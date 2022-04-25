@@ -18,6 +18,7 @@ yarn-error.log
 /public/css/app.css
 /public/assets/js/app.js
 /public/files/
+/public/js/admin/
 /public/media
 /package-lock.json
 
