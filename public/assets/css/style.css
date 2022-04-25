@@ -1,0 +1,187 @@
+body {
+    background-color: #F5F5F5;
+}
+
+.width-full {
+    width: 100%;
+}
+
+.m0 {
+    margin: 0;
+}
+
+.form-inline {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-orient: horizontal;
+    -webkit-box-direction: normal;
+    -ms-flex-flow: row wrap;
+    flex-flow: row wrap;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+}
+
+.table th {
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+.dataTables_wrapper table tr:hover {
+    cursor: pointer;
+}
+
+.dataTables_wrapper table tr>td {
+    position: relative;
+}
+
+.dataTables_wrapper table tr>td .fa-trash {
+    display: none;
+    position: absolute;
+    top: 50%;
+    right: 0;
+    margin-top: -5px;
+}
+
+.dataTables_wrapper table tr:hover>td .fa-trash {
+    display: inline-block;
+}
+
+.form-filter .form-control,
+.form-filter .form-select {
+    min-width: 250px;
+    max-width: 300px;
+}
+
+.form-select.form-select-solid {
+    background-color: #fff;
+    border: 1px solid #e4e6ef;
+}
+
+.form-select.form-select-solid[aria-disabled=true] {
+    background-color: #eef3f7;
+    border: 1px solid #e4e6ef;
+}
+
+.hidden {
+    display: none;
+}
+
+.text-right {
+    text-align: right;
+}
+
+.ui-sortable-handle {
+    cursor: move;
+}
+
+.comment_toggle_childrens {
+    position: relative;
+}
+
+.comment_toggle_childrens::before {
+    content: "";
+    position: absolute;
+    left: 25px;
+    width: 3px;
+    top: 0;
+    bottom: 0;
+    background-color: #eff2f5;
+}
+
+.overflow-auto {
+    position: relative;
+    overflow: inherit !important;
+}
+
+.overflow-auto .timeline-badge {
+    position: absolute;
+    left: -30px;
+    background: #fff;
+    top: 50%;
+    margin-top: -10px;
+}
+
+.sub-comment-form {
+    position: relative;
+}
+
+.sub-comment-form .timeline-badge {
+    position: absolute;
+    left: -30px;
+    background: #fff;
+    top: 50%;
+    margin-top: -10px;
+}
+
+.flex-1 {
+    flex: 1;
+}
+
+.form-check.form-check-solid .form-check-input {
+    position: relative;
+    border: 1px solid #e4e6ef;
+}
+
+.form-check.form-check-solid .form-check-input.u1 {
+    border: 1px solid #e4e6ef;
+    background: #e4e6ef;
+}
+
+.form-check.form-check-solid .form-check-input.u1::before {
+    position: absolute;
+    content: '';
+    display: inline-block;
+    width: 14px;
+    height: 4px;
+    background: #fff;
+    top: 50%;
+    margin-top: -2px;
+    margin-left: 2px;
+}
+
+.i-tab {
+    border: solid 1px #009ef7;
+    padding: 0;
+    border-radius: 5px;
+    width: 100%;
+}
+
+.i-tab-item {
+    margin: 0 !important;
+    text-align: center;
+    padding: 10px 0;
+    cursor: pointer;
+}
+
+.i-tab-item>h3.stepper-title {
+    margin: 0;
+}
+
+.i-tab-item.current {
+    background: #009ef7;
+}
+
+.i-tab-item.current>h3 {
+    color: #fff !important;
+}
+
+.i-tab-item.current:after {
+    background-color: transparent !important;
+}
+
+.footer {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+}
+
+.form-switch.form-check-solid .form-check-input {
+    height: 22px;
+    margin: 0;
+}
+
+.form-switch {
+    padding-left: 0;
+}
