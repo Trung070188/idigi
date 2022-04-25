@@ -43,9 +43,12 @@
 
                                 </div>
                                 <div class="form-group">
-                                    <label>Avatar</label>
-                                    <file-manager-input v-model="entry.avatar"/>
-                                    <upload-file-component v-model="entry.avatar"/>
+
+                                    <div class="col-3">
+                                        <q-image v-if="entry.avatar" :src="entry.avatar" styles="width: 100%; max-height: 400px; margin-bottom: 11px"/>
+                                    </div>
+
+                                    <upload-file-component :type="'image'" v-model="entry.avatar"/>
                                 </div>
                             </div>
 

@@ -30,6 +30,7 @@
         "moment": "^2.29.1",
         "toastr": "^2.1.4",
         "vue": "^2.6.12",
-        "vue-nprogress": "^0.2.0"
+        "vue-nprogress": "^0.2.0",
+        "viewerjs": "^1.10.0"
     }
 }

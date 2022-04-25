@@ -20,6 +20,8 @@ Vue.component('ErrorLabel', require('./components/ErrorLabel').default);
 Vue.component('SaveButton', require('./components/SaveButton').default);
 Vue.component('ActionBar', require('./admin/includes/ActionBar').default);
 Vue.component('QSelect', require('./components/QSelect').default);
+Vue.component('QImage', require('./components/QImage').default);
+
 require('./mixin');
 
 function main() {
