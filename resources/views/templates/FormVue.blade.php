@@ -28,18 +28,20 @@
 
                         </div>
 
-
+                        <hr>
+                        <div >
+                            <button type="reset" @click="save()" class="btn btn-primary mr-2">Save</button>
+                            <button type="reset" @click="cancel()" class="btn btn-secondary">Cancel</button>
+                        </div>
                     </div>
                 </div>
+
             </div>
 
 
         </div>
 
-        <div class="card-footer" style="padding:50px">
-            <button type="reset" @click="save()" class="btn btn-primary mr-2">Submit</button>
-            <button type="reset" @click="cancel()" class="btn btn-secondary">Cancel</button>
-        </div>
+
 
     </div>
 
