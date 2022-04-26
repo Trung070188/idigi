@@ -31,8 +31,12 @@
             .btn-trash i{
                 font-size: 1.3rem;
             }
-            .table tr{
-                border-top:1px solid lightgrey;
+            .table-head-bg{
+                border-top: 1px solid #d5cfcf;
+                border-bottom: 1px solid #d5cfcf;
+            }
+            .table td:first-child, .table th:first-child, .table tr:first-child{
+                padding-left: 0.75rem;
             }
         </style>
 

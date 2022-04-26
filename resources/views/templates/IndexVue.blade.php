@@ -34,6 +34,7 @@
                     </div>
 
                     <div class="card-body d-flex flex-column" >
+                        <div v-text="'Showing '+ from +' to '+ to +' of '+ paginate.totalRecord +' entries'"></div>
                         <table class=" table  table-head-custom table-head-bg table-vertical-center">
                             <thead>
                             <tr> <th>ID</th>
@@ -63,7 +64,7 @@
                                     <label>Records per page:</label>
                                 </div>
                                 <div>
-                                    <select class="form-select form-select-sm " v-if="limit" @change="changeLimit">
+                                    <select class="form-select form-select-sm " v-model="limit" @change="changeLimit">
                                         <option value="25">25</option>
                                         <option value="50">50</option>
                                         <option value="100">100</option>
@@ -105,9 +106,12 @@
                     created: $q.created || created,
                 },
                 limit: 25,
+                from: 0,
+                to: 0,
                 paginate: {
                     currentPage: 1,
-                    lastPage: 1
+                    lastPage: 1,
+                    totalRecord: 0
                 }
             }
         },
@@ -123,6 +127,8 @@
                 const res  = await $get('{{$routePrefix}}/{{$table}}/data', query);
                 this.paginate = res.paginate;
                 this.entries = res.data;
+                this.from = (this.paginate.currentPage-1)*(this.limit) + 1;
+                this.to = (this.paginate.currentPage-1)*(this.limit) + this.entries.length;
             },
             async remove(entry) {
                 if (!confirm('Xóa bản ghi: ' + entry.id)) {
