@@ -181,6 +181,11 @@ export default {
             filter: {
                 keyword: $q.keyword || '',
                 created: $q.created || created,
+                name:'',
+                subject:'',
+                type:'',
+                grade:'',
+                enabled:'',
             },
             limit: 25,
             from: 0,
