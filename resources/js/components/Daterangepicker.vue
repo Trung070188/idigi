@@ -1,5 +1,5 @@
 <template>
-    <input  name="time" :placeholder="placeholder"
+    <input ref="input"  name="time" :placeholder="placeholder"
             autocomplete="off"
             :class="className" >
 </template>
@@ -87,6 +87,13 @@
                 this.$emit('input', start.format('YYYY-MM-DD') + '_'+ end.format('YYYY-MM-DD'));
                 this.$el.value = start.format('DD/MM/YYYY') + ' -- ' + end.format('DD/MM/YYYY');
             });
+
+            const self = this
+            $( this.$el).on('change',  function () {
+                if (!self.$el.value) {
+                    self.$emit('input', '');
+                }
+            })
 
 
            // var _query  = $router.getQuery();

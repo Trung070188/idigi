@@ -22,8 +22,16 @@
                                         <button type="button" style="margin-left: 10px"
                                                 @click="isShowFilter = !isShowFilter"
                                                 class="btn btn-primary"> Tìm kiếm mở rộng
-                                            <i class="fa fa-filter" v-if="!isShowFilter"></i>
-                                            <i class="fa fa-window-close"  v-if="isShowFilter"></i>
+                                            <i class="fa fa-caret-down" v-if="!isShowFilter"></i>
+                                            <i class="fa fa-caret-up" v-if="isShowFilter" aria-hidden="true"></i>
+
+                                        </button>
+
+
+                                    </div>
+                                    <div class="form-group mx-sm-3 mb-2">
+                                        <button @click="filterClear()" type="button"
+                                                class="btn btn-flex btn-light  fw-bolder ">Clear
                                         </button>
                                     </div>
 
@@ -33,14 +41,8 @@
                                 <form class="col-lg-12" v-if="isShowFilter">
                                     <div class="row">
                                         <div class="form-group col-lg-3">
-                                            <label>Name </label>
-
-                                            <input class="form-control" placeholder="Enter the inventories name">
-
-                                        </div>
-                                        <div class="form-group col-lg-3">
                                             <label>Type </label>
-                                            <select class="form-control">
+                                            <select class="form-control" v-model="filter.type">
                                                 <option value="">-</option>
                                                 <option value="vocabulary">Vocabulary</option>
                                                 <option value="summary">Summary</option>
@@ -51,16 +53,16 @@
                                         </div>
                                         <div class="form-group col-lg-3">
                                             <label>Subject </label>
-                                            <select class="form-control" >
+                                            <select class="form-control" v-model="filter.subject">
                                                 <option value="">-</option>
                                                 <option value="math">Maths</option>
-                                                <option value="science ">Science </option>
+                                                <option value="science ">Science</option>
                                             </select>
 
                                         </div>
                                         <div class="form-group col-lg-3">
                                             <label>Grade </label>
-                                            <select class="form-control">
+                                            <select class="form-control" v-model="filter.grade">
                                                 <option value="">-</option>
                                                 <option value="1">1</option>
                                                 <option value="2">2</option>
@@ -82,12 +84,14 @@
                                         </div>
                                         <div class="form-group col-lg-3">
                                             <label>Active</label>
-                                            <div><switch-button></switch-button></div>
+                                            <div>
+                                                <switch-button v-model="filter.enabled"></switch-button>
+                                            </div>
 
                                         </div>
                                     </div>
-                                    <div  style="margin: auto 0">
-                                        <button class="btn btn-primary">Tìm kiếm</button>
+                                    <div style="margin: auto 0">
+                                        <button class="btn btn-primary" @click="doFilter()">Tìm kiếm</button>
                                     </div>
                                 </form>
                             </div>
@@ -120,7 +124,7 @@
                                 <td v-text="entry.enable == 0 ? 'No' : 'Yes'"></td>
                                 <td v-text=" d(entry.created_at)"></td>
 
-                                <td >
+                                <td>
                                     <!--                                    <a :href="'/xadmin/inventories/edit?id='+entry.id" ><i style="font-size:1.3rem" class="fa fa-edit"></i></a>-->
                                     <a @click="remove(entry)" href="javascript:;" class="btn-trash deleted"><i
                                         class="fa fa-trash mr-1 deleted"></i></a>
@@ -168,25 +172,32 @@ const $q = $router.getQuery();
 
 export default {
     name: "InventoriesIndex.vue",
-    components: {ActionBar,SwitchButton},
+    components: {ActionBar, SwitchButton},
     data() {
+        let isShowFilter = false;
+        let filter = {
+            keyword: $q.keyword || '',
+            created: $q.created || '',
+            subject: $q.subject || '',
+            type: $q.type || '',
+            grade: $q.grade || '',
+            enabled: $q.enabled || ''
+        };
+        for (var key in filter) {
+            if (filter[key] != '') {
+                isShowFilter = true;
+            }
+        }
         return {
-            isShowFilter: false,
+
+            isShowFilter: isShowFilter,
             breadcrumbs: [
                 {
                     title: 'Inventories'
                 },
             ],
             entries: [],
-            filter: {
-                keyword: $q.keyword || '',
-                created: $q.created || created,
-                name:'',
-                subject:'',
-                type:'',
-                grade:'',
-                enabled:'',
-            },
+            filter: filter,
             limit: 25,
             from: 0,
             to: 0,
@@ -202,7 +213,7 @@ export default {
     },
     methods: {
         edit: function (id, event) {
-            if (!event.target.hasClass('deleted')){
+            if (!event.target.hasClass('deleted')) {
                 window.location.href = '/xadmin/inventories/edit?id=' + id;
             }
 
@@ -232,20 +243,15 @@ export default {
             $router.updateQuery({page: this.paginate.currentPage, _: Date.now()});
         },
         filterClear() {
-            for (var key in app.filter) {
-                app.filter[key] = '';
+            for (var key in this.filter) {
+                this.filter[key] = '';
             }
 
             $router.setQuery({});
         },
-        doFilter(field, value, event) {
-            if (event) {
-                event.preventDefault();
-            }
+        doFilter() {
 
-            const params = {page: 1};
-            params[field] = value;
-            $router.setQuery(params)
+            $router.setQuery(this.filter)
         },
         changeLimit() {
             let params = $router.getQuery();
