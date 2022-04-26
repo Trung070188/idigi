@@ -1,6 +1,6 @@
 <template>
 
-    <label class="switch"><input ref="input" v-model="isChecked" @change="toggle()" type="checkbox"> <span class="slider round"></span></label>
+    <label class="switch-button"><input ref="input" v-model="isChecked" @change="toggle()" type="checkbox"> <span class="slider round"></span></label>
 </template>
 
 <script>
@@ -32,11 +32,12 @@
 </script>
 
 <style scoped>
-    .switch {
+    .switch-button {
         position: relative;
         display: inline-block;
         width: 60px;
         height: 34px;
+        margin-bottom: 0;
     }
     input:focus+.slider {
         box-shadow: 0 0 1px #2196f3;
@@ -48,7 +49,7 @@
     .slider.round {
         border-radius: 34px;
     }
-    .switch input {
+    .switch-button input {
         display: none;
     }
     .slider {

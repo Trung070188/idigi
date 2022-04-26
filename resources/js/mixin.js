@@ -4,7 +4,7 @@ import {numberFormat, parseIntEx} from "./utils";
 Vue.mixin({
     data() {
         return {
-            auth: window.$auth
+            auth: window.$auth,
         }
     },
     methods: {
@@ -16,17 +16,15 @@ Vue.mixin({
             a = parseIntEx(a);
             return numberFormat(a)
         },
-        max: function (a,b) {
-            return Math.max(a,b);
-        },
+
         d(tzTime) {
             if (!tzTime) {
                 return '';
             }
             const m =  moment(tzTime);
-            if (m.format('YYYY') == (new Date).getFullYear()) {
-                return m.format('DD/MM HH:mm')
-            }
+            // if (m.format('YYYY') == (new Date).getFullYear()) {
+            //     return m.format('DD/MM HH:mm')
+            // }
 
             return m.format('DD/MM/YYYY HH:mm')
         },

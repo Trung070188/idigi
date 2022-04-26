@@ -25,3 +25,4 @@ yarn-error.log
 /public/assets/css/all.min.css
 /public/assets/css/app.css
 /public/js/admin/uploadFile.js
+/public/js/admin
