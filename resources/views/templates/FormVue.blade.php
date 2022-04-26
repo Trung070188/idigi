@@ -35,6 +35,12 @@
 
 
         </div>
+
+        <div class="card-footer" style="padding:50px">
+            <button type="reset" @click="save()" class="btn btn-primary mr-2">Submit</button>
+            <button type="reset" @click="cancel()" class="btn btn-secondary">Cancel</button>
+        </div>
+
     </div>
 
 </template>
@@ -54,6 +60,9 @@
             }
         },
         methods: {
+            cancel(){
+                window.location.href = '{{$routePrefix}}/{{$table}}/index';
+            },
             async save() {
                 this.isLoading = true;
                 const res = await $post('{{$routePrefix}}/{{$table}}/save', {entry: this.entry}, false);

@@ -306,3 +306,10 @@ function get_gravatar(string $id, $s = 128, $d = 'identicon', $r = 'g', $img = f
     }
     return $url;
 }
+
+function component(string $component, array $jsonData = []) {
+    $vars['jsonData'] = $jsonData;
+    $vars['component'] = $component;
+
+    return view('admin.layouts.vue', $vars);
+}
