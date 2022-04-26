@@ -36,11 +36,11 @@
                     </div>
                 </div>
                 <div class="flex-1 text-right" v-else-if="type==='index'">
-                    <a :href="createUrl" class="btn btn-primary btn-sm" v-if="createUrl">
+                    <a :href="createUrl" class="btn btn-primary " v-if="createUrl">
                         Create new
                     </a>
 
-                    <a href="#" @click="createNew" class="btn btn-primary btn-sm" v-if="createWithFunction">
+                    <a href="#" @click="createNew" class="btn btn-primary " v-if="createWithFunction">
                         Create new
                     </a>
 

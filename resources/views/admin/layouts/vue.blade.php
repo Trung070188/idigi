@@ -26,6 +26,11 @@
         <link href="{{ asset('/assets/css/viewer.min.css') }}" rel="stylesheet" type="text/css" />
         <link rel="stylesheet" href="/assets/css/jquery-ui.css">
         <link rel="stylesheet" href="/assets/css/style.css">
+        <style>
+            .btn-trash i{
+                font-size: 1.3rem;
+            }
+        </style>
 
         <!--end::Layout Themes-->
         <script>

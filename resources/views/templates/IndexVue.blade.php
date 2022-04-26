@@ -22,7 +22,7 @@
 
                                     <div class="form-group mx-sm-3 mb-2">
                                         <button @click="filterClear()" type="button" v-on:click="clearFilter()"
-                                                class="btn btn-default btn-sm btn-clear">Xóa
+                                                class="btn btn-sm btn-flex btn-light  fw-bolder">Xóa
                                         </button>
                                     </div>
 
@@ -34,13 +34,13 @@
                     </div>
 
                     <div class="card-body d-flex flex-column" >
-                        <table class="table table-head-custom table-head-bg table-borderless table-vertical-center">
+                        <table class="table table-striped table-bordered">
                             <thead>
                             <tr> <th>ID</th>
                                 @foreach ($fields as $field)
                                     <th>{{word_normalized($field)}}</th>
                                 @endforeach
-                                <th>Action</th>
+                                <th></th>
                             </tr>
                             </thead>
                             <tbody>
@@ -53,8 +53,8 @@
                                 @endforeach
 
                                 <td class="">
-                                    <a :href="'{{$routePrefix}}/{{$table}}/edit?id='+entry.id" class="btn "><i class="fa fa-edit"></i></a>
-                                    <a @click="remove(entry)" href="javascript:;" class="btn "><i class="fa fa-trash"></i></a>
+<!--                                    <a :href="'{{$routePrefix}}/{{$table}}/edit?id='+entry.id" ><i style="font-size:1.3rem" class="fa fa-edit"></i></a>-->
+                                    <a @click="remove(entry)" href="javascript:;" class="btn-trash"><i  class="fa fa-trash mr-1"></i></a>
                                 </td>
                             </tr>
                             </tbody>
