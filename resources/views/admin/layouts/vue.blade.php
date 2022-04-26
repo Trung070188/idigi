@@ -24,11 +24,15 @@
         <link href="/assets/plugins/ion-rangeslider/css/ion.rangeSlider.css" rel="stylesheet">
         <link href="/assets/plugins/ion-rangeslider/css/ion.rangeSlider.skinFlat.css" rel="stylesheet">
         <link href="{{ asset('/assets/css/viewer.min.css') }}" rel="stylesheet" type="text/css" />
+        <link href="{{ asset('assets/css/style.bundle.css') }}" rel="stylesheet" type="text/css" />
         <link rel="stylesheet" href="/assets/css/jquery-ui.css">
         <link rel="stylesheet" href="/assets/css/style.css">
         <style>
             .btn-trash i{
                 font-size: 1.3rem;
+            }
+            .table tr{
+                border-top:1px solid lightgrey;
             }
         </style>
 

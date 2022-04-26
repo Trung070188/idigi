@@ -34,7 +34,7 @@
                     </div>
 
                     <div class="card-body d-flex flex-column" >
-                        <table class="table table-striped table-bordered">
+                        <table class=" table  table-head-custom table-head-bg table-vertical-center">
                             <thead>
                             <tr> <th>ID</th>
                                 @foreach ($fields as $field)
@@ -44,10 +44,8 @@
                             </tr>
                             </thead>
                             <tbody>
-                            <tr v-for="entry in entries">
-                                <td >
-                                    <a class="edit-link" :href="'{{$routePrefix}}/{{$table}}/edit?id='+entry.id"  v-text="entry.id"></a>
-                                </td>
+                            <tr v-for="entry in entries" @click="edit(entry.id)">
+                                <td v-text="entry.id"></td>
                                 @foreach ($fields as $field)
                                     <td v-text="entry.{{$field}}"></td>
                                 @endforeach
@@ -59,8 +57,23 @@
                             </tr>
                             </tbody>
                         </table>
-                        <div style="margin-top:10px; ">
-                            <Paginate :value="paginate" :pagechange="onPageChange"></Paginate>
+                        <div style="margin-top:10px; display: flex">
+                            <div class="col-4 form-group d-inline-flex mt-2">
+                                <div class="mr-2">
+                                    <label>Records per page:</label>
+                                </div>
+                                <div>
+                                    <select class="form-select form-select-sm " v-if="limit" @change="changeLimit">
+                                        <option value="25">25</option>
+                                        <option value="50">50</option>
+                                        <option value="100">100</option>
+
+                                    </select>
+                                </div>
+                            </div>
+                            <div style="float: right">
+                                <Paginate :value="paginate" :pagechange="onPageChange"></Paginate>
+                            </div>
                         </div>
 
 
@@ -91,6 +104,7 @@
                     keyword: $q.keyword || '',
                     created: $q.created || created,
                 },
+                limit: 25,
                 paginate: {
                     currentPage: 1,
                     lastPage: 1
@@ -101,6 +115,9 @@
             $router.on('/', this.load).init();
         },
         methods: {
+            edit: function (id){
+                window.location.href='{{$routePrefix}}/{{$table}}/edit?id='+ id;
+            },
             async load() {
                 let query = $router.getQuery();
                 const res  = await $get('{{$routePrefix}}/{{$table}}/data', query);
@@ -138,6 +155,13 @@
                 params[field] = value;
                 $router.setQuery(params)
             },
+            changeLimit() {
+                let params = $router.getQuery();
+                params['page']=1;
+                params['limit'] = this.limit;
+                $router.setQuery(params)
+            },
+
             async toggleStatus(entry) {
                 const res = await $post('{{$routePrefix}}/{{$table}}/toggleStatus', {
                     id: entry.id,
