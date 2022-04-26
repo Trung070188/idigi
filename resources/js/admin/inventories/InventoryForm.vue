@@ -148,9 +148,9 @@
                 window.location.href = '/xadmin/inventories/index';
             },
             async save() {
-                this.isLoading = true;
+                this.$loading(true);
                 const res = await $post('/xadmin/inventories/save', {entry: this.entry}, false);
-                this.isLoading = false;
+                this.$loading(false);
                 if (res.errors) {
                     this.errors = res.errors;
                     return;

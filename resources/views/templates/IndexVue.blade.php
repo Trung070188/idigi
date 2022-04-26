@@ -120,7 +120,7 @@
         },
         methods: {
             edit: function (id, event){
-                if (!event.target.hasClass('deleted')){
+                if (!$(event.target).hasClass('deleted')){
                     window.location.href='{{$routePrefix}}/{{$table}}/edit?id='+ id;
                 }
 

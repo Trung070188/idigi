@@ -9,6 +9,17 @@
 import Vue from 'vue';
 import { botInfo, botWarn } from "./utils";
 import AppLayout from "./admin/layouts/AppLayout";
+import VueLoading from 'vuejs-loading-plugin';
+Vue.use(VueLoading);
+Vue.use(VueLoading, {
+    dark: true, // default false
+    text: 'Ladataan', // default 'Loading'
+    loading: true, // default false
+    //customLoader: myVueComponent, // replaces the spinner and text with your own
+    background: 'rgb(255,255,255)', // set custom background
+    classes: ['myclass'] // array, object or string
+});
+
 window.Vue = require('vue');
 window.toastr = require('toastr');
 

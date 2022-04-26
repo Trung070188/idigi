@@ -91,7 +91,7 @@
                                         </div>
                                     </div>
                                     <div style="margin: auto 0">
-                                        <button class="btn btn-primary" @click="doFilter()">Tìm kiếm</button>
+                                        <button type="button" class="btn btn-primary" @click="doFilter()">Tìm kiếm</button>
                                     </div>
                                 </form>
                             </div>
@@ -157,6 +157,7 @@
             </div>
 
         </div>
+
     </div>
 
 </template>
@@ -213,14 +214,17 @@ export default {
     },
     methods: {
         edit: function (id, event) {
-            if (!event.target.hasClass('deleted')) {
+
+            if (!$(event.target).hasClass('deleted')) {
                 window.location.href = '/xadmin/inventories/edit?id=' + id;
             }
 
         },
         async load() {
             let query = $router.getQuery();
+            this.$loading(true);
             const res = await $get('/xadmin/inventories/data', query);
+            this.$loading(false);
             this.paginate = res.paginate;
             this.entries = res.data;
             this.from = (this.paginate.currentPage - 1) * (this.limit) + 1;
