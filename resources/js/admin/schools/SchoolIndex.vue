@@ -171,7 +171,9 @@
             },
             async load() {
                 let query = $router.getQuery();
+                this.$loading(true);
                 const res  = await $get('/xadmin/schools/data', query);
+                this.$loading(false);
                 this.paginate = res.paginate;
                 this.entries = res.data;
                 this.from = (this.paginate.currentPage-1)*(this.limit) + 1;
