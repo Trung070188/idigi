@@ -4,7 +4,8 @@ import UserForm from "./admin/users/UserForm";
 import ElfinderIndex from "./admin/elfinder/ElfinderIndex";
 import RoleIndex from "./admin/roles/RoleIndex";
 import RoleForm from "./admin/roles/RoleForm";
-
+import InventoryIndex from "./admin/inventories/InventoryIndex";
+import InventoryForm from "./admin/inventories/InventoryForm";
 
 export default {
 
@@ -13,6 +14,8 @@ export default {
     UserForm,
     ElfinderIndex,
     RoleIndex,
-    RoleForm
+    RoleForm,
+    InventoryIndex,
+    InventoryForm,
 
 }

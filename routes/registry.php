@@ -27,8 +27,8 @@
         'name' => 'elfinder',
     ],
     [
-        'path' => '/roles/{action}',
-        'action' => 'RolesController',
-        'name' => 'roles',
+        'path' => '/inventories/{action}',
+        'action' => 'InventoriesController',
+        'name' => 'inventories',
     ],
 ];

@@ -26,7 +26,12 @@ return [
             ]
         ]
     ],
-
+    [
+        "name" => "Inventories",
+        "icon" => "fa fa-archive",
+        "group" => 1,
+        'url' => '/xadmin/inventories/index',
+    ],
     [
         "name" => "Users, Roles, Permissions",
         "icon" => "fa fa-users",

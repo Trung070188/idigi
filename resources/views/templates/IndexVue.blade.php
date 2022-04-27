@@ -34,7 +34,7 @@
                     </div>
 
                     <div class="card-body d-flex flex-column" >
-                        <div v-text="'Showing '+ from +' to '+ to +' of '+ paginate.totalRecord +' entries'"></div>
+                        <div v-text="'Showing '+ from +' to '+ to +' of '+ paginate.totalRecord +' entries'" v-if="entries.length > 0"></div>
                         <table class=" table  table-head-custom table-head-bg table-vertical-center">
                             <thead>
                             <tr> <th>ID</th>
@@ -45,7 +45,7 @@
                             </tr>
                             </thead>
                             <tbody>
-                            <tr v-for="entry in entries" @click="edit(entry.id)">
+                            <tr v-for="entry in entries" @click="edit(entry.id, $event)">
                                 <td v-text="entry.id"></td>
                                 @foreach ($fields as $field)
                                     <td v-text="entry.{{$field}}"></td>
@@ -53,7 +53,7 @@
 
                                 <td class="">
 <!--                                    <a :href="'{{$routePrefix}}/{{$table}}/edit?id='+entry.id" ><i style="font-size:1.3rem" class="fa fa-edit"></i></a>-->
-                                    <a @click="remove(entry)" href="javascript:;" class="btn-trash"><i  class="fa fa-trash mr-1"></i></a>
+                                    <a @click="remove(entry)" href="javascript:;" class="btn-trash deleted"><i  class="fa fa-trash mr-1"></i></a>
                                 </td>
                             </tr>
                             </tbody>
@@ -119,8 +119,11 @@
             $router.on('/', this.load).init();
         },
         methods: {
-            edit: function (id){
-                window.location.href='{{$routePrefix}}/{{$table}}/edit?id='+ id;
+            edit: function (id, event){
+                if (!$(event.target).hasClass('deleted')){
+                    window.location.href='{{$routePrefix}}/{{$table}}/edit?id='+ id;
+                }
+
             },
             async load() {
                 let query = $router.getQuery();
