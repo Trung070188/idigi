@@ -1,8 +1,9 @@
 <template>
     <div class="container-fluid" >
         <ActionBar type="index"
-                   createUrl="/xadmin/{{$table}}/create"
-                   title="{{$ucTable.'Index'}}"/>
+                   createUrl="/xadmin/schools/create"
+                   :breadcrumbs="breadcrumbs"
+                   title="School"/>
         <div class="row">
             <div class="col-lg-12">
                 <div class="card card-custom card-stretch gutter-b">
@@ -12,20 +13,44 @@
                             <div class="col-lg-12">
                                 <form class="form-inline">
                                     <div class="form-group mx-sm-3 mb-4">
-                                        <input @keydown.enter="doFilter('keyword', filter.keyword, $event)" v-model="filter.keyword"
+                                        <input @keydown.enter="doFilter($event)"
+                                               v-model="filter.keyword"
                                                type="text"
-                                               class="form-control" placeholder="tìm kiếm" value="">
+                                               class="form-control" placeholder="Tìm kiếm" value="">
                                     </div>
-                                    <div class="form-group mx-sm-3 mb-4">
-                                        <Daterangepicker v-model="filter.created" placeholder="Ngày tạo"></Daterangepicker>
-                                    </div>
-
                                     <div class="form-group mx-sm-3 mb-2">
-                                        <button @click="filterClear()" type="button" v-on:click="clearFilter()"
-                                                class="btn btn-sm btn-flex btn-light  fw-bolder">Xóa
+                                        <button type="button" style="margin-left: 10px"
+                                                @click="isShowFilter = !isShowFilter"
+                                                class="btn btn-primary"> Tìm kiếm mở rộng
+                                            <i class="fa fa-caret-down" v-if="!isShowFilter"></i>
+                                            <i class="fa fa-caret-up" v-if="isShowFilter" aria-hidden="true"></i>
+
+                                        </button>
+
+
+                                    </div>
+                                    <div class="form-group mx-sm-3 mb-2">
+                                        <button @click="filterClear()" type="button"
+                                                class="btn btn-flex btn-light  fw-bolder ">Clear
                                         </button>
                                     </div>
 
+
+                                </form>
+
+                                <form class="col-lg-12" v-if="isShowFilter">
+                                    <div class="row">
+                                        <div class="form-group col-lg-3">
+                                            <label>School name </label>
+                                            <input class="form-control" type="text" placeholder="Enter your school name" v-model="filter.school_name"/>
+
+                                        </div>
+
+                                    </div>
+
+                                    <div style="margin: auto 0">
+                                        <button type="button" class="btn btn-primary" @click="doFilter($event)">Tìm kiếm</button>
+                                    </div>
                                 </form>
                             </div>
 
@@ -38,21 +63,27 @@
                         <table class=" table  table-head-custom table-head-bg table-vertical-center">
                             <thead>
                             <tr> <th>ID</th>
-                                @foreach ($fields as $field)
-                                    <th>{{word_normalized($field)}}</th>
-                                @endforeach
-                                <th></th>
+                                <th>School Name</th>
+                                <th>School Address</th>
+                                <th>No Of Users</th>
+                                <th>Devices Per User</th>
+                                <th>Region/City</th>
+                                <th>License State</th>
+                            <th>Action</th>
                             </tr>
                             </thead>
                             <tbody>
-                            <tr v-for="entry in entries" @click="edit(entry.id, $event)">
+                            <tr v-for="entry in entries">
                                 <td v-text="entry.id"></td>
-                                @foreach ($fields as $field)
-                                    <td v-text="entry.{{$field}}"></td>
-                                @endforeach
+                                <td v-text="entry.school_name"></td>
+                                <td v-text="entry.school_address"></td>
+                                <td v-text="entry.number_of_users"></td>
+                                <td v-text="entry.devices_per_user"></td>
+                                <td ></td>
+                                <td v-text="entry.license_state"></td>
 
                                 <td class="">
-<!--                                    <a :href="'{{$routePrefix}}/{{$table}}/edit?id='+entry.id" style="margin-right: 10px"><i style="font-size:1.3rem" class="fa fa-edit"></i></a>-->
+                                    <a :href="'/xadmin/schools/edit?id='+entry.id" style="margin-right: 10px"><i style="font-size:1.3rem" class="fa fa-edit"></i></a>
                                     <a @click="remove(entry)" href="javascript:;" class="btn-trash deleted"><i  class="fa fa-trash mr-1"></i></a>
                                 </td>
                             </tr>
@@ -96,15 +127,28 @@
     const $q = $router.getQuery();
 
     export default {
-        name: "{{ucfirst($table)}}Index.vue",
+        name: "SchoolsIndex.vue",
         components: {ActionBar},
         data() {
+            let isShowFilter = false;
+            let filter = {
+                keyword: $q.keyword || '',
+                school_name: $q.school_name || ''
+            };
+            for (var key in filter) {
+                if (filter[key] != '') {
+                    isShowFilter = true;
+                }
+            }
             return {
+                breadcrumbs: [
+                    {
+                        title: 'Schools'
+                    },
+                ],
                 entries: [],
-                filter: {
-                    keyword: $q.keyword || '',
-                    created: $q.created || created,
-                },
+                isShowFilter: isShowFilter,
+                filter: filter,
                 limit: 25,
                 from: 0,
                 to: 0,
@@ -121,13 +165,13 @@
         methods: {
             edit: function (id, event){
                 if (!$(event.target).hasClass('deleted')){
-                    window.location.href='{{$routePrefix}}/{{$table}}/edit?id='+ id;
+                    window.location.href='/xadmin/schools/edit?id='+ id;
                 }
 
             },
             async load() {
                 let query = $router.getQuery();
-                const res  = await $get('{{$routePrefix}}/{{$table}}/data', query);
+                const res  = await $get('/xadmin/schools/data', query);
                 this.paginate = res.paginate;
                 this.entries = res.data;
                 this.from = (this.paginate.currentPage-1)*(this.limit) + 1;
@@ -138,7 +182,7 @@
                     return;
                 }
 
-                const res = await $post('{{$routePrefix}}/{{$table}}/remove', {id: entry.id});
+                const res = await $post('/xadmin/schools/remove', {id: entry.id});
 
                 if (res.code) {
                     toastr.error(res.message);
@@ -149,20 +193,17 @@
                 $router.updateQuery({page: this.paginate.currentPage, _: Date.now()});
             },
             filterClear() {
-                for( var key in app.filter) {
-                    app.filter[key] = '';
+                for (var key in this.filter) {
+                    this.filter[key] = '';
                 }
 
                 $router.setQuery({});
             },
-            doFilter(field, value, event) {
+            doFilter(event) {
                 if (event) {
                     event.preventDefault();
                 }
-
-                const params = {page: 1};
-                params[field] = value;
-                $router.setQuery(params)
+                $router.setQuery(this.filter)
             },
             changeLimit() {
                 let params = $router.getQuery();
@@ -172,7 +213,7 @@
             },
 
             async toggleStatus(entry) {
-                const res = await $post('{{$routePrefix}}/{{$table}}/toggleStatus', {
+                const res = await $post('/xadmin/schools/toggleStatus', {
                     id: entry.id,
                     status: entry.status
                 });

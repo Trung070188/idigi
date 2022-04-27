@@ -40,6 +40,12 @@ return [
     ],
 
     [
+        "name" => "School",
+        "icon" => "fa fa-school",
+        'url' => '/xadmin/schools/index',
+    ],
+
+    [
         "name" => "System",
         "icon" => "fa fa-users",
         "group" => 1,

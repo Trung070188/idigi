@@ -36,4 +36,9 @@
         'action' => 'LessonsController',
         'name' => 'lessons',
     ],
+    [
+        'path' => '/schools/{action}',
+        'action' => 'SchoolsController',
+        'name' => 'schools',
+    ],
 ];

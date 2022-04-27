@@ -6,6 +6,8 @@ import InventoryIndex from "./admin/inventories/InventoryIndex";
 import InventoryForm from "./admin/inventories/InventoryForm";
 import LessonIndex from "./admin/lessons/LessonIndex";
 import LessonForm from "./admin/lessons/LessonForm";
+import SchoolIndex from "./admin/schools/SchoolIndex";
+import SchoolForm from "./admin/schools/SchoolForm";
 
 export default {
     DashboardIndex,
@@ -15,6 +17,9 @@ export default {
     InventoryIndex,
     InventoryForm,
     LessonIndex,
-    LessonForm
+    LessonForm,
+    SchoolIndex,
+    SchoolForm
+
 
 }
