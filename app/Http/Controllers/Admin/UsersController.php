@@ -32,6 +32,7 @@ class UsersController extends AdminBaseController
     public function index() {
         $title = 'User';
         $component = 'UserIndex';
+
         return view('admin.layouts.vue', compact('title', 'component'));
     }
 
@@ -96,6 +97,7 @@ class UsersController extends AdminBaseController
     * @return  array
     */
     public function save(Request $req) {
+
         if (!$req->isMethod('POST')) {
             return ['code' => 405, 'message' => 'Method not allow'];
         }
@@ -103,12 +105,12 @@ class UsersController extends AdminBaseController
         $data = $req->get('entry');
 
         $rules = [
-    'name' => 'required|max:191',
-    'email' => 'required|max:191',
-    'last_login' => 'date_format:Y-m-d H:i:s',
-    'avatar' => 'max:191',
-    'birthday' => 'date_format:Y-m-d',
-    'phone' => 'max:11',
+//    'name' => 'required|max:191',
+//    'email' => 'required|max:191',
+//    'last_login' => 'date_format:Y-m-d H:i:s',
+//    'avatar' => 'max:191',
+//    'birthday' => 'date_format:Y-m-d',
+//    'phone' => 'max:11',
 ];
 
         $v = Validator::make($data, $rules);

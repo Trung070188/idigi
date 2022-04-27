@@ -28,6 +28,33 @@ return [
     ],
 
     [
+        "name" => "Users, Roles, Permissions",
+        "icon" => "fa fa-users",
+        "group" => 1,
+        'base' => '/xadmin/users',
+        'subs' => [
+            [
+                "name" => "User",
+                "icon" => "fa fa-plus",
+                "url" => "/xadmin/users/index",
+                "group" => 1,
+            ],
+            [
+                "name" => "Role",
+                "icon" => "fa fa-plus",
+                "url" => "/xadmin/roles/index",
+                "group" => 1,
+            ],
+            [
+            "name" => "Permissions",
+            "icon" => "fa fa-plus",
+            "url" => "/xadmin/users/create",
+            "group" => 1,
+        ]
+        ]
+    ],
+
+    [
         "name" => "System",
         "icon" => "fa fa-users",
         "group" => 1,

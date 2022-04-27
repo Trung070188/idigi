@@ -13,6 +13,10 @@ class Role extends BaseModel
     const SUPER_USER = 1;
     const NORMAL_USER = 2;
     const EDITOR = 3;
+    protected $fillable = [
+        'role_name',
+        'role_description'
+    ];
 
     public function getAllowedRoutes()
     {
