@@ -33,6 +33,13 @@ return [
         'url' => '/xadmin/inventories/index',
     ],
     [
+        "name" => "Lesson",
+        "icon" => "fa fa-book-open",
+        "group" => 1,
+        'url' => '/xadmin/lessons/index',
+    ],
+
+    [
         "name" => "System",
         "icon" => "fa fa-users",
         "group" => 1,

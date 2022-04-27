@@ -31,4 +31,9 @@
         'action' => 'InventoriesController',
         'name' => 'inventories',
     ],
+    [
+        'path' => '/lessons/{action}',
+        'action' => 'LessonsController',
+        'name' => 'lessons',
+    ],
 ];
