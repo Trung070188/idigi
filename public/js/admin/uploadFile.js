@@ -130,7 +130,7 @@ __webpack_require__.r(__webpack_exports__);
   \************************************/
 /***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
 
-Vue.component('upload-file-component', (__webpack_require__(/*! ./components/UploadFileComponent */ "./resources/js/components/UploadFileComponent.vue")["default"]));
+Vue.component('upload-file-component', __webpack_require__(/*! ./components/UploadFileComponent */ "./resources/js/components/UploadFileComponent.vue").default);
 
 /***/ }),
 
@@ -168,8 +168,8 @@ __webpack_require__.r(__webpack_exports__);
 
 /* normalize component */
 ;
-var component = (0,_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
-  _UploadFileComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+var component = (0,_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__.default)(
+  _UploadFileComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__.default,
   _UploadFileComponent_vue_vue_type_template_id_84fce776___WEBPACK_IMPORTED_MODULE_0__.render,
   _UploadFileComponent_vue_vue_type_template_id_84fce776___WEBPACK_IMPORTED_MODULE_0__.staticRenderFns,
   false,
@@ -198,7 +198,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
 /* harmony import */ var _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_0_rules_0_use_0_node_modules_vue_loader_lib_index_js_vue_loader_options_UploadFileComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/babel-loader/lib/index.js??clonedRuleSet-5[0].rules[0].use[0]!../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./UploadFileComponent.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5[0].rules[0].use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/UploadFileComponent.vue?vue&type=script&lang=js&");
- /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (_node_modules_babel_loader_lib_index_js_clonedRuleSet_5_0_rules_0_use_0_node_modules_vue_loader_lib_index_js_vue_loader_options_UploadFileComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+ /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (_node_modules_babel_loader_lib_index_js_clonedRuleSet_5_0_rules_0_use_0_node_modules_vue_loader_lib_index_js_vue_loader_options_UploadFileComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__.default); 
 
 /***/ }),
 
@@ -231,7 +231,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "render": () => (/* binding */ render),
 /* harmony export */   "staticRenderFns": () => (/* binding */ staticRenderFns)
 /* harmony export */ });
-var render = function () {
+var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
@@ -244,20 +244,20 @@ var render = function () {
               name: "model",
               rawName: "v-model",
               value: _vm.value,
-              expression: "value",
-            },
+              expression: "value"
+            }
           ],
           staticClass: "form-control",
           attrs: { type: "text", readonly: "" },
           domProps: { value: _vm.value },
           on: {
-            input: function ($event) {
+            input: function($event) {
               if ($event.target.composing) {
                 return
               }
               _vm.value = $event.target.value
-            },
-          },
+            }
+          }
         }),
         _vm._v(" "),
         _c("span", { staticClass: "input-group-append" }, [
@@ -266,7 +266,7 @@ var render = function () {
             {
               staticClass: "btn btn-light ",
               attrs: { type: "button" },
-              on: { click: _vm.openElfinder },
+              on: { click: _vm.openElfinder }
             },
             [_c("i", { staticClass: "la la-cloud-upload" }), _vm._v(" Browse")]
           ),
@@ -276,20 +276,20 @@ var render = function () {
             {
               staticClass: "btn btn-light  clear_elfinder_picker",
               attrs: { type: "button" },
-              on: { click: _vm.clearInput },
+              on: { click: _vm.clearInput }
             },
             [_c("i", { staticClass: "la la-eraser" }), _vm._v(" Clear")]
-          ),
-        ]),
+          )
+        ])
       ]),
       _vm._v(" "),
       _vm.value && _vm.type == "image"
         ? _c("div", { staticClass: "well well-sm" }, [
             _c("img", {
-              attrs: { width: "100px", height: "100px", src: _vm.value },
-            }),
+              attrs: { width: "100px", height: "100px", src: _vm.value }
+            })
           ])
-        : _vm._e(),
+        : _vm._e()
     ]),
     _vm._v(" "),
     _c("div", [
@@ -298,7 +298,7 @@ var render = function () {
         {
           ref: "modal",
           staticClass: "modal",
-          attrs: { tabindex: "-1", role: "dialog" },
+          attrs: { tabindex: "-1", role: "dialog" }
         },
         [
           _c(
@@ -306,13 +306,13 @@ var render = function () {
             {
               staticClass: "modal-dialog",
               staticStyle: { "max-width": "80%" },
-              attrs: { role: "document" },
+              attrs: { role: "document" }
             },
             [
               _c("div", { staticClass: "modal-content" }, [
                 _c("div", { staticClass: "modal-header" }, [
                   _c("h5", { staticClass: "modal-title" }, [
-                    _vm._v("Quản lí file"),
+                    _vm._v("Quản lí file")
                   ]),
                   _vm._v(" "),
                   _c(
@@ -322,25 +322,25 @@ var render = function () {
                       attrs: {
                         type: "button",
                         "data-dismiss": "modal",
-                        "aria-label": "Close",
+                        "aria-label": "Close"
                       },
-                      on: { click: _vm.closeModal },
+                      on: { click: _vm.closeModal }
                     },
                     [
                       _c("span", { attrs: { "aria-hidden": "true" } }, [
-                        _vm._v("×"),
-                      ]),
+                        _vm._v("×")
+                      ])
                     ]
-                  ),
+                  )
                 ]),
                 _vm._v(" "),
-                _c("div", { ref: "elfinder", staticClass: "modal-body" }),
-              ]),
+                _c("div", { ref: "elfinder", staticClass: "modal-body" })
+              ])
             ]
-          ),
+          )
         ]
-      ),
-    ]),
+      )
+    ])
   ])
 }
 var staticRenderFns = []
@@ -517,8 +517,7 @@ function normalizeComponent (
 /******/ 				}
 /******/ 				if(fulfilled) {
 /******/ 					deferred.splice(i--, 1)
-/******/ 					var r = fn();
-/******/ 					if (r !== undefined) result = r;
+/******/ 					result = fn();
 /******/ 				}
 /******/ 			}
 /******/ 			return result;
@@ -583,21 +582,19 @@ function normalizeComponent (
 /******/ 			// add "moreModules" to the modules object,
 /******/ 			// then flag all "chunkIds" as loaded and fire callback
 /******/ 			var moduleId, chunkId, i = 0;
-/******/ 			if(chunkIds.some((id) => (installedChunks[id] !== 0))) {
-/******/ 				for(moduleId in moreModules) {
-/******/ 					if(__webpack_require__.o(moreModules, moduleId)) {
-/******/ 						__webpack_require__.m[moduleId] = moreModules[moduleId];
-/******/ 					}
+/******/ 			for(moduleId in moreModules) {
+/******/ 				if(__webpack_require__.o(moreModules, moduleId)) {
+/******/ 					__webpack_require__.m[moduleId] = moreModules[moduleId];
 /******/ 				}
-/******/ 				if(runtime) var result = runtime(__webpack_require__);
 /******/ 			}
+/******/ 			if(runtime) var result = runtime(__webpack_require__);
 /******/ 			if(parentChunkLoadingFunction) parentChunkLoadingFunction(data);
 /******/ 			for(;i < chunkIds.length; i++) {
 /******/ 				chunkId = chunkIds[i];
 /******/ 				if(__webpack_require__.o(installedChunks, chunkId) && installedChunks[chunkId]) {
 /******/ 					installedChunks[chunkId][0]();
 /******/ 				}
-/******/ 				installedChunks[chunkId] = 0;
+/******/ 				installedChunks[chunkIds[i]] = 0;
 /******/ 			}
 /******/ 			return __webpack_require__.O(result);
 /******/ 		}
