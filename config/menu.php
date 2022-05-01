@@ -33,6 +33,7 @@ return [
         'url' => '/xadmin/inventories/index',
     ],
     [
+
         "name" => "Users, Roles, Permissions",
         "icon" => "fa fa-users",
         "group" => 1,
@@ -55,8 +56,19 @@ return [
             "icon" => "fa fa-plus",
             "url" => "/xadmin/users/create",
             "group" => 1,
-        ]
-        ]
+        ],
+        ],
+
+        "name" => "Lesson",
+        "icon" => "fa fa-book-open",
+        "group" => 1,
+        'url' => '/xadmin/lessons/index',
+    ],
+
+    [
+        "name" => "School",
+        "icon" => "fa fa-school",
+        'url' => '/xadmin/schools/index',
     ],
 
     [

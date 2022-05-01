@@ -28,7 +28,8 @@ Route::get('/sso', 'SSOController@index');
 
 Route::middleware(['auth'])->namespace('Admin')->prefix('xadmin')->group(function () {
     Route::get('/elfinder', 'ElfinderController@index');
-
+    Route::get('/data-source/index', 'DataSourceController@index')->name('data-source');
+    Route::post('/data-source/get-many', 'DataSourceController@getMany')->name('data-source-get-many');
     Route::any('/files/{action}', 'FilesController')->name('files');
     Route::get('/dashboard/{action}', 'DashboardController')->name('dashboard');
     $registry = require_once base_path('routes/registry.php');
