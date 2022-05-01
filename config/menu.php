@@ -32,9 +32,9 @@ return [
         "group" => 1,
         'url' => '/xadmin/inventories/index',
     ],
-    [
 
-        "name" => "Users, Roles, Permissions",
+
+     [  "name" => "Users, Roles, Permissions",
         "icon" => "fa fa-users",
         "group" => 1,
         'base' => '/xadmin/users',
@@ -58,12 +58,12 @@ return [
             "group" => 1,
         ],
         ],
-
-        "name" => "Lesson",
-        "icon" => "fa fa-book-open",
-        "group" => 1,
-        'url' => '/xadmin/lessons/index',
-    ],
+         ],
+        [
+            "name" => "Lesson",
+            "icon" => "fa fa-book-open",
+            'url' => '/xadmin/lessons/index',
+        ],
 
     [
         "name" => "School",
