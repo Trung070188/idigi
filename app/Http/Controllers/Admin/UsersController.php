@@ -119,6 +119,7 @@ class UsersController extends AdminBaseController
         }
         $data = $req->get('entry');
 
+
         $rules = [
             'username' => 'required|max:191',
             'email' => 'required|max:191',
@@ -136,7 +137,7 @@ class UsersController extends AdminBaseController
                 'errors' => $v->errors()
             ];
         }
-        $data['state'] = ($data['state'] == 'true' || $data['state'] == 1) ? 1 : 0;
+        $data['state'] = ($data['state'] == 'true' || $data['state'] ==1) ? 1 : 0;
 
         /**
          * @var  User $entry
@@ -242,6 +243,7 @@ class UsersController extends AdminBaseController
                 'username' => $user->username,
                 'full_name' => $user->full_name,
                 'email' => $user->email,
+                'state'=>$user->state,
                 'created_at' => $user->created_at
             ];
         }
