@@ -29,12 +29,10 @@ class RolesController extends AdminBaseController
     * @throw  NotFoundHttpException
     * @return  View
     */
-    public function index( Request $request) {
+    public function index() {
         $title = 'Role';
         $component = 'RoleIndex';
-        $perPage=!empty($request->per_page)? $request->per_page :25 ;
-
-            return view('admin.layouts.vue', compact('title', 'component'));
+            return component($component, compact('title'));
     }
 
     /**
@@ -46,7 +44,7 @@ class RolesController extends AdminBaseController
     public function create () {
         $component = 'RoleForm';
         $title = 'Create roles';
-        return view('admin.layouts.vue', compact('title', 'component'));
+        return component($component, compact('title'));
     }
 
     /**
@@ -70,7 +68,7 @@ class RolesController extends AdminBaseController
         $component = 'RoleForm';
 
 
-        return view('admin.layouts.vue', compact('title', 'entry', 'component'));
+        return component($component, compact('title', 'entry'));
     }
 
     /**
@@ -105,8 +103,8 @@ class RolesController extends AdminBaseController
         $data = $req->get('entry');
 
         $rules = [
-    //'role_name' => 'required|max:45',
-    //'role_description' => 'max:255',
+//    'role_name' => 'required|max:45',
+//    'role_description' => 'max:255',
 ];
 
         $v = Validator::make($data, $rules);
@@ -185,6 +183,13 @@ class RolesController extends AdminBaseController
 
         if ($req->keyword) {
             //$query->where('title', 'LIKE', '%' . $req->keyword. '%');
+            if ($req->role_name) {
+                $query->where('role_name',  $req->username);
+
+            }
+            if ($req->role_description) {
+                $query->where('role_description',  $req->email);
+            }
         }
 
         $query->createdIn($req->created);

@@ -150,6 +150,7 @@
             async save() {
                 this.$loading(true);
                 const res = await $post('/xadmin/inventories/save', {entry: this.entry}, false);
+                console.log(res);
                 this.$loading(false);
                 if (res.errors) {
                     this.errors = res.errors;

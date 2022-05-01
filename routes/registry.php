@@ -21,6 +21,11 @@
         'action' => 'PermissionsController',
         'name' => 'permissions',
     ],
+     [
+         'path' => '/roles/{action}',
+         'action' => 'RolesController',
+         'name' => 'roles',
+     ],
     [
         'path' => '/elfinder/{action}',
         'action' => 'ElfinderController',

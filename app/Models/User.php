@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\DB;
@@ -33,13 +34,10 @@ class User extends Authenticatable
      */
     protected $fillable = [
         'username',
-        'password',
         'full_name',
         'email',
         'description',
-        'sso_id',
-        'state'
-
+        'state',
     ];
 
     /**
@@ -114,5 +112,9 @@ WHERE p.`user_id`=?', [$this->id]);
         }
 
         return asset('/assets/avatar/?name=' . urlencode($this->name));
+    }
+
+    public function roles(){
+        return $this->belongsToMany(Role::class,'user_role');
     }
 }

@@ -5,6 +5,7 @@ namespace App\Models;
 
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Role extends BaseModel
 {
@@ -18,23 +19,23 @@ class Role extends BaseModel
         'role_description'
     ];
 
-    public function getAllowedRoutes()
-    {
-        $routes = $this->routes;
-
-        $routes = explode("\n", $routes);
-        $routes = array_map('trim', $routes);
-        $allowed = [];
-
-        foreach ($routes as $route) {
-            if (!$route) {
-                continue;
-            }
-
-            if ($route[0] !== '#') {
-                $allowed[] = $route;
-            }
-        }
-        return $allowed;
-    }
+//    public function getAllowedRoutes()
+//    {
+//        $routes = $this->routes;
+//
+//        $routes = explode("\n", $routes);
+//        $routes = array_map('trim', $routes);
+//        $allowed = [];
+//
+//        foreach ($routes as $route) {
+//            if (!$route) {
+//                continue;
+//            }
+//
+//            if ($route[0] !== '#') {
+//                $allowed[] = $route;
+//            }
+//        }
+//        return $allowed;
+//    }
 }
