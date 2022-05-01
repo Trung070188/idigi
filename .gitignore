@@ -18,8 +18,11 @@ yarn-error.log
 /public/css/app.css
 /public/assets/js/app.js
 /public/files/
+/public/js/admin/
 /public/media
 /package-lock.json
 
 /public/assets/css/all.min.css
 /public/assets/css/app.css
+/public/js/admin/uploadFile.js
+/public/js/admin

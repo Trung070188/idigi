@@ -21,10 +21,29 @@
         'action' => 'PermissionsController',
         'name' => 'permissions',
     ],
-
      [
-         'path' => '/elfinder/{action}',
-         'action' => 'ElfinderController',
-         'name' => 'elfinder',
+         'path' => '/roles/{action}',
+         'action' => 'RolesController',
+         'name' => 'roles',
      ],
+    [
+        'path' => '/elfinder/{action}',
+        'action' => 'ElfinderController',
+        'name' => 'elfinder',
+    ],
+    [
+        'path' => '/inventories/{action}',
+        'action' => 'InventoriesController',
+        'name' => 'inventories',
+    ],
+    [
+        'path' => '/lessons/{action}',
+        'action' => 'LessonsController',
+        'name' => 'lessons',
+    ],
+    [
+        'path' => '/schools/{action}',
+        'action' => 'SchoolsController',
+        'name' => 'schools',
+    ],
 ];

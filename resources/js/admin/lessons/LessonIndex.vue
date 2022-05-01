@@ -1,9 +1,8 @@
 <template>
     <div class="container-fluid" >
         <ActionBar type="index"
-                   createUrl="/xadmin/users/create"
                    :breadcrumbs="breadcrumbs"
-                   title="User"/>
+                   title="Lesson"/>
         <div class="row">
             <div class="col-lg-12">
                 <div class="card card-custom card-stretch gutter-b">
@@ -13,10 +12,9 @@
                             <div class="col-lg-12">
                                 <form class="form-inline">
                                     <div class="form-group mx-sm-3 mb-4">
-                                        <input @keydown.enter="doFilter('keyword', filter.keyword, $event)"
-                                               v-model="filter.keyword"
+                                        <input @keydown.enter="doFilter($event)" v-model="filter.keyword"
                                                type="text"
-                                               class="form-control" placeholder="Tìm kiếm" value="">
+                                               class="form-control" placeholder="tìm kiếm" value="">
                                     </div>
                                     <div class="form-group mx-sm-3 mb-2">
                                         <button type="button" style="margin-left: 10px"
@@ -35,29 +33,31 @@
                                         </button>
                                     </div>
 
-
                                 </form>
-
                                 <form class="col-lg-12" v-if="isShowFilter">
                                     <div class="row">
                                         <div class="form-group col-lg-3">
-                                            <label>Fullname </label>
-                                            <input class="form-control" placeholder="Enter the full name" v-model="filter.full_name"/>
+                                            <label>Subject </label>
+                                            <select class="form-control" v-model="filter.subject">
+                                                <option value="">-</option>
+                                                <option value="math">Maths</option>
+                                                <option value="science ">Science</option>
+                                            </select>
 
                                         </div>
                                         <div class="form-group col-lg-3">
-                                            <label>Email </label>
-                                            <input class="form-control" placeholder="Enter the email" v-model="filter.email">
-
-                                        </div>
-                                        <div class="form-group col-lg-3">
-                                            <label>Role </label>
-                                            <select class="form-control" v-model="filter.role_name" data-placeholder="Choose role" >
-
-                                                <option v-for="role in roles" v-bind:value="role.role_name" v-model="filter.role_name">
-                                                    {{role.role_name}}
-                                                </option>
-
+                                            <label>Grade </label>
+                                            <select class="form-control" v-model="filter.grade">
+                                                <option value="">-</option>
+                                                <option value="1">1</option>
+                                                <option value="2">2</option>
+                                                <option value="3">3</option>
+                                                <option value="4">4</option>
+                                                <option value="5">5</option>
+                                                <option value="6">6</option>
+                                                <option value="7">7</option>
+                                                <option value="8">8</option>
+                                                <option value="9">9</option>
                                             </select>
                                         </div>
                                     </div>
@@ -70,13 +70,13 @@
                                         <div class="form-group col-lg-3">
                                             <label>Active</label>
                                             <div>
-                                                <switch-button v-model="filter.state"></switch-button>
+                                                <switch-button v-model="filter.enabled"></switch-button>
                                             </div>
 
                                         </div>
                                     </div>
                                     <div style="margin: auto 0">
-                                        <button type="button" class="btn btn-primary" @click="doFilter()">Tìm kiếm</button>
+                                        <button type="button" class="btn btn-primary" @click="doFilter($event)">Tìm kiếm</button>
                                     </div>
                                 </form>
                             </div>
@@ -85,37 +85,34 @@
 
                     </div>
 
-                    <div class="card-body d-flex flex-column">
-                        <div v-text="'Showing '+ from +' to '+ to +' of '+ paginate.totalRecord +' entries'"
-                             v-if="entries.length > 0"></div>
+                    <div class="card-body d-flex flex-column" >
+                        <div class="d-flex">
+                            <div v-text="'Showing '+ from +' to '+ to +' of '+ paginate.totalRecord +' entries'" v-if="entries.length > 0"></div>
+                            <div style="margin-left: 20px" v-if="lessonIds.length > 0"> {{lessonIds.length}} lesson selected <a href="javascript:;" @click="removeAll" style="color: red; margin-left: 10px">clear all</a></div>
+                        </div>
                         <table class=" table  table-head-custom table-head-bg table-vertical-center">
                             <thead>
-                            <tr>
-                                <th>ID</th>
+                            <tr> <th><input type="checkbox" v-model="allSelected" @change="selectAll()"/> ID</th>
                                 <th>Name</th>
-                                <th>FullName</th>
-                                <th>Email</th>
-                                <th>Role</th>
-                                <th>Creation Date</th>
+                                <th>Grade</th>
+                                <th>Subject</th>
                                 <th>Active</th>
+                                <th>Creation Date</th>
                                 <th>Action</th>
                             </tr>
                             </thead>
                             <tbody>
-                            <tr v-for="entry in entries" >
-                                <td v-text="entry.id"></td>
-                                <td v-text="entry.username"></td>
-                                <td v-text="entry.full_name"></td>
-                                <td v-text="entry.email"></td>
-                                <td v-text="entry.role"></td>
+                            <tr v-for="entry in entries"  >
+                                <td ><input type="checkbox"  class="deleted" v-model="lessonIds" :value="entry.id" @change="updateCheckAll" /> {{entry.id}}</td>
+                                <td v-text="entry.name"></td>
+                                <td v-text="entry.grade"></td>
+                                <td v-text="entry.subject"></td>
+                                <td v-text="entry.enabled == 0 ? 'No' : 'Yes'"></td>
                                 <td v-text=" d(entry.created_at)"></td>
-                                <td v-text="entry.state===0 ? 'No' : 'Yes'"></td>
 
-
-                                <td>
-                                    <a :href="'/xadmin/users/edit?id='+entry.id" ><i style="font-size:1.3rem" class="fa fa-edit"></i></a>
-                                    <a @click="remove(entry)" href="javascript:;" class="btn-trash deleted"><i
-                                        class="fa fa-trash mr-1 deleted"></i></a>
+                                <td class="">
+<!--                                    <a :href="'/xadmin/lessons/edit?id='+entry.id" style="margin-right: 10px"><i style="font-size:1.3rem" class="fa fa-edit"></i></a>-->
+                                    <a @click="remove(entry)" href="javascript:;" class="btn-trash deleted"><i  class="fa fa-trash mr-1"></i></a>
                                 </td>
                             </tr>
                             </tbody>
@@ -151,26 +148,23 @@
 
 <script>
     import {$get, $post, getTimeRangeAll} from "../../utils";
-    import axios from 'axios';
     import $router from '../../lib/SimpleRouter';
     import ActionBar from "../includes/ActionBar";
-    import SwitchButton from "../../components/SwitchButton";
-
 
     let created = getTimeRangeAll();
     const $q = $router.getQuery();
 
     export default {
-        name: "UsersIndex.vue",
-        components: {ActionBar,SwitchButton},
+        name: "LessonsIndex.vue",
+        components: {ActionBar},
         data() {
             let isShowFilter = false;
             let filter = {
                 keyword: $q.keyword || '',
                 created: $q.created || '',
-                full_name: $q.full_name || '',
-                email: $q.email || '',
-                state: $q.state || '',
+                subject: $q.subject || '',
+                grade: $q.grade || '',
+                enabled: $q.enabled || ''
             };
             for (var key in filter) {
                 if (filter[key] != '') {
@@ -178,16 +172,16 @@
                 }
             }
             return {
-                isShowFilter: isShowFilter,
+                lessonIds: [],
+                allSelected: false,
                 breadcrumbs: [
                     {
-                        title: 'Users'
+                        title: 'Lessons'
                     },
                 ],
-                roles:$json.roles || [],
                 entries: [],
-                filter:filter,
-
+                filter: filter,
+                isShowFilter: isShowFilter,
                 limit: 25,
                 from: 0,
                 to: 0,
@@ -202,15 +196,32 @@
             $router.on('/', this.load).init();
         },
         methods: {
+             selectAll() {
+                if (this.allSelected) {
+                    const selected = this.entries.map((u) => u.id);
+                    this.lessonIds = selected;
+                } else {
+                    this.lessonIds = [];
+                }
+            },
+            updateCheckAll(){
+              if(this.lessonIds.length ===  this.entries.length){
+                  this.allSelected = true;
+              }else{
+                  this.allSelected = false;
+              }
+            },
+            edit: function (id, event){
+                if (!$(event.target).hasClass('deleted')){
+                    window.location.href='/xadmin/lessons/edit?id='+ id;
+                }
 
-            // edit: function (id, event){
-            //     if (!$(event.target).hasClass('deleted')) {
-            //         window.location.href = '/xadmin/users/edit?id=' + id;
-            //     }
-            // },
+            },
             async load() {
                 let query = $router.getQuery();
-                const res  = await $get('/xadmin/users/data', query);
+                this.$loading(true);
+                const res  = await $get('/xadmin/lessons/data', query);
+                this.$loading(false);
                 this.paginate = res.paginate;
                 this.entries = res.data;
                 this.from = (this.paginate.currentPage-1)*(this.limit) + 1;
@@ -221,7 +232,23 @@
                     return;
                 }
 
-                const res = await $post('/xadmin/users/remove', {id: entry.id});
+                const res = await $post('/xadmin/lessons/remove', {id: entry.id});
+
+                if (res.code) {
+                    toastr.error(res.message);
+                } else {
+                    toastr.success(res.message);
+                }
+
+                $router.updateQuery({page: this.paginate.currentPage, _: Date.now()});
+            },
+
+            async removeAll() {
+                if (!confirm('Xóa bản ghi: ' + JSON.stringify(this.lessonIds))) {
+                    return;
+                }
+
+                const res = await $post('/xadmin/lessons/removeAll', {ids: this.lessonIds});
 
                 if (res.code) {
                     toastr.error(res.message);
@@ -233,15 +260,16 @@
             },
 
             filterClear() {
-
-                for( var key in this.filter) {
+                for (var key in this.filter) {
                     this.filter[key] = '';
                 }
+
                 $router.setQuery({});
             },
-            doFilter() {
-                console.log(this.filter);
-
+            doFilter(event) {
+                if (event) {
+                    event.preventDefault();
+                }
                 $router.setQuery(this.filter)
             },
             changeLimit() {
@@ -252,7 +280,7 @@
             },
 
             async toggleStatus(entry) {
-                const res = await $post('/xadmin/users/toggleStatus', {
+                const res = await $post('/xadmin/lessons/toggleStatus', {
                     id: entry.id,
                     status: entry.status
                 });

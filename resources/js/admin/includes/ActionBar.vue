@@ -8,7 +8,7 @@
 
                 <ul class="breadcrumb breadcrumb-separatorless fw-bold fs-7 my-1">
                     <li class="breadcrumb-item text-muted">
-                        <a href="/xadmin" class="text-muted text-hover-primary">List</a>
+                        <a href="/xadmin" class="text-muted text-hover-primary">Home</a>
                     </li>
 
                     <template v-if="breadcrumbs" v-for="breadcrumb in breadcrumbs">
@@ -36,11 +36,11 @@
                     </div>
                 </div>
                 <div class="flex-1 text-right" v-else-if="type==='index'">
-                    <a :href="createUrl" class="btn btn-primary btn-sm" v-if="createUrl">
+                    <a :href="createUrl" class="btn btn-primary " v-if="createUrl">
                         Create new
                     </a>
 
-                    <a href="#" @click="createNew" class="btn btn-primary btn-sm" v-if="createWithFunction">
+                    <a href="#" @click="createNew" class="btn btn-primary " v-if="createWithFunction">
                         Create new
                     </a>
 

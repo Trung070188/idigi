@@ -22,7 +22,7 @@
 
                                     <div class="form-group mx-sm-3 mb-2">
                                         <button @click="filterClear()" type="button" v-on:click="clearFilter()"
-                                                class="btn btn-default btn-sm btn-clear">Xóa
+                                                class="btn btn-sm btn-flex btn-light  fw-bolder">Xóa
                                         </button>
                                     </div>
 
@@ -34,33 +34,47 @@
                     </div>
 
                     <div class="card-body d-flex flex-column" >
-                        <table class="table table-head-custom table-head-bg table-borderless table-vertical-center">
+                        <div v-text="'Showing '+ from +' to '+ to +' of '+ paginate.totalRecord +' entries'" v-if="entries.length > 0"></div>
+                        <table class=" table  table-head-custom table-head-bg table-vertical-center">
                             <thead>
                             <tr> <th>ID</th>
                                 @foreach ($fields as $field)
                                     <th>{{word_normalized($field)}}</th>
                                 @endforeach
-                                <th>Action</th>
+                                <th></th>
                             </tr>
                             </thead>
                             <tbody>
-                            <tr v-for="entry in entries">
-                                <td >
-                                    <a class="edit-link" :href="'{{$routePrefix}}/{{$table}}/edit?id='+entry.id"  v-text="entry.id"></a>
-                                </td>
+                            <tr v-for="entry in entries" @click="edit(entry.id, $event)">
+                                <td v-text="entry.id"></td>
                                 @foreach ($fields as $field)
                                     <td v-text="entry.{{$field}}"></td>
                                 @endforeach
 
                                 <td class="">
-                                    <a :href="'{{$routePrefix}}/{{$table}}/edit?id='+entry.id" class="btn "><i class="fa fa-edit"></i></a>
-                                    <a @click="remove(entry)" href="javascript:;" class="btn "><i class="fa fa-trash"></i></a>
+<!--                                    <a :href="'{{$routePrefix}}/{{$table}}/edit?id='+entry.id" style="margin-right: 10px"><i style="font-size:1.3rem" class="fa fa-edit"></i></a>-->
+                                    <a @click="remove(entry)" href="javascript:;" class="btn-trash deleted"><i  class="fa fa-trash mr-1"></i></a>
                                 </td>
                             </tr>
                             </tbody>
                         </table>
-                        <div style="margin-top:10px; ">
-                            <Paginate :value="paginate" :pagechange="onPageChange"></Paginate>
+                        <div style="margin-top:10px; display: flex">
+                            <div class="col-4 form-group d-inline-flex mt-2">
+                                <div class="mr-2">
+                                    <label>Records per page:</label>
+                                </div>
+                                <div>
+                                    <select class="form-select form-select-sm " v-model="limit" @change="changeLimit">
+                                        <option value="25">25</option>
+                                        <option value="50">50</option>
+                                        <option value="100">100</option>
+
+                                    </select>
+                                </div>
+                            </div>
+                            <div style="float: right">
+                                <Paginate :value="paginate" :pagechange="onPageChange"></Paginate>
+                            </div>
                         </div>
 
 
@@ -91,9 +105,13 @@
                     keyword: $q.keyword || '',
                     created: $q.created || created,
                 },
+                limit: 25,
+                from: 0,
+                to: 0,
                 paginate: {
                     currentPage: 1,
-                    lastPage: 1
+                    lastPage: 1,
+                    totalRecord: 0
                 }
             }
         },
@@ -101,11 +119,19 @@
             $router.on('/', this.load).init();
         },
         methods: {
+            edit: function (id, event){
+                if (!$(event.target).hasClass('deleted')){
+                    window.location.href='{{$routePrefix}}/{{$table}}/edit?id='+ id;
+                }
+
+            },
             async load() {
                 let query = $router.getQuery();
                 const res  = await $get('{{$routePrefix}}/{{$table}}/data', query);
                 this.paginate = res.paginate;
                 this.entries = res.data;
+                this.from = (this.paginate.currentPage-1)*(this.limit) + 1;
+                this.to = (this.paginate.currentPage-1)*(this.limit) + this.entries.length;
             },
             async remove(entry) {
                 if (!confirm('Xóa bản ghi: ' + entry.id)) {
@@ -138,6 +164,13 @@
                 params[field] = value;
                 $router.setQuery(params)
             },
+            changeLimit() {
+                let params = $router.getQuery();
+                params['page']=1;
+                params['limit'] = this.limit;
+                $router.setQuery(params)
+            },
+
             async toggleStatus(entry) {
                 const res = await $post('{{$routePrefix}}/{{$table}}/toggleStatus', {
                     id: entry.id,

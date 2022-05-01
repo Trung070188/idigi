@@ -26,6 +26,50 @@ return [
             ]
         ]
     ],
+    [
+        "name" => "Inventories",
+        "icon" => "fa fa-archive",
+        "group" => 1,
+        'url' => '/xadmin/inventories/index',
+    ],
+    [
+
+        "name" => "Users, Roles, Permissions",
+        "icon" => "fa fa-users",
+        "group" => 1,
+        'base' => '/xadmin/users',
+        'subs' => [
+            [
+                "name" => "User",
+                "icon" => "fa fa-plus",
+                "url" => "/xadmin/users/index",
+                "group" => 1,
+            ],
+            [
+                "name" => "Role",
+                "icon" => "fa fa-plus",
+                "url" => "/xadmin/roles/index",
+                "group" => 1,
+            ],
+            [
+            "name" => "Permissions",
+            "icon" => "fa fa-plus",
+            "url" => "/xadmin/users/create",
+            "group" => 1,
+        ],
+        ],
+
+        "name" => "Lesson",
+        "icon" => "fa fa-book-open",
+        "group" => 1,
+        'url' => '/xadmin/lessons/index',
+    ],
+
+    [
+        "name" => "School",
+        "icon" => "fa fa-school",
+        'url' => '/xadmin/schools/index',
+    ],
 
     [
         "name" => "System",

@@ -11,8 +11,8 @@
  * @private
  */
 function _middlewareCall(arr, index, param, done) {
-    if (index <= arr.length - 1) {
-        arr[index](param, function() {
+    if (index <= arr.length -1) {
+        arr[index](param, function () {
             index++;
             _middlewareCall(arr, index, param, done)
         });
@@ -21,7 +21,7 @@ function _middlewareCall(arr, index, param, done) {
     }
 }
 
-function SimpleRouter() {
+function SimpleRouter()  {
 
     this.routeCollections = [];
     this.notFounds = [];
@@ -42,7 +42,7 @@ function SimpleRouter() {
      */
     this.on = function(path, callback) {
         if (Array.isArray(path)) {
-            for (var i = 0; i < path.length; i++) {
+            for (var i  = 0; i < path.length; i++) {
                 this.on(path[i], callback);
             }
             return;
@@ -50,11 +50,11 @@ function SimpleRouter() {
         var routeKeys = [];
         var keyExists = {};
 
-        var regExp = path.replace(/\{\w+\}/g, function(match, contents, s, offset) {
+        var regExp = path.replace(/\{\w+\}/g, function (match, contents, s, offset) {
             var key = match.replace(/^\{/, '').replace(/\}$/, '');
             if (keyExists.hasOwnProperty(key)) {
                 keyExists[key] = true;
-                throw new Error("Duplicate router key: {" + key + "}")
+                throw new Error("Duplicate router key: {" + key + "}" )
             }
             routeKeys.push(key);
             return '([^/]+)';
@@ -85,7 +85,7 @@ function SimpleRouter() {
                     routeParams[e.routeKeys[k]] = match[k + 1];
                 }
 
-                if (this.middleware.length > 0) {
+                if (this.middleware.length > 0 ) {
                     _middlewareCall(this.middleware, 0, routeParams, function() {
                         e.callback(routeParams, query);
                     });
@@ -99,29 +99,14 @@ function SimpleRouter() {
             }
         }
 
-        this.notFounds.forEach(function(cb) {
+        this.notFounds.forEach(function (cb) {
             cb();
         });
 
     }
 
     this.getQuery = function() {
-        var qs = (function(a) {
-            if (a == "") return {};
-            var b = {};
-            for (var i = 0; i < a.length; ++i) {
-                var p = a[i].split('=', 2);
-                if (p.length == 1)
-                    b[p[0]] = "";
-                else
-                    b[p[0]] = decodeURIComponent(p[1].replace(/\+/g, " "));
-            }
-            return b;
-        })(window.location.search.substr(1).split('&'));
-
-        return {...qs };
-
-        /*var uriParts = location.hash.substr(1).split('?');
+        var uriParts = location.hash.substr(1).split('?');
         if (uriParts.length === 1) {
             return {};
         }
@@ -129,14 +114,15 @@ function SimpleRouter() {
         var a = uriParts[1].split('&');
         if (a == "") return {};
         var b = {};
-        for (var i = 0; i < a.length; ++i) {
-            var p = a[i].split('=', 2);
+        for (var i = 0; i < a.length; ++i)
+        {
+            var p=a[i].split('=', 2);
             if (p.length == 1)
                 b[p[0]] = "";
             else
                 b[p[0]] = decodeURIComponent(p[1].replace(/\+/g, " "));
         }
-        return b;*/
+        return b;
     }
 
     function buildQuery(data) {
@@ -144,28 +130,28 @@ function SimpleRouter() {
             return '';
         }
         let queries = [];
-        for (let k in data) {
+        for ( let k in data) {
             if (data.hasOwnProperty(k)) {
-                queries.push(k + '=' + encodeURIComponent(data[k]));
+                queries.push( k + '=' +encodeURIComponent(data[k]));
             }
         }
         return queries.join('&');
     }
 
-    this.setQuery = function(data, overwrite) {
-        return this.path(this.path().split('?')[0] + '?' + buildQuery(data));
+    this.setQuery = function (data, overwrite) {
+        return this.path(this.path().split('?')[0] +'?'+ buildQuery(data));
     }
 
-    this.updateQuery = function(data) {
+    this.updateQuery = function (data) {
         var currentQuery = this.getQuery();
         var queries = [];
-        for (var k in data) {
+        for ( var k in data) {
             if (data.hasOwnProperty(k)) {
                 currentQuery[k] = data[k];
             }
         }
 
-        return this.path(this.path().split('?')[0] + '?' + buildQuery(currentQuery));
+        return this.path(this.path().split('?')[0] +'?'+ buildQuery(currentQuery));
     }
 
     this.init = function() {
@@ -178,7 +164,7 @@ function SimpleRouter() {
         this.dispatch(uri);
         var self = this;
 
-        window.addEventListener('hashchange', function() {
+        window.addEventListener('hashchange', function(){
             var uriParts = location.hash.substr(1).split('?');
             var uri = uriParts[0];
             if (!uri) {
@@ -186,7 +172,7 @@ function SimpleRouter() {
             }
             self.dispatch(uri);
         });
-        // self.dispatch(uri);
+       // self.dispatch(uri);
 
     };
 
@@ -201,4 +187,4 @@ function SimpleRouter() {
 
 const $router = new SimpleRouter();
 
-export default $router;
+export  default  $router;

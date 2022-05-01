@@ -7,9 +7,7 @@
         <div class="row">
             <div class="col-lg-12">
                 <div class="card card-custom card-stretch gutter-b">
-
                     <div class="card-body d-flex flex-column" >
-
                         <div class="row">
                             <div class="col-lg-12">
                                 <input v-model="entry.id" type="hidden" name="id" value="">
@@ -24,16 +22,15 @@
                                 @endforeach
 
                             </div>
-
-
                         </div>
-
-
+                        <hr>
+                        <div >
+                            <button type="reset" @click="save()" class="btn btn-primary mr-2">Save</button>
+                            <button type="reset" @click="backIndex()" class="btn btn-secondary">Cancel</button>
+                        </div>
                     </div>
                 </div>
             </div>
-
-
         </div>
     </div>
 
@@ -54,6 +51,9 @@
             }
         },
         methods: {
+            backIndex(){
+                window.location.href = '{{$routePrefix}}/{{$table}}/index';
+            },
             async save() {
                 this.isLoading = true;
                 const res = await $post('{{$routePrefix}}/{{$table}}/save', {entry: this.entry}, false);

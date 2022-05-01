@@ -48,11 +48,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
-//
-//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: "UploadFile",
   props: ['value', 'check', 'type'],
@@ -238,58 +233,21 @@ var render = function() {
   return _c("div", { ref: "root" }, [
     _c("div", {}, [
       _c("div", { staticClass: "input-group" }, [
-        _c("input", {
-          directives: [
-            {
-              name: "model",
-              rawName: "v-model",
-              value: _vm.value,
-              expression: "value"
-            }
-          ],
-          staticClass: "form-control",
-          attrs: { type: "text", readonly: "" },
-          domProps: { value: _vm.value },
-          on: {
-            input: function($event) {
-              if ($event.target.composing) {
-                return
-              }
-              _vm.value = $event.target.value
-            }
-          }
-        }),
-        _vm._v(" "),
         _c("span", { staticClass: "input-group-append" }, [
           _c(
             "button",
             {
-              staticClass: "btn btn-light ",
+              staticClass: "btn btn-primary ",
               attrs: { type: "button" },
               on: { click: _vm.openElfinder }
             },
-            [_c("i", { staticClass: "la la-cloud-upload" }), _vm._v(" Browse")]
-          ),
-          _vm._v(" "),
-          _c(
-            "button",
-            {
-              staticClass: "btn btn-light  clear_elfinder_picker",
-              attrs: { type: "button" },
-              on: { click: _vm.clearInput }
-            },
-            [_c("i", { staticClass: "la la-eraser" }), _vm._v(" Clear")]
+            [
+              _c("i", { staticClass: "la la-cloud-upload" }),
+              _vm._v(" Chọn file")
+            ]
           )
         ])
-      ]),
-      _vm._v(" "),
-      _vm.value && _vm.type == "image"
-        ? _c("div", { staticClass: "well well-sm" }, [
-            _c("img", {
-              attrs: { width: "100px", height: "100px", src: _vm.value }
-            })
-          ])
-        : _vm._e()
+      ])
     ]),
     _vm._v(" "),
     _c("div", [

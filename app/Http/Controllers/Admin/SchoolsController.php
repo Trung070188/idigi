@@ -3,99 +3,85 @@
 namespace App\Http\Controllers\Admin;
 
 
-use App\Models\Role;
-use App\Models\UserRole;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
-use App\Models\User;
+use App\Models\School;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
 
-class UsersController extends AdminBaseController
+class SchoolsController extends AdminBaseController
 {
     public static $menus = [
         [
-            'name' => 'User',
+            'name' => 'School',
             'icon' => 'fa fa-shopping-cart',
-            'url' => '/xadmin/users/index',
+            'url' => '/xadmin/schools/index',
         ]
     ];
 
     /**
      * Index page
-     * @uri  /xadmin/users/index
+     * @uri  /xadmin/schools/index
      * @throw  NotFoundHttpException
      * @return  View
      */
-    public function index(Request $request) {
-        $title = 'Users';
-        $component = 'UserIndex';
-        $roles=Role::query()->orderBy('role_name')->get();
-        $jsonData=[
-          'roles'=>$roles
-        ];
-
-
-//        dd($entry);
-
-
-        return view('admin.layouts.vue', compact('title','component','jsonData'));
+    public function index()
+    {
+        $title = 'School';
+        $component = 'SchoolIndex';
+        return component($component, compact('title'));
     }
 
     /**
      * Create new entry
-     * @uri  /xadmin/users/create
+     * @uri  /xadmin/schools/create
      * @throw  NotFoundHttpException
      * @return  View
      */
-    public function create (Request $req) {
-        $component = 'UserForm';
-        $title = 'Create users';
-        $roles=Role::query()->orderBy('role_name')->get();
-        $jsonData=[
-            'roles'=>$roles
-        ];
-
-        return view('admin.layouts.vue', compact('title','component','jsonData'));
+    public function create(Request $req)
+    {
+        $component = 'SchoolForm';
+        $title = 'Create schools';
+        return component($component, compact('title'));
     }
 
     /**
-     * @uri  /xadmin/users/edit?id=$id
+     * @uri  /xadmin/schools/edit?id=$id
      * @throw  NotFoundHttpException
      * @return  View
      */
-    public function edit (Request $req) {
+    public function edit(Request $req)
+    {
         $id = $req->id;
-        $entry = User::find($id);
+        $entry = School::find($id);
 
         if (!$entry) {
             throw new NotFoundHttpException();
         }
 
         /**
-         * @var  User $entry
+         * @var  School $entry
          */
+
         $title = 'Edit';
-        $component = 'UserForm';
-        $roles=Role::query()->orderBy('role_name')->get();
-        $jsonData=[
-            'entry'=>$entry,
-            'roles'=>$roles
-        ];
-        return view('admin.layouts.vue', compact('title','component','jsonData'));
+        $component = 'SchoolForm';
+
+
+        return component($component, compact('title', 'entry'));
     }
 
     /**
-     * @uri  /xadmin/users/remove
+     * @uri  /xadmin/schools/remove
      * @return  array
      */
-    public function remove(Request $req) {
+    public function remove(Request $req)
+    {
         $id = $req->id;
-        $entry = User::find($id);
+        $entry = School::find($id);
 
         if (!$entry) {
             throw new NotFoundHttpException();
@@ -110,22 +96,26 @@ class UsersController extends AdminBaseController
     }
 
     /**
-     * @uri  /xadmin/users/save
+     * @uri  /xadmin/schools/save
      * @return  array
      */
-    public function save(Request $req) {
+    public function save(Request $req)
+    {
         if (!$req->isMethod('POST')) {
             return ['code' => 405, 'message' => 'Method not allow'];
         }
+
         $data = $req->get('entry');
 
         $rules = [
-            'username' => 'required|max:191',
-            'email' => 'required|max:191',
-//            'last_login' => 'date_format:Y-m-d H:i:s',
-//            'avatar' => 'max:191',
-//            'birthday' => 'date_format:Y-m-d',
-//            'phone' => 'max:11',
+            'school_name' => 'required|max:45',
+            'school_address' => 'required|max:255',
+            'school_email' => 'required|max:45|email',
+            'school_phone' => 'required|max:45',
+            'license_to' => 'required',
+            'license_info' => 'max:1000',
+            'number_of_users' => 'required|integer|min:1',
+            'devices_per_user' => 'required|integer|min:1',
         ];
 
         $v = Validator::make($data, $rules);
@@ -136,45 +126,47 @@ class UsersController extends AdminBaseController
                 'errors' => $v->errors()
             ];
         }
-        $data['state'] = ($data['state'] == 'true' || $data['state'] == 1) ? 1 : 0;
 
         /**
-         * @var  User $entry
+         * @var  School $entry
          */
         if (isset($data['id'])) {
-            $entry = User::find($data['id']);
+            $entry = School::find($data['id']);
             if (!$entry) {
                 return [
                     'code' => 3,
                     'message' => 'Không tìm thấy',
                 ];
             }
+
             $entry->fill($data);
             $entry->save();
+
             return [
                 'code' => 0,
                 'message' => 'Đã cập nhật',
-                'id' => $entry->id,
+                'id' => $entry->id
             ];
         } else {
-            $entry = new User();
+            $entry = new School();
             $entry->fill($data);
             $entry->save();
+
             return [
                 'code' => 0,
                 'message' => 'Đã thêm',
-                'id' => $entry->id,
+                'id' => $entry->id
             ];
         }
     }
 
     /**
-     * @param  Request $req
+     * @param Request $req
      */
     public function toggleStatus(Request $req)
     {
         $id = $req->get('id');
-        $entry = User::find($id);
+        $entry = School::find($id);
 
         if (!$id) {
             return [
@@ -194,83 +186,55 @@ class UsersController extends AdminBaseController
 
     /**
      * Ajax data for index page
-     * @uri  /xadmin/users/data
+     * @uri  /xadmin/schools/data
      * @return  array
      */
-    public function data(Request $req) {
-        $query = User::query()
-            ->with(['roles'])
-            ->orderBy('id', 'desc');
+    public function data(Request $req)
+    {
+        $query = School::query()->orderBy('id', 'desc');
+
         if ($req->keyword) {
-            $query->where('name', 'LIKE', '%' . $req->keyword. '%');
-        }
-        if ($req->username) {
-            $query->where('username',  $req->username);
-
-        }
-        if ($req->email) {
-            $query->where('email',  $req->email);
-        }
-        if ($req->full_name) {
-            $query->where('full_name',  $req->full_name);
-        }
-        if ($req->state) {
-            $query->where('state',  $req->state);
+            $query->where('school_name', 'LIKE', '%' . $req->keyword. '%');
         }
 
-        $query->createdIn($req->created);
-        $entries = $query->paginate();
-
-        $users  = $entries->items();
-        $data = [];
-
-        foreach ($users as $user){
-            $roles = $user->roles;
-
-            $roleNames = [];
-
-            if($roles){
-                foreach($roles as $role){
-                    $roleNames[] = $role->role_name;
-                }
-            }
-
-
-            $data[] = [
-                'role' => implode(', ', $roleNames),
-                'id'=>$user->id,
-                'username' => $user->username,
-                'full_name' => $user->full_name,
-                'email' => $user->email,
-                'created_at' => $user->created_at
-            ];
+        if ($req->school_name) {
+            $query->where('school_name', 'LIKE', '%' . $req->school_name. '%');
         }
+
+        $limit = 25;
+
+        if($req->limit){
+            $limit = $req->limit;
+        }
+
+        $entries = $query->paginate($limit);
 
         return [
-            'roles'=>$roles,
             'code' => 0,
-            'data' =>$data,
+            'data' => $entries->items(),
             'paginate' => [
                 'currentPage' => $entries->currentPage(),
                 'lastPage' => $entries->lastPage(),
-                'totalRecord' => $entries->count(),
+                'totalRecord' => $entries->count()
             ]
         ];
     }
 
-    public function export() {
+    public function export()
+    {
         $keys = [
-            'username' => ['A', 'username'],
-            'password' => ['B', 'password'],
-            'full_name' => ['C', 'full_name'],
-            'email' => ['D', 'email'],
-            'description' => ['E', 'description'],
-            'sso_id' => ['F', 'sso_id'],
-            'state' => ['G', 'state'],
-            'remember_token' => ['H', 'remember_token'],
+            'school_name' => ['A', 'school_name'],
+            'school_address' => ['B', 'school_address'],
+            'school_email' => ['C', 'school_email'],
+            'school_phone' => ['D', 'school_phone'],
+            'license_info' => ['E', 'license_info'],
+            'license_to' => ['F', 'license_to'],
+            'license_state' => ['G', 'license_state'],
+            'number_of_users' => ['H', 'number_of_users'],
+            'devices_per_user' => ['I', 'devices_per_user'],
         ];
 
-        $query = User::query()->orderBy('id', 'desc');
+        $query = School::query()->orderBy('id', 'desc');
 
         $entries = $query->paginate();
         $spreadsheet = new Spreadsheet();

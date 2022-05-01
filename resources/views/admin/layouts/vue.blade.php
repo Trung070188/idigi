@@ -23,8 +23,29 @@
 		<link href="/themes/admin/assets/css/style.bundle.css" rel="stylesheet" type="text/css" />
         <link href="/assets/plugins/ion-rangeslider/css/ion.rangeSlider.css" rel="stylesheet">
         <link href="/assets/plugins/ion-rangeslider/css/ion.rangeSlider.skinFlat.css" rel="stylesheet">
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet">
+        <link href="{{ asset('/assets/css/viewer.min.css') }}" rel="stylesheet" type="text/css" />
+        <link href="{{ asset('assets/css/style.bundle.css') }}" rel="stylesheet" type="text/css" />
         <link rel="stylesheet" href="/assets/css/jquery-ui.css">
         <link rel="stylesheet" href="/assets/css/style.css">
+        <style>
+            .btn-trash i{
+                font-size: 1.3rem;
+            }
+            .breadcrumb{
+                background:unset;
+            }
+            .table-head-bg{
+                border-top: 1px solid #d5cfcf;
+                border-bottom: 1px solid #d5cfcf;
+            }
+            .table td:first-child, .table th:first-child, .table tr:first-child{
+                padding-left: 0.75rem;
+            }
+            .form-group label{
+                font-weight: 700;
+            }
+        </style>
 
         <!--end::Layout Themes-->
         <script>
@@ -70,6 +91,7 @@
         <script src="/assets/plugins/ckeditor/plugins/codesnippet/lib/highlight/highlight.pack.js"></script>
         <script src="/assets/plugins/ion-rangeslider/js/ion.rangeSlider.js"></script>
         <script src="/assets/js/jquery-ui.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
         <script type="text/javascript" src="{{ asset('packages/barryvdh/elfinder/js/elfinder.min.js') }}"></script>
         <link rel="stylesheet" type="text/css" href="{{ asset('packages/barryvdh/elfinder/css/elfinder.min.css') }}">
         <link rel="stylesheet" type="text/css" href="{{ asset('packages/barryvdh/elfinder/css/theme.css') }}">

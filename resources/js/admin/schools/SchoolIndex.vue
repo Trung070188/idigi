@@ -1,9 +1,9 @@
 <template>
     <div class="container-fluid" >
         <ActionBar type="index"
-                   createUrl="/xadmin/users/create"
+                   createUrl="/xadmin/schools/create"
                    :breadcrumbs="breadcrumbs"
-                   title="User"/>
+                   title="School"/>
         <div class="row">
             <div class="col-lg-12">
                 <div class="card card-custom card-stretch gutter-b">
@@ -13,7 +13,7 @@
                             <div class="col-lg-12">
                                 <form class="form-inline">
                                     <div class="form-group mx-sm-3 mb-4">
-                                        <input @keydown.enter="doFilter('keyword', filter.keyword, $event)"
+                                        <input @keydown.enter="doFilter($event)"
                                                v-model="filter.keyword"
                                                type="text"
                                                class="form-control" placeholder="Tìm kiếm" value="">
@@ -41,42 +41,15 @@
                                 <form class="col-lg-12" v-if="isShowFilter">
                                     <div class="row">
                                         <div class="form-group col-lg-3">
-                                            <label>Fullname </label>
-                                            <input class="form-control" placeholder="Enter the full name" v-model="filter.full_name"/>
+                                            <label>School name </label>
+                                            <input class="form-control" type="text" placeholder="Enter your school name" v-model="filter.school_name"/>
 
                                         </div>
-                                        <div class="form-group col-lg-3">
-                                            <label>Email </label>
-                                            <input class="form-control" placeholder="Enter the email" v-model="filter.email">
 
-                                        </div>
-                                        <div class="form-group col-lg-3">
-                                            <label>Role </label>
-                                            <select class="form-control" v-model="filter.role_name" data-placeholder="Choose role" >
-
-                                                <option v-for="role in roles" v-bind:value="role.role_name" v-model="filter.role_name">
-                                                    {{role.role_name}}
-                                                </option>
-
-                                            </select>
-                                        </div>
                                     </div>
-                                    <div class="row">
-                                        <div class="form-group col-lg-3">
-                                            <label>Ngày tạo </label>
-                                            <Daterangepicker v-model="filter.created"
-                                                             placeholder="Ngày tạo"></Daterangepicker>
-                                        </div>
-                                        <div class="form-group col-lg-3">
-                                            <label>Active</label>
-                                            <div>
-                                                <switch-button v-model="filter.state"></switch-button>
-                                            </div>
 
-                                        </div>
-                                    </div>
                                     <div style="margin: auto 0">
-                                        <button type="button" class="btn btn-primary" @click="doFilter()">Tìm kiếm</button>
+                                        <button type="button" class="btn btn-primary" @click="doFilter($event)">Tìm kiếm</button>
                                     </div>
                                 </form>
                             </div>
@@ -85,37 +58,33 @@
 
                     </div>
 
-                    <div class="card-body d-flex flex-column">
-                        <div v-text="'Showing '+ from +' to '+ to +' of '+ paginate.totalRecord +' entries'"
-                             v-if="entries.length > 0"></div>
+                    <div class="card-body d-flex flex-column" >
+                        <div v-text="'Showing '+ from +' to '+ to +' of '+ paginate.totalRecord +' entries'" v-if="entries.length > 0"></div>
                         <table class=" table  table-head-custom table-head-bg table-vertical-center">
                             <thead>
-                            <tr>
-                                <th>ID</th>
-                                <th>Name</th>
-                                <th>FullName</th>
-                                <th>Email</th>
-                                <th>Role</th>
-                                <th>Creation Date</th>
-                                <th>Active</th>
-                                <th>Action</th>
+                            <tr> <th>ID</th>
+                                <th>School Name</th>
+                                <th>School Address</th>
+                                <th>No Of Users</th>
+                                <th>Devices Per User</th>
+                                <th>Region/City</th>
+                                <th>License State</th>
+                            <th>Action</th>
                             </tr>
                             </thead>
                             <tbody>
-                            <tr v-for="entry in entries" >
+                            <tr v-for="entry in entries">
                                 <td v-text="entry.id"></td>
-                                <td v-text="entry.username"></td>
-                                <td v-text="entry.full_name"></td>
-                                <td v-text="entry.email"></td>
-                                <td v-text="entry.role"></td>
-                                <td v-text=" d(entry.created_at)"></td>
-                                <td v-text="entry.state===0 ? 'No' : 'Yes'"></td>
+                                <td v-text="entry.school_name"></td>
+                                <td v-text="entry.school_address"></td>
+                                <td v-text="entry.number_of_users"></td>
+                                <td v-text="entry.devices_per_user"></td>
+                                <td ></td>
+                                <td v-text="entry.license_state"></td>
 
-
-                                <td>
-                                    <a :href="'/xadmin/users/edit?id='+entry.id" ><i style="font-size:1.3rem" class="fa fa-edit"></i></a>
-                                    <a @click="remove(entry)" href="javascript:;" class="btn-trash deleted"><i
-                                        class="fa fa-trash mr-1 deleted"></i></a>
+                                <td class="">
+                                    <a :href="'/xadmin/schools/edit?id='+entry.id" style="margin-right: 10px"><i style="font-size:1.3rem" class="fa fa-edit"></i></a>
+                                    <a @click="remove(entry)" href="javascript:;" class="btn-trash deleted"><i  class="fa fa-trash mr-1"></i></a>
                                 </td>
                             </tr>
                             </tbody>
@@ -151,26 +120,20 @@
 
 <script>
     import {$get, $post, getTimeRangeAll} from "../../utils";
-    import axios from 'axios';
     import $router from '../../lib/SimpleRouter';
     import ActionBar from "../includes/ActionBar";
-    import SwitchButton from "../../components/SwitchButton";
-
 
     let created = getTimeRangeAll();
     const $q = $router.getQuery();
 
     export default {
-        name: "UsersIndex.vue",
-        components: {ActionBar,SwitchButton},
+        name: "SchoolsIndex.vue",
+        components: {ActionBar},
         data() {
             let isShowFilter = false;
             let filter = {
                 keyword: $q.keyword || '',
-                created: $q.created || '',
-                full_name: $q.full_name || '',
-                email: $q.email || '',
-                state: $q.state || '',
+                school_name: $q.school_name || ''
             };
             for (var key in filter) {
                 if (filter[key] != '') {
@@ -178,16 +141,14 @@
                 }
             }
             return {
-                isShowFilter: isShowFilter,
                 breadcrumbs: [
                     {
-                        title: 'Users'
+                        title: 'Schools'
                     },
                 ],
-                roles:$json.roles || [],
                 entries: [],
-                filter:filter,
-
+                isShowFilter: isShowFilter,
+                filter: filter,
                 limit: 25,
                 from: 0,
                 to: 0,
@@ -202,15 +163,17 @@
             $router.on('/', this.load).init();
         },
         methods: {
+            edit: function (id, event){
+                if (!$(event.target).hasClass('deleted')){
+                    window.location.href='/xadmin/schools/edit?id='+ id;
+                }
 
-            // edit: function (id, event){
-            //     if (!$(event.target).hasClass('deleted')) {
-            //         window.location.href = '/xadmin/users/edit?id=' + id;
-            //     }
-            // },
+            },
             async load() {
                 let query = $router.getQuery();
-                const res  = await $get('/xadmin/users/data', query);
+                this.$loading(true);
+                const res  = await $get('/xadmin/schools/data', query);
+                this.$loading(false);
                 this.paginate = res.paginate;
                 this.entries = res.data;
                 this.from = (this.paginate.currentPage-1)*(this.limit) + 1;
@@ -221,7 +184,7 @@
                     return;
                 }
 
-                const res = await $post('/xadmin/users/remove', {id: entry.id});
+                const res = await $post('/xadmin/schools/remove', {id: entry.id});
 
                 if (res.code) {
                     toastr.error(res.message);
@@ -231,17 +194,17 @@
 
                 $router.updateQuery({page: this.paginate.currentPage, _: Date.now()});
             },
-
             filterClear() {
-
-                for( var key in this.filter) {
+                for (var key in this.filter) {
                     this.filter[key] = '';
                 }
+
                 $router.setQuery({});
             },
-            doFilter() {
-                console.log(this.filter);
-
+            doFilter(event) {
+                if (event) {
+                    event.preventDefault();
+                }
                 $router.setQuery(this.filter)
             },
             changeLimit() {
@@ -252,7 +215,7 @@
             },
 
             async toggleStatus(entry) {
-                const res = await $post('/xadmin/users/toggleStatus', {
+                const res = await $post('/xadmin/schools/toggleStatus', {
                     id: entry.id,
                     status: entry.status
                 });

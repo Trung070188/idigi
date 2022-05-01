@@ -3,99 +3,85 @@
 namespace App\Http\Controllers\Admin;
 
 
-use App\Models\Role;
-use App\Models\UserRole;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
-use App\Models\User;
+use App\Models\Inventory;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
 
-class UsersController extends AdminBaseController
+class InventoriesController extends AdminBaseController
 {
     public static $menus = [
         [
-            'name' => 'User',
+            'name' => 'Inventory',
             'icon' => 'fa fa-shopping-cart',
-            'url' => '/xadmin/users/index',
+            'url' => '/xadmin/inventories/index',
         ]
     ];
 
     /**
      * Index page
-     * @uri  /xadmin/users/index
+     * @uri  /xadmin/inventories/index
      * @throw  NotFoundHttpException
      * @return  View
      */
-    public function index(Request $request) {
-        $title = 'Users';
-        $component = 'UserIndex';
-        $roles=Role::query()->orderBy('role_name')->get();
-        $jsonData=[
-          'roles'=>$roles
-        ];
-
-
-//        dd($entry);
-
-
-        return view('admin.layouts.vue', compact('title','component','jsonData'));
+    public function index()
+    {
+        $title = 'Inventory';
+        $component = 'InventoryIndex';
+        return component($component, compact('title'));
     }
 
     /**
      * Create new entry
-     * @uri  /xadmin/users/create
+     * @uri  /xadmin/inventories/create
      * @throw  NotFoundHttpException
      * @return  View
      */
-    public function create (Request $req) {
-        $component = 'UserForm';
-        $title = 'Create users';
-        $roles=Role::query()->orderBy('role_name')->get();
-        $jsonData=[
-            'roles'=>$roles
-        ];
-
-        return view('admin.layouts.vue', compact('title','component','jsonData'));
+    public function create(Request $req)
+    {
+        $component = 'InventoryForm';
+        $title = 'Create inventories';
+        return component($component, compact('title'));
     }
 
     /**
-     * @uri  /xadmin/users/edit?id=$id
+     * @uri  /xadmin/inventories/edit?id=$id
      * @throw  NotFoundHttpException
      * @return  View
      */
-    public function edit (Request $req) {
+    public function edit(Request $req)
+    {
         $id = $req->id;
-        $entry = User::find($id);
+        $entry = Inventory::find($id);
 
         if (!$entry) {
             throw new NotFoundHttpException();
         }
 
         /**
-         * @var  User $entry
+         * @var  Inventory $entry
          */
+
         $title = 'Edit';
-        $component = 'UserForm';
-        $roles=Role::query()->orderBy('role_name')->get();
-        $jsonData=[
-            'entry'=>$entry,
-            'roles'=>$roles
-        ];
-        return view('admin.layouts.vue', compact('title','component','jsonData'));
+        $component = 'InventoryForm';
+
+
+        return component($component, compact('title', 'entry'));
     }
 
     /**
-     * @uri  /xadmin/users/remove
+     * @uri  /xadmin/inventories/remove
      * @return  array
      */
-    public function remove(Request $req) {
+    public function remove(Request $req)
+    {
         $id = $req->id;
-        $entry = User::find($id);
+        $entry = Inventory::find($id);
 
         if (!$entry) {
             throw new NotFoundHttpException();
@@ -110,22 +96,27 @@ class UsersController extends AdminBaseController
     }
 
     /**
-     * @uri  /xadmin/users/save
+     * @uri  /xadmin/inventories/save
      * @return  array
      */
-    public function save(Request $req) {
+    public function save(Request $req)
+    {
         if (!$req->isMethod('POST')) {
             return ['code' => 405, 'message' => 'Method not allow'];
         }
+
         $data = $req->get('entry');
 
         $rules = [
-            'username' => 'required|max:191',
-            'email' => 'required|max:191',
-//            'last_login' => 'date_format:Y-m-d H:i:s',
-//            'avatar' => 'max:191',
-//            'birthday' => 'date_format:Y-m-d',
-//            'phone' => 'max:11',
+            'image' => 'max:255',
+            'name' => 'max:255|required',
+            'physical_path' => 'max:2000',
+            'subject' => 'max:255|required',
+            'type' => 'max:255|required',
+            'grade' => 'max:255|required',
+            'virtual_path' => 'max:255',
+            'link_webview' => 'max:255',
+            'tags' => 'max:1000',
         ];
 
         $v = Validator::make($data, $rules);
@@ -136,45 +127,48 @@ class UsersController extends AdminBaseController
                 'errors' => $v->errors()
             ];
         }
-        $data['state'] = ($data['state'] == 'true' || $data['state'] == 1) ? 1 : 0;
+        $data['enabled'] = ($data['enabled'] == 'true' || $data['enabled'] == 1) ? 1 : 0;
 
         /**
-         * @var  User $entry
+         * @var  Inventory $entry
          */
         if (isset($data['id'])) {
-            $entry = User::find($data['id']);
+            $entry = Inventory::find($data['id']);
             if (!$entry) {
                 return [
                     'code' => 3,
                     'message' => 'Không tìm thấy',
                 ];
             }
+
             $entry->fill($data);
             $entry->save();
+
             return [
                 'code' => 0,
                 'message' => 'Đã cập nhật',
-                'id' => $entry->id,
+                'id' => $entry->id
             ];
         } else {
-            $entry = new User();
+            $entry = new Inventory();
             $entry->fill($data);
             $entry->save();
+
             return [
                 'code' => 0,
                 'message' => 'Đã thêm',
-                'id' => $entry->id,
+                'id' => $entry->id
             ];
         }
     }
 
     /**
-     * @param  Request $req
+     * @param Request $req
      */
     public function toggleStatus(Request $req)
     {
         $id = $req->get('id');
-        $entry = User::find($id);
+        $entry = Inventory::find($id);
 
         if (!$id) {
             return [
@@ -194,62 +188,40 @@ class UsersController extends AdminBaseController
 
     /**
      * Ajax data for index page
-     * @uri  /xadmin/users/data
+     * @uri  /xadmin/inventories/data
      * @return  array
      */
-    public function data(Request $req) {
-        $query = User::query()
-            ->with(['roles'])
-            ->orderBy('id', 'desc');
+    public function data(Request $req)
+    {
+        $query = Inventory::query()->orderBy('id', 'desc');
+
         if ($req->keyword) {
             $query->where('name', 'LIKE', '%' . $req->keyword. '%');
         }
-        if ($req->username) {
-            $query->where('username',  $req->username);
+        if ($req->subject) {
+            $query->where('subject',  $req->subject);
 
         }
-        if ($req->email) {
-            $query->where('email',  $req->email);
+        if ($req->type) {
+            $query->where('type',  $req->type);
         }
-        if ($req->full_name) {
-            $query->where('full_name',  $req->full_name);
+        if ($req->grade) {
+            $query->where('grade',  $req->grade);
         }
-        if ($req->state) {
-            $query->where('state',  $req->state);
+
+        if ($req->enabled) {
+            $query->where('enabled',  $req->enabled);
         }
+
 
         $query->createdIn($req->created);
+
         $entries = $query->paginate();
 
-        $users  = $entries->items();
-        $data = [];
-
-        foreach ($users as $user){
-            $roles = $user->roles;
-
-            $roleNames = [];
-
-            if($roles){
-                foreach($roles as $role){
-                    $roleNames[] = $role->role_name;
-                }
-            }
-
-
-            $data[] = [
-                'role' => implode(', ', $roleNames),
-                'id'=>$user->id,
-                'username' => $user->username,
-                'full_name' => $user->full_name,
-                'email' => $user->email,
-                'created_at' => $user->created_at
-            ];
-        }
 
         return [
-            'roles'=>$roles,
             'code' => 0,
-            'data' =>$data,
+            'data' => $entries->items(),
             'paginate' => [
                 'currentPage' => $entries->currentPage(),
                 'lastPage' => $entries->lastPage(),
@@ -258,19 +230,29 @@ class UsersController extends AdminBaseController
         ];
     }
 
-    public function export() {
+    public function export()
+    {
         $keys = [
-            'username' => ['A', 'username'],
-            'password' => ['B', 'password'],
-            'full_name' => ['C', 'full_name'],
-            'email' => ['D', 'email'],
-            'description' => ['E', 'description'],
-            'sso_id' => ['F', 'sso_id'],
-            'state' => ['G', 'state'],
-            'remember_token' => ['H', 'remember_token'],
+            'description' => ['A', 'description'],
+            'enabled' => ['B', 'enabled'],
+            'grade' => ['C', 'grade'],
+            'image' => ['D', 'image'],
+            'name' => ['E', 'name'],
+            'physical_path' => ['F', 'physical_path'],
+            'rating' => ['G', 'rating'],
+            'subject' => ['H', 'subject'],
+            'type' => ['I', 'type'],
+            'virtual_path' => ['J', 'virtual_path'],
+            'slideshows' => ['K', 'slideshows'],
+            'link_webview' => ['L', 'link_webview'],
+            'duration' => ['M', 'duration'],
+            'tags' => ['N', 'tags'],
+            'created_by' => ['O', 'created_by'],
+            'updated_by' => ['P', 'updated_by'],
+            'deleted_by' => ['Q', 'deleted_by'],
         ];
 
-        $query = User::query()->orderBy('id', 'desc');
+        $query = Inventory::query()->orderBy('id', 'desc');
 
         $entries = $query->paginate();
         $spreadsheet = new Spreadsheet();

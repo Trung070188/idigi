@@ -1,9 +1,9 @@
 <template>
-    <div class="container-fluid" >
+    <div class="container-fluid">
         <ActionBar type="index"
-                   createUrl="/xadmin/users/create"
+                   createUrl="/xadmin/inventories/create"
                    :breadcrumbs="breadcrumbs"
-                   title="User"/>
+                   title="Inventory"/>
         <div class="row">
             <div class="col-lg-12">
                 <div class="card card-custom card-stretch gutter-b">
@@ -13,7 +13,7 @@
                             <div class="col-lg-12">
                                 <form class="form-inline">
                                     <div class="form-group mx-sm-3 mb-4">
-                                        <input @keydown.enter="doFilter('keyword', filter.keyword, $event)"
+                                        <input @keydown.enter="doFilter($event)"
                                                v-model="filter.keyword"
                                                type="text"
                                                class="form-control" placeholder="Tìm kiếm" value="">
@@ -41,23 +41,38 @@
                                 <form class="col-lg-12" v-if="isShowFilter">
                                     <div class="row">
                                         <div class="form-group col-lg-3">
-                                            <label>Fullname </label>
-                                            <input class="form-control" placeholder="Enter the full name" v-model="filter.full_name"/>
+                                            <label>Type </label>
+                                            <select class="form-control" v-model="filter.type">
+                                                <option value="">-</option>
+                                                <option value="vocabulary">Vocabulary</option>
+                                                <option value="summary">Summary</option>
+                                                <option value="lecture">Lecture</option>
+                                                <option value="activity1">Activity1</option>
+                                                <option value="activity2">Activity2</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group col-lg-3">
+                                            <label>Subject </label>
+                                            <select class="form-control" v-model="filter.subject">
+                                                <option value="">-</option>
+                                                <option value="math">Maths</option>
+                                                <option value="science ">Science</option>
+                                            </select>
 
                                         </div>
                                         <div class="form-group col-lg-3">
-                                            <label>Email </label>
-                                            <input class="form-control" placeholder="Enter the email" v-model="filter.email">
-
-                                        </div>
-                                        <div class="form-group col-lg-3">
-                                            <label>Role </label>
-                                            <select class="form-control" v-model="filter.role_name" data-placeholder="Choose role" >
-
-                                                <option v-for="role in roles" v-bind:value="role.role_name" v-model="filter.role_name">
-                                                    {{role.role_name}}
-                                                </option>
-
+                                            <label>Grade </label>
+                                            <select class="form-control" v-model="filter.grade">
+                                                <option value="">-</option>
+                                                <option value="1">1</option>
+                                                <option value="2">2</option>
+                                                <option value="3">3</option>
+                                                <option value="4">4</option>
+                                                <option value="5">5</option>
+                                                <option value="6">6</option>
+                                                <option value="7">7</option>
+                                                <option value="8">8</option>
+                                                <option value="9">9</option>
                                             </select>
                                         </div>
                                     </div>
@@ -70,13 +85,13 @@
                                         <div class="form-group col-lg-3">
                                             <label>Active</label>
                                             <div>
-                                                <switch-button v-model="filter.state"></switch-button>
+                                                <switch-button v-model="filter.enabled"></switch-button>
                                             </div>
 
                                         </div>
                                     </div>
                                     <div style="margin: auto 0">
-                                        <button type="button" class="btn btn-primary" @click="doFilter()">Tìm kiếm</button>
+                                        <button type="button" class="btn btn-primary" @click="doFilter($event)">Tìm kiếm</button>
                                     </div>
                                 </form>
                             </div>
@@ -93,27 +108,24 @@
                             <tr>
                                 <th>ID</th>
                                 <th>Name</th>
-                                <th>FullName</th>
-                                <th>Email</th>
-                                <th>Role</th>
-                                <th>Creation Date</th>
+                                <th>Grade</th>
+                                <th>Type</th>
                                 <th>Active</th>
+                                <th>Creation Date</th>
                                 <th>Action</th>
                             </tr>
                             </thead>
                             <tbody>
-                            <tr v-for="entry in entries" >
+                            <tr v-for="entry in entries">
                                 <td v-text="entry.id"></td>
-                                <td v-text="entry.username"></td>
-                                <td v-text="entry.full_name"></td>
-                                <td v-text="entry.email"></td>
-                                <td v-text="entry.role"></td>
+                                <td v-text="entry.name"></td>
+                                <td v-text="entry.grade"></td>
+                                <td v-text="entry.type"></td>
+                                <td v-text="entry.enabled == 0 ? 'No' : 'Yes'"></td>
                                 <td v-text=" d(entry.created_at)"></td>
-                                <td v-text="entry.state===0 ? 'No' : 'Yes'"></td>
-
 
                                 <td>
-                                    <a :href="'/xadmin/users/edit?id='+entry.id" ><i style="font-size:1.3rem" class="fa fa-edit"></i></a>
+                                    <a :href="'/xadmin/inventories/edit?id='+entry.id" style="margin-right: 10px"><i style="font-size:1.3rem" class="fa fa-edit"></i></a>
                                     <a @click="remove(entry)" href="javascript:;" class="btn-trash deleted"><i
                                         class="fa fa-trash mr-1 deleted"></i></a>
                                 </td>
@@ -145,32 +157,32 @@
             </div>
 
         </div>
+
     </div>
 
 </template>
 
 <script>
     import {$get, $post, getTimeRangeAll} from "../../utils";
-    import axios from 'axios';
     import $router from '../../lib/SimpleRouter';
     import ActionBar from "../includes/ActionBar";
     import SwitchButton from "../../components/SwitchButton";
-
 
     let created = getTimeRangeAll();
     const $q = $router.getQuery();
 
     export default {
-        name: "UsersIndex.vue",
-        components: {ActionBar,SwitchButton},
+        name: "InventoriesIndex.vue",
+        components: {ActionBar, SwitchButton},
         data() {
             let isShowFilter = false;
             let filter = {
                 keyword: $q.keyword || '',
                 created: $q.created || '',
-                full_name: $q.full_name || '',
-                email: $q.email || '',
-                state: $q.state || '',
+                subject: $q.subject || '',
+                type: $q.type || '',
+                grade: $q.grade || '',
+                enabled: $q.enabled || ''
             };
             for (var key in filter) {
                 if (filter[key] != '') {
@@ -181,13 +193,11 @@
                 isShowFilter: isShowFilter,
                 breadcrumbs: [
                     {
-                        title: 'Users'
+                        title: 'Inventories'
                     },
                 ],
-                roles:$json.roles || [],
                 entries: [],
-                filter:filter,
-
+                filter: filter,
                 limit: 25,
                 from: 0,
                 to: 0,
@@ -202,26 +212,30 @@
             $router.on('/', this.load).init();
         },
         methods: {
+            edit: function (id, event) {
 
-            // edit: function (id, event){
-            //     if (!$(event.target).hasClass('deleted')) {
-            //         window.location.href = '/xadmin/users/edit?id=' + id;
-            //     }
-            // },
-            async load() {
-                let query = $router.getQuery();
-                const res  = await $get('/xadmin/users/data', query);
-                this.paginate = res.paginate;
-                this.entries = res.data;
-                this.from = (this.paginate.currentPage-1)*(this.limit) + 1;
-                this.to = (this.paginate.currentPage-1)*(this.limit) + this.entries.length;
-            },
-            async remove(entry) {
-                if (!confirm('Xóa bản ghi: ' + entry.id)) {
-                    return;
+                if (!$(event.target).hasClass('deleted')) {
+                    window.location.href = '/xadmin/inventories/edit?id=' + id;
                 }
 
-                const res = await $post('/xadmin/users/remove', {id: entry.id});
+            },
+            async load() {
+                let query = $router.getQuery();
+                this.$loading(true);
+                const res = await $get('/xadmin/inventories/data', query);
+                this.$loading(false);
+                this.paginate = res.paginate;
+                this.entries = res.data;
+                this.from = (this.paginate.currentPage - 1) * (this.limit) + 1;
+                this.to = (this.paginate.currentPage - 1) * (this.limit) + this.entries.length;
+            },
+            async remove(entry) {
+
+                if (!confirm('Xóa bản ghi: ' + entry.id)) {
+                    return false;
+                }
+
+                const res = await $post('/xadmin/inventories/remove', {id: entry.id});
 
                 if (res.code) {
                     toastr.error(res.message);
@@ -231,28 +245,28 @@
 
                 $router.updateQuery({page: this.paginate.currentPage, _: Date.now()});
             },
-
             filterClear() {
-
-                for( var key in this.filter) {
+                for (var key in this.filter) {
                     this.filter[key] = '';
                 }
+
                 $router.setQuery({});
             },
-            doFilter() {
-                console.log(this.filter);
-
+            doFilter(event) {
+                if (event) {
+                    event.preventDefault();
+                }
                 $router.setQuery(this.filter)
             },
             changeLimit() {
                 let params = $router.getQuery();
-                params['page']=1;
+                params['page'] = 1;
                 params['limit'] = this.limit;
                 $router.setQuery(params)
             },
 
             async toggleStatus(entry) {
-                const res = await $post('/xadmin/users/toggleStatus', {
+                const res = await $post('/xadmin/inventories/toggleStatus', {
                     id: entry.id,
                     status: entry.status
                 });
@@ -268,6 +282,7 @@
                 $router.updateQuery({page: page})
             }
         }
+
     }
 </script>
 

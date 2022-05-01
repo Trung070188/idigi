@@ -2,17 +2,12 @@
     <div ref="root">
         <div class="">
             <div class="input-group">
-                <input type="text" v-model="value" class="form-control"
-                       readonly="">
                 <span class="input-group-append">
-			  	                    <button type="button" class="btn btn-light " @click="openElfinder"><i
-                                        class="la la-cloud-upload"></i> Browse</button>
-				                    <button type="button" class="btn btn-light  clear_elfinder_picker" @click="clearInput"><i
-                                        class="la la-eraser" ></i> Clear</button>
+			  	                    <button type="button" class="btn btn-primary " @click="openElfinder"><i
+                                        class="la la-cloud-upload"></i> Chọn file</button>
 			                        </span>
             </div>
-            <div class="well well-sm"  v-if="value && type == 'image'"><img width="100px" height="100px" :src="value">
-            </div>
+
         </div>
 
             <!-- Modal-->

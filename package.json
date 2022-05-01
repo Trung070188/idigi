@@ -10,7 +10,7 @@
         "production": "mix --production"
     },
     "devDependencies": {
-        "axios": "^0.19",
+        "axios": "^0.27.1",
         "bootstrap": "^4.0.0",
         "cross-env": "^7.0",
         "jquery": "^3.2",
@@ -29,7 +29,9 @@
         "babel-preset-es2015": "^6.24.1",
         "moment": "^2.29.1",
         "toastr": "^2.1.4",
+        "viewerjs": "^1.10.0",
         "vue": "^2.6.12",
-        "vue-nprogress": "^0.2.0"
+        "vue-nprogress": "^0.2.0",
+        "vuejs-loading-plugin": "^1.0.51"
     }
 }
