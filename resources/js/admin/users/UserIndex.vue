@@ -110,8 +110,6 @@
                                 <td v-text="entry.role"></td>
                                 <td v-text=" d(entry.created_at)"></td>
                                 <td v-text="entry.state===0 ? 'No' : 'Yes'"></td>
-
-
                                 <td>
                                     <a :href="'/xadmin/users/edit?id='+entry.id" ><i style="font-size:1.3rem" class="fa fa-edit"></i></a>
                                     <a @click="remove(entry)" href="javascript:;" class="btn-trash deleted"><i
@@ -151,7 +149,6 @@
 
 <script>
     import {$get, $post, getTimeRangeAll} from "../../utils";
-    import axios from 'axios';
     import $router from '../../lib/SimpleRouter';
     import ActionBar from "../includes/ActionBar";
     import SwitchButton from "../../components/SwitchButton";
@@ -170,7 +167,7 @@
                 created: $q.created || '',
                 full_name: $q.full_name || '',
                 email: $q.email || '',
-                state: $q.state || '',
+                state: $q.state || ''
             };
             for (var key in filter) {
                 if (filter[key] != '') {
