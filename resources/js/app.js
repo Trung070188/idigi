@@ -22,7 +22,6 @@ Vue.use(VueLoading, {
 
 window.Vue = require('vue');
 window.toastr = require('toastr');
-
 Vue.component('Paginate', require('./components/Paginate').default);
 Vue.component('SwitchButton', require('./components/SwitchButton').default);
 Vue.component('Daterangepicker', require('./components/Daterangepicker').default);

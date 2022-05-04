@@ -163,126 +163,127 @@
 </template>
 
 <script>
-import {$get, $post, getTimeRangeAll} from "../../utils";
-import $router from '../../lib/SimpleRouter';
-import ActionBar from "../includes/ActionBar";
-import SwitchButton from "../../components/SwitchButton";
+    import {$get, $post, getTimeRangeAll} from "../../utils";
+    import $router from '../../lib/SimpleRouter';
+    import ActionBar from "../includes/ActionBar";
+    import SwitchButton from "../../components/SwitchButton";
 
-let created = getTimeRangeAll();
-const $q = $router.getQuery();
+    let created = getTimeRangeAll();
+    const $q = $router.getQuery();
 
-export default {
-    name: "InventoriesIndex.vue",
-    components: {ActionBar, SwitchButton},
-    data() {
-        let isShowFilter = false;
-        let filter = {
-            keyword: $q.keyword || '',
-            created: $q.created || '',
-            subject: $q.subject || '',
-            type: $q.type || '',
-            grade: $q.grade || '',
-            enabled: $q.enabled || ''
-        };
-        for (var key in filter) {
-            if (filter[key] != '') {
-                isShowFilter = true;
+    export default {
+        name: "InventoriesIndex.vue",
+        components: {ActionBar, SwitchButton},
+        data() {
+            let isShowFilter = false;
+            let filter = {
+                keyword: $q.keyword || '',
+                created: $q.created || '',
+                subject: $q.subject || '',
+                type: $q.type || '',
+                grade: $q.grade || '',
+                enabled: $q.enabled || ''
+            };
+            for (var key in filter) {
+                if (filter[key] != '') {
+                    isShowFilter = true;
+                }
+            }
+            return {
+                isShowFilter: isShowFilter,
+                breadcrumbs: [
+                    {
+                        title: 'Inventories'
+                    },
+                ],
+                entries: [],
+                filter: filter,
+                limit: 25,
+                from: 0,
+                to: 0,
+                paginate: {
+                    currentPage: 1,
+                    lastPage: 1,
+                    totalRecord: 0
+                }
+            }
+        },
+        mounted() {
+            $router.on('/', this.load).init();
+        },
+        methods: {
+            edit: function (id, event) {
+
+                if (!$(event.target).hasClass('deleted')) {
+                    window.location.href = '/xadmin/inventories/edit?id=' + id;
+                }
+
+            },
+            async load() {
+                let query = $router.getQuery();
+                this.$loading(true);
+                const res = await $get('/xadmin/inventories/data', query);
+                this.$loading(false);
+                this.paginate = res.paginate;
+                this.entries = res.data;
+                this.from = (this.paginate.currentPage - 1) * (this.limit) + 1;
+                this.to = (this.paginate.currentPage - 1) * (this.limit) + this.entries.length;
+            },
+            async remove(entry) {
+
+                if (!confirm('Xóa bản ghi: ' + entry.id)) {
+                    return false;
+                }
+
+                const res = await $post('/xadmin/inventories/remove', {id: entry.id});
+
+                if (res.code) {
+                    toastr.error(res.message);
+                } else {
+                    toastr.success(res.message);
+                }
+
+                $router.updateQuery({page: this.paginate.currentPage, _: Date.now()});
+            },
+            filterClear() {
+                for (var key in this.filter) {
+                    this.filter[key] = '';
+                }
+
+                $router.setQuery({});
+            },
+            doFilter(event) {
+                if (event) {
+                    event.preventDefault();
+                }
+                $router.setQuery(this.filter)
+            },
+            changeLimit() {
+                let params = $router.getQuery();
+                params['page'] = 1;
+                params['limit'] = this.limit;
+                $router.setQuery(params)
+            },
+
+            async toggleStatus(entry) {
+                const res = await $post('/xadmin/inventories/toggleStatus', {
+                    id: entry.id,
+                    status: entry.status
+                });
+
+                if (res.code === 200) {
+                    toastr.success(res.message);
+                } else {
+                    toastr.error(res.message);
+                }
+
+            },
+            onPageChange(page) {
+                $router.updateQuery({page: page})
             }
         }
-        return {
-            isShowFilter: isShowFilter,
-            breadcrumbs: [
-                {
-                    title: 'Inventories'
-                },
-            ],
-            entries: [],
-            filter: filter,
-            limit: 25,
-            from: 0,
-            to: 0,
-            paginate: {
-                currentPage: 1,
-                lastPage: 1,
-                totalRecord: 0
-            }
-        }
-    },
-    mounted() {
-        $router.on('/', this.load).init();
-    },
-    methods: {
-        edit: function (id, event) {
 
-            if (!$(event.target).hasClass('deleted')) {
-                window.location.href = '/xadmin/inventories/edit?id=' + id;
-            }
-
-        },
-        async load() {
-            let query = $router.getQuery();
-            this.$loading(true);
-            const res = await $get('/xadmin/inventories/data', query);
-            this.$loading(false);
-            this.paginate = res.paginate;
-            this.entries = res.data;
-            this.from = (this.paginate.currentPage - 1) * (this.limit) + 1;
-            this.to = (this.paginate.currentPage - 1) * (this.limit) + this.entries.length;
-        },
-        async remove(entry) {
-
-            if (!confirm('Xóa bản ghi: ' + entry.id)) {
-                return false;
-            }
-
-            const res = await $post('/xadmin/inventories/remove', {id: entry.id});
-
-            if (res.code) {
-                toastr.error(res.message);
-            } else {
-                toastr.success(res.message);
-            }
-
-            $router.updateQuery({page: this.paginate.currentPage, _: Date.now()});
-        },
-        filterClear() {
-            for (var key in this.filter) {
-                this.filter[key] = '';
-            }
-
-            $router.setQuery({});
-        },
-        doFilter(event) {
-            if (event) {
-                event.preventDefault();
-            }
-            $router.setQuery(this.filter)
-        },
-        changeLimit() {
-            let params = $router.getQuery();
-            params['page'] = 1;
-            params['limit'] = this.limit;
-            $router.setQuery(params)
-        },
-
-        async toggleStatus(entry) {
-            const res = await $post('/xadmin/inventories/toggleStatus', {
-                id: entry.id,
-                status: entry.status
-            });
-
-            if (res.code === 200) {
-                toastr.success(res.message);
-            } else {
-                toastr.error(res.message);
-            }
-
-        },
-        onPageChange(page) {
-            $router.updateQuery({page: page})
-        }
     }
-}
 </script>
 
 <style scoped>

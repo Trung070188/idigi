@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Admin;
 
 
+use App\Models\Role;
+use App\Models\UserRole;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -24,34 +26,48 @@ class UsersController extends AdminBaseController
     ];
 
     /**
-    * Index page
-    * @uri  /xadmin/users/index
-    * @throw  NotFoundHttpException
-    * @return  View
-    */
-    public function index() {
-        $title = 'User';
+     * Index page
+     * @uri  /xadmin/users/index
+     * @throw  NotFoundHttpException
+     * @return  View
+     */
+    public function index(Request $request) {
+        $title = 'Users';
         $component = 'UserIndex';
-        return view('admin.layouts.vue', compact('title', 'component'));
+        $roles=Role::query()->orderBy('role_name')->get();
+        $jsonData=[
+          'roles'=>$roles
+        ];
+
+
+//        dd($entry);
+
+
+        return view('admin.layouts.vue', compact('title','component','jsonData'));
     }
 
     /**
-    * Create new entry
-    * @uri  /xadmin/users/create
-    * @throw  NotFoundHttpException
-    * @return  View
-    */
+     * Create new entry
+     * @uri  /xadmin/users/create
+     * @throw  NotFoundHttpException
+     * @return  View
+     */
     public function create (Request $req) {
         $component = 'UserForm';
         $title = 'Create users';
-        return view('admin.layouts.vue', compact('title', 'component'));
+        $roles=Role::query()->orderBy('role_name')->get();
+        $jsonData=[
+            'roles'=>$roles
+        ];
+
+        return view('admin.layouts.vue', compact('title','component','jsonData'));
     }
 
     /**
-    * @uri  /xadmin/users/edit?id=$id
-    * @throw  NotFoundHttpException
-    * @return  View
-    */
+     * @uri  /xadmin/users/edit?id=$id
+     * @throw  NotFoundHttpException
+     * @return  View
+     */
     public function edit (Request $req) {
         $id = $req->id;
         $entry = User::find($id);
@@ -61,20 +77,22 @@ class UsersController extends AdminBaseController
         }
 
         /**
-        * @var  User $entry
-        */
-        $jsonData = compact('entry');
+         * @var  User $entry
+         */
         $title = 'Edit';
         $component = 'UserForm';
-
-
-        return view('admin.layouts.vue', compact('title', 'jsonData', 'component'));
+        $roles=Role::query()->orderBy('role_name')->get();
+        $jsonData=[
+            'entry'=>$entry,
+            'roles'=>$roles
+        ];
+        return view('admin.layouts.vue', compact('title','component','jsonData'));
     }
 
     /**
-    * @uri  /xadmin/users/remove
-    * @return  array
-    */
+     * @uri  /xadmin/users/remove
+     * @return  array
+     */
     public function remove(Request $req) {
         $id = $req->id;
         $entry = User::find($id);
@@ -92,24 +110,24 @@ class UsersController extends AdminBaseController
     }
 
     /**
-    * @uri  /xadmin/users/save
-    * @return  array
-    */
+     * @uri  /xadmin/users/save
+     * @return  array
+     */
     public function save(Request $req) {
         if (!$req->isMethod('POST')) {
             return ['code' => 405, 'message' => 'Method not allow'];
         }
-
         $data = $req->get('entry');
 
+
         $rules = [
-    'name' => 'required|max:191',
-    'email' => 'required|max:191',
-    'last_login' => 'date_format:Y-m-d H:i:s',
-    'avatar' => 'max:191',
-    'birthday' => 'date_format:Y-m-d',
-    'phone' => 'max:11',
-];
+            'username' => 'required|max:191',
+            'email' => 'required|max:191',
+//            'last_login' => 'date_format:Y-m-d H:i:s',
+//            'avatar' => 'max:191',
+//            'birthday' => 'date_format:Y-m-d',
+//            'phone' => 'max:11',
+        ];
 
         $v = Validator::make($data, $rules);
 
@@ -119,10 +137,11 @@ class UsersController extends AdminBaseController
                 'errors' => $v->errors()
             ];
         }
+        $data['state'] = ($data['state'] == 'true' || $data['state'] ==1) ? 1 : 0;
 
         /**
-        * @var  User $entry
-        */
+         * @var  User $entry
+         */
         if (isset($data['id'])) {
             $entry = User::find($data['id']);
             if (!$entry) {
@@ -131,31 +150,28 @@ class UsersController extends AdminBaseController
                     'message' => 'Không tìm thấy',
                 ];
             }
-
             $entry->fill($data);
             $entry->save();
-
             return [
                 'code' => 0,
                 'message' => 'Đã cập nhật',
-                'id' => $entry->id
+                'id' => $entry->id,
             ];
         } else {
             $entry = new User();
             $entry->fill($data);
             $entry->save();
-
             return [
                 'code' => 0,
                 'message' => 'Đã thêm',
-                'id' => $entry->id
+                'id' => $entry->id,
             ];
         }
     }
 
     /**
-    * @param  Request $req
-    */
+     * @param  Request $req
+     */
     public function toggleStatus(Request $req)
     {
         $id = $req->get('id');
@@ -178,41 +194,83 @@ class UsersController extends AdminBaseController
     }
 
     /**
-    * Ajax data for index page
-    * @uri  /xadmin/users/data
-    * @return  array
-    */
+     * Ajax data for index page
+     * @uri  /xadmin/users/data
+     * @return  array
+     */
     public function data(Request $req) {
-        $query = User::query()->orderBy('id', 'desc');
-
+        $query = User::query()
+            ->with(['roles'])
+            ->orderBy('id', 'desc');
         if ($req->keyword) {
-            //$query->where('title', 'LIKE', '%' . $req->keyword. '%');
+            $query->where('name', 'LIKE', '%' . $req->keyword. '%');
+        }
+        if ($req->username) {
+            $query->where('username',  $req->username);
+
+        }
+        if ($req->email) {
+            $query->where('email',  $req->email);
+        }
+        if ($req->full_name) {
+            $query->where('full_name',  $req->full_name);
+        }
+        if ($req->state) {
+            $query->where('state',  $req->state);
         }
 
         $query->createdIn($req->created);
-
-
         $entries = $query->paginate();
 
+        $users  = $entries->items();
+        $data = [];
+
+        foreach ($users as $user){
+            $roles = $user->roles;
+
+            $roleNames = [];
+
+            if($roles){
+                foreach($roles as $role){
+                    $roleNames[] = $role->role_name;
+                }
+            }
+
+
+            $data[] = [
+                'role' => implode(', ', $roleNames),
+                'id'=>$user->id,
+                'username' => $user->username,
+                'full_name' => $user->full_name,
+                'email' => $user->email,
+                'state'=>$user->state,
+                'created_at' => $user->created_at
+            ];
+        }
+
         return [
+            'roles'=>$roles,
             'code' => 0,
-            'data' => $entries->items(),
+            'data' =>$data,
             'paginate' => [
                 'currentPage' => $entries->currentPage(),
                 'lastPage' => $entries->lastPage(),
+                'totalRecord' => $entries->count(),
             ]
         ];
     }
 
     public function export() {
-                $keys = [
-                            'name' => ['A', 'name'],
-                            'email' => ['B', 'email'],
-                            'last_login' => ['C', 'last_login'],
-                            'avatar' => ['D', 'avatar'],
-                            'birthday' => ['E', 'birthday'],
-                            'phone' => ['F', 'phone'],
-                            ];
+        $keys = [
+            'username' => ['A', 'username'],
+            'password' => ['B', 'password'],
+            'full_name' => ['C', 'full_name'],
+            'email' => ['D', 'email'],
+            'description' => ['E', 'description'],
+            'sso_id' => ['F', 'sso_id'],
+            'state' => ['G', 'state'],
+            'remember_token' => ['H', 'remember_token'],
+        ];
 
         $query = User::query()->orderBy('id', 'desc');
 
@@ -225,7 +283,7 @@ class UsersController extends AdminBaseController
                 $sheet->setCellValue($v . "1", $key);
             } elseif (is_array($v)) {
                 list($c, $n) = $v;
-                 $sheet->setCellValue($c . "1", $n);
+                $sheet->setCellValue($c . "1", $n);
             }
         }
 
