@@ -15,6 +15,8 @@ class Inventory extends BaseModel
         'grade',
         'image',
         'physical_path',
+        'virtual_image',
+        'virtual_path',
         'type',
         'subject',
         'grade',

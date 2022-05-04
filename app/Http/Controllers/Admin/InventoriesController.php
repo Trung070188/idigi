@@ -108,9 +108,9 @@ class InventoriesController extends AdminBaseController
         $data = $req->get('entry');
 
         $rules = [
-            'image' => 'max:255',
+            'image' => 'max:255|required',
             'name' => 'max:255|required',
-            'physical_path' => 'max:2000',
+            'physical_path' => 'max:2000|required',
             'subject' => 'max:255|required',
             'type' => 'max:255|required',
             'grade' => 'max:255|required',
@@ -127,6 +127,8 @@ class InventoriesController extends AdminBaseController
                 'errors' => $v->errors()
             ];
         }
+        $data['virtual_image'] = get_virtual_path($data['image']);
+        $data['virtual_path'] = get_virtual_path($data['physical_path']);
         $data['enabled'] = ($data['enabled'] == 'true' || $data['enabled'] == 1) ? 1 : 0;
 
         /**
@@ -291,4 +293,6 @@ class InventoriesController extends AdminBaseController
         $writer->save('php://output');
         die;
     }
+
+
 }

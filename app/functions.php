@@ -313,3 +313,11 @@ function component(string $component, array $jsonData = []) {
 
     return view('admin.layouts.vue', $vars);
 }
+
+function get_virtual_path($physical_path) {
+    $physical_path = str_replace('\\', '/', $physical_path);
+    $path=  str_replace(env('APP_URL'), "", $physical_path);
+
+    return $path;
+
+}
