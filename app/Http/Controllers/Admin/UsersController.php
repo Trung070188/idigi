@@ -7,7 +7,6 @@ use App\Models\Role;
 use App\Models\UserRole;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use App\Models\User;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -62,6 +61,31 @@ class UsersController extends AdminBaseController
 
         return view('admin.layouts.vue', compact('title','component','jsonData'));
     }
+    /**
+     * Index page
+     * @uri  /xadmin/users/index
+     * @throw  NotFoundHttpException
+     * @return  View
+     */
+    public function profile(Request $req)
+    {
+        $id = $req->id;
+        $entry = User::find($id);
+
+        if (!$entry) {
+            throw new NotFoundHttpException();
+        }
+
+        /**
+         * @var  User $entry
+         */
+        $title = 'Profile Edit';
+        $component = 'ProfileForm';
+        $jsonData=[
+            'entry'=>$entry,
+        ];
+        return view('admin.layouts.vue', compact('title','component','jsonData'));
+    }
 
     /**
      * @uri  /xadmin/users/edit?id=$id
@@ -96,7 +120,7 @@ class UsersController extends AdminBaseController
     public function remove(Request $req) {
         $id = $req->id;
         $entry = User::find($id);
-
+        $entry->roles()->detach();
         if (!$entry) {
             throw new NotFoundHttpException();
         }
@@ -118,17 +142,10 @@ class UsersController extends AdminBaseController
             return ['code' => 405, 'message' => 'Method not allow'];
         }
         $data = $req->get('entry');
-
-
         $rules = [
             'username' => 'required|max:191',
             'email' => 'required|max:191',
-//            'last_login' => 'date_format:Y-m-d H:i:s',
-//            'avatar' => 'max:191',
-//            'birthday' => 'date_format:Y-m-d',
-//            'phone' => 'max:11',
         ];
-
         $v = Validator::make($data, $rules);
 
         if ($v->fails()) {
@@ -137,34 +154,35 @@ class UsersController extends AdminBaseController
                 'errors' => $v->errors()
             ];
         }
-        $data['state'] = ($data['state'] == 'true' || $data['state'] ==1) ? 1 : 0;
-
+//        $data['state'] = ($data['state'] == 'true' || $data['state'] ==1) ? 1 : 0;
         /**
          * @var  User $entry
          */
-        if (isset($data['id'])) {
+
+       if (isset($data['id'])) {
             $entry = User::find($data['id']);
-            if (!$entry) {
-                return [
+
+           if (!$entry) {
+               return [
                     'code' => 3,
                     'message' => 'Không tìm thấy',
                 ];
             }
-            $entry->fill($data);
-            $entry->save();
-            return [
+           $entry->fill($data);
+           $entry->save();
+           return [
                 'code' => 0,
-                'message' => 'Đã cập nhật',
+               'message' => 'Đã cập nhật',
                 'id' => $entry->id,
-            ];
+           ];
         } else {
-            $entry = new User();
-            $entry->fill($data);
-            $entry->save();
-            return [
-                'code' => 0,
-                'message' => 'Đã thêm',
-                'id' => $entry->id,
+           $entry = new User();
+           $entry->fill($data);
+           $entry->save();
+           return [
+               'code' => 0,
+              'message' => 'Đã thêm',
+               'id' => $entry->id,
             ];
         }
     }
@@ -203,7 +221,7 @@ class UsersController extends AdminBaseController
             ->with(['roles'])
             ->orderBy('id', 'desc');
         if ($req->keyword) {
-            $query->where('name', 'LIKE', '%' . $req->keyword. '%');
+            $query->where('username', 'LIKE', '%' . $req->keyword. '%');
         }
         if ($req->username) {
             $query->where('username',  $req->username);
@@ -215,10 +233,9 @@ class UsersController extends AdminBaseController
         if ($req->full_name) {
             $query->where('full_name',  $req->full_name);
         }
-        if ($req->state) {
-            $query->where('state',  $req->state);
+        if ($req->user_id) {
+            $query->where('user_id',  $req->user_id);
         }
-
         $query->createdIn($req->created);
         $entries = $query->paginate();
 
@@ -235,10 +252,8 @@ class UsersController extends AdminBaseController
                     $roleNames[] = $role->role_name;
                 }
             }
-
-
             $data[] = [
-                'role' => implode(', ', $roleNames),
+                'role' => implode(',', $roleNames),
                 'id'=>$user->id,
                 'username' => $user->username,
                 'full_name' => $user->full_name,
@@ -247,7 +262,6 @@ class UsersController extends AdminBaseController
                 'created_at' => $user->created_at
             ];
         }
-
         return [
             'roles'=>$roles,
             'code' => 0,

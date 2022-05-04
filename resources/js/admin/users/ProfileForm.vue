@@ -4,7 +4,7 @@
                    :code="entry.id"
                    back-url="/xadmin/users/index"
                    :breadcrumbs = "breadcrumbs"
-                   title="UserForm"/>
+                   title="ProfileForm"/>
         <div class="row">
             <div class="col-lg-12">
                 <div class="card card-custom card-stretch gutter-b">
@@ -34,12 +34,12 @@
                                 </div>
                                 <div class="row" >
                                     <label>Role</label>
-                                    <div v-for="role in roles" :key="role.id" class="form-group col-sm-2">
-                                        <input type="checkbox"  v-model="entry.roles" :value="role"  >
+                                    <div v-for="role in roles" class="form-group col-sm-2">
+
+                                        <input type="checkbox" v-bind:value="role.role_name" v-model="check_role" >
                                         <label >{{role.role_name}}</label>
                                     </div>
                                 </div>
-                                <div>{{entry.roles}}</div>
                                 <div class="row" >
                                     <div class="form-group col-sm-8">
                                         <label>Description</label>
@@ -80,10 +80,11 @@
     import SwitchButton from "../../components/SwitchButton";
 
     export default {
-        name: "UsersForm.vue",
+        name: "ProfileForm.vue",
         components: { ActionBar,SwitchButton},
         data() {
             return {
+                check_role:[],
                 types: [
 
                 ],
@@ -96,26 +97,23 @@
                         title: $json.entry ? 'Edit User' : 'Create new User',
                     },
                 ],
-                entry: $json.entry || {
-                   roles:[]
-                },
+                entry: $json.entry || {},
                 roles:$json.roles || [],
                 isLoading: false,
                 errors: {}
             }
         },
         methods: {
-            checkbox_roles()
-            {
-
-            },
             backIndex(){
 
                 window.location.href = '/xadmin/users/index';
             },
             async save() {
+                console.log(this.check_role);
+
                 this.isLoading = true;
                 const res = await $post('/xadmin/users/save', {entry: this.entry}, false);
+                console.log(res);
                 this.isLoading = false;
                 if (res.errors) {
                     this.errors = res.errors;

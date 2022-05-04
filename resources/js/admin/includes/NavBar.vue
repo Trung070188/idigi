@@ -49,8 +49,10 @@
                                 </div>
                             <div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-800 menu-state-bg menu-state-primary fw-bold py-4 fs-6 w-275px" data-kt-menu="true">
 
-                                <div class="menu-item px-5">
-                                    <a href="account/overview.html" class="menu-link px-5">My Profile</a>
+                                <div  class="menu-item px-5" >
+<!--                                    <a v-for="entry in entries" :href="'/xadmin/users/profile?id='+entry.id" ><i style="font-size:1.3rem" class="fa fa-edit"></i></a>-->
+
+                                    <a  :href="'/xadmin/users/profile'" class="menu-link px-5">My Profile</a>
                                 </div>
 
                                 <div class="menu-item px-5">
@@ -70,9 +72,66 @@
 
 <script>
     import TopNotification from "./TopNotification";
+    import ProfileForm from "../users/ProfileForm";
+    import $router from "../../lib/SimpleRouter";
+    import {$get, $post} from "../../utils";
     export default {
         name: "NavBar",
-        components: {TopNotification}
+        components: {TopNotification,ProfileForm},
+        data() {
+
+            return {
+
+                entries: [],
+
+            }
+        },
+        methods: {
+
+            // edit: function (id, event){
+            //     if (!$(event.target).hasClass('deleted')) {
+            //         window.location.href = '/xadmin/users/edit?id=' + id;
+            //     }
+            // },
+            async load() {
+                let query = $router.getQuery();
+                this.$loading(true);
+                const res  = await $get('/xadmin/users/profile', query);
+                this.$loading(false);
+                this.paginate = res.paginate;
+                this.entries = res.data;
+                this.from = (this.paginate.currentPage-1)*(this.limit) + 1;
+                this.to = (this.paginate.currentPage-1)*(this.limit) + this.entries.length;
+            },
+
+            changeLimit() {
+                let params = $router.getQuery();
+                params['page']=1;
+                params['limit'] = this.limit;
+                $router.setQuery(params)
+            },
+
+            async toggleStatus(entry) {
+                const res = await $post('/xadmin/users/toggleStatus', {
+                    id: entry.id,
+                    status: entry.status
+                });
+
+                if (res.code === 200) {
+                    toastr.success(res.message);
+                } else {
+                    toastr.error(res.message);
+                }
+
+            },
+            onPageChange(page) {
+                $router.updateQuery({page: page})
+            }
+        }
+
+
+
+
     }
 </script>
 
