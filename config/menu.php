@@ -81,10 +81,10 @@ return [
         ]
     ],
 
-    [
-        "name" => "Logout",
-        "icon" => "fa fa-sign-out-alt",
-        "url" => "/xadmin/logout",
-        "group" => 1
-    ],
+//    [
+//        "name" => "Logout",
+//        "icon" => "fa fa-sign-out-alt",
+//        "url" => "/xadmin/logout",
+//        "group" => 1
+//    ],
 ];

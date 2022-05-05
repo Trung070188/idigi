@@ -38,8 +38,9 @@
                                         <input type="checkbox"  v-model="entry.roles" :value="role"  >
                                         <label >{{role.role_name}}</label>
                                     </div>
+                                    <p>{{entry.roles}}</p>
                                 </div>
-                                <div>{{entry.roles}}</div>
+
                                 <div class="row" >
                                     <div class="form-group col-sm-8">
                                         <label>Description</label>
@@ -107,7 +108,6 @@
         methods: {
             checkbox_roles()
             {
-
             },
             backIndex(){
 

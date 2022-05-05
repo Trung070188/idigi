@@ -68,10 +68,8 @@ class UsersController extends AdminBaseController
      * @return  View
      */
     public function profile(Request $req)
-    {
-        $id = $req->id;
+    {   $id=$req->id;
         $entry = User::find($id);
-
         if (!$entry) {
             throw new NotFoundHttpException();
         }
@@ -95,7 +93,7 @@ class UsersController extends AdminBaseController
     public function edit (Request $req) {
         $id = $req->id;
         $entry = User::find($id);
-
+//        $entry->roles()->acttch();
         if (!$entry) {
             throw new NotFoundHttpException();
         }
@@ -161,13 +159,22 @@ class UsersController extends AdminBaseController
 
        if (isset($data['id'])) {
             $entry = User::find($data['id']);
-
            if (!$entry) {
                return [
                     'code' => 3,
                     'message' => 'Không tìm thấy',
                 ];
             }
+//           $roles = $data['roles'];
+//
+//           UserRole::where('user_id', $entry->id)->delete();
+//
+//           foreach ($roles as $role){
+//               User::create([
+//                   'user_id' => $entry->id,
+//                   'role_id' => $role
+//               ]);
+//           }
            $entry->fill($data);
            $entry->save();
            return [
@@ -176,9 +183,22 @@ class UsersController extends AdminBaseController
                 'id' => $entry->id,
            ];
         } else {
-           $entry = new User();
-           $entry->fill($data);
-           $entry->save();
+//
+           $id=$req->id;
+//           $entry=User::find($id)->roles;
+          $entry=new User();
+          $entry->fill($data);
+//           $roles = $data['roles'];
+//           UserRole::where('user_id', $id)->delete();
+//
+//
+//           foreach ($roles as $role){
+//               User::create([
+//                   'user_id' => $entry->id,
+//                   'role_id' => $role
+//               ]);
+//           }
+          $entry->save();
            return [
                'code' => 0,
               'message' => 'Đã thêm',
