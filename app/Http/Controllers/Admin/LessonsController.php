@@ -8,6 +8,7 @@ use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use App\Models\Lesson;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -297,5 +298,45 @@ class LessonsController extends AdminBaseController
         // Write file to the browser
         $writer->save('php://output');
         die;
+    }
+
+    public function downloadLesson(Request  $request){
+        $lessons = Lesson::whereIn('id', $request->lessonIds)
+            ->with(['inventories'])->get();
+        $data = [];
+
+        foreach ($lessons as $lesson){
+            $lessonData = [];
+            $lessonData['idSubject'] = 1;
+            $lessonData['codeSubject'] = 1;
+            $lessonData['nameSubject'] = 1;
+            $lessonData['grade'] = 1;
+            $lessonData['codeLesson'] = 1;
+            $lessonData['titleUnit'] = 1;
+            $lessonData['nameUnit'] = 1;
+            $lessonData['idUnit'] = 1;
+            $lessonData['nameLesson'] = 1;
+            $lessonData['idLesson'] = 1;
+            $lessonData['titleLesson'] = 1;
+
+            $inventoryData = [];
+            if($lesson->inventories){
+                foreach ($lesson->inventories as $inventory){
+                    $inventoryData[] = [
+                        'idSublesson' => 1,
+                        'pathIcon' => 1,
+                        'name' => 1,
+                        'time' => 1,
+                        'type' => 1,
+                        'link' => 1,
+                    ];
+                }
+            }
+
+            $lessonData['subLessons'] = $inventoryData;
+
+            $data[] = $lessonData;
+        }
+        Storage::put('attempt1.txt', json_encode($data));
     }
 }

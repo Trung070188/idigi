@@ -170,8 +170,7 @@
                         </ul>
                         <p>Hãy chọn thiết bị để tải về các bài học này:</p>
                         <ul class="device">
-                            <li v-for="_device in devices"><input type="radio" v-model="device"  :value="_device.id" /> <strong>{{_device.name}}</strong></li>
-
+                            <li v-for="_device in devices"><input type="radio" v-model="device"  :value="_device.id" /> <strong>{{_device.device_name}}</strong></li>
                         </ul>
                     </div>
                     <div class="modal-footer" style="justify-content: center">
@@ -236,15 +235,23 @@ export default {
     mounted() {
         $router.on('/', this.load).init();
         let self = this;
-        $get('/xadmin/user_devices/getDeviceByUser', function (res){
+        $.get('/xadmin/user_devices/getDeviceByUser', function (res){
             self.devices = res;
         });
     },
     methods: {
-        downloadLesson: function () {
+        async downloadLesson() {
 
+            this.$loading(true);
+            const res = await $post('/xadmin/lessons/downloadLesson', {lessonIds: this.lessonIds, device: this.device}, false);
+            this.$loading(false);
+            if (res.errors) {
+               alert('có lỗi xảy ra')
+                return;
+            }
 
         },
+
         closeModal: function () {
             $('#download-lesson').modal('hide');
         },

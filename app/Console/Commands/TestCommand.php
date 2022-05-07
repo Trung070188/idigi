@@ -7,6 +7,7 @@ use App\Models\Inventory;
 use App\Models\Product;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 
 class TestCommand extends Command
 {
@@ -41,6 +42,8 @@ class TestCommand extends Command
      */
     public function handle()
     {
+        Storage::put('attempt1.txt', '1234');
+        dd(1);
 
         $zip_file = public_path('invoices.zip');
         $zip = new \ZipArchive();

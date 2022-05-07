@@ -92,10 +92,7 @@
             }
         },
         data() {
-            console.log(this.download)
-            //if (this.type === 'index' && !this.createUrl) {
-            //    console.error('Missing createUrl')
-            //}
+
             return {
                 isLoading: false
             }
