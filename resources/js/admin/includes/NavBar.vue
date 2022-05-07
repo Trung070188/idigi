@@ -39,22 +39,26 @@
                             </div>
                         </div>
 
-                        <div class="d-flex align-items-center ms-1 ms-lg-3" id="kt_header_user_menu_toggle">
-                            <div data-kt-menu-trigger="click" data-kt-menu-attach="parent" data-kt-menu-placement="bottom-end">
+                        <div  class="d-flex align-items-center ms-1 ms-lg-3" id="kt_header_user_menu_toggle">
+                            <div  data-kt-menu-trigger="click" data-kt-menu-attach="parent" data-kt-menu-placement="bottom-end">
                             <span class="text-muted font-weight-bold font-size-base d-none d-md-inline mr-1">Hi,&nbsp;</span>
                             <span class="text-dark-50 font-weight-bolder font-size-base d-none d-md-inline mr-3">{{auth.username}}&nbsp;</span>
                             <span class="symbol symbol-lg-35 symbol-25 symbol-light-success">
-                                <span class="symbol-label font-size-h5 font-weight-bold"><i class="fa fa-user"></i></span>
+                                <span   class="symbol-label font-size-h5 font-weight-bold"><i class="fa fa-user"></i></span>
                             </span>
                                 </div>
-                            <div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-800 menu-state-bg menu-state-primary fw-bold py-4 fs-6 w-275px" data-kt-menu="true">
+                            <div  class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-800 menu-state-bg menu-state-primary fw-bold py-4 fs-6 w-275px" data-kt-menu="true">
 
-                                <div class="menu-item px-5">
-                                    <a href="account/overview.html" class="menu-link px-5">My Profile</a>
+                                <div    class="menu-item px-5" >
+<!--                                    <a v-for="entry in entries" :href="'/xadmin/users/profile?id='+entry.id" ><i style="font-size:1.3rem" class="fa fa-edit"></i></a>-->
+
+                                                <a  :href="'/xadmin/users/profile?id='+auth.id" class="menu-link px-5">View Profile</a>
+
+
                                 </div>
 
                                 <div class="menu-item px-5">
-                                    <a href="/xadmin/logout" class="menu-link px-5">Sign Out</a>
+                                    <a href="/xadmin/logout" class="menu-link px-5">Log Out</a>
                                 </div>
 
                             </div>
@@ -64,15 +68,20 @@
                 </div>
             </div>
         </div>
+
     </div>
 
 </template>
 
 <script>
     import TopNotification from "./TopNotification";
+    import ProfileForm from "../users/ProfileForm";
+    import $router from "../../lib/SimpleRouter";
+    import {$get, $post, getTimeRangeAll} from "../../utils";
+
     export default {
         name: "NavBar",
-        components: {TopNotification}
+        components: {TopNotification,ProfileForm},
     }
 </script>
 

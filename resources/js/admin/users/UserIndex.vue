@@ -52,9 +52,8 @@
                                         </div>
                                         <div class="form-group col-lg-3">
                                             <label>Role </label>
-                                            <select class="form-control" v-model="filter.role_name" data-placeholder="Choose role" >
-
-                                                <option v-for="role in roles" v-bind:value="role.role_name" v-model="filter.role_name">
+                                            <select  class="form-control"  v-model="filter.role" data-placeholder="Choose role" >
+                                                <option v-for="role in roles" v-bind:value="role.role_name">
                                                     {{role.role_name}}
                                                 </option>
 
@@ -167,7 +166,8 @@
                 created: $q.created || '',
                 full_name: $q.full_name || '',
                 email: $q.email || '',
-                state: $q.state || ''
+                state: $q.state || '',
+                role:$q.role || ''
             };
             for (var key in filter) {
                 if (filter[key] != '') {
@@ -207,15 +207,18 @@
             // },
             async load() {
                 let query = $router.getQuery();
+                this.$loading(true);
                 const res  = await $get('/xadmin/users/data', query);
+                this.$loading(false);
                 this.paginate = res.paginate;
                 this.entries = res.data;
+                console.log(this.entries);
                 this.from = (this.paginate.currentPage-1)*(this.limit) + 1;
                 this.to = (this.paginate.currentPage-1)*(this.limit) + this.entries.length;
             },
             async remove(entry) {
                 if (!confirm('Xóa bản ghi: ' + entry.id)) {
-                    return;
+                    return false;
                 }
 
                 const res = await $post('/xadmin/users/remove', {id: entry.id});

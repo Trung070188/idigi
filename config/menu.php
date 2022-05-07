@@ -34,7 +34,7 @@ return [
     ],
 
 
-     [  "name" => "Users, Roles, Permissions",
+     [  "name" => "Users, Roles",
         "icon" => "fa fa-users",
         "group" => 1,
         'base' => '/xadmin/users',
@@ -51,12 +51,6 @@ return [
                 "url" => "/xadmin/roles/index",
                 "group" => 1,
             ],
-            [
-            "name" => "Permissions",
-            "icon" => "fa fa-plus",
-            "url" => "/xadmin/users/create",
-            "group" => 1,
-        ],
         ],
          ],
         [
@@ -87,10 +81,10 @@ return [
         ]
     ],
 
-    [
-        "name" => "Logout",
-        "icon" => "fa fa-sign-out-alt",
-        "url" => "/xadmin/logout",
-        "group" => 1
-    ],
+//    [
+//        "name" => "Logout",
+//        "icon" => "fa fa-sign-out-alt",
+//        "url" => "/xadmin/logout",
+//        "group" => 1
+//    ],
 ];

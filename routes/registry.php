@@ -11,6 +11,7 @@
         'action' => 'UsersController',
         'name' => 'users',
     ],
+
     [
         'path' => '/products/{action}',
         'action' => 'ProductsController',

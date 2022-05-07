@@ -10,6 +10,7 @@ import LessonIndex from "./admin/lessons/LessonIndex";
 import LessonForm from "./admin/lessons/LessonForm";
 import SchoolIndex from "./admin/schools/SchoolIndex";
 import SchoolForm from "./admin/schools/SchoolForm";
+import ProfileForm from "./admin/users/ProfileForm";
 
 export default {
     DashboardIndex,
@@ -23,7 +24,8 @@ export default {
     LessonIndex,
     LessonForm,
     SchoolIndex,
-    SchoolForm
+    SchoolForm,
+    ProfileForm
 
 
 }

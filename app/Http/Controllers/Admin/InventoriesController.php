@@ -129,7 +129,7 @@ class InventoriesController extends AdminBaseController
         }
         $data['virtual_image'] = get_virtual_path($data['image']);
         $data['virtual_path'] = get_virtual_path($data['physical_path']);
-        $data['enabled'] = ($data['enabled'] == 'true' || $data['enabled'] == 1) ? 1 : 0;
+//        $data['enabled'] = ($data['enabled'] == 'true' || $data['enabled'] == 1) ? 1 : 0;
 
         /**
          * @var  Inventory $entry

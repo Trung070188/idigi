@@ -34,12 +34,13 @@
                                 </div>
                                 <div class="row" >
                                     <label>Role</label>
-                                    <div v-for="role in roles" class="form-group col-sm-2">
-
-                                        <input type="checkbox" v-bind:value="role.role_name" v-model="check_role" >
+                                    <div v-for="role in roles" :key="role.id" class="form-group col-sm-2">
+                                        <input type="checkbox"  v-model="entry.roles" :value="role"  >
                                         <label >{{role.role_name}}</label>
                                     </div>
+                                    <p>{{entry.roles}}</p>
                                 </div>
+
                                 <div class="row" >
                                     <div class="form-group col-sm-8">
                                         <label>Description</label>
@@ -84,7 +85,6 @@
         components: { ActionBar,SwitchButton},
         data() {
             return {
-                check_role:[],
                 types: [
 
                 ],
@@ -97,23 +97,25 @@
                         title: $json.entry ? 'Edit User' : 'Create new User',
                     },
                 ],
-                entry: $json.entry || {},
+                entry: $json.entry || {
+                   roles:[]
+                },
                 roles:$json.roles || [],
                 isLoading: false,
                 errors: {}
             }
         },
         methods: {
+            checkbox_roles()
+            {
+            },
             backIndex(){
 
                 window.location.href = '/xadmin/users/index';
             },
             async save() {
-                console.log(this.check_role);
-
                 this.isLoading = true;
                 const res = await $post('/xadmin/users/save', {entry: this.entry}, false);
-                console.log(res);
                 this.isLoading = false;
                 if (res.errors) {
                     this.errors = res.errors;
