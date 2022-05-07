@@ -3,84 +3,82 @@
 namespace App\Http\Controllers\Admin;
 
 
-use App\Models\UserDevice;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
-use App\Models\Lesson;
+use App\Models\UserDevice;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
 
-class LessonsController extends AdminBaseController
+class UserDevicesController extends AdminBaseController
 {
     public static $menus = [
         [
-            'name' => 'Lesson',
+            'name' => 'UserDevice',
             'icon' => 'fa fa-shopping-cart',
-            'url' => '/xadmin/lessons/index',
+            'url' => '/xadmin/user_devices/index',
         ]
     ];
 
     /**
     * Index page
-    * @uri  /xadmin/lessons/index
+    * @uri  /xadmin/user_devices/index
     * @throw  NotFoundHttpException
     * @return  View
     */
     public function index() {
-        $title = 'Lesson';
-        $component = 'LessonIndex';
-
+        $title = 'UserDevice';
+        $component = 'User_deviceIndex';
         return component($component, compact('title'));
     }
 
     /**
     * Create new entry
-    * @uri  /xadmin/lessons/create
+    * @uri  /xadmin/user_devices/create
     * @throw  NotFoundHttpException
     * @return  View
     */
     public function create (Request $req) {
-        $component = 'LessonForm';
-        $title = 'Create lessons';
+        $component = 'User_deviceForm';
+        $title = 'Create user_devices';
         return component($component, compact('title'));
     }
 
     /**
-    * @uri  /xadmin/lessons/edit?id=$id
+    * @uri  /xadmin/user_devices/edit?id=$id
     * @throw  NotFoundHttpException
     * @return  View
     */
     public function edit (Request $req) {
         $id = $req->id;
-        $entry = Lesson::find($id);
+        $entry = UserDevice::find($id);
 
         if (!$entry) {
             throw new NotFoundHttpException();
         }
 
         /**
-        * @var  Lesson $entry
+        * @var  UserDevice $entry
         */
 
         $title = 'Edit';
-        $component = 'LessonForm';
+        $component = 'User_deviceForm';
 
 
         return component($component, compact('title', 'entry'));
     }
 
     /**
-    * @uri  /xadmin/lessons/remove
+    * @uri  /xadmin/user_devices/remove
     * @return  array
     */
     public function remove(Request $req) {
         $id = $req->id;
-        $entry = Lesson::find($id);
+        $entry = UserDevice::find($id);
 
         if (!$entry) {
             throw new NotFoundHttpException();
@@ -95,22 +93,7 @@ class LessonsController extends AdminBaseController
     }
 
     /**
-     * @uri  /xadmin/lessons/removeAll
-     * @return  array
-     */
-    public function removeAll(Request $req) {
-        $ids = $req->ids;
-        Lesson::whereIn('id',$ids)->delete();
-
-
-        return [
-            'code' => 0,
-            'message' => 'Đã xóa'
-        ];
-    }
-
-    /**
-    * @uri  /xadmin/lessons/save
+    * @uri  /xadmin/user_devices/save
     * @return  array
     */
     public function save(Request $req) {
@@ -121,13 +104,9 @@ class LessonsController extends AdminBaseController
         $data = $req->get('entry');
 
         $rules = [
-    'created_by' => 'max:255',
-    'created_date' => 'date_format:Y-m-d H:i:s',
-    'last_modified_by' => 'max:255',
-    'last_modified_date' => 'date_format:Y-m-d H:i:s',
-    'name' => 'max:255',
-    'subject' => 'max:255',
-    'number' => 'max:255',
+    'device_uid' => 'required|max:45',
+    'device_name' => 'required|max:45',
+    'user_id' => 'required',
 ];
 
         $v = Validator::make($data, $rules);
@@ -140,10 +119,10 @@ class LessonsController extends AdminBaseController
         }
 
         /**
-        * @var  Lesson $entry
+        * @var  UserDevice $entry
         */
         if (isset($data['id'])) {
-            $entry = Lesson::find($data['id']);
+            $entry = UserDevice::find($data['id']);
             if (!$entry) {
                 return [
                     'code' => 3,
@@ -160,7 +139,7 @@ class LessonsController extends AdminBaseController
                 'id' => $entry->id
             ];
         } else {
-            $entry = new Lesson();
+            $entry = new UserDevice();
             $entry->fill($data);
             $entry->save();
 
@@ -178,7 +157,7 @@ class LessonsController extends AdminBaseController
     public function toggleStatus(Request $req)
     {
         $id = $req->get('id');
-        $entry = Lesson::find($id);
+        $entry = UserDevice::find($id);
 
         if (!$id) {
             return [
@@ -198,37 +177,20 @@ class LessonsController extends AdminBaseController
 
     /**
     * Ajax data for index page
-    * @uri  /xadmin/lessons/data
+    * @uri  /xadmin/user_devices/data
     * @return  array
     */
     public function data(Request $req) {
-        $query = Lesson::query()->orderBy('id', 'desc');
+        $query = UserDevice::query()->orderBy('id', 'desc');
 
         if ($req->keyword) {
-            $query->where('name', 'LIKE', '%' . $req->keyword. '%');
-        }
-        if ($req->subject) {
-            $query->where('subject',  $req->subject);
-
-        }
-
-        if ($req->grade) {
-            $query->where('grade',  $req->grade);
-        }
-
-        if ($req->enabled) {
-            $query->where('enabled',  $req->enabled);
+            //$query->where('title', 'LIKE', '%' . $req->keyword. '%');
         }
 
         $query->createdIn($req->created);
 
-        $limit = 25;
 
-        if($req->limit){
-            $limit = $req->limit;
-        }
-
-        $entries = $query->paginate($limit);
+        $entries = $query->paginate();
 
         return [
             'code' => 0,
@@ -236,30 +198,18 @@ class LessonsController extends AdminBaseController
             'paginate' => [
                 'currentPage' => $entries->currentPage(),
                 'lastPage' => $entries->lastPage(),
-                'totalRecord' => $entries->count(),
             ]
         ];
     }
 
     public function export() {
                 $keys = [
-                            'created_by' => ['A', 'created_by'],
-                            'created_date' => ['B', 'created_date'],
-                            'enabled' => ['C', 'enabled'],
-                            'grade' => ['D', 'grade'],
-                            'last_modified_by' => ['E', 'last_modified_by'],
-                            'last_modified_date' => ['F', 'last_modified_date'],
-                            'name' => ['G', 'name'],
-                            'rating' => ['H', 'rating'],
-                            'shared' => ['I', 'shared'],
-                            'structure' => ['J', 'structure'],
-                            'subject' => ['K', 'subject'],
-                            'unit' => ['L', 'unit'],
-                            'number' => ['M', 'number'],
-                            'customized' => ['N', 'customized'],
+                            'device_uid' => ['A', 'device_uid'],
+                            'device_name' => ['B', 'device_name'],
+                            'user_id' => ['C', 'user_id'],
                             ];
 
-        $query = Lesson::query()->orderBy('id', 'desc');
+        $query = UserDevice::query()->orderBy('id', 'desc');
 
         $entries = $query->paginate();
         $spreadsheet = new Spreadsheet();
@@ -297,5 +247,12 @@ class LessonsController extends AdminBaseController
         // Write file to the browser
         $writer->save('php://output');
         die;
+    }
+
+    public function getDeviceByUser(){
+        $user = Auth::user();
+        $devices = UserDevice::where('user_id', $user->id)->select(['device_name', 'id'])->get()->toArray();
+
+        return $devices;
     }
 }

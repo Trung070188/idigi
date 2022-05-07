@@ -11,7 +11,6 @@
         'action' => 'UsersController',
         'name' => 'users',
     ],
-
     [
         'path' => '/products/{action}',
         'action' => 'ProductsController',
@@ -22,11 +21,11 @@
         'action' => 'PermissionsController',
         'name' => 'permissions',
     ],
-     [
-         'path' => '/roles/{action}',
-         'action' => 'RolesController',
-         'name' => 'roles',
-     ],
+    [
+        'path' => '/roles/{action}',
+        'action' => 'RolesController',
+        'name' => 'roles',
+    ],
     [
         'path' => '/elfinder/{action}',
         'action' => 'ElfinderController',
@@ -46,5 +45,10 @@
         'path' => '/schools/{action}',
         'action' => 'SchoolsController',
         'name' => 'schools',
+    ],
+    [
+        'path' => '/user_devices/{action}',
+        'action' => 'UserDevicesController',
+        'name' => 'user_devices',
     ],
 ];

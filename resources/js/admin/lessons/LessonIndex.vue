@@ -1,9 +1,9 @@
 <template>
-    <div class="container-fluid" >
+    <div class="container-fluid">
         <ActionBar type="index"
                    :download="1"
                    :breadcrumbs="breadcrumbs"
-                   v-on:download_lesson="downloadLesson"
+                   v-on:download_lesson="openModal"
                    title="Lesson"/>
         <div class="row">
             <div class="col-lg-12">
@@ -78,7 +78,9 @@
                                         </div>
                                     </div>
                                     <div style="margin: auto 0">
-                                        <button type="button" class="btn btn-primary" @click="doFilter($event)">Tìm kiếm</button>
+                                        <button type="button" class="btn btn-primary" @click="doFilter($event)">Tìm
+                                            kiếm
+                                        </button>
                                     </div>
                                 </form>
                             </div>
@@ -87,14 +89,18 @@
 
                     </div>
 
-                    <div class="card-body d-flex flex-column" >
+                    <div class="card-body d-flex flex-column">
                         <div class="d-flex">
-                            <div v-text="'Showing '+ from +' to '+ to +' of '+ paginate.totalRecord +' entries'" v-if="entries.length > 0"></div>
-                            <div style="margin-left: 20px" v-if="lessonIds.length > 0"> {{lessonIds.length}} lesson selected <a href="javascript:;" @click="removeAll" style="color: red; margin-left: 10px">clear all</a></div>
+                            <div v-text="'Showing '+ from +' to '+ to +' of '+ paginate.totalRecord +' entries'"
+                                 v-if="entries.length > 0"></div>
+                            <div style="margin-left: 20px" v-if="lessonIds.length > 0"> {{ lessonIds.length }} lesson
+                                selected <a href="javascript:;" @click="removeAll"
+                                            style="color: red; margin-left: 10px">clear all</a></div>
                         </div>
                         <table class=" table  table-head-custom table-head-bg table-vertical-center">
                             <thead>
-                            <tr> <th><input type="checkbox" v-model="allSelected" @change="selectAll()"/> ID</th>
+                            <tr>
+                                <th><input type="checkbox" v-model="allSelected" @change="selectAll()"/> ID</th>
                                 <th>Name</th>
                                 <th>Grade</th>
                                 <th>Subject</th>
@@ -104,8 +110,10 @@
                             </tr>
                             </thead>
                             <tbody>
-                            <tr v-for="entry in entries"  >
-                                <td ><input type="checkbox"  class="deleted" v-model="lessonIds" :value="entry.id" @change="updateCheckAll" /> {{entry.id}}</td>
+                            <tr v-for="entry in entries">
+                                <td><input type="checkbox" class="deleted" v-model="lessonIds" :value="entry.id"
+                                           @change="updateCheckAll"/> {{ entry.id }}
+                                </td>
                                 <td v-text="entry.name"></td>
                                 <td v-text="entry.grade"></td>
                                 <td v-text="entry.subject"></td>
@@ -113,8 +121,9 @@
                                 <td v-text=" d(entry.created_at)"></td>
 
                                 <td class="">
-<!--                                    <a :href="'/xadmin/lessons/edit?id='+entry.id" style="margin-right: 10px"><i style="font-size:1.3rem" class="fa fa-edit"></i></a>-->
-                                    <a @click="remove(entry)" href="javascript:;" class="btn-trash deleted"><i  class="fa fa-trash mr-1"></i></a>
+                                    <!--                                    <a :href="'/xadmin/lessons/edit?id='+entry.id" style="margin-right: 10px"><i style="font-size:1.3rem" class="fa fa-edit"></i></a>-->
+                                    <a @click="remove(entry)" href="javascript:;" class="btn-trash deleted"><i
+                                        class="fa fa-trash mr-1"></i></a>
                                 </td>
                             </tr>
                             </tbody>
@@ -144,21 +153,29 @@
             </div>
 
         </div>
-        <div class="modal fade" id="download-lesson" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-            <div class="modal-dialog" role="document">
+        <div class="modal" id="download-lesson" tabindex="-1">
+            <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">Download Lesson</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
+                        <h5 class="modal-title">Download Lesson</h5>
+                        <button type="button" class="close" @click="closeModal">
+                            &times;
                         </button>
                     </div>
                     <div class="modal-body">
-                        ...
+                        <p>Bạn đang lựa chọn để tải về các bài học:</p>
+                        <ul>
+                            <li v-for="lesson in lessons"><strong>{{ lesson.tag }}: {{ lesson.name }}</strong></li>
+
+                        </ul>
+                        <p>Hãy chọn thiết bị để tải về các bài học này:</p>
+                        <ul class="device">
+                            <li v-for="_device in devices"><input type="radio" v-model="device"  :value="_device.id" /> <strong>{{_device.name}}</strong></li>
+
+                        </ul>
                     </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" @click="closeModal">Close</button>
-                        <button type="button" class="btn btn-primary">Save changes</button>
+                    <div class="modal-footer" style="justify-content: center">
+                        <button type="button" class="btn btn-primary" :disabled="lessons.length == 0 || !device" @click="downloadLesson">Confirm</button>
                     </div>
                 </div>
             </div>
@@ -168,164 +185,187 @@
 </template>
 
 <script>
-    import {$get, $post, getTimeRangeAll} from "../../utils";
-    import $router from '../../lib/SimpleRouter';
-    import ActionBar from "../includes/ActionBar";
+import {$get, $post, getTimeRangeAll} from "../../utils";
+import $router from '../../lib/SimpleRouter';
+import ActionBar from "../includes/ActionBar";
 
-    let created = getTimeRangeAll();
-    const $q = $router.getQuery();
+let created = getTimeRangeAll();
+const $q = $router.getQuery();
 
-    export default {
-        name: "LessonsIndex.vue",
-        components: {ActionBar},
-        data() {
-            let isShowFilter = false;
-            let filter = {
-                keyword: $q.keyword || '',
-                created: $q.created || '',
-                subject: $q.subject || '',
-                grade: $q.grade || '',
-                enabled: $q.enabled || ''
-            };
-            for (var key in filter) {
-                if (filter[key] != '') {
-                    isShowFilter = true;
-                }
-            }
-            return {
-                lessonIds: [],
-                allSelected: false,
-                breadcrumbs: [
-                    {
-                        title: 'Lessons'
-                    },
-                ],
-                entries: [],
-                filter: filter,
-                isShowFilter: isShowFilter,
-                limit: 25,
-                from: 0,
-                to: 0,
-                paginate: {
-                    currentPage: 1,
-                    lastPage: 1,
-                    totalRecord: 0
-                }
-            }
-        },
-        mounted() {
-            $router.on('/', this.load).init();
-        },
-        methods: {
-            closeModal: function(){
-                $('#download-lesson').modal('hide');
-            },
-            openModal: function (){
-                $('#download-lesson').modal('show');
-            },
-             selectAll() {
-                if (this.allSelected) {
-                    const selected = this.entries.map((u) => u.id);
-                    this.lessonIds = selected;
-                } else {
-                    this.lessonIds = [];
-                }
-            },
-            updateCheckAll(){
-              if(this.lessonIds.length ===  this.entries.length){
-                  this.allSelected = true;
-              }else{
-                  this.allSelected = false;
-              }
-            },
-            edit: function (id, event){
-                if (!$(event.target).hasClass('deleted')){
-                    window.location.href='/xadmin/lessons/edit?id='+ id;
-                }
-
-            },
-            async load() {
-                let query = $router.getQuery();
-                this.$loading(true);
-                const res  = await $get('/xadmin/lessons/data', query);
-                this.$loading(false);
-                this.paginate = res.paginate;
-                this.entries = res.data;
-                this.from = (this.paginate.currentPage-1)*(this.limit) + 1;
-                this.to = (this.paginate.currentPage-1)*(this.limit) + this.entries.length;
-            },
-            async remove(entry) {
-                if (!confirm('Xóa bản ghi: ' + entry.id)) {
-                    return;
-                }
-
-                const res = await $post('/xadmin/lessons/remove', {id: entry.id});
-
-                if (res.code) {
-                    toastr.error(res.message);
-                } else {
-                    toastr.success(res.message);
-                }
-
-                $router.updateQuery({page: this.paginate.currentPage, _: Date.now()});
-            },
-
-            async removeAll() {
-                if (!confirm('Xóa bản ghi: ' + JSON.stringify(this.lessonIds))) {
-                    return;
-                }
-
-                const res = await $post('/xadmin/lessons/removeAll', {ids: this.lessonIds});
-
-                if (res.code) {
-                    toastr.error(res.message);
-                } else {
-                    toastr.success(res.message);
-                }
-
-                $router.updateQuery({page: this.paginate.currentPage, _: Date.now()});
-            },
-
-            filterClear() {
-                for (var key in this.filter) {
-                    this.filter[key] = '';
-                }
-
-                $router.setQuery({});
-            },
-            doFilter(event) {
-                if (event) {
-                    event.preventDefault();
-                }
-                $router.setQuery(this.filter)
-            },
-            changeLimit() {
-                let params = $router.getQuery();
-                params['page']=1;
-                params['limit'] = this.limit;
-                $router.setQuery(params)
-            },
-
-            async toggleStatus(entry) {
-                const res = await $post('/xadmin/lessons/toggleStatus', {
-                    id: entry.id,
-                    status: entry.status
-                });
-
-                if (res.code === 200) {
-                    toastr.success(res.message);
-                } else {
-                    toastr.error(res.message);
-                }
-
-            },
-            onPageChange(page) {
-                $router.updateQuery({page: page})
+export default {
+    name: "LessonsIndex.vue",
+    components: {ActionBar},
+    data() {
+        let isShowFilter = false;
+        let filter = {
+            keyword: $q.keyword || '',
+            created: $q.created || '',
+            subject: $q.subject || '',
+            grade: $q.grade || '',
+            enabled: $q.enabled || ''
+        };
+        for (var key in filter) {
+            if (filter[key] != '') {
+                isShowFilter = true;
             }
         }
+        return {
+            device: '',
+            devices: [],
+            lessonIds: [],
+            lessons: [],
+            allSelected: false,
+            breadcrumbs: [
+                {
+                    title: 'Lessons'
+                },
+            ],
+            entries: [],
+            filter: filter,
+            isShowFilter: isShowFilter,
+            limit: 25,
+            from: 0,
+            to: 0,
+            paginate: {
+                currentPage: 1,
+                lastPage: 1,
+                totalRecord: 0
+            }
+        }
+    },
+    mounted() {
+        $router.on('/', this.load).init();
+        let self = this;
+        $get('/xadmin/user_devices/getDeviceByUser', function (res){
+            self.devices = res;
+        });
+    },
+    methods: {
+        downloadLesson: function () {
+
+
+        },
+        closeModal: function () {
+            $('#download-lesson').modal('hide');
+        },
+        openModal: function () {
+            $('#download-lesson').modal('show');
+        },
+        selectAll() {
+            if (this.allSelected) {
+                const selected = this.entries.map((u) => u.id);
+                this.lessonIds = selected;
+                this.lessons = this.entries
+            } else {
+                this.lessonIds = [];
+                this.lessons = [];
+            }
+
+        },
+        updateCheckAll() {
+            this.lessons = [];
+            if (this.lessonIds.length === this.entries.length) {
+                this.allSelected = true;
+            } else {
+                this.allSelected = false;
+            }
+            let self = this;
+            self.lessonIds.forEach(function (e) {
+                self.entries.forEach(function (e1) {
+                    if (e1.id == e) {
+                        self.lessons.push(e1);
+                    }
+                })
+            })
+        },
+        edit: function (id, event) {
+            if (!$(event.target).hasClass('deleted')) {
+                window.location.href = '/xadmin/lessons/edit?id=' + id;
+            }
+
+        },
+        async load() {
+            let query = $router.getQuery();
+            this.$loading(true);
+            const res = await $get('/xadmin/lessons/data', query);
+            this.$loading(false);
+            this.paginate = res.paginate;
+            this.entries = res.data;
+            this.from = (this.paginate.currentPage - 1) * (this.limit) + 1;
+            this.to = (this.paginate.currentPage - 1) * (this.limit) + this.entries.length;
+        },
+        async remove(entry) {
+            if (!confirm('Xóa bản ghi: ' + entry.id)) {
+                return;
+            }
+
+            const res = await $post('/xadmin/lessons/remove', {id: entry.id});
+
+            if (res.code) {
+                toastr.error(res.message);
+            } else {
+                toastr.success(res.message);
+            }
+
+            $router.updateQuery({page: this.paginate.currentPage, _: Date.now()});
+        },
+
+        async removeAll() {
+            if (!confirm('Xóa bản ghi: ' + JSON.stringify(this.lessonIds))) {
+                return;
+            }
+
+            const res = await $post('/xadmin/lessons/removeAll', {ids: this.lessonIds});
+
+            if (res.code) {
+                toastr.error(res.message);
+            } else {
+                toastr.success(res.message);
+            }
+
+            $router.updateQuery({page: this.paginate.currentPage, _: Date.now()});
+        },
+
+        filterClear() {
+            for (var key in this.filter) {
+                this.filter[key] = '';
+            }
+
+            $router.setQuery({});
+        },
+        doFilter(event) {
+            if (event) {
+                event.preventDefault();
+            }
+            $router.setQuery(this.filter)
+        },
+        changeLimit() {
+            let params = $router.getQuery();
+            params['page'] = 1;
+            params['limit'] = this.limit;
+            $router.setQuery(params)
+        },
+
+        async toggleStatus(entry) {
+            const res = await $post('/xadmin/lessons/toggleStatus', {
+                id: entry.id,
+                status: entry.status
+            });
+
+            if (res.code === 200) {
+                toastr.success(res.message);
+            } else {
+                toastr.error(res.message);
+            }
+
+        },
+        onPageChange(page) {
+            $router.updateQuery({page: page})
+        }
     }
+}
 </script>
 
 <style scoped>
-
+ul.device {list-style-type: none;}
 </style>
