@@ -1,7 +1,9 @@
 <template>
     <div class="container-fluid" >
         <ActionBar type="index"
+                   :download="1"
                    :breadcrumbs="breadcrumbs"
+                   v-on:download_lesson="downloadLesson"
                    title="Lesson"/>
         <div class="row">
             <div class="col-lg-12">
@@ -142,6 +144,25 @@
             </div>
 
         </div>
+        <div class="modal fade" id="download-lesson" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Download Lesson</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        ...
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" @click="closeModal">Close</button>
+                        <button type="button" class="btn btn-primary">Save changes</button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
 </template>
@@ -196,6 +217,12 @@
             $router.on('/', this.load).init();
         },
         methods: {
+            closeModal: function(){
+                $('#download-lesson').modal('hide');
+            },
+            openModal: function (){
+                $('#download-lesson').modal('show');
+            },
              selectAll() {
                 if (this.allSelected) {
                     const selected = this.entries.map((u) => u.id);

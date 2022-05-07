@@ -40,8 +40,8 @@
                         Create new
                     </a>
 
-                    <a href="#" @click="createNew" class="btn btn-primary " v-if="createWithFunction">
-                        Create new
+                    <a href="javascript:void(0);" @click="downloadLesson" class="btn btn-primary " v-if="download">
+                        Download Lesson
                     </a>
 
                     <a href="javascript:void(0);" class="btn btn-danger btn-sm" @click="deleteAll()" v-if="isShowDelete">
@@ -60,7 +60,7 @@
 <script>
     export default {
         name: "ActionBar",
-        props: ['title', 'type', 'createUrl', 'code', 'backUrl', 'isShowDelete', 'createWithFunction', 'breadcrumbs'],
+        props: ['title', 'type', 'createUrl', 'code', 'backUrl', 'isShowDelete', 'createWithFunction', 'breadcrumbs', 'download'],
         methods: {
             save() {
                 this.isLoading = true;
@@ -71,6 +71,11 @@
             createNew() {
                 this.isLoading = true;
                 this.$emit('createNew');
+                this.isLoading = false;
+            },
+            downloadLesson() {
+                this.isLoading = true;
+                this.$emit('download_lesson');
                 this.isLoading = false;
             },
 
@@ -87,6 +92,7 @@
             }
         },
         data() {
+            console.log(this.download)
             //if (this.type === 'index' && !this.createUrl) {
             //    console.error('Missing createUrl')
             //}

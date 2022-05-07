@@ -294,5 +294,10 @@ class InventoriesController extends AdminBaseController
         die;
     }
 
+    public function download(Request  $req){
+
+
+    }
+
 
 }

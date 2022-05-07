@@ -1,6 +1,7 @@
 <template>
     <div class="container-fluid">
         <ActionBar type="index"
+
                    createUrl="/xadmin/inventories/create"
                    :breadcrumbs="breadcrumbs"
                    title="Inventory"/>
@@ -158,6 +159,7 @@
 
         </div>
 
+
     </div>
 
 </template>
@@ -209,9 +211,11 @@
             }
         },
         mounted() {
+
             $router.on('/', this.load).init();
         },
         methods: {
+
             edit: function (id, event) {
 
                 if (!$(event.target).hasClass('deleted')) {

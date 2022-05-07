@@ -41,9 +41,15 @@ class TestCommand extends Command
      */
     public function handle()
     {
-        $inventory = new Inventory();
-        $inventory->name = 'Chi nhánh vinhome skylake';
-        $inventory->status = 1;
-        $inventory->save();
+
+        $zip_file = public_path('invoices.zip');
+        $zip = new \ZipArchive();
+        $zip->open($zip_file, \ZipArchive::CREATE | \ZipArchive::OVERWRITE);
+        $zip->setPassword('123456');
+        $invoice_file = 'sample.pdf';
+        $zip->addFile( storage_path($invoice_file),'test.pdf');
+        $zip->setEncryptionName('test.pdf', \ZipArchive::EM_AES_256, '123456');
+        $zip->close();
+
     }
 }
