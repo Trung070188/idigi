@@ -3,13 +3,13 @@
         <div class="fmi-dropdown" ref="dropdown">
             <input @change="fileChanged()" accept="image/*" type="file" ref="uploader" style="display: none;width: 1px;height: 1px;"/>
             <button ref="button" @click="toggleTooltip()"  class="btn btn-primary btn-sm dropdown-toggle" type="button">
-                Chọn ảnh
+                Chọn file
             </button>
             <div>
                 <span class="qinput-error-label" v-if="errorMessage">{{errorMessage}}</span>
             </div>
             <div class="fmi-dropdown-menu" v-if="showToolTip" ref="tooltip">
-                <a class="fmi-dropdown-item" href="#" @click.prevent="chooseFile()">Tải ảnh lên</a>
+                <a class="fmi-dropdown-item" href="#" @click.prevent="chooseFile()">Tải file</a>
                 <a class="fmi-dropdown-item" href="#" @click.prevent="showModal()">Chọn file từ thư viện</a>
             </div>
         </div>

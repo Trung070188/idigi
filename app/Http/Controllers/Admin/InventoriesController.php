@@ -62,6 +62,7 @@ class InventoriesController extends AdminBaseController
         if (!$entry) {
             throw new NotFoundHttpException();
         }
+        $entry->virtual_path = asset($entry->virtual_path);
 
         /**
          * @var  Inventory $entry
@@ -110,11 +111,10 @@ class InventoriesController extends AdminBaseController
         $rules = [
             'image' => 'max:255|required',
             'name' => 'max:255|required',
-            'physical_path' => 'max:2000|required',
+            'virtual_path' => 'max:2000|required',
             'subject' => 'max:255|required',
             'type' => 'max:255|required',
             'grade' => 'max:255|required',
-            'virtual_path' => 'max:255',
             'link_webview' => 'max:255',
             'tags' => 'max:1000',
         ];
@@ -127,9 +127,10 @@ class InventoriesController extends AdminBaseController
                 'errors' => $v->errors()
             ];
         }
-        $data['virtual_image'] = get_virtual_path($data['image']);
-        $data['virtual_path'] = get_virtual_path($data['physical_path']);
-//        $data['enabled'] = ($data['enabled'] == 'true' || $data['enabled'] == 1) ? 1 : 0;
+
+        $data['image'] = get_virtual_path($data['image']);
+        $data['virtual_path'] = get_virtual_path($data['virtual_path']);
+        $data['physical_path'] = str_replace('\\', '/', $_SERVER['DOCUMENT_ROOT']).$data['virtual_path'];
 
         /**
          * @var  Inventory $entry
@@ -293,11 +294,5 @@ class InventoriesController extends AdminBaseController
         $writer->save('php://output');
         die;
     }
-
-    public function download(Request  $req){
-
-
-    }
-
 
 }

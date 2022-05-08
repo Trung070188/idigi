@@ -84,15 +84,15 @@
                                 <div class="form-group mb-3">
                                     <label>Chọn ảnh</label>
                                     <q-image v-if="entry.image" :src="entry.image" styles="width: 100%; max-height: 400px; margin-bottom: 11px"/>
-                                    <upload-file-component v-model="entry.image" :hide-preview="true"></upload-file-component>
+                                    <file-manager-input v-model="entry.image" :hide-preview="true"></file-manager-input>
                                     <error-label for="f_title" :errors="errors.image"></error-label>
 
                                 </div>
                                 <div class="form-group mb-3">
                                     <label>File asset bundle</label>
-                                    <a :href="entry.physical_path" v-if="entry.physical_path" v-text="entry.physical_path"></a>
-                                    <upload-file-component v-model="entry.physical_path"></upload-file-component>
-                                    <error-label for="f_title" :errors="errors.physical_path"></error-label>
+                                    <a :href="entry.virtual_path" v-if="entry.virtual_path" v-text="entry.virtual_path"></a>
+                                    <file-manager-input v-model="entry.virtual_path"></file-manager-input>
+                                    <error-label for="f_title" :errors="errors.virtual_path"></error-label>
 
                                 </div>
                             </div>
@@ -118,12 +118,13 @@
 <script>
     import {$post} from "../../utils";
     import ActionBar from "../includes/ActionBar";
-    import UploadFileComponent from "../../components/UploadFileComponent";
+    //import UploadFileComponent from "../../components/UploadFileComponent";
+    import FileManagerInput from "../../components/FileManagerInput";
     import SwitchButton from "../../components/SwitchButton";
 
     export default {
         name: "InventoriesForm.vue",
-        components: {ActionBar,UploadFileComponent,SwitchButton},
+        components: {ActionBar,SwitchButton,FileManagerInput},
         data() {
             return {
                 types: [
@@ -148,10 +149,10 @@
                 window.location.href = '/xadmin/inventories/index';
             },
             async save() {
-                this.$loading(true);
+               // this.$loading(true);
                 const res = await $post('/xadmin/inventories/save', {entry: this.entry}, false);
-                console.log(res);
-                this.$loading(false);
+
+               // this.$loading(false);
                 if (res.errors) {
                     this.errors = res.errors;
                     return;
