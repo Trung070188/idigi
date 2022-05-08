@@ -14,6 +14,7 @@ use App\Models\Lesson;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+use Symfony\Component\Routing\Exception\MethodNotAllowedException;
 
 
 class LessonsController extends AdminBaseController
@@ -27,12 +28,13 @@ class LessonsController extends AdminBaseController
     ];
 
     /**
-    * Index page
-    * @uri  /xadmin/lessons/index
-    * @throw  NotFoundHttpException
-    * @return  View
-    */
-    public function index() {
+     * Index page
+     * @uri  /xadmin/lessons/index
+     * @throw  NotFoundHttpException
+     * @return  View
+     */
+    public function index()
+    {
         $title = 'Lesson';
         $component = 'LessonIndex';
 
@@ -40,23 +42,25 @@ class LessonsController extends AdminBaseController
     }
 
     /**
-    * Create new entry
-    * @uri  /xadmin/lessons/create
-    * @throw  NotFoundHttpException
-    * @return  View
-    */
-    public function create (Request $req) {
+     * Create new entry
+     * @uri  /xadmin/lessons/create
+     * @throw  NotFoundHttpException
+     * @return  View
+     */
+    public function create(Request $req)
+    {
         $component = 'LessonForm';
         $title = 'Create lessons';
         return component($component, compact('title'));
     }
 
     /**
-    * @uri  /xadmin/lessons/edit?id=$id
-    * @throw  NotFoundHttpException
-    * @return  View
-    */
-    public function edit (Request $req) {
+     * @uri  /xadmin/lessons/edit?id=$id
+     * @throw  NotFoundHttpException
+     * @return  View
+     */
+    public function edit(Request $req)
+    {
         $id = $req->id;
         $entry = Lesson::find($id);
 
@@ -65,8 +69,8 @@ class LessonsController extends AdminBaseController
         }
 
         /**
-        * @var  Lesson $entry
-        */
+         * @var  Lesson $entry
+         */
 
         $title = 'Edit';
         $component = 'LessonForm';
@@ -76,10 +80,11 @@ class LessonsController extends AdminBaseController
     }
 
     /**
-    * @uri  /xadmin/lessons/remove
-    * @return  array
-    */
-    public function remove(Request $req) {
+     * @uri  /xadmin/lessons/remove
+     * @return  array
+     */
+    public function remove(Request $req)
+    {
         $id = $req->id;
         $entry = Lesson::find($id);
 
@@ -99,9 +104,10 @@ class LessonsController extends AdminBaseController
      * @uri  /xadmin/lessons/removeAll
      * @return  array
      */
-    public function removeAll(Request $req) {
+    public function removeAll(Request $req)
+    {
         $ids = $req->ids;
-        Lesson::whereIn('id',$ids)->delete();
+        Lesson::whereIn('id', $ids)->delete();
 
 
         return [
@@ -111,10 +117,11 @@ class LessonsController extends AdminBaseController
     }
 
     /**
-    * @uri  /xadmin/lessons/save
-    * @return  array
-    */
-    public function save(Request $req) {
+     * @uri  /xadmin/lessons/save
+     * @return  array
+     */
+    public function save(Request $req)
+    {
         if (!$req->isMethod('POST')) {
             return ['code' => 405, 'message' => 'Method not allow'];
         }
@@ -122,14 +129,14 @@ class LessonsController extends AdminBaseController
         $data = $req->get('entry');
 
         $rules = [
-    'created_by' => 'max:255',
-    'created_date' => 'date_format:Y-m-d H:i:s',
-    'last_modified_by' => 'max:255',
-    'last_modified_date' => 'date_format:Y-m-d H:i:s',
-    'name' => 'max:255',
-    'subject' => 'max:255',
-    'number' => 'max:255',
-];
+            'created_by' => 'max:255',
+            'created_date' => 'date_format:Y-m-d H:i:s',
+            'last_modified_by' => 'max:255',
+            'last_modified_date' => 'date_format:Y-m-d H:i:s',
+            'name' => 'max:255',
+            'subject' => 'max:255',
+            'number' => 'max:255',
+        ];
 
         $v = Validator::make($data, $rules);
 
@@ -141,8 +148,8 @@ class LessonsController extends AdminBaseController
         }
 
         /**
-        * @var  Lesson $entry
-        */
+         * @var  Lesson $entry
+         */
         if (isset($data['id'])) {
             $entry = Lesson::find($data['id']);
             if (!$entry) {
@@ -174,8 +181,8 @@ class LessonsController extends AdminBaseController
     }
 
     /**
-    * @param  Request $req
-    */
+     * @param Request $req
+     */
     public function toggleStatus(Request $req)
     {
         $id = $req->get('id');
@@ -198,34 +205,35 @@ class LessonsController extends AdminBaseController
     }
 
     /**
-    * Ajax data for index page
-    * @uri  /xadmin/lessons/data
-    * @return  array
-    */
-    public function data(Request $req) {
+     * Ajax data for index page
+     * @uri  /xadmin/lessons/data
+     * @return  array
+     */
+    public function data(Request $req)
+    {
         $query = Lesson::query()->orderBy('id', 'desc');
 
         if ($req->keyword) {
-            $query->where('name', 'LIKE', '%' . $req->keyword. '%');
+            $query->where('name', 'LIKE', '%' . $req->keyword . '%');
         }
         if ($req->subject) {
-            $query->where('subject',  $req->subject);
+            $query->where('subject', $req->subject);
 
         }
 
         if ($req->grade) {
-            $query->where('grade',  $req->grade);
+            $query->where('grade', $req->grade);
         }
 
         if ($req->enabled) {
-            $query->where('enabled',  $req->enabled);
+            $query->where('enabled', $req->enabled);
         }
 
         $query->createdIn($req->created);
 
         $limit = 25;
 
-        if($req->limit){
+        if ($req->limit) {
             $limit = $req->limit;
         }
 
@@ -242,23 +250,24 @@ class LessonsController extends AdminBaseController
         ];
     }
 
-    public function export() {
-                $keys = [
-                            'created_by' => ['A', 'created_by'],
-                            'created_date' => ['B', 'created_date'],
-                            'enabled' => ['C', 'enabled'],
-                            'grade' => ['D', 'grade'],
-                            'last_modified_by' => ['E', 'last_modified_by'],
-                            'last_modified_date' => ['F', 'last_modified_date'],
-                            'name' => ['G', 'name'],
-                            'rating' => ['H', 'rating'],
-                            'shared' => ['I', 'shared'],
-                            'structure' => ['J', 'structure'],
-                            'subject' => ['K', 'subject'],
-                            'unit' => ['L', 'unit'],
-                            'number' => ['M', 'number'],
-                            'customized' => ['N', 'customized'],
-                            ];
+    public function export()
+    {
+        $keys = [
+            'created_by' => ['A', 'created_by'],
+            'created_date' => ['B', 'created_date'],
+            'enabled' => ['C', 'enabled'],
+            'grade' => ['D', 'grade'],
+            'last_modified_by' => ['E', 'last_modified_by'],
+            'last_modified_date' => ['F', 'last_modified_date'],
+            'name' => ['G', 'name'],
+            'rating' => ['H', 'rating'],
+            'shared' => ['I', 'shared'],
+            'structure' => ['J', 'structure'],
+            'subject' => ['K', 'subject'],
+            'unit' => ['L', 'unit'],
+            'number' => ['M', 'number'],
+            'customized' => ['N', 'customized'],
+        ];
 
         $query = Lesson::query()->orderBy('id', 'desc');
 
@@ -271,7 +280,7 @@ class LessonsController extends AdminBaseController
                 $sheet->setCellValue($v . "1", $key);
             } elseif (is_array($v)) {
                 list($c, $n) = $v;
-                 $sheet->setCellValue($c . "1", $n);
+                $sheet->setCellValue($c . "1", $n);
             }
         }
 
@@ -300,36 +309,59 @@ class LessonsController extends AdminBaseController
         die;
     }
 
-    public function downloadLesson(Request  $request){
-        $lessons = Lesson::whereIn('id', $request->lessonIds)
+    public function downloadLesson(Request $request)
+    {
+        ob_get_clean();
+        $filePath = public_path('ekid.zip');
+
+        header('Content-Type: application/octet-stream');
+        header("Content-Transfer-Encoding: Binary");
+        header("Content-disposition: attachment; filename=\"" . basename($filePath) . "\"");
+        readfile($filePath);
+        die;
+        return response()->download(public_path('ekid.zip'));
+        if ($request->isMethod('POST')) {
+            throw new MethodNotAllowedException("405");
+        }
+
+        $lessons = Lesson::whereIn('id', explode(',',$request->lessonIds))
             ->with(['inventories'])->get();
         $data = [];
+        $zip_file = public_path('lessons.zip');
+        $zip = new \ZipArchive();
+        $zip->open($zip_file, \ZipArchive::CREATE | \ZipArchive::OVERWRITE);
 
-        foreach ($lessons as $lesson){
+        foreach ($lessons as $lesson) {
             $lessonData = [];
-            $lessonData['idSubject'] = 1;
+            $lessonData['idSubject'] = $lesson->subject;
             $lessonData['codeSubject'] = 1;
-            $lessonData['nameSubject'] = 1;
-            $lessonData['grade'] = 1;
+            $lessonData['nameSubject'] = $lesson->subject;
+            $lessonData['grade'] = $lesson->grade;
             $lessonData['codeLesson'] = 1;
             $lessonData['titleUnit'] = 1;
             $lessonData['nameUnit'] = 1;
             $lessonData['idUnit'] = 1;
-            $lessonData['nameLesson'] = 1;
-            $lessonData['idLesson'] = 1;
+            $lessonData['nameLesson'] = $lesson->name;
+            $lessonData['idLesson'] = $lesson->id;
             $lessonData['titleLesson'] = 1;
 
             $inventoryData = [];
-            if($lesson->inventories){
-                foreach ($lesson->inventories as $inventory){
+            if ($lesson->inventories) {
+                foreach ($lesson->inventories as $inventory) {
+                    $icon = basename(public_path($inventory->image));
+                    $link = basename(public_path($inventory->virtual_path));
                     $inventoryData[] = [
-                        'idSublesson' => 1,
-                        'pathIcon' => 1,
-                        'name' => 1,
+                        'idSublesson' => $inventory->id,
+                        'pathIcon' => $icon,
+                        'name' => $inventory->name,
                         'time' => 1,
-                        'type' => 1,
-                        'link' => 1,
+                        'type' => $inventory->type,
+                        'link' => $link,
                     ];
+
+                    $zip->addFile(public_path($inventory->image), $icon);
+                    $zip->addFile(public_path($inventory->virtual_path), $link);
+
                 }
             }
 
@@ -337,6 +369,14 @@ class LessonsController extends AdminBaseController
 
             $data[] = $lessonData;
         }
-        Storage::put('attempt1.txt', json_encode($data));
+        Storage::put('lesson_detail.txt', json_encode($data));
+
+
+        $zip->addFile(storage_path('app/lesson_detail.txt'), 'lesson_detail.txt');
+        // $zip->setEncryptionName('lesson_detail.txt', \ZipArchive::EM_AES_256, '123456');
+        $zip->close();
+
+        return response()->download(public_path('ekid.zip'));
     }
+
 }

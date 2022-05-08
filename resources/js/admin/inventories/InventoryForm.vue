@@ -83,14 +83,12 @@
                             <div class="col-lg-3 col-sm-12">
                                 <div class="form-group mb-3">
                                     <label>Chọn ảnh</label>
-                                    <q-image v-if="entry.image" :src="entry.image" styles="width: 100%; max-height: 400px; margin-bottom: 11px"/>
                                     <file-manager-input v-model="entry.image" :hide-preview="true"></file-manager-input>
                                     <error-label for="f_title" :errors="errors.image"></error-label>
 
                                 </div>
                                 <div class="form-group mb-3">
                                     <label>File asset bundle</label>
-                                    <a :href="entry.virtual_path" v-if="entry.virtual_path" v-text="entry.virtual_path"></a>
                                     <file-manager-input v-model="entry.virtual_path"></file-manager-input>
                                     <error-label for="f_title" :errors="errors.virtual_path"></error-label>
 

@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div class="row" >
+        <div class="row1" >
             <input @keydown="search()" class="fm-search-input" placeholder="tìm kiếm" v-model="filter.keyword">
             <Daterangepicker
                 @input="doFilter()"
@@ -40,7 +40,7 @@
                         <a @click.prevent="selectFile()" class="fm-btn-upload">
                             <i class="fa fa-plus"/>
                         </a>
-                        <input @change="fileChange()" accept="image/*" type="file" ref="uploader" style="display: none;width: 1px;height: 1px"/>
+                        <input @change="fileChange()"  type="file" ref="uploader" style="display: none;width: 1px;height: 1px"/>
                     </th>
                 </tr>
                 </thead>

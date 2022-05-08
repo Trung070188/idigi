@@ -240,16 +240,8 @@ export default {
         });
     },
     methods: {
-        async downloadLesson() {
-
-            this.$loading(true);
-            const res = await $post('/xadmin/lessons/downloadLesson', {lessonIds: this.lessonIds, device: this.device}, false);
-            this.$loading(false);
-            if (res.errors) {
-               alert('có lỗi xảy ra')
-                return;
-            }
-
+       downloadLesson() {
+            window.location.href = '/xadmin/lessons/downloadLesson?'+ 'lessonIds='+this.lessonIds +'&device=' + this.device;
         },
 
         closeModal: function () {

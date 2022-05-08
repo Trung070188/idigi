@@ -1,43 +1,11 @@
 <template>
     <div ref="root">
-        <div class="fmi-dropdown" ref="dropdown">
-            <input @change="fileChanged()" accept="image/*" type="file" ref="uploader" style="display: none;width: 1px;height: 1px;"/>
-            <button ref="button" @click="toggleTooltip()"  class="btn btn-primary btn-sm dropdown-toggle" type="button">
-                Chọn file
-            </button>
-            <div>
-                <span class="qinput-error-label" v-if="errorMessage">{{errorMessage}}</span>
-            </div>
-            <div class="fmi-dropdown-menu" v-if="showToolTip" ref="tooltip">
-                <a class="fmi-dropdown-item" href="#" @click.prevent="chooseFile()">Tải file</a>
-                <a class="fmi-dropdown-item" href="#" @click.prevent="showModal()">Chọn file từ thư viện</a>
-            </div>
-        </div>
-        <div>
-            <div ref="modal" class="modal" tabindex="-1" role="dialog">
-                <div class="modal-dialog" role="document" style="    max-width: 80%;">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title">Quản lí file</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <div class="modal-body">
-                            <FileManager v-if="showFileManager" :multiple="isMultiple" @fileclick="fileClicked"/>
-                        </div>
-
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="fmi-preview">
+        <div class="fmi-preview" style="margin: 0px">
             <ul class="fmi-preview-ul">
                 <li v-for="(file, index) in files">
                     <div v-if="file.is_image">
                         <a  target="_blank" :href="file.url">
-                            <img  class="fm-img-preview" :src="file.url"/>
+                            <img  class="fm-img-preview" style="width:100%; height:100%; " :src="file.url"/>
                         </a>
                     </div>
 
@@ -56,6 +24,40 @@
                 </li>
             </ul>
         </div>
+        <div class="fmi-dropdown" ref="dropdown">
+            <input @change="fileChanged()"  type="file" ref="uploader" style="display: none;width: 1px;height: 1px;"/>
+            <button ref="button" @click="toggleTooltip()"  class="btn btn-primary btn-sm" type="button">
+               Chọn file
+                <i class="fa fa-caret-down"></i>
+            </button>
+            <div>
+                <span class="qinput-error-label" v-if="errorMessage">{{errorMessage}}</span>
+            </div>
+            <div class="fmi-dropdown-menu" v-if="showToolTip" ref="tooltip">
+                <a class="fmi-dropdown-item" href="#" @click.prevent="chooseFile()">Tải file</a>
+                <a class="fmi-dropdown-item" href="#" @click.prevent="showModal()">Chọn file từ thư viện</a>
+            </div>
+        </div>
+        <div>
+            <div ref="modal" class="modal" tabindex="-1" role="dialog">
+                <div class="modal-dialog" role="document" style="    max-width: 80%;">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Quản lí file</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                &times;
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <FileManager v-if="showFileManager" :multiple="isMultiple" @fileclick="fileClicked"/>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
     </div>
 </template>
 
@@ -243,7 +245,7 @@
         display: inline-block;
         margin-left: 5px;
         position: relative;
-        width: 64px;
+     /* width: 80px;*/
     }
 
     .fmi-close {

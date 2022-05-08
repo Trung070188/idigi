@@ -17,7 +17,7 @@ class FilesController extends AdminBaseController
         $keyword = $request->get('keyword');
         $sortDirection = $request->get('sort_direction') === 'asc' ? 'asc' : 'desc';
         $sortField = $request->get('sort_field');
-        $fileType = $request->get('file_type');
+       // $fileType = $request->get('file_type');
 
         $allowedSortFiled = [
             'id' => true,
@@ -38,11 +38,11 @@ class FilesController extends AdminBaseController
             $query->where('name', 'LIKE', '%'.$keyword.'%');
         }
 
-        if ($fileType === 'image') {
+        /*if ($fileType === 'image') {
             $query->where('is_image', 1);
         } elseif ($fileType === 'excel') {
             $query->where('extension', 'xlsx');
-        }
+        }*/
 
         $query->createdIn($request->get('created'));
 
