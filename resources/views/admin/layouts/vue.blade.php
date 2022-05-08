@@ -15,7 +15,7 @@
 
 		<link rel="shortcut icon" href="/themes/admin/assets/media/logos/favicon.ico" />
 
-<!--        <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&amp;display=swap" rel="stylesheet">-->
+        <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&amp;display=swap" rel="stylesheet">
         <link href="/assets/js/daterangepicker/daterangepicker.css" rel="stylesheet" type="text/css" />
         <link href="/assets/js/daterangepicker/daterangepicker.css" rel="stylesheet" type="text/css" />
         <link href="/assets/plugins/ckeditor/plugins/codesnippet/lib/highlight/styles/default.css" rel="stylesheet"/>
@@ -45,6 +45,12 @@
             .form-group label{
                 font-weight: 700;
             }
+            @media (max-width: 991.98px){
+                .toolbar .page-title[data-kt-swapper=true] {
+                    display: block!important;
+                }
+            }
+
         </style>
 
         <!--end::Layout Themes-->
