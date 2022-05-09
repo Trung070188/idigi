@@ -10,6 +10,11 @@ class UserDevice extends BaseModel
     protected  $fillable = [
         'device_uid',
         'device_name',
-        'user_id'
+        'user_id',
+        'status'
     ];
+    public function user()
+    {
+        return $this->hasOne(User::class,'user_id');
+    }
 }

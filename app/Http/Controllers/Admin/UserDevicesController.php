@@ -18,9 +18,9 @@ class UserDevicesController extends AdminBaseController
 {
     public static $menus = [
         [
-            'name' => 'UserDevice',
-            'icon' => 'fa fa-shopping-cart',
-            'url' => '/xadmin/user_devices/index',
+//            'name' => 'UserDevice',
+//            'icon' => 'fa fa-shopping-cart',
+//            'url' => '/xadmin/user_devices/index',
         ]
     ];
 
@@ -31,11 +31,10 @@ class UserDevicesController extends AdminBaseController
     * @return  View
     */
     public function index() {
-        $title = 'UserDevice';
+        $title = 'UserDevices';
         $component = 'User_deviceIndex';
         return component($component, compact('title'));
     }
-
     /**
     * Create new entry
     * @uri  /xadmin/user_devices/create
@@ -43,6 +42,7 @@ class UserDevicesController extends AdminBaseController
     * @return  View
     */
     public function create (Request $req) {
+
         $component = 'User_deviceForm';
         $title = 'Create user_devices';
         return component($component, compact('title'));

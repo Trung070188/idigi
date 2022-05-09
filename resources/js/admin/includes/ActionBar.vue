@@ -48,6 +48,7 @@
                         Delete
                     </a>
                 </div>
+
             </div>
             <div class="d-flex align-items-center py-1">
 
@@ -60,13 +61,14 @@
 <script>
     export default {
         name: "ActionBar",
-        props: ['title', 'type', 'createUrl', 'code', 'backUrl', 'isShowDelete', 'createWithFunction', 'breadcrumbs', 'download'],
+        props: ['title', 'type', 'createUrl', 'code', 'backUrl', 'isShowDelete', 'createWithFunction', 'breadcrumbs', 'download','createDevice'],
         methods: {
             save() {
                 this.isLoading = true;
                 this.$emit('save');
                 this.isLoading = false;
             },
+
 
             createNew() {
                 this.isLoading = true;

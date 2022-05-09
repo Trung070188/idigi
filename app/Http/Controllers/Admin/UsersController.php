@@ -73,7 +73,6 @@ class UsersController extends AdminBaseController
         if (!$entry) {
             throw new NotFoundHttpException();
         }
-
         /**
          * @var  User $entry
          */
@@ -92,8 +91,16 @@ class UsersController extends AdminBaseController
      */
     public function edit (Request $req) {
         $id = $req->id;
-        $entry = User::find($id);
-//        $entry->roles()->acttch();
+        $entry = User::query()->with(['roles'],['role_role'])
+            ->where('id',$id)->first();
+
+//        $entry=User::find($id);
+
+
+//        foreach ($entry->roles as $role)
+//        {
+//          $role->role_id;
+//        }
         if (!$entry) {
             throw new NotFoundHttpException();
         }
@@ -101,16 +108,15 @@ class UsersController extends AdminBaseController
         /**
          * @var  User $entry
          */
+        $roles=Role::query()->orderBy('role_name')->get();
         $title = 'Edit';
         $component = 'UserForm';
-        $roles=Role::query()->orderBy('role_name')->get();
         $jsonData=[
             'entry'=>$entry,
-            'roles'=>$roles
+            'roles'=>$roles,
         ];
         return view('admin.layouts.vue', compact('title','component','jsonData'));
     }
-
     /**
      * @uri  /xadmin/users/remove
      * @return  array
@@ -140,6 +146,7 @@ class UsersController extends AdminBaseController
             return ['code' => 405, 'message' => 'Method not allow'];
         }
         $data = $req->get('entry');
+        $roles = @$data['roles'];
         $rules = [
             'username' => 'required|max:191',
             'email' => 'required|max:191',
@@ -165,40 +172,29 @@ class UsersController extends AdminBaseController
                     'message' => 'Không tìm thấy',
                 ];
             }
-//           $roles = $data['roles'];
-//
-//           UserRole::where('user_id', $entry->id)->delete();
-//
-//           foreach ($roles as $role){
-//               User::create([
-//                   'user_id' => $entry->id,
-//                   'role_id' => $role
-//               ]);
-//           }
+
            $entry->fill($data);
            $entry->save();
+
+
+              foreach ($roles as $role){
+                  UserRole::create([ 'user_id'=>$entry->id,'role_id' => $role['id']]);
+
+          }
+
+
            return [
                 'code' => 0,
                'message' => 'Đã cập nhật',
                 'id' => $entry->id,
            ];
         } else {
-//
-           $id=$req->id;
-//           $entry=User::find($id)->roles;
           $entry=new User();
           $entry->fill($data);
-//           $roles = $data['roles'];
-//           UserRole::where('user_id', $id)->delete();
-//
-//
-//           foreach ($roles as $role){
-//               User::create([
-//                   'user_id' => $entry->id,
-//                   'role_id' => $role
-//               ]);
-//           }
           $entry->save();
+           foreach ($roles as $role){
+               UserRole::create(['user_id' => $entry->id, 'role_id' => $role['id']]);
+           }
            return [
                'code' => 0,
               'message' => 'Đã thêm',
@@ -255,6 +251,11 @@ class UsersController extends AdminBaseController
         }
         if ($req->user_id) {
             $query->where('user_id',  $req->user_id);
+        }
+        $trung=Role::query()->orderBy('id','desc');
+        if($req->role_name)
+        {
+            $trung->where('role_name',$req->role_name);
         }
         $query->createdIn($req->created);
         $entries = $query->paginate();

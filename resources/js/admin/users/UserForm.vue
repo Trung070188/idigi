@@ -33,10 +33,12 @@
                                     </div>
                                 </div>
                                 <div class="row" >
+
                                     <label>Role</label>
-                                    <div v-for="role in roles" :key="role.id" class="form-group col-sm-2">
-                                        <input type="checkbox"  v-model="entry.roles" :value="role"  >
+                                    <div v-for="role in roles" class="form-group col-sm-2">
+                                        <input type="checkbox"  v-model="entry.roles" :value="role" >
                                         <label >{{role.role_name}}</label>
+                                        <error-label for="f_grade" :errors="errors.roles"></error-label>
                                     </div>
                                     <p>{{entry.roles}}</p>
                                 </div>
@@ -106,9 +108,10 @@
             }
         },
         methods: {
-            checkbox_roles()
-            {
-            },
+            // checkbox_roles()
+            // {
+            //     this.entry=this.roles;
+            // },
             backIndex(){
 
                 window.location.href = '/xadmin/users/index';
