@@ -19,7 +19,7 @@
                     </template>
 
                     <span @click="remove(file, index)" class="fmi-close">
-                        <i class="fa fa-times"/>
+                        <i class="fa fa-times" style="color:red"/>
                     </span>
                 </li>
             </ul>
@@ -250,8 +250,8 @@
 
     .fmi-close {
         position: absolute;
-        top: -4px;
-        right: 0;
+        top: -9px;
+        right: -5px;
         color: #8b0000;
         cursor: pointer;
     }
