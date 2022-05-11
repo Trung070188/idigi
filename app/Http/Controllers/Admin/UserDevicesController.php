@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 
+use App\Models\User;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -41,36 +42,36 @@ class UserDevicesController extends AdminBaseController
     * @throw  NotFoundHttpException
     * @return  View
     */
-    public function create (Request $req) {
-
-        $component = 'User_deviceForm';
-        $title = 'Create user_devices';
-        return component($component, compact('title'));
-    }
+//    public function create (Request $req) {
+//
+//        $component = 'User_deviceForm';
+//        $title = 'Create user_devices';
+//        return component($component, compact('title'));
+//    }
 
     /**
     * @uri  /xadmin/user_devices/edit?id=$id
     * @throw  NotFoundHttpException
     * @return  View
     */
-    public function edit (Request $req) {
-        $id = $req->id;
-        $entry = UserDevice::find($id);
-
-        if (!$entry) {
-            throw new NotFoundHttpException();
-        }
-
-        /**
-        * @var  UserDevice $entry
-        */
-
-        $title = 'Edit';
-        $component = 'User_deviceForm';
-
-
-        return component($component, compact('title', 'entry'));
-    }
+//    public function edit (Request $req) {
+//        $id = $req->id;
+//        $entry = UserDevice::find($id);
+//
+//        if (!$entry) {
+//            throw new NotFoundHttpException();
+//        }
+//
+//        /**
+//        * @var  UserDevice $entry
+//        */
+//
+//        $title = 'Edit';
+//        $component = 'User_deviceForm';
+//
+//
+//        return component($component, compact('title', 'entry'));
+//    }
 
     /**
     * @uri  /xadmin/user_devices/remove
@@ -96,17 +97,14 @@ class UserDevicesController extends AdminBaseController
     * @uri  /xadmin/user_devices/save
     * @return  array
     */
-    public function save(Request $req) {
-        if (!$req->isMethod('POST')) {
+    public function save(Request $request) {
+        if (!$request->isMethod('POST')) {
             return ['code' => 405, 'message' => 'Method not allow'];
         }
-
-        $data = $req->get('entry');
-
+        $data = $request->get('entry');
         $rules = [
     'device_uid' => 'required|max:45',
     'device_name' => 'required|max:45',
-    'user_id' => 'required',
 ];
 
         $v = Validator::make($data, $rules);
@@ -121,25 +119,13 @@ class UserDevicesController extends AdminBaseController
         /**
         * @var  UserDevice $entry
         */
-        if (isset($data['id'])) {
-            $entry = UserDevice::find($data['id']);
-            if (!$entry) {
-                return [
-                    'code' => 3,
-                    'message' => 'Không tìm thấy',
-                ];
-            }
 
-            $entry->fill($data);
-            $entry->save();
 
-            return [
-                'code' => 0,
-                'message' => 'Đã cập nhật',
-                'id' => $entry->id
-            ];
-        } else {
-            $entry = new UserDevice();
+        $entry = new UserDevice();
+            $entry->device_uid=$request->input('device_uid');
+            $entry->device_name=$request->input('device_name');
+            $entry->user_id=auth()->id();
+            $entry->status=0;
             $entry->fill($data);
             $entry->save();
 
@@ -149,7 +135,43 @@ class UserDevicesController extends AdminBaseController
                 'id' => $entry->id
             ];
         }
+    public function savesend(Request $request) {
+        if (!$request->isMethod('POST')) {
+            return ['code' => 405, 'message' => 'Method not allow'];
+        }
+        $data = $request->get('entry');
+        $rules = [
+            'device_uid' => 'required|max:45',
+            'device_name' => 'required|max:45',
+        ];
+
+        $v = Validator::make($data, $rules);
+
+        if ($v->fails()) {
+            return [
+                'code' => 2,
+                'errors' => $v->errors()
+            ];
+        }
+
+        /**
+         * @var  UserDevice $entry
+         */
+        $entry = new UserDevice();
+        $entry->device_uid=$request->input('device_uid');
+        $entry->device_name=$request->input('device_name');
+        $entry->user_id=auth()->id();
+        $entry->status=1;
+        $entry->fill($data);
+        $entry->save();
+        return [
+            'code' => 0,
+            'message' => 'Đã thêm',
+            'id' => $entry->id
+        ];
     }
+
+//    }
 
     /**
     * @param  Request $req
@@ -166,12 +188,12 @@ class UserDevicesController extends AdminBaseController
             ];
         }
 
-        $entry->status = $req->status ? 1 : 0;
+        $entry->status = $req->status ? 0 : 1;
         $entry->save();
 
         return [
             'code' => 200,
-            'message' => 'Đã lưu'
+            'message' => 'Đã gửi yêu cầu'
         ];
     }
 
@@ -181,19 +203,23 @@ class UserDevicesController extends AdminBaseController
     * @return  array
     */
     public function data(Request $req) {
-        $query = UserDevice::query()->orderBy('id', 'desc');
+        $count_user=auth()->id();
+        $query = UserDevice::query()
+            ->where('user_id',$count_user)
+            ->orderBy('id', 'desc');
 
         if ($req->keyword) {
             //$query->where('title', 'LIKE', '%' . $req->keyword. '%');
         }
 
         $query->createdIn($req->created);
-
-
         $entries = $query->paginate();
+//            $user_id=auth()->id();
+//        $count_user=UserDevice::where('user_id',$user_id)->count();
 
         return [
             'code' => 0,
+//            'count_user'=>$count_user,
             'data' => $entries->items(),
             'paginate' => [
                 'currentPage' => $entries->currentPage(),
@@ -250,9 +276,10 @@ class UserDevicesController extends AdminBaseController
     }
 
     public function getDeviceByUser(){
-        $user = Auth::user();
-        $devices = UserDevice::where('user_id', $user->id)->select(['device_name', 'id'])->get()->toArray();
+//        $user = Auth::user();
+//        $devices = UserDevice::where('user_id', $user->id)->select(['device_name', 'id'])->get()->toArray();
+//
+//        return $devices;
 
-        return $devices;
     }
 }

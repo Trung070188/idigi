@@ -16,40 +16,69 @@
                         <p>Bước 1 :Sử dụng máy tính mà bạn muốn thêm thiết bị mở ứng dụng IDIGI trên Desktop</p>
                         <p>Bước 2:Nhấn vào nút "Get device information" và copy đoạn mã thông tin thiết bị </p>
                         <p>Bước 3:Dán đoạn mã vào ô phía dưới</p>
-                        <input type="text" class="form-control" placeholder="" aria-label="Username" aria-describedby="basic-addon1">
+                        <input type="text" class="form-control " placeholder="Device name" aria-label="" style="margin-bottom: 10px" aria-describedby="basic-addon1" v-model="entry.device_name" >
+                        <error-label for="f_category_id" :errors="errors.device_name"></error-label>
+                        <input type="text" class="form-control col-2" placeholder="Enter the device information code" aria-label="" aria-describedby="basic-addon1" v-model="entry.device_uid" >
+                        <error-label for="f_category_id" :errors="errors.device_uid"></error-label>
+
                     </div>
                     <div class="form-group d-flex justify-content-between">
-                        <button class="btn btn-danger ito-btn-small" data-dismiss="modal">Add now</button>
-                        <button class="btn btn-primary ito-btn-add" data-dismiss="modal">
+                        <button  class="btn btn-danger ito-btn-small" data-dismiss="modal" @click="save()">Add now</button>
+                        <button class="btn btn-primary ito-btn-add" data-dismiss="modal" @click="save_send()">
                             Add & send verify request
                         </button>
                     </div>
                 </div>
             </div>
         </div>
+        <div class="modal fade" style="margin-right:50px;border:2px solid #333333  " id="deviceConfirmLimit" tabindex="-1" role="dialog"
+             aria-labelledby="deviceConfirmLimit"
+             aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered popup-main-1" role="document"
+                 style="max-width: 500px;">
+                <div class="modal-content box-shadow-main paymment-status" style="margin-right:20px; left:140px;margin-bottom: 200px;padding: 20px">
+                    <div class="close-popup" data-dismiss="modal"></div>
+                    <h3 class="popup-title success" style="margin-left:100px">Can not add more devices</h3>
+                    <div class="content">
+                        <p>Bạn chỉ được truy cập vào tối đa 3 thiết bị, hãy xóa bớt thiết bị cũ nếu muốn truy cập vào thiết bị mới.</p>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div class="row">
             <div class="col-lg-12">
                 <div class="card card-custom card-stretch gutter-b">
                     <div class="card-body d-flex flex-column" style="height: 563px" >
-                        <div class="row">
+                        <div class="row" >
                             <button type="button" class="col-lg-2 btn btn-danger modal-devices " @click="modalDevice()">
                                 Add more device
                             </button>
+
                         </div>
-                        <div class="row width-full" >
+
+                        <div   class="row width-full" v-for="entry in entries" v-if="entry.user_id==auth.id">
                             <div class="col-lg-12 body ">
-                                <form class="form-inline">
-                                    <div class="form-group mx-sm-3 mb-2">
-                                        <label></label>
+                                <form class="form-inline"  >
+                                    <div  class="form-group mx-sm-3 mb-2">
+                                        <label>{{entry.device_name}}</label>
                                     </div>
                                     <div class="form-group col-lg-12">
-                                        <label></label>
+                                        <label v-if="entry.status===0" style="color:#F26464">Not Verified</label>
+                                        <label v-if="entry.status===1" style="color:#FFAC32">Waiting for administrator verify</label>
                                     </div>
 
-                                    <div class="form-group mx-sm-3 mb-2" style="position: absolute;right:65px">
-                                        <button type="button"
-                                                class="btn btn-flex btn-light  fw-bolder ">Delete
+                                    <div  class="form-group mx-sm-3 mb-2" style="position: absolute;right:65px">
+                                        <button v-if="entry.status==0" type="button"
+                                                class="btn btn-flex btn-light  fw-verify " style="margin-right: 5px" @click="toggleStatus(entry)">
+                                            Send verify request
                                         </button>
+
+                                        <button type="button"
+                                                class="btn btn-flex btn-light  fw-bolder " @click="remove(entry)">Delete
+                                        </button>
+
                                     </div>
 
                                 </form>
@@ -93,23 +122,39 @@
                     currentPage: 1,
                     lastPage: 1,
                     totalRecord: 0
-                }
+                },
+                entry: $json.entry || {
+                },
+                isLoading: false,
+                errors:{},
             }
         },
         mounted() {
             $router.on('/', this.load).init();
         },
         methods: {
+
             modalDevice() {
-                $('#deviceConfirm').modal('show');
+                if(this.entries.length<3)
+                {
+                    $('#deviceConfirm').modal('show');
+                }
+                else {
+
+                    $('#deviceConfirmLimit').modal('show');
+                }
+
+
             },
             async load() {
+
                 let query = $router.getQuery();
                 this.$loading(true);
                 const res  = await $get('/xadmin/user_devices/data', query);
                 this.$loading(false);
                 this.paginate = res.paginate;
                 this.entries = res.data;
+                console.log(this.entries);
                 this.from = (this.paginate.currentPage-1)*(this.limit) + 1;
                 this.to = (this.paginate.currentPage-1)*(this.limit) + this.entries.length;
             },
@@ -135,6 +180,51 @@
                 params['limit'] = this.limit;
                 $router.setQuery(params)
             },
+            async save() {
+                this.isLoading = true;
+                const res = await $post('/xadmin/user_devices/save', {
+                    entry: this.entry,
+                }, false);
+                console.log(res);
+                this.isLoading = false;
+                if (res.errors) {
+                    this.errors = res.errors;
+                    return;
+                }
+                if (res.code) {
+                    toastr.error(res.message);
+                } else {
+                    this.errors = {};
+                    toastr.success(res.message);
+                    if (!this.entry.id) {
+                        location.replace('/xadmin/user_devices/index');
+                    }
+
+                }
+            },
+            async save_send() {
+                this.isLoading = true;
+                const res = await $post('/xadmin/user_devices/savesend', {
+                    entry: this.entry,
+                    status: this.status
+                }, false);
+                console.log(res);
+                this.isLoading = false;
+                if (res.errors) {
+                    this.errors = res.errors;
+                    return;
+                }
+                if (res.code) {
+                    toastr.error(res.message);
+                } else {
+                    this.errors = {};
+                    toastr.success(res.message);
+                    if (!this.entry.id) {
+                        location.replace('/xadmin/user_devices/index');
+                    }
+
+                }
+            },
 
             async toggleStatus(entry) {
                 const res = await $post('/xadmin/user_devices/toggleStatus', {
@@ -144,8 +234,26 @@
 
                 if (res.code === 200) {
                     toastr.success(res.message);
+                    location.replace('/xadmin/user_devices/index');
                 } else {
                     toastr.error(res.message);
+
+                }
+
+            },
+
+            async getDeviceByUser(entry) {
+                const res = await $post('/xadmin/user_devices/getDeviceByUser', {
+                    id: entry.id,
+                    status: entry.status
+                });
+
+                if (res.code === 200) {
+                    toastr.success(res.message);
+                    location.replace('/xadmin/user_devices/index');
+                } else {
+                    toastr.error(res.message);
+
                 }
 
             },
@@ -176,7 +284,7 @@
         margin-right:70px;
     }
     .body{
-        padding: 30px;
+        padding: 20px;
         /*max-width: 1612px;*/
         box-sizing: border-box;
         position: static;

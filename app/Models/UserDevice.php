@@ -6,6 +6,7 @@ namespace App\Models;
 
 class UserDevice extends BaseModel
 {
+    public $timestamps = false;
     protected $table = 'user_devices';
     protected  $fillable = [
         'device_uid',
@@ -15,6 +16,6 @@ class UserDevice extends BaseModel
     ];
     public function user()
     {
-        return $this->hasOne(User::class,'user_id');
+        return $this->hasMany(User::class,'user_id');
     }
 }
