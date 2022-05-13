@@ -41,7 +41,6 @@
                     <h3 class="popup-title success" style="margin-left:100px">Can not add more devices</h3>
                     <div class="content">
                         <p>Bạn chỉ được truy cập vào tối đa 3 thiết bị, hãy xóa bớt thiết bị cũ nếu muốn truy cập vào thiết bị mới.</p>
-
                     </div>
                 </div>
             </div>
@@ -78,13 +77,9 @@
                                         <button type="button"
                                                 class="btn btn-flex btn-light  fw-bolder " @click="remove(entry)">Delete
                                         </button>
-
                                     </div>
-
                                 </form>
-
                             </div>
-
                         </div>
                         </div>
                     </div>

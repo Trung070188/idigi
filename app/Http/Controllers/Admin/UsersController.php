@@ -9,6 +9,7 @@ use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use App\Models\User;
+use Ramsey\Collection\Collection;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
@@ -30,19 +31,19 @@ class UsersController extends AdminBaseController
      * @throw  NotFoundHttpException
      * @return  View
      */
-    public function index(Request $request) {
+    public function index(Request $request)
+    {
         $title = 'Users';
         $component = 'UserIndex';
-        $roles=Role::query()->orderBy('role_name')->get();
-        $jsonData=[
-          'roles'=>$roles
+        $roles = Role::query()->orderBy('role_name')->get();
+        $jsonData = [
+            'roles' => $roles
         ];
-
 
 //        dd($entry);
 
 
-        return view('admin.layouts.vue', compact('title','component','jsonData'));
+        return view('admin.layouts.vue', compact('title', 'component', 'jsonData'));
     }
 
     /**
@@ -51,16 +52,18 @@ class UsersController extends AdminBaseController
      * @throw  NotFoundHttpException
      * @return  View
      */
-    public function create (Request $req) {
+    public function create(Request $req)
+    {
         $component = 'UserForm';
         $title = 'Create users';
-        $roles=Role::query()->orderBy('role_name')->get();
-        $jsonData=[
-            'roles'=>$roles
+        $roles = Role::query()->orderBy('role_name')->get();
+        $jsonData = [
+            'roles' => $roles
         ];
 
-        return view('admin.layouts.vue', compact('title','component','jsonData'));
+        return view('admin.layouts.vue', compact('title', 'component', 'jsonData'));
     }
+
     /**
      * Index page
      * @uri  /xadmin/users/index
@@ -68,7 +71,8 @@ class UsersController extends AdminBaseController
      * @return  View
      */
     public function profile(Request $req)
-    {   $id=$req->id;
+    {
+        $id = $req->id;
         $entry = User::find($id);
         if (!$entry) {
             throw new NotFoundHttpException();
@@ -78,10 +82,10 @@ class UsersController extends AdminBaseController
          */
         $title = 'Profile Edit';
         $component = 'ProfileForm';
-        $jsonData=[
-            'entry'=>$entry,
+        $jsonData = [
+            'entry' => $entry,
         ];
-        return view('admin.layouts.vue', compact('title','component','jsonData'));
+        return view('admin.layouts.vue', compact('title', 'component', 'jsonData'));
     }
 
     /**
@@ -89,10 +93,11 @@ class UsersController extends AdminBaseController
      * @throw  NotFoundHttpException
      * @return  View
      */
-    public function edit (Request $req) {
+    public function edit(Request $req)
+    {
         $id = $req->id;
-        $entry = User::query()->with(['roles'],['role_role'])
-            ->where('id',$id)->first();
+        $entry = User::query()->with(['roles'])
+            ->where('id', $id)->first();
 
 //        $entry=User::find($id);
 
@@ -108,20 +113,37 @@ class UsersController extends AdminBaseController
         /**
          * @var  User $entry
          */
-        $roles=Role::query()->orderBy('role_name')->get();
+        $roles = Role::query()->orderBy('role_name')->get();
+
+
+        foreach ($roles as $role) {
+            $role->user = false;
+            if ($entry->roles) {
+
+                foreach ($entry->roles as $userRole) {
+                    if ($role->id == $userRole->id) {
+                        $role->user = true;
+                    }
+                }
+
+            }
+        }
+
         $title = 'Edit';
         $component = 'UserForm';
-        $jsonData=[
-            'entry'=>$entry,
-            'roles'=>$roles,
+        $jsonData = [
+            'entry' => $entry,
+            'roles' => $roles,
         ];
-        return view('admin.layouts.vue', compact('title','component','jsonData'));
+        return view('admin.layouts.vue', compact('title', 'component', 'jsonData'));
     }
+
     /**
      * @uri  /xadmin/users/remove
      * @return  array
      */
-    public function remove(Request $req) {
+    public function remove(Request $req)
+    {
         $id = $req->id;
         $entry = User::find($id);
         $entry->roles()->detach();
@@ -141,12 +163,13 @@ class UsersController extends AdminBaseController
      * @uri  /xadmin/users/save
      * @return  array
      */
-    public function save(Request $req) {
+    public function save(Request $req)
+    {
         if (!$req->isMethod('POST')) {
             return ['code' => 405, 'message' => 'Method not allow'];
         }
         $data = $req->get('entry');
-        $roles = @$data['roles'];
+        $roles = $req->roles;
         $rules = [
             'username' => 'required|max:191',
             'email' => 'required|max:191',
@@ -164,47 +187,54 @@ class UsersController extends AdminBaseController
          * @var  User $entry
          */
 
-       if (isset($data['id'])) {
+        if (isset($data['id'])) {
             $entry = User::find($data['id']);
-           if (!$entry) {
-               return [
+
+            if (!$entry) {
+                return [
                     'code' => 3,
                     'message' => 'Không tìm thấy',
                 ];
             }
 
-           $entry->fill($data);
-           $entry->save();
+            $entry->fill($data);
+            $entry->save();
+
+            UserRole::where('user_id', $entry->id)->delete();
+
+            foreach ($roles as $role) {
+                if (@$role['user']) {
+                    UserRole::create(['user_id' => $entry->id, 'role_id' => $role['id']]);
+                }
 
 
-              foreach ($roles as $role){
-                  UserRole::create([ 'user_id'=>$entry->id,'role_id' => $role['id']]);
-
-          }
-
-
-           return [
+            }
+            return [
                 'code' => 0,
-               'message' => 'Đã cập nhật',
+                'message' => 'Đã cập nhật',
                 'id' => $entry->id,
-           ];
+            ];
         } else {
-          $entry=new User();
-          $entry->fill($data);
-          $entry->save();
-           foreach ($roles as $role){
-               UserRole::create(['user_id' => $entry->id, 'role_id' => $role['id']]);
-           }
-           return [
-               'code' => 0,
-              'message' => 'Đã thêm',
-               'id' => $entry->id,
+            $entry = new User();
+            $entry->fill($data);
+            $entry->save();
+
+            foreach ($roles as $role) {
+                if (@$role['user']) {
+                    UserRole::create(['user_id' => $entry->id, 'role_id' => $role['id']]);
+                }
+            }
+
+            return [
+                'code' => 0,
+                'message' => 'Đã thêm',
+                'id' => $entry->id,
             ];
         }
     }
 
     /**
-     * @param  Request $req
+     * @param Request $req
      */
     public function toggleStatus(Request $req)
     {
@@ -232,61 +262,61 @@ class UsersController extends AdminBaseController
      * @uri  /xadmin/users/data
      * @return  array
      */
-    public function data(Request $req) {
+    public function data(Request $req)
+    {
         $query = User::query()
             ->with(['roles'])
             ->orderBy('id', 'desc');
         if ($req->keyword) {
-            $query->where('username', 'LIKE', '%' . $req->keyword. '%');
+            $query->where('username', 'LIKE', '%' . $req->keyword . '%');
+        }
+        if ($req->role) {
+            $query->whereHas('roles', function ($q) use ($req) {
+                $q->where('role_name', 'LIKE', '%' . $req->role);
+            });
         }
         if ($req->username) {
-            $query->where('username',  $req->username);
+            $query->where('username', 'LIKE', '%' . $req->username);
 
         }
-        if ($req->email) {
-            $query->where('email',  $req->email);
-        }
         if ($req->full_name) {
-            $query->where('full_name',  $req->full_name);
+            $query->where('full_name', 'LIKE', '%' . $req->full_name);
         }
-        if ($req->user_id) {
-            $query->where('user_id',  $req->user_id);
+        if ($req->email) {
+            $query->where('email', 'LIKE', '%' . $req->email);
         }
-        $trung=Role::query()->orderBy('id','desc');
-        if($req->role_name)
-        {
-            $trung->where('role_name',$req->role_name);
+        if ($req->state) {
+            $query->where('state', 'LIKE', '%' . $req->state);
         }
+
         $query->createdIn($req->created);
         $entries = $query->paginate();
 
-        $users  = $entries->items();
+        $users = $entries->items();
         $data = [];
 
-        foreach ($users as $user){
+        foreach ($users as $user) {
             $roles = $user->roles;
 
             $roleNames = [];
-
-            if($roles){
-                foreach($roles as $role){
+            if ($roles) {
+                foreach ($roles as $role) {
                     $roleNames[] = $role->role_name;
                 }
             }
             $data[] = [
                 'role' => implode(',', $roleNames),
-                'id'=>$user->id,
+                'id' => $user->id,
                 'username' => $user->username,
                 'full_name' => $user->full_name,
                 'email' => $user->email,
-                'state'=>$user->state,
+                'state' => $user->state,
                 'created_at' => $user->created_at
             ];
         }
         return [
-            'roles'=>$roles,
             'code' => 0,
-            'data' =>$data,
+            'data' => $data,
             'paginate' => [
                 'currentPage' => $entries->currentPage(),
                 'lastPage' => $entries->lastPage(),
@@ -295,7 +325,8 @@ class UsersController extends AdminBaseController
         ];
     }
 
-    public function export() {
+    public function export()
+    {
         $keys = [
             'username' => ['A', 'username'],
             'password' => ['B', 'password'],
