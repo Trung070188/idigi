@@ -245,7 +245,7 @@ class LessonsController extends AdminBaseController
             'paginate' => [
                 'currentPage' => $entries->currentPage(),
                 'lastPage' => $entries->lastPage(),
-                'totalRecord' => $entries->count(),
+                'totalRecord' => $query->count(),
             ]
         ];
     }
@@ -312,71 +312,51 @@ class LessonsController extends AdminBaseController
     public function downloadLesson(Request $request)
     {
         ob_get_clean();
-        $filePath = public_path('ekid.zip');
 
-        header('Content-Type: application/octet-stream');
-        header("Content-Transfer-Encoding: Binary");
-        header("Content-disposition: attachment; filename=\"" . basename($filePath) . "\"");
-        readfile($filePath);
-        die;
-        return response()->download(public_path('ekid.zip'));
         if ($request->isMethod('POST')) {
             throw new MethodNotAllowedException("405");
         }
+        $y = date('Y');
+        $m = date('m');
+        $d = date('d');
+        $dir = "files/downloads/{$y}/{$m}/{$d}";
 
-        $lessons = Lesson::whereIn('id', explode(',',$request->lessonIds))
+        if (!is_dir(public_path($dir))) {
+            mkdir(public_path($dir), 0755, true);
+        }
+
+        $lessons = Lesson::whereIn('id', explode(',', $request->lessonIds))
             ->with(['inventories'])->get();
-        $data = [];
-        $zip_file = public_path('lessons.zip');
-        $zip = new \ZipArchive();
-        $zip->open($zip_file, \ZipArchive::CREATE | \ZipArchive::OVERWRITE);
+
 
         foreach ($lessons as $lesson) {
-            $lessonData = [];
-            $lessonData['idSubject'] = $lesson->subject;
-            $lessonData['codeSubject'] = 1;
-            $lessonData['nameSubject'] = $lesson->subject;
-            $lessonData['grade'] = $lesson->grade;
-            $lessonData['codeLesson'] = 1;
-            $lessonData['titleUnit'] = 1;
-            $lessonData['nameUnit'] = 1;
-            $lessonData['idUnit'] = 1;
-            $lessonData['nameLesson'] = $lesson->name;
-            $lessonData['idLesson'] = $lesson->id;
-            $lessonData['titleLesson'] = 1;
+            $filename = uniqid(time());
+            $zip_file = public_path($dir . '/lessons_'.$filename.'.zip');
+            $zip = new \ZipArchive();
+            $zip->open($zip_file, \ZipArchive::CREATE | \ZipArchive::OVERWRITE);
 
-            $inventoryData = [];
             if ($lesson->inventories) {
                 foreach ($lesson->inventories as $inventory) {
-                    $icon = basename(public_path($inventory->image));
+                    $icon = 'Icons/' . basename(public_path($inventory->image));
                     $link = basename(public_path($inventory->virtual_path));
-                    $inventoryData[] = [
-                        'idSublesson' => $inventory->id,
-                        'pathIcon' => $icon,
-                        'name' => $inventory->name,
-                        'time' => 1,
-                        'type' => $inventory->type,
-                        'link' => $link,
-                    ];
 
                     $zip->addFile(public_path($inventory->image), $icon);
+                    $zip->setEncryptionName($icon, \ZipArchive::EM_AES_256, env('SECRET_KEY'));
+
                     $zip->addFile(public_path($inventory->virtual_path), $link);
+                    $zip->setEncryptionName($link, \ZipArchive::EM_AES_256, env('SECRET_KEY'));
 
                 }
             }
 
-            $lessonData['subLessons'] = $inventoryData;
+            Storage::put($dir . '/lesson_detail'.$filename.'.txt', $lesson->structure);
 
-            $data[] = $lessonData;
+            $zip->addFile(storage_path('app/' . $dir . '/lesson_detail'.$filename.'.txt'), 'lesson_detail.txt');
+            $zip->setEncryptionName('lesson_detail.txt', \ZipArchive::EM_AES_256, env('SECRET_KEY'));
+            $zip->close();
+
+            return response()->download($zip_file);
         }
-        Storage::put('lesson_detail.txt', json_encode($data));
-
-
-        $zip->addFile(storage_path('app/lesson_detail.txt'), 'lesson_detail.txt');
-        // $zip->setEncryptionName('lesson_detail.txt', \ZipArchive::EM_AES_256, '123456');
-        $zip->close();
-
-        return response()->download(public_path('ekid.zip'));
     }
 
 }

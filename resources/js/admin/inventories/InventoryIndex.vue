@@ -173,6 +173,7 @@
     let created = getTimeRangeAll();
     const $q = $router.getQuery();
 
+
     export default {
         name: "InventoriesIndex.vue",
         components: {ActionBar, SwitchButton},
@@ -200,7 +201,7 @@
                 ],
                 entries: [],
                 filter: filter,
-                limit: 25,
+                limit: $q.limit || 25,
                 from: 0,
                 to: 0,
                 paginate: {

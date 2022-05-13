@@ -25,11 +25,11 @@
                                     <div class="form-group col-lg-4">
                                         <label>Type <span class="text-danger">*</span></label>
                                         <select class="form-control" v-model="entry.type">
-                                            <option value="vocabulary">Vocabulary</option>
-                                            <option value="summary">Summary</option>
-                                            <option value="lecture">Lecture</option>
-                                            <option value="activity1">Activity1</option>
-                                            <option value="activity2">Activity2</option>
+                                            <option value="Vocabulary">Vocabulary</option>
+                                            <option value="Summary">Summary</option>
+                                            <option value="Lecture">Lecture</option>
+                                            <option value="Activity1">Activity1</option>
+                                            <option value="Activity2">Activity2</option>
                                         </select>
                                         <error-label for="f_category_id" :errors="errors.type"></error-label>
                                     </div>

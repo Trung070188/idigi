@@ -42,8 +42,8 @@
                                             <label>Subject </label>
                                             <select class="form-control" v-model="filter.subject">
                                                 <option value="">-</option>
-                                                <option value="math">Maths</option>
-                                                <option value="science ">Science</option>
+                                                <option value="Math">Math</option>
+                                                <option value="Science ">Science</option>
                                             </select>
 
                                         </div>
@@ -165,7 +165,7 @@
                     <div class="modal-body">
                         <p>Bạn đang lựa chọn để tải về các bài học:</p>
                         <ul>
-                            <li v-for="lesson in lessons"><strong>{{ lesson.tag }}: {{ lesson.name }}</strong></li>
+                            <li v-for="lesson in lessons"><strong>{{ lesson.name }}</strong></li>
 
                         </ul>
                         <p>Hãy chọn thiết bị để tải về các bài học này:</p>
@@ -195,6 +195,7 @@ export default {
     name: "LessonsIndex.vue",
     components: {ActionBar},
     data() {
+
         let isShowFilter = false;
         let filter = {
             keyword: $q.keyword || '',
@@ -222,7 +223,7 @@ export default {
             entries: [],
             filter: filter,
             isShowFilter: isShowFilter,
-            limit: 25,
+            limit: $q.limit || 25,
             from: 0,
             to: 0,
             paginate: {

@@ -218,8 +218,12 @@ class InventoriesController extends AdminBaseController
 
 
         $query->createdIn($req->created);
+        $limit = 25;
 
-        $entries = $query->paginate();
+        if ($req->limit) {
+            $limit = $req->limit;
+        }
+        $entries = $query->paginate($limit);
 
 
         return [
@@ -228,7 +232,7 @@ class InventoriesController extends AdminBaseController
             'paginate' => [
                 'currentPage' => $entries->currentPage(),
                 'lastPage' => $entries->lastPage(),
-                'totalRecord' => $entries->count(),
+                'totalRecord' => $query->count(),
             ]
         ];
     }

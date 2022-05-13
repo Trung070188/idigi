@@ -42,17 +42,19 @@ class TestCommand extends Command
      */
     public function handle()
     {
-        Storage::put('attempt1.txt', '1234');
-        dd(1);
 
+        $time_start = microtime(true);
         $zip_file = public_path('invoices.zip');
         $zip = new \ZipArchive();
         $zip->open($zip_file, \ZipArchive::CREATE | \ZipArchive::OVERWRITE);
         $zip->setPassword('123456');
         $invoice_file = 'sample.pdf';
-        $zip->addFile( storage_path($invoice_file),'test.pdf');
-        $zip->setEncryptionName('test.pdf', \ZipArchive::EM_AES_256, '123456');
+        $zip->addFile( public_path('Sample-Video-File-For-Testing.mp4'),'Sample-Video-File-For-Testing.mp4');
+        $zip->addFile( public_path('Sample-Video-File-For-Testing - Copy.mp4'),'Sample-Video-File-For-Testing - Copy.mp4');
+        /*$zip->setEncryptionName('test.pdf', \ZipArchive::EM_AES_256, '123456');*/
         $zip->close();
+
+        echo 'Total execution time in seconds: ' . (microtime(true) - $time_start);
 
     }
 }

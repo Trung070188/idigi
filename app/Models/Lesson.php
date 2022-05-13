@@ -28,12 +28,8 @@ class Lesson extends BaseModel
 
     protected $table = 'lessons';
     protected $fillable = [
-        'created_by',
-        'created_date',
         'enabled',
         'grade',
-        'last_modified_by',
-        'last_modified_date',
         'name',
         'rating',
         'shared',
@@ -42,6 +38,11 @@ class Lesson extends BaseModel
         'unit',
         'number',
         'customized',
+        'old_id',
+        'created_at',
+        'updated_at',
+        'created_by',
+        'updated_by',
     ];
 
     public function inventories(){
