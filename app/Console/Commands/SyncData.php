@@ -44,7 +44,7 @@ class SyncData extends Command
      */
     public function handle()
     {
-        \DB::connection('mysql2')->table('lessons')
+        /*\DB::connection('mysql2')->table('lessons')
             ->chunkById(100, function ($lessons) {
                 foreach ($lessons as $lesson){
                     $userCreate = User::where('username', $lesson->created_by)->first();
@@ -73,7 +73,7 @@ class SyncData extends Command
 
                     echo 'Sync lesson: '.$lesson->id.PHP_EOL;
                 }
-            });
+            });*/
 
 
 
@@ -82,8 +82,26 @@ class SyncData extends Command
                 foreach ($inventories as $inventory){
                     $userCreate = User::where('username', $inventory->created_by)->first();
                     $userUpdate = User::where('username', $inventory->last_modified_by)->first();
+
+                    $img = '';
+                    if($inventory->image){
+                        $path = str_replace('\\', '/', $inventory->image);
+                        $paths = pathinfo($path);
+
+                        $dir = public_path("files/attachments".$paths['dirname']);
+
+                        if (!is_dir($dir)) {
+                            mkdir($dir, 0755, true);
+                        }
+
+                        $img = '/files/attachments'.str_replace('/files', '', $inventory->image);
+
+                        file_put_contents(public_path($img), file_get_contents(env('OLD_DOMAIN').$inventory->image));
+                    }
+
                     $newInventory = [
                         'enabled' => $inventory->enabled,
+                        'image' => $img,
                         'grade' => $inventory->grade,
                         'name' => $inventory->name,
                         'subject' => $inventory->subject,
