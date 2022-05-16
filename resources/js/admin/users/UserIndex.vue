@@ -42,21 +42,19 @@
                                     <div class="row">
                                         <div class="form-group col-lg-3">
                                             <label>Fullname </label>
-                                            <input class="form-control" placeholder="Enter the full name" v-model="filter.full_name"/>
+                                            <input @keydown.enter="doFilter('full_name', filter.full_name, $event)" class="form-control" placeholder="Enter the full name" v-model="filter.full_name"/>
 
                                         </div>
                                         <div class="form-group col-lg-3">
                                             <label>Email </label>
-                                            <input class="form-control" placeholder="Enter the email" v-model="filter.email">
-
+                                            <input @keydown.enter="doFilter('email', filter.email, $event)" class="form-control" placeholder="Enter the email" v-model="filter.email">
                                         </div>
                                         <div class="form-group col-lg-3">
                                             <label>Role </label>
-                                            <select  class="form-control"  v-model="filter.role" data-placeholder="Choose role" >
-                                                <option v-for="role in roles" v-bind:value="role.role_name">
+                                            <select @keydown.enter="doFilter('role', filter.role, $event)" class="form-control"  v-model="filter.role" data-placeholder="Select a role">
+                                                <option  v-for="role in roles" v-bind:value="role.role_name">
                                                     {{role.role_name}}
                                                 </option>
-
                                             </select>
                                         </div>
                                     </div>
@@ -167,7 +165,7 @@
                 full_name: $q.full_name || '',
                 email: $q.email || '',
                 state: $q.state || '',
-                role:$q.role || ''
+                role:$q.role||'',
             };
             for (var key in filter) {
                 if (filter[key] != '') {
@@ -212,7 +210,6 @@
                 this.$loading(false);
                 this.paginate = res.paginate;
                 this.entries = res.data;
-                console.log(this.entries);
                 this.from = (this.paginate.currentPage-1)*(this.limit) + 1;
                 this.to = (this.paginate.currentPage-1)*(this.limit) + this.entries.length;
             },
@@ -240,8 +237,6 @@
                 $router.setQuery({});
             },
             doFilter() {
-                console.log(this.filter);
-
                 $router.setQuery(this.filter)
             },
             changeLimit() {

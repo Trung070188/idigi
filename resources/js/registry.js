@@ -11,6 +11,7 @@ import LessonForm from "./admin/lessons/LessonForm";
 import SchoolIndex from "./admin/schools/SchoolIndex";
 import SchoolForm from "./admin/schools/SchoolForm";
 import ProfileForm from "./admin/users/ProfileForm";
+import User_deviceIndex from "./admin/user_devices/User_deviceIndex";
 
 export default {
     DashboardIndex,
@@ -25,7 +26,8 @@ export default {
     LessonForm,
     SchoolIndex,
     SchoolForm,
-    ProfileForm
+    ProfileForm,
+    User_deviceIndex
 
 
 }

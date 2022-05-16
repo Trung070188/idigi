@@ -80,6 +80,11 @@ return [
 
         ]
     ],
+    [
+        "name" => "Manager",
+        "icon" => "fa fa-school",
+        'url' => '/xadmin/user_devices/index',
+    ],
 
 //    [
 //        "name" => "Logout",

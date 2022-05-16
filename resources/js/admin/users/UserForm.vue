@@ -33,12 +33,14 @@
                                     </div>
                                 </div>
                                 <div class="row" >
+
                                     <label>Role</label>
-                                    <div v-for="role in roles" :key="role.id" class="form-group col-sm-2">
-                                        <input type="checkbox"  v-model="entry.roles" :value="role"  >
+                                    <div v-for="(role, k) in roles" class="form-group col-sm-2">
+                                        <input type="checkbox"  v-model="role.user" :value="role.id" >
                                         <label >{{role.role_name}}</label>
+                                        <error-label for="f_grade" :errors="errors.roles"></error-label>
                                     </div>
-                                    <p>{{entry.roles}}</p>
+
                                 </div>
 
                                 <div class="row" >
@@ -84,6 +86,7 @@
         name: "UsersForm.vue",
         components: { ActionBar,SwitchButton},
         data() {
+
             return {
                 types: [
 
@@ -106,16 +109,17 @@
             }
         },
         methods: {
-            checkbox_roles()
-            {
-            },
+            // checkbox_roles()
+            // {
+            //     this.entry=this.roles;
+            // },
             backIndex(){
 
                 window.location.href = '/xadmin/users/index';
             },
             async save() {
                 this.isLoading = true;
-                const res = await $post('/xadmin/users/save', {entry: this.entry}, false);
+                const res = await $post('/xadmin/users/save', {entry: this.entry, roles: this.roles}, false);
                 this.isLoading = false;
                 if (res.errors) {
                     this.errors = res.errors;
