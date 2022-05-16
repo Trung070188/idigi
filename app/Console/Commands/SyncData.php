@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use App\Helpers\PhpDoc;
 use App\Models\Inventory;
 use App\Models\Lesson;
+use App\Models\LessonInventory;
 use App\Models\Product;
 use App\Models\User;
 use Illuminate\Console\Command;
@@ -84,6 +85,9 @@ class SyncData extends Command
                     $userUpdate = User::where('username', $inventory->last_modified_by)->first();
 
                     $img = '';
+                    $physicalPath = '';
+                    $virtualPath = '';
+
                     if($inventory->image){
                         $path = str_replace('\\', '/', $inventory->image);
                         $paths = pathinfo($path);
@@ -94,12 +98,44 @@ class SyncData extends Command
                             mkdir($dir, 0755, true);
                         }
 
-                        $img = '/files/attachments'.str_replace('/files', '', $inventory->image);
+                        try {
+                            $img = '/files/attachments'.str_replace('/files', '', $inventory->image);
+                            file_put_contents(public_path($img), file_get_contents(env('OLD_DOMAIN').$inventory->image));
 
-                        file_put_contents(public_path($img), file_get_contents(env('OLD_DOMAIN').$inventory->image));
+                        }
+                        catch (\Exception $e) {
+                            echo $e->getMessage();
+                        }
+
+
+                    }
+
+                    if($inventory->virtual_path){
+                        $path = str_replace('\\', '/', $inventory->virtual_path);
+                        $paths = pathinfo($path);
+
+
+                        $dir = public_path("files/attachments".$paths['dirname']);
+
+                        if (!is_dir($dir)) {
+                            mkdir($dir, 0755, true);
+                        }
+
+                        try {
+                            $virtualPath = '/files/attachments'.str_replace('/files', '', $inventory->virtual_path);
+                            file_put_contents(public_path($virtualPath), file_get_contents(env('OLD_DOMAIN').$inventory->virtual_path));
+                            $physicalPath = str_replace('\\', '/', $_SERVER['DOCUMENT_ROOT']).$virtualPath;
+
+                        }
+                        catch (\Exception $e) {
+                            echo $e->getMessage();
+                        }
+
                     }
 
                     $newInventory = [
+                        'physical_path' => $physicalPath,
+                        'virtual_path' => $virtualPath,
                         'enabled' => $inventory->enabled,
                         'image' => $img,
                         'grade' => $inventory->grade,
@@ -110,12 +146,12 @@ class SyncData extends Command
                         'updated_at' => $inventory->last_modified_date,
                         'created_by' => @$userCreate->id,
                         'updated_by' => @$userUpdate->id,
-                        'old_id' => @$userUpdate->id,
-                        'rating' => @$userUpdate->rating,
-                        'duration' => @$userUpdate->duration,
-                        'link_webview' => @$userUpdate->link_webview,
-                        'slideshows' => @$userUpdate->slideshows,
-                        'tags' => @$userUpdate->tags,
+                        'old_id' => $inventory->id,
+                        'rating' => $inventory->rating,
+                        'duration' => $inventory->duration,
+                        'link_webview' => $inventory->link_webview,
+                        'slideshows' => $inventory->slideshows,
+                        'tags' => $inventory->tags,
                     ];
 
                     Inventory::updateOrCreate([
@@ -126,5 +162,34 @@ class SyncData extends Command
                 }
             });
 
+        \DB::connection('mysql2')->table('lessons')
+            ->chunkById(100, function ($lessons) {
+                foreach ($lessons as $lesson){
+                   if($lesson->structure){
+                       $structure = json_decode($lesson->structure, true);
+                       if($structure){
+                           if(@$structure['sublesson']){
+                               $inventories= $structure['sublesson'];
+                               $newLesson = Lesson::where('old_id', $lesson->id)->first();
+                               foreach ($inventories as $inventory){
+                                    $newInventory = Inventory::where('old_id', $inventory['idSublesson'])->first();
+                                    if($newLesson && $newInventory){
+                                        LessonInventory::updateOrCreate([
+                                            'lesson_id' => $lesson->id,
+                                            'inventory_id' => $inventory->id,
+                                        ],[
+                                            'lesson_id' => $lesson->id,
+                                            'inventory_id' => $inventory->id,
+                                        ]);
+                                    }
+                               }
+
+                           }
+                       }
+                   }
+
+                    echo 'Sync lesson inventory: '.$lesson->id.PHP_EOL;
+                }
+            });
     }
 }

@@ -1,12 +1,13 @@
 <?php
-function asset_js($paths) {
+function asset_js($paths)
+{
     if (!is_iterable($paths)) {
         $paths = [$paths];
     }
 
     $content = '';
     foreach ($paths as $_path) {
-        $content .=sprintf('<script src="%s"></script>',
+        $content .= sprintf('<script src="%s"></script>',
             asset($_path) . '?v=' . filemtime(public_path($_path))
         );
     }
@@ -14,7 +15,8 @@ function asset_js($paths) {
     return $content;
 }
 
-function asset_css($paths) {
+function asset_css($paths)
+{
     if (!is_iterable($paths)) {
         $paths = [$paths];
     }
@@ -28,7 +30,8 @@ function asset_css($paths) {
     return $content;
 }
 
-function errors2message($errors) {
+function errors2message($errors)
+{
     $message = [];
     foreach ($errors as $err => $m) {
         $message[] = $m;
@@ -36,18 +39,22 @@ function errors2message($errors) {
     return implode('<br>', $message);
 }
 
-function d1($var) {
+function d1($var)
+{
     echo "<pre>";
     echo json_encode($var, 128);
     echo "</pre>";
     die;
 }
 
-function word_normalized($word) {
+function word_normalized($word)
+{
     $word = preg_replace('/[\-_]/', ' ', $word);
     return ucwords($word);
 }
-function date_parse_range($date_str) {
+
+function date_parse_range($date_str)
+{
     if (!is_string($date_str)) {
         return false;
     }
@@ -57,23 +64,24 @@ function date_parse_range($date_str) {
         list($start, $end) = $tmp;
         $start = date('Y-m-d', strtotime($start));
         $end = date('Y-m-d', strtotime($end));
-        return compact('start','end');
+        return compact('start', 'end');
     }
 
 
     return false;
 }
 
-function columns2rules($col) {
+function columns2rules($col)
+{
     /**
-    0 => {#726
-    +"Field": "id"
-    +"Type": "int(10) unsigned"
-    +"Null": "NO"
-    +"Key": "PRI"
-    +"Default": null
-    +"Extra": "auto_increment"
-    }
+     * 0 => {#726
+     * +"Field": "id"
+     * +"Type": "int(10) unsigned"
+     * +"Null": "NO"
+     * +"Key": "PRI"
+     * +"Default": null
+     * +"Extra": "auto_increment"
+     * }
      */
     $rules = [];
     if ($col->Null === 'NO') {
@@ -97,7 +105,8 @@ function columns2rules($col) {
     return implode('|', $rules);
 }
 
-function mail_send($to, $subject, $content) {
+function mail_send($to, $subject, $content)
+{
     $SSOHelper = new \App\Helpers\SSOHelper();
     $params = [
         'mail' => $to,
@@ -112,31 +121,32 @@ function mail_send($to, $subject, $content) {
 }
 
 
-function timeAgo( $timestamp = 0, $now = 0 ) : string {
+function timeAgo($timestamp = 0, $now = 0): string
+{
 
     // Set up an array of time intervals.
     $intervals = array(
         60 * 60 * 24 * 365 => 'Năm',
-        60 * 60 * 24 * 30  => 'Tháng',
-        60 * 60 * 24 * 7   => 'Tuần',
-        60 * 60 * 24       => 'Ngày',
-        60 * 60            => 'Giờ',
-        60                 => 'Phút',
-        1                  => 'Giây',
+        60 * 60 * 24 * 30 => 'Tháng',
+        60 * 60 * 24 * 7 => 'Tuần',
+        60 * 60 * 24 => 'Ngày',
+        60 * 60 => 'Giờ',
+        60 => 'Phút',
+        1 => 'Giây',
     );
 
     // Get the current time if a reference point has not been provided.
-    if ( 0 === $now ) {
+    if (0 === $now) {
         $now = time();
     }
 
     // Make sure the timestamp to check predates the current time reference point.
-    if ( $timestamp > $now ) {
-        throw new \Exception( 'Timestamp postdates the current time reference point' );
+    if ($timestamp > $now) {
+        throw new \Exception('Timestamp postdates the current time reference point');
     }
 
     // Calculate the time difference between the current time reference point and the timestamp we're comparing.
-    $time_difference = (int) abs( $now - $timestamp );
+    $time_difference = (int)abs($now - $timestamp);
 
     if ($time_difference > 2592000) {
         return date('d/m/Y H:i', $timestamp);
@@ -148,23 +158,23 @@ function timeAgo( $timestamp = 0, $now = 0 ) : string {
     // Check the time difference against each item in our $intervals array. When we find an applicable interval,
     // calculate the amount of intervals represented by the the time difference and return it in a human-friendly
     // format.
-    foreach ( $intervals as $interval => $label ) {
+    foreach ($intervals as $interval => $label) {
 
         // If the current interval is larger than our time difference, move on to the next smaller interval.
-        if ( $time_difference < $interval ) {
+        if ($time_difference < $interval) {
             continue;
         }
 
         // Our time difference is smaller than the interval. Find the number of times our time difference will fit into
         // the interval.
-        $time_difference_in_units = round( $time_difference / $interval );
+        $time_difference_in_units = round($time_difference / $interval);
 
-        if ( $time_difference_in_units <= 1 ) {
-            $time_ago = sprintf( '1 %s trước',
+        if ($time_difference_in_units <= 1) {
+            $time_ago = sprintf('1 %s trước',
                 $label
             );
         } else {
-            $time_ago = sprintf( '%s %s trước',
+            $time_ago = sprintf('%s %s trước',
                 $time_difference_in_units,
                 $label
             );
@@ -176,7 +186,8 @@ function timeAgo( $timestamp = 0, $now = 0 ) : string {
     return 'Unknown';
 }
 
-function front_url($path) {
+function front_url($path)
+{
     return config('app.front_url') . '/' . ltrim($path, '/');
 }
 
@@ -257,13 +268,14 @@ function curl_post($url, $data = array(), $jsonContentType = false)
     return $server_output;
 }
 
-function generate_id($url) {
-    return trim(str_replace('/', '_', $url), '_') ;
+function generate_id($url)
+{
+    return trim(str_replace('/', '_', $url), '_');
 }
 
 function image_url($path)
 {
-    return config('app.image_url').'/'.ltrim($path, '/');
+    return config('app.image_url') . '/' . ltrim($path, '/');
 }
 
 /**
@@ -293,31 +305,47 @@ function vue(array $vars = [], array $jsonData = [])
     return view('admin.layouts.vue', $vars);
 }
 
-function get_gravatar(string $id, $s = 128, $d = 'identicon', $r = 'g', $img = false, $atts = array() ): string
+function get_gravatar(string $id, $s = 128, $d = 'identicon', $r = 'g', $img = false, $atts = array()): string
 {
     $url = 'https://www.gravatar.com/avatar/';
-    $url .= md5( strtolower( trim( $id ) ) );
+    $url .= md5(strtolower(trim($id)));
     $url .= "?s=$s&d=$d&r=$r";
-    if ( $img ) {
+    if ($img) {
         $url = '<img src="' . $url . '"';
-        foreach ( $atts as $key => $val )
+        foreach ($atts as $key => $val)
             $url .= ' ' . $key . '="' . $val . '"';
         $url .= ' />';
     }
     return $url;
 }
 
-function component(string $component, array $jsonData = []) {
+function component(string $component, array $jsonData = [])
+{
     $vars['jsonData'] = $jsonData;
     $vars['component'] = $component;
 
     return view('admin.layouts.vue', $vars);
 }
 
-function get_virtual_path($physical_path) {
+function get_virtual_path($physical_path)
+{
     $physical_path = str_replace('\\', '/', $physical_path);
-    $path=  str_replace(env('APP_URL'), "", $physical_path);
+    $path = str_replace(env('APP_URL'), "", $physical_path);
 
     return $path;
 
+}
+
+function jwtToken($payload)
+{
+    $header = [
+        "alg" => "HS256",
+        "typ" => "JWT"
+    ];
+
+    $data = base64_encode($header) . "." . base64_encode($payload);
+    $hashedData = hash($data, env('SECRET_KEY'));
+    $signature = base64_encode($hashedData);
+
+    return $data. ".".$signature;
 }
