@@ -174,7 +174,7 @@
                         </ul>
                     </div>
                     <div class="modal-footer" style="justify-content: center">
-                        <button type="button" class="btn btn-primary" :disabled="lessons.length == 0 || !device" @click="downloadLesson">Confirm</button>
+                        <button type="button" class="btn btn-primary" :disabled="lessons.length == 0" @click="downloadLesson">Confirm</button>
                     </div>
                 </div>
             </div>

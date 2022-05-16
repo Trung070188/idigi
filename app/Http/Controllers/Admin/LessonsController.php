@@ -316,6 +316,13 @@ class LessonsController extends AdminBaseController
         if ($request->isMethod('POST')) {
             throw new MethodNotAllowedException("405");
         }
+
+        $user = Auth::user();
+        $userDevice = UserDevice::where('user_id', $user->id)->where('id', $request->device_id)->first();
+
+        $password = @$userDevice->device_uid;
+        $password = 123456;
+
         $y = date('Y');
         $m = date('m');
         $d = date('d');
@@ -329,9 +336,15 @@ class LessonsController extends AdminBaseController
             ->with(['inventories'])->get();
 
 
-        foreach ($lessons as $lesson) {
-            $filename = uniqid(time());
-            $zip_file = public_path($dir . '/lessons_'.$filename.'.zip');
+        $filenameAll = uniqid(time().rand(10, 100));
+        $zipFileAll = public_path($dir . '/all_lessons_'.$filenameAll.'.zip');
+        $zipAll = new \ZipArchive();
+        $zipAll->open($zipFileAll, \ZipArchive::CREATE | \ZipArchive::OVERWRITE);
+
+
+        foreach ($lessons as $key => $lesson) {
+            $filename = uniqid(time().rand(10,100));
+            $zip_file = public_path($dir . '/lessons_'.$key.'.zip');
             $zip = new \ZipArchive();
             $zip->open($zip_file, \ZipArchive::CREATE | \ZipArchive::OVERWRITE);
 
@@ -341,10 +354,10 @@ class LessonsController extends AdminBaseController
                     $link = basename(public_path($inventory->virtual_path));
 
                     $zip->addFile(public_path($inventory->image), $icon);
-                    $zip->setEncryptionName($icon, \ZipArchive::EM_AES_256, env('SECRET_KEY'));
+                    $zip->setEncryptionName($icon, \ZipArchive::EM_AES_256, $password);
 
                     $zip->addFile(public_path($inventory->virtual_path), $link);
-                    $zip->setEncryptionName($link, \ZipArchive::EM_AES_256, env('SECRET_KEY'));
+                    $zip->setEncryptionName($link, \ZipArchive::EM_AES_256, $password);
 
                 }
             }
@@ -352,11 +365,17 @@ class LessonsController extends AdminBaseController
             Storage::put($dir . '/lesson_detail'.$filename.'.txt', $lesson->structure);
 
             $zip->addFile(storage_path('app/' . $dir . '/lesson_detail'.$filename.'.txt'), 'lesson_detail.txt');
-            $zip->setEncryptionName('lesson_detail.txt', \ZipArchive::EM_AES_256, env('SECRET_KEY'));
+            $zip->setEncryptionName('lesson_detail.txt', \ZipArchive::EM_AES_256,$password);
             $zip->close();
 
-            return response()->download($zip_file);
+            $zipAll->addFile($zip_file, 'lessons_'.$key.'.zip');
+            $zipAll->setEncryptionName('/lessons_'.$key.'.zip', \ZipArchive::EM_AES_256, $password);
+
         }
+
+        $zipAll->close();
+
+        return response()->download($zipFileAll);
     }
 
 }

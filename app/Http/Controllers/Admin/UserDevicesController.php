@@ -6,6 +6,7 @@ namespace App\Http\Controllers\Admin;
 use App\Models\User;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
@@ -276,10 +277,31 @@ class UserDevicesController extends AdminBaseController
     }
 
     public function getDeviceByUser(){
-//        $user = Auth::user();
-//        $devices = UserDevice::where('user_id', $user->id)->select(['device_name', 'id'])->get()->toArray();
-//
-//        return $devices;
+        $user = Auth::user();
+        $devices = UserDevice::where('user_id', $user->id)->select(['device_name', 'id'])->get()->toArray();
 
+        return $devices;
+
+    }
+
+    public function generateToken(Request  $request){
+        $user = Auth::user();
+        $device = UserDevice::where('user_id', $user->id)
+            ->where('id', $request->id)
+            ->where('status', 2)->first();
+
+
+        if($device){
+            $payload = [
+                'user_id' => $user->id,
+                'device_uid' =>$device->device_uid,
+                'device_name' =>$device->device_name,
+                'secret_key' =>$device->secret_key,
+                'expired' => strtotime(Carbon::now()->addHours(10))
+            ];
+            return jwtToken($payload);
+        }
+
+        return 'Error';
     }
 }
