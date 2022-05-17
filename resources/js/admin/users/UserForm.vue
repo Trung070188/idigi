@@ -33,12 +33,12 @@
                                     </div>
                                     <div class="form-group  col-sm-4">
                                         <label>Password <span class="text-danger">*</span></label>
-                                        <input type="password" class="form-control" v-model="entry.password">
+                                        <input type="password" class="form-control" ref="password"  v-model="entry.password">
                                         <error-label for="f_category_id" :errors="errors.password"></error-label>
                                     </div>
                                     <div class="form-group  col-sm-4">
                                         <label>Confirm your password <span class="text-danger">*</span></label>
-                                        <input class="form-control" >
+                                        <input class="form-control" type="password"  >
                                         <error-label for="f_category_id" ></error-label>
                                     </div>
                                 </div>

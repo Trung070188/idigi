@@ -83,7 +83,21 @@ return [
     [
         "name" => "Manage devices",
         "icon" => "fa fa-school",
-        'url' => '/xadmin/user_devices/index',
+        'url' => '/xadmin/user_devices',
+        'subs'=>[
+            [
+                "name" => "Manage devices",
+                "icon" => "fa fa-plus",
+                "url" => "/xadmin/user_devices/index",
+                "group" => 1,
+            ],
+            [
+                "name" => " Approval devices",
+                "icon" => "fa fa-plus",
+                "url" => "/xadmin/user_devices/approval",
+                "group" => 1,
+            ],
+        ]
     ],
 
 //    [

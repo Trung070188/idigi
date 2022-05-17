@@ -8,7 +8,6 @@ use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use App\Models\UserDevice;
 use Illuminate\Support\Str;
@@ -37,6 +36,11 @@ class UserDevicesController extends AdminBaseController
     public function index() {
         $title = 'UserDevices';
         $component = 'User_deviceIndex';
+        return component($component, compact('title'));
+    }
+    public function approval() {
+        $title = 'ApprovalDevices';
+        $component = 'Approval_device';
         return component($component, compact('title'));
     }
     /**
@@ -122,7 +126,8 @@ class UserDevicesController extends AdminBaseController
         /**
         * @var  UserDevice $entry
         */
-        $entry = new UserDevice();
+
+            $entry = new UserDevice();
             $entry->device_uid=$request->input('device_uid');
             $entry->device_name=$request->input('device_name');
             $entry->user_id=auth()->id();
@@ -136,6 +141,9 @@ class UserDevicesController extends AdminBaseController
                 'message' => 'Đã thêm',
                 'id' => $entry->id,
             ];
+
+
+
         }
     public function savesend(Request $request) {
         if (!$request->isMethod('POST')) {
@@ -174,6 +182,7 @@ class UserDevicesController extends AdminBaseController
         ];
     }
 
+
 //    }
 
     /**
@@ -199,6 +208,26 @@ class UserDevicesController extends AdminBaseController
             'message' => 'Đã gửi yêu cầu'
         ];
     }
+    public function toggleStatus_approval(Request $req)
+    {
+        $id = $req->get('id');
+        $entry = UserDevice::find($id);
+
+        if (!$id) {
+            return [
+                'code' => 404,
+                'message' => 'Not Found'
+            ];
+        }
+
+        $entry->status = $req->status ? 2 : 1;
+        $entry->save();
+
+        return [
+            'code' => 200,
+            'message' => 'Đã gửi yêu cầu'
+        ];
+    }
 
     /**
     * Ajax data for index page
@@ -209,6 +238,29 @@ class UserDevicesController extends AdminBaseController
         $count_user=auth()->id();
         $query = UserDevice::query()
             ->where('user_id',$count_user)
+            ->orderBy('id', 'desc');
+
+        if ($req->keyword) {
+            //$query->where('title', 'LIKE', '%' . $req->keyword. '%');
+        }
+
+        $query->createdIn($req->created);
+        $entries = $query->paginate();
+//            $user_id=auth()->id();
+//        $count_user=UserDevice::where('user_id',$user_id)->count();
+
+        return [
+            'code' => 0,
+//            'count_user'=>$count_user,
+            'data' => $entries->items(),
+            'paginate' => [
+                'currentPage' => $entries->currentPage(),
+                'lastPage' => $entries->lastPage(),
+            ]
+        ];
+    }
+    public function data_approval(Request $req) {
+        $query = UserDevice::query()
             ->orderBy('id', 'desc');
 
         if ($req->keyword) {
