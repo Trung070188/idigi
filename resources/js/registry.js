@@ -12,6 +12,8 @@ import SchoolIndex from "./admin/schools/SchoolIndex";
 import SchoolForm from "./admin/schools/SchoolForm";
 import ProfileForm from "./admin/users/ProfileForm";
 import User_deviceIndex from "./admin/user_devices/User_deviceIndex";
+import Request_roleIndex from "./admin/request_role/Request_roleIndex";
+
 
 export default {
     DashboardIndex,
@@ -27,7 +29,7 @@ export default {
     SchoolIndex,
     SchoolForm,
     ProfileForm,
-    User_deviceIndex
-
+    User_deviceIndex,
+    Request_roleIndex
 
 }
