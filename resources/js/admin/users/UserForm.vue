@@ -31,6 +31,16 @@
                                         <input class="form-control" v-model="entry.email">
                                         <error-label for="f_category_id" :errors="errors.email"></error-label>
                                     </div>
+                                    <div class="form-group  col-sm-4">
+                                        <label>Password <span class="text-danger">*</span></label>
+                                        <input type="password" class="form-control" v-model="entry.password">
+                                        <error-label for="f_category_id" :errors="errors.password"></error-label>
+                                    </div>
+                                    <div class="form-group  col-sm-4">
+                                        <label>Confirm your password <span class="text-danger">*</span></label>
+                                        <input class="form-control" >
+                                        <error-label for="f_category_id" ></error-label>
+                                    </div>
                                 </div>
                                 <div class="row" >
 
@@ -119,7 +129,7 @@
             },
             async save() {
                 this.isLoading = true;
-                const res = await $post('/xadmin/users/save', {entry: this.entry, roles: this.roles}, false);
+                const res = await $post('/xadmin/users/save', {entry: this.entry,roles: this.roles}, false);
                 this.isLoading = false;
                 if (res.errors) {
                     this.errors = res.errors;
@@ -133,7 +143,6 @@
                     if (!this.entry.id) {
                         location.replace('/xadmin/users/edit?id=' + res.id);
                     }
-
                 }
             }
         }

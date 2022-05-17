@@ -119,16 +119,13 @@ class UsersController extends AdminBaseController
         foreach ($roles as $role) {
             $role->user = false;
             if ($entry->roles) {
-
                 foreach ($entry->roles as $userRole) {
                     if ($role->id == $userRole->id) {
                         $role->user = true;
                     }
                 }
-
             }
         }
-
         $title = 'Edit';
         $component = 'UserForm';
         $jsonData = [
@@ -201,13 +198,10 @@ class UsersController extends AdminBaseController
             $entry->save();
 
             UserRole::where('user_id', $entry->id)->delete();
-
             foreach ($roles as $role) {
                 if (@$role['user']) {
                     UserRole::create(['user_id' => $entry->id, 'role_id' => $role['id']]);
                 }
-
-
             }
             return [
                 'code' => 0,
@@ -218,13 +212,11 @@ class UsersController extends AdminBaseController
             $entry = new User();
             $entry->fill($data);
             $entry->save();
-
             foreach ($roles as $role) {
                 if (@$role['user']) {
                     UserRole::create(['user_id' => $entry->id, 'role_id' => $role['id']]);
                 }
             }
-
             return [
                 'code' => 0,
                 'message' => 'Đã thêm',

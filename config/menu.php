@@ -81,7 +81,7 @@ return [
         ]
     ],
     [
-        "name" => "Manager",
+        "name" => "Manage devices",
         "icon" => "fa fa-school",
         'url' => '/xadmin/user_devices/index',
     ],

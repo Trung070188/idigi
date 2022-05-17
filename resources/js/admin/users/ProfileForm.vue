@@ -17,8 +17,8 @@
                                     <div class="user-info-left">
 
                                         <div class="contact">
-                                            <a href="#" class="btn btn-block btn-success">Change password</a>
-                                            <a href="/xadmin/logout" class="btn btn-block btn-danger"> Log out</a>
+                                            <a href="#" class="btn-block" >Change password</a>
+                                            <a href="/xadmin/logout" class=" btn-block"> Log out</a>
 
                                         </div>
                                     </div>
@@ -45,20 +45,12 @@
                                                     <div class="role" v-if="role.id==auth.id">
                                                         {{role.role}}
                                                     </div>
-
                                                 </div>
                                           </div>
-
-
-
                                             <div class="data-row col-sm-6 " >
                                                 <button type="reset" @click="save()" class="btn btn-primary mr-2">Save</button>
-
                                             </div>
-
                                         </div>
-
-
                                     </div>
                                 </div>
                             </div>
@@ -66,9 +58,6 @@
 
                     </div>
                 </div>
-
-
-
             </div>
         </div>
 
@@ -82,10 +71,11 @@
     import ActionBar from "../includes/ActionBar";
     import SwitchButton from "../../components/SwitchButton";
     import $router from "../../lib/SimpleRouter";
+    import Uploader from "../../components/Uploader";
 
     export default {
         name: "ProfileForm.vue",
-        components: { ActionBar,SwitchButton},
+        components: {Uploader, ActionBar,SwitchButton},
         data() {
             return {
                 check_role:[],
@@ -202,6 +192,16 @@
         margin-bottom: 22px;
         margin-top: -30px;
         margin-left: 14px;
+    }
+    .btn-block{
+        background: #000000;
+        color: #f1f1f1;
+        border: 1px solid #000000;
+        border-radius: 32px;
+        align-items: center;
+        padding: 7px 15px 9px;
+        gap: 6px;
+
     }
 
 

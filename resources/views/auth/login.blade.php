@@ -19,6 +19,7 @@
 
 <div class="container d-flex justify-content-center align-items-center">
     <div class="row">
+
         <div class="form-wrapper" style="   padding: 31px;width: 500px; border: 0; text-align: center">
 
             <!-- logo -->
@@ -26,20 +27,16 @@
                 <img src="{{asset('/images/logo.svg')}}">
             </div>
             <!-- ./ logo //// -->
-
             <h5 style="margin-top:20px;">Đăng nhập</h5>
-
             <!-- form -->
             <form method="post" id="loginForm" method="post" action="/xadmin/login" style="margin-top:50px;">
                 {{csrf_field()}}
                 @if (config('app.env') !== 'production')
                     <div class="form-group">
                         <input type="text" class="form-control" placeholder="ID" name="email" value="{{ old('email') }}" required autofocus>
-
                     </div>
                     <div class="form-group">
                         <input type="password" class="form-control" placeholder="Mật khẩu" required name="password">
-
                     </div>
                     <div class="form-group d-flex justify-content-between">
                         <div class="custom-control custom-checkbox">
@@ -47,7 +44,6 @@
                             <label class="custom-control-label" for="customCheck1">Ghi nhớ</label>
                         </div>
                     </div>
-
                     @error('email')
                     <div class="alert alert-danger" role="alert">
                         <strong>{{ $message }}</strong>
@@ -73,6 +69,8 @@
         </div>
     </div>
 </div>
+<script>
+</script>
 
 </body>
 </html>
