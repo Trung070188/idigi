@@ -10,9 +10,11 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use App\Models\UserDevice;
+use Illuminate\Support\Str;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+use function Sodium\randombytes_buf;
 
 
 class UserDevicesController extends AdminBaseController
@@ -119,12 +121,11 @@ class UserDevicesController extends AdminBaseController
         /**
         * @var  UserDevice $entry
         */
-
-
         $entry = new UserDevice();
             $entry->device_uid=$request->input('device_uid');
             $entry->device_name=$request->input('device_name');
             $entry->user_id=auth()->id();
+            $entry->secret_key=(Str::random(10));
             $entry->status=0;
             $entry->fill($data);
             $entry->save();
@@ -132,7 +133,7 @@ class UserDevicesController extends AdminBaseController
             return [
                 'code' => 0,
                 'message' => 'Đã thêm',
-                'id' => $entry->id
+                'id' => $entry->id,
             ];
         }
     public function savesend(Request $request) {
@@ -161,6 +162,7 @@ class UserDevicesController extends AdminBaseController
         $entry->device_uid=$request->input('device_uid');
         $entry->device_name=$request->input('device_name');
         $entry->user_id=auth()->id();
+        $entry->secret_key=(Str::random(10));
         $entry->status=1;
         $entry->fill($data);
         $entry->save();
