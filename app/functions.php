@@ -343,8 +343,8 @@ function jwtToken($payload)
         "typ" => "JWT"
     ];
 
-    $data = base64_encode($header) . "." . base64_encode($payload);
-    $hashedData = hash($data, env('SECRET_KEY'));
+    $data = base64_encode(json_encode($header)) . "." . base64_encode(json_encode($payload));
+    $hashedData = hash_hmac('sha256',$data, env('SECRET_KEY'));
     $signature = base64_encode($hashedData);
 
     return $data. ".".$signature;
