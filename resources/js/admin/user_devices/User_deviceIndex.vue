@@ -3,7 +3,6 @@
         <ActionBar type="index"
                    :breadcrumbs="breadcrumbs"
                    title="User Device"/>
-
         <div class="modal fade" style="margin-right:50px " id="deviceConfirm" tabindex="-1" role="dialog"
              aria-labelledby="deviceConfirm"
              aria-hidden="true">
@@ -18,9 +17,36 @@
                         <p>Bước 3:Dán đoạn mã vào ô phía dưới</p>
                         <input type="text" class="form-control " placeholder="Device name" aria-label="" style="margin-bottom: 10px" aria-describedby="basic-addon1" v-model="entry.device_name" >
                         <error-label for="f_category_id" :errors="errors.device_name"></error-label>
+
                         <input type="text" class="form-control col-2" placeholder="Enter the device information code" aria-label="" aria-describedby="basic-addon1" v-model="entry.device_uid" >
                         <error-label for="f_category_id" :errors="errors.device_uid"></error-label>
+                    </div>
+                    <div class="form-group d-flex justify-content-between">
+                        <button  class="btn btn-danger ito-btn-small" data-dismiss="modal" @click="save()">Add now</button>
+                        <button class="btn btn-primary ito-btn-add" data-dismiss="modal" @click="save_send()">
+                            Add & send verify request
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal fade" style="margin-right:50px " id="editdeviceConfirm" tabindex="-1" role="dialog"
+             aria-labelledby="editdeviceConfirm"
+             aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered popup-main-1" role="document"
+                 style="max-width: 500px;">
+                <div class="modal-content box-shadow-main paymment-status" style="margin-right:20px; left:140px">
+                    <div class="close-popup" data-dismiss="modal"></div>
+                    <h3 class="popup-title success">Add more device</h3>
+                    <div class="content">
+                        <input type="text" class="form-control " placeholder="Device name" aria-label="" style="margin-bottom: 10px" aria-describedby="basic-addon1" v-model="editDevice" disabled>
+                        <error-label for="f_category_id" :errors="errors.device_name"></error-label>
+                        <div>
+                            <button  type="button" class="generate" v-on:click="isHidden =true"> Generate Key</button>
+                            <br>
+                            <input v-if="isHidden"  type="text" class="form-control " placeholder="Device name" aria-label="" style="margin-bottom: 10px" aria-describedby="basic-addon1" v-model="secret_key" disabled>
 
+                        </div>
                     </div>
                     <div class="form-group d-flex justify-content-between">
                         <button  class="btn btn-danger ito-btn-small" data-dismiss="modal" @click="save()">Add now</button>
@@ -45,7 +71,6 @@
                 </div>
             </div>
         </div>
-
         <div class="row">
             <div class="col-lg-12">
                 <div class="card card-custom card-stretch gutter-b">
@@ -54,12 +79,18 @@
                             <button type="button" class="col-lg-2 btn btn-danger modal-devices " @click="modalDevice()">
                                 Add more device
                             </button>
-
                         </div>
-
-                        <div   class="row width-full" v-for="entry in entries" v-if="entry.user_id==auth.id">
+                        <div   class="row width-full" v-for="entry in entries" v-if="entry.user_id==auth.id"   >
                             <div class="col-lg-12 body ">
-                                <form class="form-inline"  >
+                                <form v-if="entry.status==2" class="form-inline" @click="editModalDevice(entry.id,entry.device_name,entry.secret_key)" >
+                                    <div  class="form-group mx-sm-3 mb-2">
+                                        <label>{{entry.device_name}}</label>
+                                    </div>
+                                    <div class="form-group col-lg-12">
+                                        <label v-if="entry.status===2" style="color:#08C749">Verified</label>
+                                    </div>
+                                </form>
+                                <form v-if="entry.status==0 || entry.status==1" class="form-inline">
                                     <div  class="form-group mx-sm-3 mb-2">
                                         <label>{{entry.device_name}}</label>
                                     </div>
@@ -68,17 +99,16 @@
                                         <label v-if="entry.status===1" style="color:#FFAC32">Waiting for administrator verify</label>
                                     </div>
 
-                                    <div  class="form-group mx-sm-3 mb-2" style="position: absolute;right:65px">
-                                        <button v-if="entry.status==0" type="button"
-                                                class="btn btn-flex btn-light  fw-verify " style="margin-right: 5px" @click="toggleStatus(entry)">
-                                            Send verify request
-                                        </button>
-
-                                        <button type="button"
-                                                class="btn btn-flex btn-light  fw-bolder " @click="remove(entry)">Delete
-                                        </button>
-                                    </div>
                                 </form>
+                                <div  class="form-group mx-sm-3 mb-2" style="position: absolute;right:65px;margin-top: -46px;">
+                                    <button v-if="entry.status==0" type="button"
+                                            class="btn btn-flex btn-light  fw-verify " style="margin-right: 5px" @click="toggleStatus(entry)">
+                                        Send verify request
+                                    </button>
+                                    <button type="button"
+                                            class="btn btn-flex btn-light  fw-bolder " @click="remove(entry)">Delete
+                                    </button>
+                                </div>
                             </div>
                         </div>
                         </div>
@@ -91,11 +121,9 @@
 </template>
 
 <script>
-
     import {$get, $post, getTimeRangeAll} from "../../utils";
     import $router from '../../lib/SimpleRouter';
     import ActionBar from "../includes/ActionBar";
-
     let created = getTimeRangeAll();
     const $q = $router.getQuery();
 
@@ -104,6 +132,10 @@
         components: {ActionBar},
         data() {
             return {
+                isHidden:false,
+                secret_key:"",
+                device_name:"",
+                editDevice:"",
                 breadcrumbs: [
                     {
                         title: 'User Device'
@@ -129,17 +161,22 @@
         },
         methods: {
 
+            editModalDevice(id,device_name,secret_key)
+            {
+                const that=this;
+                that.currId = id;
+                that.editDevice = device_name;
+                that.secret_key=secret_key;
+                $('#editdeviceConfirm').modal('show');
+            },
             modalDevice() {
                 if(this.entries.length<3)
                 {
                     $('#deviceConfirm').modal('show');
                 }
                 else {
-
                     $('#deviceConfirmLimit').modal('show');
                 }
-
-
             },
             async load() {
 
@@ -157,18 +194,14 @@
                 if (!confirm('Xóa bản ghi: ' + entry.id)) {
                     return;
                 }
-
                 const res = await $post('/xadmin/user_devices/remove', {id: entry.id});
-
                 if (res.code) {
                     toastr.error(res.message);
                 } else {
                     toastr.success(res.message);
                 }
-
                 $router.updateQuery({page: this.paginate.currentPage, _: Date.now()});
             },
-
             changeLimit() {
                 let params = $router.getQuery();
                 params['page']=1;
@@ -295,6 +328,16 @@
         position: absolute;
         right: 20px;
         max-width: 150px;
+
+
+    }
+    .generate{
+        padding: 8px 18px;
+        border-radius: 8px;
+        margin-bottom: 40px;
+        background: #333333;
+        color: #ffffff;
+
     }
 
 </style>
