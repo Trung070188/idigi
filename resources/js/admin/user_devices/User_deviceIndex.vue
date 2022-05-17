@@ -30,30 +30,26 @@
                 </div>
             </div>
         </div>
-        <div class="modal fade" style="margin-right:50px " id="editdeviceConfirm" tabindex="-1" role="dialog"
+
+
+        <div class="modal fade" id="editdeviceConfirm" tabindex="-1" role="dialog"
              aria-labelledby="editdeviceConfirm"
              aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered popup-main-1" role="document"
-                 style="max-width: 500px;">
-                <div class="modal-content box-shadow-main paymment-status" style="margin-right:20px; left:140px">
+            <div class="modal-dialog modal-dialog-centered popup-main-1" role="document">
+                <div class="modal-content">
                     <div class="close-popup" data-dismiss="modal"></div>
-                    <h3 class="popup-title success">Add more device</h3>
+                    <h2 style="margin-top: 30px" class="popup-title success">Thông tin device</h2>
                     <div class="content">
                         <input type="text" class="form-control " placeholder="Device name" aria-label="" style="margin-bottom: 10px" aria-describedby="basic-addon1" v-model="editDevice" disabled>
                         <error-label for="f_category_id" :errors="errors.device_name"></error-label>
                         <div>
-                            <button  type="button" class="generate" v-on:click="isHidden =true"> Generate Key</button>
-                            <br>
-                            <input v-if="isHidden"  type="text" class="form-control " placeholder="Device name" aria-label="" style="margin-bottom: 10px" aria-describedby="basic-addon1" v-model="secret_key" disabled>
-
+                            <button  type="button" class="generate" v-on:click="genToken"> Generate Key</button>
                         </div>
+
+                            <div v-if="token" style="font-size: 16px; word-wrap: break-word;white-space: pre-wrap;word-break: normal;">{{token}}</div>
                     </div>
-                    <div class="form-group d-flex justify-content-between">
-                        <button  class="btn btn-danger ito-btn-small" data-dismiss="modal" @click="save()">Add now</button>
-                        <button class="btn btn-primary ito-btn-add" data-dismiss="modal" @click="save_send()">
-                            Add & send verify request
-                        </button>
-                    </div>
+
+
                 </div>
             </div>
         </div>
@@ -132,7 +128,7 @@
         components: {ActionBar},
         data() {
             return {
-                isHidden:false,
+                token:'',
                 secret_key:"",
                 device_name:"",
                 editDevice:"",
@@ -160,6 +156,10 @@
             $router.on('/', this.load).init();
         },
         methods: {
+            async genToken(){
+                    const res  = await $post('/xadmin/user_devices/generateToken', {device_id: this.currId});
+                    this.token = res.token;
+            },
 
             editModalDevice(id,device_name,secret_key)
             {
@@ -297,7 +297,7 @@
         margin-left: 160px;
     }
     .content{
-        margin-left: 30px;
+        margin: 30px;
     }
     .form-control{
         max-width: 400px;
@@ -335,7 +335,7 @@
         padding: 8px 18px;
         border-radius: 8px;
         margin-bottom: 40px;
-        background: #333333;
+        background: #008cff;
         color: #ffffff;
 
     }

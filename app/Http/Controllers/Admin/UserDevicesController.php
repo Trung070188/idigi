@@ -341,7 +341,7 @@ class UserDevicesController extends AdminBaseController
     public function generateToken(Request  $request){
         $user = Auth::user();
         $device = UserDevice::where('user_id', $user->id)
-            ->where('id', $request->id)
+            ->where('id', $request->device_id)
             ->where('status', 2)->first();
 
 
@@ -353,9 +353,10 @@ class UserDevicesController extends AdminBaseController
                 'secret_key' =>$device->secret_key,
                 'expired' => strtotime(Carbon::now()->addHours(10))
             ];
-            return jwtToken($payload);
+            return ['status' => 1, 'token' =>  jwtToken($payload)];
+
         }
 
-        return 'Error';
+        return  ['status' => 0, 'token' =>  'Error'];
     }
 }

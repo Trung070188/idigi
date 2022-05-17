@@ -169,7 +169,7 @@ class UsersController extends AdminBaseController
         $roles = $req->roles;
         $rules = [
             'username' => 'required|max:191',
-            'email' => 'required|max:191',
+            'email' => 'required|max:191|email',
         ];
         $v = Validator::make($data, $rules);
 
