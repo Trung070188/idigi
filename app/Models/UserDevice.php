@@ -12,7 +12,9 @@ class UserDevice extends BaseModel
         'device_uid',
         'device_name',
         'user_id',
-        'status'
+        'status',
+        'secret_key',
+        'reason',
     ];
     public function user()
     {

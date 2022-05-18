@@ -61,24 +61,23 @@ class UserDevicesController extends AdminBaseController
     * @throw  NotFoundHttpException
     * @return  View
     */
-//    public function edit (Request $req) {
-//        $id = $req->id;
-//        $entry = UserDevice::find($id);
-//
-//        if (!$entry) {
-//            throw new NotFoundHttpException();
-//        }
-//
-//        /**
-//        * @var  UserDevice $entry
-//        */
-//
-//        $title = 'Edit';
-//        $component = 'User_deviceForm';
-//
-//
-//        return component($component, compact('title', 'entry'));
-//    }
+    public function edit (Request $req) {
+        $id = $req->id;
+        $entry = UserDevice::find($id);
+
+        if (!$entry) {
+            throw new NotFoundHttpException();
+        }
+
+        /**
+        * @var  UserDevice $entry
+        */
+
+        $title = 'Edit';
+        $component = 'User_deviceForm';
+
+        return component($component, compact('title', 'entry'));
+    }
 
     /**
     * @uri  /xadmin/user_devices/remove
@@ -104,11 +103,13 @@ class UserDevicesController extends AdminBaseController
     * @uri  /xadmin/user_devices/save
     * @return  array
     */
-    public function save(Request $request) {
-        if (!$request->isMethod('POST')) {
+
+    public function save(Request $req) {
+
+        if (!$req->isMethod('POST')) {
             return ['code' => 405, 'message' => 'Method not allow'];
         }
-        $data = $request->get('entry');
+        $data = $req->get('entry');
         $rules = [
     'device_uid' => 'required|max:45',
     'device_name' => 'required|max:45',
@@ -122,27 +123,43 @@ class UserDevicesController extends AdminBaseController
                 'errors' => $v->errors()
             ];
         }
-
+        if (isset($data['id'])) {
+            $entry = UserDevice::find($data['id']);
+            if (!$entry) {
+                return [
+                    'code' => 3,
+                    'message' => 'Không tìm thấy',
+                ];
+            }
+            $entry->fill($data);
+            $entry->save();
+            return [
+                'code' => 0,
+                'message' => 'Đã cập nhật',
+                'id' => $entry->id,
+            ];
+        }
         /**
         * @var  UserDevice $entry
         */
+           else{
+               $entry = new UserDevice();
+               $entry->device_uid=$req->input('device_uid');
+               $entry->device_name=$req->input('device_name');
+               $entry->user_id=auth()->id();
+               $entry->secret_key=(Str::random(10));
+               $entry->reason=$req->input('reason');
+               $entry->status=0;
+               $entry->fill($data);
+               $entry->save();
 
-            $entry = new UserDevice();
-            $entry->device_uid=$request->input('device_uid');
-            $entry->device_name=$request->input('device_name');
-            $entry->user_id=auth()->id();
-            $entry->secret_key=(Str::random(10));
-            $entry->status=0;
-            $entry->fill($data);
-            $entry->save();
+               return [
+                   'code' => 0,
+                   'message' => 'Đã thêm',
+                   'id' => $entry->id,
+               ];
 
-            return [
-                'code' => 0,
-                'message' => 'Đã thêm',
-                'id' => $entry->id,
-            ];
-
-
+           }
 
         }
     public function savesend(Request $request) {

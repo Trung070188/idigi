@@ -40,6 +40,7 @@
                     <div class="close-popup" data-dismiss="modal"></div>
                     <h2 style="margin-top: 30px" class="popup-title success">Thông tin device</h2>
                     <div class="content">
+                        <label>Device Name</label>
                         <input type="text" class="form-control " placeholder="Device name" aria-label="" style="margin-bottom: 10px" aria-describedby="basic-addon1" v-model="editDevice" disabled>
                         <error-label for="f_category_id" :errors="errors.device_name"></error-label>
                         <div>
@@ -86,13 +87,15 @@
                                         <label v-if="entry.status===2" style="color:#08C749">Verified</label>
                                     </div>
                                 </form>
-                                <form v-if="entry.status==0 || entry.status==1" class="form-inline">
+                                <form v-if="entry.status==0 || entry.status==1 || entry.status==3" class="form-inline">
                                     <div  class="form-group mx-sm-3 mb-2">
                                         <label>{{entry.device_name}}</label>
                                     </div>
                                     <div class="form-group col-lg-12">
                                         <label v-if="entry.status===0" style="color:#F26464">Not Verified</label>
                                         <label v-if="entry.status===1" style="color:#FFAC32">Waiting for administrator verify</label>
+                                        <label v-if="entry.status===3" style="color:#F26464">Refuse</label>
+
                                     </div>
 
                                 </form>

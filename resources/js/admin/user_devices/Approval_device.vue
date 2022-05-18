@@ -3,7 +3,7 @@
         <ActionBar type="index"
                    createUrl="/xadmin/users/create"
                    :breadcrumbs="breadcrumbs"
-                   title="User"/>
+                   title="Approval Device"/>
         <div class="row">
             <div class="col-lg-12">
                 <div class="card card-custom card-stretch gutter-b">
@@ -91,7 +91,6 @@
                                 <div class="close-popup" data-dismiss="modal"></div>
                                 <h3 class="popup-title success" style="text-align: center">Approval device</h3>
                                 <div class="content">
-                                    <label style="float: left; margin-left: 200px">Lý do từ chối</label>
                                     <input type="text" class="form-control " placeholder="Nhập lí do từ chối" aria-label="" style="margin-bottom: 10px" aria-describedby="basic-addon1" v-model="reason" >
                                     <div>
                                     </div>
@@ -111,7 +110,7 @@
                                 <th>ID</th>
                                 <th>Device UID</th>
                                 <th>Device Name</th>
-                                <th>User Name</th>
+                                <th>User Id</th>
                                 <th>Status</th>
                             </tr>
                             </thead>
@@ -124,12 +123,14 @@
                                 <td style="color:#FFAC32">Waiting for administrator verify</td>
 
                                 <td>
-                                  <button class="btn-danger" @click="editModalDevice(entry.id,entry.status,entry.reason)">
-                                      Approval
-                                  </button>
+
                                     <button class="" @click="toggleStatus_approval(entry)">
-                                        Refuse
+                                  Approval
                                     </button>
+<!--                                    <button class="btn-danger" @click="editModalDevice(entry.id,entry.status,entry.reason)">-->
+<!--                                        Refuse-->
+<!--                                    </button>-->
+                                    <a :href="'/xadmin/user_devices/edit?id='+entry.id"> <button class="btn-danger" >Refuse</button></a>
                                 </td>
                             </tr>
                             </tbody>
@@ -175,11 +176,10 @@
         components: {ActionBar},
         data() {
             return {
-                reason:"",
                 editDevice:"",
                 breadcrumbs: [
                     {
-                        title: 'User Device'
+                        title: 'Approval Device'
                     },
                 ],
                 entries: [],
@@ -201,6 +201,12 @@
             $router.on('/', this.load).init();
         },
         methods: {
+            // edit: function (id, event){
+            //     if (!$(event.target).hasClass('deleted')) {
+            //         window.location.href = '/xadmin/user_devices/edit?id=' + id;
+            //     }
+            // },
+
             editModalDevice(id,status,reason)
             {
                 const that=this;
@@ -210,7 +216,6 @@
                 $('#editdeviceConfirm').modal('show');
             },
             async save() {
-                this.isLoading = true;
                 const res = await $post('/xadmin/user_devices/save', {
                     entry: this.entry,
                 }, false);
@@ -226,7 +231,7 @@
                     this.errors = {};
                     toastr.success(res.message);
                     if (!this.entry.id) {
-                        location.replace('/xadmin/user_devices/index');
+                        location.replace('/xadmin/user_devices/approval');
                     }
 
                 }
