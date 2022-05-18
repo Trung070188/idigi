@@ -1,7 +1,6 @@
 <template>
     <div class="container-fluid" >
         <ActionBar type="index"
-                   createUrl="/xadmin/users/create"
                    :breadcrumbs="breadcrumbs"
                    title="Approval Device"/>
         <div class="row">
@@ -82,25 +81,25 @@
 
 <!--                    </div>-->
 
-                    <div class="modal fade"  id="editdeviceConfirm" tabindex="-1" role="dialog"
-                         aria-labelledby="editdeviceConfirm"
-                         aria-hidden="true">
-                        <div class="modal-dialog modal-dialog-centered popup-main-1" role="document"
-                             style="max-width: 500px;">
-                            <div class="modal-content box-shadow-main paymment-status" style="margin-right:20px; left:140px">
-                                <div class="close-popup" data-dismiss="modal"></div>
-                                <h3 class="popup-title success" style="text-align: center">Approval device</h3>
-                                <div class="content">
-                                    <input type="text" class="form-control " placeholder="Nhập lí do từ chối" aria-label="" style="margin-bottom: 10px" aria-describedby="basic-addon1" v-model="reason" >
-                                    <div>
-                                    </div>
-                                </div>
-                                <div class="form-group d-flex justify-content-between">
-                                    <button  class="btn btn-danger ito-btn-small" style="margin-left: 200px" data-dismiss="modal" @click="save()">Add now</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+<!--                    <div class="modal fade"  id="editdeviceConfirm" tabindex="-1" role="dialog"-->
+<!--                         aria-labelledby="editdeviceConfirm"-->
+<!--                         aria-hidden="true">-->
+<!--                        <div class="modal-dialog modal-dialog-centered popup-main-1" role="document"-->
+<!--                             style="max-width: 500px;">-->
+<!--                            <div class="modal-content box-shadow-main paymment-status" style="margin-right:20px; left:140px">-->
+<!--                                <div class="close-popup" data-dismiss="modal"></div>-->
+<!--                                <h3 class="popup-title success" style="text-align: center">Approval device</h3>-->
+<!--                                <div class="content">-->
+<!--                                    <input type="text" class="form-control " placeholder="Nhập lí do từ chối" aria-label="" style="margin-bottom: 10px" aria-describedby="basic-addon1" v-model="reason" >-->
+<!--                                    <div>-->
+<!--                                    </div>-->
+<!--                                </div>-->
+<!--                                <div class="form-group d-flex justify-content-between">-->
+<!--                                    <button  class="btn btn-danger ito-btn-small" style="margin-left: 200px" data-dismiss="modal" @click="save()">Add now</button>-->
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                    </div>-->
                     <div class="card-body d-flex flex-column">
                         <div v-text="'Showing '+ from +' to '+ to +' of '+ paginate.totalRecord +' entries'"
                              v-if="entries.length > 0"></div>
@@ -207,14 +206,14 @@
             //     }
             // },
 
-            editModalDevice(id,status,reason)
-            {
-                const that=this;
-                that.currId = id;
-               that.status=status
-                that.reason=reason
-                $('#editdeviceConfirm').modal('show');
-            },
+            // editModalDevice(id,status,reason)
+            // {
+            //     const that=this;
+            //     that.currId = id;
+            //    that.status=status
+            //     that.reason=reason
+            //     $('#editdeviceConfirm').modal('show');
+            // },
             async save() {
                 const res = await $post('/xadmin/user_devices/save', {
                     entry: this.entry,
