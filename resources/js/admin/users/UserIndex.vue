@@ -210,6 +210,7 @@
                 this.$loading(false);
                 this.paginate = res.paginate;
                 this.entries = res.data;
+                console.log(this.entries);
                 this.from = (this.paginate.currentPage-1)*(this.limit) + 1;
                 this.to = (this.paginate.currentPage-1)*(this.limit) + this.entries.length;
             },

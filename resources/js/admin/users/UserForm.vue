@@ -33,13 +33,16 @@
                                     </div>
                                     <div class="form-group  col-sm-4">
                                         <label>Password <span class="text-danger">*</span></label>
-                                        <input type="password" class="form-control" ref="password"  v-model="entry.password">
+                                            <input :type="showPass ? 'text' : 'password'" class="form-control" ref="password"  v-model="entry.password">
+                                 <i  @click="showPass = !showPass" class="fa fa-eye"></i>
                                         <error-label for="f_category_id" :errors="errors.password"></error-label>
                                     </div>
-                                    <div class="form-group  col-sm-4">
-                                        <label>Confirm your password <span class="text-danger">*</span></label>
-                                        <input class="form-control" type="password"  >
-                                        <error-label for="f_category_id" ></error-label>
+
+                                    <div  class="form-group  col-sm-4">
+                                        <label >Confirm your password <span class="text-danger">*</span></label>
+                                        <input  class="form-control" :type="showConfirm ? 'text' : 'password'" v-model="entry.password_confirmation">
+                                        <i @click="showConfirm = !showConfirm" class="fa fa-eye"></i>
+                                        <error-label for="f_category_id" :errors="errors.password_confirmation" ></error-label>
                                     </div>
                                 </div>
                                 <div class="row" >
@@ -98,6 +101,9 @@
         data() {
 
             return {
+
+                showConfirm:false,
+                showPass:false,
                 types: [
 
                 ],
@@ -150,5 +156,11 @@
 </script>
 
 <style scoped>
+    .fa-eye{
+        position: absolute;
+        top:40% ;
+        right:10%
+
+    }
 
 </style>

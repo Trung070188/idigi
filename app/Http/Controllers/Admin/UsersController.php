@@ -170,6 +170,7 @@ class UsersController extends AdminBaseController
         $rules = [
             'username' => 'required|max:191',
             'email' => 'required|max:191|email',
+            'password' => '|max:191|confirmed',
         ];
         $v = Validator::make($data, $rules);
 
@@ -303,6 +304,7 @@ class UsersController extends AdminBaseController
                 'full_name' => $user->full_name,
                 'email' => $user->email,
                 'state' => $user->state,
+                'password'=>$user->password,
                 'created_at' => $user->created_at
             ];
         }
