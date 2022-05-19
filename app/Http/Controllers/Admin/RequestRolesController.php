@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use App\Models\RequestRole;
@@ -100,9 +101,11 @@ class RequestRolesController extends AdminBaseController
             return ['code' => 405, 'message' => 'Method not allow'];
         }
 
-        $data = $req->get('entry');
+        $data = $req->all();
 
-        $rules = [];
+        $rules = [
+            'role' => 'required'
+        ];
 
         $v = Validator::make($data, $rules);
 
@@ -113,37 +116,26 @@ class RequestRolesController extends AdminBaseController
             ];
         }
 
-        /**
-        * @var  RequestRole $entry
-        */
-        if (isset($data['id'])) {
-            $entry = RequestRole::find($data['id']);
-            if (!$entry) {
-                return [
-                    'code' => 3,
-                    'message' => 'Không tìm thấy',
-                ];
-            }
+        $user = Auth::user();
+        $data['user_id'] = $user->id;
 
-            $entry->fill($data);
-            $entry->save();
-
-            return [
-                'code' => 0,
-                'message' => 'Đã cập nhật',
-                'id' => $entry->id
-            ];
-        } else {
-            $entry = new RequestRole();
-            $entry->fill($data);
-            $entry->save();
-
-            return [
-                'code' => 0,
-                'message' => 'Đã thêm',
-                'id' => $entry->id
-            ];
+        if($data['role'] == 1){
+            $data['content'] = 'Tôi là quản trị viên';
+        }else{
+            $data['content'] = 'Tôi là giáo viên';
         }
+        $data['status'] = 'Waiting';
+
+        RequestRole::updateOrCreate([
+            'content' => $data['content'],
+            'status' => 'Waiting',
+            'user_id' => $data['user_id'],
+        ], $data);
+
+        return [
+            'code' => 0,
+            'message' => 'Đã gửi yêu cầu cấp quyền thành công',
+        ];
     }
 
     /**
