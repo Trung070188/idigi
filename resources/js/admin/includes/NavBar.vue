@@ -23,23 +23,45 @@
                     </div>
                 </div>
                 <div class="d-flex align-items-stretch flex-shrink-0">
-                    <div class="d-flex align-items-stretch flex-shrink-0">
+                    <div  class="d-flex align-items-center ms-1 ms-lg-3" id="kt_header_bell">
 
-                        <div class="d-flex align-items-center ms-1 ms-lg-3">
-                            <div class="btn btn-icon btn-active-light-primary position-relative w-30px h-30px w-md-40px h-md-40px" data-kt-menu-trigger="click" data-kt-menu-attach="parent" data-kt-menu-placement="bottom-end">
-                                <span class="svg-icon svg-icon-1">
-                                    <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
-                                        <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-                                            <rect x="0" y="0" width="24" height="24" />
-                                            <path d="M2.56066017,10.6819805 L4.68198052,8.56066017 C5.26776695,7.97487373 6.21751442,7.97487373 6.80330086,8.56066017 L8.9246212,10.6819805 C9.51040764,11.267767 9.51040764,12.2175144 8.9246212,12.8033009 L6.80330086,14.9246212 C6.21751442,15.5104076 5.26776695,15.5104076 4.68198052,14.9246212 L2.56066017,12.8033009 C1.97487373,12.2175144 1.97487373,11.267767 2.56066017,10.6819805 Z M14.5606602,10.6819805 L16.6819805,8.56066017 C17.267767,7.97487373 18.2175144,7.97487373 18.8033009,8.56066017 L20.9246212,10.6819805 C21.5104076,11.267767 21.5104076,12.2175144 20.9246212,12.8033009 L18.8033009,14.9246212 C18.2175144,15.5104076 17.267767,15.5104076 16.6819805,14.9246212 L14.5606602,12.8033009 C13.9748737,12.2175144 13.9748737,11.267767 14.5606602,10.6819805 Z" fill="#000000" opacity="0.3" />
-                                            <path d="M8.56066017,16.6819805 L10.6819805,14.5606602 C11.267767,13.9748737 12.2175144,13.9748737 12.8033009,14.5606602 L14.9246212,16.6819805 C15.5104076,17.267767 15.5104076,18.2175144 14.9246212,18.8033009 L12.8033009,20.9246212 C12.2175144,21.5104076 11.267767,21.5104076 10.6819805,20.9246212 L8.56066017,18.8033009 C7.97487373,18.2175144 7.97487373,17.267767 8.56066017,16.6819805 Z M8.56066017,4.68198052 L10.6819805,2.56066017 C11.267767,1.97487373 12.2175144,1.97487373 12.8033009,2.56066017 L14.9246212,4.68198052 C15.5104076,5.26776695 15.5104076,6.21751442 14.9246212,6.80330086 L12.8033009,8.9246212 C12.2175144,9.51040764 11.267767,9.51040764 10.6819805,8.9246212 L8.56066017,6.80330086 C7.97487373,6.21751442 7.97487373,5.26776695 8.56066017,4.68198052 Z" fill="#000000" />
-                                        </g>
-                                    </svg>
-                                </span>
+                        <div  data-kt-menu-trigger="click" data-kt-menu-attach="parent" data-kt-menu-placement="bottom-end" style="position:relative">
+                            <i class="fas fa-bell"></i><span class="badge badge-light-danger badge-circle fw-bolder fs-7" style="position: absolute;top: -8px;right: -7px; width: 1.25rem; height: 1.25rem">3</span>
+                        </div>
+                        <div  class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-800 menu-state-bg menu-state-primary fw-bold py-4 fs-6 w-275px" data-kt-menu="true">
+                            <div class="menu-item px-3">
+                                <div class="menu-content d-flex align-items-center px-3">
+                                    <div class="d-flex flex-column">
+                                        <div class="fw-bolder d-flex align-items-center fs-5">Thông báo</div>
+                                    </div>
+                                    <!--end::Username-->
+                                </div>
                             </div>
+                            <div class="separator my-2"></div>
+
+                            <div    class="menu-item px-5" >
+                                <a  :href="'/xadmin/users/profile?id='+auth.id" class="menu-link px-5">Thông báo 1</a>
+
+                            </div>
+                            <div    class="menu-item px-5" >
+                                <a  :href="'/xadmin/users/profile?id='+auth.id" class="menu-link px-5">Thông báo 1</a>
+
+                            </div>
+                            <div    class="menu-item px-5" >
+                                <a  :href="'/xadmin/users/profile?id='+auth.id" class="menu-link px-5">Thông báo 1</a>
+
+                            </div> <div    class="menu-item px-5" >
+                            <a  :href="'/xadmin/users/profile?id='+auth.id" class="menu-link px-5">Thông báo 1</a>
+
                         </div>
 
+
+                        </div>
+
+                    </div>
+
                         <div  class="d-flex align-items-center ms-1 ms-lg-3" id="kt_header_user_menu_toggle">
+
                             <div  data-kt-menu-trigger="click" data-kt-menu-attach="parent" data-kt-menu-placement="bottom-end">
                             <span class="text-muted font-weight-bold font-size-base d-none d-md-inline mr-1">Hi,&nbsp;</span>
                             <span class="text-dark-50 font-weight-bolder font-size-base d-none d-md-inline mr-3">{{auth.username}}&nbsp;</span>
@@ -64,7 +86,7 @@
                             </div>
 
                         </div>
-                    </div>
+
                 </div>
             </div>
         </div>
@@ -86,5 +108,7 @@
 </script>
 
 <style scoped>
-
+.menu-sub-dropdown{
+    border: 1px solid #009ef7;
+}
 </style>
