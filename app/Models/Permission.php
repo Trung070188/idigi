@@ -21,7 +21,8 @@ class Permission extends BaseModel
     protected $autoSchema = false;
     protected $table = 'permissions';
     protected $fillable = [
-        'name'
+        'name',
+        'group_permission_id'
     ];
 
     public static function getTree()

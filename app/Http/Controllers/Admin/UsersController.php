@@ -147,9 +147,7 @@ class UsersController extends AdminBaseController
         if (!$entry) {
             throw new NotFoundHttpException();
         }
-
         $entry->delete();
-
         return [
             'code' => 0,
             'message' => 'Đã xóa'
@@ -318,7 +316,6 @@ class UsersController extends AdminBaseController
             ]
         ];
     }
-
     public function export()
     {
         $keys = [
