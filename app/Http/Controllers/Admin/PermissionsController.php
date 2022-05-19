@@ -22,8 +22,8 @@ class PermissionsController extends AdminBaseController
     * @return  View
     */
     public function index() {
-        $title = 'Permission';
-        $component = 'PermissionIndex';
+        $title = 'Role';
+        $component = 'RoleIndex';
         return vue(compact('title', 'component'));
     }
 

@@ -13,9 +13,9 @@
                             <tbody>
                             <tr>
                                 <td></td>
-                                <td v-for="entry in entries"  @click="edit(entry.id)">
+                                <td  >
                                     <div class="text-center">
-                                        {{entry.role_name}}
+
                                     </div>
 
                                 </td>
@@ -25,12 +25,7 @@
                             <tr>
                                 <th scope="col">
                                     <span>Manage user</span>
-                                    <span  class="d-block" style="margin-left: 20px">Sync user list with ECO,SIS</span>
-                                    <span  class="d-block" style="margin-left: 20px">Active/ Deactive user </span>
-                                    <span  class="d-block" style="margin-left: 20px">Edit user information</span>
-                                    <span  class="d-block" style="margin-left: 20px">Delete user</span>
-                                    <span  class="d-block" style="margin-left: 20px">Reset password</span>
-                                    <span  class="d-block" style="margin-left: 20px">Verify registed device ID</span>
+                                    <span  v-for="entry in entries" v-if="entry.group_permission_id==1" class="d-block" style="margin-left: 20px">{{entry.name}}</span>
                                 </th>
                                 <td v-for="entry in entries">
                                     <br>
@@ -57,19 +52,13 @@
                                         <input  class="form-check-input" type="checkbox" value="" >
 
                                     </div>  <br>
-                                    <div class="text-center check">
-                                        <input  class="form-check-input" type="checkbox" value="" >
 
-                                    </div>
                                 </td>
                             </tr>
                             <tr>
                                 <th scope="row">
                                     <span>Manage user</span>
-                                    <span  class="d-block" style="margin-left: 20px">Create roles</span>
-                                    <span  class="d-block" style="margin-left: 20px">Update roles </span>
-                                    <span  class="d-block" style="margin-left: 20px">Delete roles</span>
-                                    <span  class="d-block" style="margin-left: 20px">Assignment</span>
+                                    <span v-for="entry in entries" v-if="entry.group_permission_id==2" class="d-block" style="margin-left: 20px">{{entry.name}}</span>
                                 </th>
                                 <td v-for="entry in entries">
                                     <br>
@@ -93,8 +82,7 @@
                             <tr>
                                 <th scope="row">
                                     <span>Manage data</span>
-                                    <span  class="d-block" style="margin-left: 20px">Create new lesson</span>
-                                    <span  class="d-block" style="margin-left: 20px">Create new inventories </span>
+                                    <span v-for="entry in entries" v-if="entry.group_permission_id==3" class="d-block" style="margin-left: 20px">{{entry.name}}</span>
                                 </th>
                                 <td v-for="entry in entries">
                                     <br>
@@ -205,9 +193,18 @@
             edit: function (id){
                 window.location.href='/xadmin/roles/edit?id='+ id;
             },
+            // async load() {
+            //     let query = $router.getQuery();
+            //     const res  = await $get('/xadmin/roles/data', query);
+            //     this.paginate = res.paginate;
+            //     this.entries = res.data;
+            //     console.log(this.entries);
+            //     this.from = (this.paginate.currentPage-1)*(this.limit) + 1;
+            //     this.to = (this.paginate.currentPage-1)*(this.limit) + this.entries.length;
+            // },
             async load() {
                 let query = $router.getQuery();
-                const res  = await $get('/xadmin/roles/data', query);
+                const res  = await $get('/xadmin/permissions/data', query);
                 this.paginate = res.paginate;
                 this.entries = res.data;
                 this.from = (this.paginate.currentPage-1)*(this.limit) + 1;

@@ -159,7 +159,7 @@
     .fa-eye{
         position: absolute;
         top:40% ;
-        right:10%
+        right:5%
 
     }
 
