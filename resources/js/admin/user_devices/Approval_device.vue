@@ -111,6 +111,7 @@
                                 <th>Device Name</th>
                                 <th>User Id</th>
                                 <th>Status</th>
+                                <th></th>
                             </tr>
                             </thead>
                             <tbody>
@@ -123,7 +124,7 @@
 
                                 <td>
 
-                                    <button class="" @click="toggleStatus_approval(entry)">
+                                    <button style="background:#50f14b;color: #f1f1f1;border-color: #50f14b;margin: 10px;" class="" @click="toggleStatus_approval(entry)">
                                   Approval
                                     </button>
 <!--                                    <button class="btn-danger" @click="editModalDevice(entry.id,entry.status,entry.reason)">-->
