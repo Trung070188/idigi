@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 
+use App\Models\Role;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -22,9 +23,9 @@ class PermissionsController extends AdminBaseController
     * @return  View
     */
     public function index() {
-        $title = 'Role';
-        $component = 'RoleIndex';
-        return vue(compact('title', 'component'));
+        $title = '';
+        $component = '';
+        return view('admin.layouts.vue', compact('title', 'component'));
     }
 
     public function assigns(Request $req)
@@ -244,7 +245,9 @@ class PermissionsController extends AdminBaseController
     * @return  array
     */
     public function data(Request $req) {
-        $query = Permission::query()->orderBy('id', 'desc');
+        $query = Permission::query()
+            ->with(['role'])
+            ->orderBy('id', 'desc');
 
         if ($req->keyword) {
             //$query->where('title', 'LIKE', '%' . $req->keyword. '%');

@@ -22,6 +22,7 @@ class Permission extends BaseModel
     protected $table = 'permissions';
     protected $fillable = [
         'name',
+        'description',
         'group_permission_id'
     ];
 
@@ -46,4 +47,9 @@ class Permission extends BaseModel
 
         return $tree;
     }
+//public function role()
+//{
+//    return $this->belongsToMany(Role::class,'role_has_permissions');
+//
+//}
 }

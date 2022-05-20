@@ -13,151 +13,66 @@
                             <tbody>
                             <tr>
                                 <td></td>
-                                <td  >
-                                    <div class="text-center">
-
+                                <td  v-for="entry in entries">
+                                    <div   class="text-center">
+                                        {{entry.role_name}}
                                     </div>
-
                                 </td>
-
                             </tr>
                             </tbody>
                             <tr>
                                 <th scope="col">
                                     <span>Manage user</span>
-                                    <span  v-for="entry in entries" v-if="entry.group_permission_id==1" class="d-block" style="margin-left: 20px">{{entry.name}}</span>
+                                    <span  v-for="permission in permissions" v-if="permission.group_permission_id==1" class="d-block" style="margin-left: 20px">{{permission.name}}</span>
                                 </th>
                                 <td v-for="entry in entries">
                                     <br>
-                                    <div class="text-center check">
-                                        <input  class="form-check-input" type="checkbox"  value="" >
+                                    <div v-for="permission in permissions" v-if="permission.group_permission_id==1"  class="text-center check">
+                                        <input  class="form-check-input"  type="checkbox"  value="" >
+                                        <br>
                                     </div>
-                                    <br>
-                                    <div class="text-center check">
-                                        <input  class="form-check-input" type="checkbox" value="" >
-
-                                    </div>
-                                    <br>
-                                    <div class="text-center check">
-                                        <input  class="form-check-input" type="checkbox" value="" >
-
-                                    </div>
-                                    <br>
-                                    <div class="text-center check">
-                                        <input  class="form-check-input" type="checkbox" value="" >
-
-                                    </div>
-                                    <br>
-                                    <div class="text-center check">
-                                        <input  class="form-check-input" type="checkbox" value="" >
-
-                                    </div>  <br>
-
                                 </td>
                             </tr>
                             <tr>
                                 <th scope="row">
-                                    <span>Manage user</span>
-                                    <span v-for="entry in entries" v-if="entry.group_permission_id==2" class="d-block" style="margin-left: 20px">{{entry.name}}</span>
+                                    <span>Manage role</span>
+                                    <span  v-for="permission in permissions" v-if="permission.group_permission_id==2" class="d-block" style="margin-left: 20px">{{permission.name}}</span>
                                 </th>
                                 <td v-for="entry in entries">
                                     <br>
-                                    <div class="text-center check">
-                                        <input  class="form-check-input" type="checkbox" value="" >
-                                    </div>
-                                    <br>
-                                    <div class="text-center check">
-                                        <input  class="form-check-input" type="checkbox" value="" >
-                                    </div>
-                                    <br>
-                                    <div class="text-center check">
-                                        <input  class="form-check-input" type="checkbox" value="" >
-                                    </div>
-                                    <br>
-                                    <div class="text-center check">
-                                        <input  class="form-check-input" type="checkbox" value="" >
+                                    <div v-for="permission in permissions" v-if="permission.group_permission_id==2" class="text-center check">
+                                        <input  class="form-check-input"  type="checkbox" value="" >
+                                        <br>
                                     </div>
                                 </td>
                             </tr>
                             <tr>
                                 <th scope="row">
                                     <span>Manage data</span>
-                                    <span v-for="entry in entries" v-if="entry.group_permission_id==3" class="d-block" style="margin-left: 20px">{{entry.name}}</span>
+                                    <span  v-for="permission in permissions" v-if="permission.group_permission_id==3" class="d-block" style="margin-left: 20px">{{permission.name}}</span>
                                 </th>
                                 <td v-for="entry in entries">
                                     <br>
-                                    <div class="text-center check">
-                                        <input  class="form-check-input" type="checkbox" value="" >
-                                    </div>
-                                    <br>
-                                    <div class="text-center check">
-                                        <input  class="form-check-input" type="checkbox" value="" >
+                                    <div  v-for="permission in permissions" v-if="permission.group_permission_id==3" class="text-center check">
+                                        <input  class="form-check-input"  type="checkbox" value="" >
+                                        <br>
                                     </div>
                                 </td>
-
                             </tr>
-
-
-
-
                         </table>
+                    <div >
+                        <button class="save_role" @click="save()" >save</button>
+                    </div>
 
-
-<!--                    <div class="card-body d-flex flex-column" >-->
-<!--                        <div v-text="'Showing '+ from +' to '+ to +' of '+ paginate.totalRecord +' entries'"></div>-->
-<!--                        <table class=" table  table-head-custom table-head-bg table-vertical-center">-->
-<!--                            <thead>-->
-<!--                            <tr v-for="entry in entries" @click="edit(entry.id)">-->
-
-<!--                                                                    <th>{{entry.role_name}}</th>-->
-
-<!--                            </tr>-->
-<!--                            </thead>-->
-<!--                            <tr >-->
-<!--&lt;!&ndash;                                <td v-text="entry.id"></td>&ndash;&gt;-->
-<!--&lt;!&ndash;                                                                    <td v-text="entry.role_name"></td>&ndash;&gt;-->
-<!--&lt;!&ndash;                                                                    <td v-text="entry.role_description"></td>&ndash;&gt;-->
-
-<!--&lt;!&ndash;                                <td class="">&ndash;&gt;-->
-<!--&lt;!&ndash;&lt;!&ndash;                                    <a :href="'/xadmin/roles/edit?id='+entry.id" ><i style="font-size:1.3rem" class="fa fa-edit"></i></a>&ndash;&gt;&ndash;&gt;-->
-<!--&lt;!&ndash;                                    <a @click="remove(entry)" href="javascript:;" class="btn-trash"><i  class="fa fa-trash mr-1"></i></a>&ndash;&gt;-->
-<!--&lt;!&ndash;                                </td>&ndash;&gt;-->
-<!--                            </tr>-->
-<!--                        </table>-->
-<!--                        <div style="margin-top:10px; display: flex">-->
-<!--                            <div class="col-4 form-group d-inline-flex mt-2">-->
-<!--                                <div class="mr-2">-->
-<!--                                    <label>Records per page:</label>-->
-<!--                                </div>-->
-<!--                                <div>-->
-<!--                                    <select class="form-select form-select-sm " v-model="limit" @change="changeLimit">-->
-<!--                                        <option value="25">25</option>-->
-<!--                                        <option value="50">50</option>-->
-<!--                                        <option value="100">100</option>-->
-
-<!--                                    </select>-->
-<!--                                </div>-->
-<!--                            </div>-->
-<!--                            <div style="float: right">-->
-<!--                                <Paginate :value="paginate" :pagechange="onPageChange"></Paginate>-->
-<!--                            </div>-->
-<!--                        </div>-->
-
-
-<!--                    </div>-->
                 </div>
             </div>
-
         </div>
     </div>
-
 </template>
-
 <script>
     import {$get, $post, getTimeRangeAll} from "../../utils";
     import $router from '../../lib/SimpleRouter';
     import ActionBar from "../includes/ActionBar";
-
     let created = getTimeRangeAll();
     const $q = $router.getQuery();
 
@@ -171,6 +86,7 @@
                         title: 'Roles'
                     },
                 ],
+                permissions:$json.permissions || [],
                 entries: [],
                 filter: {
                     keyword: $q.keyword || '',
@@ -193,22 +109,32 @@
             edit: function (id){
                 window.location.href='/xadmin/roles/edit?id='+ id;
             },
-            // async load() {
-            //     let query = $router.getQuery();
-            //     const res  = await $get('/xadmin/roles/data', query);
-            //     this.paginate = res.paginate;
-            //     this.entries = res.data;
-            //     console.log(this.entries);
-            //     this.from = (this.paginate.currentPage-1)*(this.limit) + 1;
-            //     this.to = (this.paginate.currentPage-1)*(this.limit) + this.entries.length;
-            // },
             async load() {
                 let query = $router.getQuery();
-                const res  = await $get('/xadmin/permissions/data', query);
+                const res  = await $get('/xadmin/roles/data', query);
                 this.paginate = res.paginate;
                 this.entries = res.data;
+                console.log(this.entries);
                 this.from = (this.paginate.currentPage-1)*(this.limit) + 1;
                 this.to = (this.paginate.currentPage-1)*(this.limit) + this.entries.length;
+            },
+            async save() {
+                this.isLoading = true;
+                const res = await $post('/xadmin/roles/save', {entry: this.entry,permissions: this.permissions}, false);
+                this.isLoading = false;
+                if (res.errors) {
+                    this.errors = res.errors;
+                    return;
+                }
+                if (res.code) {
+                    toastr.error(res.message);
+                } else {
+                    this.errors = {};
+                    toastr.success(res.message);
+                    if (!this.entry.id) {
+                        location.replace('/xadmin/roles/edit?id=' + res.id);
+                    }
+                }
             },
             async remove(entry) {
                 if (!confirm('Xóa bản ghi: ' + entry.id)) {
@@ -269,5 +195,13 @@
 </script>
 
 <style scoped>
+    .save_role{
+        width: 101px;
+        height: 34px;
+        background: #333333;
+        border-radius: 32px;
+        float: right;
+        color: #ffffff;
+    }
 
 </style>

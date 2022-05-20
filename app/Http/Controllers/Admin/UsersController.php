@@ -40,9 +40,6 @@ class UsersController extends AdminBaseController
             'roles' => $roles
         ];
 
-//        dd($entry);
-
-
         return view('admin.layouts.vue', compact('title', 'component', 'jsonData'));
     }
 
@@ -114,8 +111,6 @@ class UsersController extends AdminBaseController
          * @var  User $entry
          */
         $roles = Role::query()->orderBy('role_name')->get();
-
-
         foreach ($roles as $role) {
             $role->user = false;
             if ($entry->roles) {
@@ -282,13 +277,13 @@ class UsersController extends AdminBaseController
 
         $query->createdIn($req->created);
         $entries = $query->paginate();
+   ;
 
         $users = $entries->items();
         $data = [];
 
         foreach ($users as $user) {
             $roles = $user->roles;
-
             $roleNames = [];
             if ($roles) {
                 foreach ($roles as $role) {
@@ -305,6 +300,8 @@ class UsersController extends AdminBaseController
                 'password'=>$user->password,
                 'created_at' => $user->created_at
             ];
+
+
         }
         return [
             'code' => 0,

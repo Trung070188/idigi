@@ -10,10 +10,10 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Role extends BaseModel
 {
     protected $table = 'roles';
-    protected $autoSchema = false;
-    const SUPER_USER = 1;
-    const NORMAL_USER = 2;
-    const EDITOR = 3;
+//    protected $autoSchema = false;
+//    const SUPER_USER = 1;
+//    const NORMAL_USER = 2;
+//    const EDITOR = 3;
     protected $fillable = [
         'role_name',
         'role_description'
@@ -38,4 +38,8 @@ class Role extends BaseModel
 //        }
 //        return $allowed;
 //    }
+public function permissions(){
+    return $this->belongsToMany(Permission::class,'role_has_permissions','role_id','permission_id');
+
+}
 }

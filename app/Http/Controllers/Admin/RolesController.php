@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Admin;
 
 
+use App\Models\Permission;
+use App\Models\RoleHasPermission;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -15,13 +17,13 @@ use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
 class RolesController extends AdminBaseController
 {
-    public static $menus = [
-        [
-            'name' => 'Role',
-            'icon' => 'fa fa-shopping-cart',
-            'url' => '/xadmin/roles/index',
-        ]
-    ];
+//    public static $menus = [
+//        [
+//            'name' => 'Role',
+//            'icon' => 'fa fa-shopping-cart',
+//            'url' => '/xadmin/roles/index',
+//        ]
+//    ];
 
     /**
     * Index page
@@ -29,10 +31,16 @@ class RolesController extends AdminBaseController
     * @throw  NotFoundHttpException
     * @return  View
     */
-    public function index() {
+    public function index( Request $req) {
         $title = 'Role';
         $component = 'RoleIndex';
-            return component($component, compact('title'));
+        $permissions=Permission::query()->orderBy('name')->get();
+        $jsonData = [
+            'permissions' => $permissions,
+//            'entry' => $entry,
+        ];
+
+        return view('admin.layouts.vue', compact('title', 'component','jsonData'));
     }
 
     /**
@@ -90,7 +98,6 @@ class RolesController extends AdminBaseController
             'message' => 'Đã xóa'
         ];
     }
-
     /**
     * @uri  /xadmin/roles/save
     * @return  array
@@ -101,6 +108,7 @@ class RolesController extends AdminBaseController
         }
 
         $data = $req->get('entry');
+        $permissions = $req->permissions;
 
         $rules = [
 //    'role_name' => 'required|max:45',
@@ -110,10 +118,10 @@ class RolesController extends AdminBaseController
         $v = Validator::make($data, $rules);
 
         if ($v->fails()) {
-            return [
+           return [
                 'code' => 2,
-                'errors' => $v->errors()
-            ];
+               'errors' => $v->errors()
+           ];
         }
 
         /**
@@ -131,6 +139,7 @@ class RolesController extends AdminBaseController
             $entry->fill($data);
             $entry->save();
 
+
             return [
                 'code' => 0,
                 'message' => 'Đã cập nhật',
@@ -140,6 +149,12 @@ class RolesController extends AdminBaseController
             $entry = new Role();
             $entry->fill($data);
             $entry->save();
+
+            foreach ($permissions as $permission) {
+                if (@$permission['user']) {
+                    RoleHasPermission::create(['role_id' => $entry->id, 'permission_id' => $permission['id']]);
+                }
+            }
 
             return [
                 'code' => 0,
@@ -179,7 +194,10 @@ class RolesController extends AdminBaseController
     * @return  array
     */
     public function data(Request $req) {
-        $query = Role::query()->orderBy('id', 'desc');
+        $query = Role::query()
+            ->with(['permissions'])
+            ->orderBy('id', 'desc');
+
 
         if ($req->keyword) {
             //$query->where('title', 'LIKE', '%' . $req->keyword. '%');
@@ -202,9 +220,29 @@ class RolesController extends AdminBaseController
 
         $entries = $query->paginate($limit);
 
+        $roles=$entries->items();
+        $data=[];
+        foreach ($roles as $role) {
+            $permissions = $role->permissions;
+            $permissionNames = [];
+            if ($permissions) {
+                foreach ($permissions as $permission) {
+                    $permissionNames[] = $permission->name;
+                }
+            }
+            $data[] = [
+                'permission' => implode(',', $permissionNames),
+                'id' => $role->id,
+                'role_name'=>$role->role_name,
+                'description'=>$role->description,
+            ];
+
+        }
+
+
         return [
             'code' => 0,
-            'data' => $entries->items(),
+            'data' => $data,
             'paginate' => [
                 'currentPage' => $entries->currentPage(),
                 'lastPage' => $entries->lastPage(),
