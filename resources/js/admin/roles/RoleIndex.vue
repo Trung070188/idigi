@@ -1,7 +1,6 @@
 <template>
     <div class="container-fluid" >
         <ActionBar type="index"
-                   createUrl="/xadmin/roles/create"
                    :breadcrumbs="breadcrumbs"
                    title="RoleIndex"/>
         <div class="row">
@@ -13,56 +12,30 @@
                             <tbody>
                             <tr>
                                 <td></td>
-                                <td  v-for="entry in entries">
+                                <td  v-for="role in roles">
                                     <div   class="text-center">
-                                        {{entry.role_name}}
+                                        {{role.role_name}}
                                     </div>
                                 </td>
                             </tr>
                             </tbody>
-                            <tr>
+                            <tr v-for="groupPermission in groupPermissions">
                                 <th scope="col">
-                                    <span>Manage user</span>
-                                    <span  v-for="permission in permissions" v-if="permission.group_permission_id==1" class="d-block" style="margin-left: 20px">{{permission.name}}</span>
+                                    <span v-text="groupPermission.name"></span>
+                                    <span  v-for="permission in groupPermission.permissions" class="d-block"  style="margin-left: 18px; font-size:12px">{{permission.name}}</span>
                                 </th>
-                                <td v-for="entry in entries">
-                                    <br>
-                                    <div v-for="permission in permissions" v-if="permission.group_permission_id==1"  class="text-center check">
-                                        <input  class="form-check-input"  type="checkbox"  value="" >
+
+                                <td v-for="role in roles">
+
+                                    <div   class="text-center check" v-for="permission in role.permissions" v-if="permission.group_permission==groupPermission.id">
+                                        <input @change="changeRolePermission(role.id,permission.id,permission.value)"  class="form-check-input" v-model="permission.value"   type="checkbox"  value="" >
                                         <br>
                                     </div>
                                 </td>
                             </tr>
-                            <tr>
-                                <th scope="row">
-                                    <span>Manage role</span>
-                                    <span  v-for="permission in permissions" v-if="permission.group_permission_id==2" class="d-block" style="margin-left: 20px">{{permission.name}}</span>
-                                </th>
-                                <td v-for="entry in entries">
-                                    <br>
-                                    <div v-for="permission in permissions" v-if="permission.group_permission_id==2" class="text-center check">
-                                        <input  class="form-check-input"  type="checkbox" value="" >
-                                        <br>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <th scope="row">
-                                    <span>Manage data</span>
-                                    <span  v-for="permission in permissions" v-if="permission.group_permission_id==3" class="d-block" style="margin-left: 20px">{{permission.name}}</span>
-                                </th>
-                                <td v-for="entry in entries">
-                                    <br>
-                                    <div  v-for="permission in permissions" v-if="permission.group_permission_id==3" class="text-center check">
-                                        <input  class="form-check-input"  type="checkbox" value="" >
-                                        <br>
-                                    </div>
-                                </td>
-                            </tr>
+
                         </table>
-                    <div >
-                        <button class="save_role" @click="save()" >save</button>
-                    </div>
+
 
                 </div>
             </div>
@@ -86,109 +59,31 @@
                         title: 'Roles'
                     },
                 ],
-                permissions:$json.permissions || [],
-                entries: [],
-                filter: {
-                    keyword: $q.keyword || '',
-                    created: $q.created || created,
-                },
-                limit: 25,
-                from: 0,
-                to: 0,
-                paginate: {
-                    currentPage: 1,
-                    lastPage: 1,
-                    totalRecord: 0
-                }
+                roles: [],
+                groupPermissions: [],
+
             }
         },
         mounted() {
             $router.on('/', this.load).init();
         },
         methods: {
-            edit: function (id){
-                window.location.href='/xadmin/roles/edit?id='+ id;
-            },
+
             async load() {
                 let query = $router.getQuery();
                 const res  = await $get('/xadmin/roles/data', query);
-                this.paginate = res.paginate;
-                this.entries = res.data;
-                console.log(this.entries);
-                this.from = (this.paginate.currentPage-1)*(this.limit) + 1;
-                this.to = (this.paginate.currentPage-1)*(this.limit) + this.entries.length;
-            },
-            async save() {
-                this.isLoading = true;
-                const res = await $post('/xadmin/roles/save', {entry: this.entry,permissions: this.permissions}, false);
-                this.isLoading = false;
-                if (res.errors) {
-                    this.errors = res.errors;
-                    return;
-                }
-                if (res.code) {
-                    toastr.error(res.message);
-                } else {
-                    this.errors = {};
-                    toastr.success(res.message);
-                    if (!this.entry.id) {
-                        location.replace('/xadmin/roles/edit?id=' + res.id);
-                    }
-                }
-            },
-            async remove(entry) {
-                if (!confirm('Xóa bản ghi: ' + entry.id)) {
-                    return;
-                }
+                this.roles = res.data.roles;
+                this.groupPermissions = res.data.groupPermissions;
 
-                const res = await $post('/xadmin/roles/remove', {id: entry.id});
-
-                if (res.code) {
-                    toastr.error(res.message);
-                } else {
-                    toastr.success(res.message);
-                }
-
-                $router.updateQuery({page: this.paginate.currentPage, _: Date.now()});
-            },
-            filterClear() {
-                for( var key in app.filter) {
-                    app.filter[key] = '';
-                }
-
-                $router.setQuery({});
-            },
-            doFilter(field, value, event) {
-                if (event) {
-                    event.preventDefault();
-                }
-
-                const params = {page: 1};
-                params[field] = value;
-                $router.setQuery(params)
-            },
-            changeLimit() {
-                let params = $router.getQuery();
-                params['page']=1;
-                params['limit'] = this.limit;
-                $router.setQuery(params)
             },
 
-            async toggleStatus(entry) {
-                const res = await $post('/xadmin/roles/toggleStatus', {
-                    id: entry.id,
-                    status: entry.status
+            async changeRolePermission(roleId, permissionId, check){
+                const res  = await $post('/xadmin/roles/changeRolePermission', {
+                    'role_id' : roleId,
+                    'permission_id' : permissionId,
+                    'check' : check,
                 });
-
-                if (res.code === 200) {
-                    toastr.success(res.message);
-                } else {
-                    toastr.error(res.message);
-                }
-
-            },
-            onPageChange(page) {
-                $router.updateQuery({page: page})
+                toastr.success(res.message);
             }
         }
     }

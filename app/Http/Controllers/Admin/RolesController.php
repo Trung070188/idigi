@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 
+use App\Models\GroupPermission;
 use App\Models\Permission;
 use App\Models\RoleHasPermission;
 use Illuminate\Contracts\View\View;
@@ -194,47 +195,38 @@ class RolesController extends AdminBaseController
     * @return  array
     */
     public function data(Request $req) {
-        $query = Role::query()
+        $roles = Role::query()
             ->with(['permissions'])
-            ->orderBy('id', 'desc');
+            ->orderBy('id', 'ASC')->get();
+        $groupPermissions = GroupPermission::with(['permissions'])->orderBy('name', 'ASC')->get();
 
-
-        if ($req->keyword) {
-            //$query->where('title', 'LIKE', '%' . $req->keyword. '%');
-            if ($req->role_name) {
-                $query->where('role_name',  $req->username);
-
-            }
-            if ($req->role_description) {
-                $query->where('role_description',  $req->email);
-            }
-        }
-
-        $query->createdIn($req->created);
-        $limit = 25;
-
-        if ($req->limit){
-            $limit = $req->limit;
-        }
-
-
-        $entries = $query->paginate($limit);
-
-        $roles=$entries->items();
         $data=[];
+
         foreach ($roles as $role) {
-            $permissions = $role->permissions;
-            $permissionNames = [];
-            if ($permissions) {
-                foreach ($permissions as $permission) {
-                    $permissionNames[] = $permission->name;
+            $rolePermissions = [];
+
+            foreach ($groupPermissions as $groupPermission){
+                foreach ($groupPermission->permissions as $permission){
+                    $item = [
+                        'id' => $permission->id,
+                        'group_permission' => $groupPermission->id,
+                        'value' => 0
+                    ];
+                    foreach ($role->permissions as $_permission){
+                        if($_permission->id == $permission->id){
+                            $item['value'] = 1;
+                        }
+                    }
+                    $rolePermissions[] = $item;
                 }
             }
+
             $data[] = [
-                'permission' => implode(',', $permissionNames),
-                'id' => $role->id,
                 'role_name'=>$role->role_name,
+                'id' => $role->id,
                 'description'=>$role->description,
+                'permissions'=> $rolePermissions
+
             ];
 
         }
@@ -242,11 +234,11 @@ class RolesController extends AdminBaseController
 
         return [
             'code' => 0,
-            'data' => $data,
-            'paginate' => [
-                'currentPage' => $entries->currentPage(),
-                'lastPage' => $entries->lastPage(),
+            'data' => [
+                'roles' => $data,
+                'groupPermissions' => $groupPermissions
             ]
+
         ];
     }
 
@@ -294,5 +286,31 @@ class RolesController extends AdminBaseController
         // Write file to the browser
         $writer->save('php://output');
         die;
+    }
+
+    public function changeRolePermission(Request $req) {
+        $roleId = $req->role_id;
+        $permissionId = $req->permission_id;
+        $check  = $req->check;
+
+
+        if($check == 0){
+            RoleHasPermission::where('role_id', $roleId)
+                ->where('permission_id', $permissionId)
+                ->delete();
+        }else{
+            RoleHasPermission::updateOrCreate([
+                'role_id' => $roleId,
+                'permission_id' => $permissionId
+            ],
+              [  'role_id' => $roleId,
+                'permission_id' => $permissionId
+            ]);
+        }
+
+        return [
+            'code' => 0,
+            'message' => 'Đã update'
+        ];
     }
 }
