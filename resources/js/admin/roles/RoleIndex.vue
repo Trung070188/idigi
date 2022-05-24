@@ -2,6 +2,7 @@
     <div class="container-fluid" >
         <ActionBar type="index"
                    :breadcrumbs="breadcrumbs"
+                   createUrl="/xadmin/roles/create"
                    title="RoleIndex"/>
         <div class="row">
             <div class="col-lg-12">
