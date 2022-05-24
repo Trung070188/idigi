@@ -17,6 +17,7 @@
                     <img alt="Logo" src="/images/logo.svg" class="h-30px" />
                 </a>
             </div>
+            
             <div class="d-flex align-items-stretch justify-content-between flex-lg-grow-1">
                 <div class="d-flex align-items-stretch" id="kt_header_nav">
                     <div class="header-menu align-items-stretch" data-kt-drawer="true" data-kt-drawer-name="header-menu" data-kt-drawer-activate="{default: true, lg: false}" data-kt-drawer-overlay="true" data-kt-drawer-width="{default:'200px', '300px': '250px'}" data-kt-drawer-direction="end" data-kt-drawer-toggle="#kt_header_menu_mobile_toggle" data-kt-swapper="true" data-kt-swapper-mode="prepend" data-kt-swapper-parent="{default: '#kt_body', lg: '#kt_header_nav'}">
@@ -25,9 +26,10 @@
                 <div class="d-flex align-items-stretch flex-shrink-0">
                     <div  class="d-flex align-items-center ms-1 ms-lg-3" id="kt_header_bell">
 
-                        <div  data-kt-menu-trigger="click" data-kt-menu-attach="parent" data-kt-menu-placement="bottom-end" style="position:relative">
+
+<!--                        <div  data-kt-menu-trigger="click" data-kt-menu-attach="parent" data-kt-menu-placement="bottom-end" style="position:relative">
                             <i class="fas fa-bell"></i><span class="badge badge-light-danger badge-circle fw-bolder fs-7" style="position: absolute;top: -8px;right: -7px; width: 1.25rem; height: 1.25rem">3</span>
-                        </div>
+                        </div>-->
                         <div  class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-800 menu-state-bg menu-state-primary fw-bold py-4 fs-6 w-275px" data-kt-menu="true">
                             <div class="menu-item px-3">
                                 <div class="menu-content d-flex align-items-center px-3">
