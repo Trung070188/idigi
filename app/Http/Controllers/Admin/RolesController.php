@@ -34,36 +34,36 @@ class RolesController extends AdminBaseController
     public function index( Request $req) {
         $title = 'Role';
         $component = 'RoleIndex';
+
         $permissions=Permission::query()->orderBy('name')->get();
+
         $jsonData = [
             'permissions' => $permissions,
-//            'entry' => $entry,
         ];
-
         return view('admin.layouts.vue', compact('title', 'component','jsonData'));
     }
-
     /**
     * Create new entry
     * @uri  /xadmin/roles/create
     * @throw  NotFoundHttpException
     * @return  View
     */
-    public function create () {
-        $component = 'RoleForm';
-        $title = 'Create roles';
-        return component($component, compact('title'));
-    }
+//    public function create () {
+//        $component = 'RoleForm';
+//        $title = 'Create roles';
+//        return component($component, compact('title'));
+//    }
+
 
     /**
     * @uri  /xadmin/roles/edit?id=$id
     * @throw  NotFoundHttpException
     * @return  View
     */
+
     public function edit (Request $req) {
         $id = $req->id;
-        $entry = Role::find($id);
-
+        $entry = Role::where('id',$id)->first();
         if (!$entry) {
             throw new NotFoundHttpException();
         }
@@ -71,14 +71,12 @@ class RolesController extends AdminBaseController
         /**
         * @var  Role $entry
         */
+        $title = 'Role';
+        $component = 'RoleIndex';
 
-        $title = 'Edit';
-        $component = 'RoleForm';
 
-
-        return component($component, compact('title', 'entry'));
+        return view('admin.layouts.vue', compact('title', 'component', 'jsonData'));
     }
-
     /**
     * @uri  /xadmin/roles/remove
     * @return  array
@@ -90,7 +88,6 @@ class RolesController extends AdminBaseController
         if (!$entry) {
             throw new NotFoundHttpException();
         }
-
         $entry->delete();
 
         return [
@@ -108,11 +105,10 @@ class RolesController extends AdminBaseController
         }
 
         $data = $req->get('entry');
-        $permissions = $req->permissions;
 
         $rules = [
-//    'role_name' => 'required|max:45',
-//    'role_description' => 'max:255',
+    'role_name' => 'required|max:45',
+    'role_description' => 'max:255',
 ];
 
         $v = Validator::make($data, $rules);
@@ -123,7 +119,6 @@ class RolesController extends AdminBaseController
                'errors' => $v->errors()
            ];
         }
-
         /**
         * @var  Role $entry
         */
@@ -138,8 +133,6 @@ class RolesController extends AdminBaseController
 
             $entry->fill($data);
             $entry->save();
-
-
             return [
                 'code' => 0,
                 'message' => 'Đã cập nhật',
@@ -149,13 +142,6 @@ class RolesController extends AdminBaseController
             $entry = new Role();
             $entry->fill($data);
             $entry->save();
-
-            foreach ($permissions as $permission) {
-                if (@$permission['user']) {
-                    RoleHasPermission::create(['role_id' => $entry->id, 'permission_id' => $permission['id']]);
-                }
-            }
-
             return [
                 'code' => 0,
                 'message' => 'Đã thêm',
@@ -163,6 +149,7 @@ class RolesController extends AdminBaseController
             ];
         }
     }
+
 
     /**
     * @param  Request $req
@@ -197,8 +184,6 @@ class RolesController extends AdminBaseController
         $query = Role::query()
             ->with(['permissions'])
             ->orderBy('id', 'desc');
-
-
         if ($req->keyword) {
             //$query->where('title', 'LIKE', '%' . $req->keyword. '%');
             if ($req->role_name) {
@@ -238,8 +223,6 @@ class RolesController extends AdminBaseController
             ];
 
         }
-
-
         return [
             'code' => 0,
             'data' => $data,

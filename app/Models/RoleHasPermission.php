@@ -16,4 +16,5 @@ class RoleHasPermission extends Model
         'permission_id',
         'role_id',
     ];
+
 }

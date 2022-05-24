@@ -14,21 +14,21 @@
                             <tr>
                                 <td></td>
                                 <td  v-for="entry in entries">
-                                    <div   class="text-center">
+                                    <div     class="text-center">
                                         {{entry.role_name}}
                                     </div>
                                 </td>
                             </tr>
                             </tbody>
-                            <tr>
+                            <tr >
                                 <th scope="col">
                                     <span>Manage user</span>
-                                    <span  v-for="permission in permissions" v-if="permission.group_permission_id==1" class="d-block" style="margin-left: 20px">{{permission.name}}</span>
+                                    <span  v-for="permission in permissions" v-if="permission.group_permission_id==1" class="d-block" style="margin-left: 20px"  >{{permission.name}}</span>
                                 </th>
-                                <td v-for="entry in entries">
+                                <td v-for="entry in entries"  >
                                     <br>
-                                    <div v-for="permission in permissions" v-if="permission.group_permission_id==1"  class="text-center check">
-                                        <input  class="form-check-input"  type="checkbox"  value="" >
+                                    <div    v-for="permission in permissions" v-if="permission.group_permission_id==1"  class="text-center check">
+                                        <input class="form-check-input" v-model="permission.abc" :value="permission.id" type="checkbox"  >
                                         <br>
                                     </div>
                                 </td>
@@ -36,33 +36,32 @@
                             <tr>
                                 <th scope="row">
                                     <span>Manage role</span>
-                                    <span  v-for="permission in permissions" v-if="permission.group_permission_id==2" class="d-block" style="margin-left: 20px">{{permission.name}}</span>
+                                    <span  v-for="permission in permissions" v-if="permission.group_permission_id==2" class="d-block" style="margin-left: 20px" @click="edit()">{{permission.name}}</span>
                                 </th>
                                 <td v-for="entry in entries">
                                     <br>
                                     <div v-for="permission in permissions" v-if="permission.group_permission_id==2" class="text-center check">
-                                        <input  class="form-check-input"  type="checkbox" value="" >
+                                        <input  class="form-check-input" v-model="permission.abc" :value="permission.id" type="checkbox" value="" >
                                         <br>
+
                                     </div>
                                 </td>
                             </tr>
                             <tr>
                                 <th scope="row">
                                     <span>Manage data</span>
-                                    <span  v-for="permission in permissions" v-if="permission.group_permission_id==3" class="d-block" style="margin-left: 20px">{{permission.name}}</span>
+                                    <span  v-for="permission in permissions" v-if="permission.group_permission_id==3" class="d-block" style="margin-left: 20px"  @click="edit()">{{permission.name}}</span>
                                 </th>
                                 <td v-for="entry in entries">
                                     <br>
                                     <div  v-for="permission in permissions" v-if="permission.group_permission_id==3" class="text-center check">
-                                        <input  class="form-check-input"  type="checkbox" value="" >
+                                        <input  class="form-check-input" v-model="permission.abc" :value="permission.id" type="checkbox" value="" >
                                         <br>
                                     </div>
                                 </td>
                             </tr>
                         </table>
-                    <div >
-                        <button class="save_role" @click="save()" >save</button>
-                    </div>
+
 
                 </div>
             </div>
@@ -87,6 +86,7 @@
                     },
                 ],
                 permissions:$json.permissions || [],
+                entry:$json.entry||[],
                 entries: [],
                 filter: {
                     keyword: $q.keyword || '',
@@ -195,13 +195,4 @@
 </script>
 
 <style scoped>
-    .save_role{
-        width: 101px;
-        height: 34px;
-        background: #333333;
-        border-radius: 32px;
-        float: right;
-        color: #ffffff;
-    }
-
 </style>

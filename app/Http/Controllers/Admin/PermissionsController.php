@@ -119,7 +119,9 @@ class PermissionsController extends AdminBaseController
     */
     public function edit (Request $req) {
         $id = $req->id;
-        $entry = Permission::find($id);
+        $entry = Permission::query()->where('id',$id)->first();
+
+
 
         if (!$entry) {
             throw new NotFoundHttpException();
@@ -128,10 +130,13 @@ class PermissionsController extends AdminBaseController
         /**
         * @var  Permission $entry
         */
+
         $jsonData = compact('entry');
         $title = 'Edit';
-        $component = 'PermissionForm';
+        $component = 'RoleIndex';
+        $jsonData=[
 
+            ];
 
         return vue(compact('title', 'jsonData', 'component'));
     }

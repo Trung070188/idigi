@@ -36,6 +36,7 @@ class UsersController extends AdminBaseController
         $title = 'Users';
         $component = 'UserIndex';
         $roles = Role::query()->orderBy('role_name')->get();
+
         $jsonData = [
             'roles' => $roles
         ];
@@ -93,16 +94,8 @@ class UsersController extends AdminBaseController
     public function edit(Request $req)
     {
         $id = $req->id;
-        $entry = User::query()->with(['roles'])
+        $entry = User::query()
             ->where('id', $id)->first();
-
-//        $entry=User::find($id);
-
-
-//        foreach ($entry->roles as $role)
-//        {
-//          $role->role_id;
-//        }
         if (!$entry) {
             throw new NotFoundHttpException();
         }
@@ -114,6 +107,7 @@ class UsersController extends AdminBaseController
         foreach ($roles as $role) {
             $role->user = false;
             if ($entry->roles) {
+
                 foreach ($entry->roles as $userRole) {
                     if ($role->id == $userRole->id) {
                         $role->user = true;

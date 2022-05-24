@@ -48,11 +48,14 @@
                                 <div class="row" >
 
                                     <label>Role</label>
-                                    <div v-for="(role, k) in roles" class="form-group col-sm-2">
-                                        <input type="checkbox"  v-model="role.user" :value="role.id" >
+                                    <div v-for="role in roles" class="form-group col-sm-2">
+                                        <input type="checkbox"  v-model="role.user"  >
                                         <label >{{role.role_name}}</label>
                                         <error-label for="f_grade" :errors="errors.roles"></error-label>
+
+
                                     </div>
+
 
                                 </div>
 
@@ -68,11 +71,9 @@
                                     <input id="state" type="checkbox" v-model="entry.state">
                                     <label for="state"  class="pl-2">Active</label>
                                     <error-label for="f_grade" :errors="errors.state"></error-label>
-
                                 </div>
                             </div>
                         </div>
-
                         <hr>
                         <div >
                             <button type="reset" @click="save()" class="btn btn-primary mr-2">Save</button>
