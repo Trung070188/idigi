@@ -62,23 +62,6 @@ class UserDevicesController extends AdminBaseController
     * @throw  NotFoundHttpException
     * @return  View
     */
-    public function edit (Request $req) {
-        $id = $req->id;
-        $entry = UserDevice::find($id);
-
-        if (!$entry) {
-            throw new NotFoundHttpException();
-        }
-
-        /**
-        * @var  UserDevice $entry
-        */
-
-        $title = 'Edit';
-        $component = 'User_deviceForm';
-
-        return component($component, compact('title', 'entry'));
-    }
 
     /**
     * @uri  /xadmin/user_devices/remove
@@ -112,8 +95,9 @@ class UserDevicesController extends AdminBaseController
         }
         $data = $req->get('entry');
         $rules = [
-    'device_uid' => 'required|max:45',
-    'device_name' => 'required|max:45',
+//    'device_uid' => 'required|max:45',
+//    'device_name' => 'required|max:45',
+        'reason'=>'required||max:100',
 ];
 
         $v = Validator::make($data, $rules);
@@ -126,6 +110,7 @@ class UserDevicesController extends AdminBaseController
         }
         if (isset($data['id'])) {
             $entry = UserDevice::find($data['id']);
+
             if (!$entry) {
                 return [
                     'code' => 3,
@@ -133,7 +118,10 @@ class UserDevicesController extends AdminBaseController
                 ];
             }
             $entry->fill($data);
+
+            $entry->status=3;
             $entry->save();
+
             return [
                 'code' => 0,
                 'message' => 'Đã cập nhật',
@@ -258,18 +246,11 @@ class UserDevicesController extends AdminBaseController
             ->where('user_id',$count_user)
             ->orderBy('id', 'desc');
 
-        if ($req->keyword) {
-            //$query->where('title', 'LIKE', '%' . $req->keyword. '%');
-        }
 
-        $query->createdIn($req->created);
         $entries = $query->paginate();
-//            $user_id=auth()->id();
-//        $count_user=UserDevice::where('user_id',$user_id)->count();
 
         return [
             'code' => 0,
-//            'count_user'=>$count_user,
             'data' => $entries->items(),
             'paginate' => [
                 'currentPage' => $entries->currentPage(),
@@ -281,18 +262,12 @@ class UserDevicesController extends AdminBaseController
         $query = UserDevice::query()
             ->orderBy('id', 'desc');
 
-        if ($req->keyword) {
-            //$query->where('title', 'LIKE', '%' . $req->keyword. '%');
-        }
-
         $query->createdIn($req->created);
         $entries = $query->paginate();
-//            $user_id=auth()->id();
-//        $count_user=UserDevice::where('user_id',$user_id)->count();
+
 
         return [
             'code' => 0,
-//            'count_user'=>$count_user,
             'data' => $entries->items(),
             'paginate' => [
                 'currentPage' => $entries->currentPage(),
