@@ -26,7 +26,7 @@
 
 
                                 <div class="form-group d-flex justify-content-between">
-                                    <button  class="btn btn-danger ito-btn-small" style="margin-left: 200px" data-dismiss="modal"  @click="save" >Add now</button>
+                                    <button  class="btn btn-danger ito-btn-small" style="margin-left: 200px" data-dismiss="modal"  @click="save" >Refuse now</button>
 
                                 </div>
                             </div>
@@ -112,11 +112,6 @@
                 this.curDevice = device;
 
             },
-            closeModal: function (){
-                $('#editdeviceConfirm').modal('hide');
-
-            },
-
 
             async save() {
                 const res = await $post('/xadmin/user_devices/save', {
