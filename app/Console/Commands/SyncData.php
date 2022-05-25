@@ -45,7 +45,7 @@ class SyncData extends Command
      */
     public function handle()
     {
-        /*\DB::connection('mysql2')->table('lessons')
+        \DB::connection('mysql2')->table('lessons')
             ->chunkById(100, function ($lessons) {
                 foreach ($lessons as $lesson){
                     $userCreate = User::where('username', $lesson->created_by)->first();
@@ -74,7 +74,7 @@ class SyncData extends Command
 
                     echo 'Sync lesson: '.$lesson->id.PHP_EOL;
                 }
-            });*/
+            });
 
 
 
@@ -96,6 +96,7 @@ class SyncData extends Command
 
                         if (!is_dir($dir)) {
                             mkdir($dir, 0755, true);
+                            echo 1111111;
                         }
 
                         try {
