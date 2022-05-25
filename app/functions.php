@@ -351,8 +351,8 @@ function hasPermission($user, $permissionName)
             }
         }
     }
-    return false;
 
+    return false;
 }
 
 

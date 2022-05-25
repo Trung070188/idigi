@@ -315,7 +315,7 @@ class RolesController extends AdminBaseController
 
         return [
             'code' => 0,
-            'message' => 'Đã update'
+            'message' => 'Đã cập nhật'
         ];
     }
 }
