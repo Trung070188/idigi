@@ -3,13 +3,13 @@
         <ActionBar type="form" @save="save()"
                    :code="entry.id"
                    back-url="/xadmin/users/index"
-                   :breadcrumbs = "breadcrumbs"
+                   :breadcrumbs="breadcrumbs"
                    title="UserForm"/>
         <div class="row">
             <div class="col-lg-12">
                 <div class="card card-custom card-stretch gutter-b">
 
-                    <div class="card-body d-flex flex-column" >
+                    <div class="card-body d-flex flex-column">
                         <div class="row">
                             <div class=" col-sm-12">
                                 <input v-model="entry.id" type="hidden" name="id" value="">
@@ -33,24 +33,27 @@
                                     </div>
                                     <div class="form-group  col-sm-4">
                                         <label>Password <span class="text-danger">*</span></label>
-                                            <input :type="showPass ? 'text' : 'password'" class="form-control" ref="password"  v-model="entry.password">
-                                 <i  @click="showPass = !showPass" class="fa fa-eye"></i>
+                                        <input :type="showPass ? 'text' : 'password'" class="form-control"
+                                               ref="password" v-model="entry.password">
+                                        <i @click="showPass = !showPass" class="fa fa-eye"></i>
                                         <error-label for="f_category_id" :errors="errors.password"></error-label>
                                     </div>
 
-                                    <div  class="form-group  col-sm-4">
-                                        <label >Confirm your password <span class="text-danger">*</span></label>
-                                        <input  class="form-control" :type="showConfirm ? 'text' : 'password'" v-model="entry.password_confirmation">
+                                    <div class="form-group  col-sm-4">
+                                        <label>Confirm your password <span class="text-danger">*</span></label>
+                                        <input class="form-control" :type="showConfirm ? 'text' : 'password'"
+                                               v-model="entry.password_confirmation">
                                         <i @click="showConfirm = !showConfirm" class="fa fa-eye"></i>
-                                        <error-label for="f_category_id" :errors="errors.password_confirmation" ></error-label>
+                                        <error-label for="f_category_id"
+                                                     :errors="errors.password_confirmation"></error-label>
                                     </div>
                                 </div>
-                                <div class="row" >
+                                <div class="row">
 
                                     <label>Role</label>
                                     <div v-for="role in roles" class="form-group col-sm-2">
-                                        <input type="checkbox"  v-model="role.user"  >
-                                        <label >{{role.role_name}}</label>
+                                        <input type="checkbox" v-model="role.user">
+                                        <label>{{ role.role_name }}</label>
                                         <error-label for="f_grade" :errors="errors.roles"></error-label>
 
 
@@ -59,26 +62,28 @@
 
                                 </div>
 
-                                <div class="row" >
+                                <div class="row">
                                     <div class="form-group col-sm-8">
                                         <label>Description</label>
-                                        <textarea  v-model="entry.description" rows="5" class="form-control" placeholder="Your text here"></textarea>
+                                        <textarea v-model="entry.description" rows="5" class="form-control"
+                                                  placeholder="Your text here"></textarea>
                                         <error-label for="f_grade" :errors="errors.description"></error-label>
 
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <input id="state" type="checkbox" v-model="entry.state">
-                                    <label for="state"  class="pl-2">Active</label>
+                                    <label for="state" class="pl-2">Active</label>
                                     <error-label for="f_grade" :errors="errors.state"></error-label>
                                 </div>
                             </div>
                         </div>
                         <hr>
-                        <div >
+                        <div>
                             <button type="reset" @click="save()" class="btn btn-primary mr-2">Save</button>
                             <button type="reset" @click="backIndex()" class="btn btn-secondary">Cancel</button>
-                            <label style="margin-left: 20px">Thông tin đăng nhập và mật khẩu sẽ được gửi tới người dùng qua email.</label>
+<!--                            <label style="margin-left: 20px">Thông tin đăng nhập và mật khẩu sẽ được gửi tới người dùng
+                                qua email.</label>-->
                         </div>
                     </div>
                 </div>
@@ -91,77 +96,75 @@
 </template>
 
 <script>
-    import {$post} from "../../utils";
+import {$post} from "../../utils";
 
-    import ActionBar from "../includes/ActionBar";
-    import SwitchButton from "../../components/SwitchButton";
+import ActionBar from "../includes/ActionBar";
+import SwitchButton from "../../components/SwitchButton";
 
-    export default {
-        name: "UsersForm.vue",
-        components: { ActionBar,SwitchButton},
-        data() {
+export default {
+    name: "UsersForm.vue",
+    components: {ActionBar, SwitchButton},
+    data() {
 
-            return {
+        return {
 
-                showConfirm:false,
-                showPass:false,
-                types: [
-
-                ],
-                breadcrumbs: [
-                    {
-                        title: 'Users',
-                        url: '/xadmin/users/index',
-                    },
-                    {
-                        title: $json.entry ? 'Edit User' : 'Create new User',
-                    },
-                ],
-                entry: $json.entry || {
-                   roles:[]
+            showConfirm: false,
+            showPass: false,
+            types: [],
+            breadcrumbs: [
+                {
+                    title: 'Users',
+                    url: '/xadmin/users/index',
                 },
-                roles:$json.roles || [],
-                isLoading: false,
-                errors: {}
-            }
-        },
-        methods: {
-            // checkbox_roles()
-            // {
-            //     this.entry=this.roles;
-            // },
-            backIndex(){
-
-                window.location.href = '/xadmin/users/index';
+                {
+                    title: $json.entry ? 'Edit User' : 'Create new User',
+                },
+            ],
+            entry: $json.entry || {
+                roles: []
             },
-            async save() {
-                this.isLoading = true;
-                const res = await $post('/xadmin/users/save', {entry: this.entry,roles: this.roles}, false);
-                this.isLoading = false;
-                if (res.errors) {
-                    this.errors = res.errors;
-                    return;
-                }
-                if (res.code) {
-                    toastr.error(res.message);
-                } else {
-                    this.errors = {};
-                    toastr.success(res.message);
-                    if (!this.entry.id) {
-                        location.replace('/xadmin/users/edit?id=' + res.id);
-                    }
+            roles: $json.roles || [],
+            isLoading: false,
+            errors: {}
+        }
+    },
+    methods: {
+        // checkbox_roles()
+        // {
+        //     this.entry=this.roles;
+        // },
+        backIndex() {
+
+            window.location.href = '/xadmin/users/index';
+        },
+        async save() {
+            this.isLoading = true;
+            const res = await $post('/xadmin/users/save', {entry: this.entry, roles: this.roles}, false);
+            this.isLoading = false;
+            if (res.errors) {
+                this.errors = res.errors;
+                return;
+            }
+            if (res.code) {
+                toastr.error(res.message);
+            } else {
+                this.errors = {};
+                toastr.success(res.message);
+                if (!this.entry.id) {
+                    location.replace('/xadmin/users/edit?id=' + res.id);
                 }
             }
         }
     }
+}
 </script>
 
 <style scoped>
-    .fa-eye{
-        position: absolute;
-        top:40% ;
-        right:5%
+.fa-eye {
+    position: absolute;
+    top: 40%;
+    right: 5%
 
-    }
+}
 
 </style>

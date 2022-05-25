@@ -44,6 +44,10 @@
                         Download Lesson
                     </a>
 
+                    <a href="javascript:void(0);" @click="createWithFunction" class="btn btn-primary " v-if="createFunction">
+                        Create new
+                    </a>
+
                     <a href="javascript:void(0);" class="btn btn-danger btn-sm" @click="deleteAll()" v-if="isShowDelete">
                         Delete
                     </a>
@@ -61,7 +65,7 @@
 <script>
     export default {
         name: "ActionBar",
-        props: ['title', 'type', 'createUrl', 'code', 'backUrl', 'isShowDelete', 'createWithFunction', 'breadcrumbs', 'download','createDevice'],
+        props: ['title', 'type', 'createUrl', 'code', 'backUrl', 'isShowDelete', 'createFunction','breadcrumbs', 'download','createDevice'],
         methods: {
             save() {
                 this.isLoading = true;
@@ -75,6 +79,13 @@
                 this.$emit('createNew');
                 this.isLoading = false;
             },
+
+            createWithFunction() {
+                this.isLoading = true;
+                this.$emit('createWithFunction');
+                this.isLoading = false;
+            },
+
             downloadLesson() {
                 this.isLoading = true;
                 this.$emit('download_lesson');
