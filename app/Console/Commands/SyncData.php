@@ -45,7 +45,7 @@ class SyncData extends Command
      */
     public function handle()
     {
-        \DB::connection('mysql2')->table('lessons')
+       /* \DB::connection('mysql2')->table('lessons')
             ->chunkById(100, function ($lessons) {
                 foreach ($lessons as $lesson){
                     $userCreate = User::where('username', $lesson->created_by)->first();
@@ -160,7 +160,7 @@ class SyncData extends Command
 
                     echo 'Sync inventory: '.$inventory->id.PHP_EOL;
                 }
-            });
+            });*/
 
         \DB::connection('mysql2')->table('lessons')
             ->chunkById(100, function ($lessons) {
@@ -175,11 +175,11 @@ class SyncData extends Command
                                     $newInventory = Inventory::where('old_id', $inventory['idSublesson'])->first();
                                     if($newLesson && $newInventory){
                                         LessonInventory::updateOrCreate([
-                                            'lesson_id' => $lesson->id,
-                                            'inventory_id' => $inventory->id,
+                                            'lesson_id' => @$lesson->id,
+                                            'inventory_id' => @$inventory->id,
                                         ],[
-                                            'lesson_id' => $lesson->id,
-                                            'inventory_id' => $inventory->id,
+                                            'lesson_id' => @$lesson->id,
+                                            'inventory_id' => @$inventory->id,
                                         ]);
                                     }
                                }

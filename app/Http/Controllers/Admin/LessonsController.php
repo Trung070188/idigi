@@ -321,7 +321,7 @@ class LessonsController extends AdminBaseController
         $userDevice = UserDevice::where('user_id', $user->id)->where('id', $request->device_id)->first();
 
         $password = @$userDevice->device_uid;
-        $password = 123456;
+        $password = '123456';
 
         $y = date('Y');
         $m = date('m');

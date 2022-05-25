@@ -336,16 +336,3 @@ function get_virtual_path($physical_path)
 
 }
 
-function jwtToken($payload)
-{
-    $header = [
-        "alg" => "HS256",
-        "typ" => "JWT"
-    ];
-
-    $data = base64_encode(json_encode($header)) . "." . base64_encode(json_encode($payload));
-    $hashedData = hash_hmac('sha256',$data, env('SECRET_KEY'));
-    $signature = base64_encode($hashedData);
-
-    return $data. ".".$signature;
-}

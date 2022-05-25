@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 
 use App\Models\User;
+use Firebase\JWT\JWT;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
@@ -370,7 +371,9 @@ class UserDevicesController extends AdminBaseController
                 'secret_key' =>$device->secret_key,
                 'expired' => strtotime(Carbon::now()->addHours(10))
             ];
-            return ['status' => 1, 'token' =>  jwtToken($payload)];
+            $jwt = JWT::encode($payload, env('SECRET_KEY'), 'HS256');
+
+            return ['status' => 1, 'token' =>  $jwt];
 
         }
 
