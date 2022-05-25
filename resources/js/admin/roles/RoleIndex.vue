@@ -91,13 +91,4 @@
 </script>
 
 <style scoped>
-    .save_role{
-        width: 101px;
-        height: 34px;
-        background: #333333;
-        border-radius: 32px;
-        float: right;
-        color: #ffffff;
-    }
-
 </style>

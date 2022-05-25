@@ -151,11 +151,6 @@ class RolesController extends AdminBaseController
             $entry->fill($data);
             $entry->save();
 
-            foreach ($permissions as $permission) {
-                if (@$permission['user']) {
-                    RoleHasPermission::create(['role_id' => $entry->id, 'permission_id' => $permission['id']]);
-                }
-            }
 
             return [
                 'code' => 0,
@@ -198,6 +193,7 @@ class RolesController extends AdminBaseController
         $roles = Role::query()
             ->with(['permissions'])
             ->orderBy('id', 'ASC')->get();
+
         $groupPermissions = GroupPermission::with(['permissions'])->orderBy('name', 'ASC')->get();
 
         $data=[];
@@ -206,13 +202,17 @@ class RolesController extends AdminBaseController
             $rolePermissions = [];
 
             foreach ($groupPermissions as $groupPermission){
+
                 foreach ($groupPermission->permissions as $permission){
                     $item = [
                         'id' => $permission->id,
                         'group_permission' => $groupPermission->id,
                         'value' => 0
                     ];
+
                     foreach ($role->permissions as $_permission){
+
+
                         if($_permission->id == $permission->id){
                             $item['value'] = 1;
                         }
@@ -230,7 +230,6 @@ class RolesController extends AdminBaseController
             ];
 
         }
-
 
         return [
             'code' => 0,
@@ -292,8 +291,6 @@ class RolesController extends AdminBaseController
         $roleId = $req->role_id;
         $permissionId = $req->permission_id;
         $check  = $req->check;
-
-
         if($check == 0){
             RoleHasPermission::where('role_id', $roleId)
                 ->where('permission_id', $permissionId)
