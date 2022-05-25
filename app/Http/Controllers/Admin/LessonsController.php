@@ -350,7 +350,7 @@ class LessonsController extends AdminBaseController
 
             if ($lesson->inventories) {
                 foreach ($lesson->inventories as $inventory) {
-                    $icon = 'Icons/' . basename(public_path($inventory->image));
+                    $icon = basename(public_path($inventory->image));
                     $link = basename(public_path($inventory->virtual_path));
 
                     $zip->addFile(public_path($inventory->image), $icon);
