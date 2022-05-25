@@ -336,3 +336,23 @@ function get_virtual_path($physical_path)
 
 }
 
+function hasPermission($user, $permissionName)
+{
+    $roles = $user->roles;
+
+    if($roles){
+        foreach ($roles as $role){
+            if($role->permissions){
+                foreach ($role->permissions as $permission){
+                    if($permission->name == $permissionName){
+                        return true;
+                    }
+                }
+            }
+        }
+    }
+    return false;
+
+}
+
+
