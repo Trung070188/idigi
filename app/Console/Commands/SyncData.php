@@ -96,11 +96,10 @@ class SyncData extends Command
 
                         if (!is_dir($dir)) {
                             mkdir($dir, 0755, true);
-                            echo 1111111;
                         }
 
                         try {
-                            $img = '/files/attachments'.str_replace('/files', '', $inventory->image);
+                            $img = '/files/attachments'.$inventory->image;
                             file_put_contents(public_path($img), file_get_contents(env('OLD_DOMAIN').$inventory->image));
 
                         }
@@ -123,7 +122,7 @@ class SyncData extends Command
                         }
 
                         try {
-                            $virtualPath = '/files/attachments'.str_replace('/files', '', $inventory->virtual_path);
+                            $virtualPath = '/files/attachments'.$inventory->virtual_path;
                             file_put_contents(public_path($virtualPath), file_get_contents(env('OLD_DOMAIN').$inventory->virtual_path));
                             $physicalPath = str_replace('\\', '/', $_SERVER['DOCUMENT_ROOT']).$virtualPath;
 
