@@ -175,11 +175,11 @@ class SyncData extends Command
                                     $newInventory = Inventory::where('old_id', $inventory['idSublesson'])->first();
                                     if($newLesson && $newInventory){
                                         LessonInventory::updateOrCreate([
-                                            'lesson_id' => @$lesson->id,
-                                            'inventory_id' => @$inventory->id,
+                                            'lesson_id' => @$newLesson->id,
+                                            'inventory_id' => @$newInventory->id,
                                         ],[
-                                            'lesson_id' => @$lesson->id,
-                                            'inventory_id' => @$inventory->id,
+                                            'lesson_id' => @$newLesson->id,
+                                            'inventory_id' => @$newInventory->id,
                                         ]);
                                     }
                                }
