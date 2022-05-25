@@ -321,7 +321,7 @@ class LessonsController extends AdminBaseController
         $userDevice = UserDevice::where('user_id', $user->id)->where('id', $request->device_id)->first();
 
         $password = @$userDevice->device_uid;
-        $password = 123456;
+        $password = '123456';
 
         $y = date('Y');
         $m = date('m');
@@ -353,12 +353,14 @@ class LessonsController extends AdminBaseController
                     $icon = 'Icons/' . basename(public_path($inventory->image));
                     $link = basename(public_path($inventory->virtual_path));
 
-                    $zip->addFile(public_path($inventory->image), $icon);
-                    $zip->setEncryptionName($icon, \ZipArchive::EM_AES_256, $password);
-
-                    $zip->addFile(public_path($inventory->virtual_path), $link);
-                    $zip->setEncryptionName($link, \ZipArchive::EM_AES_256, $password);
-
+                    if(file_exists(public_path($inventory->image))){
+                        $zip->addFile(public_path($inventory->image), $icon);
+                        $zip->setEncryptionName($icon, \ZipArchive::EM_AES_256, $password);
+                    }
+                    if(file_exists(public_path($inventory->virtual_path))){
+                        $zip->addFile(public_path($inventory->virtual_path), $link);
+                        $zip->setEncryptionName($link, \ZipArchive::EM_AES_256, $password);
+                    }
                 }
             }
 

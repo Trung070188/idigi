@@ -6,6 +6,7 @@ namespace App\Http\Controllers\Admin;
 use App\Models\GroupPermission;
 use App\Models\Permission;
 use App\Models\RoleHasPermission;
+use App\Models\UserRole;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -32,16 +33,17 @@ class RolesController extends AdminBaseController
      * @throw  NotFoundHttpException
      * @return  View
      */
-    public function index( Request $req) {
+    public function index(Request $req)
+    {
         $title = 'Role';
         $component = 'RoleIndex';
-        $permissions=Permission::query()->orderBy('name')->get();
+        $permissions = Permission::query()->orderBy('name')->get();
         $jsonData = [
             'permissions' => $permissions,
 //            'entry' => $entry,
         ];
 
-        return view('admin.layouts.vue', compact('title', 'component','jsonData'));
+        return view('admin.layouts.vue', compact('title', 'component', 'jsonData'));
     }
 
     /**
@@ -50,7 +52,8 @@ class RolesController extends AdminBaseController
      * @throw  NotFoundHttpException
      * @return  View
      */
-    public function create () {
+    public function create()
+    {
         $component = 'RoleForm';
         $title = 'Create roles';
         return component($component, compact('title'));
@@ -61,7 +64,8 @@ class RolesController extends AdminBaseController
      * @throw  NotFoundHttpException
      * @return  View
      */
-    public function edit (Request $req) {
+    public function edit(Request $req)
+    {
         $id = $req->id;
         $entry = Role::find($id);
 
@@ -84,7 +88,8 @@ class RolesController extends AdminBaseController
      * @uri  /xadmin/roles/remove
      * @return  array
      */
-    public function remove(Request $req) {
+    public function remove(Request $req)
+    {
         $id = $req->id;
         $entry = Role::find($id);
 
@@ -92,6 +97,8 @@ class RolesController extends AdminBaseController
             throw new NotFoundHttpException();
         }
 
+        RoleHasPermission::where('role_id', $id)->delete();
+        UserRole::where('role_id', $id)->delete();
         $entry->delete();
 
         return [
@@ -99,20 +106,21 @@ class RolesController extends AdminBaseController
             'message' => 'Đã xóa'
         ];
     }
+
     /**
      * @uri  /xadmin/roles/save
      * @return  array
      */
-    public function save(Request $req) {
+    public function save(Request $req)
+    {
         if (!$req->isMethod('POST')) {
             return ['code' => 405, 'message' => 'Method not allow'];
         }
 
         $data = $req->get('entry');
-        $permissions = $req->permissions;
 
         $rules = [
-//    'role_name' => 'required|max:45',
+            'role_name' => 'required|max:45',
 //    'role_description' => 'max:255',
         ];
 
@@ -151,7 +159,6 @@ class RolesController extends AdminBaseController
             $entry->fill($data);
             $entry->save();
 
-
             return [
                 'code' => 0,
                 'message' => 'Đã thêm',
@@ -161,7 +168,7 @@ class RolesController extends AdminBaseController
     }
 
     /**
-     * @param  Request $req
+     * @param Request $req
      */
     public function toggleStatus(Request $req)
     {
@@ -189,31 +196,27 @@ class RolesController extends AdminBaseController
      * @uri  /xadmin/roles/data
      * @return  array
      */
-    public function data(Request $req) {
+    public function data(Request $req)
+    {
         $roles = Role::query()
             ->with(['permissions'])
             ->orderBy('id', 'ASC')->get();
-
         $groupPermissions = GroupPermission::with(['permissions'])->orderBy('name', 'ASC')->get();
 
-        $data=[];
+        $data = [];
 
         foreach ($roles as $role) {
             $rolePermissions = [];
 
-            foreach ($groupPermissions as $groupPermission){
-
-                foreach ($groupPermission->permissions as $permission){
+            foreach ($groupPermissions as $groupPermission) {
+                foreach ($groupPermission->permissions as $permission) {
                     $item = [
                         'id' => $permission->id,
                         'group_permission' => $groupPermission->id,
                         'value' => 0
                     ];
-
-                    foreach ($role->permissions as $_permission){
-
-
-                        if($_permission->id == $permission->id){
+                    foreach ($role->permissions as $_permission) {
+                        if ($_permission->id == $permission->id) {
                             $item['value'] = 1;
                         }
                     }
@@ -222,14 +225,15 @@ class RolesController extends AdminBaseController
             }
 
             $data[] = [
-                'role_name'=>$role->role_name,
+                'role_name' => $role->role_name,
                 'id' => $role->id,
-                'description'=>$role->description,
-                'permissions'=> $rolePermissions
+                'description' => $role->description,
+                'permissions' => $rolePermissions
 
             ];
 
         }
+
 
         return [
             'code' => 0,
@@ -241,7 +245,8 @@ class RolesController extends AdminBaseController
         ];
     }
 
-    public function export() {
+    public function export()
+    {
         $keys = [
             'role_name' => ['A', 'role_name'],
             'role_description' => ['B', 'role_description'],
@@ -287,20 +292,23 @@ class RolesController extends AdminBaseController
         die;
     }
 
-    public function changeRolePermission(Request $req) {
+    public function changeRolePermission(Request $req)
+    {
         $roleId = $req->role_id;
         $permissionId = $req->permission_id;
-        $check  = $req->check;
-        if($check == 0){
+        $check = $req->check;
+
+
+        if ($check == 0) {
             RoleHasPermission::where('role_id', $roleId)
                 ->where('permission_id', $permissionId)
                 ->delete();
-        }else{
+        } else {
             RoleHasPermission::updateOrCreate([
                 'role_id' => $roleId,
                 'permission_id' => $permissionId
             ],
-                [  'role_id' => $roleId,
+                ['role_id' => $roleId,
                     'permission_id' => $permissionId
                 ]);
         }

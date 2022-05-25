@@ -7,6 +7,7 @@ use App\Models\Role;
 use App\Models\UserRole;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use App\Models\User;
 use Ramsey\Collection\Collection;
@@ -159,6 +160,10 @@ class UsersController extends AdminBaseController
             'email' => 'required|max:191|email',
             'password' => '|max:191|confirmed',
         ];
+
+        if(!isset($data['id'])){
+            $rules['password'] = 'required|max:191|confirmed';
+        }
         $v = Validator::make($data, $rules);
 
         if ($v->fails()) {
@@ -167,10 +172,6 @@ class UsersController extends AdminBaseController
                 'errors' => $v->errors()
             ];
         }
-//        $data['state'] = ($data['state'] == 'true' || $data['state'] ==1) ? 1 : 0;
-        /**
-         * @var  User $entry
-         */
 
         if (isset($data['id'])) {
             $entry = User::find($data['id']);
@@ -180,6 +181,9 @@ class UsersController extends AdminBaseController
                     'code' => 3,
                     'message' => 'Không tìm thấy',
                 ];
+            }
+            if($data['password']){
+                $data['password'] = Hash::make($data['password']);
             }
 
             $entry->fill($data);
@@ -198,6 +202,7 @@ class UsersController extends AdminBaseController
             ];
         } else {
             $entry = new User();
+            $data['password'] = Hash::make($data['password']);
             $entry->fill($data);
             $entry->save();
             foreach ($roles as $role) {

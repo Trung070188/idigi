@@ -45,7 +45,7 @@ class SyncData extends Command
      */
     public function handle()
     {
-        /*\DB::connection('mysql2')->table('lessons')
+       /* \DB::connection('mysql2')->table('lessons')
             ->chunkById(100, function ($lessons) {
                 foreach ($lessons as $lesson){
                     $userCreate = User::where('username', $lesson->created_by)->first();
@@ -74,7 +74,7 @@ class SyncData extends Command
 
                     echo 'Sync lesson: '.$lesson->id.PHP_EOL;
                 }
-            });*/
+            });
 
 
 
@@ -99,7 +99,7 @@ class SyncData extends Command
                         }
 
                         try {
-                            $img = '/files/attachments'.str_replace('/files', '', $inventory->image);
+                            $img = '/files/attachments'.$inventory->image;
                             file_put_contents(public_path($img), file_get_contents(env('OLD_DOMAIN').$inventory->image));
 
                         }
@@ -122,7 +122,7 @@ class SyncData extends Command
                         }
 
                         try {
-                            $virtualPath = '/files/attachments'.str_replace('/files', '', $inventory->virtual_path);
+                            $virtualPath = '/files/attachments'.$inventory->virtual_path;
                             file_put_contents(public_path($virtualPath), file_get_contents(env('OLD_DOMAIN').$inventory->virtual_path));
                             $physicalPath = str_replace('\\', '/', $_SERVER['DOCUMENT_ROOT']).$virtualPath;
 
@@ -160,7 +160,7 @@ class SyncData extends Command
 
                     echo 'Sync inventory: '.$inventory->id.PHP_EOL;
                 }
-            });
+            });*/
 
         \DB::connection('mysql2')->table('lessons')
             ->chunkById(100, function ($lessons) {
@@ -175,11 +175,11 @@ class SyncData extends Command
                                     $newInventory = Inventory::where('old_id', $inventory['idSublesson'])->first();
                                     if($newLesson && $newInventory){
                                         LessonInventory::updateOrCreate([
-                                            'lesson_id' => $lesson->id,
-                                            'inventory_id' => $inventory->id,
+                                            'lesson_id' => @$newLesson->id,
+                                            'inventory_id' => @$newInventory->id,
                                         ],[
-                                            'lesson_id' => $lesson->id,
-                                            'inventory_id' => $inventory->id,
+                                            'lesson_id' => @$newLesson->id,
+                                            'inventory_id' => @$newInventory->id,
                                         ]);
                                     }
                                }
