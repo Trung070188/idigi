@@ -123,9 +123,9 @@ class InventoriesController extends AdminBaseController
         $data = $req->get('entry');
 
         $rules = [
-            'file_image' => 'required',
+            'file_image_array' => 'required',
             'name' => 'max:255|required',
-            'file_asset' => 'required',
+            'file_asset_array' => 'required',
             'subject' => 'max:255|required',
             'type' => 'max:255|required',
             'grade' => 'max:255|required',
