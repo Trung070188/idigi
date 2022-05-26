@@ -83,13 +83,13 @@
                             <div class="col-lg-3 col-sm-12">
                                 <div class="form-group mb-3">
                                     <label>Chọn ảnh</label>
-                                    <file-manager-input v-model="entry.file_image_array" :hide-preview="true"></file-manager-input>
+                                    <file-manager-input v-model="entry.file_image_new"  :hide-preview="true"></file-manager-input>
                                     <error-label for="f_title" :errors="errors.file_image_array"></error-label>
 
                                 </div>
                                 <div class="form-group mb-3">
                                     <label>File asset bundle</label>
-                                    <file-manager-input v-model="entry.file_asset_array"></file-manager-input>
+                                    <file-manager-input v-model="entry.file_asset_new"></file-manager-input>
                                     <error-label for="f_title" :errors="errors.file_asset_array"></error-label>
 
                                 </div>
