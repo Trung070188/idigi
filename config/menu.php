@@ -80,4 +80,11 @@ return [
         ]
 
     ],
+    [
+        "name" => "RequestRole",
+        "icon" => "fa fa-archive",
+        "group" => 1,
+        'url' => '/xadmin/request_role/manage',
+
+    ],
 ];

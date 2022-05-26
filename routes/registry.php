@@ -51,4 +51,9 @@
         'action' => 'UserDevicesController',
         'name' => 'user_devices',
     ],
+     [
+         'path' => '/request_role/{action}',
+         'action' => 'RequestRolesController',
+         'name' => 'request_role',
+     ],
 ];

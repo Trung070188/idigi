@@ -43,6 +43,8 @@ Route::middleware(['auth', 'CheckIfRole'])->namespace('Admin')->prefix('xadmin')
 Route::middleware(['auth', ])->namespace('Admin')->prefix('xadmin')->group(function () {
     Route::get('/request_role/index', 'RequestRolesController@index');
     Route::post('/request_role/save', 'RequestRolesController@save');
+//    Route::get('/request_role/manage', 'RequestRolesController@manage');
+
 
 });
 

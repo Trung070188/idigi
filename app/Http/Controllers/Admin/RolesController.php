@@ -207,9 +207,9 @@ class RolesController extends AdminBaseController
 
         foreach ($roles as $role) {
             $rolePermissions = [];
-
             foreach ($groupPermissions as $groupPermission) {
                 foreach ($groupPermission->permissions as $permission) {
+
                     $item = [
                         'id' => $permission->id,
                         'group_permission' => $groupPermission->id,

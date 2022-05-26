@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 
+use App\Models\User;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -33,6 +34,11 @@ class RequestRolesController extends AdminBaseController
     public function index() {
         $title = 'RequestRole';
         $component = 'Request_roleIndex';
+        return component($component, compact('title'));
+    }
+    public function manage() {
+        $title = 'trung';
+        $component = 'Request_roleManage';
         return component($component, compact('title'));
     }
 
@@ -137,6 +143,62 @@ class RequestRolesController extends AdminBaseController
             'message' => 'Đã gửi yêu cầu cấp quyền thành công',
         ];
     }
+    public function refuse(Request $req)
+    {
+        if (!$req->isMethod('POST')) {
+            return ['code' => 405, 'message' => 'Method not allow'];
+        }
+
+        $data = $req->get('entry');
+
+        $rules = [
+            'reason' => 'required|max:100',
+//    'role_description' => 'max:255',
+        ];
+
+        $v = Validator::make($data, $rules);
+
+        if ($v->fails()) {
+            return [
+                'code' => 2,
+                'errors' => $v->errors()
+            ];
+        }
+
+        /**
+         * @var  RequestRole $entry
+         */
+        if (isset($data['id'])) {
+            $entry = RequestRole::find($data['id']);
+            if (!$entry) {
+                return [
+                    'code' => 3,
+                    'message' => 'Không tìm thấy',
+                ];
+            }
+
+            $entry->fill($data);
+            $entry->status='Refuse';
+            $entry->save();
+
+
+            return [
+                'code' => 0,
+                'message' => 'Đã cập nhật',
+                'id' => $entry->id
+            ];
+        } else {
+            $entry = new RequestRole();
+            $entry->fill($data);
+            $entry->save();
+
+            return [
+                'code' => 0,
+                'message' => 'Đã thêm',
+                'id' => $entry->id
+            ];
+        }
+    }
 
     /**
     * @param  Request $req
@@ -153,7 +215,7 @@ class RequestRolesController extends AdminBaseController
             ];
         }
 
-        $entry->status = $req->status ? 1 : 0;
+        $entry->status = $req->status ?'Refuse':'Waiting';
         $entry->save();
 
         return [
@@ -168,7 +230,9 @@ class RequestRolesController extends AdminBaseController
     * @return  array
     */
     public function data(Request $req) {
-        $query = RequestRole::query()->orderBy('id', 'desc');
+        $query = RequestRole::query()
+            ->orderBy('id', 'desc');
+        $users=User::with(['request_roles'])->orderBy('username','ASC')->get();
 
         if ($req->keyword) {
             //$query->where('title', 'LIKE', '%' . $req->keyword. '%');
@@ -176,12 +240,28 @@ class RequestRolesController extends AdminBaseController
 
         $query->createdIn($req->created);
 
-
         $entries = $query->paginate();
+        $data = [];
+
+    foreach ($entries as $entry) {
+
+        $data[] = [
+            'id' => $entry->id,
+            'content'=>$entry->content,
+            'status'=>$entry->status,
+            'created_at'=>$entry->created_at,
+            'user_id'=>$entry->user_id,
+            'users' => $users
+        ];
+}
+
 
         return [
             'code' => 0,
-            'data' => $entries->items(),
+
+            'data' => [
+                'entries' => $data,
+            ],
             'paginate' => [
                 'currentPage' => $entries->currentPage(),
                 'lastPage' => $entries->lastPage(),

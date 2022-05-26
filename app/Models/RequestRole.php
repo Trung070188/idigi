@@ -17,5 +17,8 @@ class RequestRole extends BaseModel
         'reason',
         'content'
     ];
-
+    public function users()
+    {
+        return $this->hasMany(User::class);
+    }
 }
