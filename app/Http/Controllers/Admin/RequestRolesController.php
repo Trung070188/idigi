@@ -251,6 +251,7 @@ class RequestRolesController extends AdminBaseController
             'status'=>$entry->status,
             'created_at'=>$entry->created_at,
             'user_id'=>$entry->user_id,
+            'reason'=>$entry->reason,
             'users' => $users
         ];
 }

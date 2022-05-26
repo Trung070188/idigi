@@ -4,8 +4,8 @@
                    :breadcrumbs="breadcrumbs"
                    title="RequestRole"/>
         <div class="row">
-            <div class="modal fade"  id="editdeviceConfirm" tabindex="-1" role="dialog"
-                 aria-labelledby="editdeviceConfirm"
+            <div class="modal fade"  id="editRequestConfirm" tabindex="-1" role="dialog"
+                 aria-labelledby="editRequestConfirm"
                  aria-hidden="true">
 
                 <div class="modal-dialog modal-dialog-centered popup-main-1" role="document"
@@ -15,7 +15,7 @@
                         <h3 class="popup-title success" style="text-align: center">Approval device</h3>
                         <input v-model="curRequest.id" type="hidden" name="id" value="">
                         <div class="content">
-                            <textarea style="width: 100%;height: 50px" v-model="curRequest.reason"  class="form-control" placeholder="Nhập lí do hủy thiết bị" ></textarea>
+                            <textarea style="width: 100%;height: 50px" v-model="curRequest.reason"  class="form-control" placeholder="Nhập lí do từ chối yêu cầu" ></textarea>
                             <error-label for="f_role_name" :errors="errors.reason"></error-label>
                             <div>
                             </div>
@@ -54,7 +54,9 @@
                                 <td v-text="entry.id"></td>
                                 <td v-for="user in entry.users" v-if="entry.user_id==user.id" v-text="user.username"></td>
                                 <td v-text="entry.content"></td>
-                                <td v-text="entry.status"></td>
+                                <td v-if="entry.status=='Refuse'" style="color:#d70f0f">Refuse</td>
+                                <td v-if="entry.status=='Waiting'" style="color:#ddaf0d">Waiting</td>
+                                <td v-if="entry.status=='Aprrove'" style="color:#10d13e">Aprrove</td>
                                 <td v-text=" d(entry.created_at)"></td>
                                 <td >
                                     <button class="btn" style="margin-right: 20px;background:#50f14b;color: #f1f1f1;border-color: #50f14b">Aprrove</button>
@@ -113,9 +115,9 @@
         },
         methods: {
 
-            editModalDevice: function (device = {}){
-                $('#editdeviceConfirm').modal('show');
-                this.curRequest = device;
+            editModalDevice: function (request = {}){
+                $('#editRequestConfirm').modal('show');
+                this.curRequest = request;
 
             },
             async refuse() {
@@ -141,7 +143,6 @@
                 this.$loading(false);
                 this.paginate = res.paginate;
                 this.entries = res.data.entries;
-                this.users=res.data.users;
                 this.from = (this.paginate.currentPage-1)*(this.limit) + 1;
                 this.to = (this.paginate.currentPage-1)*(this.limit) + this.entries.length;
             },
