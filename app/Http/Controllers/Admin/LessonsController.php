@@ -318,8 +318,7 @@ class LessonsController extends AdminBaseController
         }
 
         $user = Auth::user();
-        $userDevice = UserDevice::where('user_id', $user->id)->where('id', $request->device_id)->first();
-
+        $userDevice = UserDevice::where('user_id', $user->id)->where('id', $request->device)->first();
         $password = @$userDevice->secret_key;
 
         $y = date('Y');
@@ -369,8 +368,9 @@ class LessonsController extends AdminBaseController
                     }
                     if($structure['sublesson']){
                         foreach ($structure['sublesson'] as $key1 => $subLesson){
-                            if(@$subLesson['idSublesson'] == $inventory->old_id){
+                            if(@$subLesson['sublesson'] == $inventory->old_id){
                                 $structure['sublesson'][$key1]['link'] = $link;
+                                $structure['sublesson'][$key1]['idSublesson'] = $link;
                             }
                         }
                     }
@@ -378,7 +378,9 @@ class LessonsController extends AdminBaseController
                 }
             }
 
-
+            $structure['subLessons'] = @$structure['sublesson'];
+            $structure['idLesson '] = $lesson->id;
+            unset($structure['sublesson']);
             Storage::put($dir . '/lesson_detail'.$filename.'.txt', json_encode($structure));
 
             $zip->addFile(storage_path('app/' . $dir . '/lesson_detail'.$filename.'.txt'), 'lesson_detail.txt');
