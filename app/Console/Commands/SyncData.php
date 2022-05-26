@@ -89,6 +89,8 @@ class SyncData extends Command
                     $img = '';
                     $physicalPath = '';
                     $virtualPath = '';
+                    $fileImageId = NULL;
+                    $fileAssetId = NULL;
 
                     if($inventory->image){
                         $path = str_replace('\\', '/', $inventory->image);
@@ -156,8 +158,8 @@ class SyncData extends Command
                         'link_webview' => $inventory->link_webview,
                         'slideshows' => $inventory->slideshows,
                         'tags' => $inventory->tags,
-                        'file_image_id' => $fileImageId,
-                        'file_asset_id' => $fileAssetId,
+                        'file_image_id' => @$fileImageId,
+                        'file_asset_id' => @$fileAssetId,
                     ];
 
                     Inventory::updateOrCreate([
