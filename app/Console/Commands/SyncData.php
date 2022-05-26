@@ -3,12 +3,14 @@
 namespace App\Console\Commands;
 
 use App\Helpers\PhpDoc;
+use App\Models\File;
 use App\Models\Inventory;
 use App\Models\Lesson;
 use App\Models\LessonInventory;
 use App\Models\Product;
 use App\Models\User;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
@@ -45,7 +47,7 @@ class SyncData extends Command
      */
     public function handle()
     {
-       /* \DB::connection('mysql2')->table('lessons')
+       /*\DB::connection('mysql2')->table('lessons')
             ->chunkById(100, function ($lessons) {
                 foreach ($lessons as $lesson){
                     $userCreate = User::where('username', $lesson->created_by)->first();
@@ -74,7 +76,7 @@ class SyncData extends Command
 
                     echo 'Sync lesson: '.$lesson->id.PHP_EOL;
                 }
-            });
+            });*/
 
 
 
@@ -100,7 +102,8 @@ class SyncData extends Command
 
                         try {
                             $img = '/files/attachments'.$inventory->image;
-                            file_put_contents(public_path($img), file_get_contents(env('OLD_DOMAIN').$inventory->image));
+                            $this->insertFile($img, 1);
+                            //file_put_contents(public_path($img), file_get_contents(env('OLD_DOMAIN').$inventory->image));
 
                         }
                         catch (\Exception $e) {
@@ -123,8 +126,9 @@ class SyncData extends Command
 
                         try {
                             $virtualPath = '/files/attachments'.$inventory->virtual_path;
-                            file_put_contents(public_path($virtualPath), file_get_contents(env('OLD_DOMAIN').$inventory->virtual_path));
-                            $physicalPath = str_replace('\\', '/', $_SERVER['DOCUMENT_ROOT']).$virtualPath;
+                            $this->insertFile($virtualPath, 0);
+                            //file_put_contents(public_path($virtualPath), file_get_contents(env('OLD_DOMAIN').$inventory->virtual_path));
+                            $physicalPath = public_path($virtualPath);
 
                         }
                         catch (\Exception $e) {
@@ -160,9 +164,9 @@ class SyncData extends Command
 
                     echo 'Sync inventory: '.$inventory->id.PHP_EOL;
                 }
-            });*/
+            });
 
-        \DB::connection('mysql2')->table('lessons')
+        /*\DB::connection('mysql2')->table('lessons')
             ->chunkById(100, function ($lessons) {
                 foreach ($lessons as $lesson){
                    if($lesson->structure){
@@ -190,6 +194,21 @@ class SyncData extends Command
 
                     echo 'Sync lesson inventory: '.$lesson->id.PHP_EOL;
                 }
-            });
+            });*/
+    }
+
+    protected function insertFile($path, $isImage = 0){
+        $newFilePath = public_path($path);
+        $info = pathinfo($path);
+        $file = new File();
+        $file->type =  \Illuminate\Support\Facades\File::type($newFilePath);
+        $file->hash = sha1($newFilePath);
+        $file->url = url($path);
+        $file->is_image = $isImage;
+        $file->size = \Illuminate\Support\Facades\File::size($newFilePath);
+        $file->name = $info['filename'];
+        $file->path =  $newFilePath;
+        $file->extension =  \Illuminate\Support\Facades\File::extension($newFilePath);
+        $file->save();
     }
 }
