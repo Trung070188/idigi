@@ -260,7 +260,7 @@ export default {
     margin-left: 5px;
     position: relative;
     width: 80px;
-    height: 80px
+    height: auto;
 }
 
 .fmi-close {
