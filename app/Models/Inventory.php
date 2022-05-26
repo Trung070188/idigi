@@ -25,10 +25,20 @@ class Inventory extends BaseModel
         'link_webview',
         'slideshows',
         'tags',
+        'file_image_id',
+        'file_asset_id',
         'old_id',
         'created_at',
         'updated_at',
         'created_by',
         'updated_by',
     ];
+
+    public function fileImage(){
+        return $this->belongsTo(File::class, 'file_image_id');
+    }
+    public function fileAsset(){
+        return $this->belongsTo(File::class, 'file_asset_id');
+    }
+
 }

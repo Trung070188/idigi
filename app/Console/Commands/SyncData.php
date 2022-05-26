@@ -102,7 +102,7 @@ class SyncData extends Command
 
                         try {
                             $img = '/files/attachments'.$inventory->image;
-                            $this->insertFile($img, 1);
+                            $fileImageId = $this->insertFile($img, 1);
                             //file_put_contents(public_path($img), file_get_contents(env('OLD_DOMAIN').$inventory->image));
 
                         }
@@ -126,7 +126,7 @@ class SyncData extends Command
 
                         try {
                             $virtualPath = '/files/attachments'.$inventory->virtual_path;
-                            $this->insertFile($virtualPath, 0);
+                            $fileAssetId = $this->insertFile($virtualPath, 0);
                             //file_put_contents(public_path($virtualPath), file_get_contents(env('OLD_DOMAIN').$inventory->virtual_path));
                             $physicalPath = public_path($virtualPath);
 
@@ -156,6 +156,8 @@ class SyncData extends Command
                         'link_webview' => $inventory->link_webview,
                         'slideshows' => $inventory->slideshows,
                         'tags' => $inventory->tags,
+                        'file_image_id' => $fileImageId,
+                        'file_asset_id' => $fileAssetId,
                     ];
 
                     Inventory::updateOrCreate([
@@ -210,5 +212,7 @@ class SyncData extends Command
         $file->path =  $newFilePath;
         $file->extension =  \Illuminate\Support\Facades\File::extension($newFilePath);
         $file->save();
+
+        return $file->id;
     }
 }

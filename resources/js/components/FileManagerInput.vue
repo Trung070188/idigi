@@ -44,7 +44,7 @@
                     <div class="modal-content">
                         <div class="modal-header">
                             <h5 class="modal-title">Quản lí file</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <button type="button" class="close" data-dismiss="modal" @click="closeModal" aria-label="Close">
                                 &times;
                             </button>
                         </div>
@@ -77,7 +77,8 @@
         'xls': 'fa fa-file-excel',
         'docx': 'fa fa-file-word',
         'doc': 'fa fa-file-word',
-        'pdf': 'fa fa-file-pdf'
+        'pdf': 'fa fa-file-pdf',
+        '': 'fa fa-file',
     };
 
     export default {
@@ -87,9 +88,12 @@
 
             const isMultiple = this.multiple;
 
+            console.log(this.value)
             const files = arr(this.value).map((v => {
                 return {
-                    is_image: true,
+                    is_image: v.is_image,
+                    extension: v.extension,
+                    name: v.name,
                     id: v.id,
                     url: v.uri
                 }
@@ -110,6 +114,9 @@
             FileManager
         },
         methods: {
+            closeModal: function (){
+                $('.modal').modal('hide');
+            },
             docClicked(ev) {
                 if (this.$refs.button.contains(ev.target)) {
                 } else {

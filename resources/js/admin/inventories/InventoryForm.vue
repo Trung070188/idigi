@@ -83,14 +83,14 @@
                             <div class="col-lg-3 col-sm-12">
                                 <div class="form-group mb-3">
                                     <label>Chọn ảnh</label>
-                                    <file-manager-input v-model="entry.image" :hide-preview="true"></file-manager-input>
-                                    <error-label for="f_title" :errors="errors.image"></error-label>
+                                    <file-manager-input v-model="entry.file_image_array" :hide-preview="true"></file-manager-input>
+                                    <error-label for="f_title" :errors="errors.file_image_array"></error-label>
 
                                 </div>
                                 <div class="form-group mb-3">
                                     <label>File asset bundle</label>
-                                    <file-manager-input v-model="entry.virtual_path"></file-manager-input>
-                                    <error-label for="f_title" :errors="errors.virtual_path"></error-label>
+                                    <file-manager-input v-model="entry.file_asset_array"></file-manager-input>
+                                    <error-label for="f_title" :errors="errors.file_asset_array"></error-label>
 
                                 </div>
                             </div>
@@ -124,7 +124,9 @@
         name: "InventoriesForm.vue",
         components: {ActionBar,SwitchButton,FileManagerInput},
         data() {
+            console.log($json.entry);
             return {
+
                 types: [
 
                 ],
@@ -147,6 +149,7 @@
                 window.location.href = '/xadmin/inventories/index';
             },
             async save() {
+
                // this.$loading(true);
                 const res = await $post('/xadmin/inventories/save', {entry: this.entry}, false);
 

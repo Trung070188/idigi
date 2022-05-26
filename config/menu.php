@@ -12,7 +12,11 @@ return [
         "group" => 1,
         'url' => '/xadmin/inventories/index',
     ],
-
+    [
+        "name" => "Lesson",
+        "icon" => "fa fa-book-open",
+        'url' => '/xadmin/lessons/index',
+    ],
 
      [  "name" => "Users, Roles",
         "icon" => "fa fa-users",
@@ -33,11 +37,7 @@ return [
             ],
         ],
          ],
-        [
-            "name" => "Lesson",
-            "icon" => "fa fa-book-open",
-            'url' => '/xadmin/lessons/index',
-        ],
+
 
     [
         "name" => "School",

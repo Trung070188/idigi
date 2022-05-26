@@ -62,7 +62,21 @@ class InventoriesController extends AdminBaseController
         if (!$entry) {
             throw new NotFoundHttpException();
         }
-        $entry->virtual_path = asset($entry->virtual_path);
+        $entry->file_image_array = [[
+            'id' => @$entry->fileImage->id,
+            'uri' => @$entry->fileImage->url,
+            'is_image' => 1,
+        ]];
+
+        $entry->file_asset_array =[[
+            'id' => @$entry->fileAsset->id,
+            'uri' => @$entry->fileAsset->url,
+            'extension' => @$entry->fileAsset->extension,
+            'name' => @$entry->fileAsset->name,
+            'is_image' => 0,
+        ]];
+       //dd($entry);
+
 
         /**
          * @var  Inventory $entry
@@ -109,9 +123,9 @@ class InventoriesController extends AdminBaseController
         $data = $req->get('entry');
 
         $rules = [
-            'image' => 'max:255|required',
+            'file_image' => 'required',
             'name' => 'max:255|required',
-            'virtual_path' => 'max:2000|required',
+            'file_asset' => 'required',
             'subject' => 'max:255|required',
             'type' => 'max:255|required',
             'grade' => 'max:255|required',
@@ -128,9 +142,11 @@ class InventoriesController extends AdminBaseController
             ];
         }
 
-        $data['image'] = get_virtual_path($data['image']);
-        $data['virtual_path'] = get_virtual_path($data['virtual_path']);
-        $data['physical_path'] = str_replace('\\', '/', $_SERVER['DOCUMENT_ROOT']).$data['virtual_path'];
+        $data['file_image_id'] = $data['file_image_array'][0]['id'];
+        $data['file_asset_id'] = $data['file_asset_array'][0]['id'];
+        $data['virtual_path'] = str_replace('APP_URL', '',  $data['file_asset_array'][0]['uri']);
+        $data['physical_path'] = public_path($data['virtual_path']);
+        $data['image'] = str_replace('APP_URL', '',  $data['file_image_array'][0]['uri']);
 
         /**
          * @var  Inventory $entry
