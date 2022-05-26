@@ -62,19 +62,28 @@ class InventoriesController extends AdminBaseController
         if (!$entry) {
             throw new NotFoundHttpException();
         }
-        $entry->file_image_new= [
-            'id' => @$entry->fileImage->id,
-            'uri' => @$entry->fileImage->url,
-            'is_image' => 1,
-        ];
+        if(@$entry->fileImage){
+            $entry->file_image_new= [
+                'id' => @$entry->fileImage->id,
+                'uri' => @$entry->fileImage->url,
+                'is_image' => 1,
+            ];
+        }else{
+            $entry->file_image_new = NULL;
+        }
+        if(@$entry->fileAsset){
+            $entry->file_asset_new =[
+                'id' => @$entry->fileAsset->id,
+                'uri' => @$entry->fileAsset->url,
+                'extension' => @$entry->fileAsset->extension,
+                'name' => @$entry->fileAsset->name,
+                'is_image' => 0,
+            ];
+        }else{
+            $entry->file_asset_new = NULL;
+        }
 
-        $entry->file_asset_new =[
-            'id' => @$entry->fileAsset->id,
-            'uri' => @$entry->fileAsset->url,
-            'extension' => @$entry->fileAsset->extension,
-            'name' => @$entry->fileAsset->name,
-            'is_image' => 0,
-        ];
+
        //dd($entry);
 
 
@@ -123,7 +132,7 @@ class InventoriesController extends AdminBaseController
         $data = $req->get('entry');
 
         $rules = [
-            'file_image_new' => 'required',
+            //'file_image_new' => 'required',
             'name' => 'max:255|required',
             'file_asset_new' => 'required',
             'subject' => 'max:255|required',
@@ -142,11 +151,16 @@ class InventoriesController extends AdminBaseController
             ];
         }
 
-        $data['file_image_id'] = $data['file_image_new']['id'];
-        $data['file_asset_id'] = $data['file_asset_new']['id'];
+        $data['file_image_id'] = @$data['file_image_new']['id'];
+        $data['file_asset_id'] = @$data['file_asset_new']['id'];
+
         $data['virtual_path'] = str_replace('APP_URL', '',  $data['file_asset_new']['uri']);
         $data['physical_path'] = public_path($data['virtual_path']);
-        $data['image'] = str_replace('APP_URL', '',  $data['file_image_new']['uri']);
+
+        if($data['file_image_id']){
+            $data['image'] = str_replace('APP_URL', '',  $data['file_image_new']['uri']);
+        }
+
 
         /**
          * @var  Inventory $entry
