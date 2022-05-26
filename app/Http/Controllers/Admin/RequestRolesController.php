@@ -215,7 +215,7 @@ class RequestRolesController extends AdminBaseController
             ];
         }
 
-        $entry->status = $req->status ?'Refuse':'Waiting';
+        $entry->status = $req->status ?'Aprrove':'Waiting';
         $entry->save();
 
         return [

@@ -12,7 +12,7 @@
                      style="max-width: 500px;">
                     <div class="modal-content box-shadow-main paymment-status" style="margin-right:20px; left:140px">
                         <div class="close-popup" data-dismiss="modal"></div>
-                        <h3 class="popup-title success" style="text-align: center">Approval device</h3>
+                        <h3 class="popup-title success" style="text-align: center">Refuse Request</h3>
                         <input v-model="curRequest.id" type="hidden" name="id" value="">
                         <div class="content">
                             <textarea style="width: 100%;height: 50px" v-model="curRequest.reason"  class="form-control" placeholder="Nhập lí do từ chối yêu cầu" ></textarea>
@@ -59,7 +59,7 @@
                                 <td v-if="entry.status=='Aprrove'" style="color:#10d13e">Aprrove</td>
                                 <td v-text=" d(entry.created_at)"></td>
                                 <td >
-                                    <button class="btn" style="margin-right: 20px;background:#50f14b;color: #f1f1f1;border-color: #50f14b">Aprrove</button>
+                                    <button class="btn" style="margin-right: 20px;background:#50f14b;color: #f1f1f1;border-color: #50f14b" @click="toggleStatus(entry)">Aprrove</button>
                                     <a :href="'/xadmin/users/edit?id='+entry.user_id" ><button class="btn btn-success" style="margin-right: 20px">grant permission</button></a>
                                     <button class="btn btn-danger" @click="editModalDevice(entry)">Refuse</button>
 
@@ -68,11 +68,7 @@
                             </tbody>
                         </table>
                         <div style="margin-top:10px; display: flex">
-
-
                         </div>
-
-
                     </div>
                 </div>
             </div>
@@ -162,16 +158,6 @@
                 $router.updateQuery({page: this.paginate.currentPage, _: Date.now()});
             },
 
-            filterClear() {
-
-                for( var key in this.filter) {
-                    this.filter[key] = '';
-                }
-                $router.setQuery({});
-            },
-            doFilter() {
-                $router.setQuery(this.filter)
-            },
             changeLimit() {
                 let params = $router.getQuery();
                 params['page']=1;
@@ -187,9 +173,12 @@
 
                 if (res.code === 200) {
                     toastr.success(res.message);
-                } else {
+                }
+
+                else {
                     toastr.error(res.message);
                 }
+                location.replace('/xadmin/request_role/manage');
 
             },
             onPageChange(page) {
