@@ -259,8 +259,8 @@ export default {
     display: inline-block;
     margin-left: 5px;
     position: relative;
-    width: 80px;
-    height: auto;
+    /*width: 80px;
+    height: auto;*/
 }
 
 .fmi-close {
