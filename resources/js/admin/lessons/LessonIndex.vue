@@ -170,11 +170,14 @@
                         </ul>
                         <p>Hãy chọn thiết bị để tải về các bài học này:</p>
                         <ul class="device">
-                            <li v-for="_device in devices"><input type="radio" v-model="device"  :value="_device.id" /> <strong>{{_device.device_name}}</strong></li>
+                            <li v-for="_device in devices"><input type="radio" v-model="device" :value="_device.id"/>
+                                <strong>{{ _device.device_name }}</strong></li>
                         </ul>
                     </div>
                     <div class="modal-footer" style="justify-content: center">
-                        <button type="button" class="btn btn-primary" :disabled="lessons.length == 0" @click="downloadLesson">Confirm</button>
+                        <button type="button" class="btn btn-primary" :disabled="lessons.length == 0 || !device"
+                                @click="downloadLesson">Confirm
+                        </button>
                     </div>
                 </div>
             </div>
@@ -236,19 +239,23 @@ export default {
     mounted() {
         $router.on('/', this.load).init();
         let self = this;
-        $.get('/xadmin/user_devices/getDeviceByUser', function (res){
+        $.get('/xadmin/user_devices/getDeviceByUser', function (res) {
             self.devices = res;
         });
     },
     methods: {
-       downloadLesson() {
-            window.location.href = '/xadmin/lessons/downloadLesson?'+ 'lessonIds='+this.lessonIds +'&device=' + this.device;
+        downloadLesson() {
+            window.location.href = '/xadmin/lessons/downloadLesson?' + 'lessonIds=' + this.lessonIds + '&device=' + this.device;
         },
 
         closeModal: function () {
             $('#download-lesson').modal('hide');
         },
         openModal: function () {
+            if (this.lessons.length > 3) {
+                alert('Bạn chỉ được chọn tối đa 3 lesson');
+                return false;
+            }
             $('#download-lesson').modal('show');
         },
         selectAll() {
@@ -367,5 +374,7 @@ export default {
 </script>
 
 <style scoped>
-ul.device {list-style-type: none;}
+ul.device {
+    list-style-type: none;
+}
 </style>
