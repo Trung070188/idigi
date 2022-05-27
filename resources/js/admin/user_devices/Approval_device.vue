@@ -42,7 +42,7 @@
                                 <th>ID</th>
                                 <th>Device UID</th>
                                 <th>Device Name</th>
-                                <th>User Id</th>
+                                <th>User Name</th>
                                 <th>Status</th>
                                 <th></th>
                             </tr>
@@ -52,7 +52,7 @@
                                 <td v-text="entry.id"></td>
                                 <td v-text="entry.device_uid"></td>
                                 <td v-text="entry.device_name"></td>
-                                <td  v-text="entry.user_id"></td>
+                                <td v-for="user in entry.users" v-if="entry.user_id==user.id" v-text="user.username"></td>
                                 <td style="color:#FFAC32">Waiting for administrator verify</td>
 
                                 <td >
@@ -95,6 +95,7 @@
                     },
                 ],
                 entries: [],
+                users:[],
 
                 entry: $json.entry || {
                 },
@@ -140,7 +141,8 @@
                 const res  = await $get('/xadmin/user_devices/data_approval', query);
                 this.$loading(false);
                 this.paginate = res.paginate;
-                this.entries = res.data;
+                this.entries = res.data.entries;
+                console.log(this.entries);
                 this.from = (this.paginate.currentPage-1)*(this.limit) + 1;
                 this.to = (this.paginate.currentPage-1)*(this.limit) + this.entries.length;
             },

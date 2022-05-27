@@ -264,11 +264,28 @@ class UserDevicesController extends AdminBaseController
 
         $query->createdIn($req->created);
         $entries = $query->paginate();
+        $users=User::with(['user_devices'])->orderBy('username','ASC')->get();
+        $data=[];
+        foreach ($entries as $entry)
+        {
+            $data[]=[
+                    'id'=>$entry->id,
+                    'device_uid'=>$entry->device_uid,
+                    'device_name'=>$entry->device_name,
+                    'status'=>$entry->status,
+                    'user_id'=>$entry->user_id,
+                    'users'=>$users
+
+            ];
+
+        }
 
 
         return [
             'code' => 0,
-            'data' => $entries->items(),
+            'data' =>[
+              'entries'=> $data,
+            ],
             'paginate' => [
                 'currentPage' => $entries->currentPage(),
                 'lastPage' => $entries->lastPage(),

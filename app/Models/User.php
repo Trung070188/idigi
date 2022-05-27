@@ -127,4 +127,8 @@ WHERE p.`user_id`=?', [$this->id]);
     {
         return $this->hasMany(RequestRole::class);
     }
+    public function user_devices()
+    {
+        return  $this->hasMany(UserDevice::class);
+    }
 }
