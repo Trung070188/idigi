@@ -354,6 +354,7 @@ class LessonsController extends AdminBaseController
             }
             $name = explode(':', $lesson->name);
             $structure['codeLesson'] = @$name[0];
+            $structure['idLesson'] = $lesson->id;
 
             if ($lesson->inventories) {
                 foreach ($lesson->inventories as $inventory) {
