@@ -361,11 +361,11 @@ class LessonsController extends AdminBaseController
                     $icon = 'Icons/' . basename(public_path($inventory->image));
                     $link = basename(public_path($inventory->virtual_path));
 
-                    if(file_exists(public_path($inventory->image))){
+                    if(file_exists(public_path($inventory->image)) && is_file(public_path($inventory->image))){
                         $zip->addFile(public_path($inventory->image), $icon);
                         $zip->setEncryptionName($icon, \ZipArchive::EM_AES_256, $password);
                     }
-                    if(file_exists(public_path($inventory->virtual_path))){
+                    if(file_exists(public_path($inventory->virtual_path)) && is_file(public_path($inventory->virtual_path))){
                         $zip->addFile(public_path($inventory->virtual_path), $link);
                         $zip->setEncryptionName($link, \ZipArchive::EM_AES_256, $password);
                     }
