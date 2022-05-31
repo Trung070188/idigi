@@ -84,11 +84,11 @@
                 types: [],
                 breadcrumbs: [
                     {
-                        title: 'Users',
-                        url: '/xadmin/users/index',
+                        title: 'Teachers',
+                        url: '/xadmin/users/index_teacher',
                     },
                     {
-                        title: $json.entry ? 'Edit User' : 'Create new User',
+                        title: $json.entry ? 'Edit User' : 'Create new Teachers',
                     },
                 ],
                 entry: $json.entry || {

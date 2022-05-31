@@ -3,7 +3,7 @@
         <ActionBar type="index"
                    createUrl="/xadmin/users/create_teacher"
                    :breadcrumbs="breadcrumbs"
-                   title="User"/>
+                   title="Teacher"/>
         <div class="row">
             <div class="col-lg-12">
                 <div class="card card-custom card-stretch gutter-b">
@@ -175,7 +175,7 @@
                 isShowFilter: isShowFilter,
                 breadcrumbs: [
                     {
-                        title: 'Users'
+                        title: 'Teachers'
                     },
                 ],
                 roles:$json.roles || [],

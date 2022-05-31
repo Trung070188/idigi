@@ -4,7 +4,7 @@
                    :code="entry.id"
                    back-url="/xadmin/users/index"
                    :breadcrumbs="breadcrumbs"
-                   title="UserForm"/>
+                   title="TeacherEdit"/>
         <div class="modal fade" style="margin-right:50px " id="deviceConfirm" tabindex="-1" role="dialog"
              aria-labelledby="deviceConfirm"
              aria-hidden="true">
@@ -21,7 +21,7 @@
                         <button class="btn btn-primary ito-btn-add" data-dismiss="modal" style="margin-right: 5px" @click="closeModalDevice">
                            Cancel
                         </button>
-                        <button v-for="device in user_device" v-if="trung.id==currId" class="btn btn-danger ito-btn-small" data-dismiss="modal" @click="remove_device(device)" >Accept remove</button>
+                        <button v-for="device in user_device" v-if="device.id==currId" class="btn btn-danger ito-btn-small" data-dismiss="modal" @click="remove_device(device)" >Accept remove</button>
                     </div>
                 </div>
             </div>
@@ -146,11 +146,11 @@
                 currId:'',
                 breadcrumbs: [
                     {
-                        title: 'Users',
-                        url: '/xadmin/users/index',
+                        title: 'Techers',
+                        url: '/xadmin/users/index_teacher',
                     },
                     {
-                        title: $json.entry ? 'Edit User' : 'Create new User',
+                        title: $json.entry ? 'Edit Teacher' : 'Create new User',
                     },
                 ],
                 entry: $json.entry || {
