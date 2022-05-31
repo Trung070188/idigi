@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 
 use App\Models\Role;
+use App\Models\UserDevice;
 use App\Models\UserRole;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
@@ -44,6 +45,18 @@ class UsersController extends AdminBaseController
 
         return view('admin.layouts.vue', compact('title', 'component', 'jsonData'));
     }
+    public function index_teacher(Request $request)
+    {
+        $title = 'Teacher';
+        $component = 'TeacherIndex';
+        $roles = Role::query()->orderBy('role_name')->get();
+
+        $jsonData = [
+            'roles' => $roles
+        ];
+
+        return view('admin.layouts.vue', compact('title', 'component', 'jsonData'));
+    }
 
     /**
      * Create new entry
@@ -55,6 +68,17 @@ class UsersController extends AdminBaseController
     {
         $component = 'UserForm';
         $title = 'Create users';
+        $roles = Role::query()->orderBy('role_name')->get();
+        $jsonData = [
+            'roles' => $roles
+        ];
+
+        return view('admin.layouts.vue', compact('title', 'component', 'jsonData'));
+    }
+    public function create_teacher(Request $req)
+    {
+        $component = 'TeacherCreated';
+        $title = 'Create Teacher';
         $roles = Role::query()->orderBy('role_name')->get();
         $jsonData = [
             'roles' => $roles
@@ -124,6 +148,28 @@ class UsersController extends AdminBaseController
         ];
         return view('admin.layouts.vue', compact('title', 'component', 'jsonData'));
     }
+    public function edit_teacher(Request $req)
+    {
+        $id = $req->id;
+        $entry = User::query()
+            ->where('id', $id)->first();
+        if (!$entry) {
+            throw new NotFoundHttpException();
+        }
+        $user_device=UserDevice::query()->orderBy('id','DESC')->get();
+
+        /**
+         * @var  User $entry
+         */
+
+        $title = 'Edit';
+        $component = 'TeacherEdit';
+        $jsonData = [
+            'entry' => $entry,
+            'user_device'=>$user_device
+        ];
+        return view('admin.layouts.vue', compact('title', 'component', 'jsonData'));
+    }
 
     /**
      * @uri  /xadmin/users/remove
@@ -134,6 +180,19 @@ class UsersController extends AdminBaseController
         $id = $req->id;
         $entry = User::find($id);
         $entry->roles()->detach();
+        if (!$entry) {
+            throw new NotFoundHttpException();
+        }
+        $entry->delete();
+        return [
+            'code' => 0,
+            'message' => 'Đã xóa'
+        ];
+    }
+    public function remove_device(Request $req)
+    {
+        $id = $req->id;
+        $entry = UserDevice::find($id);
         if (!$entry) {
             throw new NotFoundHttpException();
         }
@@ -217,7 +276,6 @@ class UsersController extends AdminBaseController
             ];
         }
     }
-
     /**
      * @param Request $req
      */
@@ -252,6 +310,7 @@ class UsersController extends AdminBaseController
         $query = User::query()
             ->with(['roles'])
             ->orderBy('id', 'desc');
+        $roles=Role::with(['users'])->orderBy('role_name','ASC')->get();
         if ($req->keyword) {
             $query->where('username', 'LIKE', '%' . $req->keyword . '%');
         }
@@ -297,7 +356,8 @@ class UsersController extends AdminBaseController
                 'email' => $user->email,
                 'state' => $user->state,
                 'password'=>$user->password,
-                'created_at' => $user->created_at
+                'created_at' => $user->created_at,
+                'roles'=>$roles,
             ];
 
 
