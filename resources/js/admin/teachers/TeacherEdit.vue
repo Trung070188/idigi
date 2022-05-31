@@ -21,7 +21,7 @@
                         <button class="btn btn-primary ito-btn-add" data-dismiss="modal" style="margin-right: 5px" @click="closeModalDevice">
                            Cancel
                         </button>
-                        <button v-for="trung in user_device" v-if="trung.id==currId" class="btn btn-danger ito-btn-small" data-dismiss="modal" @click="remove_device(trung)" >Accept remove</button>
+                        <button v-for="device in user_device" v-if="trung.id==currId" class="btn btn-danger ito-btn-small" data-dismiss="modal" @click="remove_device(device)" >Accept remove</button>
                     </div>
                 </div>
             </div>
