@@ -347,14 +347,6 @@ class LessonsController extends AdminBaseController
             $zip->open($zip_file, \ZipArchive::CREATE | \ZipArchive::OVERWRITE);
             $structure = json_decode($lesson->structure, true);
 
-            if($structure['sublesson']){
-                foreach ($structure['sublesson']  as $key1 => $subLesson){
-                    $structure['sublesson'][$key1]['link'] = "";
-                }
-            }
-            $name = explode(':', $lesson->name);
-            $structure['codeLesson'] = @$name[0];
-            $structure['idLesson'] = $lesson->id;
 
             if ($lesson->inventories) {
                 foreach ($lesson->inventories as $inventory) {
@@ -369,21 +361,11 @@ class LessonsController extends AdminBaseController
                         $zip->addFile(public_path($inventory->virtual_path), $link);
                         $zip->setEncryptionName($link, \ZipArchive::EM_AES_256, $password);
                     }
-                    if($structure['sublesson']){
-                        foreach ($structure['sublesson'] as $key1 => $subLesson){
-                            if(@$subLesson['idSublesson'] == $inventory->old_id){
-                                $structure['sublesson'][$key1]['link'] = $link;
-                                $structure['sublesson'][$key1]['idSublesson'] = $link;
-                            }
-                        }
-                    }
+
 
                 }
             }
 
-            $structure['subLessons'] = @$structure['sublesson'];
-            $structure['idLesson '] = $lesson->id;
-            unset($structure['sublesson']);
             Storage::put($dir . '/lesson_detail'.$filename.'.txt', json_encode($structure));
 
             $zip->addFile(storage_path('app/' . $dir . '/lesson_detail'.$filename.'.txt'), 'lesson_detail.txt');
