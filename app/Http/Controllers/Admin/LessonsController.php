@@ -371,7 +371,7 @@ class LessonsController extends AdminBaseController
                     }
                     if($structure['sublesson']){
                         foreach ($structure['sublesson'] as $key1 => $subLesson){
-                            if(@$subLesson['sublesson'] == $inventory->old_id){
+                            if(@$subLesson['idSublesson'] == $inventory->old_id){
                                 $structure['sublesson'][$key1]['link'] = $link;
                                 $structure['sublesson'][$key1]['idSublesson'] = $link;
                             }
