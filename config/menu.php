@@ -37,6 +37,13 @@ return [
             ],
         ],
          ],
+    [
+
+            "name" => "Teacher",
+            "icon" => "	fas fa-landmark",
+             "group" => 1,
+            "url" => "/xadmin/users/index_teacher",
+    ],
 
 
     [
@@ -62,7 +69,7 @@ return [
     ],
     [
         "name" => "Manage devices",
-        "icon" => "fa fa-school",
+        "icon" => "	fas fa-laptop",
         'url' => '/xadmin/user_devices',
         'subs'=>[
             [

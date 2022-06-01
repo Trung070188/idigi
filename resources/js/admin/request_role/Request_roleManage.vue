@@ -36,8 +36,8 @@
                     </div>
 
                     <div class="card-body d-flex flex-column">
-                        <div v-text="'Showing '+ from +' to '+ to +' of '+ paginate.totalRecord +' entries'"
-                             v-if="entries.length > 0"></div>
+<!--                        <div v-text="'Showing '+ from +' to '+ to +' of '+ paginate.totalRecord +' entries'"-->
+<!--                             v-if="entries.length > 0"></div>-->
                         <table class=" table  table-head-custom table-head-bg table-vertical-center">
                             <thead>
                             <tr>
