@@ -15,8 +15,12 @@
                             <div class="row">
                                 <div class="col-md-3">
                                     <div class="user-info-left">
-
-                                        <div class="contact">
+                                        <div class="profile-avatar-upload">
+                                            <div class="profile-avatar-upload-c"
+                                                >
+                                            </div>
+                                        </div>
+                                        <div class="contact" style="margin-top: 20px">
                                             <a href="#" class="btn-block" >Change password</a>
                                             <a href="/xadmin/logout" class=" btn-block"> Log out</a>
 
@@ -201,6 +205,17 @@
         align-items: center;
         padding: 7px 15px 9px;
         gap: 6px;
+
+    }
+    .profile-avatar-upload-c{
+        margin-left: 20%;
+        width: 135px;
+        height: 135px;
+        border-radius: 100%;
+        background-color: #fff;
+        background-position: center center;
+        background-repeat: no-repeat;
+        background-size: cover;
 
     }
 
