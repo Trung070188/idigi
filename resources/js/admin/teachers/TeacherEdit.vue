@@ -18,7 +18,7 @@
                           <p>  Giáo viên sẽ không thể tiếp tục sử dụng thiết bị này để cài đặt bài giảng.</p>
                     </div>
                     <div class="form-group d-flex justify-content-between" style="margin: auto;margin-bottom: 20px">
-                        <button class="btn btn-primary ito-btn-add" data-dismiss="modal" style="margin-right: 5px" @click="closeModalDevice">
+                        <button class="btn btn-primary ito-btn-add" data-dismiss="modal" style="margin-right: 5px" data-bs-dismiss="modal">
                            Cancel
                         </button>
                         <button v-for="device in user_device" v-if="device.id==currId" class="btn btn-danger ito-btn-small" data-dismiss="modal" @click="remove_device(device)" >Accept remove</button>
@@ -169,9 +169,7 @@
                 $('#deviceConfirm').modal('show');
 
             },
-            closeModalDevice: function (){
-                $('#deviceConfirm').modal('hide');
-            },
+
             backIndex() {
 
                 window.location.href = '/xadmin/users/index';

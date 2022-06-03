@@ -56,4 +56,9 @@
         'action' => 'RequestRolesController',
         'name' => 'request_role',
     ],
+    [
+        'path' => '/app_versions/{action}',
+        'action' => 'AppVersionsController',
+        'name' => 'app_versions',
+    ],
 ];

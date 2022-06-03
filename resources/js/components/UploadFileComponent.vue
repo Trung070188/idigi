@@ -17,7 +17,7 @@
                     <div class="modal-content">
                         <div class="modal-header">
                             <h5 class="modal-title">Quản lí file</h5>
-                            <button type="button" class="close" @click="closeModal" data-dismiss="modal" aria-label="Close">
+                            <button type="button" class="close" data-bs-dismiss="modal" data-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
                         </div>
@@ -50,9 +50,7 @@ export default {
 
     },
     methods: {
-        closeModal: function (){
-            $(this.$refs.modal).modal('hide');
-        },
+
         clearInput: function (){
           this.value = '';
           this.emitInput();

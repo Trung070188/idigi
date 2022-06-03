@@ -94,4 +94,12 @@ return [
         'url' => '/xadmin/request_role/manage',
 
     ],
+
+    [
+        "name" => "Download Application",
+        "icon" => "fa fa-download",
+        "group" => 1,
+        'url' => '/xadmin/app_versions/index',
+
+    ],
 ];

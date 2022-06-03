@@ -48,7 +48,7 @@
                     <div class="modal-header">
                         <div style="text-align: center"><h2 class="modal-title">Add new role</h2></div>
 
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
@@ -74,7 +74,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-primary" @click="save">Save changes</button>
-                        <button type="button" class="btn btn-secondary"@click="closeModalRole">Close</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                     </div>
                 </div>
             </div>
@@ -113,9 +113,7 @@
                 $('#modal-role').modal('show');
                 this.curRole = role;
             },
-            closeModalRole: function (){
-                $('#modal-role').modal('hide');
-            },
+
 
             async load() {
                 let query = $router.getQuery();

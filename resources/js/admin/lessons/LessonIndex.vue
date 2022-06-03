@@ -158,7 +158,7 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title">Download Lesson</h5>
-                        <button type="button" class="close" @click="closeModal">
+                        <button type="button" class="close" data-bs-dismiss="modal">
                             &times;
                         </button>
                     </div>
@@ -248,9 +248,6 @@ export default {
             window.location.href = '/xadmin/lessons/downloadLesson?' + 'lessonIds=' + this.lessonIds + '&device=' + this.device;
         },
 
-        closeModal: function () {
-            $('#download-lesson').modal('hide');
-        },
         openModal: function () {
             if (this.lessons.length > 3) {
                 alert('Bạn chỉ được chọn tối đa 3 lesson');

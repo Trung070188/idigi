@@ -18,6 +18,7 @@ import User_deviceIndex from "./admin/user_devices/User_deviceIndex";
 import Approval_device from "./admin/user_devices/Approval_device";
 import Request_roleIndex from "./admin/request_role/Request_roleIndex";
 import Request_roleManage from "./admin/request_role/Request_roleManage";
+import App_versionIndex from "./admin/app_versions/App_versionIndex";
 
 export default {
     DashboardIndex,
@@ -40,6 +41,4 @@ export default {
     TeacherCreated,
     TeacherEdit,
     TeacherIndex,
-
-
-}
+    App_versionIndex,}
