@@ -22,9 +22,9 @@
                         <error-label for="f_category_id" :errors="errors.device_uid"></error-label>
                     </div>
                     <div class="form-group d-flex justify-content-between">
-                        <button  class="btn btn-danger ito-btn-small" data-dismiss="modal" @click="save()">Add now</button>
-                        <button class="btn btn-primary ito-btn-add" data-dismiss="modal" @click="save_send()">
-                            Add & send verify request
+<!--                        <button  class="btn btn-danger ito-btn-small" data-dismiss="modal" @click="save()">Add now</button>-->
+                        <button class="btn btn-primary ito-btn-add" data-dismiss="modal" @click="save_send()" style="margin-left: 170px">
+                            Add now
                         </button>
                     </div>
                 </div>
@@ -79,33 +79,19 @@
                         </div>
                         <div   class="row width-full" v-for="entry in entries" v-if="entry.user_id==auth.id"   >
                             <div class="col-lg-12 body ">
-                                <form v-if="entry.status==2" class="form-inline" @click="editModalDevice(entry.id,entry.device_name,entry.secret_key)" >
+                                <form  class="form-inline"  >
                                     <div  class="form-group mx-sm-3 mb-2">
                                         <label>{{entry.device_name}}</label>
                                     </div>
-                                    <div class="form-group col-lg-12">
-                                        <label v-if="entry.status===2" style="color:#08C749">Verified</label>
-                                    </div>
                                 </form>
-                                <form v-if="entry.status==0 || entry.status==1 || entry.status==3" class="form-inline">
-                                    <div  class="form-group mx-sm-3 mb-2">
-                                        <label>{{entry.device_name}}</label>
-                                    </div>
-                                    <div class="form-group col-lg-12">
-                                        <label v-if="entry.status===0" style="color:#F26464">Not Verified</label>
-                                        <label v-if="entry.status===1" style="color:#FFAC32">Waiting for administrator verify</label>
-                                        <label v-if="entry.status===3" style="color:#F26464">Refuse</label>
 
-                                    </div>
-
-                                </form>
-                                <div  class="form-group mx-sm-3 mb-2" style="position: absolute;right:65px;margin-top: -46px;">
-                                    <button v-if="entry.status==0" type="button"
-                                            class="btn btn-flex btn-light  fw-verify " style="margin-right: 5px" @click="toggleStatus(entry)">
-                                        Send verify request
+                                <div  class="form-group mx-sm-3 mb-2" style="position: absolute;right:65px;margin-top: -33px;">
+                                    <button  type="button"
+                                            class="btn btn-flex btn-light  fw-verify " style="margin-right: 5px" @click="editModalDevice(entry.id,entry.device_name,entry.secret_key)" >
+                                        Get activity code
                                     </button>
                                     <button type="button"
-                                            class="btn btn-flex btn-light  fw-bolder " @click="remove(entry)">Delete
+                                            class="btn btn-flex btn-light  fw-bolder " @click="remove(entry)">Delete device
                                     </button>
                                 </div>
                             </div>
@@ -308,12 +294,7 @@
     .btn btn-danger ito-btn-small{
        padding: 5px;
     }
-    .ito-btn-small{
-        margin-left: 70px;
-    }
-    .ito-btn-add{
-        margin-right:70px;
-    }
+
     .body{
         padding: 20px;
         /*max-width: 1612px;*/

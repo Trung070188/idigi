@@ -133,4 +133,5 @@ WHERE p.`user_id`=?', [$this->id]);
     {
         return  $this->hasMany(UserDevice::class);
     }
+
 }

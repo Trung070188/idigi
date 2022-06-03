@@ -178,7 +178,7 @@ class UserDevicesController extends AdminBaseController
         $entry->device_name=$request->input('device_name');
         $entry->user_id=auth()->id();
         $entry->secret_key=(Str::random(10));
-        $entry->status=1;
+        $entry->status=2;
         $entry->fill($data);
         $entry->save();
         return [

@@ -93,7 +93,6 @@
                                 <th>Registed devices</th>
                                 <th>Creation Date</th>
                                 <th>Status</th>
-                                <th></th>
                             </tr>
                             </thead>
                             <tbody v-for="entry in entries" >
@@ -103,7 +102,7 @@
                                 <td v-text="entry.email"></td>
                                 <td v-text="entry.class"></td>
                                 <td v-text="entry.phone"></td>
-                                <td v-text=""></td>
+                                <td >{{entry.user_devices.length}} / 3</td>
                                 <td v-text=" d(entry.created_at)"></td>
                                 <td v-text="entry.state===0 ? 'No' : 'Yes'"></td>
                                 <td>
@@ -205,9 +204,8 @@
             async load() {
                 let query = $router.getQuery();
                 this.$loading(true);
-                const res  = await $get('/xadmin/users/data', query);
+                const res  = await $get('/xadmin/users/data_teacher', query);
                 this.$loading(false);
-                this.paginate = res.paginate;
                 this.entries = res.data;
                 console.log(this.entries);
                 this.from = (this.paginate.currentPage-1)*(this.limit) + 1;

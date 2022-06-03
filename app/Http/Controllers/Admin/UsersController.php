@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 
 use App\Models\Role;
+use App\Models\School;
 use App\Models\UserDevice;
 use App\Models\UserRole;
 use Illuminate\Contracts\View\View;
@@ -335,7 +336,7 @@ class UsersController extends AdminBaseController
 
         $query->createdIn($req->created);
         $entries = $query->paginate();
-   ;
+
 
         $users = $entries->items();
         $data = [];
@@ -345,6 +346,7 @@ class UsersController extends AdminBaseController
             $roleNames = [];
             if ($roles) {
                 foreach ($roles as $role) {
+
                     $roleNames[] = $role->role_name;
                 }
             }
@@ -358,6 +360,69 @@ class UsersController extends AdminBaseController
                 'password'=>$user->password,
                 'created_at' => $user->created_at,
                 'roles'=>$roles,
+//                'devices'=>$devices,
+                'users'=>$users
+            ];
+
+
+        }
+        return [
+            'code' => 0,
+            'data' => $data,
+            'paginate' => [
+                'currentPage' => $entries->currentPage(),
+                'lastPage' => $entries->lastPage(),
+                'totalRecord' => $entries->count(),
+            ]
+        ];
+    }
+    public function data_teacher(Request $req)
+    {
+        $query = User::query()
+            ->with(['roles','user_devices'])
+            ->orderBy('id', 'ASC');
+        if ($req->keyword) {
+            $query->where('username', 'LIKE', '%' . $req->keyword . '%');
+        }
+        if ($req->role) {
+            $query->whereHas('roles', function ($q) use ($req) {
+                $q->where('role_name', 'LIKE', '%' . $req->role);
+            });
+        }
+        if ($req->username) {
+            $query->where('username', 'LIKE', '%' . $req->username);
+
+        }
+        if ($req->full_name) {
+            $query->where('full_name', 'LIKE', '%' . $req->full_name);
+        }
+        if ($req->email) {
+            $query->where('email', 'LIKE', '%' . $req->email);
+        }
+        if ($req->state) {
+            $query->where('state', 'LIKE', '%' . $req->state);
+        }
+
+        $query->createdIn($req->created);
+        $entries = $query->paginate();
+
+        $users = $entries->items();
+        $data = [];
+
+        foreach ($users as $user) {
+
+            $roles = $user->roles;
+           $user_devices=$user->user_devices;
+            $data[] = [
+                'id' => $user->id,
+                'username' => $user->username,
+                'full_name' => $user->full_name,
+                'email' => $user->email,
+                'state' => $user->state,
+                'password'=>$user->password,
+                'created_at' => $user->created_at,
+                'roles'=>$roles,
+                'user_devices'=>$user_devices,
             ];
 
 
