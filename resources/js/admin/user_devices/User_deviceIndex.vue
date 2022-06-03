@@ -72,26 +72,29 @@
             <div class="col-lg-12">
                 <div class="card card-custom card-stretch gutter-b">
                     <div class="card-body d-flex flex-column" style="height: 563px" >
-                        <div class="row" >
-                            <button type="button" class="col-lg-2 btn btn-danger modal-devices " @click="modalDevice()">
+                        <div v-for="entry in entries"  class="row" v-if="entry.id==auth.id">
+                            <button     v-if="entry.user_devices.length<3 " type="button" class="col-lg-2 btn btn-danger modal-devices " @click="modalDevice()">
+                                Add more device
+                            </button>
+                            <button  v-if="entry.user_devices.length>=3" type="button" class="col-lg-2 btn btn-danger modal-devices " @click="closeModal()">
                                 Add more device
                             </button>
                         </div>
-                        <div   class="row width-full" v-for="entry in entries" v-if="entry.user_id==auth.id"   >
-                            <div class="col-lg-12 body ">
+                        <div   class="row width-full" v-for="entry in entries" v-if="entry.id==auth.id">
+                            <div class="col-lg-12 body " v-for="device in entry.user_devices" >
                                 <form  class="form-inline"  >
                                     <div  class="form-group mx-sm-3 mb-2">
-                                        <label>{{entry.device_name}}</label>
+                                        <label>{{device.device_name}}</label>
                                     </div>
                                 </form>
 
                                 <div  class="form-group mx-sm-3 mb-2" style="position: absolute;right:65px;margin-top: -33px;">
                                     <button  type="button"
-                                            class="btn btn-flex btn-light  fw-verify " style="margin-right: 5px" @click="editModalDevice(entry.id,entry.device_name,entry.secret_key)" >
+                                            class="btn btn-flex btn-light  fw-verify " style="margin-right: 5px" @click="editModalDevice(device.id,device.device_name,device.secret_key)" >
                                         Get activity code
                                     </button>
                                     <button type="button"
-                                            class="btn btn-flex btn-light  fw-bolder " @click="remove(entry)">Delete device
+                                            class="btn btn-flex btn-light  fw-bolder " @click="remove(device)">Delete device
                                     </button>
                                 </div>
                             </div>
@@ -130,11 +133,6 @@
                 limit: 25,
                 from: 0,
                 to: 0,
-                paginate: {
-                    currentPage: 1,
-                    lastPage: 1,
-                    totalRecord: 0
-                },
                 entry: $json.entry || {
                 },
                 isLoading: false,
@@ -159,13 +157,11 @@
                 $('#editdeviceConfirm').modal('show');
             },
             modalDevice() {
-                if(this.entries.length<3)
-                {
                     $('#deviceConfirm').modal('show');
-                }
-                else {
-                    $('#deviceConfirmLimit').modal('show');
-                }
+            },
+            closeModal()
+            {
+                $('#deviceConfirmLimit').modal('show');
             },
             async load() {
 
@@ -174,10 +170,7 @@
                 const res  = await $get('/xadmin/user_devices/data', query);
                 this.$loading(false);
                 this.paginate = res.paginate;
-                this.entries = res.data;
-                console.log(this.entries);
-                this.from = (this.paginate.currentPage-1)*(this.limit) + 1;
-                this.to = (this.paginate.currentPage-1)*(this.limit) + this.entries.length;
+                this.entries = res.users;
             },
             async remove(entry) {
                 if (!confirm('Xóa bản ghi: ' + entry.id)) {
@@ -189,7 +182,6 @@
                 } else {
                     toastr.success(res.message);
                 }
-                $router.updateQuery({page: this.paginate.currentPage, _: Date.now()});
             },
             changeLimit() {
                 let params = $router.getQuery();
