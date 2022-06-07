@@ -314,12 +314,17 @@ class UsersController extends AdminBaseController
         $last_updated=User::query()->orderBy('updated_at','desc')->first()->updated_at;
         $roles=Role::with(['users'])->orderBy('role_name','ASC')->get();
         if ($req->keyword) {
-            $query->where( 'username','LIKE', '%' . $req->keyword . '%');
+            $query->where( 'username','LIKE', '%' . $req->keyword . '%')
+                ->orWhere('email','LIKE','%' . $req->keyword . '%')
+                ->orWhere('id','LIKE','%' . $req->keyword . '%')
+                ->orwhereHas('roles',function ($q) use ($req){
+                    $q->where('role_name', 'LIKE', '%' . $req->keyword . '%' );
+            });
         }
 
         if ($req->role) {
             $query->whereHas('roles', function ($q) use ($req) {
-                $q->where('id', 'LIKE', '%' . $req->role );
+                $q->where('role_name', 'LIKE', '%' . $req->role );
             });
         }
         if ($req->full_name) {

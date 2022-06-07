@@ -59,11 +59,11 @@
                                             <select required  class="form-control form-select"  v-model="filter.role" >
                                                 <option value="" disabled selected>Choose role</option>
                                                 <option value="0" >All</option>
-                                                <option  value="1">Super Administrator</option>
-                                                <option  value="2">Admin</option>
-                                                <option  value="3">Partner</option>
-                                                <option  value="4">Teacher</option>
-                                                <option  value="5">Student</option>
+                                                <option  value="Super Administrator">Super Administrator</option>
+                                                <option  value="Admin">Admin</option>
+                                                <option  value="Partner">Partner</option>
+                                                <option  value="Teacher">Teacher</option>
+                                                <option  value="Student">Student</option>
                                             </select>
                                         </div>
                                     </div>
