@@ -82,7 +82,7 @@
                                         </div>
                                     </div>
                                     <div style="margin: auto 0">
-                                        <button type="button" class="btn btn-primary" @click="doFilter()">Search</button>
+                                        <button type="button" class="btn btn-dark" @click="doFilter()">Search</button>
                                     </div>
 
                                 </form>
