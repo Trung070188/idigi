@@ -16,24 +16,29 @@
                                         <input @keydown.enter="doFilter('keyword', filter.keyword, $event)"
                                                v-model="filter.keyword"
                                                type="text"
-                                               class="form-control" placeholder="Tìm kiếm" value="">
+                                               style="width: 240px"
+                                               class="form-control" placeholder="Search ID,username,email,role..." value="">
                                     </div>
-                                    <div class="form-group mx-sm-3 mb-2">
+                                    <div class="form-group mx-sm-3 mb-4">
                                         <button type="button" style="margin-left: 10px"
                                                 @click="isShowFilter = !isShowFilter"
-                                                class="btn btn-primary"> Tìm kiếm mở rộng
-                                            <i class="fa fa-caret-down" v-if="!isShowFilter"></i>
-                                            <i class="fa fa-caret-up" v-if="isShowFilter" aria-hidden="true"></i>
+                                                class="btn btn-dark" v-if="isShowFilter" > Close Adventure search
+                                            <i style="margin-left: 5px" class="fas fa-times"></i>
+
+                                        </button>
+                                        <button type="button" style="margin-left: 10px"
+                                                @click="isShowFilter = !isShowFilter"
+                                                class="btn btn-dark" v-if="!isShowFilter"> Adventure search
+                                            <i class="fa fa-filter"  v-if="!isShowFilter" aria-hidden="true"></i>
 
                                         </button>
 
-
                                     </div>
-                                    <div class="form-group mx-sm-3 mb-2">
-                                        <button @click="filterClear()" type="button"
-                                                class="btn btn-flex btn-light  fw-bolder ">Clear
-                                        </button>
-                                    </div>
+<!--                                    <div class="form-group mx-sm-3 mb-4">-->
+<!--                                        <button @click="filterClear()" type="button"-->
+<!--                                                class="btn btn-flex btn-light  fw-bolder ">Resfesh List-->
+<!--                                        </button>-->
+<!--                                    </div>-->
 
 
                                 </form>
@@ -41,7 +46,7 @@
                                 <form class="col-lg-12" v-if="isShowFilter">
                                     <div class="row">
                                         <div class="form-group col-lg-3">
-                                            <label>Fullname </label>
+                                            <label>Full name </label>
                                             <input @keydown.enter="doFilter('full_name', filter.full_name, $event)" class="form-control" placeholder="Enter the full name" v-model="filter.full_name"/>
 
                                         </div>
@@ -51,18 +56,22 @@
                                         </div>
                                         <div class="form-group col-lg-3">
                                             <label>Role </label>
-                                            <select @keydown.enter="doFilter('role', filter.role, $event)" class="form-control"  v-model="filter.role" data-placeholder="Select a role">
-                                                <option  v-for="role in roles" v-bind:value="role.role_name">
-                                                    {{role.role_name}}
-                                                </option>
+                                            <select required  class="form-control form-select"  v-model="filter.role" >
+                                                <option value="" disabled selected>Choose role</option>
+                                                <option value="0" >All</option>
+                                                <option  value="1">Super Administrator</option>
+                                                <option  value="2">Admin</option>
+                                                <option  value="3">Partner</option>
+                                                <option  value="4">Teacher</option>
+                                                <option  value="5">Student</option>
                                             </select>
                                         </div>
                                     </div>
                                     <div class="row">
                                         <div class="form-group col-lg-3">
-                                            <label>Ngày tạo </label>
+                                            <label>Creation date </label>
                                             <Daterangepicker v-model="filter.created"
-                                                             placeholder="Ngày tạo"></Daterangepicker>
+                                                             placeholder="Creation date"></Daterangepicker>
                                         </div>
                                         <div class="form-group col-lg-3">
                                             <label>Active</label>
@@ -73,23 +82,38 @@
                                         </div>
                                     </div>
                                     <div style="margin: auto 0">
-                                        <button type="button" class="btn btn-primary" @click="doFilter()">Tìm kiếm</button>
+                                        <button type="button" class="btn btn-primary" @click="doFilter()">Search</button>
                                     </div>
+
                                 </form>
+
                             </div>
 
                         </div>
 
                     </div>
 
-                    <div class="card-body d-flex flex-column">
-                        <div v-text="'Showing '+ from +' to '+ to +' of '+ paginate.totalRecord +' entries'"
+
+                    <div class="card-body d-flex flex-column"  @click="filterClear()">
+                        <div>
+                              <span  style="float: right;margin-bottom: -20px">
+                                Resfesh List
+                                  <i class="fas fa-sync" @click="filterClear()"></i>
+                              </span>
+                        </div>
+                        <div>
+                              <span  style="float: right;margin-bottom: -20px;margin-right: 105px">
+                                Last update at {{d(last_updated)}}
+                              </span>
+                        </div>
+
+                        <div style="float: left" v-text="'Showing '+ from +' to '+ to +' of '+ paginate.totalRecord +' entries'"
                              v-if="entries.length > 0"></div>
                         <table class=" table  table-head-custom table-head-bg table-vertical-center">
                             <thead>
                             <tr>
-                                <th>ID</th>
-                                <th>Name</th>
+                                <th >ID</th>
+                                <th>Username</th>
                                 <th>FullName</th>
                                 <th>Email</th>
                                 <th>Role</th>
@@ -180,6 +204,7 @@
                     },
                 ],
                 roles:$json.roles || [],
+                last_updated:[],
                 entries: [],
                 filter:filter,
 
@@ -203,14 +228,16 @@
             //         window.location.href = '/xadmin/users/edit?id=' + id;
             //     }
             // },
+
             async load() {
+
                 let query = $router.getQuery();
                 this.$loading(true);
                 const res  = await $get('/xadmin/users/data', query);
                 this.$loading(false);
                 this.paginate = res.paginate;
-                this.entries = res.data;
-                console.log(this.entries);
+                this.entries = res.data.data;
+                this.last_updated=res.data.last_updated;
                 this.from = (this.paginate.currentPage-1)*(this.limit) + 1;
                 this.to = (this.paginate.currentPage-1)*(this.limit) + this.entries.length;
             },
@@ -268,5 +295,14 @@
 </script>
 
 <style scoped>
+    select:required:invalid {
+        color: #adadad;
+    }
+    option[value=""][disabled] {
+        display: none;
+    }
+    option {
+        color: black;
+    }
 
 </style>

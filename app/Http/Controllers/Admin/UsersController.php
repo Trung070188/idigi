@@ -7,6 +7,7 @@ use App\Models\Role;
 use App\Models\School;
 use App\Models\UserDevice;
 use App\Models\UserRole;
+use Carbon\Carbon;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -51,7 +52,6 @@ class UsersController extends AdminBaseController
         $title = 'Teacher';
         $component = 'TeacherIndex';
         $roles = Role::query()->orderBy('role_name')->get();
-
         $jsonData = [
             'roles' => $roles
         ];
@@ -310,28 +310,26 @@ class UsersController extends AdminBaseController
     {
         $query = User::query()
             ->with(['roles'])
-            ->orderBy('id', 'desc');
+            ->orderBy('id', 'ASC');
+        $last_updated=User::query()->orderBy('updated_at','desc')->first()->updated_at;
         $roles=Role::with(['users'])->orderBy('role_name','ASC')->get();
         if ($req->keyword) {
-            $query->where('username', 'LIKE', '%' . $req->keyword . '%');
+            $query->where( 'username','LIKE', '%' . $req->keyword . '%');
         }
+
         if ($req->role) {
             $query->whereHas('roles', function ($q) use ($req) {
-                $q->where('role_name', 'LIKE', '%' . $req->role);
+                $q->where('id', 'LIKE', '%' . $req->role );
             });
         }
-        if ($req->username) {
-            $query->where('username', 'LIKE', '%' . $req->username);
-
-        }
         if ($req->full_name) {
-            $query->where('full_name', 'LIKE', '%' . $req->full_name);
+            $query->where('full_name', 'LIKE', '%' . $req->full_name .'%');
         }
         if ($req->email) {
-            $query->where('email', 'LIKE', '%' . $req->email);
+            $query->where('email', 'LIKE', '%' . $req->email . '%');
         }
         if ($req->state) {
-            $query->where('state', 'LIKE', '%' . $req->state);
+            $query->where('state', 'LIKE', '%' . $req->state .'%');
         }
 
         $query->createdIn($req->created);
@@ -341,11 +339,22 @@ class UsersController extends AdminBaseController
         $users = $entries->items();
         $data = [];
 
+
+
         foreach ($users as $user) {
+
+
+
+
+
+
+
+
             $roles = $user->roles;
             $roleNames = [];
             if ($roles) {
                 foreach ($roles as $role) {
+
 
                     $roleNames[] = $role->role_name;
                 }
@@ -359,16 +368,19 @@ class UsersController extends AdminBaseController
                 'state' => $user->state,
                 'password'=>$user->password,
                 'created_at' => $user->created_at,
-                'roles'=>$roles,
-//                'devices'=>$devices,
-                'users'=>$users
-            ];
+                'updated_at'=>$user->updated_at,
 
+
+
+            ];
 
         }
         return [
             'code' => 0,
-            'data' => $data,
+            'data' =>[
+                'data' => $data,
+                'last_updated'=>$last_updated
+            ],
             'paginate' => [
                 'currentPage' => $entries->currentPage(),
                 'lastPage' => $entries->lastPage(),
@@ -394,7 +406,7 @@ class UsersController extends AdminBaseController
 
         }
         if ($req->full_name) {
-            $query->where('full_name', 'LIKE', '%' . $req->full_name);
+            $query->where('full_name', 'LIKE' . $req->full_name);
         }
         if ($req->email) {
             $query->where('email', 'LIKE', '%' . $req->email);
