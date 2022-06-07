@@ -47,6 +47,7 @@ class UsersController extends AdminBaseController
 
         return view('admin.layouts.vue', compact('title', 'component', 'jsonData'));
     }
+
     public function index_teacher(Request $request)
     {
         $title = 'Teacher';
@@ -76,6 +77,7 @@ class UsersController extends AdminBaseController
 
         return view('admin.layouts.vue', compact('title', 'component', 'jsonData'));
     }
+
     public function create_teacher(Request $req)
     {
         $component = 'TeacherCreated';
@@ -149,6 +151,7 @@ class UsersController extends AdminBaseController
         ];
         return view('admin.layouts.vue', compact('title', 'component', 'jsonData'));
     }
+
     public function edit_teacher(Request $req)
     {
         $id = $req->id;
@@ -157,7 +160,7 @@ class UsersController extends AdminBaseController
         if (!$entry) {
             throw new NotFoundHttpException();
         }
-        $user_device=UserDevice::query()->orderBy('id','DESC')->get();
+        $user_device = UserDevice::query()->orderBy('id', 'DESC')->get();
 
         /**
          * @var  User $entry
@@ -167,7 +170,7 @@ class UsersController extends AdminBaseController
         $component = 'TeacherEdit';
         $jsonData = [
             'entry' => $entry,
-            'user_device'=>$user_device
+            'user_device' => $user_device
         ];
         return view('admin.layouts.vue', compact('title', 'component', 'jsonData'));
     }
@@ -190,6 +193,7 @@ class UsersController extends AdminBaseController
             'message' => 'Đã xóa'
         ];
     }
+
     public function remove_device(Request $req)
     {
         $id = $req->id;
@@ -221,7 +225,7 @@ class UsersController extends AdminBaseController
             'password' => '|max:191|confirmed',
         ];
 
-        if(!isset($data['id'])){
+        if (!isset($data['id'])) {
             $rules['password'] = 'required|max:191|confirmed';
         }
         $v = Validator::make($data, $rules);
@@ -242,7 +246,7 @@ class UsersController extends AdminBaseController
                     'message' => 'Không tìm thấy',
                 ];
             }
-            if($data['password']){
+            if ($data['password']) {
                 $data['password'] = Hash::make($data['password']);
             }
 
@@ -277,6 +281,7 @@ class UsersController extends AdminBaseController
             ];
         }
     }
+
     /**
      * @param Request $req
      */
@@ -311,30 +316,30 @@ class UsersController extends AdminBaseController
         $query = User::query()
             ->with(['roles'])
             ->orderBy('id', 'ASC');
-        $last_updated=User::query()->orderBy('updated_at','desc')->first()->updated_at;
-        $roles=Role::with(['users'])->orderBy('role_name','ASC')->get();
+        $last_updated = User::query()->orderBy('updated_at', 'desc')->first()->updated_at;
+        $roles = Role::with(['users'])->orderBy('role_name', 'ASC')->get();
         if ($req->keyword) {
-            $query->where( 'username','LIKE', '%' . $req->keyword . '%')
-                ->orWhere('email','LIKE','%' . $req->keyword . '%')
-                ->orWhere('id','LIKE','%' . $req->keyword . '%')
-                ->orwhereHas('roles',function ($q) use ($req){
-                    $q->where('role_name', 'LIKE', '%' . $req->keyword . '%' );
-            });
+            $query->where('username', 'LIKE', '%' . $req->keyword . '%')
+                ->orWhere('email', 'LIKE', '%' . $req->keyword . '%')
+                ->orWhere('id', 'LIKE', '%' . $req->keyword . '%')
+                ->orwhereHas('roles', function ($q) use ($req) {
+                    $q->where('role_name', 'LIKE', '%' . $req->keyword . '%');
+                });
         }
 
         if ($req->role) {
             $query->whereHas('roles', function ($q) use ($req) {
-                $q->where('role_name', 'LIKE', '%' . $req->role );
+                $q->where('role_name', 'LIKE', '%' . $req->role);
             });
         }
         if ($req->full_name) {
-            $query->where('full_name', 'LIKE', '%' . $req->full_name .'%');
+            $query->where('full_name', 'LIKE', '%' . $req->full_name . '%');
         }
         if ($req->email) {
             $query->where('email', 'LIKE', '%' . $req->email . '%');
         }
         if ($req->state) {
-            $query->where('state', 'LIKE', '%' . $req->state .'%');
+            $query->where('state', 'LIKE', '%' . $req->state . '%');
         }
 
         $query->createdIn($req->created);
@@ -343,23 +348,11 @@ class UsersController extends AdminBaseController
 
         $users = $entries->items();
         $data = [];
-
-
-
         foreach ($users as $user) {
-
-
-
-
-
-
-
-
             $roles = $user->roles;
             $roleNames = [];
             if ($roles) {
                 foreach ($roles as $role) {
-
 
                     $roleNames[] = $role->role_name;
                 }
@@ -371,20 +364,17 @@ class UsersController extends AdminBaseController
                 'full_name' => $user->full_name,
                 'email' => $user->email,
                 'state' => $user->state,
-                'password'=>$user->password,
+                'password' => $user->password,
                 'created_at' => $user->created_at,
-                'updated_at'=>$user->updated_at,
-
-
-
+                'updated_at' => $user->updated_at,
             ];
 
         }
         return [
             'code' => 0,
-            'data' =>[
+            'data' => [
                 'data' => $data,
-                'last_updated'=>$last_updated
+                'last_updated' => $last_updated
             ],
             'paginate' => [
                 'currentPage' => $entries->currentPage(),
@@ -393,10 +383,11 @@ class UsersController extends AdminBaseController
             ]
         ];
     }
+
     public function data_teacher(Request $req)
     {
         $query = User::query()
-            ->with(['roles','user_devices'])
+            ->with(['roles', 'user_devices'])
             ->orderBy('id', 'ASC');
         if ($req->keyword) {
             $query->where('username', 'LIKE', '%' . $req->keyword . '%');
@@ -429,17 +420,17 @@ class UsersController extends AdminBaseController
         foreach ($users as $user) {
 
             $roles = $user->roles;
-           $user_devices=$user->user_devices;
+            $user_devices = $user->user_devices;
             $data[] = [
                 'id' => $user->id,
                 'username' => $user->username,
                 'full_name' => $user->full_name,
                 'email' => $user->email,
                 'state' => $user->state,
-                'password'=>$user->password,
+                'password' => $user->password,
                 'created_at' => $user->created_at,
-                'roles'=>$roles,
-                'user_devices'=>$user_devices,
+                'roles' => $roles,
+                'user_devices' => $user_devices,
             ];
 
 
@@ -454,6 +445,7 @@ class UsersController extends AdminBaseController
             ]
         ];
     }
+
     public function export()
     {
         $keys = [
