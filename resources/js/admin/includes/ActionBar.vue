@@ -36,7 +36,7 @@
                     </div>
                 </div>
                 <div class="flex-1 text-right" v-else-if="type==='index'">
-                    <a :href="createUrl" class="btn btn-dark " v-if="createUrl">
+                    <a :href="createUrl" class="btn btn-primary " v-if="createUrl">
                         Create new
                     </a>
 
