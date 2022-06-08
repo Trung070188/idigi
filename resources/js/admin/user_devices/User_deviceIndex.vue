@@ -64,11 +64,14 @@
                     <h2 style="margin-top: 30px" class="popup-title success">Thông tin device</h2>
                     <div class="content">
                         <label>Device Name</label>
-                        <input type="text" class="form-control " placeholder="Device name" aria-label="" style="margin-bottom: 10px" aria-describedby="basic-addon1" v-model="editDevice" disabled>
+                        <input type="text" class="form-control " placeholder="Device name" aria-label=""
+                               style="margin-bottom: 10px" aria-describedby="basic-addon1" v-model="editDevice"
+                               disabled>
                         <error-label for="f_category_id" :errors="errors.device_name"></error-label>
                         <div>
                             <button  type="button" class="generate" v-on:click="genToken"> Generate Key</button>
                         </div>
+                        <div style="text-align:right"><button type="button" v-if="token" class="btn-primary" v-on:click="copyTextToken" title="Copy Token"> Copy</button></div>
 
                         <div v-if="token" style="font-size: 16px; word-wrap: break-word;white-space: pre-wrap;word-break: normal;">{{token}}</div>
                     </div>
@@ -163,6 +166,7 @@
         data() {
             return {
                 curDevice:{},
+                isHidden:false,
                 token:'',
                 secret_key:"",
                 device_name:"",
@@ -317,6 +321,9 @@
 
                 }
 
+            },
+            copyTextToken() {
+                navigator.clipboard.writeText(this.token);
             },
             onPageChange(page) {
                 $router.updateQuery({page: page})
