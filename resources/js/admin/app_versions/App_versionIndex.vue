@@ -258,6 +258,7 @@ export default {
                 toastr.error(res.message);
             } else {
                 this.errors = {};
+                $router.on('/', this.load).init();
                 toastr.success(res.message);
 
             }
@@ -282,7 +283,7 @@ export default {
             for (let i = 0; i < files.length; i++) {
                 formData.append('file_' + i, files[i]);
             }
-            let self = this;
+
             $('#overlay').show();
             let res = await fetch('/xadmin/app_versions/save', {
                 method: 'POST',
@@ -295,7 +296,7 @@ export default {
 
             $('#overlay').hide();
             if (res.code) {
-                self.errors = res.errors;
+                this.errors = res.errors;
             } else {
                 $('#uploadApp').modal('hide');
                 toastr.success(res.message);
