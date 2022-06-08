@@ -105,15 +105,15 @@ class AppVersionsController extends AdminBaseController
             return ['code' => 405, 'message' => 'Method not allow'];
         }
 
-        $data = $req->get('entry');
 
         $rules = [
-            'name' => 'required|max:45',
-            'url' => 'max:255',
-            'path' => 'max:255',
+            'name' => 'required',
+            'type' => 'required',
+            'file_0' => 'required',
+            'release_date' => 'required',
         ];
 
-        $v = Validator::make($data, $rules);
+        $v = Validator::make($req->all(), $rules);
 
         if ($v->fails()) {
             return [
@@ -122,37 +122,43 @@ class AppVersionsController extends AdminBaseController
             ];
         }
 
-        /**
-         * @var  AppVersion $entry
-         */
-        if (isset($data['id'])) {
-            $entry = AppVersion::find($data['id']);
-            if (!$entry) {
-                return [
-                    'code' => 3,
-                    'message' => 'Không tìm thấy',
-                ];
-            }
+        //Upload File
+        $file0 = $_FILES['file_0'];
 
-            $entry->fill($data);
-            $entry->save();
+        $y = date('Y');
+        $m = date('m');
 
-            return [
-                'code' => 0,
-                'message' => 'Đã cập nhật',
-                'id' => $entry->id
-            ];
-        } else {
-            $entry = new AppVersion();
-            $entry->fill($data);
-            $entry->save();
+        $dir = public_path("files/app_version/{$y}/{$m}");
 
-            return [
-                'code' => 0,
-                'message' => 'Đã thêm',
-                'id' => $entry->id
-            ];
+        if (!is_dir($dir)) {
+            mkdir($dir, 0755, true);
         }
+
+        $info = pathinfo($file0['name']);
+        $extension = strtolower($info['extension']);
+
+        $hash = sha1(uniqid());
+        $newFilePath = $dir.'/'.$hash.'.'.$extension;
+        $ok = move_uploaded_file($file0['tmp_name'], $newFilePath);
+        $newUrl = url("/files/app_version/{$y}/{$m}/{$hash}.{$extension}");
+
+        $data = [
+            'name' =>$req->name,
+            'path' =>$newFilePath,
+            'url' => $newUrl,
+            'type' => $req->type,
+            'release_date' => $req->release_date
+        ];
+
+        $entry = new AppVersion();
+        $entry->fill($data);
+        $entry->save();
+
+        return [
+            'code' => 0,
+            'message' => 'Đã thêm',
+            'id' => $entry->id
+        ];
     }
 
     /**
@@ -206,5 +212,29 @@ class AppVersionsController extends AdminBaseController
             ]
         ];
     }
+
+    public function setDefaultVersion(Request  $req){
+        if (!$req->isMethod('POST')) {
+            return ['code' => 405, 'message' => 'Method not allow'];
+        }
+
+        $entry = AppVersion::find($req->id);
+        if (!$entry) {
+            return [
+                'code' => 3,
+                'message' => 'Không tìm thấy',
+            ];
+        }
+
+        $entry->fill(['is_default' => $req->is_default]);
+        $entry->save();
+
+        return [
+            'code' => 0,
+            'message' => 'Đã cập nhật',
+            'id' => $entry->id
+        ];
+    }
+
 
 }
