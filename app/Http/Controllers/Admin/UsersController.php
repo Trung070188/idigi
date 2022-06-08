@@ -44,10 +44,8 @@ class UsersController extends AdminBaseController
         $jsonData = [
             'roles' => $roles
         ];
-
         return view('admin.layouts.vue', compact('title', 'component', 'jsonData'));
     }
-
     public function index_teacher(Request $request)
     {
         $title = 'Teacher';
@@ -56,10 +54,8 @@ class UsersController extends AdminBaseController
         $jsonData = [
             'roles' => $roles
         ];
-
         return view('admin.layouts.vue', compact('title', 'component', 'jsonData'));
     }
-
     /**
      * Create new entry
      * @uri  /xadmin/users/create
@@ -74,7 +70,6 @@ class UsersController extends AdminBaseController
         $jsonData = [
             'roles' => $roles
         ];
-
         return view('admin.layouts.vue', compact('title', 'component', 'jsonData'));
     }
 
@@ -193,7 +188,6 @@ class UsersController extends AdminBaseController
             'message' => 'Đã xóa'
         ];
     }
-
     public function remove_device(Request $req)
     {
         $id = $req->id;
@@ -207,7 +201,6 @@ class UsersController extends AdminBaseController
             'message' => 'Đã xóa'
         ];
     }
-
     /**
      * @uri  /xadmin/users/save
      * @return  array
@@ -224,9 +217,8 @@ class UsersController extends AdminBaseController
             'email' => 'required|max:191|email',
             'password' => '|max:191|confirmed',
         ];
-
         if (!isset($data['id'])) {
-            $rules['password'] = 'required|max:191|confirmed';
+//            $rules['password'] = 'required|max:191|confirmed';
         }
         $v = Validator::make($data, $rules);
 
@@ -236,7 +228,6 @@ class UsersController extends AdminBaseController
                 'errors' => $v->errors()
             ];
         }
-
         if (isset($data['id'])) {
             $entry = User::find($data['id']);
 
@@ -246,9 +237,9 @@ class UsersController extends AdminBaseController
                     'message' => 'Không tìm thấy',
                 ];
             }
-            if ($data['password']) {
-                $data['password'] = Hash::make($data['password']);
-            }
+//            if ($data['password']) {
+//                $data['password'] = Hash::make($data['password']);
+//            }
 
             $entry->fill($data);
             $entry->save();
@@ -281,7 +272,6 @@ class UsersController extends AdminBaseController
             ];
         }
     }
-
     /**
      * @param Request $req
      */
@@ -296,7 +286,6 @@ class UsersController extends AdminBaseController
                 'message' => 'Not Found'
             ];
         }
-
         $entry->status = $req->status ? 1 : 0;
         $entry->save();
 
@@ -305,7 +294,6 @@ class UsersController extends AdminBaseController
             'message' => 'Đã lưu'
         ];
     }
-
     /**
      * Ajax data for index page
      * @uri  /xadmin/users/data
@@ -326,7 +314,6 @@ class UsersController extends AdminBaseController
                     $q->where('role_name', 'LIKE', '%' . $req->keyword . '%');
                 });
         }
-
         if ($req->role) {
             $query->whereHas('roles', function ($q) use ($req) {
                 $q->where('role_name', 'LIKE', '%' . $req->role);
@@ -341,11 +328,8 @@ class UsersController extends AdminBaseController
         if ($req->state) {
             $query->where('state', 'LIKE', '%' . $req->state . '%');
         }
-
         $query->createdIn($req->created);
         $entries = $query->paginate();
-
-
         $users = $entries->items();
         $data = [];
         foreach ($users as $user) {
@@ -368,7 +352,6 @@ class UsersController extends AdminBaseController
                 'created_at' => $user->created_at,
                 'updated_at' => $user->updated_at,
             ];
-
         }
         return [
             'code' => 0,
@@ -383,7 +366,6 @@ class UsersController extends AdminBaseController
             ]
         ];
     }
-
     public function data_teacher(Request $req)
     {
         $query = User::query()
@@ -399,7 +381,6 @@ class UsersController extends AdminBaseController
         }
         if ($req->username) {
             $query->where('username', 'LIKE', '%' . $req->username);
-
         }
         if ($req->full_name) {
             $query->where('full_name', 'LIKE' . $req->full_name);
@@ -410,15 +391,11 @@ class UsersController extends AdminBaseController
         if ($req->state) {
             $query->where('state', 'LIKE', '%' . $req->state);
         }
-
         $query->createdIn($req->created);
         $entries = $query->paginate();
-
         $users = $entries->items();
         $data = [];
-
         foreach ($users as $user) {
-
             $roles = $user->roles;
             $user_devices = $user->user_devices;
             $data[] = [
@@ -432,8 +409,6 @@ class UsersController extends AdminBaseController
                 'roles' => $roles,
                 'user_devices' => $user_devices,
             ];
-
-
         }
         return [
             'code' => 0,
@@ -445,7 +420,6 @@ class UsersController extends AdminBaseController
             ]
         ];
     }
-
     public function export()
     {
         $keys = [
@@ -458,9 +432,7 @@ class UsersController extends AdminBaseController
             'state' => ['G', 'state'],
             'remember_token' => ['H', 'remember_token'],
         ];
-
         $query = User::query()->orderBy('id', 'desc');
-
         $entries = $query->paginate();
         $spreadsheet = new Spreadsheet();
         $sheet = $spreadsheet->getActiveSheet();
@@ -473,8 +445,6 @@ class UsersController extends AdminBaseController
                 $sheet->setCellValue($c . "1", $n);
             }
         }
-
-
         foreach ($entries as $index => $entry) {
             $idx = $index + 2;
             foreach ($keys as $key => $v) {

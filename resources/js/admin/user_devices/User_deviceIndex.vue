@@ -3,6 +3,29 @@
         <ActionBar type="index"
                    :breadcrumbs="breadcrumbs"
                    title="User Device"/>
+        <div class="modal fade" style="margin-right:50px " id="sentConfirm" tabindex="-1" role="dialog"
+             aria-labelledby="sentConfirm"
+             aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered popup-main-1" role="document"
+                 style="max-width: 500px;">
+                <div class="modal-content box-shadow-main paymment-status" style="margin-right:20px; left:140px">
+                    <div class="close-popup" data-dismiss="modal"></div>
+                    <h3 class="popup-title success" style="margin-top: 20px">Delete device</h3>
+                    <div class="content" style="text-align: center;margin: 0px">
+                        <p>Yêu cầu xóa thiết bị khỏi danh sách cần có phê duyệt của Admin.</p>
+                        <p > Bạn có muốn gửi yêu cầu tới Admin không? </p>
+                    </div>
+                    <div  class="form-group d-flex justify-content-between" >
+                        <button  class="btn btn-dark ito-btn-small" data-dismiss="modal" @click="Cancel()" style="margin-left: 110px">Cancel</button>
+
+                            <button   class="btn btn-light ito-btn-add"  data-dismiss="modal"  style="margin-right: 150px" @click="save">
+                                Send request
+                            </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div class="modal fade" style="margin-right:50px " id="deviceConfirm" tabindex="-1" role="dialog"
              aria-labelledby="deviceConfirm"
              aria-hidden="true">
@@ -23,7 +46,7 @@
                     </div>
                     <div class="form-group d-flex justify-content-between">
 <!--                        <button  class="btn btn-danger ito-btn-small" data-dismiss="modal" @click="save()">Add now</button>-->
-                        <button class="btn btn-primary ito-btn-add" data-dismiss="modal" @click="save_send()" style="margin-left: 170px">
+                        <button class="btn btn-dark ito-btn-add" data-dismiss="modal" @click="save_send()" style="margin-left: 170px">
                             Add now
                         </button>
                     </div>
@@ -73,10 +96,10 @@
                 <div class="card card-custom card-stretch gutter-b">
                     <div class="card-body d-flex flex-column" style="height: 563px" >
                         <div v-for="entry in entries"  class="row" v-if="entry.id==auth.id">
-                            <button     v-if="entry.user_devices.length<3 " type="button" class="col-lg-2 btn btn-danger modal-devices " @click="modalDevice()">
+                            <button     v-if="entry.user_devices.length<3 " type="button" class="col-lg-2 btn btn-dark modal-devices " @click="modalDevice()">
                                 Add more device
                             </button>
-                            <button  v-if="entry.user_devices.length>=3" type="button" class="col-lg-2 btn btn-danger modal-devices " @click="closeModal()">
+                            <button  v-if="entry.user_devices.length>=3" type="button" class="col-lg-2 btn btn-dark modal-devices " @click="closeModal()">
                                 Add more device
                             </button>
                         </div>
@@ -88,14 +111,33 @@
                                     </div>
                                 </form>
 
-                                <div  class="form-group mx-sm-3 mb-2" style="position: absolute;right:65px;margin-top: -33px;">
+                                <div  class="form-group mx-sm-3 mb-2" style="position: absolute;right:65px;margin-top: -33px;" v-if="device.status==1">
+
+                                       <button type="button"
+                                               class="btn btn-flex btn-dark  fw-bolder " v-for="role in entry.roles"  v-if="role.id!==5"  @click="remove(device)">Delete device
+                                       </button>
+                                       <span v-for="role in entry.roles" v-if="role.id==5"
+                                               style="color: #f1c40f;margin-right: 5px" ><i class="fas fa-exclamation-circle" style="color: #f1c40f"></i> Delete request sent
+                                       </span>
                                     <button  type="button"
-                                            class="btn btn-flex btn-light  fw-verify " style="margin-right: 5px" @click="editModalDevice(device.id,device.device_name,device.secret_key)" >
+                                             class="btn btn-flex btn-dark  fw-verify " style="margin-right: 5px" @click="editModalDevice(device.id,device.device_name,device.secret_key)" >
                                         Get activity code
                                     </button>
-                                    <button type="button"
-                                            class="btn btn-flex btn-light  fw-bolder " @click="remove(device)">Delete device
+
+                                </div>
+                                <div  class="form-group mx-sm-3 mb-2" style="position: absolute;right:65px;margin-top: -33px;" v-if="device.status!==1">
+                                    <button  type="button"
+                                             class="btn btn-flex btn-dark  fw-verify " style="margin-right: 5px" @click="editModalDevice(device.id,device.device_name,device.secret_key)" >
+                                        Get activity code
                                     </button>
+
+                                    <button type="button"
+                                            class="btn btn-flex btn-dark  fw-bolder " v-for="role in entry.roles"  v-if="role.id!==5"  @click="remove(device)">Delete device
+                                    </button>
+                                    <button v-for="role in entry.roles" v-if="role.id==5" type="button"
+                                            class="btn btn-flex btn-dark  fw-bolder " @click="Sent(device)">Delete device
+                                    </button>
+
                                 </div>
                             </div>
                         </div>
@@ -120,6 +162,7 @@
         components: {ActionBar},
         data() {
             return {
+                curDevice:{},
                 token:'',
                 secret_key:"",
                 device_name:"",
@@ -143,6 +186,15 @@
             $router.on('/', this.load).init();
         },
         methods: {
+
+                Sent: function (device = {}){
+                    $('#sentConfirm').modal('show');
+                    this.curDevice = device;
+                },
+            Cancel()
+            {
+                $('#sentConfirm').modal('hide');
+            },
             async genToken(){
                     const res  = await $post('/xadmin/user_devices/generateToken', {device_id: this.currId});
                     this.token = res.token;
@@ -192,7 +244,7 @@
             async save() {
                 this.isLoading = true;
                 const res = await $post('/xadmin/user_devices/save', {
-                    entry: this.entry,
+                    entry: this.curDevice,
                 }, false);
                 console.log(res);
                 this.isLoading = false;

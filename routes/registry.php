@@ -56,4 +56,9 @@
         'action' => 'RequestRolesController',
         'name' => 'request_role',
     ],
+    [
+        'path' => '/notifications/{action}',
+        'action' => 'NotificationsController',
+        'name' => 'notifications',
+    ],
 ];

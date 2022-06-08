@@ -31,7 +31,7 @@
                                         <input class="form-control" v-model="entry.email">
                                         <error-label for="f_category_id" :errors="errors.email"></error-label>
                                     </div>
-                                    <div class="form-group  col-sm-4">
+                                    <div v-if="entry.id==null" class="form-group  col-sm-4">
                                         <label>Password <span class="text-danger">*</span></label>
                                         <input :type="showPass ? 'text' : 'password'" class="form-control"
                                                ref="password" v-model="entry.password">
@@ -39,7 +39,7 @@
                                         <error-label for="f_category_id" :errors="errors.password"></error-label>
                                     </div>
 
-                                    <div class="form-group  col-sm-4">
+                                    <div v-if="entry.id==null" class="form-group  col-sm-4">
                                         <label>Confirm your password <span class="text-danger">*</span></label>
                                         <input class="form-control" :type="showConfirm ? 'text' : 'password'"
                                                v-model="entry.password_confirmation">

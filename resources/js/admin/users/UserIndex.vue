@@ -17,7 +17,7 @@
                                                v-model="filter.keyword"
                                                type="text"
                                                style="width: 240px"
-                                               class="form-control" placeholder="Search ID,username,email,role..."
+                                               class="form-control " placeholder="Search ID,username,email,role..."
                                                value="">
                                     </div>
                                     <div class="form-group mx-sm-3 mb-4">
@@ -61,7 +61,7 @@
                                         </div>
                                         <div class="form-group col-lg-3">
                                             <label>Role </label>
-                                            <select required class="form-control form-select" v-model="filter.role">
+                                            <select @keydown.enter="doFilter('role', filter.role, $event)" required class="form-control form-select" v-model="filter.role">
                                                 <option value="" disabled selected>Choose role</option>
                                                 <option value="0">All</option>
                                                 <option value="Super Administrator">Super Administrator</option>
@@ -99,11 +99,11 @@
                     </div>
 
 
-                    <div class="card-body d-flex flex-column" @click="filterClear()">
-                        <div>
-                              <span style="float: right;margin-bottom: -20px">
+                    <div class="card-body d-flex flex-column">
+                        <div style="position: absolute;margin-left: 90.5%">
+                              <span >
                                 Resfesh List
-                                  <i class="fas fa-sync" @click="filterClear()"></i>
+                                  <i  class="fas fa-sync" @click="filterClear()"></i>
                               </span>
                         </div>
                         <div>
