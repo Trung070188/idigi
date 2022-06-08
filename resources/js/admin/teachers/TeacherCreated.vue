@@ -22,19 +22,19 @@
                                     </div>
                                     <div class="form-group  col-sm-4">
                                         <label>Class <span class="text-danger">*</span></label>
-                                        <input class="form-control" v-model="entry.full_name">
+                                        <input class="form-control" v-model="entry.class">
 
-                                        <error-label for="f_category_id" :errors="errors.full_name"></error-label>
+                                        <error-label for="f_category_id" :errors="errors.class"></error-label>
                                     </div>
                                     <div class="form-group  col-sm-4">
                                         <label>School <span class="text-danger">*</span></label>
-                                        <input class="form-control" v-model="entry.email">
-                                        <error-label for="f_category_id" :errors="errors.email"></error-label>
+                                        <input class="form-control" >
+                                        <error-label for="f_category_id" ></error-label>
                                     </div>
                                     <div class="form-group  col-sm-4">
                                         <label>Phone number <span class="text-danger">*</span></label>
-                                        <input class="form-control" v-model="entry.email">
-                                        <error-label for="f_category_id" :errors="errors.email"></error-label>
+                                        <input class="form-control" v-model="entry.phone">
+                                        <error-label for="f_category_id" :errors="errors.phone"></error-label>
                                     </div>
                                     <div class="form-group  col-sm-4">
                                         <label>Email <span class="text-danger">*</span></label>
@@ -53,12 +53,9 @@
                         <div>
                             <button type="reset" @click="save()" class="btn btn-primary mr-2">Create new teacher</button>
                             <button type="reset" @click="backIndex()" class="btn btn-secondary">Cancel</button>
-                            <!--                            <label style="margin-left: 20px">Thông tin đăng nhập và mật khẩu sẽ được gửi tới người dùng
-                                                            qua email.</label>-->
                         </div>
                     </div>
                 </div>
-
             </div>
 
         </div>
@@ -110,7 +107,7 @@
             },
             async save() {
                 this.isLoading = true;
-                const res = await $post('/xadmin/users/save', {entry: this.entry, roles: this.roles}, false);
+                const res = await $post('/xadmin/users/save_teacher', {entry: this.entry, roles: this.roles}, false);
                 this.isLoading = false;
                 if (res.errors) {
                     this.errors = res.errors;

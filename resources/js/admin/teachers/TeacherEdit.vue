@@ -88,7 +88,7 @@
                                 <td v-text="device.id"></td>
                                 <td v-text="device.device_name"></td>
                                 <td v-text="device.device_uid"></td>
-                                <td v-text="device.created_at"></td>
+                                <td v-text="d(device.created_at)"></td>
                                 <td>
                                     <a @click="modalDevice(device.id)" href="javascript:;" class="btn-trash deleted"><i
                                         class="fa fa-trash mr-1 deleted"></i></a>

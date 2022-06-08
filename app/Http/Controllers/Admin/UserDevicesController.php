@@ -178,7 +178,7 @@ class UserDevicesController extends AdminBaseController
         $entry->device_name=$request->input('device_name');
         $entry->user_id=auth()->id();
         $entry->secret_key=(Str::random(10));
-        $entry->status=1;
+        $entry->status=2;
         $entry->fill($data);
         $entry->save();
         return [
@@ -241,21 +241,10 @@ class UserDevicesController extends AdminBaseController
     * @return  array
     */
     public function data(Request $req) {
-        $count_user=auth()->id();
-        $query = UserDevice::query()
-            ->where('user_id',$count_user)
-            ->orderBy('id', 'desc');
-
-
-        $entries = $query->paginate();
-
+        $users=User::with(['user_devices','roles'])->orderBy('username','ASC')->get();
         return [
             'code' => 0,
-            'data' => $entries->items(),
-            'paginate' => [
-                'currentPage' => $entries->currentPage(),
-                'lastPage' => $entries->lastPage(),
-            ]
+            'users'=>$users,
         ];
     }
     public function data_approval(Request $req) {

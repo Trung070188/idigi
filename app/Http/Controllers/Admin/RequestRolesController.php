@@ -235,7 +235,7 @@ class RequestRolesController extends AdminBaseController
         $users=User::with(['request_roles'])->orderBy('username','ASC')->get();
 
         if ($req->keyword) {
-            //$query->where('title', 'LIKE', '%' . $req->keyword. '%');
+//            $query->where('title', 'LIKE', '%' . $req->keyword. '%');
         }
 
         $query->createdIn($req->created);

@@ -1,5 +1,5 @@
 <template>
-    <div class="container-fluid" >
+    <div class="container-fluid">
         <ActionBar type="index"
                    createUrl="/xadmin/users/create_teacher"
                    :breadcrumbs="breadcrumbs"
@@ -16,50 +16,54 @@
                                         <input @keydown.enter="doFilter('keyword', filter.keyword, $event)"
                                                v-model="filter.keyword"
                                                type="text"
-                                               class="form-control" placeholder="Tìm kiếm" value="">
+                                               class="form-control" placeholder="Search..." value="">
                                     </div>
-                                    <div class="form-group mx-sm-3 mb-2">
+                                    <div class="form-group mx-sm-3 mb-4">
                                         <button type="button" style="margin-left: 10px"
                                                 @click="isShowFilter = !isShowFilter"
-                                                class="btn btn-primary"> Tìm kiếm mở rộng
-                                            <i class="fa fa-caret-down" v-if="!isShowFilter"></i>
-                                            <i class="fa fa-caret-up" v-if="isShowFilter" aria-hidden="true"></i>
-
+                                                class="btn btn-dark" v-if="isShowFilter"> Close Adventure search
+                                            <i style="margin-left: 5px" class="fas fa-times"></i>
                                         </button>
-
-
+                                        <button type="button" style="margin-left: 10px"
+                                                @click="isShowFilter = !isShowFilter"
+                                                class="btn btn-dark" v-if="!isShowFilter"> Adventure search
+                                            <i class="fa fa-filter" v-if="!isShowFilter" aria-hidden="true"></i>
+                                        </button>
                                     </div>
-                                    <div class="form-group mx-sm-3 mb-2">
+                                    <div class="form-group mx-sm-3 mb-4">
                                         <button @click="filterClear()" type="button"
                                                 class="btn btn-flex btn-light  fw-bolder ">Clear
                                         </button>
                                     </div>
-
-
                                 </form>
 
                                 <form class="col-lg-12" v-if="isShowFilter">
                                     <div class="row">
                                         <div class="form-group col-lg-3">
                                             <label>Teacher name </label>
-                                            <input @keydown.enter="doFilter('username', filter.full_name, $event)" class="form-control" placeholder="Enter the teacher’s name" v-model="filter.username"/>
+                                            <input @keydown.enter="doFilter('username', filter.full_name, $event)"
+                                                   class="form-control" placeholder="Enter the teacher’s name"
+                                                   v-model="filter.username"/>
 
                                         </div>
                                         <div class="form-group col-lg-3">
                                             <label>Teacher email </label>
-                                            <input @keydown.enter="doFilter('email', filter.email, $event)" class="form-control" placeholder="Enter the teacher’s email" v-model="filter.email">
+                                            <input @keydown.enter="doFilter('email', filter.email, $event)"
+                                                   class="form-control" placeholder="Enter the teacher’s email"
+                                                   v-model="filter.email">
                                         </div>
                                         <div class="form-group col-lg-3">
                                             <label>Teacher phone number </label>
-                                            <input @keydown.enter="doFilter('phone', filter.email, $event)" class="form-control" placeholder="Enter the teacher’s phone number" v-model="filter.phone">
-
+                                            <input @keydown.enter="doFilter('phone', filter.email, $event)"
+                                                   class="form-control" placeholder="Enter the teacher’s phone number"
+                                                   v-model="filter.phone">
                                         </div>
                                     </div>
                                     <div class="row">
                                         <div class="form-group col-lg-3">
-                                            <label>Creation time  </label>
+                                            <label>Creation time </label>
                                             <Daterangepicker v-model="filter.created"
-                                                             placeholder="Ngày tạo"></Daterangepicker>
+                                                             placeholder="Creation date"></Daterangepicker>
                                         </div>
                                         <div class="form-group col-lg-3">
                                             <label>Active</label>
@@ -70,13 +74,11 @@
                                         </div>
                                     </div>
                                     <div style="margin: auto 0">
-                                        <button type="button" class="btn btn-primary" @click="doFilter()">Tìm kiếm</button>
+                                        <button type="button" class="btn btn-dark" @click="doFilter()">Search</button>
                                     </div>
                                 </form>
                             </div>
-
                         </div>
-
                     </div>
 
                     <div class="card-body d-flex flex-column">
@@ -93,21 +95,21 @@
                                 <th>Registed devices</th>
                                 <th>Creation Date</th>
                                 <th>Status</th>
-                                <th></th>
                             </tr>
                             </thead>
-                            <tbody v-for="entry in entries" >
+                            <tbody v-for="entry in entries">
                             <tr v-for="teacher in entry.roles" v-if="teacher.role_name==='Teacher'">
                                 <td v-text="entry.id"></td>
                                 <td v-text="entry.username"></td>
                                 <td v-text="entry.email"></td>
                                 <td v-text="entry.class"></td>
                                 <td v-text="entry.phone"></td>
-                                <td v-text=""></td>
+                                <td>{{entry.user_devices.length}} / 3</td>
                                 <td v-text=" d(entry.created_at)"></td>
                                 <td v-text="entry.state===0 ? 'No' : 'Yes'"></td>
                                 <td>
-                                    <a :href="'/xadmin/users/edit_teacher?id='+entry.id" ><i style="font-size:1.3rem" class="fa fa-edit"></i></a>
+                                    <a :href="'/xadmin/users/edit_teacher?id='+entry.id"><i style="font-size:1.3rem"
+                                                                                            class="fa fa-edit"></i></a>
                                     <a @click="remove(entry)" href="javascript:;" class="btn-trash deleted"><i
                                         class="fa fa-trash mr-1 deleted"></i></a>
                                 </td>
@@ -132,8 +134,6 @@
                                 <Paginate :value="paginate" :pagechange="onPageChange"></Paginate>
                             </div>
                         </div>
-
-
                     </div>
                 </div>
             </div>
@@ -155,7 +155,7 @@
 
     export default {
         name: "TeacherIndex.vue",
-        components: {ActionBar,SwitchButton},
+        components: {ActionBar, SwitchButton},
         data() {
             let isShowFilter = false;
             let filter = {
@@ -164,7 +164,7 @@
                 full_name: $q.full_name || '',
                 email: $q.email || '',
                 state: $q.state || '',
-                role:$q.role||'',
+                role: $q.role || '',
             };
             for (var key in filter) {
                 if (filter[key] != '') {
@@ -178,9 +178,9 @@
                         title: 'Teachers'
                     },
                 ],
-                roles:$json.roles || [],
+                roles: $json.roles || [],
                 entries: [],
-                filter:filter,
+                filter: filter,
 
                 limit: 25,
                 from: 0,
@@ -205,13 +205,12 @@
             async load() {
                 let query = $router.getQuery();
                 this.$loading(true);
-                const res  = await $get('/xadmin/users/data', query);
+                const res = await $get('/xadmin/users/data_teacher', query);
                 this.$loading(false);
-                this.paginate = res.paginate;
                 this.entries = res.data;
                 console.log(this.entries);
-                this.from = (this.paginate.currentPage-1)*(this.limit) + 1;
-                this.to = (this.paginate.currentPage-1)*(this.limit) + this.entries.length;
+                this.from = (this.paginate.currentPage - 1) * (this.limit) + 1;
+                this.to = (this.paginate.currentPage - 1) * (this.limit) + this.entries.length;
             },
             async remove(entry) {
                 if (!confirm('Xóa bản ghi: ' + entry.id)) {
@@ -231,7 +230,7 @@
 
             filterClear() {
 
-                for( var key in this.filter) {
+                for (var key in this.filter) {
                     this.filter[key] = '';
                 }
                 $router.setQuery({});
@@ -241,7 +240,7 @@
             },
             changeLimit() {
                 let params = $router.getQuery();
-                params['page']=1;
+                params['page'] = 1;
                 params['limit'] = this.limit;
                 $router.setQuery(params)
             },

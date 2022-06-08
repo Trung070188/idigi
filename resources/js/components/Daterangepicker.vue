@@ -10,11 +10,11 @@
     const DATE_LOCALES = {
         "format": "DD/MM/YYYY",
         "separator": " -- ",
-        "applyLabel": "Chọn",
-        "cancelLabel": "Hủy",
+        "applyLabel": "Apply",
+        "cancelLabel": "Cancel",
         "fromLabel": "Từ",
         "toLabel": "tới",
-        "customRangeLabel": "Tùy chọn",
+        "customRangeLabel": "Option",
         "daysOfWeek": [
             "CN",
             "T2",
@@ -61,17 +61,17 @@
 
 
             var ranges =  {
-                'Hôm nay': [moment(), moment()],
-                'Hôm qua': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
-                '3 ngày trước': [moment().subtract(2, 'days'), moment()],
-                '7 ngày trước': [moment().subtract(6, 'days'), moment()],
-                '30 ngày trước': [moment().subtract(29, 'days'), moment()],
-                'Tháng này': [moment().startOf('month'), moment().endOf('month')],
-                'Tất cả': [moment('2021-01-01'), moment()]
+                'Today': [moment(), moment()],
+                'Yesterday': [moment().subtract(1, 'days'), moment()],
+                'Last 3 Days': [moment().subtract(2, 'days'), moment()],
+                'Last 7 Days': [moment().subtract(6, 'days'), moment()],
+                'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+                'This Month': [moment().startOf('month'), moment().endOf('month')],
+                'All': [moment('2021-01-01'), moment()]
             };
 
             var tmp = this.value ? this.value.split('_') : [];
-            var startDate = tmp[0] ? moment(tmp[0]) :moment('2019-01-01');
+            var startDate = tmp[0] ? moment(tmp[0]) :moment();
             var endDate =  tmp[1] ? moment(tmp[1]) : moment();
 
 
@@ -81,7 +81,7 @@
                 startDate:  startDate ,
                 endDate:  endDate,
                 locale: DATE_LOCALES,
-                ranges: ranges
+                // ranges: ranges
 
             },  (start, end) => {
                 this.$emit('input', start.format('YYYY-MM-DD') + '_'+ end.format('YYYY-MM-DD'));
