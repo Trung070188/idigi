@@ -36,7 +36,7 @@
                     </div>
                 </div>
                 <div class="flex-1 text-right" v-else-if="type==='index'">
-                    <a :href="createUrl" class="btn btn-dark " v-if="createUrl">
+                    <a :href="createUrl" class="btn btn-primary " v-if="createUrl">
                         Create new
                     </a>
 
@@ -45,7 +45,8 @@
                     </a>
 
                     <a href="javascript:void(0);" @click="createWithFunction" class="btn btn-primary " v-if="createFunction">
-                        Create new
+                        <template v-if="nameFunction">{{nameFunction}}</template>
+                        <template v-else>Create new</template>
                     </a>
 
                     <a href="javascript:void(0);" class="btn btn-danger btn-sm" @click="deleteAll()" v-if="isShowDelete">
@@ -65,7 +66,7 @@
 <script>
     export default {
         name: "ActionBar",
-        props: ['title', 'type', 'createUrl', 'code', 'backUrl', 'isShowDelete', 'createFunction','breadcrumbs', 'download','createDevice'],
+        props: ['title', 'type', 'createUrl', 'code', 'backUrl', 'isShowDelete', 'createFunction','breadcrumbs', 'download','createDevice', 'nameFunction'],
         methods: {
             save() {
                 this.isLoading = true;

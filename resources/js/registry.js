@@ -20,6 +20,7 @@ import Request_roleIndex from "./admin/request_role/Request_roleIndex";
 import Request_roleManage from "./admin/request_role/Request_roleManage";
 import NotificationIndex from "./admin/notifications/NotificationIndex";
 import NotificationForm from "./admin/notifications/NotificationForm";
+import App_versionIndex from "./admin/app_versions/App_versionIndex";
 
 export default {
     DashboardIndex,
@@ -43,8 +44,6 @@ export default {
     TeacherEdit,
     TeacherIndex,
     NotificationIndex,
-    NotificationForm
-
-
-
+    NotificationForm,
+    App_versionIndex,
 }

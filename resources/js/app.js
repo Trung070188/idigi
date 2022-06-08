@@ -25,6 +25,7 @@ window.toastr = require('toastr');
 Vue.component('Paginate', require('./components/Paginate').default);
 Vue.component('SwitchButton', require('./components/SwitchButton').default);
 Vue.component('Daterangepicker', require('./components/Daterangepicker').default);
+Vue.component('Datepicker', require('./components/Datepicker').default);
 Vue.component('RichtextEditor', require('./components/RichtextEditor').default);
 Vue.component('ErrorLabel', require('./components/ErrorLabel').default);
 Vue.component('SaveButton', require('./components/SaveButton').default);

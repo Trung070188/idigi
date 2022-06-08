@@ -60,5 +60,10 @@
         'path' => '/notifications/{action}',
         'action' => 'NotificationsController',
         'name' => 'notifications',
+],
+     [
+        'path' => '/app_versions/{action}',
+        'action' => 'AppVersionsController',
+        'name' => 'app_versions',
     ],
 ];

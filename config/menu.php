@@ -94,11 +94,19 @@ return [
         'url' => '/xadmin/request_role/manage',
 
     ],
+
     [
         "name" => "Notification",
         "icon" => "fa fa-archive",
         "group" => 1,
         'url' => '/xadmin/notifications/index',
+        ],
+
+    [
+        "name" => "Download Application",
+        "icon" => "fa fa-download",
+        "group" => 1,
+        'url' => '/xadmin/app_versions/index',
 
     ],
 ];

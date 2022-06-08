@@ -28,6 +28,18 @@ Vue.mixin({
 
             return m.format('DD/MM/YYYY HH:mm')
         },
+        d2(tzTime) {
+            if (!tzTime) {
+                return '';
+            }
+            const m =  moment(tzTime);
+            // if (m.format('YYYY') == (new Date).getFullYear()) {
+            //     return m.format('DD/MM HH:mm')
+            // }
+
+            return m.format('DD/MM/YYYY')
+        },
+
         m: function (value, rate, reverse) {
             if (typeof value === 'string') {
                 value = Number(value.replace(/,/g,''));

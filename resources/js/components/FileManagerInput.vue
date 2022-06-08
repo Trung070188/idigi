@@ -44,7 +44,7 @@
                     <div class="modal-content">
                         <div class="modal-header">
                             <h5 class="modal-title">Quản lí file</h5>
-                            <button type="button" class="close" data-dismiss="modal" @click="closeModal"
+                            <button type="button" class="close" data-dismiss="modal" data-bs-dismiss="modal"
                                     aria-label="Close">
                                 &times;
                             </button>
@@ -115,9 +115,7 @@ export default {
         FileManager
     },
     methods: {
-        closeModal: function () {
-            $('.modal').modal('hide');
-        },
+
         docClicked(ev) {
             if (this.$refs.button.contains(ev.target)) {
             } else {

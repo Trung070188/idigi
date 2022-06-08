@@ -18,9 +18,9 @@
                     <div  class="form-group d-flex justify-content-between" >
                         <button  class="btn btn-dark ito-btn-small" data-dismiss="modal" @click="Cancel()" style="margin-left: 110px">Cancel</button>
 
-                            <button   class="btn btn-light ito-btn-add"  data-dismiss="modal"  style="margin-right: 150px" @click="save">
-                                Send request
-                            </button>
+                        <button   class="btn btn-light ito-btn-add"  data-dismiss="modal"  style="margin-right: 150px" @click="save">
+                            Send request
+                        </button>
                     </div>
                 </div>
             </div>
@@ -45,7 +45,7 @@
                         <error-label for="f_category_id" :errors="errors.device_uid"></error-label>
                     </div>
                     <div class="form-group d-flex justify-content-between">
-<!--                        <button  class="btn btn-danger ito-btn-small" data-dismiss="modal" @click="save()">Add now</button>-->
+                        <!--                        <button  class="btn btn-danger ito-btn-small" data-dismiss="modal" @click="save()">Add now</button>-->
                         <button class="btn btn-dark ito-btn-add" data-dismiss="modal" @click="save_send()" style="margin-left: 170px">
                             Add now
                         </button>
@@ -70,7 +70,7 @@
                             <button  type="button" class="generate" v-on:click="genToken"> Generate Key</button>
                         </div>
 
-                            <div v-if="token" style="font-size: 16px; word-wrap: break-word;white-space: pre-wrap;word-break: normal;">{{token}}</div>
+                        <div v-if="token" style="font-size: 16px; word-wrap: break-word;white-space: pre-wrap;word-break: normal;">{{token}}</div>
                     </div>
 
 
@@ -113,11 +113,11 @@
 
                                 <div  class="form-group mx-sm-3 mb-2" style="position: absolute;right:65px;margin-top: -33px;" v-if="device.status==1">
 
-                                       <button type="button"
-                                               class="btn btn-flex btn-dark  fw-bolder " v-for="role in entry.roles"  v-if="role.id!==5"  @click="remove(device)">Delete device
-                                       </button>
-                                       <span v-for="role in entry.roles" v-if="role.id==5"
-                                               style="color: #f1c40f;margin-right: 5px" ><i class="fas fa-exclamation-circle" style="color: #f1c40f"></i> Delete request sent
+                                    <button type="button"
+                                            class="btn btn-flex btn-dark  fw-bolder " v-for="role in entry.roles"  v-if="role.id!==5"  @click="remove(device)">Delete device
+                                    </button>
+                                    <span v-for="role in entry.roles" v-if="role.id==5"
+                                          style="color: #f1c40f;margin-right: 5px" ><i class="fas fa-exclamation-circle" style="color: #f1c40f"></i> Delete request sent
                                        </span>
                                     <button  type="button"
                                              class="btn btn-flex btn-dark  fw-verify " style="margin-right: 5px" @click="editModalDevice(device.id,device.device_name,device.secret_key)" >
@@ -141,11 +141,11 @@
                                 </div>
                             </div>
                         </div>
-                        </div>
                     </div>
                 </div>
             </div>
         </div>
+    </div>
 
 
 </template>
@@ -187,17 +187,17 @@
         },
         methods: {
 
-                Sent: function (device = {}){
-                    $('#sentConfirm').modal('show');
-                    this.curDevice = device;
-                },
+            Sent: function (device = {}){
+                $('#sentConfirm').modal('show');
+                this.curDevice = device;
+            },
             Cancel()
             {
                 $('#sentConfirm').modal('hide');
             },
             async genToken(){
-                    const res  = await $post('/xadmin/user_devices/generateToken', {device_id: this.currId});
-                    this.token = res.token;
+                const res  = await $post('/xadmin/user_devices/generateToken', {device_id: this.currId});
+                this.token = res.token;
             },
 
             editModalDevice(id,device_name,secret_key)
@@ -209,7 +209,7 @@
                 $('#editdeviceConfirm').modal('show');
             },
             modalDevice() {
-                    $('#deviceConfirm').modal('show');
+                $('#deviceConfirm').modal('show');
             },
             closeModal()
             {
@@ -336,7 +336,7 @@
         max-width: 400px;
     }
     .btn btn-danger ito-btn-small{
-       padding: 5px;
+        padding: 5px;
     }
 
     .body{
