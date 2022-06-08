@@ -213,7 +213,9 @@ export default {
     components: {ActionBar},
     data() {
         return {
-            model: {},
+            model: {
+                type:''
+            },
             errors: {},
             entries: [],
             totalVersionIos: 0,
@@ -264,7 +266,9 @@ export default {
 
         async save() {
             this.errors = {};
-            this.model = {};
+            this.model = {
+                type:''
+            };
             const files = this.$refs.uploader.files;
             const formData = new FormData();
             formData.append('_token', window.$csrf)
