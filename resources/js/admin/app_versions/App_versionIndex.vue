@@ -253,6 +253,7 @@ export default {
             });
 
             $('#setDefault').modal('hide');
+            $('#unsetDefault').modal('hide');
 
             if (res.code) {
                 toastr.error(res.message);
