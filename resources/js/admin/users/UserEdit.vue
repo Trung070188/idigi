@@ -54,6 +54,7 @@
                                     <div v-for="role in roles" class="form-group col-sm-2">
                                         <input type="checkbox" v-model="role.user">
                                         <label>{{ role.role_name }}</label>
+                                        {{role.user}}
                                         <error-label for="f_grade" :errors="errors.roles"></error-label>
 
                                     </div>

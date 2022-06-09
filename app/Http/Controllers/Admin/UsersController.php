@@ -218,7 +218,7 @@ class UsersController extends AdminBaseController
             'username' => ['required',new ValiUser()],
             'full_name'=>['required',new ValiFullname()],
             'email' => 'required|max:191|email',
-            'password' => '|max:191|confirmed',
+//            'password' => '|max:191|confirmed',
         ];
         if (!isset($data['id'])) {
 //            $rules['password'] = 'required|max:191|confirmed';
@@ -249,6 +249,7 @@ class UsersController extends AdminBaseController
 
             UserRole::where('user_id', $entry->id)->delete();
             foreach ($roles as $role) {
+
                 if (@$role['user']) {
                     UserRole::create(['user_id' => $entry->id, 'role_id' => $role['id']]);
                 }
@@ -264,9 +265,14 @@ class UsersController extends AdminBaseController
             $entry->fill($data);
             $entry->save();
             foreach ($roles as $role) {
-                if (@$role['user']) {
-                    UserRole::create(['user_id' => $entry->id, 'role_id' => $role['id']]);
+               {
+                   if(@$role['user'])
+                   {
+                       UserRole::create(['user_id' => $entry->id, 'role_id' => $role['id']]);
+
+                   }
                 }
+
             }
             return [
                 'code' => 0,
