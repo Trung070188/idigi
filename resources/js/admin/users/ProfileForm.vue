@@ -6,6 +6,50 @@
                    :breadcrumbs = "breadcrumbs"
                    title="ProfileForm"/>
         <div class="container bootstrap snippets bootdey">
+
+            <!-- Modal -->
+            <div class="modal fade" id="deviceConfirm" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLongTitle">Change password</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <label>Current Password <span class="text-danger">*</span></label>
+                            <input id="f_role_name"  name="name" class="form-control"
+                                   placeholder="" >
+                            <error-label for="f_role_name" ></error-label>
+
+                            <div class="form-group">
+                                <label>New Password <span class="text-danger">*</span></label>
+                                <input id="f_role_description"  name="name" class="form-control"
+                                       placeholder="" >
+                                <error-label for="f_role_description" ></error-label>
+
+                            </div>
+
+                            <div class="form-group">
+                                <label>Confirm New Password <span class="text-danger">*</span></label>
+                                <input  name="name" class="form-control"
+                                        placeholder="" >
+                                <error-label for="f_role_description" ></error-label>
+
+                            </div>
+                        </div>
+
+
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal"@click="CloseModal()">Close</button>
+                            <button type="button" class="btn btn-primary">Save changes</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
             <div class="row">
                 <div class="main-content">
 
@@ -21,7 +65,7 @@
                                             </div>
                                         </div>
                                         <div class="contact" style="margin-top: 20px">
-                                            <a href="#" class="btn-block" >Change password</a>
+                                            <a href="#" class="btn-block" @click="modalDevice()">Change password</a>
                                             <a href="/xadmin/logout" class=" btn-block"> Log out</a>
 
                                         </div>
@@ -103,6 +147,13 @@
             $router.on('/', this.load).init();
         },
         methods: {
+            modalDevice() {
+                $('#deviceConfirm').modal('show');
+            },
+            CloseModal()
+            {
+                $('#deviceConfirm').modal('hide');
+            },
             backIndex(){
 
                 window.location.href = '/xadmin/dashboard/index';
@@ -113,7 +164,7 @@
                 const res  = await $get('/xadmin/users/data', query);
                 this.$loading(false);
                 this.paginate = res.paginate;
-                this.entries = res.data;
+                this.entries = res.data.data;
                 console.log(this.entries);
                 this.from = (this.paginate.currentPage-1)*(this.limit) + 1;
                 this.to = (this.paginate.currentPage-1)*(this.limit) + this.entries.length;

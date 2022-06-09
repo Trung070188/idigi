@@ -17,7 +17,7 @@
                                                v-model="filter.keyword"
                                                type="text"
                                                style="width: 240px"
-                                               class="form-control" placeholder="Search ID,username,email,role..."
+                                               class="form-control " placeholder="Search ID,username,email,role..."
                                                value="">
                                     </div>
                                     <div class="form-group mx-sm-3 mb-4">
@@ -61,7 +61,7 @@
                                         </div>
                                         <div class="form-group col-lg-3">
                                             <label>Role </label>
-                                            <select required class="form-control form-select" v-model="filter.role">
+                                            <select @keydown.enter="doFilter('role', filter.role, $event)" required class="form-control form-select" v-model="filter.role">
                                                 <option value="" disabled selected>Choose role</option>
                                                 <option value="0">All</option>
                                                 <option value="Super Administrator">Super Administrator</option>
@@ -99,11 +99,11 @@
                     </div>
 
 
-                    <div class="card-body d-flex flex-column" @click="filterClear()">
-                        <div>
-                              <span style="float: right;margin-bottom: -20px">
+                    <div class="card-body d-flex flex-column">
+                        <div style="position: absolute;margin-left: 90.5%">
+                              <span >
                                 Resfesh List
-                                  <i class="fas fa-sync" @click="filterClear()"></i>
+                                  <i  class="fas fa-sync" @click="filterClear()"></i>
                               </span>
                         </div>
                         <div>
@@ -128,22 +128,25 @@
                                 <th>Action</th>
                             </tr>
                             </thead>
-                            <tbody>
-                            <tr v-for="entry in entries">
-                                <td v-text="entry.id"></td>
-                                <td v-text="entry.username"></td>
-                                <td v-text="entry.full_name"></td>
-                                <td v-text="entry.email"></td>
-                                <td v-text="entry.role"></td>
-                                <td v-text=" d(entry.created_at)"></td>
-                                <td v-text="entry.state===0 ? 'No' : 'Yes'"></td>
-                                <td>
-                                    <a :href="'/xadmin/users/edit?id='+entry.id"><i style="font-size:1.3rem"
-                                                                                    class="fa fa-edit"></i></a>
-                                    <a @click="remove(entry)" href="javascript:;" class="btn-trash deleted"><i
-                                        class="fa fa-trash mr-1 deleted"></i></a>
-                                </td>
+                            <tbody >
+                            <tr  v-for="entry in entries" >
+                                    <td v-text="entry.id"></td>
+                                    <td v-text="entry.username"></td>
+                                    <td v-text="entry.full_name"></td>
+                                    <td v-text="entry.email"></td>
+                                    <td v-text="entry.role"></td>
+                                    <td v-text=" d(entry.created_at)"></td>
+                                    <td  v-if="entry.state==0">No</td>
+                                    <td v-if="entry.state==1">Yes</td>
+                                    <td>
+                                        <a :href="'/xadmin/users/edit?id='+entry.id"><i style="font-size:1.3rem"
+                                                                                        class="fa fa-edit"></i></a>
+                                        <a @click="remove(entry)" href="javascript:;" class="btn-trash deleted"><i
+                                            class="fa fa-trash mr-1 deleted"></i></a>
+                                    </td>
+
                             </tr>
+
                             </tbody>
                         </table>
                         <div style="margin-top:10px; display: flex">

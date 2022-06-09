@@ -97,7 +97,7 @@ class UserDevicesController extends AdminBaseController
         $rules = [
 //    'device_uid' => 'required|max:45',
 //    'device_name' => 'required|max:45',
-        'reason'=>'required||max:100',
+//        'reason'=>'required||max:100',
 ];
 
         $v = Validator::make($data, $rules);
@@ -119,7 +119,7 @@ class UserDevicesController extends AdminBaseController
             }
             $entry->fill($data);
 
-            $entry->status=3;
+            $entry->status=1;
             $entry->save();
 
             return [
@@ -206,7 +206,7 @@ class UserDevicesController extends AdminBaseController
             ];
         }
 
-        $entry->status = $req->status ? 0 : 1;
+        $entry->status = $req->status ? 1 : 2;
         $entry->save();
 
         return [

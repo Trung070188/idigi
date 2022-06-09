@@ -233,6 +233,7 @@ class InventoriesController extends AdminBaseController
             $query = $query->orderBy('id', 'desc');
         }
 
+
         if ($req->keyword) {
             $query->where('name', 'LIKE', '%' . $req->keyword. '%');
         }

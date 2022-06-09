@@ -16,41 +16,51 @@
                                     <div class="form-group mx-sm-3 mb-4">
                                         <input @keydown.enter="doFilter($event)" v-model="filter.keyword"
                                                type="text"
-                                               class="form-control" placeholder="tìm kiếm" value="">
+                                               class="form-control" placeholder="Search..." value="">
                                     </div>
-                                    <div class="form-group mx-sm-3 mb-2">
+                                    <div class="form-group mx-sm-3 mb-4">
                                         <button type="button" style="margin-left: 10px"
                                                 @click="isShowFilter = !isShowFilter"
-                                                class="btn btn-primary"> Tìm kiếm mở rộng
-                                            <i class="fa fa-caret-down" v-if="!isShowFilter"></i>
-                                            <i class="fa fa-caret-up" v-if="isShowFilter" aria-hidden="true"></i>
+                                                class="btn btn-dark" v-if="isShowFilter"> Close Adventure search
+                                            <i style="margin-left: 5px" class="fas fa-times"></i>
+
+                                        </button>
+                                        <button type="button" style="margin-left: 10px"
+                                                @click="isShowFilter = !isShowFilter"
+                                                class="btn btn-dark" v-if="!isShowFilter"> Adventure search
+                                            <i class="fa fa-filter" v-if="!isShowFilter" aria-hidden="true"></i>
 
                                         </button>
 
-
                                     </div>
-                                    <div class="form-group mx-sm-3 mb-2">
-                                        <button @click="filterClear()" type="button"
-                                                class="btn btn-flex btn-light  fw-bolder ">Clear
-                                        </button>
-                                    </div>
+<!--                                    <div class="form-group mx-sm-3 mb-2">-->
+<!--                                        <button @click="filterClear()" type="button"-->
+<!--                                                class="btn btn-flex btn-light  fw-bolder ">Clear-->
+<!--                                        </button>-->
+<!--                                    </div>-->
 
                                 </form>
                                 <form class="col-lg-12" v-if="isShowFilter">
                                     <div class="row">
-                                        <div class="form-group col-lg-3">
+                                        <div class="form-group col-lg-4">
+                                            <label>Name </label>
+                                            <input class="form-control" placeholder="Enter the lesson name" v-model="filter.subject"/>
+                                        </div>
+                                        <div class="form-group col-lg-2">
                                             <label>Subject </label>
-                                            <select class="form-control" v-model="filter.subject">
-                                                <option value="">-</option>
+                                            <select required class="form-control form-select" v-model="filter.subject">
+                                                <option value="" disabled selected>Choose Subject</option>
+                                                <option value="0">All</option>
                                                 <option value="Math">Math</option>
                                                 <option value="Science ">Science</option>
                                             </select>
 
                                         </div>
-                                        <div class="form-group col-lg-3">
+                                        <div class="form-group col-lg-2">
                                             <label>Grade </label>
-                                            <select class="form-control" v-model="filter.grade">
-                                                <option value="">-</option>
+                                            <select required class="form-control form-select" v-model="filter.grade">
+                                                <option value="" disabled selected>Choose Grade</option>
+                                                <option value="0">All</option>
                                                 <option value="1">1</option>
                                                 <option value="2">2</option>
                                                 <option value="3">3</option>
@@ -65,9 +75,9 @@
                                     </div>
                                     <div class="row">
                                         <div class="form-group col-lg-3">
-                                            <label>Ngày tạo </label>
+                                            <label>Creation time </label>
                                             <Daterangepicker v-model="filter.created"
-                                                             placeholder="Ngày tạo"></Daterangepicker>
+                                                             placeholder="Creation time"></Daterangepicker>
                                         </div>
                                         <div class="form-group col-lg-3">
                                             <label>Active</label>
@@ -78,8 +88,7 @@
                                         </div>
                                     </div>
                                     <div style="margin: auto 0">
-                                        <button type="button" class="btn btn-primary" @click="doFilter($event)">Tìm
-                                            kiếm
+                                        <button type="button" class="btn btn-dark" @click="doFilter($event)">Search
                                         </button>
                                     </div>
                                 </form>
@@ -373,5 +382,16 @@ export default {
 <style scoped>
 ul.device {
     list-style-type: none;
+}
+select:required:invalid {
+    color: #adadad;
+}
+
+option[value=""][disabled] {
+    display: none;
+}
+
+option {
+    color: black;
 }
 </style>
