@@ -4,7 +4,7 @@
                    :code="entry.id"
                    back-url="/xadmin/users/index"
                    :breadcrumbs="breadcrumbs"
-                   title="User Created"/>
+                   title="UserEdit"/>
         <div class="row">
             <div class="col-lg-12">
                 <div class="card card-custom card-stretch gutter-b">
@@ -16,7 +16,7 @@
                                 <div class="row">
                                     <div  class="form-group  col-sm-4">
                                         <label>Username <span class="text-danger">*</span></label>
-                                        <input class="form-control" placeholder="Enter the username" v-model="entry.username">
+                                        <input class="form-control" placeholder="Enter the username" v-model="entry.username" disabled>
 
                                         <error-label for="f_category_id" :errors="errors.username"></error-label>
                                     </div>
@@ -56,9 +56,7 @@
                                         <label>{{ role.role_name }}</label>
                                         <error-label for="f_grade" :errors="errors.roles"></error-label>
 
-
                                     </div>
-
 
                                 </div>
 
@@ -82,8 +80,8 @@
                         <div>
                             <button type="reset" @click="save()" class="btn btn-primary mr-2">Save</button>
                             <button type="reset" @click="backIndex()" class="btn btn-secondary">Cancel</button>
-<!--                            <label style="margin-left: 20px">Thông tin đăng nhập và mật khẩu sẽ được gửi tới người dùng
-                                qua email.</label>-->
+                            <!--                            <label style="margin-left: 20px">Thông tin đăng nhập và mật khẩu sẽ được gửi tới người dùng
+                                                            qua email.</label>-->
                         </div>
                     </div>
                 </div>
@@ -96,75 +94,75 @@
 </template>
 
 <script>
-import {$post} from "../../utils";
+    import {$post} from "../../utils";
 
-import ActionBar from "../includes/ActionBar";
-import SwitchButton from "../../components/SwitchButton";
+    import ActionBar from "../includes/ActionBar";
+    import SwitchButton from "../../components/SwitchButton";
 
-export default {
-    name: "UsersForm.vue",
-    components: {ActionBar, SwitchButton},
-    data() {
+    export default {
+        name: "UsersForm.vue",
+        components: {ActionBar, SwitchButton},
+        data() {
 
-        return {
+            return {
 
-            showConfirm: false,
-            showPass: false,
-            types: [],
-            breadcrumbs: [
-                {
-                    title: 'Users',
-                    url: '/xadmin/users/index',
+                showConfirm: false,
+                showPass: false,
+                types: [],
+                breadcrumbs: [
+                    {
+                        title: 'Users',
+                        url: '/xadmin/users/index',
+                    },
+                    {
+                        title: $json.entry ? 'Edit User' : 'Create new User',
+                    },
+                ],
+                entry: $json.entry || {
+                    roles: []
                 },
-                {
-                    title: $json.entry ? 'Edit User' : 'Create new User',
-                },
-            ],
-            entry: $json.entry || {
-                roles: []
-            },
-            roles: $json.roles || [],
-            isLoading: false,
-            errors: {}
-        }
-    },
-    methods: {
-        // checkbox_roles()
-        // {
-        //     this.entry=this.roles;
-        // },
-        backIndex() {
-
-            window.location.href = '/xadmin/users/index';
-        },
-        async save() {
-            this.isLoading = true;
-            const res = await $post('/xadmin/users/save', {entry: this.entry, roles: this.roles}, false);
-            this.isLoading = false;
-            if (res.errors) {
-                this.errors = res.errors;
-                return;
+                roles: $json.roles || [],
+                isLoading: false,
+                errors: {}
             }
-            if (res.code) {
-                toastr.error(res.message);
-            } else {
-                this.errors = {};
-                toastr.success(res.message);
-                if (!this.entry.id) {
-                    location.replace('/xadmin/users/edit?id=' + res.id);
+        },
+        methods: {
+            // checkbox_roles()
+            // {
+            //     this.entry=this.roles;
+            // },
+            backIndex() {
+
+                window.location.href = '/xadmin/users/index';
+            },
+            async save() {
+                this.isLoading = true;
+                const res = await $post('/xadmin/users/save', {entry: this.entry, roles: this.roles}, false);
+                this.isLoading = false;
+                if (res.errors) {
+                    this.errors = res.errors;
+                    return;
+                }
+                if (res.code) {
+                    toastr.error(res.message);
+                } else {
+                    this.errors = {};
+                    toastr.success(res.message);
+                    if (!this.entry.id) {
+                        location.replace('/xadmin/users/edit?id=' + res.id);
+                    }
                 }
             }
         }
     }
-}
 </script>
 
 <style scoped>
-.fa-eye {
-    position: absolute;
-    top: 40%;
-    right: 5%
+    .fa-eye {
+        position: absolute;
+        top: 40%;
+        right: 5%
 
-}
+    }
 
 </style>

@@ -21,11 +21,13 @@ import Request_roleManage from "./admin/request_role/Request_roleManage";
 import NotificationIndex from "./admin/notifications/NotificationIndex";
 import NotificationForm from "./admin/notifications/NotificationForm";
 import App_versionIndex from "./admin/app_versions/App_versionIndex";
+import UserEdit from "./admin/users/UserEdit";
 
 export default {
     DashboardIndex,
     UserIndex,
     UserForm,
+    UserEdit,
     ElfinderIndex,
     RoleIndex,
     RoleForm,

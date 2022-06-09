@@ -7,6 +7,8 @@ use App\Models\Role;
 use App\Models\School;
 use App\Models\UserDevice;
 use App\Models\UserRole;
+use App\Rules\ValiFullname;
+use App\Rules\ValiUser;
 use Carbon\Carbon;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
@@ -139,7 +141,7 @@ class UsersController extends AdminBaseController
             }
         }
         $title = 'Edit';
-        $component = 'UserForm';
+        $component = 'UserEdit';
         $jsonData = [
             'entry' => $entry,
             'roles' => $roles,
@@ -213,7 +215,8 @@ class UsersController extends AdminBaseController
         $data = $req->get('entry');
         $roles = $req->roles;
         $rules = [
-            'username' => 'required|max:191',
+            'username' => ['required',new ValiUser()],
+            'full_name'=>['required',new ValiFullname()],
             'email' => 'required|max:191|email',
             'password' => '|max:191|confirmed',
         ];
