@@ -119,7 +119,9 @@
                             <thead>
                             <tr>
                                 <th>ID</th>
-                                <th>Name</th>
+                                <th>Name<button class="btn-sort" @click="onSort('name')">
+                                    <i class="fa fa-sort"></i>
+                                </button></th>
                                 <th>Grade</th>
                                 <th>Type</th>
                                 <th>Active</th>
@@ -236,6 +238,14 @@
                 }
 
             },
+            onSort(key) {
+                let query = $router.getQuery();
+                if (query?.sortBy == "desc") {
+                    $router.updateQuery({order: key, page: 1, sortBy: "asc"});
+                } else {
+                    $router.updateQuery({order: key, page: 1, sortBy: "desc"});
+                }
+            },
             async load() {
                 let query = $router.getQuery();
                 this.$loading(true);
@@ -305,6 +315,11 @@
 </script>
 
 <style scoped>
+
+    .btn-sort{
+        border:none;
+    }
+
     select:required:invalid {
         color: #adadad;
     }
@@ -316,6 +331,6 @@
     option {
         color: black;
     }
-
+    
 
 </style>

@@ -341,7 +341,8 @@ class UserDevicesController extends AdminBaseController
         $user = Auth::user();
         $device = UserDevice::where('user_id', $user->id)
             ->where('id', $request->device_id)
-            ->where('status', 2)->first();
+            ->where('status', 2)
+            ->first();
 
 
         if($device){
