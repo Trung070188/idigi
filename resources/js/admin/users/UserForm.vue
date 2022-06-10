@@ -16,7 +16,7 @@
                                 <div class="row">
                                     <div  class="form-group  col-sm-4">
                                         <label>Username <span class="text-danger">*</span></label>
-                                        <input class="form-control" placeholder="Enter the username" v-model="entry.username">
+                                        <input class="form-control nospace" placeholder="Enter the username" v-model="entry.username">
 
                                         <error-label for="f_category_id" :errors="errors.username"></error-label>
                                     </div>
@@ -59,15 +59,42 @@
                                 <div class="row">
 
                                     <label>Role</label>
-                                    <div v-for="role in roles" class="form-group col-sm-2">
-                                        <input type="radio" v-model="role.id" v-bind:value="role.role_name" :name="role.role_name">
-                                        {{role.id}}
-                                        <label>{{ role.role_name }}</label>
-                                        <error-label for="f_grade" :errors="role"></error-label>
+                                    <div  class="form-group col-sm-2">
+                                        <input  type="radio"  v-model="role" value="1">
+                                        <label>Super Administrator</label>
+                                    </div>
+                                    <div  class="form-group col-sm-2">
+                                        <input  type="radio"  v-model="role" value="2">
+                                        <label>Admin</label>
+                                    </div>
+                                    <div   class="form-group col-sm-2">
+                                        <input  type="radio" v-model="role" value="5" >
+                                        <label>Teacher</label>
+
+
+                                    </div>
+                                    <div   class="form-group col-sm-2">
+                                        <input  type="radio"  v-model="role" value="4">
+                                        <label>Partner</label>
                                     </div>
 
 
+                                </div>
+                                <div class="row" v-if="role==2">
+                                    <div class="form-group  col-sm-4">
+                                        <label>School <span class="text-danger">*</span></label>
+                                        <select class="form-control form-select" type="" placeholder="Enter the school" >
 
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="row" v-if="role==5">
+                                    <div class="form-group  col-sm-4">
+                                        <label>School <span class="text-danger">*</span></label>
+                                        <select class="form-control form-select" type="" placeholder="Enter the school" >
+
+                                        </select>
+                                    </div>
                                 </div>
 
                                 <div class="row">
@@ -115,9 +142,8 @@
         data() {
 
             return {
-
+                role:'',
                 auto_gen:true,
-
                 showConfirm: false,
                 showPass: false,
                 types: [],
@@ -131,13 +157,23 @@
                     },
                 ],
                 entry: $json.entry || {
-                    roles: []
+                    role: []
                 },
                 roles: $json.roles || [],
                 isLoading: false,
                 errors: {}
             }
         },
+        mounted() {
+            $('.nospace').keypress(function (e) {
+
+                console.log(e.keyCode);
+                if (e.keyCode == 32 ) {
+                    e.preventDefault();
+                }
+            })
+        },
+
         methods: {
             // checkbox_roles()
             // {
@@ -148,8 +184,11 @@
                 window.location.href = '/xadmin/users/index';
             },
             async save() {
+                console.log(this.role);
+
                 this.isLoading = true;
-                const res = await $post('/xadmin/users/save', {entry: this.entry, roles: this.roles}, false);
+                const res = await $post('/xadmin/users/save', {entry: this.entry, role: this.role}, false);
+
                 this.isLoading = false;
                 if (res.errors) {
                     this.errors = res.errors;
@@ -160,9 +199,9 @@
                 } else {
                     this.errors = {};
                     toastr.success(res.message);
-                    if (!this.entry.id) {
-                        location.replace('/xadmin/users/edit?id=' + res.id);
-                    }
+                    // if (!this.entry.id) {
+                    //     location.replace('/xadmin/users/edit?id=' + res.id);
+                    // }
                 }
             }
         }
