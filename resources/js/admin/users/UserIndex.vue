@@ -100,7 +100,7 @@
 
 
                     <div class="card-body d-flex flex-column">
-                        <div style="position: absolute;margin-left: 90.5%">
+                        <div style="margin-left: 94%;margin-bottom: -19px">
                               <span >
                                 Resfesh List
                                   <i  class="fas fa-sync" @click="filterClear()"></i>
@@ -130,20 +130,22 @@
                             </thead>
                             <tbody >
                             <tr  v-for="entry in entries" >
-                                    <td v-text="entry.id"></td>
-                                    <td v-text="entry.username"></td>
-                                    <td v-text="entry.full_name"></td>
-                                    <td v-text="entry.email"></td>
-                                    <td v-text="entry.role"></td>
-                                    <td v-text=" d(entry.created_at)"></td>
-                                    <td  v-if="entry.state==0">No</td>
-                                    <td v-if="entry.state==1">Yes</td>
-                                    <td>
-                                        <a :href="'/xadmin/users/edit?id='+entry.id"><i style="font-size:1.3rem"
-                                                                                        class="fa fa-edit"></i></a>
-                                        <a @click="remove(entry)" href="javascript:;" class="btn-trash deleted"><i
-                                            class="fa fa-trash mr-1 deleted"></i></a>
-                                    </td>
+                                <td v-text="entry.id"></td>
+                                <td v-text="entry.username"></td>
+                                <td v-text="entry.full_name"></td>
+                                <td v-text="entry.email"></td>
+                                <td v-text="entry.role"></td>
+                                <td v-text=" d(entry.created_at)"></td>
+                                <td v-if="entry.state==1">Yes</td>
+                                <td v-if="entry.state==0">No</td>
+
+
+                                <td>
+                                    <a :href="'/xadmin/users/edit?id='+entry.id"><i style="font-size:1.3rem"
+                                                                                    class="fa fa-edit"></i></a>
+                                    <a @click="remove(entry)" href="javascript:;" class="btn-trash deleted"><i
+                                        class="fa fa-trash mr-1 deleted"></i></a>
+                                </td>
 
                             </tr>
 
@@ -196,12 +198,12 @@
                 created: $q.created || '',
                 full_name: $q.full_name || '',
                 email: $q.email || '',
-                state: $q.state || '',
+                state: $q.state ||'',
                 role: $q.role || '',
             };
             for (var key in filter) {
                 if (filter[key] != '') {
-                    isShowFilter = true;
+                    // isShowFilter = true;
                 }
             }
             return {
@@ -314,5 +316,6 @@
     option {
         color: black;
     }
+
 
 </style>

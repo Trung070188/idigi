@@ -24,7 +24,7 @@
         },
         methods: {
             toggle: function() {
-                this.$emit('input', this.$refs.input.checked ? 1 : 0);
+                this.$emit('input', this.$refs.input.checked ? 1 : 0 );
                 this.$emit('change')
             }
         }

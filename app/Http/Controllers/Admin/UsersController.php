@@ -322,11 +322,14 @@ class UsersController extends AdminBaseController
                 $data_role['user_id']=$entry->id;
                 $data_role['role_id']=5;
             }
-           UserRole::updateOrCreate([
-               'user_id'=>$data_role['user_id'],
-               'role_id'=>$data_role['role_id']
+            if($data_role['role'])
+            {
+                UserRole::updateOrCreate([
+                    'user_id'=>@$data_role['user_id'],
+                    'role_id'=>@$data_role['role_id']
+                ],$data_role);
 
-           ],$data_role);
+            }
 
             return [
                 'code' => 0,
@@ -374,6 +377,7 @@ class UsersController extends AdminBaseController
             $query->where('username', 'LIKE', '%' . $req->keyword . '%')
                 ->orWhere('email', 'LIKE', '%' . $req->keyword . '%')
                 ->orWhere('id', 'LIKE', '%' . $req->keyword . '%')
+                ->orWhere('state','LIKE','%'.$req->keyword . '%')
                 ->orwhereHas('roles', function ($q) use ($req) {
                     $q->where('role_name', 'LIKE', '%' . $req->keyword . '%');
                 });
