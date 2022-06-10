@@ -65,6 +65,7 @@ class SyncData extends Command
                             }
 
                             $oldStructure['sublesson'][$key1]['link'] = $link;
+                            $oldStructure['sublesson'][$key1]['full_link'] = url($inventory->virtual_path);
                         }
                     }
 
