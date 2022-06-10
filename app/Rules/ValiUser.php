@@ -33,13 +33,9 @@ class ValiUser implements Rule
             return false;
         }
 
-        if (preg_match('/[0-9]/', $value)) {
-            return false;
-        }
         if (preg_match('/[\'\/~`\!@#\$%\^&\*\(\)_\-\+=\{\}\[\]\|;:"\<\>,\.\?\\\]/', $value)) {
             return false;
         }
-
 
         return true;
     }

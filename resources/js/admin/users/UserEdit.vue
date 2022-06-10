@@ -51,15 +51,44 @@
                                 <div class="row">
 
                                     <label>Role</label>
-                                    <div v-for="role in roles" class="form-group col-sm-2">
-                                        <input type="checkbox" v-model="role.user">
-                                        <label>{{ role.role_name }}</label>
-                                        <error-label for="f_grade" :errors="errors.roles"></error-label>
+                                    <div  class="form-group col-sm-2">
+                                        <input  type="radio"  v-model="role" value="1">
+                                        <label>Super Administrator</label>
+                                    </div>
+                                    <div  class="form-group col-sm-2">
+                                        <input  type="radio"  v-model="role" value="2">
 
+                                        <label>Admin</label>
+                                    </div>
+                                    <div   class="form-group col-sm-2">
+                                        <input  type="radio" v-model="role" value="5" >
+
+                                        <label>Teacher</label>
+
+                                    </div>
+                                    <div   class="form-group col-sm-2">
+                                        <input  type="radio"  v-model="role" value="4">
+
+                                        <label>Partner</label>
                                     </div>
 
                                 </div>
+                                <div class="row" v-if="role==2">
+                                    <div class="form-group  col-sm-4">
+                                        <label>School <span class="text-danger">*</span></label>
+                                        <select class="form-control form-select" type="" placeholder="Enter the school" >
 
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="row" v-if="role==5">
+                                    <div class="form-group  col-sm-4">
+                                        <label>School <span class="text-danger">*</span></label>
+                                        <select class="form-control form-select" type="" placeholder="Enter the school" >
+
+                                        </select>
+                                    </div>
+                                </div>
                                 <div class="row">
                                     <div class="form-group col-sm-8">
                                         <label>Description</label>
@@ -105,7 +134,7 @@
         data() {
 
             return {
-
+                role:null,
                 showConfirm: false,
                 showPass: false,
                 types: [],
@@ -121,11 +150,12 @@
                 entry: $json.entry || {
                     roles: []
                 },
-                roles: $json.roles || [],
+                role: $json.role || [],
                 isLoading: false,
                 errors: {}
             }
         },
+
         methods: {
             // checkbox_roles()
             // {
@@ -137,7 +167,7 @@
             },
             async save() {
                 this.isLoading = true;
-                const res = await $post('/xadmin/users/save', {entry: this.entry, roles: this.roles}, false);
+                const res = await $post('/xadmin/users/save', {entry: this.entry, role: this.role}, false);
                 this.isLoading = false;
                 if (res.errors) {
                     this.errors = res.errors;

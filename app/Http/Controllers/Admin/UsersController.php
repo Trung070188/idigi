@@ -116,10 +116,12 @@ class UsersController extends AdminBaseController
      * @throw  NotFoundHttpException
      * @return  View
      */
+
     public function edit(Request $req)
     {
+
         $id = $req->id;
-        $entry = User::query()
+        $entry = User::with('roles')
             ->where('id', $id)->first();
         if (!$entry) {
             throw new NotFoundHttpException();
@@ -129,25 +131,39 @@ class UsersController extends AdminBaseController
          * @var  User $entry
          */
         $roles = Role::query()->orderBy('role_name')->get();
-        foreach ($roles as $role) {
-            $role->user = false;
-            if ($entry->roles) {
 
-                foreach ($entry->roles as $userRole) {
-                    if ($role->id == $userRole->id) {
-                        $role->user = true;
-                    }
-                }
-            }
+        $role='';
+        foreach ($entry->roles as $role_id)
+        {
+            $role=$role_id->id;
+
         }
+
+//        foreach ($roles as $role) {
+//           $entry->role=null;
+//
+//
+//            if ($entry->roles) {
+//
+//                foreach ($entry->roles as $userRole) {
+//
+//                    if ($role->id == $userRole->id) {
+//
+//                     $entry->role =$userRole->id;
+//                    }
+//                }
+//            }
+//        }
         $title = 'Edit';
         $component = 'UserEdit';
         $jsonData = [
             'entry' => $entry,
-            'roles' => $roles,
+            'role'=>$role,
+
         ];
         return view('admin.layouts.vue', compact('title', 'component', 'jsonData'));
     }
+
 
     public function edit_teacher(Request $req)
     {
@@ -213,12 +229,13 @@ class UsersController extends AdminBaseController
             return ['code' => 405, 'message' => 'Method not allow'];
         }
         $data = $req->get('entry');
+        $data_role=$req->all();
         $roles = $req->roles;
         $rules = [
             'username' => ['required',new ValiUser()],
             'full_name'=>['required',new ValiFullname()],
             'email' => 'required|max:191|email',
-            'password' => '|max:191|confirmed',
+//            'password' => '|max:191|confirmed',
         ];
         if (!isset($data['id'])) {
 //            $rules['password'] = 'required|max:191|confirmed';
@@ -248,11 +265,32 @@ class UsersController extends AdminBaseController
             $entry->save();
 
             UserRole::where('user_id', $entry->id)->delete();
-            foreach ($roles as $role) {
-                if (@$role['user']) {
-                    UserRole::create(['user_id' => $entry->id, 'role_id' => $role['id']]);
-                }
+            $data_role['user_id']=$entry->id;
+            if($data_role['role']==1)
+            {
+                $data_role['user_id']=$entry->id;
+                $data_role['role_id']=1;
             }
+            if($data_role['role']==2)
+            {
+                $data_role['user_id']=$entry->id;
+                $data_role['role_id']=2;
+            }
+            if($data_role['role']==4)
+            {
+                $data_role['user_id']=$entry->id;
+                $data_role['role_id']=4;
+            }
+            if($data_role['role']==5)
+            {
+                $data_role['user_id']=$entry->id;
+                $data_role['role_id']=5;
+            }
+            UserRole::updateOrCreate([
+                'user_id'=>$data_role['user_id'],
+                'role_id'=>$data_role['role_id']
+
+            ],$data_role);
             return [
                 'code' => 0,
                 'message' => 'Đã cập nhật',
@@ -263,11 +301,36 @@ class UsersController extends AdminBaseController
             $data['password'] = Hash::make($data['password']);
             $entry->fill($data);
             $entry->save();
-            foreach ($roles as $role) {
-                if (@$role['user']) {
-                    UserRole::create(['user_id' => $entry->id, 'role_id' => $role['id']]);
-                }
+            $data_role['user_id']=$entry->id;
+            if($data_role['role']==1)
+            {
+                $data_role['user_id']=$entry->id;
+                $data_role['role_id']=1;
             }
+            if($data_role['role']==2)
+            {
+                $data_role['user_id']=$entry->id;
+                $data_role['role_id']=2;
+            }
+            if($data_role['role']==4)
+            {
+                $data_role['user_id']=$entry->id;
+                $data_role['role_id']=4;
+            }
+            if($data_role['role']==5)
+            {
+                $data_role['user_id']=$entry->id;
+                $data_role['role_id']=5;
+            }
+            if($data_role['role'])
+            {
+                UserRole::updateOrCreate([
+                    'user_id'=>@$data_role['user_id'],
+                    'role_id'=>@$data_role['role_id']
+                ],$data_role);
+
+            }
+
             return [
                 'code' => 0,
                 'message' => 'Đã thêm',
@@ -275,6 +338,7 @@ class UsersController extends AdminBaseController
             ];
         }
     }
+
     /**
      * @param Request $req
      */
@@ -313,6 +377,7 @@ class UsersController extends AdminBaseController
             $query->where('username', 'LIKE', '%' . $req->keyword . '%')
                 ->orWhere('email', 'LIKE', '%' . $req->keyword . '%')
                 ->orWhere('id', 'LIKE', '%' . $req->keyword . '%')
+                ->orWhere('state','LIKE','%'.$req->keyword . '%')
                 ->orwhereHas('roles', function ($q) use ($req) {
                     $q->where('role_name', 'LIKE', '%' . $req->keyword . '%');
                 });

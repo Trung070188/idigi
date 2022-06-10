@@ -16,7 +16,7 @@
                                 <div class="row">
                                     <div  class="form-group  col-sm-4">
                                         <label>Username <span class="text-danger">*</span></label>
-                                        <input class="form-control" placeholder="Enter the username" v-model="entry.username">
+                                        <input class="form-control nospace" placeholder="Enter the username" v-model="entry.username">
 
                                         <error-label for="f_category_id" :errors="errors.username"></error-label>
                                     </div>
@@ -32,34 +32,69 @@
                                         <error-label for="f_category_id" :errors="errors.email"></error-label>
                                     </div>
                                     <div v-if="entry.id==null" class="form-group  col-sm-4">
-                                        <label>Password <span class="text-danger">*</span></label>
-                                        <input :type="showPass ? 'text' : 'password'" class="form-control"
+                                        <label>Password </label>
+                                        <input v-if="auto_gen==true" disabled :type="showPass ? 'text' : 'password'" class="form-control"
+                                               ref="password" v-model="entry.password">
+                                        <input v-if="auto_gen==false"  :type="showPass ? 'text' : 'password'" class="form-control"
                                                ref="password" v-model="entry.password">
                                         <i @click="showPass = !showPass" class="fa fa-eye"></i>
                                         <error-label for="f_category_id" :errors="errors.password"></error-label>
                                     </div>
 
                                     <div v-if="entry.id==null" class="form-group  col-sm-4">
-                                        <label>Confirm your password <span class="text-danger">*</span></label>
-                                        <input class="form-control" :type="showConfirm ? 'text' : 'password'"
+                                        <label>Confirm your password</label>
+                                        <input v-if="auto_gen==true" disabled class="form-control" :type="showConfirm ? 'text' : 'password'"
+                                               v-model="entry.password_confirmation">
+                                        <input v-if="auto_gen==false"  class="form-control" :type="showConfirm ? 'text' : 'password'"
                                                v-model="entry.password_confirmation">
                                         <i @click="showConfirm = !showConfirm" class="fa fa-eye"></i>
                                         <error-label for="f_category_id"
                                                      :errors="errors.password_confirmation"></error-label>
                                     </div>
+                                    <div class="form-group  col-sm-8">
+                                        <input  type="checkbox" v-model="auto_gen">
+                                        <label>Auto password</label>
+                                    </div>
                                 </div>
                                 <div class="row">
 
                                     <label>Role</label>
-                                    <div v-for="role in roles" class="form-group col-sm-2">
-                                        <input type="checkbox" v-model="role.user">
-                                        <label>{{ role.role_name }}</label>
-                                        <error-label for="f_grade" :errors="errors.roles"></error-label>
+                                    <div  class="form-group col-sm-2">
+                                        <input  type="radio"  v-model="role" value="1">
+                                        <label>Super Administrator</label>
+                                    </div>
+                                    <div  class="form-group col-sm-2">
+                                        <input  type="radio"  v-model="role" value="2">
+                                        <label>Admin</label>
+                                    </div>
+                                    <div   class="form-group col-sm-2">
+                                        <input  type="radio" v-model="role" value="5" >
+                                        <label>Teacher</label>
 
 
                                     </div>
+                                    <div   class="form-group col-sm-2">
+                                        <input  type="radio"  v-model="role" value="4">
+                                        <label>Partner</label>
+                                    </div>
 
 
+                                </div>
+                                <div class="row" v-if="role==2">
+                                    <div class="form-group  col-sm-4">
+                                        <label>School <span class="text-danger">*</span></label>
+                                        <select class="form-control form-select" type="" placeholder="Enter the school" >
+
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="row" v-if="role==5">
+                                    <div class="form-group  col-sm-4">
+                                        <label>School <span class="text-danger">*</span></label>
+                                        <select class="form-control form-select" type="" placeholder="Enter the school" >
+
+                                        </select>
+                                    </div>
                                 </div>
 
                                 <div class="row">
@@ -82,8 +117,8 @@
                         <div>
                             <button type="reset" @click="save()" class="btn btn-primary mr-2">Save</button>
                             <button type="reset" @click="backIndex()" class="btn btn-secondary">Cancel</button>
-<!--                            <label style="margin-left: 20px">Thông tin đăng nhập và mật khẩu sẽ được gửi tới người dùng
-                                qua email.</label>-->
+                            <!--                            <label style="margin-left: 20px">Thông tin đăng nhập và mật khẩu sẽ được gửi tới người dùng
+                                                            qua email.</label>-->
                         </div>
                     </div>
                 </div>
@@ -96,75 +131,89 @@
 </template>
 
 <script>
-import {$post} from "../../utils";
+    import {$post} from "../../utils";
 
-import ActionBar from "../includes/ActionBar";
-import SwitchButton from "../../components/SwitchButton";
+    import ActionBar from "../includes/ActionBar";
+    import SwitchButton from "../../components/SwitchButton";
 
-export default {
-    name: "UsersForm.vue",
-    components: {ActionBar, SwitchButton},
-    data() {
+    export default {
+        name: "UsersForm.vue",
+        components: {ActionBar, SwitchButton},
+        data() {
 
-        return {
-
-            showConfirm: false,
-            showPass: false,
-            types: [],
-            breadcrumbs: [
-                {
-                    title: 'Users',
-                    url: '/xadmin/users/index',
+            return {
+                role:'',
+                auto_gen:true,
+                showConfirm: false,
+                showPass: false,
+                types: [],
+                breadcrumbs: [
+                    {
+                        title: 'Users',
+                        url: '/xadmin/users/index',
+                    },
+                    {
+                        title: $json.entry ? 'Edit User' : 'Create new User',
+                    },
+                ],
+                entry: $json.entry || {
+                    role: []
                 },
-                {
-                    title: $json.entry ? 'Edit User' : 'Create new User',
-                },
-            ],
-            entry: $json.entry || {
-                roles: []
-            },
-            roles: $json.roles || [],
-            isLoading: false,
-            errors: {}
-        }
-    },
-    methods: {
-        // checkbox_roles()
-        // {
-        //     this.entry=this.roles;
-        // },
-        backIndex() {
-
-            window.location.href = '/xadmin/users/index';
-        },
-        async save() {
-            this.isLoading = true;
-            const res = await $post('/xadmin/users/save', {entry: this.entry, roles: this.roles}, false);
-            this.isLoading = false;
-            if (res.errors) {
-                this.errors = res.errors;
-                return;
+                roles: $json.roles || [],
+                isLoading: false,
+                errors: {}
             }
-            if (res.code) {
-                toastr.error(res.message);
-            } else {
-                this.errors = {};
-                toastr.success(res.message);
-                if (!this.entry.id) {
-                    location.replace('/xadmin/users/edit?id=' + res.id);
+        },
+        mounted() {
+            $('.nospace').keypress(function (e) {
+
+                console.log(e.keyCode);
+                if (e.keyCode == 32 ) {
+                    e.preventDefault();
+                }
+            })
+        },
+
+        methods: {
+            // checkbox_roles()
+            // {
+            //     this.entry=this.roles;
+            // },
+            backIndex() {
+
+                window.location.href = '/xadmin/users/index';
+            },
+            async save() {
+                console.log(this.role);
+
+                this.isLoading = true;
+                const res = await $post('/xadmin/users/save', {entry: this.entry, role: this.role}, false);
+
+                this.isLoading = false;
+                if (res.errors) {
+                    this.errors = res.errors;
+                    return;
+                }
+                if (res.code) {
+                    toastr.error(res.message);
+                } else {
+                    this.errors = {};
+                    toastr.success(res.message);
+                    // if (!this.entry.id) {
+                    //     location.replace('/xadmin/users/edit?id=' + res.id);
+                    // }
                 }
             }
         }
     }
-}
 </script>
 
 <style scoped>
-.fa-eye {
-    position: absolute;
-    top: 40%;
-    right: 5%
+    .fa-eye {
+        position: absolute;
+        top: 40%;
+        right: 5%
 
-}
+    }
 
 </style>

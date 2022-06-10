@@ -125,6 +125,10 @@ WHERE p.`user_id`=?', [$this->id]);
         return $this->belongsToMany(Role::class,'user_role','user_id','role_id');
 //            return $this->belongsToMany('App\Role','')
     }
+    public function user_roles()
+    {
+        return $this->hasMany(UserRole::class);
+    }
     public function request_roles()
     {
         return $this->hasMany(RequestRole::class);
