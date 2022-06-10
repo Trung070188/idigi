@@ -4,6 +4,7 @@ namespace App\Http;
 
 use App\Http\Middleware\CheckIfRole;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
+use Laravel\Passport\Http\Middleware\CheckClientCredentials;
 
 class Kernel extends HttpKernel
 {
@@ -54,7 +55,7 @@ class Kernel extends HttpKernel
      * @var array
      */
     protected $routeMiddleware = [
-	    'SimplePermission' => \App\Http\Middleware\SimplePermission::class,
+        'SimplePermission' => \App\Http\Middleware\SimplePermission::class,
         'auth' => \App\Http\Middleware\Authenticate::class,
         'auth.basic' => \Illuminate\Auth\Middleware\AuthenticateWithBasicAuth::class,
         'cache.headers' => \Illuminate\Http\Middleware\SetCacheHeaders::class,
@@ -65,5 +66,6 @@ class Kernel extends HttpKernel
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
         'CheckIfRole' => CheckIfRole::class,
+        'client' => CheckClientCredentials::class,
     ];
 }
