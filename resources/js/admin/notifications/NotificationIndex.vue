@@ -1,97 +1,42 @@
 <template>
-    <div class="container-fluid" >
+    <div class="container-fluid">
         <ActionBar type="index"
-                   createUrl="/xadmin/notifications/create"
-                   title="NotificationIndex"/>
+                   :breadcrumbs="breadcrumbs"
+                   title="Notifications"/>
+
         <div class="row">
             <div class="col-lg-12">
                 <div class="card card-custom card-stretch gutter-b">
-                    <div class="card-header border-0 pt-5">
-
-                        <div class="row width-full">
-                            <div class="col-lg-12">
-                                <form class="form-inline">
-                                    <div class="form-group mx-sm-3 mb-4">
-                                        <input @keydown.enter="doFilter('keyword', filter.keyword, $event)" v-model="filter.keyword"
-                                               type="text"
-                                               class="form-control" placeholder="tìm kiếm" value="">
+                    <div class="card-body d-flex flex-column" style="height: 563px" >
+                        <div   class="row width-full">
+                            <div class="col-lg-12 body " >
+                                <form  class="form-inline"  >
+                                    <div  class="form-group mx-sm-3 mb-2">
+                                        <label>quangtrungnguyen</label>
                                     </div>
-                                    <div class="form-group mx-sm-3 mb-4">
-                                        <Daterangepicker v-model="filter.created" placeholder="Ngày tạo"></Daterangepicker>
-                                    </div>
-
-                                    <div class="form-group mx-sm-3 mb-2">
-                                        <button @click="filterClear()" type="button" v-on:click="clearFilter()"
-                                                class="btn btn-sm btn-flex btn-light  fw-bolder">Xóa
-                                        </button>
-                                    </div>
-
                                 </form>
-                            </div>
 
-                        </div>
+                                <div  class="form-group mx-sm-3 mb-2" style="position: absolute;right:65px;margin-top: -33px;" >
 
-                    </div>
 
-                    <div class="card-body d-flex flex-column" >
-                        <div v-text="'Showing '+ from +' to '+ to +' of '+ paginate.totalRecord +' entries'" v-if="entries.length > 0"></div>
-                        <table class=" table  table-head-custom table-head-bg table-vertical-center">
-                            <thead>
-                            <tr> <th>ID</th>
-                                                                    <th>Type</th>
-                                                                    <th>Url</th>
-                                                                    <th>Channel</th>
-                                                                    <th>Status</th>
-                                                                    <th>Content</th>
-                                                                    <th>Title</th>
-                                                                    <th>Sent At</th>
-                                                                <th></th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <tr v-for="entry in entries" @click="edit(entry.id, $event)">
-                                <td v-text="entry.id"></td>
-                                                                    <td v-text="entry.type"></td>
-                                                                    <td v-text="entry.url"></td>
-                                                                    <td v-text="entry.channel"></td>
-                                                                    <td v-text="entry.status"></td>
-                                                                    <td v-text="entry.content"></td>
-                                                                    <td v-text="entry.title"></td>
-                                                                    <td v-text="entry.sent_at"></td>
-                                
-                                <td class="">
-<!--                                    <a :href="'/xadmin/notifications/edit?id='+entry.id" style="margin-right: 10px"><i style="font-size:1.3rem" class="fa fa-edit"></i></a>-->
-                                    <a @click="remove(entry)" href="javascript:;" class="btn-trash deleted"><i  class="fa fa-trash mr-1"></i></a>
-                                </td>
-                            </tr>
-                            </tbody>
-                        </table>
-                        <div style="margin-top:10px; display: flex">
-                            <div class="col-4 form-group d-inline-flex mt-2">
-                                <div class="mr-2">
-                                    <label>Records per page:</label>
                                 </div>
-                                <div>
-                                    <select class="form-select form-select-sm " v-model="limit" @change="changeLimit">
-                                        <option value="25">25</option>
-                                        <option value="50">50</option>
-                                        <option value="100">100</option>
+                                <div  class="form-group mx-sm-3 mb-2" style="position: absolute;right:65px;margin-top: -33px;" >
+                                    <button  type="button"
+                                             class="btn btn-flex btn-dark  fw-verify " style="margin-right: 5px" >
+                                        Xem chi tiết
+                                    </button>
 
-                                    </select>
+
+
                                 </div>
                             </div>
-                            <div style="float: right">
-                                <Paginate :value="paginate" :pagechange="onPageChange"></Paginate>
-                            </div>
                         </div>
-
-
                     </div>
                 </div>
             </div>
-
         </div>
     </div>
+
 
 </template>
 
@@ -113,6 +58,11 @@
                     keyword: $q.keyword || '',
                     created: $q.created || created,
                 },
+                breadcrumbs: [
+                    {
+                        title: 'Notifications'
+                    },
+                ],
                 limit: 25,
                 from: 0,
                 to: 0,
@@ -200,5 +150,32 @@
 </script>
 
 <style scoped>
+    .popup-title{
+        margin-left: 160px;
+    }
+    .content{
+        margin: 30px;
+    }
+    .form-control{
+        max-width: 400px;
+    }
+    .btn btn-danger ito-btn-small{
+        padding: 5px;
+    }
+
+    .body{
+        padding: 40px;
+        /*max-width: 1612px;*/
+        box-sizing: border-box;
+        position: static;
+        width: 100%;
+        left: 0px;
+        top: 0px;
+        background: #FFFFFF;
+        border: 2px solid #333333;
+        border-radius: 44px;
+        margin-top: 70px;
+    }
+
 
 </style>

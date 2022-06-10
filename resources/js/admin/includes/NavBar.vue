@@ -17,7 +17,7 @@
                     <img alt="Logo" src="/images/logo.svg" class="h-30px" />
                 </a>
             </div>
-            
+
             <div class="d-flex align-items-stretch justify-content-between flex-lg-grow-1">
                 <div class="d-flex align-items-stretch" id="kt_header_nav">
                     <div class="header-menu align-items-stretch" data-kt-drawer="true" data-kt-drawer-name="header-menu" data-kt-drawer-activate="{default: true, lg: false}" data-kt-drawer-overlay="true" data-kt-drawer-width="{default:'200px', '300px': '250px'}" data-kt-drawer-direction="end" data-kt-drawer-toggle="#kt_header_menu_mobile_toggle" data-kt-swapper="true" data-kt-swapper-mode="prepend" data-kt-swapper-parent="{default: '#kt_body', lg: '#kt_header_nav'}">
@@ -62,11 +62,13 @@
 
                     </div>
 
+
                         <div  class="d-flex align-items-center ms-1 ms-lg-3" id="kt_header_user_menu_toggle">
 
                             <div  data-kt-menu-trigger="click" data-kt-menu-attach="parent" data-kt-menu-placement="bottom-end">
                             <span class="text-muted font-weight-bold font-size-base d-none d-md-inline mr-1">Hi,&nbsp;</span>
                             <span class="text-dark-50 font-weight-bolder font-size-base d-none d-md-inline mr-3">{{auth.username}}&nbsp;</span>
+                                <TopNotification></TopNotification>
                             <span class="symbol symbol-lg-35 symbol-25 symbol-light-success">
                                 <span   class="symbol-label font-size-h5 font-weight-bold"><i class="fa fa-user"></i></span>
                             </span>
