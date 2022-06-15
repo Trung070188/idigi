@@ -13,7 +13,6 @@ class InvoicePaid extends Notification
 
     public $user;
     public $device_name;
-    public $content;
 
 
     /**
@@ -21,11 +20,11 @@ class InvoicePaid extends Notification
      *
      * @return void
      */
-    public function __construct($user,$device_name,$content)
+    public function __construct($user,$device_name)
     {
         $this->user=$user;
         $this->device_name=$device_name;
-        $this->content=$content;
+
 
 
     }
@@ -67,7 +66,6 @@ class InvoicePaid extends Notification
             'user_id'=>$this->user->id,
             'username'=>$this->user->username,
             'device_name'=>$this->device_name,
-            'content'=>$this->content,
 
         ];
     }
