@@ -3,8 +3,11 @@
 namespace App\Http\Controllers\Admin;
 
 
+use App\Models\User;
+use App\Models\UserDevice;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use App\Models\Notification;
@@ -29,11 +32,29 @@ class NotificationsController extends AdminBaseController
     * @throw  NotFoundHttpException
     * @return  View
     */
-    public function index() {
+    public function index($notification_id) {
+
         $title = 'Notification';
         $component = 'NotificationIndex';
+        $notification=Auth::user()->notifications()->find($notification_id);
+        if($notification)
+        {
+            $notification->markAsRead();
+        }
         return component($component, compact('title'));
     }
+//    public function show($device_name,$notification_id)
+//    {
+//        $notification=Auth::user()->notifications()->find($notification_id);
+//
+//        if($notification)
+//        {
+//            $notification->markAsRead();
+//        }
+//        $device=UserDevice::findOrFail($device_name);
+//        $component = 'NotificationIndex';
+//        return $component($component,compact('device'));
+//    }
 
     /**
     * Create new entry
@@ -199,7 +220,16 @@ class NotificationsController extends AdminBaseController
                 'lastPage' => $entries->lastPage(),
             ]
         ];
+
+
+//        $unreadNotifications=Auth::user()->unreadNotifications;
+//        return [
+//            'code' => 0,
+//           'unreadNotifications' => $unreadNotifications,
+//
+//        ];
     }
+
 
     public function export() {
                 $keys = [
@@ -251,4 +281,5 @@ class NotificationsController extends AdminBaseController
         $writer->save('php://output');
         die;
     }
+
 }

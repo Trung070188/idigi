@@ -9,10 +9,10 @@
                 <div class="card card-custom card-stretch gutter-b">
                     <div class="card-body d-flex flex-column" style="height: 563px" >
                         <div   class="row width-full">
-                            <div class="col-lg-12 body " >
+                            <div  v-for="entry in entries" v-if="entry.notifiable_id==auth.id" class="col-lg-12 body " >
                                 <form  class="form-inline"  >
-                                    <div  class="form-group mx-sm-3 mb-2">
-                                        <label>quangtrungnguyen</label>
+                                    <div class="form-group mx-sm-3 mb-2" style="">
+                                      giáo viên  {{(JSON.parse(entry.data)).username}} yêu cầu xóa thiết bị '{{(JSON.parse(entry.data)).device_name}}'
                                     </div>
                                 </form>
 
@@ -21,10 +21,12 @@
 
                                 </div>
                                 <div  class="form-group mx-sm-3 mb-2" style="position: absolute;right:65px;margin-top: -33px;" >
+                                    <a :href="'/xadmin/users/edit_teacher?id='+(JSON.parse(entry.data)).user_id" >
                                     <button  type="button"
-                                             class="btn btn-flex btn-dark  fw-verify " style="margin-right: 5px" >
+                                             class="btn btn-flex btn-dark  fw-verify " style="margin-right: 5px">
                                         Xem chi tiết
                                     </button>
+                                    </a>
 
 
 
@@ -44,6 +46,7 @@
     import {$get, $post, getTimeRangeAll} from "../../utils";
     import $router from '../../lib/SimpleRouter';
     import ActionBar from "../includes/ActionBar";
+    import axios from 'axios';
 
     let created = getTimeRangeAll();
     const $q = $router.getQuery();
@@ -53,6 +56,7 @@
         components: {ActionBar},
         data() {
             return {
+                unreadNotifications:{},
                 entries: [],
                 filter: {
                     keyword: $q.keyword || '',
@@ -66,11 +70,11 @@
                 limit: 25,
                 from: 0,
                 to: 0,
-                paginate: {
-                    currentPage: 1,
-                    lastPage: 1,
-                    totalRecord: 0
-                }
+                // paginate: {
+                //     currentPage: 1,
+                //     lastPage: 1,
+                //     totalRecord: 0
+                // }
             }
         },
         mounted() {
@@ -83,13 +87,26 @@
                 }
 
             },
+            getNotifications(){
+                axios.get('unreadNotifications').then((response) => {
+                    this.unreadnotifications = response.data
+                }).catch((errors) => {
+                    console.log(errors)
+                });
+                console.log( this.unreadnotifications);
+            },
             async load() {
                 let query = $router.getQuery();
                 const res  = await $get('/xadmin/notifications/data', query);
                 this.paginate = res.paginate;
                 this.entries = res.data;
-                this.from = (this.paginate.currentPage-1)*(this.limit) + 1;
-                this.to = (this.paginate.currentPage-1)*(this.limit) + this.entries.length;
+
+
+
+                console.log(this.entries
+                );
+                // this.from = (this.paginate.currentPage-1)*(this.limit) + 1;
+                // this.to = (this.paginate.currentPage-1)*(this.limit) + this.entries.length;
             },
             async remove(entry) {
                 if (!confirm('Xóa bản ghi: ' + entry.id)) {

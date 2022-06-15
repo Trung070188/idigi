@@ -11,14 +11,23 @@ class InvoicePaid extends Notification
 {
     use Queueable;
 
+    public $user;
+    public $device_name;
+    public $content;
+
+
     /**
      * Create a new notification instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct($user,$device_name,$content)
     {
-        //
+        $this->user=$user;
+        $this->device_name=$device_name;
+        $this->content=$content;
+
+
     }
 
     /**
@@ -29,7 +38,7 @@ class InvoicePaid extends Notification
      */
     public function via($notifiable)
     {
-        return ['mail'];
+        return ['database'];
     }
 
     /**
@@ -38,13 +47,13 @@ class InvoicePaid extends Notification
      * @param  mixed  $notifiable
      * @return \Illuminate\Notifications\Messages\MailMessage
      */
-    public function toMail($notifiable)
-    {
-        return (new MailMessage)
-                    ->line('The introduction to the notification.')
-                    ->action('Notification Action', url('/'))
-                    ->line('Thank you for using our application!');
-    }
+//    public function toMail($notifiable)
+//    {
+//        return (new MailMessage)
+//                    ->line('The introduction to the notification.')
+//                    ->action('Notification Action', url('/'))
+//                    ->line('Thank you for using our application!');
+//    }
 
     /**
      * Get the array representation of the notification.
@@ -52,10 +61,14 @@ class InvoicePaid extends Notification
      * @param  mixed  $notifiable
      * @return array
      */
-    public function toArray($notifiable)
+    public function toDatabase ($notifiable)
     {
         return [
-            //
+            'user_id'=>$this->user->id,
+            'username'=>$this->user->username,
+            'device_name'=>$this->device_name,
+            'content'=>$this->content,
+
         ];
     }
 }

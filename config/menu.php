@@ -99,7 +99,7 @@ return [
 
     [
         "name" => "Notification",
-        "icon" => "fa fa-archive",
+        "icon" => "fa fa-bell",
         "group" => 1,
         'url' => '/xadmin/notifications/index',
         ],

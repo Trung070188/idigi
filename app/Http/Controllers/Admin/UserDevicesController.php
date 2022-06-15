@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 
 use App\Models\User;
+use App\Notifications\InvoicePaid;
 use Firebase\JWT\JWT;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
@@ -120,6 +121,21 @@ class UserDevicesController extends AdminBaseController
             $entry->fill($data);
 
             $entry->status=1;
+            $users=User::with('roles')->orderBy('username')->get();
+
+            foreach ($users as $user)
+            {
+               foreach ($user->roles as $role)
+               {
+
+                   if($role->role_name=='Admin')
+                   {
+                       $user->notify(new InvoicePaid(Auth::user(),$entry->device_name,$entry->user_device_id));
+                   }
+               }
+            }
+
+
             $entry->save();
 
             return [
@@ -360,5 +376,17 @@ class UserDevicesController extends AdminBaseController
         }
 
         return  ['status' => 0, 'token' =>  'Error'];
+    }
+    public function  unreadNotifications()
+    {
+        $unreadNotifications = Auth::user()->unreadNotifications;
+        return response()->json($unreadNotifications);
+    }
+    public function markAsRead()
+    {
+
+        Auth::user()->notifications->markAsRead();
+        return response()->json('success');
+
     }
 }
