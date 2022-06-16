@@ -440,9 +440,12 @@
                 <span id="notifiy_num"  v-show="unreadnotifications.length>0" >{{unreadnotifications.length}}</span>
             </a>
             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="">
-                <a class="dropdown-item" v-for="(unread,index) in unreadnotifications" :key="index" >
-                    <h5>{{unread.data.device_name}}</h5>
-                    <p>{{d((unread.created_at))}}</p>
+                <a class="dropdown-item" v-for="(unread,index) in unreadnotifications" :key="index" @click="show(index)">
+                    <p v-if="unread.type=='App\\Notifications\\InvoicePaid'">yêu cầu xóa thiết bị của {{unread.data.username}}. {{d(unread.created_at)}} </p>
+                    <p v-if="unread.type=='App\\Notifications\\RequestRoleNotification'">yêu cầu cấp quyền {{unread.data.user_name}}. {{d(unread.created_at)}} </p>
+
+
+
 
                 </a>
                 <a class="dropdown-item" v-show="unreadnotifications.length==0">No Notifications</a>
@@ -487,12 +490,12 @@
                     console.log(errors)
                 });
             },
-            // show(index)
-            // {
-            //     var user_device_id=this.this.unreadnotifications[index].data.user_device_id;
-            //     var notification_id=this.unreadnotifications[index].id;
-            //     location.href='xadmin/notifications/'+user_device_id+'/'+notification_id;
-            // }
+            show(index)
+            {
+
+                var notification_id=this.unreadnotifications[index].id;
+                location.href='/xadmin/notifications/show?id='+notification_id;
+            }
         },
     }
 </script>

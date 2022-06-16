@@ -45,7 +45,6 @@ Route::middleware(['auth', 'CheckIfRole'])->namespace('Admin')->prefix('xadmin')
 
 Route::middleware(['auth', ])->namespace('Admin')->prefix('xadmin')->group(function () {
     Route::get('/unreadNotifications', 'UserDevicesController@unreadNotifications');
-//    Route::get('/notifications/{device_name}/{notificationid}','NotificationsController@show');
     Route::get('/markAsRead', 'UserDevicesController@markAsRead');
     Route::get('/request_role/index', 'RequestRolesController@index');
     Route::post('/request_role/save', 'RequestRolesController@save');

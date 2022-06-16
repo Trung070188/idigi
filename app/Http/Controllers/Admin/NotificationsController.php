@@ -32,29 +32,12 @@ class NotificationsController extends AdminBaseController
     * @throw  NotFoundHttpException
     * @return  View
     */
-    public function index($notification_id) {
+    public function index() {
 
         $title = 'Notification';
         $component = 'NotificationIndex';
-        $notification=Auth::user()->notifications()->find($notification_id);
-        if($notification)
-        {
-            $notification->markAsRead();
-        }
         return component($component, compact('title'));
     }
-//    public function show($device_name,$notification_id)
-//    {
-//        $notification=Auth::user()->notifications()->find($notification_id);
-//
-//        if($notification)
-//        {
-//            $notification->markAsRead();
-//        }
-//        $device=UserDevice::findOrFail($device_name);
-//        $component = 'NotificationIndex';
-//        return $component($component,compact('device'));
-//    }
 
     /**
     * Create new entry
@@ -73,9 +56,16 @@ class NotificationsController extends AdminBaseController
     * @throw  NotFoundHttpException
     * @return  View
     */
-    public function edit (Request $req) {
+    public function show (Request $req) {
         $id = $req->id;
         $entry = Notification::find($id);
+               $notification=Auth::user()->notifications()->find($id);
+
+       if($notification)
+       {
+            $notification->markAsRead();
+        }
+
 
         if (!$entry) {
             throw new NotFoundHttpException();
@@ -208,26 +198,43 @@ class NotificationsController extends AdminBaseController
         }
 
         $query->createdIn($req->created);
+        $limit = 2;
 
-
-        $entries = $query->paginate();
-
+        if ($req->limit) {
+            $limit = $req->limit;
+        }
+        $entries = $query->paginate($limit);
+        $data=[];
+        foreach ($entries as $entry)
+        {
+            $user=  $user = Auth::user();
+                if( $entry->notifiable_id==$user->id)
+           {
+               $data[]=[
+                'id'=>$entry->id,
+               'type'=>$entry->type,
+               'notifiable_type'=>$entry->notifiable_type,
+               'notifiable_id'=>$entry->notifiable_id,
+               'data'=>$entry->data,
+               'read_at'=>$entry->read_at,
+               'created_at'=>$entry->created_at,
+               'updated_at'=>$entry->updated_at,
+               ];
+           }
+        }
         return [
             'code' => 0,
-            'data' => $entries->items(),
+                'data'=>[
+                  'entries'=>$data,
+                ],
             'paginate' => [
                 'currentPage' => $entries->currentPage(),
                 'lastPage' => $entries->lastPage(),
+                'totalRecord' =>$entries->count(),
             ]
         ];
 
 
-//        $unreadNotifications=Auth::user()->unreadNotifications;
-//        return [
-//            'code' => 0,
-//           'unreadNotifications' => $unreadNotifications,
-//
-//        ];
     }
 
 

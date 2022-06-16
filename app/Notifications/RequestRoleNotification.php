@@ -7,23 +7,21 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class InvoicePaid extends Notification
+class RequestRoleNotification extends Notification
 {
     use Queueable;
-
     public $user;
-    public $device_name;
+    public $content;
 
     /**
      * Create a new notification instance.
      *
      * @return void
      */
-    public function __construct($user,$device_name)
+    public function __construct($user,$content)
     {
-        $this->user=$user;
-        $this->device_name=$device_name;
-
+           $this->user=$user;
+           $this->content=$content;
     }
 
     /**
@@ -57,12 +55,12 @@ class InvoicePaid extends Notification
      * @param  mixed  $notifiable
      * @return array
      */
-    public function toDatabase ($notifiable)
+    public function toDatabase($notifiable)
     {
         return [
+            'user_name'=>$this->user->username,
             'user_id'=>$this->user->id,
-            'username'=>$this->user->username,
-            'device_name'=>$this->device_name,
+            'content'=>$this->content,
         ];
     }
 }

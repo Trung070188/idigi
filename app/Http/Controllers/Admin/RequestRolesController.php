@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Admin;
 
 
 use App\Models\User;
+use App\Notifications\InvoicePaid;
+use App\Notifications\RequestRoleNotification;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -131,6 +133,20 @@ class RequestRolesController extends AdminBaseController
             $data['content'] = 'Tôi là giáo viên';
         }
         $data['status'] = 'Waiting';
+        $users=User::with('roles')->orderBy('username')->get();
+
+        foreach ($users as $user)
+        {
+            foreach ($user->roles as $role)
+            {
+
+                if($role->role_name=='Admin')
+                {
+                    $user->notify(new RequestRoleNotification(Auth::user(),$data['content']));
+                }
+            }
+        }
+
 
         RequestRole::updateOrCreate([
             'content' => $data['content'],
