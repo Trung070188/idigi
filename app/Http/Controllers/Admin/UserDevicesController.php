@@ -30,11 +30,11 @@ class UserDevicesController extends AdminBaseController
     ];
 
     /**
-    * Index page
-    * @uri  /xadmin/user_devices/index
-    * @throw  NotFoundHttpException
-    * @return  View
-    */
+     * Index page
+     * @uri  /xadmin/user_devices/index
+     * @throw  NotFoundHttpException
+     * @return  View
+     */
     public function index() {
         $title = 'UserDevices';
         $component = 'User_deviceIndex';
@@ -46,11 +46,11 @@ class UserDevicesController extends AdminBaseController
         return component($component, compact('title'));
     }
     /**
-    * Create new entry
-    * @uri  /xadmin/user_devices/create
-    * @throw  NotFoundHttpException
-    * @return  View
-    */
+     * Create new entry
+     * @uri  /xadmin/user_devices/create
+     * @throw  NotFoundHttpException
+     * @return  View
+     */
 //    public function create (Request $req) {
 //
 //        $component = 'User_deviceForm';
@@ -59,15 +59,15 @@ class UserDevicesController extends AdminBaseController
 //    }
 
     /**
-    * @uri  /xadmin/user_devices/edit?id=$id
-    * @throw  NotFoundHttpException
-    * @return  View
-    */
+     * @uri  /xadmin/user_devices/edit?id=$id
+     * @throw  NotFoundHttpException
+     * @return  View
+     */
 
     /**
-    * @uri  /xadmin/user_devices/remove
-    * @return  array
-    */
+     * @uri  /xadmin/user_devices/remove
+     * @return  array
+     */
     public function remove(Request $req) {
         $id = $req->id;
         $entry = UserDevice::find($id);
@@ -85,9 +85,9 @@ class UserDevicesController extends AdminBaseController
     }
 
     /**
-    * @uri  /xadmin/user_devices/save
-    * @return  array
-    */
+     * @uri  /xadmin/user_devices/save
+     * @return  array
+     */
 
     public function save(Request $req) {
 
@@ -99,7 +99,7 @@ class UserDevicesController extends AdminBaseController
 //    'device_uid' => 'required|max:45',
 //    'device_name' => 'required|max:45',
 //        'reason'=>'required||max:100',
-];
+        ];
 
         $v = Validator::make($data, $rules);
 
@@ -125,14 +125,14 @@ class UserDevicesController extends AdminBaseController
 
             foreach ($users as $user)
             {
-               foreach ($user->roles as $role)
-               {
+                foreach ($user->roles as $role)
+                {
 
-                   if($role->role_name=='Admin')
-                   {
-                       $user->notify(new InvoicePaid(Auth::user(),$entry->device_name,$entry->user_device_id));
-                   }
-               }
+                    if($role->role_name=='Admin')
+                    {
+                        $user->notify(new InvoicePaid(Auth::user(),$entry->device_name,$entry->user_device_id));
+                    }
+                }
             }
 
 
@@ -145,28 +145,28 @@ class UserDevicesController extends AdminBaseController
             ];
         }
         /**
-        * @var  UserDevice $entry
-        */
-           else{
-               $entry = new UserDevice();
-               $entry->device_uid=$req->input('device_uid');
-               $entry->device_name=$req->input('device_name');
-               $entry->user_id=auth()->id();
-               $entry->secret_key=(Str::random(10));
-               $entry->reason=$req->input('reason');
-               $entry->status=0;
-               $entry->fill($data);
-               $entry->save();
+         * @var  UserDevice $entry
+         */
+        else{
+            $entry = new UserDevice();
+            $entry->device_uid=$req->input('device_uid');
+            $entry->device_name=$req->input('device_name');
+            $entry->user_id=auth()->id();
+            $entry->secret_key=(Str::random(10));
+            $entry->reason=$req->input('reason');
+            $entry->status=0;
+            $entry->fill($data);
+            $entry->save();
 
-               return [
-                   'code' => 0,
-                   'message' => 'Đã thêm',
-                   'id' => $entry->id,
-               ];
-
-           }
+            return [
+                'code' => 0,
+                'message' => 'Đã thêm',
+                'id' => $entry->id,
+            ];
 
         }
+
+    }
     public function savesend(Request $request) {
         if (!$request->isMethod('POST')) {
             return ['code' => 405, 'message' => 'Method not allow'];
@@ -208,8 +208,8 @@ class UserDevicesController extends AdminBaseController
 //    }
 
     /**
-    * @param  Request $req
-    */
+     * @param  Request $req
+     */
     public function toggleStatus(Request $req)
     {
         $id = $req->get('id');
@@ -252,10 +252,10 @@ class UserDevicesController extends AdminBaseController
     }
 
     /**
-    * Ajax data for index page
-    * @uri  /xadmin/user_devices/data
-    * @return  array
-    */
+     * Ajax data for index page
+     * @uri  /xadmin/user_devices/data
+     * @return  array
+     */
     public function data(Request $req) {
         $users=User::with(['user_devices','roles'])->orderBy('username','ASC')->get();
         return [
@@ -274,12 +274,12 @@ class UserDevicesController extends AdminBaseController
         foreach ($entries as $entry)
         {
             $data[]=[
-                    'id'=>$entry->id,
-                    'device_uid'=>$entry->device_uid,
-                    'device_name'=>$entry->device_name,
-                    'status'=>$entry->status,
-                    'user_id'=>$entry->user_id,
-                    'users'=>$users
+                'id'=>$entry->id,
+                'device_uid'=>$entry->device_uid,
+                'device_name'=>$entry->device_name,
+                'status'=>$entry->status,
+                'user_id'=>$entry->user_id,
+                'users'=>$users
 
             ];
 
@@ -289,7 +289,7 @@ class UserDevicesController extends AdminBaseController
         return [
             'code' => 0,
             'data' =>[
-              'entries'=> $data,
+                'entries'=> $data,
             ],
             'paginate' => [
                 'currentPage' => $entries->currentPage(),
@@ -299,11 +299,11 @@ class UserDevicesController extends AdminBaseController
     }
 
     public function export() {
-                $keys = [
-                            'device_uid' => ['A', 'device_uid'],
-                            'device_name' => ['B', 'device_name'],
-                            'user_id' => ['C', 'user_id'],
-                            ];
+        $keys = [
+            'device_uid' => ['A', 'device_uid'],
+            'device_name' => ['B', 'device_name'],
+            'user_id' => ['C', 'user_id'],
+        ];
 
         $query = UserDevice::query()->orderBy('id', 'desc');
 
@@ -316,7 +316,7 @@ class UserDevicesController extends AdminBaseController
                 $sheet->setCellValue($v . "1", $key);
             } elseif (is_array($v)) {
                 list($c, $n) = $v;
-                 $sheet->setCellValue($c . "1", $n);
+                $sheet->setCellValue($c . "1", $n);
             }
         }
 

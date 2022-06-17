@@ -503,16 +503,16 @@
 <style scoped>
     #notify_icon{
         margin-right: -16px;
-        line-height: 20px;
+        line-height: 25px;
 
     }
     #notifiy_num{
         text-align: center;
         position: absolute;
-        top: 5px;
+        top: 10px;
         right: -7px;
-        min-width: 18px;
-        min-height: 19px;
+        min-width: 16px;
+        min-height: 16px;
         border-radius: 50%;
         background: red;
         color: #f1f1f1;

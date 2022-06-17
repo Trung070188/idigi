@@ -203,7 +203,7 @@ class NotificationsController extends AdminBaseController
         if ($req->limit) {
             $limit = $req->limit;
         }
-        $entries = $query->paginate($limit);
+        $entries = $query->paginate();
         $data=[];
         foreach ($entries as $entry)
         {
