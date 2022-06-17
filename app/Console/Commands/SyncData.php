@@ -72,7 +72,7 @@ class SyncData extends Command
                     $structure = [
                         "idSubject" => @$oldStructure['idSubject'],
                         "codeSubject" => $lesson->subject,
-                        "nameSubject" => "iSmart Math",
+                        "nameSubject" => "iSMART ".$lesson->subject,
                         "grade" => $lesson->grade,
                         "idUnit" => $lesson->unit,
                         "titleUnit" => $lesson->number,
