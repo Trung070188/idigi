@@ -53,8 +53,6 @@
                 </div>
             </div>
         </div>
-
-
         <div class="modal fade" id="editdeviceConfirm" tabindex="-1" role="dialog"
              aria-labelledby="editdeviceConfirm"
              aria-hidden="true">
@@ -69,7 +67,7 @@
                                disabled>
                         <error-label for="f_category_id" :errors="errors.device_name"></error-label>
                         <div>
-                            <button  type="button" class="generate" v-on:click="genToken"> Generate Key</button>
+                            <button  type="button" class=generate" v-on:click="genToken"> Generate Key</button>
                         </div>
                         <div style="text-align:right"><button type="button" v-if="token" class="btn-primary" v-on:click="copyTextToken" title="Copy Token"> Copy</button></div>
 
@@ -99,10 +97,10 @@
                 <div class="card card-custom card-stretch gutter-b">
                     <div class="card-body d-flex flex-column" style="height: 563px" >
                         <div v-for="entry in entries"  class="row" v-if="entry.id==auth.id">
-                            <button     v-if="entry.user_devices.length<3 " type="button" class="col-lg-2 btn btn-dark modal-devices " @click="modalDevice()">
+                            <button     v-if="entry.user_devices.length<3 " type="button" class="col-lg-2 btn btn-primary modal-devices " @click="modalDevice()">
                                 Add more device
                             </button>
-                            <button  v-if="entry.user_devices.length>=3" type="button" class="col-lg-2 btn btn-dark modal-devices " @click="closeModal()">
+                            <button  v-if="entry.user_devices.length>=3" type="button" class="col-lg-2 btn btn-primary modal-devices " @click="closeModal()">
                                 Add more device
                             </button>
                         </div>
@@ -130,15 +128,15 @@
                                 </div>
                                 <div  class="form-group mx-sm-3 mb-2" style="position: absolute;right:65px;margin-top: -33px;" v-if="device.status!==1">
                                     <button  type="button"
-                                             class="btn btn-flex btn-dark  fw-verify " style="margin-right: 5px" @click="editModalDevice(device.id,device.device_name,device.secret_key)" >
+                                             class="btn btn-flex btn-secondary  fw-verify " style="margin-right: 5px" @click="editModalDevice(device.id,device.device_name,device.secret_key)" >
                                         Get activity code
                                     </button>
 
                                     <button type="button"
-                                            class="btn btn-flex btn-dark  fw-bolder " v-for="role in entry.roles"  v-if="role.id!==5"  @click="remove(device)">Delete device
+                                            class="btn btn-flex btn-danger  fw-bolder " v-for="role in entry.roles"  v-if="role.id!==5"  @click="remove(device)">Delete device
                                     </button>
                                     <button v-for="role in entry.roles" v-if="role.id==5" type="button"
-                                            class="btn btn-flex btn-dark  fw-bolder " @click="Sent(device)">Delete device
+                                            class="btn btn-flex btn-info  fw-bolder " @click="Sent(device)">Delete device
                                     </button>
 
                                 </div>
@@ -355,7 +353,7 @@
         left: 0px;
         top: 0px;
         background: #FFFFFF;
-        border: 2px solid #333333;
+        border: 1px solid black;
         border-radius: 44px;
         margin-top: 70px;
     }

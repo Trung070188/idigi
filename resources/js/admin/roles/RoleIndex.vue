@@ -13,9 +13,9 @@
                         <tbody>
                         <tr>
                             <td></td>
-                            <td  v-for="role in roles">
+                            <td  v-for="role in roles" >
                                 <div   class="text-center" style="cursor: pointer">
-                                    <span  @click="showModalRole(role)">{{role.role_name}} </span><span><i @click="remove(role)" class="fa fa-trash" style="margin-left:10px"></i></span>
+                                    <span  @click="showModalRole(role)" >{{role.role_name}} </span><span><i v-if="role.allow_deleted == 1" @click="remove(role)" class="fa fa-trash" style="margin-left:10px"></i></span>
                                 </div>
                             </td>
                         </tr>

@@ -557,11 +557,12 @@ class UsersController extends AdminBaseController
         if ($req->keyword) {
             $query->where('username', 'LIKE', '%' . $req->keyword . '%');
         }
-        if ($req->role) {
-            $query->whereHas('roles', function ($q) use ($req) {
-                $q->where('role_name', 'LIKE', '%' . $req->role);
-            });
-        }
+
+
+        $query->whereHas('roles', function ($q) use ($req) {
+            $q->where('role_name', 'Teacher');
+        });
+
         if ($req->username) {
             $query->where('username', 'LIKE', '%' . $req->username);
         }
@@ -583,33 +584,10 @@ class UsersController extends AdminBaseController
         $entries = $query->paginate($limit);
         $users = $entries->items();
         $data = [];
-        foreach ($users as $user) {
 
-            $roles = $user->roles;
-            $user_devices = $user->user_devices;
-            foreach ($roles as $role)
-            {
-               if($role->role_name=='Teacher')
-               {
-                   $data[] = [
-                       'id' => $user->id,
-                       'username' => $user->username,
-                       'full_name' => $user->full_name,
-                       'email' => $user->email,
-                       'state' => $user->state,
-                       'password' => $user->password,
-                       'created_at' => $user->created_at,
-                       'roles' => $roles,
-                       'user_devices' => $user_devices,
-                   ];
-               }
-            }
-
-
-        }
         return [
             'code' => 0,
-            'data' => $data,
+            'data' => $users,
             'paginate' => [
                 'currentPage' => $entries->currentPage(),
                 'lastPage' => $entries->lastPage(),

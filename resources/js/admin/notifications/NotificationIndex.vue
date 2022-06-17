@@ -22,7 +22,7 @@
                                 <div  class="form-group mx-sm-3 mb-2" style="position: absolute;right:65px;margin-top: -33px;" >
                                     <a :href="'/xadmin/users/edit_teacher?id='+(JSON.parse(entry.data)).user_id" >
                                     <button  type="button"
-                                             class="btn btn-flex btn-dark  fw-verify " style="margin-right: 5px">
+                                             class="btn btn-flex btn-secondary  fw-verify " style="margin-right: 5px">
                                         Xem chi tiết
                                     </button>
                                     </a>
@@ -40,7 +40,7 @@
                                 <div  class="form-group mx-sm-3 mb-2" style="position: absolute;right:65px;margin-top: -33px;" >
                                     <a :href="'/xadmin/users/edit_teacher?id='+(JSON.parse(entry.data)).user_id" >
                                         <button  type="button"
-                                                 class="btn btn-flex btn-dark  fw-verify " style="margin-right: 5px">
+                                                 class="btn btn-flex btn-secondary  fw-verify " style="margin-right: 5px">
                                             Xem chi tiết
                                         </button>
                                     </a>
@@ -197,7 +197,7 @@
         left: 0px;
         top: 0px;
         background: #FFFFFF;
-        border: 2px solid #333333;
+        border: 1px solid #333333;
         border-radius: 44px;
         margin-top: 70px;
     }
