@@ -23,13 +23,13 @@
                                     <div class="form-group mx-sm-3 mb-4">
                                         <button type="button" style="margin-left: 10px"
                                                 @click="isShowFilter = !isShowFilter"
-                                                class="btn btn-dark" v-if="isShowFilter"> Close Adventure search
+                                                class="btn btn-primary" v-if="isShowFilter"> Close Adventure search
                                             <i style="margin-left: 5px" class="fas fa-times"></i>
 
                                         </button>
                                         <button type="button" style="margin-left: 10px"
                                                 @click="isShowFilter = !isShowFilter"
-                                                class="btn btn-dark" v-if="!isShowFilter"> Adventure search
+                                                class="btn btn-primary" v-if="!isShowFilter"> Adventure search
                                             <i class="fa fa-filter" v-if="!isShowFilter" aria-hidden="true"></i>
 
                                         </button>
