@@ -379,14 +379,15 @@ class UserDevicesController extends AdminBaseController
     }
     public function  unreadNotifications()
     {
-        $unreadNotifications = Auth::user()->unreadNotifications;
-        return response()->json($unreadNotifications);
-    }
-    public function markAsRead()
-    {
 
-        Auth::user()->notifications->markAsRead();
-        return response()->json('success');
-
+//        $unreadNotifications = Auth::user()->unreadNotifications;
+//        return response()->json($unreadNotifications);
     }
+//    public function markAsRead()
+//    {
+//
+//        Auth::user()->notifications->markAsRead();
+//        return response()->json('success');
+//
+//    }
 }

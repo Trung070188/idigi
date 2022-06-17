@@ -263,9 +263,9 @@ class UsersController extends AdminBaseController
 //            }
 
             if(!Hash::check($data['old_password'], auth()->user()->password)){
-                return back()->with("error", "Old Password Doesn't match!");
+
             }
-            User::whereId(auth()->user()->id)->create([
+            User::whereId(auth()->user()->id)->update([
                 $data['new_password'] => Hash::make($data['new_password'])
             ]);
             $entry->fill($data);
