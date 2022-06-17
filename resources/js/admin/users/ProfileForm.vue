@@ -19,13 +19,13 @@
                         </div>
                         <div class="modal-body">
                             <label>Current Password <span class="text-danger">*</span></label>
-                            <input id="f_role_name"  name="name" class="form-control"
+                            <input id="f_role_name" v-model="entry.old_password" type="password" name="old_password" class="form-control"
                                    placeholder="" >
                             <error-label for="f_role_name" ></error-label>
 
                             <div class="form-group">
                                 <label>New Password <span class="text-danger">*</span></label>
-                                <input id="f_role_description"  name="name" class="form-control"
+                                <input id="f_role_description" v-model="entry.new_password" type="password" name="new_password" class="form-control"
                                        placeholder="" >
                                 <error-label for="f_role_description" ></error-label>
 
@@ -33,17 +33,15 @@
 
                             <div class="form-group">
                                 <label>Confirm New Password <span class="text-danger">*</span></label>
-                                <input  name="name" class="form-control"
+                                <input  name="new_password_confirmation" type="password" class="form-control"
                                         placeholder="" >
                                 <error-label for="f_role_description" ></error-label>
 
                             </div>
                         </div>
-
-
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-dismiss="modal"@click="CloseModal()">Close</button>
-                            <button type="button" class="btn btn-primary">Save changes</button>
+                            <button type="button" class="btn btn-primary"@click="updatePassword()">Save changes</button>
                         </div>
                     </div>
                 </div>
@@ -59,8 +57,8 @@
                             <div class="row">
                                 <div class="col-md-3">
                                     <div class="user-info-left">
-                                        <div class="profile-avatar-upload">
-                                            <div class="profile-avatar-upload-c"
+                                        <div  class="profile-avatar-upload">
+                                            <div  class="profile-avatar-upload-c"
                                                 >
                                             </div>
                                         </div>
@@ -96,7 +94,7 @@
                                                 </div>
                                           </div>
                                             <div class="data-row col-sm-6 " >
-                                                <button type="reset" @click="save()" class="btn btn-primary mr-2">Save</button>
+                                                <button type="reset" @click="save_profile()" class="btn btn-primary mr-2">Save</button>
                                             </div>
                                         </div>
                                     </div>
@@ -150,30 +148,29 @@
             modalDevice() {
                 $('#deviceConfirm').modal('show');
             },
-            CloseModal()
-            {
+            CloseModal() {
                 $('#deviceConfirm').modal('hide');
             },
-            backIndex(){
+            backIndex() {
 
                 window.location.href = '/xadmin/dashboard/index';
             },
             async load() {
                 let query = $router.getQuery();
                 this.$loading(true);
-                const res  = await $get('/xadmin/users/data', query);
+                const res = await $get('/xadmin/users/data', query);
                 this.$loading(false);
                 this.paginate = res.paginate;
                 this.entries = res.data.data;
                 console.log(this.entries);
-                this.from = (this.paginate.currentPage-1)*(this.limit) + 1;
-                this.to = (this.paginate.currentPage-1)*(this.limit) + this.entries.length;
+                this.from = (this.paginate.currentPage - 1) * (this.limit) + 1;
+                this.to = (this.paginate.currentPage - 1) * (this.limit) + this.entries.length;
             },
-            async save() {
+            async save_profile() {
                 console.log(this.check_role);
 
                 this.isLoading = true;
-                const res = await $post('/xadmin/users/save', {entry: this.entry}, false);
+                const res = await $post('/xadmin/users/save_profile', {entry: this.entry}, false);
                 console.log(res);
                 this.isLoading = false;
                 if (res.errors) {
@@ -186,8 +183,29 @@
                     this.errors = {};
                     toastr.success(res.message);
                     if (!this.entry.id) {
-                        location.replace('/xadmin/users/edit?id=' + res.id);
+                        location.replace('/xadmin/users/profile?id=' + res.id);
                     }
+
+                }
+            },
+            async updatePassword() {
+                this.isLoading = true;
+                const res = await $post('/xadmin/users/updatePassword',{entry: this.entry}, false);
+                console.log(res);
+                this.isLoading = false;
+                if (res.errors) {
+                    this.errors = res.errors;
+                    return;
+                }
+                if (res.code) {
+                    toastr.error(res.message);
+                } else {
+                    this.errors = {};
+                    toastr.success(res.message);
+                    if (!this.entry.id) {
+                        location.replace('/xadmin/users/profile?id=' + res.id);
+                    }
+
 
                 }
             }

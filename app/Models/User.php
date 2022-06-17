@@ -137,5 +137,9 @@ WHERE p.`user_id`=?', [$this->id]);
     {
         return  $this->hasMany(UserDevice::class);
     }
+    public function avatars()
+    {
+        return $this->belongsToMany(Avatar::class,'user_avatars');
+    }
 
 }

@@ -159,7 +159,7 @@
                                 <div>
                                     <select class="form-select form-select-sm " v-model="limit" @change="changeLimit">
                                         <option value="25">25</option>
-                                        <option value="50">50</option>
+                                        <option value="10">10</option>
                                         <option value="100">100</option>
 
                                     </select>
@@ -200,6 +200,7 @@
                 email: $q.email || '',
                 state: $q.state ||'',
                 role: $q.role || '',
+
             };
             for (var key in filter) {
                 if (filter[key] != '') {
@@ -217,8 +218,7 @@
                 last_updated: [],
                 entries: [],
                 filter: filter,
-
-                limit: 25,
+                limit: $q.limit || 25,
                 from: 0,
                 to: 0,
                 paginate: {

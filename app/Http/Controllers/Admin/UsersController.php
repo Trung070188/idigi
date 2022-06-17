@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Models\Role;
 use App\Models\School;
+use App\Models\UserAvatar;
 use App\Models\UserDevice;
 use App\Models\UserRole;
 use App\Rules\ValiFullname;
@@ -223,6 +224,112 @@ class UsersController extends AdminBaseController
      * @uri  /xadmin/users/save
      * @return  array
      */
+    public function updatePassword(Request $req)
+    {
+        if (!$req->isMethod('POST')) {
+            return ['code' => 405, 'message' => 'Method not allow'];
+        }
+        $data = $req->get('entry');
+        $data_role=$req->all();
+        $roles = $req->roles;
+        $rules = [
+//            'username' => ['required',new ValiUser()],
+//            'full_name'=>['required',new ValiFullname()],
+//            'email' => 'required|max:191|email',
+//            'password' => '|max:191|confirmed',
+        ];
+        if (!isset($data['id'])) {
+//            $rules['password'] = 'required|max:191|confirmed';
+        }
+        $v = Validator::make($data, $rules);
+
+        if ($v->fails()) {
+            return [
+                'code' => 2,
+                'errors' => $v->errors()
+            ];
+        }
+        if (isset($data['id'])) {
+            $entry = User::find($data['id']);
+
+            if (!$entry) {
+                return [
+                    'code' => 3,
+                    'message' => 'Không tìm thấy',
+                ];
+            }
+//            if ($data['password']) {
+//                $data['password'] = Hash::make($data['password']);
+//            }
+
+            if(!Hash::check($data['old_password'], auth()->user()->password)){
+                return back()->with("error", "Old Password Doesn't match!");
+            }
+            User::whereId(auth()->user()->id)->create([
+                $data['new_password'] => Hash::make($data['new_password'])
+            ]);
+            $entry->fill($data);
+            $entry->save();
+
+
+
+            return [
+                'code' => 0,
+                'message' => 'Đã cập nhật',
+                'id' => $entry->id,
+            ];
+        }
+
+    }
+    public function save_profile(Request $req)
+    {
+        if (!$req->isMethod('POST')) {
+            return ['code' => 405, 'message' => 'Method not allow'];
+        }
+        $data = $req->get('entry');
+        $data_role=$req->all();
+        $roles = $req->roles;
+        $rules = [
+            'username' => ['required',new ValiUser()],
+            'full_name'=>['required',new ValiFullname()],
+            'email' => 'required|max:191|email',
+//            'password' => '|max:191|confirmed',
+        ];
+        if (!isset($data['id'])) {
+//            $rules['password'] = 'required|max:191|confirmed';
+        }
+        $v = Validator::make($data, $rules);
+
+        if ($v->fails()) {
+            return [
+                'code' => 2,
+                'errors' => $v->errors()
+            ];
+        }
+        if (isset($data['id'])) {
+            $entry = User::with(['avatars'])->find($data['id']);
+
+            if (!$entry) {
+                return [
+                    'code' => 3,
+                    'message' => 'Không tìm thấy',
+                ];
+            }
+//            if ($data['password']) {
+//                $data['password'] = Hash::make($data['password']);
+//            }
+            $entry->fill($data);
+            $entry->save();
+
+
+
+            return [
+                'code' => 0,
+                'message' => 'Đã cập nhật',
+                'id' => $entry->id,
+            ];
+        }
+    }
     public function save(Request $req)
     {
         if (!$req->isMethod('POST')) {
@@ -260,9 +367,11 @@ class UsersController extends AdminBaseController
 //            if ($data['password']) {
 //                $data['password'] = Hash::make($data['password']);
 //            }
-
+            $entry->avatars;
             $entry->fill($data);
             $entry->save();
+
+
 
             UserRole::where('user_id', $entry->id)->delete();
             $data_role['user_id']=$entry->id;
@@ -369,7 +478,7 @@ class UsersController extends AdminBaseController
     public function data(Request $req)
     {
         $query = User::query()
-            ->with(['roles'])
+            ->with(['roles','avatars'])
             ->orderBy('id', 'ASC');
         $last_updated = User::query()->orderBy('updated_at', 'desc')->first()->updated_at;
         $roles = Role::with(['users'])->orderBy('role_name', 'ASC')->get();
@@ -397,7 +506,13 @@ class UsersController extends AdminBaseController
             $query->where('state', 'LIKE', '%' . $req->state . '%');
         }
         $query->createdIn($req->created);
-        $entries = $query->paginate();
+        $limit=25;
+        if($req->limit)
+        {
+            $limit=$req->limit;
+        }
+        $entries = $query->paginate($limit);
+
         $users = $entries->items();
         $data = [];
         foreach ($users as $user) {
@@ -460,7 +575,12 @@ class UsersController extends AdminBaseController
             $query->where('state', 'LIKE', '%' . $req->state);
         }
         $query->createdIn($req->created);
-        $entries = $query->paginate();
+        $limit=25;
+        if($req->limit)
+        {
+            $limit=$req->limit;
+        }
+        $entries = $query->paginate($limit);
         $users = $entries->items();
         $data = [];
         foreach ($users as $user) {
@@ -545,4 +665,5 @@ class UsersController extends AdminBaseController
         $writer->save('php://output');
         die;
     }
+
 }
