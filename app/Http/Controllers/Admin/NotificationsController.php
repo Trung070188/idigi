@@ -3,8 +3,11 @@
 namespace App\Http\Controllers\Admin;
 
 
+use App\Models\User;
+use App\Models\UserDevice;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use App\Models\Notification;
@@ -30,6 +33,7 @@ class NotificationsController extends AdminBaseController
     * @return  View
     */
     public function index() {
+
         $title = 'Notification';
         $component = 'NotificationIndex';
         return component($component, compact('title'));
@@ -52,9 +56,16 @@ class NotificationsController extends AdminBaseController
     * @throw  NotFoundHttpException
     * @return  View
     */
-    public function edit (Request $req) {
+    public function show (Request $req) {
         $id = $req->id;
         $entry = Notification::find($id);
+               $notification=Auth::user()->notifications()->find($id);
+
+       if($notification)
+       {
+            $notification->markAsRead();
+        }
+
 
         if (!$entry) {
             throw new NotFoundHttpException();
@@ -187,19 +198,45 @@ class NotificationsController extends AdminBaseController
         }
 
         $query->createdIn($req->created);
+        $limit = 2;
 
-
+        if ($req->limit) {
+            $limit = $req->limit;
+        }
         $entries = $query->paginate();
-
+        $data=[];
+        foreach ($entries as $entry)
+        {
+            $user=  $user = Auth::user();
+                if( $entry->notifiable_id==$user->id)
+           {
+               $data[]=[
+                'id'=>$entry->id,
+               'type'=>$entry->type,
+               'notifiable_type'=>$entry->notifiable_type,
+               'notifiable_id'=>$entry->notifiable_id,
+               'data'=>$entry->data,
+               'read_at'=>$entry->read_at,
+               'created_at'=>$entry->created_at,
+               'updated_at'=>$entry->updated_at,
+               ];
+           }
+        }
         return [
             'code' => 0,
-            'data' => $entries->items(),
+                'data'=>[
+                  'entries'=>$data,
+                ],
             'paginate' => [
                 'currentPage' => $entries->currentPage(),
                 'lastPage' => $entries->lastPage(),
+                'totalRecord' =>$entries->count(),
             ]
         ];
+
+
     }
+
 
     public function export() {
                 $keys = [
@@ -251,4 +288,5 @@ class NotificationsController extends AdminBaseController
         $writer->save('php://output');
         die;
     }
+
 }

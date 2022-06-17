@@ -110,7 +110,7 @@
                             </tbody>
                         </table>
                         <h2>Devices activities</h2>
-                        <table class=" table  table-head-custom table-head-bg table-vertical-center">
+                        <table  class=" table  table-head-custom table-head-bg table-vertical-center">
                             <thead>
                             <tr>
                                 <th>Date</th>
@@ -119,13 +119,12 @@
                             </tr>
                             </thead>
                             <tbody>
-                            <tr >
-                                <td v-text=""></td>
-                                <td v-text=""></td>
-                                <td v-text=""></td>
-                                <td>
-
-                                </td>
+                            <tr v-for="device in user_device" v-if="device.user_id==entry.id">
+                                <td v-if="device.status==2" v-text="d(device.created_at)"></td>
+                                <td v-if="device.status==1" v-text="d(device.updated_at)"></td>
+                                <td v-if="device.status==2" >Register device</td>
+                                <td v-if="device.status==1" >Remove device</td>
+                                <td v-text="device.device_name"></td>
                             </tr>
                             </tbody>
                         </table>

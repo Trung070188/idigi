@@ -32,6 +32,9 @@ Route::middleware(['auth', 'CheckIfRole'])->namespace('Admin')->prefix('xadmin')
     Route::post('/data-source/get-many', 'DataSourceController@getMany')->name('data-source-get-many');
     Route::any('/files/{action}', 'FilesController')->name('files');
     Route::get('/dashboard/{action}', 'DashboardController')->name('dashboard');
+
+
+
     $registry = require_once base_path('routes/registry.php');
 
     foreach ($registry as $route) {
@@ -41,6 +44,8 @@ Route::middleware(['auth', 'CheckIfRole'])->namespace('Admin')->prefix('xadmin')
 });
 
 Route::middleware(['auth', ])->namespace('Admin')->prefix('xadmin')->group(function () {
+    Route::get('/unreadNotifications', 'UserDevicesController@unreadNotifications');
+    Route::get('/markAsRead', 'UserDevicesController@markAsRead');
     Route::get('/request_role/index', 'RequestRolesController@index');
     Route::post('/request_role/save', 'RequestRolesController@save');
 //    Route::get('/request_role/manage', 'RequestRolesController@manage');

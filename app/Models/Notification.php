@@ -22,8 +22,13 @@ class Notification extends BaseModel
     'url',
     'channel',
     'status',
+    'data',
     'content',
     'title',
-    'sent_at',
+    'read_at',
+    'created_at',
+    'update_at',
+    'notifiable_type',
+    'notifiable_id'
 ];
 }

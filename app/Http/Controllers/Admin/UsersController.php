@@ -464,19 +464,28 @@ class UsersController extends AdminBaseController
         $users = $entries->items();
         $data = [];
         foreach ($users as $user) {
+
             $roles = $user->roles;
             $user_devices = $user->user_devices;
-            $data[] = [
-                'id' => $user->id,
-                'username' => $user->username,
-                'full_name' => $user->full_name,
-                'email' => $user->email,
-                'state' => $user->state,
-                'password' => $user->password,
-                'created_at' => $user->created_at,
-                'roles' => $roles,
-                'user_devices' => $user_devices,
-            ];
+            foreach ($roles as $role)
+            {
+               if($role->role_name=='Teacher')
+               {
+                   $data[] = [
+                       'id' => $user->id,
+                       'username' => $user->username,
+                       'full_name' => $user->full_name,
+                       'email' => $user->email,
+                       'state' => $user->state,
+                       'password' => $user->password,
+                       'created_at' => $user->created_at,
+                       'roles' => $roles,
+                       'user_devices' => $user_devices,
+                   ];
+               }
+            }
+
+
         }
         return [
             'code' => 0,
