@@ -228,6 +228,7 @@ class RolesController extends AdminBaseController
                 'role_name' => $role->role_name,
                 'id' => $role->id,
                 'description' => $role->description,
+                'allow_deleted' => $role->allow_deleted,
                 'permissions' => $rolePermissions
 
             ];
