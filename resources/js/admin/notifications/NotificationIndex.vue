@@ -1,5 +1,5 @@
 <template>
-    <div class="container-fluid">
+    <!-- <div class="container-fluid">
         <ActionBar type="index"
                    :breadcrumbs="breadcrumbs"
                    title="Notifications"/>
@@ -46,7 +46,7 @@
                                     </a>
                                 </div>
                             </div>
-                        </div>
+                        </div> -->
 <!--                        <div style="margin-top:10px; display: flex">-->
 <!--                            <div class="col-4 form-group d-inline-flex mt-2">-->
 <!--                                <div class="mr-2">-->
@@ -67,12 +67,42 @@
 <!--                            </div>-->
 <!--                        </div>-->
 
-                    </div>
+                    <!-- </div>
 
                 </div>
             </div>
         </div>
-    </div>
+    </div> -->
+     <table class=" table  table-head-custom table-head-bg table-vertical-center">
+                            <thead>
+                            <tr> 
+                                <th>Username</th>
+                                <th>Content</th>
+                                <th>Status</th>
+                                <th>Creation Date</th>
+                                <th>Action</th>
+                            </tr>
+                            </thead>
+                            <tbody >
+                            <tr v-for="entry in entries" >
+                                <td  v-if="entry.type=='App\\Notifications\\RequestRoleNotification'" >{{(JSON.parse(entry.data)).user_name}}</td>
+                                <td  v-if="entry.type=='App\\Notifications\\InvoicePaid'" >{{(JSON.parse(entry.data)).username}}</td>
+
+                                <td  v-if="entry.type=='App\\Notifications\\RequestRoleNotification'">{{(JSON.parse(entry.data)).content}}</td>
+                                <td  v-if="entry.type=='App\\Notifications\\InvoicePaid'">{{(JSON.parse(entry.data)).device_name}}</td>
+                                <td v-if="entry.type=='App\\Notifications\\RequestRoleNotification'">Cấp quyền</td>
+                                <td  v-if="entry.type=='App\\Notifications\\InvoicePaid'">Xóa thiết bị</td>
+                                <td v-text=" d(entry.created_at)"></td>
+                               
+                                <td v-if="entry.type=='App\\Notifications\\InvoicePaid'">
+                                    <a :href="'/xadmin/users/edit_teacher?id='+(JSON.parse(entry.data)).user_id" ><i style="font-size:1.3rem"
+                                                                                    class="fa fa-trash mr-1 deleted"></i></a>
+                                </td>
+
+                            </tr>
+
+                            </tbody>
+                        </table>
 
 
 </template>

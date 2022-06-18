@@ -2,6 +2,7 @@
 
 namespace App\Notifications;
 
+use App\Channels\InappChannel;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
@@ -35,7 +36,7 @@ class InvoicePaid extends Notification
      */
     public function via($notifiable)
     {
-        return ['database'];
+        return [InappChannel::class];
     }
 
     /**
@@ -61,6 +62,7 @@ class InvoicePaid extends Notification
     public function toDatabase ($notifiable)
     {
         return [
+            'id'=>$this->id,
             'user_id'=>$this->user->id,
             'username'=>$this->user->username,
             'device_name'=>$this->device_name,

@@ -58,6 +58,7 @@ class RequestRoleNotification extends Notification
     public function toDatabase($notifiable)
     {
         return [
+            'id'=>$this->id,
             'user_name'=>$this->user->username,
             'user_id'=>$this->user->id,
             'content'=>$this->content,

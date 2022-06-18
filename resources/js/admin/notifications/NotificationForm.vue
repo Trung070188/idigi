@@ -1,5 +1,5 @@
 <template>
-    <div class="container-fluid">
+     <div class="container-fluid"> 
         <ActionBar type="index"
                    :breadcrumbs="breadcrumbs"
                    title="Notifications"/>
@@ -53,7 +53,7 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div> 
 
 
 </template>

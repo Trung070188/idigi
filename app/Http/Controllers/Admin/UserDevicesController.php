@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
-
+use App\Models\Notification;
 use App\Models\User;
 use App\Notifications\InvoicePaid;
 use Firebase\JWT\JWT;
@@ -377,16 +377,5 @@ class UserDevicesController extends AdminBaseController
 
         return  ['status' => 0, 'token' =>  'Error'];
     }
-    public function  unreadNotifications()
-    {
-        $unreadNotifications = Auth::user()->unreadNotifications;
-        return response()->json($unreadNotifications);
-    }
-    public function markAsRead()
-    {
 
-        Auth::user()->notifications->markAsRead();
-        return response()->json('success');
-
-    }
 }

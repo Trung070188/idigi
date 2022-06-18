@@ -18,6 +18,7 @@ class Notification extends BaseModel
 {
     protected $table = 'notifications';
     protected $fillable = [
+    'id',
     'type',
     'url',
     'channel',
