@@ -216,6 +216,7 @@ class NotificationsController extends AdminBaseController
                'notifiable_type'=>$entry->notifiable_type,
                'notifiable_id'=>$entry->notifiable_id,
                'data'=>$entry->data,
+               'status'=>$entry->status,
                'read_at'=>$entry->read_at,
                'created_at'=>$entry->created_at,
                'updated_at'=>$entry->updated_at,

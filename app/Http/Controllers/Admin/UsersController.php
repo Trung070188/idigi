@@ -583,8 +583,6 @@ class UsersController extends AdminBaseController
         }
         $entries = $query->paginate($limit);
         $users = $entries->items();
-        $data = [];
-
         return [
             'code' => 0,
             'data' => $users,

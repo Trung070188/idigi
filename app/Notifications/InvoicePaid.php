@@ -13,17 +13,18 @@ class InvoicePaid extends Notification
 
     public $user;
     public $device_name;
+    public $status;
 
     /**
      * Create a new notification instance.
      *
      * @return void
      */
-    public function __construct($user,$device_name)
+    public function __construct($user,$device_name,$status)
     {
         $this->user=$user;
-
         $this->device_name=$device_name;
+        $this->status=$status;
 
     }
 
