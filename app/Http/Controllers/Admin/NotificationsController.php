@@ -33,7 +33,6 @@ class NotificationsController extends AdminBaseController
     * @return  View
     */
     public function index() {
-
         $title = 'Notification';
         $component = 'NotificationIndex';
         return component($component, compact('title'));
@@ -81,7 +80,7 @@ class NotificationsController extends AdminBaseController
 
         return component($component, compact('title', 'entry'));
     }
-
+    
     /**
     * @uri  /xadmin/notifications/remove
     * @return  array
@@ -191,7 +190,55 @@ class NotificationsController extends AdminBaseController
     * @return  array
     */
     public function data(Request $req) {
-        $query = Notification::query()->orderBy('id', 'desc');
+        $query = Notification::query()->orderBy('created_at', 'desc');
+
+        if ($req->keyword) {
+            //$query->where('title', 'LIKE', '%' . $req->keyword. '%');
+        }
+
+        $query->createdIn($req->created);
+        $limit = 2;
+
+        if ($req->limit) {
+            $limit = $req->limit;
+        }
+        $entries = $query->paginate();
+        $data=[];
+        foreach ($entries as $entry)
+        {
+           
+            $user=  $user = Auth::user();
+                if( $entry->notifiable_id==$user->id)
+           {
+               $data[]=[
+                'id'=>$entry->id,
+               'type'=>$entry->type,
+               'notifiable_type'=>$entry->notifiable_type,
+               'notifiable_id'=>$entry->notifiable_id,
+               'data'=>$entry->data,
+               'read_at'=>$entry->read_at,
+               'status'=>$entry->status,
+               'created_at'=>$entry->created_at,
+               'updated_at'=>$entry->updated_at,
+               ];
+           }
+        }
+        return [
+            'code' => 0,
+                'data'=>[
+                  'entries'=>$data,
+                ],
+            'paginate' => [
+                'currentPage' => $entries->currentPage(),
+                'lastPage' => $entries->lastPage(),
+                'totalRecord' =>$entries->count(),
+            ]
+        ];
+
+
+    }
+    public function notification(Request $req) {
+        $query = Notification::query()->orderBy('created_at', 'desc');
 
         if ($req->keyword) {
             //$query->where('title', 'LIKE', '%' . $req->keyword. '%');
@@ -218,24 +265,52 @@ class NotificationsController extends AdminBaseController
                'data'=>$entry->data,
                'status'=>$entry->status,
                'read_at'=>$entry->read_at,
+               'status'=>$entry->status,
                'created_at'=>$entry->created_at,
                'updated_at'=>$entry->updated_at,
                ];
            }
         }
-        return [
-            'code' => 0,
-                'data'=>[
-                  'entries'=>$data,
-                ],
-            'paginate' => [
-                'currentPage' => $entries->currentPage(),
-                'lastPage' => $entries->lastPage(),
-                'totalRecord' =>$entries->count(),
-            ]
-        ];
+       return response()->json($data);
 
 
+    }
+    public function unread(Request $req) {
+        $data = $req->get('entry');
+
+        $rules = [
+    'type' => 'max:191',
+    'url' => 'max:191',
+    'sent_at' => 'date_format:Y-m-d H:i:s',
+];
+
+        $v = Validator::make($data, $rules);
+
+        if ($v->fails()) {
+            return [
+                'code' => 2,
+                'errors' => $v->errors()
+            ];
+        }
+
+        /**
+        * @var  Notification $entry
+        */
+        if (isset($data['id'])) {
+            $entry = Notification::find($data['id']);
+            
+            if (!$entry) {
+                return [
+                    'code' => 3,
+                    'message' => 'Không tìm thấy',
+                ];
+            }
+            $entry->status='read';
+    
+            $entry->fill($data);
+            $entry->save();
+            return response()->json('trung');
+        } 
     }
 
 

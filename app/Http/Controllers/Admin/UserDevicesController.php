@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Admin;
 
-
 use App\Models\Notification;
 use App\Models\User;
 use App\Notifications\InvoicePaid;
@@ -128,12 +127,15 @@ class UserDevicesController extends AdminBaseController
             {
                 foreach ($user->roles as $role)
                 {
+
                     if($role->role_name=='Admin')
                     {
-                        $user->notify(new InvoicePaid(Auth::user(),$entry->device_name));
+                        $user->notify(new InvoicePaid(Auth::user(),$entry->device_name,$entry->user_device_id));
                     }
                 }
             }
+
+
             $entry->save();
 
             return [
@@ -161,7 +163,9 @@ class UserDevicesController extends AdminBaseController
                 'message' => 'Đã thêm',
                 'id' => $entry->id,
             ];
+
         }
+
     }
     public function savesend(Request $request) {
         if (!$request->isMethod('POST')) {
@@ -181,6 +185,7 @@ class UserDevicesController extends AdminBaseController
                 'errors' => $v->errors()
             ];
         }
+
         /**
          * @var  UserDevice $entry
          */
@@ -372,29 +377,5 @@ class UserDevicesController extends AdminBaseController
 
         return  ['status' => 0, 'token' =>  'Error'];
     }
-    public function  unreadNotifications(Request $req)
-    {
-        $unreadNotifications = Auth::user()->unreadNotifications;
 
-        foreach ($unreadNotifications as $unreadNotification)
-        {
-            $unreadNotification->status='new';
-        }
-        return response()->json($unreadNotifications);
-    }
-    public function markAsRead()
-    {
-        Auth::user()->notifications->markAsRead();
-        return response()->json('success');
-
-    }
-    public function show()
-    {
-        $unreadNotifications=Auth::user()->unreadNotifications;
-       foreach ($unreadNotifications as $unreadNotification)
-       {
-            $unreadNotification->status='read';
-       }
-        return response()->json($unreadNotifications);
-    }
 }
