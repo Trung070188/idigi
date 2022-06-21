@@ -67,7 +67,7 @@
                                disabled>
                         <error-label for="f_category_id" :errors="errors.device_name"></error-label>
                         <div>
-                            <button  type="button" class=generate" v-on:click="genToken"> Generate Key</button>
+                            <button  type="button" class="generate" v-on:click="genToken"> Generate Key</button>
                         </div>
                         <div style="text-align:right"><button type="button" v-if="token" class="btn-primary" v-on:click="copyTextToken" title="Copy Token"> Copy</button></div>
 
