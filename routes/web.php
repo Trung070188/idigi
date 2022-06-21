@@ -45,6 +45,8 @@ Route::middleware(['auth', 'CheckIfRole'])->namespace('Admin')->prefix('xadmin')
 
 Route::middleware(['auth', ])->namespace('Admin')->prefix('xadmin')->group(function () {
     Route::get('/notification', 'NotificationsController@notification');
+    Route::post('/save_notification', 'NotificationsController@save_notification');
+
 
     Route::get('/request_role/index', 'RequestRolesController@index');
     Route::post('/request_role/save', 'RequestRolesController@save');

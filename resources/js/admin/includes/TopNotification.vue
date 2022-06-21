@@ -436,8 +436,8 @@
 <template>
     <li class="nav-item dropdown">
         <a id=""  href="#"  data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            <i  class="fa fa-bell " id="notify_icon"  ></i>
-            <span id="notifiy_num"  v-show="unreadnotifications.length>0" >{{unreadnotifications.length}}</span>
+            <i   class="fa fa-bell " id="notify_icon"  @click="unread()"></i>
+            <span  id="notifiy_num"  v-show="unreadnotifications.length>0"  >{{unreadnotifications.length}}</span>
         </a>
 
 
@@ -464,18 +464,15 @@
         name: "TopNotification",
 
         mounted() {
-            this.Notification();
+                this.Notification();
         },
-
-
 
         data()
         {
             return {
-                data:'',
-                status:'',
-                entries:[],
+                trung:'',
 
+                entry: $json.entry || {},
                 unreadnotifications:{},
             }
 
@@ -490,14 +487,17 @@
                     console.log(errors)
                 });
             },
+            unread(){
+                axios.post('/xadmin/save_notification',{
+                    id:this.trung,
+                    status:this.status
+                }).then((response) => {
 
+                }).catch((errors) => {
+                    console.log(errors)
+                });
+            },
 
-            show(index)
-            {
-
-                var notification_id=this.unreadnotifications[index].JSON.parse(data).id;
-                location.href='/xadmin/notifications/show?id='+notification_id;
-            }
         },
     }
 </script>
