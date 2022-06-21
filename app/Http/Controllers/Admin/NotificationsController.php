@@ -57,7 +57,9 @@ class NotificationsController extends AdminBaseController
     */
     public function show (Request $req) {
         $id = $req->id;
+        $user=Auth::user();
         $entry = Notification::find($id);
+        
                $notification=Auth::user()->notifications()->find($id);
 
        if($notification)
@@ -70,6 +72,7 @@ class NotificationsController extends AdminBaseController
             throw new NotFoundHttpException();
         }
 
+
         /**
         * @var  Notification $entry
         */
@@ -80,6 +83,7 @@ class NotificationsController extends AdminBaseController
 
         return component($component, compact('title', 'entry'));
     }
+    
     
     /**
     * @uri  /xadmin/notifications/remove
@@ -275,45 +279,6 @@ class NotificationsController extends AdminBaseController
 
 
     }
-    public function unread(Request $req) {
-        $data = $req->get('entry');
-
-        $rules = [
-    'type' => 'max:191',
-    'url' => 'max:191',
-    'sent_at' => 'date_format:Y-m-d H:i:s',
-];
-
-        $v = Validator::make($data, $rules);
-
-        if ($v->fails()) {
-            return [
-                'code' => 2,
-                'errors' => $v->errors()
-            ];
-        }
-
-        /**
-        * @var  Notification $entry
-        */
-        if (isset($data['id'])) {
-            $entry = Notification::find($data['id']);
-            
-            if (!$entry) {
-                return [
-                    'code' => 3,
-                    'message' => 'Không tìm thấy',
-                ];
-            }
-            $entry->status='read';
-    
-            $entry->fill($data);
-            $entry->save();
-            return response()->json('trung');
-        } 
-    }
-
-
     public function export() {
                 $keys = [
                             'type' => ['A', 'type'],

@@ -97,9 +97,18 @@ class UsersController extends AdminBaseController
     public function profile(Request $req)
     {
         $id = $req->id;
-        $entry = User::find($id);
+        $entry = User::with('roles')
+            ->where('id', $id)->first();
         if (!$entry) {
             throw new NotFoundHttpException();
+        }
+        $roles = Role::query()->orderBy('role_name')->get();
+
+        $role='';
+        foreach ($entry->roles as $role_id)
+        {
+            $role=$role_id->role_name;
+        
         }
         /**
          * @var  User $entry
@@ -108,6 +117,7 @@ class UsersController extends AdminBaseController
         $component = 'ProfileForm';
         $jsonData = [
             'entry' => $entry,
+            'role'=>$role,
         ];
         return view('admin.layouts.vue', compact('title', 'component', 'jsonData'));
     }
@@ -263,11 +273,12 @@ class UsersController extends AdminBaseController
 //            }
 
             if(!Hash::check($data['old_password'], auth()->user()->password)){
-
+                dd(1);
             }
             User::whereId(auth()->user()->id)->update([
                 $data['new_password'] => Hash::make($data['new_password'])
             ]);
+            
             $entry->fill($data);
             $entry->save();
 

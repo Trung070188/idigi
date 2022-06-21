@@ -40,8 +40,8 @@
                             </div>
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal"@click="CloseModal()">Close</button>
-                            <button type="button" class="btn btn-primary"@click="updatePassword()">Save changes</button>
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal" @click="CloseModal()">Close</button>
+                            <button type="button" class="btn btn-primary" @click="updatePassword()">Save changes</button>
                         </div>
                     </div>
                 </div>
@@ -87,10 +87,9 @@
                                             <div  class="data-row col-sm-6 " >
                                                 <label   >Role </label>
                                                 <input  class="form-control" disabled  />
-                                                <div  v-for="role in entries">
-                                                    <div class="role" v-if="role.id==auth.id">
-                                                        {{role.role}}
-                                                    </div>
+                                                <div class="role">
+                                                   {{role}}
+                                                    
                                                 </div>
                                           </div>
                                             <div class="data-row col-sm-6 " >
@@ -115,34 +114,25 @@
     import {$get, $post} from "../../utils";
 
     import ActionBar from "../includes/ActionBar";
-    import SwitchButton from "../../components/SwitchButton";
-    import $router from "../../lib/SimpleRouter";
-    import Uploader from "../../components/Uploader";
-
     export default {
         name: "ProfileForm.vue",
-        components: {Uploader, ActionBar,SwitchButton},
+        components: { ActionBar},
         data() {
             return {
                 check_role:[],
-                types: [
-
-                ],
                 breadcrumbs: [
                     {
                         title:'Profile'
                     },
 
                 ],
-                entries: [],
                 entry: $json.entry || {},
-                roles:$json.roles || [],
+                role:$json.role || [],
                 isLoading: false,
                 errors: {}
             }
         },
         mounted() {
-            $router.on('/', this.load).init();
         },
         methods: {
             modalDevice() {
@@ -155,23 +145,9 @@
 
                 window.location.href = '/xadmin/dashboard/index';
             },
-            async load() {
-                let query = $router.getQuery();
-                this.$loading(true);
-                const res = await $get('/xadmin/users/data', query);
-                this.$loading(false);
-                this.paginate = res.paginate;
-                this.entries = res.data.data;
-                console.log(this.entries);
-                this.from = (this.paginate.currentPage - 1) * (this.limit) + 1;
-                this.to = (this.paginate.currentPage - 1) * (this.limit) + this.entries.length;
-            },
             async save_profile() {
-                console.log(this.check_role);
-
                 this.isLoading = true;
-                const res = await $post('/xadmin/users/save_profile', {entry: this.entry}, false);
-                console.log(res);
+                const res = await $post('/xadmin/users/save_profile', {entry: this.entry,role:this.role}, false);
                 this.isLoading = false;
                 if (res.errors) {
                     this.errors = res.errors;
@@ -263,7 +239,7 @@
     }
     .role{
         margin-bottom: 22px;
-        margin-top: -30px;
+        margin-top: -26px;
         margin-left: 14px;
     }
     .btn-block{
