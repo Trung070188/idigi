@@ -57,7 +57,9 @@ class NotificationsController extends AdminBaseController
     */
     public function show (Request $req) {
         $id = $req->id;
+        $user=Auth::user();
         $entry = Notification::find($id);
+
                $notification=Auth::user()->notifications()->find($id);
 
        if($notification)
@@ -70,6 +72,7 @@ class NotificationsController extends AdminBaseController
             throw new NotFoundHttpException();
         }
 
+
         /**
         * @var  Notification $entry
         */
@@ -80,7 +83,6 @@ class NotificationsController extends AdminBaseController
 
         return component($component, compact('title', 'entry'));
     }
-
     /**
     * @uri  /xadmin/notifications/remove
     * @return  array
@@ -159,50 +161,6 @@ class NotificationsController extends AdminBaseController
             ];
         }
     }
-    public function save_notification(Request $req) {
-        if (!$req->isMethod('POST')) {
-            return ['code' => 405, 'message' => 'Method not allow'];
-        }
-
-        $data = $req->get('entry');
-
-        $rules = [
-
-        ];
-
-        $entry = Notification::all();
-
-        $v = Validator::make($data, $rules);
-
-        if ($v->fails()) {
-            return [
-                'code' => 2,
-                'errors' => $v->errors()
-            ];
-        }
-
-        /**
-         * @var  Notification $entry
-         */
-
-
-            if (!$entry) {
-                return [
-                    'code' => 3,
-                    'message' => 'Không tìm thấy',
-                ];
-            }
-            $entry->status='read';
-            $entry->fill($data);
-            $entry->save();
-
-            return [
-                'code' => 0,
-                'message' => 'Đã cập nhật',
-                'id' => $entry->id
-            ];
-    }
-
     /**
     * @param  Request $req
     */
@@ -318,44 +276,8 @@ class NotificationsController extends AdminBaseController
 
 
     }
-    public function unread(Request $req)
-    {
-        $query = Notification::query()->orderBy('created_at', 'desc');
 
-        if ($req->keyword) {
-            //$query->where('title', 'LIKE', '%' . $req->keyword. '%');
-        }
-
-        $query->createdIn($req->created);
-        $limit = 2;
-
-        if ($req->limit) {
-            $limit = $req->limit;
-        }
-        $entries = $query->paginate();
-        $data = [];
-        foreach ($entries as $entry) {
-            $user = $user = Auth::user();
-            if ($entry->notifiable_id == $user->id) {
-                $data[] = [
-                    'id' => $entry->id,
-                    'type' => $entry->type,
-                    'notifiable_type' => $entry->notifiable_type,
-                    'notifiable_id' => $entry->notifiable_id,
-                    'data' => $entry->data,
-                    'status' => $entry->status = 'read',
-                    'read_at' => $entry->read_at,
-                    'created_at' => $entry->created_at,
-                    'updated_at' => $entry->updated_at,
-                ];
-            }
-        }
-        return response()->json($data);
-    }
-
-
-
-        public function export() {
+    public function export() {
                 $keys = [
                             'type' => ['A', 'type'],
                             'url' => ['B', 'url'],
