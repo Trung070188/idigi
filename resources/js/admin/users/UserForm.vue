@@ -202,9 +202,9 @@
                 } else {
                     this.errors = {};
                     toastr.success(res.message);
-                    // if (!this.entry.id) {
-                    //     location.replace('/xadmin/users/edit?id=' + res.id);
-                    // }
+                     if (!this.entry.id) {
+                         location.replace('/xadmin/users/edit?id=' + res.id);
+                     }
                 }
             }
         }
