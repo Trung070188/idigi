@@ -273,11 +273,10 @@ class UsersController extends AdminBaseController
 //            }
 
             if(!Hash::check($data['old_password'], auth()->user()->password)){
-                dd(1);
             }
-            User::whereId(auth()->user()->id)->update([
-                $data['new_password'] => Hash::make($data['new_password'])
-            ]);
+//          if(auth()->user()->id)->updateOrCreate([
+//                $data['new_password'] => Hash::make($data['new_password'])
+//            ]);
 
             $entry->fill($data);
             $entry->save();
@@ -350,9 +349,9 @@ class UsersController extends AdminBaseController
         $data_role=$req->all();
         $roles = $req->roles;
         $rules = [
-            'username' => ['required',new ValiUser()],
+            'username' => ['required','unique:users,username',new ValiUser()],
             'full_name'=>['required',new ValiFullname()],
-            'email' => 'required|max:191|email',
+            'email' => 'required|max:191|email|unique:users,email',
 //            'password' => '|max:191|confirmed',
         ];
         if (!isset($data['id'])) {
@@ -406,6 +405,11 @@ class UsersController extends AdminBaseController
                 $data_role['user_id']=$entry->id;
                 $data_role['role_id']=5;
             }
+            if($data_role['role']==12)
+            {
+                $data_role['user_id']=$entry->id;
+                $data_role['role_id']=12;
+            }
             UserRole::updateOrCreate([
                 'user_id'=>$data_role['user_id'],
                 'role_id'=>$data_role['role_id']
@@ -441,6 +445,11 @@ class UsersController extends AdminBaseController
             {
                 $data_role['user_id']=$entry->id;
                 $data_role['role_id']=5;
+            }
+            if($data_role['role']==12)
+            {
+                $data_role['user_id']=$entry->id;
+                $data_role['role_id']=12;
             }
             if($data_role['role'])
             {

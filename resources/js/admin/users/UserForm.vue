@@ -65,7 +65,7 @@
                                     </div>
                                     <div  class="form-group col-sm-2">
                                         <input  type="radio"  v-model="role" value="2">
-                                        <label>Admin</label>
+                                        <label>Administrator</label>
                                     </div>
                                     <div   class="form-group col-sm-2">
                                         <input  type="radio" v-model="role" value="5" >
@@ -77,6 +77,11 @@
                                         <input  type="radio"  v-model="role" value="4">
                                         <label>Partner</label>
                                     </div>
+                                    <div   class="form-group col-sm-2">
+                                        <input  type="radio"  v-model="role" value="12">
+                                        <label>Moderator</label>
+                                    </div>
+
 
 
                                 </div>
