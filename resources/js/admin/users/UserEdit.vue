@@ -139,7 +139,6 @@
         data() {
 
             return {
-                role:null,
                 showConfirm: false,
                 showPass: false,
                 types: [],

@@ -20,6 +20,7 @@ use Ramsey\Collection\Collection;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+use Illuminate\Validation\Rule;
 
 
 class UsersController extends AdminBaseController
@@ -348,14 +349,24 @@ class UsersController extends AdminBaseController
         $data = $req->get('entry');
         $data_role=$req->all();
         $roles = $req->roles;
+
         $rules = [
-            'username' => ['required','unique:users,username',new ValiUser()],
             'full_name'=>['required',new ValiFullname()],
-            'email' => 'required|max:191|email|unique:users,email',
 //            'password' => '|max:191|confirmed',
         ];
         if (!isset($data['id'])) {
+            $rules['username'] =  ['required','unique:users,username',new ValiUser()];
+            $rules['email'] ='required|max:191|email|unique:users,email';
+
 //            $rules['password'] = 'required|max:191|confirmed';
+
+        }
+        if (isset($data['id'])) {
+            $user = User::find($data['id']);
+            $rules['email'] =['required',Rule::unique('users')->ignore($user->id),];
+//            $rules['password'] = 'required|max:191|confirmed';
+
+
         }
         $v = Validator::make($data, $rules);
 
@@ -377,7 +388,6 @@ class UsersController extends AdminBaseController
 //            if ($data['password']) {
 //                $data['password'] = Hash::make($data['password']);
 //            }
-            $entry->avatars;
             $entry->fill($data);
             $entry->save();
 
