@@ -108,7 +108,7 @@ class UsersController extends AdminBaseController
         foreach ($entry->roles as $role_id)
         {
             $role=$role_id->role_name;
-        
+
         }
         /**
          * @var  User $entry
@@ -278,7 +278,7 @@ class UsersController extends AdminBaseController
             User::whereId(auth()->user()->id)->update([
                 $data['new_password'] => Hash::make($data['new_password'])
             ]);
-            
+
             $entry->fill($data);
             $entry->save();
 
@@ -504,7 +504,7 @@ class UsersController extends AdminBaseController
         }
         if ($req->role) {
             $query->whereHas('roles', function ($q) use ($req) {
-                $q->where('role_name', 'LIKE', '%' . $req->role);
+                $q->where('role_name', 'LIKE', '%' . $req->role . '%');
             });
         }
         if ($req->full_name) {

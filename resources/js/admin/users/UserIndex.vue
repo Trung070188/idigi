@@ -65,10 +65,10 @@
                                                 <option value="" disabled selected>Choose role</option>
                                                 <option value="0">All</option>
                                                 <option value="Super Administrator">Super Administrator</option>
-                                                <option value="Admin">Admin</option>
+                                                <option value="Administrator">Administrator</option>
                                                 <option value="Partner">Partner</option>
                                                 <option value="Teacher">Teacher</option>
-                                                <option value="Student">Student</option>
+                                                <option value="Moderator">Moderator</option>
                                             </select>
                                         </div>
                                     </div>

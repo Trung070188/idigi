@@ -140,7 +140,7 @@ class RequestRolesController extends AdminBaseController
             foreach ($user->roles as $role)
             {
 
-                if($role->role_name=='Admin')
+                if($role->role_name=='Administrator')
                 {
                     $user->notify(new RequestRoleNotification(Auth::user(),$data['content']));
                 }
