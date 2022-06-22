@@ -11,6 +11,7 @@ use App\Models\UserRole;
 use App\Rules\ValiFullname;
 use App\Rules\ValiUser;
 use Carbon\Carbon;
+use http\Env\Response;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -103,6 +104,17 @@ class UsersController extends AdminBaseController
         if (!$entry) {
             throw new NotFoundHttpException();
         }
+
+        if(@$entry->fileImage){
+            $entry->file_image_new= [
+                'id' => @$entry->fileImage->id,
+                'uri' => @$entry->fileImage->url,
+                'is_image' => 1,
+            ];
+        }else{
+            $entry->file_image_new = NULL;
+        }
+
         $roles = Role::query()->orderBy('role_name')->get();
 
         $role='';
@@ -241,16 +253,12 @@ class UsersController extends AdminBaseController
             return ['code' => 405, 'message' => 'Method not allow'];
         }
         $data = $req->get('entry');
-        $data_role=$req->all();
-        $roles = $req->roles;
         $rules = [
-//            'username' => ['required',new ValiUser()],
-//            'full_name'=>['required',new ValiFullname()],
-//            'email' => 'required|max:191|email',
-//            'password' => '|max:191|confirmed',
+            'password' => ['required'],
+            'confirm_password' => ['same:password'],
         ];
-        if (!isset($data['id'])) {
-//            $rules['password'] = 'required|max:191|confirmed';
+        if (isset($data['id'])) {
+            $rules['password'] = 'required|max:191|confirmed';
         }
         $v = Validator::make($data, $rules);
 
@@ -269,21 +277,15 @@ class UsersController extends AdminBaseController
                     'message' => 'Không tìm thấy',
                 ];
             }
-//            if ($data['password']) {
-//                $data['password'] = Hash::make($data['password']);
-//            }
 
             if(!Hash::check($data['old_password'], auth()->user()->password)){
-            }
-//          if(auth()->user()->id)->updateOrCreate([
-//                $data['new_password'] => Hash::make($data['new_password'])
-//            ]);
 
+            }
+          else{
+              $data['password'] = Hash::make($data['password']);
+          }
             $entry->fill($data);
             $entry->save();
-
-
-
             return [
                 'code' => 0,
                 'message' => 'Đã cập nhật',
@@ -303,11 +305,11 @@ class UsersController extends AdminBaseController
         $rules = [
             'username' => ['required',new ValiUser()],
             'full_name'=>['required',new ValiFullname()],
-            'email' => 'required|max:191|email',
 //            'password' => '|max:191|confirmed',
         ];
-        if (!isset($data['id'])) {
-//            $rules['password'] = 'required|max:191|confirmed';
+        if (isset($data['id'])) {
+            $user = User::find($data['id']);
+            $rules['email'] =['required',Rule::unique('users')->ignore($user->id),];
         }
         $v = Validator::make($data, $rules);
 
@@ -317,8 +319,13 @@ class UsersController extends AdminBaseController
                 'errors' => $v->errors()
             ];
         }
+        $data['file_image_id'] = @$data['file_image_new']['id'];
+        if($data['file_image_id']){
+            $data['image'] = str_replace('APP_URL', '',  $data['file_image_new']['uri']);
+
+        }
         if (isset($data['id'])) {
-            $entry = User::with(['avatars'])->find($data['id']);
+            $entry = User::find($data['id']);
 
             if (!$entry) {
                 return [
@@ -329,6 +336,7 @@ class UsersController extends AdminBaseController
 //            if ($data['password']) {
 //                $data['password'] = Hash::make($data['password']);
 //            }
+
             $entry->fill($data);
             $entry->save();
 
@@ -508,7 +516,7 @@ class UsersController extends AdminBaseController
     public function data(Request $req)
     {
         $query = User::query()
-            ->with(['roles','avatars'])
+            ->with(['roles','fileImage'])
             ->orderBy('id', 'ASC');
         $last_updated = User::query()->orderBy('updated_at', 'desc')->first()->updated_at;
         $roles = Role::with(['users'])->orderBy('role_name', 'ASC')->get();
@@ -561,6 +569,8 @@ class UsersController extends AdminBaseController
                 'full_name' => $user->full_name,
                 'email' => $user->email,
                 'state' => $user->state,
+                'image'=>$user->image,
+                'file_image_id'=>$user->file_image_id,
                 'password' => $user->password,
                 'created_at' => $user->created_at,
                 'updated_at' => $user->updated_at,

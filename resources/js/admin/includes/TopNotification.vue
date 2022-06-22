@@ -1,5 +1,6 @@
 
 <template>
+
     <li class="nav-item dropdown">
         <a id=""  href="#"  data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             <i  class="fa fa-bell " id="notify_icon" ></i>
@@ -7,45 +8,36 @@
         </a>
 
         <div class="dropdown-menu dropdown-menu-right" aria-labelledby="">
-            <a class="dropdown-item" v-for="(unread,index) in unreadnotifications" :key="index" :href="'/xadmin/notifications/show?id='+(JSON.parse(unread.data)).id">
+            <a class="dropdown-item" v-for="(unread,index) in unreadnotifications" :key="index" :href="'/xadmin/users/edit_teacher?id='+(JSON.parse(unread.data)).user_id">
                 <p v-if="unread.type=='App\\Notifications\\InvoicePaid'">yêu cầu xóa thiết bị của {{(JSON.parse(unread.data)).username}}. {{d(unread.created_at)}} </p>
                 <p v-if="unread.type=='App\\Notifications\\RequestRoleNotification'">yêu cầu cấp quyền {{(JSON.parse(unread.data)).user_name}}. {{d(unread.created_at)}} </p>
-
-
-
-
             </a>
             <a class="dropdown-item" v-show="unreadnotifications.length==0">No Notifications</a>
+
         </div>
     </li>
 </template>
-
-
 <script>
     import {$post} from "../../utils";
     import axios from 'axios';
-
     export default {
         name: "TopNotification",
 
         mounted() {
-                this.Notification();
+         this.Notification();
         },
 
         data()
         {
             return {
-
                 unreadnotifications:{},
             }
-
         },
         methods:{
             Notification(){
                 axios.get('/xadmin/notification').then((response) => {
                     this.unreadnotifications=response.data
                     console.log(this.unreadnotifications);
-
                 }).catch((errors) => {
                     console.log(errors)
                 });
@@ -73,5 +65,7 @@
 
         font-family: Sans-Serif;
     }
+
+
 
 </style>

@@ -153,7 +153,6 @@ class NotificationsController extends AdminBaseController
             $entry = new Notification();
             $entry->fill($data);
             $entry->save();
-
             return [
                 'code' => 0,
                 'message' => 'Đã thêm',

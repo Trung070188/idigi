@@ -127,10 +127,9 @@ class UserDevicesController extends AdminBaseController
             {
                 foreach ($user->roles as $role)
                 {
-
                     if($role->role_name=='Administrator')
                     {
-                        $user->notify(new InvoicePaid(Auth::user(),$entry->device_name,$entry->user_device_id));
+                        $user->notify(new InvoicePaid(Auth::user(),$entry->device_name));
                     }
                 }
             }

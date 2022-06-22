@@ -32,4 +32,5 @@ class Notification extends BaseModel
     'notifiable_type',
     'notifiable_id'
 ];
+
 }

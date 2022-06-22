@@ -37,6 +37,8 @@ class User extends Authenticatable
         'full_name',
         'phone',
         'class',
+        'image',
+        'file_image_id',
         'email',
         'password',
         'description',
@@ -137,9 +139,8 @@ WHERE p.`user_id`=?', [$this->id]);
     {
         return  $this->hasMany(UserDevice::class);
     }
-    public function avatars()
-    {
-        return $this->belongsToMany(Avatar::class,'user_avatars');
+    public function fileImage(){
+        return $this->belongsTo(File::class, 'file_image_id');
     }
 
 }

@@ -21,21 +21,21 @@
                             <label>Current Password <span class="text-danger">*</span></label>
                             <input id="f_role_name" v-model="entry.old_password" type="password" name="old_password" class="form-control"
                                    placeholder="" >
-                            <error-label for="f_role_name" ></error-label>
+                            <error-label for="f_role_name"  :errors="errors.old_password" ></error-label>
 
                             <div class="form-group">
                                 <label>New Password <span class="text-danger">*</span></label>
-                                <input id="f_role_description" v-model="entry.new_password" type="password" name="new_password" class="form-control"
+                                <input id="f_role_description" v-model="entry.password" type="password" name="new_password" class="form-control "
                                        placeholder="" >
-                                <error-label for="f_role_description" ></error-label>
+
+                                <error-label for="f_role_description"  :errors="errors.password"></error-label>
 
                             </div>
-
                             <div class="form-group">
                                 <label>Confirm New Password <span class="text-danger">*</span></label>
-                                <input  name="new_password_confirmation" type="password" class="form-control"
+                                <input  name="new_password_confirmation" v-model="entry.confirm_password" type="password" class="form-control"
                                         placeholder="" >
-                                <error-label for="f_role_description" ></error-label>
+                                <error-label for="f_role_description" :errors="errors.confirm_password" ></error-label>
 
                             </div>
                         </div>
@@ -60,6 +60,7 @@
                                         <div  class="profile-avatar-upload">
                                             <div  class="profile-avatar-upload-c"
                                                 >
+                                                <upload-image v-model="entry.file_image_new"  :hide-preview="true"></upload-image>
                                             </div>
                                         </div>
                                         <div class="contact" style="margin-top: 20px">
@@ -79,6 +80,8 @@
                                             <p class="data-row col-sm-6 " >
                                                 <label >Email </label>
                                                 <input  class="form-control" placeholder="Enter the full name" v-model="entry.email" />
+                                                <error-label for="f_category_id"
+                                                             :errors="errors.email"></error-label>
                                             </p>
                                             <p class="data-row col-sm-6 " >
                                                 <label >Username </label>
@@ -89,7 +92,7 @@
                                                 <input  class="form-control" disabled  />
                                                 <div class="role">
                                                    {{role}}
-                                                    
+
                                                 </div>
                                           </div>
                                             <div class="data-row col-sm-6 " >
@@ -112,11 +115,12 @@
 
 <script>
     import {$get, $post} from "../../utils";
-
+    import FileManagerInput from "../../components/FileManagerInput";
     import ActionBar from "../includes/ActionBar";
+    import UploadImage from "../../components/UploadImage";
     export default {
         name: "ProfileForm.vue",
-        components: { ActionBar},
+        components: { ActionBar,UploadImage},
         data() {
             return {
                 check_role:[],
@@ -252,17 +256,7 @@
         gap: 6px;
 
     }
-    .profile-avatar-upload-c{
-        margin-left: 20%;
-        width: 135px;
-        height: 135px;
-        border-radius: 100%;
-        background-color: #fff;
-        background-position: center center;
-        background-repeat: no-repeat;
-        background-size: cover;
 
-    }
 
 
 
