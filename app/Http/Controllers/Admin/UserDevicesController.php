@@ -95,6 +95,7 @@ class UserDevicesController extends AdminBaseController
             return ['code' => 405, 'message' => 'Method not allow'];
         }
         $data = $req->get('entry');
+
         $rules = [
 //    'device_uid' => 'required|max:45',
 //    'device_name' => 'required|max:45',
@@ -119,23 +120,18 @@ class UserDevicesController extends AdminBaseController
                 ];
             }
             $entry->fill($data);
-
             $entry->status=1;
-            $users=User::with('roles')->orderBy('username')->get();
-
-            foreach ($users as $user)
-            {
-                foreach ($user->roles as $role)
-                {
-                    if($role->role_name=='Administrator')
-                    {
-                        $user->notify(new InvoicePaid(Auth::user(),$entry->device_name));
-                    }
-                }
-            }
-
-
+            $users=User::with(['user_devices','roles'])->orderBy('username')->get();
+                 $data_device = new Notification();
+                    $data_device->status='new';
+                    $data_device->content=$entry->device_name;
+                    $data_device->channel='inapp';
+                    $data_device->user_id=$entry->user_id;
+                    $data_device->url=url("xadmin/users/edit_teacher?id={$entry->user_id}");
+                    $data_device->title='Yêu cầu xóa thiết bị';
+            $data_device->save();
             $entry->save();
+
 
             return [
                 'code' => 0,

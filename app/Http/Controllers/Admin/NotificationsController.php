@@ -190,8 +190,9 @@ class NotificationsController extends AdminBaseController
     * @return  array
     */
     public function data(Request $req) {
-        $query = Notification::query()->orderBy('created_at', 'desc');
-
+        $query = Notification::query()
+            ->orderBy('created_at', 'desc');
+        $users=User::with(['notification'])->orderBy('username')->get();
         if ($req->keyword) {
             //$query->where('title', 'LIKE', '%' . $req->keyword. '%');
         }
@@ -206,22 +207,36 @@ class NotificationsController extends AdminBaseController
         $data=[];
         foreach ($entries as $entry)
         {
+            foreach ($users as $user)
+            {
+                if($entry->user_id==$user->id)
+                {
+                    $entry->user_name=$user->username;
+                }
+            }
+            $user=Auth::user();
 
-            $user=  $user = Auth::user();
-                if( $entry->notifiable_id==$user->id)
+
+           foreach ($user->roles as $role)
            {
-               $data[]=[
-                'id'=>$entry->id,
-               'type'=>$entry->type,
-               'notifiable_type'=>$entry->notifiable_type,
-               'notifiable_id'=>$entry->notifiable_id,
-               'data'=>$entry->data,
-               'read_at'=>$entry->read_at,
-               'status'=>$entry->status,
-               'created_at'=>$entry->created_at,
-               'updated_at'=>$entry->updated_at,
-               ];
+              if($role->role_name=='Administrator')
+              {
+                  $data[]=[
+                      'id'=>$entry->id,
+                      'user_id'=>$entry->user_id,
+                      'read_at'=>$entry->read_at,
+                      'status'=>$entry->status,
+                      'title'=>$entry->title,
+                      'url'=>$entry->url,
+                      'content'=>$entry->content,
+                      'created_at'=>$entry->created_at,
+                      'updated_at'=>$entry->updated_at,
+                      'username'=>$entry->user_name,
+                  ];
+
+              }
            }
+
         }
         return [
             'code' => 0,
@@ -239,7 +254,7 @@ class NotificationsController extends AdminBaseController
     }
     public function notification(Request $req) {
         $query = Notification::query()->orderBy('created_at', 'desc');
-
+        $users=User::with(['notification'])->orderBy('username')->get();
         if ($req->keyword) {
             //$query->where('title', 'LIKE', '%' . $req->keyword. '%');
         }
@@ -254,21 +269,37 @@ class NotificationsController extends AdminBaseController
         $data=[];
         foreach ($entries as $entry)
         {
-            $user=  $user = Auth::user();
-                if( $entry->notifiable_id==$user->id)
-           {
-               $data[]=[
-                'id'=>$entry->id,
-               'type'=>$entry->type,
-               'notifiable_type'=>$entry->notifiable_type,
-               'notifiable_id'=>$entry->notifiable_id,
-               'data'=>$entry->data,
-               'status'=>$entry->status,
-               'read_at'=>$entry->read_at,
-               'created_at'=>$entry->created_at,
-               'updated_at'=>$entry->updated_at,
-               ];
-           }
+            foreach ($users as $user)
+            {
+                if($entry->user_id==$user->id)
+                {
+                    $entry->user_name=$user->username;
+                }
+            }
+            $user=Auth::user();
+
+
+            foreach ($user->roles as $role)
+            {
+                if($role->role_name=='Administrator')
+                {
+                    $data[]=[
+                        'id'=>$entry->id,
+                        'type'=>$entry->type,
+                        'notifiable_type'=>$entry->notifiable_type,
+                        'user_id'=>$entry->user_id,
+                        'read_at'=>$entry->read_at,
+                        'status'=>$entry->status,
+                        'title'=>$entry->title,
+                        'url'=>$entry->url,
+                        'content'=>$entry->content,
+                        'created_at'=>$entry->created_at,
+                        'updated_at'=>$entry->updated_at,
+                        'username'=>$entry->user_name,
+                    ];
+
+                }
+            }
         }
        return response()->json($data);
 

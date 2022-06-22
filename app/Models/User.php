@@ -142,5 +142,9 @@ WHERE p.`user_id`=?', [$this->id]);
     public function fileImage(){
         return $this->belongsTo(File::class, 'file_image_id');
     }
+    public function notification()
+    {
+        return $this->hasMany(Notification::class);
+    }
 
 }

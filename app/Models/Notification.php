@@ -18,19 +18,14 @@ class Notification extends BaseModel
 {
     protected $table = 'notifications';
     protected $fillable = [
-    'id',
-    'type',
     'url',
     'channel',
     'status',
-    'data',
     'content',
     'title',
+    'user_id',
     'read_at',
     'created_at',
     'update_at',
-    'notifiable_type',
-    'notifiable_id'
 ];
-
 }
