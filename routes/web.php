@@ -32,8 +32,8 @@ Route::middleware(['auth', 'CheckIfRole'])->namespace('Admin')->prefix('xadmin')
     Route::post('/data-source/get-many', 'DataSourceController@getMany')->name('data-source-get-many');
     Route::any('/files/{action}', 'FilesController')->name('files');
     Route::get('/dashboard/{action}', 'DashboardController')->name('dashboard');
-
-
+    Route::get('/notification', 'NotificationsController@notification');
+    Route::post('/save_notification', 'NotificationsController@save_notification');
 
     $registry = require_once base_path('routes/registry.php');
 
@@ -44,16 +44,12 @@ Route::middleware(['auth', 'CheckIfRole'])->namespace('Admin')->prefix('xadmin')
 });
 
 Route::middleware(['auth', ])->namespace('Admin')->prefix('xadmin')->group(function () {
-    Route::get('/notification', 'NotificationsController@notification');
-    Route::post('/save_notification', 'NotificationsController@save_notification');
-
 
     Route::get('/request_role/index', 'RequestRolesController@index');
     Route::post('/request_role/save', 'RequestRolesController@save');
-//    Route::get('/request_role/manage', 'RequestRolesController@manage');
-
-
 });
+
+
 
 Route::group(['prefix' => 'xadmin'], function(){
     Route::get('login','Auth\LoginController@showLoginForm')->name('login');

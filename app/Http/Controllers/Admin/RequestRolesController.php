@@ -34,6 +34,10 @@ class RequestRolesController extends AdminBaseController
     * @return  View
     */
     public function index() {
+        $user = Auth::user();
+        if($user->roles->count() > 0){
+            return redirect('/xadmin/dashboard/index');
+        }
         $title = 'RequestRole';
         $component = 'Request_roleIndex';
         return component($component, compact('title'));

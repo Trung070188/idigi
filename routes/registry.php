@@ -52,11 +52,6 @@
         'name' => 'user_devices',
     ],
     [
-        'path' => '/request_role/{action}',
-        'action' => 'RequestRolesController',
-        'name' => 'request_role',
-    ],
-    [
         'path' => '/notifications/{action}',
         'action' => 'NotificationsController',
         'name' => 'notifications',
