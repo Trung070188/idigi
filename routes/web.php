@@ -32,7 +32,7 @@ Route::middleware(['auth', 'CheckIfRole'])->namespace('Admin')->prefix('xadmin')
     Route::post('/data-source/get-many', 'DataSourceController@getMany')->name('data-source-get-many');
     Route::any('/files/{action}', 'FilesController')->name('files');
     Route::get('/dashboard/{action}', 'DashboardController')->name('dashboard');
-    Route::get('/notification', 'NotificationsController@notification');
+//    Route::get('/notification', 'NotificationsController@notification');
 
     $registry = require_once base_path('routes/registry.php');
 

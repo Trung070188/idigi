@@ -138,7 +138,6 @@
                                     <button v-for="role in entry.roles" v-if="role.id==5" type="button"
                                             class="btn btn-flex btn-info  fw-bolder " @click="Sent(device)">Delete device
                                     </button>
-
                                 </div>
                             </div>
                         </div>

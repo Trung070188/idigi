@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Models\User;
 use App\Models\UserDevice;
+use Carbon\Carbon;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -34,6 +35,10 @@ class NotificationsController extends AdminBaseController
      */
     public function index()
     {
+//        $user = Auth::user();
+//        if($user->role !=  ){
+//            return abort(403);
+//        }
         $title = 'Notification';
         $component = 'NotificationIndex';
         return component($component, compact('title'));
@@ -186,9 +191,21 @@ class NotificationsController extends AdminBaseController
      */
     public function toggleStatus(Request $req)
     {
+        $id = $req->get('id');
+        $entry = Notification::find($id);
+        $entry->status = $req->status ? 'unread' : 'new';
+        $entry->read_at=Carbon::now();
+        $entry->save();
 
+        return [
+            'code' => 200,
+            'message' => 'Đã lưu'
+        ];
+    }
+    public function trung(Request $req)
+    {
         $entry = Notification::all();
-        $entry->status = $req->status ? 'new' : 'unread';
+        $entry->status = $req->status ? 'unread' : 'new';
         $entry->save();
 
         return [
@@ -204,6 +221,7 @@ class NotificationsController extends AdminBaseController
      */
     public function data(Request $req)
     {
+
         $query = Notification::query()
             ->orderBy('created_at', 'desc');
         $users = User::with(['notification'])->orderBy('username')->get();
@@ -277,8 +295,21 @@ class NotificationsController extends AdminBaseController
             $limit = $req->limit;
         }
         $entries = $query->paginate();
-        $data = [];
+        $trung = $query->paginate();
+        $data = [
+        ];
+
+        foreach ($trung as $quang)
+        {
+
+
+
+
+        }
+
+
         foreach ($entries as $entry) {
+
             foreach ($users as $user) {
                 if ($entry->user_id == $user->id) {
                     $entry->user_name = $user->username;
@@ -305,7 +336,19 @@ class NotificationsController extends AdminBaseController
                 }
             }
         }
-        return response()->json($data);
+        return [
+            'code' => 0,
+            'data' =>[
+                'entries'=>$data,
+                'status'=>$entry->status,
+
+
+            ]
+
+
+
+        ];
+
 
 
     }
