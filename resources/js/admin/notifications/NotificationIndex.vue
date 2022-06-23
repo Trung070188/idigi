@@ -1,108 +1,68 @@
 <template>
-    <!-- <div class="container-fluid">
+    <div class="container-fluid">
         <ActionBar type="index"
                    :breadcrumbs="breadcrumbs"
-                   title="Notifications"/>
-
+                   title="Notification"/>
         <div class="row">
             <div class="col-lg-12">
                 <div class="card card-custom card-stretch gutter-b">
-                    <div class="card-body d-flex flex-column" >
-                        <div   v-for="entry in entries"   class="row width-full">
 
-                            <div v-if="entry.type=='App\\Notifications\\InvoicePaid'" class="col-lg-12 body " >
-                                <form  class="form-inline"  >
-                                    <div class="form-group mx-sm-3 mb-2" style="font-size: 15px">
-                                      giáo viên  {{(JSON.parse(entry.data)).username}} yêu cầu xóa thiết bị '{{(JSON.parse(entry.data)).device_name}}'
-                                    </div>
-                                </form>
-                                <div  class="form-group mx-sm-3 mb-2" style="position: absolute;right:65px;margin-top: -33px;" >
+                    <table class=" table  table-head-custom table-head-bg table-vertical-center">
+                        <thead>
+                        <tr>
+                            <th>Username</th>
+                            <th>Content</th>
+                            <th>Status</th>
+                            <th>Creation Date</th>
+                            <th>Action</th>
+                            <th></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr v-for="entry in entries">
+                            <td v-if="entry.title==='Yêu cầu xóa thiết bị'">{{entry.username}}</td>
+                            <td v-if="entry.title==='Yêu cầu cấp quyền'">{{entry.username}}</td>
+                            <td v-if="entry.title==='Yêu cầu xóa thiết bị'">{{entry.content}}</td>
+                            <td v-if="entry.title='Yêu cầu cấp quyền'">{{entry.content}}</td>
+                            <td v-if="entry.title==='Yêu cầu xóa thiết bị'">Cấp quyền</td>
+                            <td v-if="entry.title==='Yêu cầu cấp quyền'">Xóa thiết bị</td>
+                            <td v-text=" d(entry.created_at)"></td>
 
-                                </div>
-                                <div  class="form-group mx-sm-3 mb-2" style="position: absolute;right:65px;margin-top: -33px;" >
-                                    <a :href="'/xadmin/users/edit_teacher?id='+(JSON.parse(entry.data)).user_id" >
-                                    <button  type="button"
-                                             class="btn btn-flex btn-secondary  fw-verify " style="margin-right: 5px">
-                                        Xem chi tiết
-                                    </button>
-                                    </a>
-                                </div>
+                            <td v-if="entry.title==='Yêu cầu xóa thiết bị'">
+                                <a :href="entry.url"><i style="font-size:1.3rem"
+                                                        class="fa fa-trash mr-1 deleted"></i></a>
+                            </td>
+                            <td v-if="entry.title==='Yêu cầu cấp quyền'">
+                                <a :href="entry.url"><i style="font-size:1.3rem"
+                                                        class="fa fa-trash mr-1 deleted"></i></a>
+                            </td>
+
+                        </tr>
+
+                        </tbody>
+                    </table>
+                    <div style="margin-top:10px; display: flex">
+                        <div class="col-4 form-group d-inline-flex mt-2">
+                            <div class="mr-2">
+                                <label>Records per page:</label>
                             </div>
-                            <div v-if="entry.type=='App\\Notifications\\RequestRoleNotification'" class="col-lg-12 body " >
-                                <form  class="form-inline"  >
-                                    <div class="form-group mx-sm-3 mb-2" style="font-size: 15px">
-                                        giáo viên  {{(JSON.parse(entry.data)).user_name}} yêu cầu cấp quyền '{{(JSON.parse(entry.data)).content}}'
-                                    </div>
-                                </form>
-                                <div  class="form-group mx-sm-3 mb-2" style="position: absolute;right:65px;margin-top: -33px;" >
+                            <div>
+                                <select class="form-select form-select-sm " v-model="limit" @change="changeLimit">
+                                    <option value="25">25</option>
+                                    <option value="50">50</option>
+                                    <option value="100">100</option>
 
-                                </div>
-                                <div  class="form-group mx-sm-3 mb-2" style="position: absolute;right:65px;margin-top: -33px;" >
-                                    <a :href="'/xadmin/users/edit_teacher?id='+(JSON.parse(entry.data)).user_id" >
-                                        <button  type="button"
-                                                 class="btn btn-flex btn-secondary  fw-verify " style="margin-right: 5px">
-                                            Xem chi tiết
-                                        </button>
-                                    </a>
-                                </div>
+                                </select>
                             </div>
-                        </div> -->
-    <!--                        <div style="margin-top:10px; display: flex">-->
-    <!--                            <div class="col-4 form-group d-inline-flex mt-2">-->
-    <!--                                <div class="mr-2">-->
-    <!--                                    <label>Records per page:</label>-->
-    <!--                                </div>-->
-    <!--                                <div>-->
-    <!--                                    <select class="form-select form-select-sm " v-model="limit" @change="changeLimit">-->
-    <!--                                        <option value="2">2</option>-->
-    <!--                                        <option value="3">3</option>-->
-    <!--                                        <option value="4">4</option>-->
-    <!--                                        <option value="100">100</option>-->
-
-    <!--                                    </select>-->
-    <!--                                </div>-->
-    <!--                            </div>-->
-    <!--                            <div style="float: right">-->
-    <!--                                <Paginate :value="paginate" :pagechange="onPageChange"></Paginate>-->
-    <!--                            </div>-->
-    <!--                        </div>-->
-
-    <!-- </div>
-
-</div>
-</div>
-</div>
-</div> -->
-    <table class=" table  table-head-custom table-head-bg table-vertical-center">
-        <thead>
-        <tr>
-            <th>Username</th>
-            <th>Content</th>
-            <th>Status</th>
-            <th>Creation Date</th>
-            <th>Action</th>
-        </tr>
-        </thead>
-        <tbody >
-        <tr v-for="entry in entries" >
-            <td  v-if="entry.type=='App\\Notifications\\RequestRoleNotification'" >{{(JSON.parse(entry.data)).user_name}}</td>
-            <td  v-if="entry.type=='App\\Notifications\\InvoicePaid'" >{{(JSON.parse(entry.data)).username}}</td>
-
-            <td  v-if="entry.type=='App\\Notifications\\RequestRoleNotification'">{{(JSON.parse(entry.data)).content}}</td>
-            <td  v-if="entry.type=='App\\Notifications\\InvoicePaid'">{{(JSON.parse(entry.data)).device_name}}</td>
-            <td v-if="entry.type=='App\\Notifications\\RequestRoleNotification'">Cấp quyền</td>
-            <td  v-if="entry.type=='App\\Notifications\\InvoicePaid'">Xóa thiết bị</td>
-            <td v-text=" d(entry.created_at)"></td>
-
-            <td v-if="entry.type=='App\\Notifications\\InvoicePaid'">
-                <a :href="'/xadmin/users/edit_teacher?id='+(JSON.parse(entry.data)).user_id" ><i style="font-size:1.3rem"
-                                                                                                 class="fa fa-trash mr-1 deleted"></i></a>
-            </td>
-
-        </tr>
-
-        </tbody>
-    </table>
+                        </div>
+                        <div style="float: right">
+                            <Paginate :value="paginate" :pagechange="onPageChange"></Paginate>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
 
 </template>
@@ -120,7 +80,7 @@
         components: {ActionBar},
         data() {
             return {
-                unreadNotifications:{},
+                unreadNotifications: {},
                 entries: [],
                 filter: {
                     keyword: $q.keyword || '',
@@ -131,7 +91,7 @@
                         title: 'Notifications'
                     },
                 ],
-                limit: $q.limit || 2,
+                limit: $q.limit || 25,
                 from: 0,
                 to: 0,
                 paginate: {
@@ -147,16 +107,16 @@
             $router.on('/', this.load).init();
         },
         methods: {
-            edit: function (id, event){
-                if (!$(event.target).hasClass('deleted')){
-                    window.location.href='/xadmin/notifications/edit?id='+ id;
+            edit: function (id, event) {
+                if (!$(event.target).hasClass('deleted')) {
+                    window.location.href = '/xadmin/notifications/edit?id=' + id;
                 }
 
             },
 
             async load() {
                 let query = $router.getQuery();
-                const res  = await $get('/xadmin/notifications/data', query);
+                const res = await $get('/xadmin/notifications/data', query);
                 this.paginate = res.paginate;
                 this.entries = res.data.entries;
                 console.log(this.entries);
@@ -181,7 +141,7 @@
                 $router.updateQuery({page: this.paginate.currentPage, _: Date.now()});
             },
             filterClear() {
-                for( var key in app.filter) {
+                for (var key in app.filter) {
                     app.filter[key] = '';
                 }
 
@@ -198,7 +158,7 @@
             },
             changeLimit() {
                 let params = $router.getQuery();
-                params['page']=1;
+                params['page'] = 1;
                 params['limit'] = this.limit;
                 $router.setQuery(params)
             },
@@ -224,20 +184,11 @@
 </script>
 
 <style scoped>
-    .popup-title{
-        margin-left: 160px;
-    }
-    .content{
-        margin: 30px;
-    }
-    .form-control{
-        max-width: 400px;
-    }
-    .btn btn-danger ito-btn-small{
+    .btn btn-danger ito-btn-small {
         padding: 5px;
     }
 
-    .body{
+    .body {
         padding: 40px;
         /*max-width: 1612px;*/
         box-sizing: border-box;

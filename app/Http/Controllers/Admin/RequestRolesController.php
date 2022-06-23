@@ -28,44 +28,42 @@ class RequestRolesController extends AdminBaseController
     ];
 
     /**
-    * Index page
-    * @uri  /xadmin/request_role/index
-    * @throw  NotFoundHttpException
-    * @return  View
-    */
-    public function index() {
+     * Index page
+     * @uri  /xadmin/request_role/index
+     * @throw  NotFoundHttpException
+     * @return  View
+     */
+    public function index()
+    {
         $user = Auth::user();
-        if($user->roles->count() > 0){
+        if ($user->roles->count() > 0) {
             return redirect('/xadmin/dashboard/index');
         }
         $title = 'RequestRole';
         $component = 'Request_roleIndex';
         return component($component, compact('title'));
     }
-    public function manage() {
-        $title = 'trung';
-        $component = 'Request_roleManage';
-        return component($component, compact('title'));
-    }
 
     /**
-    * Create new entry
-    * @uri  /xadmin/request_role/create
-    * @throw  NotFoundHttpException
-    * @return  View
-    */
-    public function create (Request $req) {
+     * Create new entry
+     * @uri  /xadmin/request_role/create
+     * @throw  NotFoundHttpException
+     * @return  View
+     */
+    public function create(Request $req)
+    {
         $component = 'Request_roleForm';
         $title = 'Create request_role';
         return component($component, compact('title'));
     }
 
     /**
-    * @uri  /xadmin/request_role/edit?id=$id
-    * @throw  NotFoundHttpException
-    * @return  View
-    */
-    public function edit (Request $req) {
+     * @uri  /xadmin/request_role/edit?id=$id
+     * @throw  NotFoundHttpException
+     * @return  View
+     */
+    public function edit(Request $req)
+    {
         $id = $req->id;
         $entry = RequestRole::find($id);
 
@@ -74,8 +72,8 @@ class RequestRolesController extends AdminBaseController
         }
 
         /**
-        * @var  RequestRole $entry
-        */
+         * @var  RequestRole $entry
+         */
 
         $title = 'Edit';
         $component = 'Request_roleForm';
@@ -85,10 +83,11 @@ class RequestRolesController extends AdminBaseController
     }
 
     /**
-    * @uri  /xadmin/request_role/remove
-    * @return  array
-    */
-    public function remove(Request $req) {
+     * @uri  /xadmin/request_role/remove
+     * @return  array
+     */
+    public function remove(Request $req)
+    {
         $id = $req->id;
         $entry = RequestRole::find($id);
 
@@ -105,10 +104,11 @@ class RequestRolesController extends AdminBaseController
     }
 
     /**
-    * @uri  /xadmin/request_role/save
-    * @return  array
-    */
-    public function save(Request $req) {
+     * @uri  /xadmin/request_role/save
+     * @return  array
+     */
+    public function save(Request $req)
+    {
         if (!$req->isMethod('POST')) {
             return ['code' => 405, 'message' => 'Method not allow'];
         }
@@ -131,22 +131,19 @@ class RequestRolesController extends AdminBaseController
         $user = Auth::user();
         $data['user_id'] = $user->id;
 
-        if($data['role'] == 1){
+        if ($data['role'] == 1) {
             $data['content'] = 'Tôi là quản trị viên';
-        }else{
+        } else {
             $data['content'] = 'Tôi là giáo viên';
         }
         $data['status'] = 'Waiting';
-        $users=User::with('roles')->orderBy('username')->get();
+        $users = User::with('roles')->orderBy('username')->get();
 
-        foreach ($users as $user)
-        {
-            foreach ($user->roles as $role)
-            {
+        foreach ($users as $user) {
+            foreach ($user->roles as $role) {
 
-                if($role->role_name=='Administrator')
-                {
-                    $user->notify(new RequestRoleNotification(Auth::user(),$data['content']));
+                if ($role->role_name == 'Administrator') {
+                    $user->notify(new RequestRoleNotification(Auth::user(), $data['content']));
                 }
             }
         }
@@ -163,6 +160,7 @@ class RequestRolesController extends AdminBaseController
             'message' => 'Đã gửi yêu cầu cấp quyền thành công',
         ];
     }
+
     public function refuse(Request $req)
     {
         if (!$req->isMethod('POST')) {
@@ -198,7 +196,7 @@ class RequestRolesController extends AdminBaseController
             }
 
             $entry->fill($data);
-            $entry->status='Refuse';
+            $entry->status = 'Refuse';
             $entry->save();
 
 
@@ -221,8 +219,8 @@ class RequestRolesController extends AdminBaseController
     }
 
     /**
-    * @param  Request $req
-    */
+     * @param Request $req
+     */
     public function toggleStatus(Request $req)
     {
         $id = $req->get('id');
@@ -235,7 +233,7 @@ class RequestRolesController extends AdminBaseController
             ];
         }
 
-        $entry->status = $req->status ?'Aprrove':'Waiting';
+        $entry->status = $req->status ? 'Aprrove' : 'Waiting';
         $entry->save();
 
         return [
@@ -245,14 +243,15 @@ class RequestRolesController extends AdminBaseController
     }
 
     /**
-    * Ajax data for index page
-    * @uri  /xadmin/request_role/data
-    * @return  array
-    */
-    public function data(Request $req) {
+     * Ajax data for index page
+     * @uri  /xadmin/request_role/data
+     * @return  array
+     */
+    public function data(Request $req)
+    {
         $query = RequestRole::query()
             ->orderBy('id', 'desc');
-        $users=User::with(['request_roles'])->orderBy('username','ASC')->get();
+        $users = User::with(['request_roles'])->orderBy('username', 'ASC')->get();
 
         if ($req->keyword) {
 //            $query->where('title', 'LIKE', '%' . $req->keyword. '%');
@@ -263,18 +262,18 @@ class RequestRolesController extends AdminBaseController
         $entries = $query->paginate();
         $data = [];
 
-    foreach ($entries as $entry) {
+        foreach ($entries as $entry) {
 
-        $data[] = [
-            'id' => $entry->id,
-            'content'=>$entry->content,
-            'status'=>$entry->status,
-            'created_at'=>$entry->created_at,
-            'user_id'=>$entry->user_id,
-            'reason'=>$entry->reason,
-            'users' => $users
-        ];
-}
+            $data[] = [
+                'id' => $entry->id,
+                'content' => $entry->content,
+                'status' => $entry->status,
+                'created_at' => $entry->created_at,
+                'user_id' => $entry->user_id,
+                'reason' => $entry->reason,
+                'users' => $users
+            ];
+        }
 
 
         return [
@@ -290,14 +289,15 @@ class RequestRolesController extends AdminBaseController
         ];
     }
 
-    public function export() {
-                $keys = [
-                            'user_id' => ['A', 'user_id'],
-                            'role_id' => ['B', 'role_id'],
-                            'status' => ['C', 'status'],
-                            'reason' => ['D', 'reason'],
-                            'content' => ['E', 'content'],
-                            ];
+    public function export()
+    {
+        $keys = [
+            'user_id' => ['A', 'user_id'],
+            'role_id' => ['B', 'role_id'],
+            'status' => ['C', 'status'],
+            'reason' => ['D', 'reason'],
+            'content' => ['E', 'content'],
+        ];
 
         $query = RequestRole::query()->orderBy('id', 'desc');
 
@@ -310,7 +310,7 @@ class RequestRolesController extends AdminBaseController
                 $sheet->setCellValue($v . "1", $key);
             } elseif (is_array($v)) {
                 list($c, $n) = $v;
-                 $sheet->setCellValue($c . "1", $n);
+                $sheet->setCellValue($c . "1", $n);
             }
         }
 

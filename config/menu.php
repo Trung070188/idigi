@@ -73,30 +73,7 @@ return [
         "icon" => "	fas fa-laptop",
         'url' => '/xadmin/user_devices/index',
         'group'=>1,
-//        'subs'=>[
-//            [
-//                "name" => "Manage devices",
-//                "icon" => "fa fa-plus",
-//                "url" => "/xadmin/user_devices/index",
-//                "group" => 1,
-//            ],
-//            [
-//                "name" => " Approval devices",
-//                "icon" => "fa fa-plus",
-//                "url" => "/xadmin/user_devices/approval",
-//                "group" => 1,
-//            ],
-//        ]
-
     ],
-    [
-        "name" => "RequestRole",
-        "icon" => "fa fa-archive",
-        "group" => 1,
-        'url' => '/xadmin/request_role/manage',
-
-    ],
-
     [
         "name" => "Notification",
         "icon" => "fa fa-bell",

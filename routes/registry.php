@@ -61,4 +61,5 @@
         'action' => 'AppVersionsController',
         'name' => 'app_versions',
     ],
+
 ];

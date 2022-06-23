@@ -27,43 +27,45 @@ class NotificationsController extends AdminBaseController
     ];
 
     /**
-    * Index page
-    * @uri  /xadmin/notifications/index
-    * @throw  NotFoundHttpException
-    * @return  View
-    */
-    public function index() {
+     * Index page
+     * @uri  /xadmin/notifications/index
+     * @throw  NotFoundHttpException
+     * @return  View
+     */
+    public function index()
+    {
         $title = 'Notification';
         $component = 'NotificationIndex';
         return component($component, compact('title'));
     }
 
     /**
-    * Create new entry
-    * @uri  /xadmin/notifications/create
-    * @throw  NotFoundHttpException
-    * @return  View
-    */
-    public function create (Request $req) {
+     * Create new entry
+     * @uri  /xadmin/notifications/create
+     * @throw  NotFoundHttpException
+     * @return  View
+     */
+    public function create(Request $req)
+    {
         $component = 'NotificationForm';
         $title = 'Create notifications';
         return component($component, compact('title'));
     }
 
     /**
-    * @uri  /xadmin/notifications/edit?id=$id
-    * @throw  NotFoundHttpException
-    * @return  View
-    */
-    public function show (Request $req) {
+     * @uri  /xadmin/notifications/edit?id=$id
+     * @throw  NotFoundHttpException
+     * @return  View
+     */
+    public function show(Request $req)
+    {
         $id = $req->id;
-        $user=Auth::user();
+        $user = Auth::user();
         $entry = Notification::find($id);
 
-               $notification=Auth::user()->notifications()->find($id);
+        $notification = Auth::user()->notifications()->find($id);
 
-       if($notification)
-       {
+        if ($notification) {
             $notification->markAsRead();
         }
 
@@ -74,8 +76,8 @@ class NotificationsController extends AdminBaseController
 
 
         /**
-        * @var  Notification $entry
-        */
+         * @var  Notification $entry
+         */
 
         $title = 'Edit';
         $component = 'NotificationForm';
@@ -83,11 +85,28 @@ class NotificationsController extends AdminBaseController
 
         return component($component, compact('title', 'entry'));
     }
+
+    public function abc(Request $req)
+    {
+        $entry = Notification::all();
+
+        /**
+         * @var  Notification $entry
+         */
+
+        $title = 'Edit';
+        $component = 'TopNotification';
+
+
+        return component($component, compact('title', 'entry'));
+    }
+
     /**
-    * @uri  /xadmin/notifications/remove
-    * @return  array
-    */
-    public function remove(Request $req) {
+     * @uri  /xadmin/notifications/remove
+     * @return  array
+     */
+    public function remove(Request $req)
+    {
         $id = $req->id;
         $entry = Notification::find($id);
 
@@ -104,10 +123,11 @@ class NotificationsController extends AdminBaseController
     }
 
     /**
-    * @uri  /xadmin/notifications/save
-    * @return  array
-    */
-    public function save(Request $req) {
+     * @uri  /xadmin/notifications/save
+     * @return  array
+     */
+    public function save(Request $req)
+    {
         if (!$req->isMethod('POST')) {
             return ['code' => 405, 'message' => 'Method not allow'];
         }
@@ -115,10 +135,10 @@ class NotificationsController extends AdminBaseController
         $data = $req->get('entry');
 
         $rules = [
-    'type' => 'max:191',
-    'url' => 'max:191',
-    'sent_at' => 'date_format:Y-m-d H:i:s',
-];
+            'type' => 'max:191',
+            'url' => 'max:191',
+            'sent_at' => 'date_format:Y-m-d H:i:s',
+        ];
 
         $v = Validator::make($data, $rules);
 
@@ -130,8 +150,8 @@ class NotificationsController extends AdminBaseController
         }
 
         /**
-        * @var  Notification $entry
-        */
+         * @var  Notification $entry
+         */
         if (isset($data['id'])) {
             $entry = Notification::find($data['id']);
             if (!$entry) {
@@ -160,22 +180,15 @@ class NotificationsController extends AdminBaseController
             ];
         }
     }
+
     /**
-    * @param  Request $req
-    */
+     * @param Request $req
+     */
     public function toggleStatus(Request $req)
     {
-        $id = $req->get('id');
-        $entry = Notification::find($id);
 
-        if (!$id) {
-            return [
-                'code' => 404,
-                'message' => 'Not Found'
-            ];
-        }
-
-        $entry->status = $req->status ? 1 : 0;
+        $entry = Notification::all();
+        $entry->status = $req->status ? 'new' : 'unread';
         $entry->save();
 
         return [
@@ -185,76 +198,74 @@ class NotificationsController extends AdminBaseController
     }
 
     /**
-    * Ajax data for index page
-    * @uri  /xadmin/notifications/data
-    * @return  array
-    */
-    public function data(Request $req) {
+     * Ajax data for index page
+     * @uri  /xadmin/notifications/data
+     * @return  array
+     */
+    public function data(Request $req)
+    {
         $query = Notification::query()
             ->orderBy('created_at', 'desc');
-        $users=User::with(['notification'])->orderBy('username')->get();
+        $users = User::with(['notification'])->orderBy('username')->get();
         if ($req->keyword) {
             //$query->where('title', 'LIKE', '%' . $req->keyword. '%');
         }
 
         $query->createdIn($req->created);
-        $limit = 2;
+        $limit = 25;
 
         if ($req->limit) {
             $limit = $req->limit;
         }
-        $entries = $query->paginate();
-        $data=[];
-        foreach ($entries as $entry)
-        {
-            foreach ($users as $user)
-            {
-                if($entry->user_id==$user->id)
-                {
-                    $entry->user_name=$user->username;
+        $entries = $query->paginate($limit);
+        $data = [];
+        foreach ($entries as $entry) {
+            foreach ($users as $user) {
+                if ($entry->user_id == $user->id) {
+                    $entry->user_name = $user->username;
                 }
             }
-            $user=Auth::user();
+            $user = Auth::user();
 
 
-           foreach ($user->roles as $role)
-           {
-              if($role->role_name=='Administrator')
-              {
-                  $data[]=[
-                      'id'=>$entry->id,
-                      'user_id'=>$entry->user_id,
-                      'read_at'=>$entry->read_at,
-                      'status'=>$entry->status,
-                      'title'=>$entry->title,
-                      'url'=>$entry->url,
-                      'content'=>$entry->content,
-                      'created_at'=>$entry->created_at,
-                      'updated_at'=>$entry->updated_at,
-                      'username'=>$entry->user_name,
-                  ];
+            foreach ($user->roles as $role) {
+                if ($role->role_name == 'Administrator') {
+                    $data[] = [
+                        'id' => $entry->id,
+                        'user_id' => $entry->user_id,
+                        'read_at' => $entry->read_at,
+                        'status' => $entry->status,
+                        'title' => $entry->title,
+                        'url' => $entry->url,
+                        'content' => $entry->content,
+                        'created_at' => $entry->created_at,
+                        'updated_at' => $entry->updated_at,
+                        'username' => $entry->user_name,
+                    ];
 
-              }
-           }
+                }
+            }
 
         }
         return [
             'code' => 0,
-                'data'=>[
-                  'entries'=>$data,
-                ],
+            'data' => [
+                'entries' => $data,
+            ],
             'paginate' => [
                 'currentPage' => $entries->currentPage(),
                 'lastPage' => $entries->lastPage(),
-                'totalRecord' =>$entries->count(),
+                'totalRecord' => $entries->count(),
             ]
         ];
 
 
     }
-    public function notification(Request $req) {
+
+    public function notification(Request $req)
+    {
         $query = Notification::query()->orderBy('created_at', 'desc');
-        $users=User::with(['notification'])->orderBy('username')->get();
+        $users = User::with(['notification'])->orderBy('username')->get();
         if ($req->keyword) {
             //$query->where('title', 'LIKE', '%' . $req->keyword. '%');
         }
@@ -266,57 +277,50 @@ class NotificationsController extends AdminBaseController
             $limit = $req->limit;
         }
         $entries = $query->paginate();
-        $data=[];
-        foreach ($entries as $entry)
-        {
-            foreach ($users as $user)
-            {
-                if($entry->user_id==$user->id)
-                {
-                    $entry->user_name=$user->username;
+        $data = [];
+        foreach ($entries as $entry) {
+            foreach ($users as $user) {
+                if ($entry->user_id == $user->id) {
+                    $entry->user_name = $user->username;
                 }
             }
-            $user=Auth::user();
-
-
-            foreach ($user->roles as $role)
-            {
-                if($role->role_name=='Administrator')
-                {
-                    $data[]=[
-                        'id'=>$entry->id,
-                        'type'=>$entry->type,
-                        'notifiable_type'=>$entry->notifiable_type,
-                        'user_id'=>$entry->user_id,
-                        'read_at'=>$entry->read_at,
-                        'status'=>$entry->status,
-                        'title'=>$entry->title,
-                        'url'=>$entry->url,
-                        'content'=>$entry->content,
-                        'created_at'=>$entry->created_at,
-                        'updated_at'=>$entry->updated_at,
-                        'username'=>$entry->user_name,
+            $user = Auth::user();
+            foreach ($user->roles as $role) {
+                if ($role->role_name == 'Administrator') {
+                    $data[] = [
+                        'id' => $entry->id,
+                        'type' => $entry->type,
+                        'notifiable_type' => $entry->notifiable_type,
+                        'user_id' => $entry->user_id,
+                        'read_at' => $entry->read_at,
+                        'status' => $entry->status,
+                        'title' => $entry->title,
+                        'url' => $entry->url,
+                        'content' => $entry->content,
+                        'created_at' => $entry->created_at,
+                        'updated_at' => $entry->updated_at,
+                        'username' => $entry->user_name,
                     ];
 
                 }
             }
         }
-       return response()->json($data);
-
+        return response()->json($data);
 
 
     }
 
-    public function export() {
-                $keys = [
-                            'type' => ['A', 'type'],
-                            'url' => ['B', 'url'],
-                            'channel' => ['C', 'channel'],
-                            'status' => ['D', 'status'],
-                            'content' => ['E', 'content'],
-                            'title' => ['F', 'title'],
-                            'sent_at' => ['G', 'sent_at'],
-                            ];
+    public function export()
+    {
+        $keys = [
+            'type' => ['A', 'type'],
+            'url' => ['B', 'url'],
+            'channel' => ['C', 'channel'],
+            'status' => ['D', 'status'],
+            'content' => ['E', 'content'],
+            'title' => ['F', 'title'],
+            'sent_at' => ['G', 'sent_at'],
+        ];
 
         $query = Notification::query()->orderBy('id', 'desc');
 
@@ -329,7 +333,7 @@ class NotificationsController extends AdminBaseController
                 $sheet->setCellValue($v . "1", $key);
             } elseif (is_array($v)) {
                 list($c, $n) = $v;
-                 $sheet->setCellValue($c . "1", $n);
+                $sheet->setCellValue($c . "1", $n);
             }
         }
 
