@@ -168,7 +168,7 @@ class UserDevicesController extends AdminBaseController
         }
         $data = $request->get('entry');
         $rules = [
-            'device_uid' => 'required|max:45',
+            'device_uid' => 'required',
             'device_name' => 'required|max:45',
         ];
 
