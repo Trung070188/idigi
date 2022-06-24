@@ -324,7 +324,7 @@ class LessonsController extends AdminBaseController
         $y = date('Y');
         $m = date('m');
         $d = date('d');
-        $dir = "files/downloads/{$y}/{$m}/{$d}";
+        $dir = "files/downloads/{$y}/{$m}/{$d}/{$user->id}";
 
         if (!is_dir(public_path($dir))) {
             mkdir(public_path($dir), 0755, true);
@@ -342,7 +342,8 @@ class LessonsController extends AdminBaseController
 
         foreach ($lessons as $key => $lesson) {
             $filename = uniqid(time().rand(10,100));
-            $zip_file = public_path($dir . '/lessons_'.$key.'.zip');
+            $name = explode(':', $lesson->name);
+            $zip_file = public_path($dir . '/'.$name[0].'.zip');
             $zip = new \ZipArchive();
             $zip->open($zip_file, \ZipArchive::CREATE | \ZipArchive::OVERWRITE);
             $structure = json_decode($lesson->structure, true);
@@ -372,7 +373,7 @@ class LessonsController extends AdminBaseController
             $zip->setEncryptionName('lesson_detail.txt', \ZipArchive::EM_AES_256,$password);
             $zip->close();
 
-            $zipAll->addFile($zip_file, 'lessons_'.$key.'.zip');
+            $zipAll->addFile($zip_file, $name[0].'.zip');
             $zipAll->setEncryptionName('/lessons_'.$key.'.zip', \ZipArchive::EM_AES_256, $password);
 
         }
