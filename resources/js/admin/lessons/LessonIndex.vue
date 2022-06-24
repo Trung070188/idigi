@@ -184,7 +184,7 @@
                         </ul>
                     </div>
                     <div class="modal-footer" style="justify-content: center">
-                        <button type="button" class="btn btn-primary" :disabled="lessons.length == 0 || !device"
+                        <button type="button" class="btn btn-primary" :disabled="lessons.length == 0 || !device || isConfirm == 0"
                                 @click="downloadLesson">Confirm
                         </button>
                     </div>
@@ -242,7 +242,8 @@ export default {
                 currentPage: 1,
                 lastPage: 1,
                 totalRecord: 0
-            }
+            },
+            isConfirm: 0,
         }
     },
     mounted() {
@@ -254,10 +255,13 @@ export default {
     },
     methods: {
         downloadLesson() {
+            this.isConfirm = 0;
             window.location.href = '/xadmin/lessons/downloadLesson?' + 'lessonIds=' + this.lessonIds + '&device=' + this.device;
+            $('#download-lesson').modal('hide');
         },
 
         openModal: function () {
+            this.isConfirm = 1;
             if (this.lessons.length > 3) {
                 alert('Bạn chỉ được chọn tối đa 3 lesson');
                 return false;

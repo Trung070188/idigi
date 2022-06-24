@@ -14,7 +14,7 @@
                         <div class="card">
                             <div class="card-header" id="headingOne">
                                 <h5 class="mb-0">
-                                    <button class="btn btn-link" data-toggle="collapse" data-target="#collapseOne"
+                                    <button class="btn btn-link btn-border" data-toggle="collapse" data-target="#collapseOne"
                                             aria-expanded="true" aria-controls="collapseOne">
                                         Application for window({{ totalVersionWindow }} version)
                                     </button>
@@ -56,7 +56,7 @@
                         <div class="card">
                             <div class="card-header" id="headingTwo">
                                 <h5 class="mb-0">
-                                    <button class="btn btn-link collapsed" data-toggle="collapse"
+                                    <button class="btn btn-link collapsed btn-border" data-toggle="collapse"
                                             data-target="#collapseTwo" aria-expanded="false"
                                             aria-controls="collapseTwo">
                                         Application for MacOs({{ totalVersionIos }} version)
@@ -114,7 +114,7 @@
 
                         <div id="overlay">
                             <div class="la-3x text" >
-                                <i class="la la-spinner la-spin" style="font-size: 8rem"></i>
+                                <i class="la la-spinner la-spin" ></i>
                             </div>
                         </div>
 
@@ -261,16 +261,12 @@ export default {
                 this.errors = {};
                 $router.on('/', this.load).init();
                 toastr.success(res.message);
-
             }
 
         },
 
         async save() {
             this.errors = {};
-            this.model = {
-                type:''
-            };
             const files = this.$refs.uploader.files;
             const formData = new FormData();
             formData.append('_token', window.$csrf)
@@ -300,6 +296,10 @@ export default {
                 this.errors = res.errors;
             } else {
                 $('#uploadApp').modal('hide');
+                this.model = {
+                    type: ''
+                }
+                $router.on('/', this.load).init();
                 toastr.success(res.message);
             }
 
@@ -338,29 +338,18 @@ export default {
 .table td {
     border-top: none;
 }
+.mb-0{
+    width:100%;
 
-#overlay {
-    position: fixed; /* Sit on top of the page content */
-    display: none;
-    width: 100%; /* Full width (cover the whole page) */
-    height: 100%; /* Full height (cover the whole page) */
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: rgba(0,0,0,0.5); /* Black background with opacity */
-    z-index: 200000; /* Specify a stack order in case you're using a different order for other elements */
-    cursor: pointer; /* Add a pointer on hover */
+
 }
-#overlay  .text {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    font-size: 50px;
-    color: white;
-    user-select: none;
-    transform: translate(-50%,-50%);
-    -ms-transform: translate(-50%,-50%);
+.card-header{
+    background-color: rgba(0,0,0,.03)!important;
+}
+.btn-border{
+    text-align:left;
+    width:100%;
+
 }
 
 .table {
