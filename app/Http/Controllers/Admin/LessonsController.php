@@ -374,7 +374,7 @@ class LessonsController extends AdminBaseController
             $zip->close();
 
             $zipAll->addFile($zip_file, $name[0].'.zip');
-            $zipAll->setEncryptionName('/lessons_'.$key.'.zip', \ZipArchive::EM_AES_256, $password);
+            $zipAll->setEncryptionName('/'.$name[0].'.zip', \ZipArchive::EM_AES_256, $password);
 
         }
 
