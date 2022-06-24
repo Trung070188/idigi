@@ -289,24 +289,14 @@ class NotificationsController extends AdminBaseController
         }
 
         $query->createdIn($req->created);
-        $limit = 2;
+        $limit = 10;
 
         if ($req->limit) {
             $limit = $req->limit;
         }
-        $entries = $query->paginate();
-        $trung = $query->paginate();
+        $entries = $query->paginate($limit);
         $data = [
         ];
-
-        foreach ($trung as $quang)
-        {
-
-
-
-
-        }
-
 
         foreach ($entries as $entry) {
 
@@ -340,9 +330,6 @@ class NotificationsController extends AdminBaseController
             'code' => 0,
             'data' =>[
                 'entries'=>$data,
-                'status'=>$entry->status,
-
-
             ]
 
 

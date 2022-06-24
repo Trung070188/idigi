@@ -46,7 +46,7 @@
                     </div>
                     <div class="form-group d-flex justify-content-between">
                         <!--                        <button  class="btn btn-danger ito-btn-small" data-dismiss="modal" @click="save()">Add now</button>-->
-                        <button class="btn btn-dark ito-btn-add" data-dismiss="modal" @click="save_send()" style="margin:0 auto">
+                        <button class="btn btn-primary ito-btn-add" data-dismiss="modal" @click="save_send()" style="margin:0 auto">
                             Add now
                         </button>
                     </div>

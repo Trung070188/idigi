@@ -13,71 +13,72 @@
         </div>
         <!--end::Toggle-->
         <!--begin::Dropdown-->
-        <div class="dropdown-menu dropdown-menu-right dropdown-menu-anim-up dropdown-menu-lg">
-            <form>
+        <div  class="dropdown-menu dropdown-menu-right dropdown-menu-anim-up dropdown-menu-lg">
+            <form >
                 <!--begin::Header-->
-                <div class="d-flex flex-column pt-12 bgi-size-cover bgi-no-repeat rounded-top" >
+                <div class="d-flex flex-column pt-12 bgi-size-cover bgi-no-repeat rounded-top" style="background-image: url(/assets/media/misc/bg-1.jpg)">
                     <!--begin::Title-->
                     <h4 class="d-flex flex-center rounded-top">
-                        <span class="text-dark">User Notifications</span>
-                        <span class="btn btn-text btn-success btn-sm font-weight-bold btn-font-md ml-2" >{{entries.length}} new</span>
+                        <span class="text-white">User Notifications</span>
+                        <span v-for="entry in entries" v-if="entry.status=='new'"  class="btn btn-text btn-success btn-sm font-weight-bold btn-font-md ml-2">{{entry.length}} new</span>
                     </h4>
                     <!--end::Title-->
                     <!--begin::Tabs-->
-                    <ul class="nav nav-bold nav-tabs nav-tabs-line nav-tabs-line-3x nav-tabs-line-transparent-white nav-tabs-line-active-border-success mt-3 px-8" >
+                    <ul class="nav nav-bold nav-tabs nav-tabs-line nav-tabs-line-3x nav-tabs-line-transparent-white nav-tabs-line-active-border-success mt-3 px-8">
 
                     </ul>
 
                 </div>
 
-                <div class="tab-content">
+                <div  class="tab-content" style="overflow: auto;height: 200px;">
 
-                    <div class="tab-pane active" id="topbar_notifications_events" role="tabpanel">
+                    <div v-for="entry in entries" class="tab-pane active" id="topbar_notifications_events" role="tabpanel">
                         <!--begin::Nav-->
-                        <div v-for="entry in entries" class="navi navi-hover scroll my-4" data-scroll="true" data-height="300" data-mobile-height="200">
+                        <div  class="navi navi-hover scroll my-4" data-scroll="true"
+                             data-height="300" data-mobile-height="200"  >
                             <!--begin::Item-->
-                            <a href="#" class="navi-item" :href="entry.url">
+                            <a href="#" class="navi-item" :href="entry.url" @click="abc(entry)">
                                 <div class="navi-link">
                                     <div class="navi-icon mr-2">
                                         <i class="flaticon2-line-chart text-success"></i>
                                     </div>
                                     <div class="navi-text">
-                                        <div class="font-weight-bold">{{entry.username}}  có yêu cầu mới !</div>
+                                        <div class="font-weight-bold">{{entry.username}} có yêu cầu mới !</div>
                                         <div class="text-muted">{{d(entry.created_at)}}</div>
                                     </div>
                                 </div>
                             </a>
 
-                        <!--end::Nav-->
-                    </div>
+                            <!--end::Nav-->
+                        </div>
 
-                </div>
+                    </div>
                 </div>
 
             </form>
         </div>
     </div>
 
-<!--    <li class="nav-item dropdown">-->
-<!--        <a id="" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">-->
-<!--            <i class="fa fa-bell " id="notify_icon"  ></i>-->
+    <!--    <li class="nav-item dropdown">-->
+    <!--        <a id="" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">-->
+    <!--            <i class="fa fa-bell " id="notify_icon"  ></i>-->
 
-<!--            <span id="notifiy_num" v-show="entries.length>0">{{entries.length}}</span>-->
+    <!--            <span id="notifiy_num" v-show="entries.length>0">{{entries.length}}</span>-->
 
-<!--        </a>-->
+    <!--        </a>-->
 
 
-<!--        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="">-->
-<!--            <a class="dropdown-item" v-for="(unread,index) in entries" :key="index"  @click="abc(unread)">-->
-<!--                <p v-if="unread.title=='Yêu cầu xóa thiết bị'">{{unread.username}} yêu cầu xóa thiết bị.-->
-<!--                    {{d(unread.created_at)}} </p>-->
-<!--                <p v-if="unread.title=='Yêu cầu cấp quyền'">{{unread.username}} yêu cầu cấp quyền .-->
-<!--                    {{d(unread.created_at)}} </p>-->
-<!--            </a>-->
-<!--            <a class="dropdown-item" v-show="entries.length==0">No Notifications</a>-->
+    <!--        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="">-->
+    <!--            <a class="dropdown-item" v-for="(unread,index) in entries" :key="index"  @click="abc(unread)">-->
+    <!--                <p v-if="unread.title=='Yêu cầu xóa thiết bị'">{{unread.username}} yêu cầu xóa thiết bị.-->
+    <!--                    {{d(unread.created_at)}} </p>-->
+    <!--                <p v-if="unread.title=='Yêu cầu cấp quyền'">{{unread.username}} yêu cầu cấp quyền .-->
+    <!--                    {{d(unread.created_at)}} </p>-->
+    <!--            </a>-->
+    <!--            <a class="dropdown-item" v-show="entries.length==0">No Notifications</a>-->
 
-<!--        </div>-->
-<!--    </li>-->
+    <!--        </div>-->
+    <!--    </li>-->
 </template>
 <script>
     import {$get, $post} from "../../utils";
@@ -92,8 +93,8 @@
 
         data() {
             return {
-                status:'',
-                entries:[],
+                status: '',
+                entries: [],
             }
         },
         methods: {
@@ -104,13 +105,14 @@
                 const res = await $get('/xadmin/notifications/notification', query);
                 this.$loading(false);
                 this.entries = res.data.entries;
-                this.status=res.data.status;
+                this.status = res.data.status;
                 console.log(this.entries);
             },
-            async abc(unread) {
+            async abc(entry) {
                 const res = await $post('/xadmin/notifications/toggleStatus', {
-                    id: unread.id,
-                    status: unread.status}, false);
+                    id: entry.id,
+                    status: entry.status
+                }, false);
                 toastr.success(res.message);
             },
 
@@ -138,6 +140,8 @@
         color: #f1f1f1;
         font-family: Sans-Serif;
     }
+
+
 
 
 </style>
