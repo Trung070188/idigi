@@ -90,13 +90,20 @@
             window.$pageTitle = '{{$title}}';
             <?php
                 $user = auth_user();
+                $roles = $user->roles;
+                $roleUser = [];
+                foreach ($roles as $role){
+                    $roleUser[] = $role->role_name;
+                }
                 $auth = [
                     'id' => $user->id,
                     'email' => $user->email,
                     'username' => $user->username
                 ];
+
             ?>
             window.$auth =  JSON.parse('{!! addslashes(json_encode($auth)) !!}');
+            window.$roles =  JSON.parse('{!! addslashes(json_encode($roleUser)) !!}');
 
             function autoGrow(element) {
                 element.style.height = "5px";

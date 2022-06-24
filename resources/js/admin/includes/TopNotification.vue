@@ -8,7 +8,7 @@
 												<i class="fa fa-bell"></i>
                                                 <!--end::Svg Icon-->
 											</span>
-                <span class="pulse-ring"></span>
+                <span v-if="notification>0" class="pulse-ring"></span>
             </div>
         </div>
         <!--end::Toggle-->
@@ -18,9 +18,12 @@
                 <!--begin::Header-->
                 <div class="d-flex flex-column pt-12 bgi-size-cover bgi-no-repeat rounded-top" style="background-image: url(/assets/media/misc/bg-1.jpg)">
                     <!--begin::Title-->
-                    <h4 class="d-flex flex-center rounded-top">
+                    <h4 v-if="notification>0" class="d-flex flex-center rounded-top">
                         <span class="text-white">User Notifications</span>
-                        <span v-for="entry in entries" v-if="entry.status=='new'"  class="btn btn-text btn-success btn-sm font-weight-bold btn-font-md ml-2">{{entry.length}} new</span>
+                        <span   class="btn btn-text btn-success btn-sm font-weight-bold btn-font-md ml-2">{{notification}} new</span>
+                    </h4>
+                    <h4 v-if="notification==0" class="d-flex flex-center rounded-top">
+                        <span class="text-white">No Notifications</span>
                     </h4>
                     <!--end::Title-->
                     <!--begin::Tabs-->
@@ -93,7 +96,7 @@
 
         data() {
             return {
-                status: '',
+                notification:'',
                 entries: [],
             }
         },
@@ -101,12 +104,9 @@
             async Notification() {
 
                 let query = $router.getQuery();
-                this.$loading(true);
                 const res = await $get('/xadmin/notifications/notification', query);
-                this.$loading(false);
                 this.entries = res.data.entries;
-                this.status = res.data.status;
-                console.log(this.entries);
+                this.notification=res.data.notification;
             },
             async abc(entry) {
                 const res = await $post('/xadmin/notifications/toggleStatus', {
