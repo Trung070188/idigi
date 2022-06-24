@@ -260,8 +260,10 @@ export default {
         openModalEntry(entry){
             this.isConfirm = 1;
             this.lessons = [entry];
+            this.lessonIds = [entry.id];
             $('#download-lesson').modal('show');
         },
+        
         downloadLesson() {
             this.isConfirm = 0;
             window.location.href = '/xadmin/lessons/downloadLesson?' + 'lessonIds=' + this.lessonIds + '&device=' + this.device;
