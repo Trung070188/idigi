@@ -33,10 +33,10 @@
                 {{csrf_field()}}
                 @if (config('app.env') !== 'production')
                     <div class="form-group">
-                        <input type="text" class="form-control" placeholder="ID" name="email" value="{{ old('email') }}" required autofocus>
+                        <input type="text" class="form-control" placeholder="Username or Email" name="login" value="{{ old('login') }}" required autofocus>
                     </div>
                     <div class="form-group">
-                        <input type="password" class="form-control" placeholder="Mật khẩu" required name="password">
+                        <input type="password" class="form-control" placeholder="Password" required name="password">
                     </div>
                     <div class="form-group d-flex justify-content-between">
                         <div class="custom-control custom-checkbox">
@@ -44,7 +44,7 @@
                             <label class="custom-control-label" for="customCheck1">Ghi nhớ</label>
                         </div>
                     </div>
-                    @error('email')
+                    @error('login')
                     <div class="alert alert-danger" role="alert">
                         <strong>{{ $message }}</strong>
                     </div>
