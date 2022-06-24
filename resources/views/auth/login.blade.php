@@ -27,24 +27,24 @@
                 <img src="{{asset('/images/logo.svg')}}">
             </div>
             <!-- ./ logo //// -->
-            <h5 style="margin-top:20px;">Đăng nhập</h5>
+            <h5 style="margin-top:20px;">Login</h5>
             <!-- form -->
             <form method="post" id="loginForm" method="post" action="/xadmin/login" style="margin-top:50px;">
                 {{csrf_field()}}
                 @if (config('app.env') !== 'production')
                     <div class="form-group">
-                        <input type="text" class="form-control" placeholder="ID" name="email" value="{{ old('email') }}" required autofocus>
+                        <input type="text" class="form-control" placeholder="Username or Email" name="login" value="{{ old('login') }}" required autofocus>
                     </div>
                     <div class="form-group">
-                        <input type="password" class="form-control" placeholder="Mật khẩu" required name="password">
+                        <input type="password" class="form-control" placeholder="Password" required name="password">
                     </div>
                     <div class="form-group d-flex justify-content-between">
                         <div class="custom-control custom-checkbox">
                             <input type="checkbox" class="custom-control-input" checked="" id="customCheck1">
-                            <label class="custom-control-label" for="customCheck1">Ghi nhớ</label>
+                            <label class="custom-control-label" for="customCheck1">Remember me</label>
                         </div>
                     </div>
-                    @error('email')
+                    @error('login')
                     <div class="alert alert-danger" role="alert">
                         <strong>{{ $message }}</strong>
                     </div>
@@ -54,7 +54,7 @@
                         <strong>{{ $message }}</strong>
                     </div>
                     @enderror
-                    <button class="btn btn-primary btn-block xxx">Đăng nhập</button>
+                    <button class="btn btn-primary btn-block xxx">Login</button>
                     <br>
                     <br>
                 @else

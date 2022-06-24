@@ -131,8 +131,11 @@
 
                                 <td class="">
                                     <!--                                    <a :href="'/xadmin/lessons/edit?id='+entry.id" style="margin-right: 10px"><i style="font-size:1.3rem" class="fa fa-edit"></i></a>-->
-                                    <a @click="remove(entry)" href="javascript:;" class="btn-trash deleted"><i
-                                        class="fa fa-trash mr-1"></i></a>
+                                    <a @click="openModalEntry(entry)" href="javascript:;" class=" btn-action"><i
+                                        class="fa fa-download"></i></a>
+                                    <a @click="remove(entry)" href="javascript:;" class="btn-trash btn-action "><i
+                                        class="fa fa-trash "></i></a>
+
                                 </td>
                             </tr>
                             </tbody>
@@ -254,6 +257,11 @@ export default {
         });
     },
     methods: {
+        openModalEntry(entry){
+            this.isConfirm = 1;
+            this.lessons = [entry];
+            $('#download-lesson').modal('show');
+        },
         downloadLesson() {
             this.isConfirm = 0;
             window.location.href = '/xadmin/lessons/downloadLesson?' + 'lessonIds=' + this.lessonIds + '&device=' + this.device;
