@@ -42,12 +42,9 @@
             async Notification() {
 
                 let query = $router.getQuery();
-                this.$loading(true);
                 const res = await $get('/xadmin/notifications/notification', query);
-                this.$loading(false);
                 this.entries = res.data.entries;
                 this.status=res.data.status;
-                console.log(this.entries);
             },
             async abc(unread) {
                 const res = await $post('/xadmin/notifications/toggleStatus', {
