@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 
+use App\Models\Notification;
 use App\Models\User;
 use App\Notifications\InvoicePaid;
 use App\Notifications\RequestRoleNotification;
@@ -139,14 +140,18 @@ class RequestRolesController extends AdminBaseController
         $data['status'] = 'Waiting';
         $users = User::with('roles')->orderBy('username')->get();
 
-        foreach ($users as $user) {
-            foreach ($user->roles as $role) {
-
-                if ($role->role_name == 'Administrator') {
-                    $user->notify(new RequestRoleNotification(Auth::user(), $data['content']));
-                }
-            }
+        $data_device = new Notification();
+        $data_device->status='new';
+        if ($data['role'] == 1) {
+          $data_device->content=  'Tôi là quản trị viên';
+        } else {
+            $data_device->content=  'Tôi là giáo viên';
         }
+        $data_device->channel='inapp';
+        $data_device->user_id=$user->id;
+        $data_device->url=url("xadmin/users/edit?id={$user->id}");
+        $data_device->title='Yêu cầu cấp quyền';
+        $data_device->save();
 
 
         RequestRole::updateOrCreate([

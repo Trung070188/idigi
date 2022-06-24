@@ -289,23 +289,18 @@ class NotificationsController extends AdminBaseController
         }
 
         $query->createdIn($req->created);
-        $limit = 2;
+        $limit = 10;
 
         if ($req->limit) {
             $limit = $req->limit;
         }
-        $entries = $query->paginate();
-        $trung = $query->paginate();
+        $entries = $query->paginate($limit);
+        $trung=$query->paginate();
         $data = [
         ];
-
-        foreach ($trung as $quang)
-        {
+        $notification=Notification::query()->where('status','=','new')->count();
 
 
-
-
-        }
 
 
         foreach ($entries as $entry) {
@@ -333,6 +328,7 @@ class NotificationsController extends AdminBaseController
                         'username' => $entry->user_name,
                     ];
 
+
                 }
             }
         }
@@ -340,7 +336,7 @@ class NotificationsController extends AdminBaseController
             'code' => 0,
             'data' =>[
                 'entries'=>$data,
-                'status'=>$entry->status,
+                'notification'=>$notification,
 
 
             ]

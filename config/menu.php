@@ -25,21 +25,21 @@ return [
         "icon" => "fa fa-users",
         "group" => 1,
         'base' => '/xadmin/users',
-        "roles" => ['Super Administrator'],
+        "roles" => ['Super Administrator','Administrator'],
         'subs' => [
             [
                 "name" => "Manage User",
                 "icon" => "fa fa-plus",
                 "url" => "/xadmin/users/index",
                 "group" => 1,
-                "roles" => ['Super Administrator']
+                "roles" => ['Super Administrator','Administrator']
             ],
             [
                 "name" => "Manage Role",
                 "icon" => "fa fa-plus",
                 "url" => "/xadmin/roles/index",
                 "group" => 1,
-                "roles" => ['Super Administrator']
+                "roles" => ['Super Administrator','Administrator']
             ],
         ],
     ],
@@ -49,7 +49,7 @@ return [
         "icon" => "	fas fa-landmark",
         "group" => 1,
         "url" => "/xadmin/users/index_teacher",
-        "roles" => ['Super Administrator']
+        "roles" => ['Super Administrator','Administrator']
 
     ],
 
@@ -58,7 +58,7 @@ return [
         "name" => "School",
         "icon" => "fa fa-school",
         'url' => '/xadmin/schools/index',
-        "roles" => ['Super Administrator']
+        "roles" => ['Super Administrator','Administrator']
     ],
 
     [
@@ -66,14 +66,14 @@ return [
         "icon" => "fa fa-users",
         "group" => 1,
         'base' => '/xadmin/system',
-        "roles" => ['Super Administrator'],
+        "roles" => ['Super Administrator','Administrator'],
         'subs' => [
             [
                 "name" => "File Manager",
                 "icon" => "fa fa-files-o",
                 "url" => "/xadmin/elfinder",
                 "group" => 1,
-                "roles" => ['Super Administrator']
+                "roles" => ['Super Administrator','Administrator']
             ],
 
         ]
@@ -83,14 +83,14 @@ return [
         "icon" => "	fas fa-laptop",
         'url' => '/xadmin/user_devices/index',
         'group' => 1,
-        "roles" => ['Super Administrator']
+        "roles" => ['Super Administrator','Administrator']
     ],
     [
         "name" => "Notification",
         "icon" => "fa fa-bell",
         "group" => 1,
         'url' => '/xadmin/notifications/index',
-        "roles" => ['Super Administrator']
+        "roles" => ['Super Administrator','Administrator']
     ],
 
     [

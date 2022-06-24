@@ -33,8 +33,8 @@
                  style="max-width: 500px;">
                 <div class="modal-content box-shadow-main paymment-status" style="margin-right:20px; left:140px">
                     <div class="close-popup" data-dismiss="modal"></div>
-                    <h3 class="popup-title success">Add more device</h3>
-                    <div class="content">
+                    <h3 style="margin:20px auto;font-weight: bold;" class="popup-title success">Add more device</h3>
+                    <div class="content" style="margin: 0 20px 20px">
                         <p>Bước 1 :Sử dụng máy tính mà bạn muốn thêm thiết bị mở ứng dụng IDIGI trên Desktop</p>
                         <p>Bước 2:Nhấn vào nút "Get device information" và copy đoạn mã thông tin thiết bị </p>
                         <p>Bước 3:Dán đoạn mã vào ô phía dưới</p>
@@ -46,7 +46,7 @@
                     </div>
                     <div class="form-group d-flex justify-content-between">
                         <!--                        <button  class="btn btn-danger ito-btn-small" data-dismiss="modal" @click="save()">Add now</button>-->
-                        <button class="btn btn-dark ito-btn-add" data-dismiss="modal" @click="save_send()" style="margin-left: 170px">
+                        <button class="btn btn-primary ito-btn-add" data-dismiss="modal" @click="save_send()" style="margin:0 auto">
                             Add now
                         </button>
                     </div>
