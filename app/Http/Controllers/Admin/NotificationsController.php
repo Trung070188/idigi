@@ -224,7 +224,7 @@ class NotificationsController extends AdminBaseController
 
         $query = Notification::query()
             ->orderBy('created_at', 'desc');
-        $users = User::with(['notification','role'])->orderBy('username')->get();
+        $users = User::with(['notification'])->orderBy('username')->get();
         if ($req->keyword) {
             //$query->where('title', 'LIKE', '%' . $req->keyword. '%');
         }
@@ -247,8 +247,7 @@ class NotificationsController extends AdminBaseController
 
 
             foreach ($user->roles as $role) {
-              if($entry->title=='Yêu cầu cấp quyền')
-              {
+
                   if ( $role->role_name=='Super Administrator') {
                       $data[] = [
                           'id' => $entry->id,
@@ -265,26 +264,7 @@ class NotificationsController extends AdminBaseController
 
                   }
 
-              }
-              if($entry->title=='Yêu cầu xóa thiết bị')
-              {
-                  if ( $role->role_name=='Super Administrator' || $role->role_name=='Administrator') {
-                      $data[] = [
-                          'id' => $entry->id,
-                          'user_id' => $entry->user_id,
-                          'read_at' => $entry->read_at,
-                          'status' => $entry->status,
-                          'title' => $entry->title,
-                          'url' => $entry->url,
-                          'content' => $entry->content,
-                          'created_at' => $entry->created_at,
-                          'updated_at' => $entry->updated_at,
-                          'username' => $entry->user_name,
-                      ];
 
-                  }
-
-              }
 
             }
 

@@ -23,9 +23,10 @@
                             <td v-if="entry.title==='Yêu cầu xóa thiết bị'">{{entry.username}}</td>
                             <td v-if="entry.title==='Yêu cầu cấp quyền'">{{entry.username}}</td>
                             <td v-if="entry.title==='Yêu cầu xóa thiết bị'">{{entry.content}}</td>
-                            <td v-if="entry.title='Yêu cầu cấp quyền'">{{entry.content}}</td>
-                            <td v-if="entry.title==='Yêu cầu xóa thiết bị'">Cấp quyền</td>
-                            <td v-if="entry.title==='Yêu cầu cấp quyền'">Xóa thiết bị</td>
+                            <td v-if="entry.title==='Yêu cầu cấp quyền'">{{entry.content}}</td>
+                            <td v-if="entry.title==='Yêu cầu xóa thiết bị'">Xóa thiết bị</td>
+                            <td v-if="entry.title==='Yêu cầu cấp quyền'">Cấp quyền</td>
+
                             <td v-text=" d(entry.created_at)"></td>
 
                             <td v-if="entry.title==='Yêu cầu xóa thiết bị'">
