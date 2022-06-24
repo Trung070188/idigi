@@ -41,7 +41,7 @@
                     <div class="form-group d-flex justify-content-between">
                         <div class="custom-control custom-checkbox">
                             <input type="checkbox" class="custom-control-input" checked="" id="customCheck1">
-                            <label class="custom-control-label" for="customCheck1">Ghi nhớ</label>
+                            <label class="custom-control-label" for="customCheck1">Remember me</label>
                         </div>
                     </div>
                     @error('login')
@@ -54,7 +54,7 @@
                         <strong>{{ $message }}</strong>
                     </div>
                     @enderror
-                    <button class="btn btn-primary btn-block xxx">Đăng nhập</button>
+                    <button class="btn btn-primary btn-block xxx">Login</button>
                     <br>
                     <br>
                 @else
