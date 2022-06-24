@@ -84,13 +84,17 @@
                 locale: DATE_LOCALES,
                 timePicker: this.timepicker || false,
                 timePicker24Hour: true,
-                minDate
+                //minDate
 
             },  (start, end) => {
                 this.$emit('input', start.format('YYYY-MM-DD HH:mm:ss'));
                 this.$el.value = start.format(format);
             });
 
+            $(this.$el).on('apply.daterangepicker', function(ev, picker) {
+                self.$emit('input', picker.startDate.format('YYYY-MM-DD HH:mm:ss'));
+                self.$el.value = picker.endDate.format(format);
+            });
 
            // var _query  = $router.getQuery();
             if (this.value) {
