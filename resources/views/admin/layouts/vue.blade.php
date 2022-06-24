@@ -77,6 +77,9 @@
             .la-spin{
                 font-size:8rem!important;
             }
+            .btn-action{
+                margin-right: 10px;
+            }
 
 
         </style>

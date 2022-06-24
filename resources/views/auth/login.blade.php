@@ -27,7 +27,7 @@
                 <img src="{{asset('/images/logo.svg')}}">
             </div>
             <!-- ./ logo //// -->
-            <h5 style="margin-top:20px;">Đăng nhập</h5>
+            <h5 style="margin-top:20px;">Login</h5>
             <!-- form -->
             <form method="post" id="loginForm" method="post" action="/xadmin/login" style="margin-top:50px;">
                 {{csrf_field()}}
