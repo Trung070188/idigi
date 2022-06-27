@@ -100,22 +100,24 @@
                     </div>
 
 
-                    <div class="card-body d-flex flex-column" @click="filterClear()">
-                        <div>
+                    <div class="card-body d-flex flex-column">
+                       <div>
+                           <div  @click="filterClear()">
                               <span style="float: right; margin:0px 0px -20px">
                                 Resfesh List
                                   <i class="fas fa-sync"></i>
                               </span>
-                        </div>
-                        <div>
+                           </div>
+                           <div>
                               <span style="float: right;margin-bottom: -20px;margin-right: 105px">
                                 Last update at {{d(last_updated)}}
                               </span>
-                        </div>
+                           </div>
 
-                        <div style="float: left"
-                             v-text="'Showing '+ from +' to '+ to +' of '+ paginate.totalRecord +' entries'"
-                             v-if="entries.length > 0"></div>
+                           <div style="float: left"
+                                v-text="'Showing '+ from +' to '+ to +' of '+ paginate.totalRecord +' entries'"
+                                v-if="entries.length > 0"></div>
+                       </div>
                         <table class=" table  table-head-custom table-head-bg table-vertical-center">
                             <thead>
                             <tr>

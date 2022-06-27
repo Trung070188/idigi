@@ -577,7 +577,7 @@ class UsersController extends AdminBaseController
                 ->orWhere('id', 'LIKE', '%' . $req->keyword . '%')
                 ->orWhere('state','LIKE','%'.$req->keyword . '%')
                 ->orwhereHas('roles', function ($q) use ($req) {
-                    $q->where('role_name', 'LIKE', '%' . $req->keyword . '%');
+                    $q->where('role_name', 'LIKE', '%' . $req->keyword );
                 });
         }
         if ($req->role) {
