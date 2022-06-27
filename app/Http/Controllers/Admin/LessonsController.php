@@ -380,7 +380,11 @@ class LessonsController extends AdminBaseController
 
         $zipAll->close();
 
-        return response()->download($zipFileAll);
+        return [
+            'code' => 0,
+            'url' => url($zipFileAll)
+        ];
+
     }
 
 }

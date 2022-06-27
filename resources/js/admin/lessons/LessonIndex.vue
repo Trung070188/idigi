@@ -166,6 +166,11 @@
 
         </div>
         <div class="modal" id="download-lesson" tabindex="-1">
+            <div id="overlay">
+                <div class="la-3x text" >
+                    <i class="la la-spinner la-spin" ></i>
+                </div>
+            </div>
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -263,10 +268,15 @@ export default {
             this.lessonIds = [entry.id];
             $('#download-lesson').modal('show');
         },
-        
+
         downloadLesson() {
             this.isConfirm = 0;
-            window.location.href = '/xadmin/lessons/downloadLesson?' + 'lessonIds=' + this.lessonIds + '&device=' + this.device;
+            $('#overlay').show();
+            $.post('/xadmin/lessons/downloadLesson?' + 'lessonIds=' + this.lessonIds + '&device=' + this.device, function (res){
+                window.location.href = res.url;
+                $('#overlay').hide();
+            })
+
             $('#download-lesson').modal('hide');
         },
 
