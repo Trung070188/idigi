@@ -99,11 +99,11 @@
                     </div>
 
 
-                    <div class="card-body d-flex flex-column">
-                        <div style="margin-left: 94%;margin-bottom: -19px">
-                              <span >
+                    <div class="card-body d-flex flex-column" @click="filterClear()">
+                        <div >
+                              <span style="float: right; margin:0px 0px -20px">
                                 Resfesh List
-                                  <i  class="fas fa-sync" @click="filterClear()"></i>
+                                  <i  class="fas fa-sync" ></i>
                               </span>
                         </div>
                         <div>
@@ -157,11 +157,12 @@
                                     <label>Records per page:</label>
                                 </div>
                                 <div>
-                                    <select class="form-select form-select-sm " v-model="limit" @change="changeLimit">
-                                        <option value="25">25</option>
+                                    <select class="form-control form-control-sm font-weight-bold mr-4 border-0 bg-light" style="width: 75px;" v-model="limit">
+                                        <option value="10">10</option>
+                                        <option value="20">20</option>
+                                        <option value="30">30</option>
                                         <option value="50">50</option>
                                         <option value="100">100</option>
-
                                     </select>
                                 </div>
                             </div>

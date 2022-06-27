@@ -20,11 +20,9 @@ class CheckIfRole
     public function handle(Request $request, Closure $next, ...$guards)
     {
         $user = Auth::user();
-
         if($user->roles->count() == 0){
             return redirect('/xadmin/request_role/index');
         }
-
         return $next($request);
     }
 }

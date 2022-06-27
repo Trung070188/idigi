@@ -2,10 +2,8 @@
 
 namespace App\Http\Controllers\Admin;
 
-
 use App\Models\Role;
 use App\Models\School;
-use App\Models\UserAvatar;
 use App\Models\UserDevice;
 use App\Models\UserRole;
 use App\Rules\ValiFullname;
@@ -14,6 +12,7 @@ use Carbon\Carbon;
 use http\Env\Response;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use App\Models\User;
@@ -45,21 +44,44 @@ class UsersController extends AdminBaseController
         $title = 'Users';
         $component = 'UserIndex';
         $roles = Role::query()->orderBy('role_name')->get();
+        $user=Auth::user();
+        foreach ($user->roles as $role)
+        {
+            if($role->role_name=='Super Administrator')
+            {
+                $jsonData = [
+                    'roles' => $roles
+                ];
+                return view('admin.layouts.vue', compact('title', 'component', 'jsonData'));
+            }
+            else{
+                echo 'You Do Not Have Access';
+            }
 
-        $jsonData = [
-            'roles' => $roles
-        ];
-        return view('admin.layouts.vue', compact('title', 'component', 'jsonData'));
+        }
+
     }
     public function index_teacher(Request $request)
     {
         $title = 'Teacher';
         $component = 'TeacherIndex';
         $roles = Role::query()->orderBy('role_name')->get();
-        $jsonData = [
-            'roles' => $roles
-        ];
-        return view('admin.layouts.vue', compact('title', 'component', 'jsonData'));
+        $user=Auth::user();
+        foreach ($user->roles as $role)
+        {
+            if($role->role_name=='Super Administrator' || $role->role_name=='Administrator')
+            {
+                $jsonData = [
+                    'roles' => $roles
+                ];
+                return view('admin.layouts.vue', compact('title', 'component', 'jsonData'));
+            }
+            else{
+                echo 'You Do Not Have Access';
+            }
+
+        }
+
     }
     /**
      * Create new entry
@@ -72,10 +94,22 @@ class UsersController extends AdminBaseController
         $component = 'UserForm';
         $title = 'Create users';
         $roles = Role::query()->orderBy('role_name')->get();
-        $jsonData = [
-            'roles' => $roles
-        ];
-        return view('admin.layouts.vue', compact('title', 'component', 'jsonData'));
+        $user=Auth::user();
+        foreach ($user->roles as $role)
+        {
+            if($role->role_name=='Super Administrator')
+            {
+                $jsonData = [
+                    'roles' => $roles
+                ];
+                return view('admin.layouts.vue', compact('title', 'component', 'jsonData'));
+            }
+            else{
+                echo 'You Do Not Have Access';
+            }
+
+        }
+
     }
 
     public function create_teacher(Request $req)
@@ -83,11 +117,21 @@ class UsersController extends AdminBaseController
         $component = 'TeacherCreated';
         $title = 'Create Teacher';
         $roles = Role::query()->orderBy('role_name')->get();
-        $jsonData = [
-            'roles' => $roles
-        ];
+        $user=Auth::user();
+        foreach ($user->roles as $role)
+        {
+            if($role->role_name=='Super Administrator'||$role->role_name=='Administrator')
+            {
+                $jsonData = [
+                    'roles' => $roles
+                ];
+                return view('admin.layouts.vue', compact('title', 'component', 'jsonData'));
+            }
+            else{
+                echo 'You Do Not Have Access';
+            }
+        }
 
-        return view('admin.layouts.vue', compact('title', 'component', 'jsonData'));
     }
 
     /**
@@ -162,30 +206,26 @@ class UsersController extends AdminBaseController
             $role=$role_id->id;
 
         }
-
-//        foreach ($roles as $role) {
-//           $entry->role=null;
-//
-//
-//            if ($entry->roles) {
-//
-//                foreach ($entry->roles as $userRole) {
-//
-//                    if ($role->id == $userRole->id) {
-//
-//                     $entry->role =$userRole->id;
-//                    }
-//                }
-//            }
-//        }
         $title = 'Edit';
         $component = 'UserEdit';
-        $jsonData = [
-            'entry' => $entry,
-            'role'=>$role,
+        $user=Auth::user();
+        foreach ($user->roles as $role)
+        {
+            if($role->role_name=='Super Administrator')
+            {
+                $jsonData = [
+                    'entry' => $entry,
+                    'role'=>$role,
 
-        ];
-        return view('admin.layouts.vue', compact('title', 'component', 'jsonData'));
+                ];
+                return view('admin.layouts.vue', compact('title', 'component', 'jsonData'));
+            }
+            else{
+                echo 'You Do Not Have Access';
+            }
+        }
+
+
     }
 
 
@@ -205,11 +245,22 @@ class UsersController extends AdminBaseController
 
         $title = 'Edit';
         $component = 'TeacherEdit';
-        $jsonData = [
-            'entry' => $entry,
-            'user_device' => $user_device
-        ];
-        return view('admin.layouts.vue', compact('title', 'component', 'jsonData'));
+        $user=Auth::user();
+        foreach ($user->roles as $role)
+        {
+            if($role->role_name=='Super Administrator'|| $role->role_name=='Administrator')
+            {
+                $jsonData = [
+                    'entry' => $entry,
+                    'user_device' => $user_device
+                ];
+                return view('admin.layouts.vue', compact('title', 'component', 'jsonData'));
+            }
+            else{
+                echo 'You Do Not Have Access';
+            }
+        }
+
     }
 
     /**
