@@ -147,7 +147,7 @@
                             </tbody>
                         </table>
                         <div style="margin-top:10px; display: flex">
-                            <div class="col-4 form-group d-inline-flex mt-2">
+                            <div class="col-4 form-group align-items-center  d-inline-flex mt-2">
                                 <div class="mr-2">
                                     <label>Records per page:</label>
                                 </div>
@@ -160,7 +160,7 @@
                                     </select>
                                 </div>
                             </div>
-                            <div style="float: right">
+                            <div style="float: right;margin: 10px">
                                 <Paginate :value="paginate" :pagechange="onPageChange"></Paginate>
                             </div>
                         </div>

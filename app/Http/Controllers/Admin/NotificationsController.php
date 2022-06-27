@@ -247,21 +247,25 @@ class NotificationsController extends AdminBaseController
 
 
             foreach ($user->roles as $role) {
-                if ($role->role_name == 'Administrator') {
-                    $data[] = [
-                        'id' => $entry->id,
-                        'user_id' => $entry->user_id,
-                        'read_at' => $entry->read_at,
-                        'status' => $entry->status,
-                        'title' => $entry->title,
-                        'url' => $entry->url,
-                        'content' => $entry->content,
-                        'created_at' => $entry->created_at,
-                        'updated_at' => $entry->updated_at,
-                        'username' => $entry->user_name,
-                    ];
 
-                }
+                  if ( $role->role_name=='Super Administrator') {
+                      $data[] = [
+                          'id' => $entry->id,
+                          'user_id' => $entry->user_id,
+                          'read_at' => $entry->read_at,
+                          'status' => $entry->status,
+                          'title' => $entry->title,
+                          'url' => $entry->url,
+                          'content' => $entry->content,
+                          'created_at' => $entry->created_at,
+                          'updated_at' => $entry->updated_at,
+                          'username' => $entry->user_name,
+                      ];
+
+                  }
+
+
+
             }
 
         }
@@ -295,13 +299,12 @@ class NotificationsController extends AdminBaseController
             $limit = $req->limit;
         }
         $entries = $query->paginate($limit);
-        $trung=$query->paginate();
         $data = [
         ];
         $notification=Notification::query()->where('status','=','new')->count();
-
-
-
+        $admin=Notification::query()->where('title','=','Yêu cầu xóa thiết bị')
+            ->Where('status','=','new')
+            ->count();
 
         foreach ($entries as $entry) {
 
@@ -312,22 +315,42 @@ class NotificationsController extends AdminBaseController
             }
             $user = Auth::user();
             foreach ($user->roles as $role) {
-                if ($role->role_name == 'Administrator') {
-                    $data[] = [
-                        'id' => $entry->id,
-                        'type' => $entry->type,
-                        'notifiable_type' => $entry->notifiable_type,
-                        'user_id' => $entry->user_id,
-                        'read_at' => $entry->read_at,
-                        'status' => $entry->status,
-                        'title' => $entry->title,
-                        'url' => $entry->url,
-                        'content' => $entry->content,
-                        'created_at' => $entry->created_at,
-                        'updated_at' => $entry->updated_at,
-                        'username' => $entry->user_name,
-                    ];
+                if($entry->title=='Yêu cầu cấp quyền')
+                {
+                    if ( $role->role_name=='Super Administrator') {
+                        $data[] = [
+                            'id' => $entry->id,
+                            'user_id' => $entry->user_id,
+                            'read_at' => $entry->read_at,
+                            'status' => $entry->status,
+                            'title' => $entry->title,
+                            'url' => $entry->url,
+                            'content' => $entry->content,
+                            'created_at' => $entry->created_at,
+                            'updated_at' => $entry->updated_at,
+                            'username' => $entry->user_name,
+                        ];
 
+                    }
+
+                }
+                if($entry->title=='Yêu cầu xóa thiết bị')
+                {
+                    if ( $role->role_name=='Super Administrator' || $role->role_name=='Administrator') {
+                        $data[] = [
+                            'id' => $entry->id,
+                            'user_id' => $entry->user_id,
+                            'read_at' => $entry->read_at,
+                            'status' => $entry->status,
+                            'title' => $entry->title,
+                            'url' => $entry->url,
+                            'content' => $entry->content,
+                            'created_at' => $entry->created_at,
+                            'updated_at' => $entry->updated_at,
+                            'username' => $entry->user_name,
+                        ];
+
+                    }
 
                 }
             }
@@ -337,15 +360,11 @@ class NotificationsController extends AdminBaseController
             'data' =>[
                 'entries'=>$data,
                 'notification'=>$notification,
-
+                'admin'=>$admin
 
             ]
 
-
-
         ];
-
-
 
     }
 

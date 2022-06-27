@@ -12,34 +12,34 @@ return [
         "icon" => "fa fa-archive",
         "group" => 1,
         'url' => '/xadmin/inventories/index',
-        "roles" => ['Super Administrator']
+        "roles" => ['Super Administrator','Moderator']
     ],
     [
         "name" => "Lesson",
         "icon" => "fa fa-book-open",
         'url' => '/xadmin/lessons/index',
-        "roles" => ['Super Administrator']
+        "roles" => ['Super Administrator','Moderator']
     ],
 
     ["name" => "Users, Roles",
         "icon" => "fa fa-users",
         "group" => 1,
         'base' => '/xadmin/users',
-        "roles" => ['Super Administrator','Administrator'],
+        "roles" => ['Super Administrator'],
         'subs' => [
             [
                 "name" => "Manage User",
                 "icon" => "fa fa-plus",
                 "url" => "/xadmin/users/index",
                 "group" => 1,
-                "roles" => ['Super Administrator','Administrator']
+                "roles" => ['Super Administrator']
             ],
             [
                 "name" => "Manage Role",
                 "icon" => "fa fa-plus",
                 "url" => "/xadmin/roles/index",
                 "group" => 1,
-                "roles" => ['Super Administrator','Administrator']
+                "roles" => ['Super Administrator']
             ],
         ],
     ],
@@ -83,14 +83,14 @@ return [
         "icon" => "	fas fa-laptop",
         'url' => '/xadmin/user_devices/index',
         'group' => 1,
-        "roles" => ['Super Administrator','Administrator']
+        "roles" => ['Super Administrator','Administrator','Teacher','Moderator']
     ],
     [
         "name" => "Notification",
         "icon" => "fa fa-bell",
         "group" => 1,
         'url' => '/xadmin/notifications/index',
-        "roles" => ['Super Administrator','Administrator']
+        "roles" => ['Super Administrator']
     ],
 
     [
@@ -98,7 +98,7 @@ return [
         "icon" => "fa fa-download",
         "group" => 1,
         'url' => '/xadmin/app_versions/index',
-        "roles" => ['Super Administrator']
+        "roles" => ['Super Administrator','Administrator','Teacher','Moderator']
 
     ],
 ];

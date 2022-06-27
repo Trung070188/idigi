@@ -23,9 +23,10 @@
                             <td v-if="entry.title==='Yêu cầu xóa thiết bị'">{{entry.username}}</td>
                             <td v-if="entry.title==='Yêu cầu cấp quyền'">{{entry.username}}</td>
                             <td v-if="entry.title==='Yêu cầu xóa thiết bị'">{{entry.content}}</td>
-                            <td v-if="entry.title='Yêu cầu cấp quyền'">{{entry.content}}</td>
-                            <td v-if="entry.title==='Yêu cầu xóa thiết bị'">Cấp quyền</td>
-                            <td v-if="entry.title==='Yêu cầu cấp quyền'">Xóa thiết bị</td>
+                            <td v-if="entry.title==='Yêu cầu cấp quyền'">{{entry.content}}</td>
+                            <td v-if="entry.title==='Yêu cầu xóa thiết bị'">Xóa thiết bị</td>
+                            <td v-if="entry.title==='Yêu cầu cấp quyền'">Cấp quyền</td>
+
                             <td v-text=" d(entry.created_at)"></td>
 
                             <td v-if="entry.title==='Yêu cầu xóa thiết bị'">
@@ -42,7 +43,7 @@
                         </tbody>
                     </table>
                     <div style="margin-top:10px; display: flex">
-                        <div class="col-4 form-group d-inline-flex mt-2">
+                        <div class="col-4 form-group align-items-center  d-inline-flex mt-2">
                             <div class="mr-2">
                                 <label>Records per page:</label>
                             </div>
@@ -55,7 +56,7 @@
                                 </select>
                             </div>
                         </div>
-                        <div style="float: right">
+                        <div style="float: right;margin: 10px">
                             <Paginate :value="paginate" :pagechange="onPageChange"></Paginate>
                         </div>
                     </div>

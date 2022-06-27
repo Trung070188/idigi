@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use App\Models\Inventory;
@@ -33,7 +34,17 @@ class InventoriesController extends AdminBaseController
     {
         $title = 'Inventory';
         $component = 'InventoryIndex';
-        return component($component, compact('title'));
+        $user=Auth::user();
+        foreach ($user->roles as $role)
+        {
+            if($role->role_name=='Super Administrator'||$role->role_name=='Moderator')
+            {
+                return component($component, compact('title'));
+            }
+            else{
+                echo 'You Do Not Have Access';
+            }
+        }
     }
 
     /**
@@ -46,7 +57,17 @@ class InventoriesController extends AdminBaseController
     {
         $component = 'InventoryForm';
         $title = 'Create inventories';
-        return component($component, compact('title'));
+        $user=Auth::user();
+        foreach ($user->roles as $role)
+        {
+            if($role->role_name=='Super Administrator'||$role->role_name=='Moderator')
+            {
+                return component($component, compact('title'));
+            }
+            else{
+                echo 'You Do Not Have Access';
+            }
+        }
     }
 
     /**
@@ -84,6 +105,7 @@ class InventoriesController extends AdminBaseController
         }
 
 
+
        //dd($entry);
 
 
@@ -93,9 +115,17 @@ class InventoriesController extends AdminBaseController
 
         $title = 'Edit';
         $component = 'InventoryForm';
-
-
-        return component($component, compact('title', 'entry'));
+        $user=Auth::user();
+        foreach ($user->roles as $role)
+        {
+            if($role->role_name=='Super Administrator'||$role->role_name=='Moderator')
+            {
+                return component($component, compact('title', 'entry'));
+            }
+            else{
+                echo 'You Do Not Have Access';
+            }
+        }
     }
 
     /**
