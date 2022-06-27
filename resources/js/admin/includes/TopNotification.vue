@@ -17,6 +17,7 @@
                     <span v-for="pulse_ring in entries" v-if="notification>0 && pulse_ring.title=='Yêu cầu cấp quyền'" class="pulse-ring"></span>
 
 
+
             </div>
         </div>
         <!--end::Toggle-->

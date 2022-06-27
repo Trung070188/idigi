@@ -202,17 +202,6 @@ class NotificationsController extends AdminBaseController
             'message' => 'Đã lưu'
         ];
     }
-    public function trung(Request $req)
-    {
-        $entry = Notification::all();
-        $entry->status = $req->status ? 'unread' : 'new';
-        $entry->save();
-
-        return [
-            'code' => 200,
-            'message' => 'Đã lưu'
-        ];
-    }
 
     /**
      * Ajax data for index page
@@ -224,7 +213,8 @@ class NotificationsController extends AdminBaseController
 
         $query = Notification::query()
             ->orderBy('created_at', 'desc');
-        $users = User::with(['notification'])->orderBy('username')->get();
+        $users = User::with(['notification','roles'])->orderBy('username')->get();
+
         if ($req->keyword) {
             //$query->where('title', 'LIKE', '%' . $req->keyword. '%');
         }
@@ -237,15 +227,24 @@ class NotificationsController extends AdminBaseController
         }
         $entries = $query->paginate($limit);
         $data = [];
+
         foreach ($entries as $entry) {
             foreach ($users as $user) {
                 if ($entry->user_id == $user->id) {
                     $entry->user_name = $user->username;
                 }
+                foreach($user->roles as $role)
+                {
+                    if($entry->user_id==$user->id)
+                    {
+                        $entry->role=$role->role_name;
+
+                    }
+                }
+
             }
+
             $user = Auth::user();
-
-
             foreach ($user->roles as $role) {
 
                   if ( $role->role_name=='Super Administrator') {
@@ -260,12 +259,9 @@ class NotificationsController extends AdminBaseController
                           'created_at' => $entry->created_at,
                           'updated_at' => $entry->updated_at,
                           'username' => $entry->user_name,
+                          'role'=>$entry->role
                       ];
-
                   }
-
-
-
             }
 
         }

@@ -26,7 +26,7 @@ Route::get('/xadmin', function() {
 Route::post('/auth/google-sign', 'Auth\GoogleSignController@login');
 Route::get('/sso', 'SSOController@index');
 
-Route::middleware(['auth', 'CheckIfRole'])->namespace('Admin')->prefix('xadmin')->group(function () {
+Route::middleware(['auth', 'CheckIfRole',])->namespace('Admin')->prefix('xadmin')->group(function () {
     Route::get('/elfinder', 'ElfinderController@index');
     Route::get('/data-source/index', 'DataSourceController@index')->name('data-source');
     Route::post('/data-source/get-many', 'DataSourceController@getMany')->name('data-source-get-many');

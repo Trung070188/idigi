@@ -121,8 +121,7 @@ class UserDevicesController extends AdminBaseController
             }
             $entry->fill($data);
             $entry->status=1;
-            $users=User::with(['user_devices','roles'])->orderBy('username')->get();
-                 $data_device = new Notification();
+                    $data_device = new Notification();
                     $data_device->status='new';
                     $data_device->content=$entry->device_name;
                     $data_device->channel='inapp';

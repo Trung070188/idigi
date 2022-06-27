@@ -18,11 +18,12 @@
                             </button>
                         </div>
                         <div class="modal-body">
-                            <label>Current Password <span class="text-danger">*</span></label>
-                            <input id="f_role_name" v-model="entry.old_password" type="password" name="old_password" class="form-control"
-                                   placeholder="" >
-                            <error-label for="f_role_name"  :errors="errors.old_password" ></error-label>
-
+                            <div class="form-group">
+                                <label>Current Password <span class="text-danger">*</span></label>
+                                <input id="f_role_name" v-model="entry.old_password" type="password" name="old_password" class="form-control"
+                                       placeholder="" >
+                                <error-label for="f_role_name"  :errors="errors.old_password" ></error-label>
+                            </div>
                             <div class="form-group">
                                 <label>New Password <span class="text-danger">*</span></label>
                                 <input id="f_role_description" v-model="entry.password" type="password" name="new_password" class="form-control "

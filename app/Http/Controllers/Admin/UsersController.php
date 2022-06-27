@@ -39,6 +39,7 @@ class UsersController extends AdminBaseController
      * @throw  NotFoundHttpException
      * @return  View
      */
+
     public function index(Request $request)
     {
         $title = 'Users';
@@ -55,11 +56,9 @@ class UsersController extends AdminBaseController
                 return view('admin.layouts.vue', compact('title', 'component', 'jsonData'));
             }
             else{
-                echo 'You Do Not Have Access';
+                return redirect('/xadmin/dashboard/index');
             }
-
         }
-
     }
     public function index_teacher(Request $request)
     {
@@ -77,7 +76,7 @@ class UsersController extends AdminBaseController
                 return view('admin.layouts.vue', compact('title', 'component', 'jsonData'));
             }
             else{
-                echo 'You Do Not Have Access';
+                return redirect('/xadmin/dashboard/index');
             }
 
         }
@@ -105,7 +104,7 @@ class UsersController extends AdminBaseController
                 return view('admin.layouts.vue', compact('title', 'component', 'jsonData'));
             }
             else{
-                echo 'You Do Not Have Access';
+                return redirect('/xadmin/dashboard/index');
             }
 
         }
@@ -128,7 +127,7 @@ class UsersController extends AdminBaseController
                 return view('admin.layouts.vue', compact('title', 'component', 'jsonData'));
             }
             else{
-                echo 'You Do Not Have Access';
+                return redirect('/xadmin/dashboard/index');
             }
         }
 
@@ -221,7 +220,7 @@ class UsersController extends AdminBaseController
                 return view('admin.layouts.vue', compact('title', 'component', 'jsonData'));
             }
             else{
-                echo 'You Do Not Have Access';
+                return redirect('/xadmin/dashboard/index');
             }
         }
 
@@ -257,7 +256,7 @@ class UsersController extends AdminBaseController
                 return view('admin.layouts.vue', compact('title', 'component', 'jsonData'));
             }
             else{
-                echo 'You Do Not Have Access';
+                return redirect('/xadmin/dashboard/index');
             }
         }
 

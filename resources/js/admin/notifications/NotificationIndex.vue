@@ -10,24 +10,25 @@
                     <table class=" table  table-head-custom table-head-bg table-vertical-center">
                         <thead>
                         <tr>
-                            <th>Username</th>
-                            <th>Content</th>
-                            <th>Status</th>
-                            <th>Creation Date</th>
-                            <th>Action</th>
+                            <th>Time</th>
+                            <th>Sender</th>
+                            <th>Role</th>
+                            <th>Notification content</th>
+                            <th>View detail</th>
                             <th></th>
                         </tr>
                         </thead>
                         <tbody>
                         <tr v-for="entry in entries">
-                            <td v-if="entry.title==='Yêu cầu xóa thiết bị'">{{entry.username}}</td>
-                            <td v-if="entry.title==='Yêu cầu cấp quyền'">{{entry.username}}</td>
+                            <td v-text=" d(entry.created_at)"></td>
+                            <td v-text="entry.username"></td>
+<!--                            <td v-if="entry.title==='Yêu cầu xóa thiết bị'">{{entry.username}}</td>-->
+<!--                            <td v-if="entry.title==='Yêu cầu cấp quyền'">{{entry.username}}</td>-->
+                            <td v-text="entry.role"></td>
                             <td v-if="entry.title==='Yêu cầu xóa thiết bị'">{{entry.content}}</td>
                             <td v-if="entry.title==='Yêu cầu cấp quyền'">{{entry.content}}</td>
                             <td v-if="entry.title==='Yêu cầu xóa thiết bị'">Xóa thiết bị</td>
                             <td v-if="entry.title==='Yêu cầu cấp quyền'">Cấp quyền</td>
-
-                            <td v-text=" d(entry.created_at)"></td>
 
                             <td v-if="entry.title==='Yêu cầu xóa thiết bị'">
                                 <a :href="entry.url"><i style="font-size:1.3rem"
@@ -35,7 +36,7 @@
                             </td>
                             <td v-if="entry.title==='Yêu cầu cấp quyền'">
                                 <a :href="entry.url"><i style="font-size:1.3rem"
-                                                        class="fa fa-trash mr-1 deleted"></i></a>
+                                                        class="fas fa-file-export"></i></a>
                             </td>
 
                         </tr>

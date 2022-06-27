@@ -30,21 +30,16 @@ class InventoriesController extends AdminBaseController
      * @throw  NotFoundHttpException
      * @return  View
      */
+    public function __construct()
+    {
+        $this->middleware('CheckInventories');
+
+    }
     public function index()
     {
         $title = 'Inventory';
         $component = 'InventoryIndex';
-        $user=Auth::user();
-        foreach ($user->roles as $role)
-        {
-            if($role->role_name=='Super Administrator'||$role->role_name=='Moderator')
-            {
-                return component($component, compact('title'));
-            }
-            else{
-                echo 'You Do Not Have Access';
-            }
-        }
+        return component($component, compact('title'));
     }
 
     /**
@@ -57,17 +52,7 @@ class InventoriesController extends AdminBaseController
     {
         $component = 'InventoryForm';
         $title = 'Create inventories';
-        $user=Auth::user();
-        foreach ($user->roles as $role)
-        {
-            if($role->role_name=='Super Administrator'||$role->role_name=='Moderator')
-            {
-                return component($component, compact('title'));
-            }
-            else{
-                echo 'You Do Not Have Access';
-            }
-        }
+        return component($component, compact('title'));
     }
 
     /**
@@ -115,17 +100,8 @@ class InventoriesController extends AdminBaseController
 
         $title = 'Edit';
         $component = 'InventoryForm';
-        $user=Auth::user();
-        foreach ($user->roles as $role)
-        {
-            if($role->role_name=='Super Administrator'||$role->role_name=='Moderator')
-            {
-                return component($component, compact('title', 'entry'));
-            }
-            else{
-                echo 'You Do Not Have Access';
-            }
-        }
+        return component($component, compact('title', 'entry'));
+
     }
 
     /**

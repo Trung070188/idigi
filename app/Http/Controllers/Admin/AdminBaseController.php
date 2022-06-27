@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
-class AdminBaseController
+class AdminBaseController extends Controller
 {
     public function __invoke(Request $req)
     {

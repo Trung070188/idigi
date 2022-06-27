@@ -18,7 +18,7 @@ return [
         "name" => "Lesson",
         "icon" => "fa fa-book-open",
         'url' => '/xadmin/lessons/index',
-        "roles" => ['Super Administrator','Moderator']
+        "roles" => ['Super Administrator','Moderator','Teacher','Administrator']
     ],
 
     ["name" => "Users, Roles",
