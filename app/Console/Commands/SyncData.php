@@ -90,7 +90,7 @@ class SyncData extends Command
                         'rating' => $lesson->rating,
                         'shared' => $lesson->shared,
                         'structure' => $structure,
-                        'subject' => $lesson->subject,
+                        'subject' => json_encode($lesson->subject),
                         'unit' => $lesson->unit,
                         'unit_name' => @$oldStructure['UnitName'],
                         'number' => $lesson->number,
