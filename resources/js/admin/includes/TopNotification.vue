@@ -93,26 +93,6 @@
         </div>
     </div>
 
-    <!--    <li class="nav-item dropdown">-->
-    <!--        <a id="" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">-->
-    <!--            <i class="fa fa-bell " id="notify_icon"  ></i>-->
-
-    <!--            <span id="notifiy_num" v-show="entries.length>0">{{entries.length}}</span>-->
-
-    <!--        </a>-->
-
-
-    <!--        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="">-->
-    <!--            <a class="dropdown-item" v-for="(unread,index) in entries" :key="index"  @click="abc(unread)">-->
-    <!--                <p v-if="unread.title=='Yêu cầu xóa thiết bị'">{{unread.username}} yêu cầu xóa thiết bị.-->
-    <!--                    {{d(unread.created_at)}} </p>-->
-    <!--                <p v-if="unread.title=='Yêu cầu cấp quyền'">{{unread.username}} yêu cầu cấp quyền .-->
-    <!--                    {{d(unread.created_at)}} </p>-->
-    <!--            </a>-->
-    <!--            <a class="dropdown-item" v-show="entries.length==0">No Notifications</a>-->
-
-    <!--        </div>-->
-    <!--    </li>-->
 </template>
 <script>
     import {$get, $post} from "../../utils";
@@ -161,8 +141,8 @@
         position: absolute;
         top: 0px;
         right: 7px;
-        min-width: 16px;
-        min-height: 16px;
+        min-width: 15px;
+        min-height: 17px;
         border-radius: 50%;
         background: red;
         color: #f1f1f1;
