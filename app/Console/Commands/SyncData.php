@@ -92,6 +92,7 @@ class SyncData extends Command
                         'structure' => $structure,
                         'subject' => $lesson->subject,
                         'unit' => $lesson->unit,
+                        'unit_name' => @$oldStructure['UnitName'],
                         'number' => $lesson->number,
                         'customized' => $lesson->customized,
                         'old_id' => $lesson->id,
