@@ -36,6 +36,7 @@ class Lesson extends BaseModel
         'structure',
         'subject',
         'unit',
+        'unit_name',
         'number',
         'customized',
         'old_id',

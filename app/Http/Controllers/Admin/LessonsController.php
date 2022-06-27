@@ -313,9 +313,9 @@ class LessonsController extends AdminBaseController
     {
         ob_get_clean();
 
-        if ($request->isMethod('POST')) {
+        /*if ($request->isMethod('POST')) {
             throw new MethodNotAllowedException("405");
-        }
+        }*/
 
         $user = Auth::user();
         $userDevice = UserDevice::where('user_id', $user->id)->where('id', $request->device)->first();
@@ -330,12 +330,13 @@ class LessonsController extends AdminBaseController
             mkdir(public_path($dir), 0755, true);
         }
 
-        $lessons = Lesson::whereIn('id', explode(',', $request->lessonIds))
+        $lessons = Lesson::whereIn('id',  $request->lessonIds)
             ->with(['inventories'])->get();
 
 
         $filenameAll = uniqid(time().rand(10, 100));
-        $zipFileAll = public_path($dir . '/all_lessons_'.$filenameAll.'.zip');
+        $pathZipAll = $dir . '/all_lessons_'.$filenameAll.'.zip';
+        $zipFileAll = public_path($pathZipAll);
         $zipAll = new \ZipArchive();
         $zipAll->open($zipFileAll, \ZipArchive::CREATE | \ZipArchive::OVERWRITE);
 
@@ -382,7 +383,7 @@ class LessonsController extends AdminBaseController
 
         return [
             'code' => 0,
-            'url' => url($zipFileAll)
+            'url' => url($pathZipAll)
         ];
 
     }

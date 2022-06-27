@@ -33,18 +33,19 @@
                                         </button>
 
                                     </div>
-<!--                                    <div class="form-group mx-sm-3 mb-2">-->
-<!--                                        <button @click="filterClear()" type="button"-->
-<!--                                                class="btn btn-flex btn-light  fw-bolder ">Clear-->
-<!--                                        </button>-->
-<!--                                    </div>-->
+                                    <!--                                    <div class="form-group mx-sm-3 mb-2">-->
+                                    <!--                                        <button @click="filterClear()" type="button"-->
+                                    <!--                                                class="btn btn-flex btn-light  fw-bolder ">Clear-->
+                                    <!--                                        </button>-->
+                                    <!--                                    </div>-->
 
                                 </form>
                                 <form class="col-lg-12" v-if="isShowFilter">
                                     <div class="row">
                                         <div class="form-group col-lg-4">
                                             <label>Name </label>
-                                            <input class="form-control" placeholder="Enter the lesson name" v-model="filter.subject"/>
+                                            <input class="form-control" placeholder="Enter the lesson name"
+                                                   v-model="filter.subject"/>
                                         </div>
                                         <div class="form-group col-lg-2">
                                             <label>Subject </label>
@@ -167,8 +168,8 @@
         </div>
         <div class="modal" id="download-lesson" tabindex="-1">
             <div id="overlay">
-                <div class="la-3x text" >
-                    <i class="la la-spinner la-spin" ></i>
+                <div class="la-3x text">
+                    <i class="la la-spinner la-spin"></i>
                 </div>
             </div>
             <div class="modal-dialog">
@@ -192,7 +193,8 @@
                         </ul>
                     </div>
                     <div class="modal-footer" style="justify-content: center">
-                        <button type="button" class="btn btn-primary" :disabled="lessons.length == 0 || !device || isConfirm == 0"
+                        <button type="button" class="btn btn-primary"
+                                :disabled="lessons.length == 0 || !device || isConfirm == 0"
                                 @click="downloadLesson">Confirm
                         </button>
                     </div>
@@ -262,22 +264,26 @@ export default {
         });
     },
     methods: {
-        openModalEntry(entry){
+        openModalEntry(entry) {
             this.isConfirm = 1;
             this.lessons = [entry];
             this.lessonIds = [entry.id];
             $('#download-lesson').modal('show');
         },
 
-        downloadLesson() {
+        async downloadLesson() {
             this.isConfirm = 0;
             $('#overlay').show();
-            $.post('/xadmin/lessons/downloadLesson?' + 'lessonIds=' + this.lessonIds + '&device=' + this.device, function (res){
-                window.location.href = res.url;
-                $('#overlay').hide();
-            })
+            const res = await $post('/xadmin/lessons/downloadLesson', {
+                csrf: window.$csrf,
+                lessonIds: this.lessonIds,
+                device: this.device
+            });
 
+            window.location.href = res.url;
+            $('#overlay').hide();
             $('#download-lesson').modal('hide');
+
         },
 
         openModal: function () {
@@ -407,6 +413,7 @@ export default {
 ul.device {
     list-style-type: none;
 }
+
 select:required:invalid {
     color: #adadad;
 }
