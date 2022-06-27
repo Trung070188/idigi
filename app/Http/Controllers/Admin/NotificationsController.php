@@ -299,7 +299,6 @@ class NotificationsController extends AdminBaseController
             $limit = $req->limit;
         }
         $entries = $query->paginate($limit);
-        $trung=$query->paginate();
         $data = [
         ];
         $notification=Notification::query()->where('status','=','new')->count();
@@ -363,14 +362,9 @@ class NotificationsController extends AdminBaseController
                 'notification'=>$notification,
                 'admin'=>$admin
 
-
             ]
 
-
-
         ];
-
-
 
     }
 
