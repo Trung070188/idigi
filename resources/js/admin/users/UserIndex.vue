@@ -61,7 +61,8 @@
                                         </div>
                                         <div class="form-group col-lg-3">
                                             <label>Role </label>
-                                            <select @keydown.enter="doFilter('role', filter.role, $event)" required class="form-control form-select" v-model="filter.role">
+                                            <select @keydown.enter="doFilter('role', filter.role, $event)" required
+                                                    class="form-control form-select" v-model="filter.role">
                                                 <option value="" disabled selected>Choose role</option>
                                                 <option value="0">All</option>
                                                 <option value="Super Administrator">Super Administrator</option>
@@ -100,10 +101,10 @@
 
 
                     <div class="card-body d-flex flex-column" @click="filterClear()">
-                        <div >
+                        <div>
                               <span style="float: right; margin:0px 0px -20px">
                                 Resfesh List
-                                  <i  class="fas fa-sync" ></i>
+                                  <i class="fas fa-sync"></i>
                               </span>
                         </div>
                         <div>
@@ -128,8 +129,8 @@
                                 <th>Action</th>
                             </tr>
                             </thead>
-                            <tbody >
-                            <tr  v-for="entry in entries" >
+                            <tbody>
+                            <tr v-for="entry in entries">
                                 <td v-text="entry.id"></td>
                                 <td v-text="entry.username"></td>
                                 <td v-text="entry.full_name"></td>
@@ -138,35 +139,30 @@
                                 <td v-text=" d(entry.created_at)"></td>
                                 <td v-if="entry.state==1">Yes</td>
                                 <td v-if="entry.state==0">No</td>
-
-
                                 <td>
                                     <a :href="'/xadmin/users/edit?id='+entry.id"><i style="font-size:1.3rem"
                                                                                     class="fa fa-edit"></i></a>
                                     <a @click="remove(entry)" href="javascript:;" class="btn-trash deleted"><i
                                         class="fa fa-trash mr-1 deleted"></i></a>
                                 </td>
-
                             </tr>
-
                             </tbody>
                         </table>
                         <div style="margin-top:10px; display: flex">
-                            <div class="col-4 form-group d-inline-flex mt-2">
+                            <div class="col-4 form-group align-items-center  d-inline-flex mt-2">
                                 <div class="mr-2">
                                     <label>Records per page:</label>
                                 </div>
                                 <div>
-                                    <select class="form-control form-control-sm font-weight-bold mr-4 border-0 bg-light" style="width: 75px;" v-model="limit">
-                                        <option value="10">10</option>
-                                        <option value="20">20</option>
-                                        <option value="30">30</option>
+                                    <select class="form-select form-select-sm " v-model="limit" @change="changeLimit">
+                                        <option value="25">25</option>
                                         <option value="50">50</option>
                                         <option value="100">100</option>
+
                                     </select>
                                 </div>
                             </div>
-                            <div style="float: right">
+                            <div style="float: right;margin: 10px">
                                 <Paginate :value="paginate" :pagechange="onPageChange"></Paginate>
                             </div>
                         </div>
@@ -199,7 +195,7 @@
                 created: $q.created || '',
                 full_name: $q.full_name || '',
                 email: $q.email || '',
-                state: $q.state ||'',
+                state: $q.state || '',
                 role: $q.role || '',
 
             };

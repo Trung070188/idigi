@@ -5,7 +5,7 @@
             <div class="btn btn-icon btn-clean btn-dropdown btn-lg mr-1 pulse pulse-primary" style="margin-top: 10px">
 											<span class="svg-icon svg-icon-xl svg-icon-primary">
 												<!--begin::Svg Icon | path:assets/media/svg/icons/Code/Compiling.svg-->
-												<i class="fa fa-bell"></i>
+												<i class="fa fa-bell" style="width: 17px;line-height: 20px;"></i>
                                                    <span v-for="notify in entries" class="notifiy_num" v-if="notification>0 && notify.title=='Yêu cầu cấp quyền'">{{notification}}</span>
                                                 <span v-for="notify in entries" class="notifiy_num"  v-if="admin>0 && notify.title=='Yêu cầu cấp quyền'">{{admin}}</span>
 
@@ -156,17 +156,11 @@
 </script>
 
 <style scoped>
-    #notify_icon {
-        margin-right: -16px;
-        line-height: 25px;
-
-    }
-
     .notifiy_num {
         text-align: center;
         position: absolute;
-        top: 5px;
-        right: 5px;
+        top: 0px;
+        right: 7px;
         min-width: 16px;
         min-height: 16px;
         border-radius: 50%;
