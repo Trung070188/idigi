@@ -35,13 +35,6 @@
                                         </button>
 
                                     </div>
-                                    <!--                                    <div class="form-group mx-sm-3 mb-4">-->
-                                    <!--                                        <button @click="filterClear()" type="button"-->
-                                    <!--                                                class="btn btn-flex btn-light  fw-bolder ">Resfesh List-->
-                                    <!--                                        </button>-->
-                                    <!--                                    </div>-->
-
-
                                 </form>
 
                                 <form class="col-lg-12" v-if="isShowFilter">

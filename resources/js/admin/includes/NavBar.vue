@@ -68,8 +68,11 @@
                             <div  data-kt-menu-trigger="click" data-kt-menu-attach="parent" data-kt-menu-placement="bottom-end">
                             <span class="text-muted font-weight-bold font-size-base d-none d-md-inline mr-1">Hi,&nbsp;</span>
                             <span class="text-dark-50 font-weight-bolder font-size-base d-none d-md-inline mr-3">{{auth.username}}&nbsp;</span>
+                            <span class="" v-if="auth.image!==null">
+                                <span   class="symbol-label font-size-h5 font-weight-bold"><img style="max-width: 40px ;border-radius:10px 10px 10px;" :src="auth.image"></span>
+                            </span>
 
-                            <span class="symbol symbol-lg-35 symbol-25 symbol-light-success">
+                                <span v-if="auth.image==null" class="symbol symbol-lg-35 symbol-25 symbol-light-success">
                                 <span   class="symbol-label font-size-h5 font-weight-bold"><i class="fa fa-user"></i></span>
                             </span>
                                 </div>
@@ -77,11 +80,9 @@
 
                                 <div    class="menu-item px-5" >
 <!--                                    <a v-for="entry in entries" :href="'/xadmin/users/profile?id='+entry.id" ><i style="font-size:1.3rem" class="fa fa-edit"></i></a>-->
-
                                                 <a  :href="'/xadmin/users/profile?id='+auth.id" class="menu-link px-5">View Profile</a>
-
-
                                 </div>
+                            </span>
 
                                 <div class="menu-item px-5">
                                     <a href="/xadmin/logout" class="menu-link px-5">Log Out</a>

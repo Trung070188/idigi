@@ -297,11 +297,15 @@ class UsersController extends AdminBaseController
         }
         $data = $req->get('entry');
         $rules = [
-            'password' => ['required'],
-            'confirm_password' => ['same:password'],
+            'old_password' => ['required', function ( $value, $fail) {
+                if (!Hash::check($value, Auth::user()->password)) {
+                    return $fail(__('The current password is incorrect.'));
+                }
+            }]
         ];
         if (isset($data['id'])) {
-            $rules['password'] = 'required|max:191|confirmed';
+           $rules[ 'password'] = 'required||different:old_password';
+           $rules['confirm_password']='same:password';
         }
         $v = Validator::make($data, $rules);
 
@@ -321,10 +325,8 @@ class UsersController extends AdminBaseController
                 ];
             }
 
-            if(!Hash::check($data['old_password'], auth()->user()->password)){
 
-            }
-          else{
+          {
               $data['password'] = Hash::make($data['password']);
           }
             $entry->fill($data);
@@ -350,9 +352,10 @@ class UsersController extends AdminBaseController
             'full_name'=>['required',new ValiFullname()],
 //            'password' => '|max:191|confirmed',
         ];
+
         if (isset($data['id'])) {
             $user = User::find($data['id']);
-            $rules['email'] =['required',Rule::unique('users')->ignore($user->id),];
+            $rules['email'] =['required','email',Rule::unique('users')->ignore($user->id),];
         }
         $v = Validator::make($data, $rules);
 

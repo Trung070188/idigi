@@ -83,6 +83,7 @@
                                 </div>
                                 <div class="form-group">
                                     <input id="state" type="checkbox" v-model="entry.state">
+                                    {{entry.state}}
                                     <label for="state" class="pl-2">Active</label>
                                     <error-label for="f_grade" :errors="errors.state"></error-label>
                                 </div>

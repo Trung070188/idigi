@@ -26,7 +26,7 @@
                             </div>
                             <div class="form-group">
                                 <label>New Password <span class="text-danger">*</span></label>
-                                <input id="f_role_description" v-model="entry.password" type="password" name="new_password" class="form-control "
+                                <input id="f_role_description" v-model="entry.password" type="password" name="password" class="form-control "
                                        placeholder="" >
 
                                 <error-label for="f_role_description"  :errors="errors.password"></error-label>
