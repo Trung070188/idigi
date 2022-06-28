@@ -460,9 +460,9 @@ class UsersController extends AdminBaseController
             }
             if($data_role['name_role'])
             {
-                UserRole::updateOrCreate([
-                    'user_id'=>@$data_role['user_id'],
-                    'role_id'=>@$data_role['role_id']
+                UserRole::Create([
+                    'user_id'=>$data_role['user_id'],
+                    'role_id'=>$data_role['role_id']
                 ],$data_role);
 
             }
@@ -489,7 +489,7 @@ class UsersController extends AdminBaseController
             }
             if($data_role['name_role'])
             {
-                UserRole::updateOrCreate([
+                UserRole::Create([
                     'user_id'=>@$data_role['user_id'],
                     'role_id'=>@$data_role['role_id']
                 ],$data_role);
