@@ -28,4 +28,8 @@ class Notification extends BaseModel
     'created_at',
     'update_at',
 ];
+    public function users()
+    {
+        return $this->belongsTo(User::class,'user_id');
+    }
 }

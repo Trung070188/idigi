@@ -6,59 +6,112 @@
         <div class="row">
             <div class="col-lg-12">
                 <div class="card card-custom card-stretch gutter-b">
+                    <div class="card-header border-0 pt-5">
 
-                    <table class=" table  table-head-custom table-head-bg table-vertical-center">
-                        <thead>
-                        <tr>
-                            <th>Time</th>
-                            <th>Sender</th>
-                            <th>Role</th>
-                            <th>Notification content</th>
-                            <th>View detail</th>
-                            <th></th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr v-for="entry in entries">
-                            <td v-text=" d(entry.created_at)"></td>
-                            <td v-text="entry.username"></td>
-<!--                            <td v-if="entry.title==='Yêu cầu xóa thiết bị'">{{entry.username}}</td>-->
-<!--                            <td v-if="entry.title==='Yêu cầu cấp quyền'">{{entry.username}}</td>-->
-                            <td v-text="entry.role"></td>
-                            <td v-if="entry.title==='Yêu cầu xóa thiết bị'">{{entry.content}}</td>
-                            <td v-if="entry.title==='Yêu cầu cấp quyền'">{{entry.content}}</td>
-                            <td v-if="entry.title==='Yêu cầu xóa thiết bị'">Xóa thiết bị</td>
-                            <td v-if="entry.title==='Yêu cầu cấp quyền'">Cấp quyền</td>
+                        <div class="row width-full">
+                            <div class="col-lg-12">
+                                <form class="form-inline">
+                                    <div class="form-group mx-sm-3 mb-4">
+                                        <input
+                                            @keydown.enter="doFilter('keyword', filter.keyword, $event)"
+                                            v-model="filter.keyword"
+                                            type="text"
+                                            class="form-control" placeholder="Search content" value="">
+                                    </div>
+                                    <div class="form-group mx-sm-3 mb-4">
+                                        <button type="button" style="margin-left: 10px"
+                                                @click="isShowFilter = !isShowFilter"
+                                                class="btn btn-primary" v-if="isShowFilter"> Close Adventure search
+                                            <i style="margin-left: 5px" class="fas fa-times"></i>
 
-                            <td v-if="entry.title==='Yêu cầu xóa thiết bị'">
-                                <a :href="entry.url"><i style="font-size:1.3rem"
-                                                        class="fa fa-trash mr-1 deleted"></i></a>
-                            </td>
-                            <td v-if="entry.title==='Yêu cầu cấp quyền'">
-                                <a :href="entry.url"><i style="font-size:1.3rem"
-                                                        class="fas fa-file-export"></i></a>
-                            </td>
+                                        </button>
+                                        <button type="button" style="margin-left: 10px"
+                                                @click="isShowFilter = !isShowFilter"
+                                                class="btn btn-primary" v-if="!isShowFilter"> Adventure search
+                                            <i class="fa fa-filter" v-if="!isShowFilter" aria-hidden="true"></i>
 
-                        </tr>
+                                        </button>
 
-                        </tbody>
-                    </table>
-                    <div style="margin-top:10px; display: flex">
-                        <div class="col-4 form-group align-items-center  d-inline-flex mt-2">
-                            <div class="mr-2">
-                                <label>Records per page:</label>
-                            </div>
-                            <div>
-                                <select class="form-select form-select-sm " v-model="limit" @change="changeLimit">
-                                    <option value="25">25</option>
-                                    <option value="50">50</option>
-                                    <option value="100">100</option>
+                                    </div>
+                                </form>
+                                <form class="col-lg-12" v-if="isShowFilter">
+                                    <div class="row">
+                                        <div class="form-group col-lg-4">
+                                            <label>Sender </label>
+                                            <input
+                                                @keydown.enter="doFilter('username', filter.username, $event)"
+                                                class="form-control" placeholder="Enter the sender name"
+                                                v-model="filter.username"
+                                            />
+                                        </div>
+                                        <div class="form-group col-lg-2">
+                                            <label>Creation time </label>
+                                            <Daterangepicker placeholder="Creation time"
+                                            v-model="filter.created"
+                                            ></Daterangepicker>
+                                        </div>
 
-                                </select>
+                                    </div>
+                                    <div style="margin: auto 0">
+                                        <button type="button" class="btn btn-primary" @click="doFilter($event)">Search
+                                        </button>
+                                    </div>
+                                </form>
                             </div>
                         </div>
-                        <div style="float: right;margin: 10px">
-                            <Paginate :value="paginate" :pagechange="onPageChange"></Paginate>
+                    </div>
+                    <div class="card-body d-flex flex-column">
+                        <table class=" table  table-head-custom table-head-bg table-vertical-center">
+                            <thead>
+                            <tr>
+                                <th>Time</th>
+                                <th>Sender</th>
+                                <th>Role</th>
+                                <th>Notification content</th>
+                                <th>View detail</th>
+                                <th></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr v-for="entry in entries">
+                                <td v-text=" d(entry.created_at)"></td>
+                                <td v-text="entry.username"></td>
+                                <!--                            <td v-if="entry.title==='Yêu cầu xóa thiết bị'">{{entry.username}}</td>-->
+                                <!--                            <td v-if="entry.title==='Yêu cầu cấp quyền'">{{entry.username}}</td>-->
+                                <td v-text="entry.role"></td>
+                                <td v-if="entry.title==='Yêu cầu xóa thiết bị'">Yêu cầu xóa thiết bị</td>
+                                <td v-if="entry.title==='Yêu cầu cấp quyền'">Yêu cầu cấp quyền</td>
+                                <td></td>
+                                <td v-if="entry.title==='Yêu cầu xóa thiết bị'">
+                                    <a :href="entry.url"><i style="font-size:1.3rem"
+                                                            class="fa fa-trash mr-1 deleted"></i></a>
+                                </td>
+                                <td v-if="entry.title==='Yêu cầu cấp quyền'">
+                                    <a :href="entry.url"><i style="font-size:1.3rem"
+                                                            class="fas fa-file-export"></i></a>
+                                </td>
+
+                            </tr>
+
+                            </tbody>
+                        </table>
+                        <div style="margin-top:10px; display: flex">
+                            <div class="col-4 form-group align-items-center  d-inline-flex mt-2">
+                                <div class="mr-2">
+                                    <label>Records per page:</label>
+                                </div>
+                                <div>
+                                    <select class="form-select form-select-sm " v-model="limit" @change="changeLimit">
+                                        <option value="25">25</option>
+                                        <option value="50">50</option>
+                                        <option value="100">100</option>
+
+                                    </select>
+                                </div>
+                            </div>
+                            <div style="float: right;margin: 10px">
+                                <Paginate :value="paginate" :pagechange="onPageChange"></Paginate>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -81,18 +134,29 @@
         name: "NotificationsIndex.vue",
         components: {ActionBar},
         data() {
+            let isShowFilter = false;
+            let filter = {
+                keyword: $q.keyword || '',
+                created: $q.created || '',
+                username:$q.username || '',
+            };
+            for (var key in filter) {
+                if (filter[key] != '') {
+                    isShowFilter = true;
+                }
+            }
             return {
+
                 unreadNotifications: {},
                 entries: [],
-                filter: {
-                    keyword: $q.keyword || '',
-                    created: $q.created || created,
-                },
+
+                filter: filter,
                 breadcrumbs: [
                     {
                         title: 'Notifications'
                     },
                 ],
+                isShowFilter: isShowFilter,
                 limit: $q.limit || 25,
                 from: 0,
                 to: 0,
@@ -121,7 +185,6 @@
                 const res = await $get('/xadmin/notifications/data', query);
                 this.paginate = res.paginate;
                 this.entries = res.data.entries;
-                console.log(this.entries);
                 this.from = (this.paginate.currentPage - 1) * (this.limit) + 1;
                 console.log(this.paginate.currentPage);
                 this.to = (this.paginate.currentPage - 1) * (this.limit) + this.entries.length;
@@ -149,14 +212,8 @@
 
                 $router.setQuery({});
             },
-            doFilter(field, value, event) {
-                if (event) {
-                    event.preventDefault();
-                }
-
-                const params = {page: 1};
-                params[field] = value;
-                $router.setQuery(params)
+            doFilter() {
+                $router.setQuery(this.filter)
             },
             changeLimit() {
                 let params = $router.getQuery();

@@ -94,9 +94,7 @@
                                     </div>
                                 </form>
                             </div>
-
                         </div>
-
                     </div>
 
                     <div class="card-body d-flex flex-column">

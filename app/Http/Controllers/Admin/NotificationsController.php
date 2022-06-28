@@ -211,14 +211,17 @@ class NotificationsController extends AdminBaseController
     public function data(Request $req)
     {
 
-        $query = Notification::query()
+        $query = Notification::query()->with(['users'])
             ->orderBy('created_at', 'desc');
         $users = User::with(['notification','roles'])->orderBy('username')->get();
-
         if ($req->keyword) {
-            //$query->where('title', 'LIKE', '%' . $req->keyword. '%');
+            $query->where('title', 'LIKE', '%' . $req->keyword. '%');
         }
-
+        if ($req->username) {
+            $query->whereHas('users', function ($q) use ($req) {
+                $q->where('username', 'LIKE', '%' . $req->username . '%');
+            });
+        }
         $query->createdIn($req->created);
         $limit = 25;
 

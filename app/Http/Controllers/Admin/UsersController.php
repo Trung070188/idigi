@@ -492,7 +492,7 @@ class UsersController extends AdminBaseController
                 ],$data_role);
 
             }
-            
+
             return [
                 'code' => 0,
                 'message' => 'Đã thêm',

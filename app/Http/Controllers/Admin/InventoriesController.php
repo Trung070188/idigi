@@ -260,7 +260,7 @@ class InventoriesController extends AdminBaseController
 
 
         $query->createdIn($req->created);
-        $limit = 25;
+        $limit =25;
 
         if ($req->limit) {
             $limit = $req->limit;
