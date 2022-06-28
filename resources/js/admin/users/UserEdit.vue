@@ -51,42 +51,12 @@
                                 <div class="row">
 
                                     <label>Role</label>
-                                    <div  class="form-group col-sm-2">
-                                        <input  type="radio"  v-model="role" value="1">
-                                        <label>Super Administrator</label>
-                                    </div>
-                                    <div  class="form-group col-sm-2">
-                                        <input  type="radio"  v-model="role" value="2">
-
-                                        <label>Administrator</label>
-                                    </div>
-                                    <div   class="form-group col-sm-2">
-                                        <input  type="radio" v-model="role" value="5" >
-
-                                        <label>Teacher</label>
-
-                                    </div>
-                                    <div   class="form-group col-sm-2">
-                                        <input  type="radio"  v-model="role" value="4">
-
-                                        <label>Partner</label>
-                                    </div>
-                                    <div   class="form-group col-sm-2">
-                                        <input  type="radio"  v-model="role" value="12">
-
-                                        <label>Moderator</label>
-                                    </div>
-
-                                </div>
-                                <div class="row" v-if="role==2">
-                                    <div class="form-group  col-sm-4">
-                                        <label>School <span class="text-danger">*</span></label>
-                                        <select class="form-control form-select" type="" placeholder="Enter the school" >
-
-                                        </select>
+                                    <div  class="form-group col-sm-2" v-for="role in roles">
+                                        <input  type="radio"  v-model="name_role" :value="role.id">
+                                        <label>{{role.role_name}}</label>
                                     </div>
                                 </div>
-                                <div class="row" v-if="role==5">
+                                <div class="row" v-if="name_role==2 || name_role==5">
                                     <div class="form-group  col-sm-4">
                                         <label>School <span class="text-danger">*</span></label>
                                         <select class="form-control form-select" type="" placeholder="Enter the school" >
@@ -139,6 +109,7 @@
         data() {
 
             return {
+                name_role:'',
                 showConfirm: false,
                 showPass: false,
                 types: [],
@@ -152,8 +123,8 @@
                     },
                 ],
                 entry: $json.entry || {
-                    roles: []
                 },
+                roles: $json.roles || [],
                 role: $json.role || [],
                 isLoading: false,
                 errors: {}
@@ -171,7 +142,7 @@
             },
             async save() {
                 this.isLoading = true;
-                const res = await $post('/xadmin/users/save', {entry: this.entry, role: this.role}, false);
+                const res = await $post('/xadmin/users/save', {entry: this.entry, name_role: this.name_role}, false);
                 this.isLoading = false;
                 if (res.errors) {
                     this.errors = res.errors;

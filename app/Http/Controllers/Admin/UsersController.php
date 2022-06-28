@@ -92,7 +92,7 @@ class UsersController extends AdminBaseController
     {
         $component = 'UserForm';
         $title = 'Create users';
-        $roles = Role::query()->orderBy('role_name')->get();
+        $roles = Role::query()->orderBy('id','ASC')->get();
         $user=Auth::user();
         foreach ($user->roles as $role)
         {
@@ -197,14 +197,7 @@ class UsersController extends AdminBaseController
         /**
          * @var  User $entry
          */
-        $roles = Role::query()->orderBy('role_name')->get();
-
-        $role='';
-        foreach ($entry->roles as $role_id)
-        {
-            $role=$role_id->id;
-
-        }
+        $roles = Role::query()->orderBy('id','ASC')->get();
         $title = 'Edit';
         $component = 'UserEdit';
         $user=Auth::user();
@@ -214,7 +207,7 @@ class UsersController extends AdminBaseController
             {
                 $jsonData = [
                     'entry' => $entry,
-                    'role'=>$role,
+                    'roles'=>$roles,
 
                 ];
                 return view('admin.layouts.vue', compact('title', 'component', 'jsonData'));
@@ -407,6 +400,8 @@ class UsersController extends AdminBaseController
         $data = $req->get('entry');
         $data_role=$req->all();
         $roles = $req->roles;
+        $users=User::with(['roles'])->orderBy('username')->get();
+
 
         $rules = [
             'full_name'=>['required',new ValiFullname()],
@@ -448,41 +443,26 @@ class UsersController extends AdminBaseController
 //            }
             $entry->fill($data);
             $entry->save();
-
-
-
             UserRole::where('user_id', $entry->id)->delete();
-            $data_role['user_id']=$entry->id;
-            if($data_role['role']==1)
+            foreach($users as $user)
             {
-                $data_role['user_id']=$entry->id;
-                $data_role['role_id']=1;
+                foreach($user->roles as $role)
+                {
+                    if($data_role['name_role']==$role->id)
+                    {
+                        $data_role['user_id']=$entry->id;
+                        $data_role['role_id']=$role->id;
+                    }
+                }
             }
-            if($data_role['role']==2)
+            if($data_role['name_role'])
             {
-                $data_role['user_id']=$entry->id;
-                $data_role['role_id']=2;
-            }
-            if($data_role['role']==4)
-            {
-                $data_role['user_id']=$entry->id;
-                $data_role['role_id']=4;
-            }
-            if($data_role['role']==5)
-            {
-                $data_role['user_id']=$entry->id;
-                $data_role['role_id']=5;
-            }
-            if($data_role['role']==12)
-            {
-                $data_role['user_id']=$entry->id;
-                $data_role['role_id']=12;
-            }
-            UserRole::updateOrCreate([
-                'user_id'=>$data_role['user_id'],
-                'role_id'=>$data_role['role_id']
+                UserRole::updateOrCreate([
+                    'user_id'=>@$data_role['user_id'],
+                    'role_id'=>@$data_role['role_id']
+                ],$data_role);
 
-            ],$data_role);
+            }
             return [
                 'code' => 0,
                 'message' => 'Đã cập nhật',
@@ -493,33 +473,18 @@ class UsersController extends AdminBaseController
             $data['password'] = Hash::make($data['password']);
             $entry->fill($data);
             $entry->save();
-            $data_role['user_id']=$entry->id;
-            if($data_role['role']==1)
+            foreach($users as $user)
             {
-                $data_role['user_id']=$entry->id;
-                $data_role['role_id']=1;
+                foreach($user->roles as $role)
+                {
+                    if($data_role['name_role']==$role->id)
+                    {
+                        $data_role['user_id']=$entry->id;
+                        $data_role['role_id']=$role->id;
+                    }
+                }
             }
-            if($data_role['role']==2)
-            {
-                $data_role['user_id']=$entry->id;
-                $data_role['role_id']=2;
-            }
-            if($data_role['role']==4)
-            {
-                $data_role['user_id']=$entry->id;
-                $data_role['role_id']=4;
-            }
-            if($data_role['role']==5)
-            {
-                $data_role['user_id']=$entry->id;
-                $data_role['role_id']=5;
-            }
-            if($data_role['role']==12)
-            {
-                $data_role['user_id']=$entry->id;
-                $data_role['role_id']=12;
-            }
-            if($data_role['role'])
+            if($data_role['name_role'])
             {
                 UserRole::updateOrCreate([
                     'user_id'=>@$data_role['user_id'],
@@ -527,7 +492,7 @@ class UsersController extends AdminBaseController
                 ],$data_role);
 
             }
-
+            
             return [
                 'code' => 0,
                 'message' => 'Đã thêm',

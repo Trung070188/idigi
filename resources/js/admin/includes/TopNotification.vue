@@ -7,7 +7,7 @@
 												<!--begin::Svg Icon | path:assets/media/svg/icons/Code/Compiling.svg-->
 												<i class="fa fa-bell" style="width: 17px;line-height: 20px;"></i>
                                                    <span v-for="notify in entries" class="notifiy_num" v-if="notification>0 && notify.title=='Yêu cầu cấp quyền'">{{notification}}</span>
-                                                <span v-for="notify in entries" class="notifiy_num"  v-if="admin>0 && notify.title=='Yêu cầu cấp quyền'">{{admin}}</span>
+                                                <span v-for="notify in entries" class="notifiy_num"  v-if="admin>0 && notify.title=='Yêu cầu xóa thiết bị'">{{admin}}</span>
 
 
                                                 <!--end::Svg Icon-->
