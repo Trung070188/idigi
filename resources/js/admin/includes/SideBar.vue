@@ -6,7 +6,7 @@
          data-kt-drawer-toggle="#kt_aside_mobile_toggle">
         <div class="aside-logo flex-column-auto" id="kt_aside_logo">
             <a href="/">
-                <img alt="Logo" src="/images/logo.svg" class="logo" style="height: 60px; width:133px"/>
+                <img alt="Logo" src="/images/imgpsh_fullsize_anim.png" class="logo" style="height: 55px"/>
             </a>
             <div id="kt_aside_toggle" class="btn btn-icon w-auto px-0 btn-active-color-primary aside-toggle"
                  data-kt-toggle="true" data-kt-toggle-state="active" data-kt-toggle-target="body"
@@ -21,6 +21,7 @@
                             fill="black"/>
                     </svg>
                 </span>
+
             </div>
         </div>
         <div class="aside-menu flex-column-fluid">

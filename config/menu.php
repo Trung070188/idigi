@@ -1,12 +1,12 @@
 <?php
 return [
-    [
-        "name" => "Dashboard",
-        "icon" => "fa fa-home",
-        "url" => "/xadmin/dashboard/index",
-        "group" => 1,
-        "roles" => ['Super Administrator']
-    ],
+//    [
+//        "name" => "Dashboard",
+//        "icon" => "fa fa-home",
+//        "url" => "/xadmin/dashboard/index",
+//        "group" => 1,
+//        "roles" => ['Super Administrator']
+//    ],
     [
         "name" => "Inventories",
         "icon" => "fa fa-archive",

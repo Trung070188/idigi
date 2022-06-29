@@ -12,22 +12,22 @@
                         <div class="row width-full">
                             <div class="col-lg-12">
                                 <form class="form-inline">
-                                    <div class="form-group mx-sm-3 mb-4">
+                                    <div class="form-group mx-sm-3 mb-4" >
                                         <input @keydown.enter="doFilter('keyword', filter.keyword, $event)"
                                                v-model="filter.keyword"
                                                type="text"
-                                               style="width: 240px"
+                                               style="width: 400px"
                                                class="form-control " placeholder="Search ID,username,email,role..."
                                                value="">
                                     </div>
                                     <div class="form-group mx-sm-3 mb-4">
-                                        <button type="button" style="margin-left: 10px"
+                                        <button type="button"
                                                 @click="isShowFilter = !isShowFilter"
                                                 class="btn btn-primary" v-if="isShowFilter"> Close Adventure search
                                             <i style="margin-left: 5px" class="fas fa-times"></i>
 
                                         </button>
-                                        <button type="button" style="margin-left: 10px"
+                                        <button type="button"
                                                 @click="isShowFilter = !isShowFilter"
                                                 class="btn btn-primary" v-if="!isShowFilter"> Adventure search
                                             <i class="fa fa-filter" v-if="!isShowFilter" aria-hidden="true"></i>
@@ -40,14 +40,14 @@
                                 <form class="col-lg-12" v-if="isShowFilter">
                                     <div class="row">
                                         <div class="form-group col-lg-3">
-                                            <label>Full name </label>
+                                            <label  style="margin-bottom: 2px">Full name </label>
                                             <input @keydown.enter="doFilter('full_name', filter.full_name, $event)"
                                                    class="form-control" placeholder="Enter the full name"
                                                    v-model="filter.full_name"/>
 
                                         </div>
                                         <div class="form-group col-lg-3">
-                                            <label>Email </label>
+                                            <label >Email </label>
                                             <input @keydown.enter="doFilter('email', filter.email, $event)"
                                                    class="form-control" placeholder="Enter the email"
                                                    v-model="filter.email">
@@ -68,12 +68,12 @@
                                     </div>
                                     <div class="row">
                                         <div class="form-group col-lg-3">
-                                            <label>Creation date </label>
+                                            <label >Creation date </label>
                                             <Daterangepicker v-model="filter.created"
                                                              placeholder="Creation date"></Daterangepicker>
                                         </div>
                                         <div class="form-group col-lg-3">
-                                            <label>Active</label>
+                                            <label >Active</label>
                                             <div>
                                                 <switch-button v-model="filter.state"></switch-button>
                                             </div>
@@ -308,6 +308,7 @@
     option {
         color: black;
     }
+
 
 
 </style>

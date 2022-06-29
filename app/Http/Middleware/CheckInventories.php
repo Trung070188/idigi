@@ -24,7 +24,7 @@ class CheckInventories
                 return $next($request);
             }
         else{
-            return redirect('/xadmin/dashboard/index');
+            return redirect('/xadmin/lessons/index');
         }
     }
 }

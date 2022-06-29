@@ -35,9 +35,11 @@
     .switch-button {
         position: relative;
         display: inline-block;
-        width: 60px;
-        height: 34px;
+        width: 55px;
+        height: 30px;
         margin-bottom: 0;
+        margin-top:4px
+    ;
     }
     input:focus+.slider {
         box-shadow: 0 0 1px #2196f3;
@@ -74,10 +76,10 @@
     .slider:before {
         position: absolute;
         content: "";
-        height: 26px;
-        width: 26px;
-        left: 4px;
-        bottom: 4px;
+        height: 24px;
+        width: 24px;
+        left: 2px;
+        bottom: 3px;
         background-color: #fff;
         -webkit-transition: .4s;
         transition: .4s;

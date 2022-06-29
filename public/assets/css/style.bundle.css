@@ -808,7 +808,7 @@ pre code {
     position: relative;
     width: 100%;
     padding-right: 12.5px;
-    padding-left: 12.5px;
+    /*padding-left: 11.5px;*/
 }
 
 .col {
@@ -2654,7 +2654,7 @@ pre code {
 .form-control {
     display: block;
     width: 100%;
-    height: calc(1.5em + 1.3rem + 2px);
+    height: calc(1.7em + 1.3rem + 2px);
     padding: 0.65rem 1rem;
     font-size: 1rem;
     font-weight: 400;
@@ -2814,7 +2814,7 @@ textarea.form-control {
 }
 
 .form-group {
-    margin-bottom: 1.75rem;
+    margin-bottom: 1.2rem;
 }
 
 .form-text {
@@ -3173,8 +3173,9 @@ textarea.form-control.is-invalid {
     }
     .form-inline .form-control {
         display: inline-block;
-        width: auto;
+        width: 400px;
         vertical-align: middle;
+        margin-left: -12px;
     }
     .form-inline .form-control-plaintext {
         display: inline-block;
@@ -12958,7 +12959,7 @@ button.bg-white:focus {
     }
     .ml-sm-3,
     .mx-sm-3 {
-        margin-left: 0.75rem !important;
+        /*margin-left: 0.75rem !important;*/
     }
     .m-sm-4 {
         margin: 1rem !important;
@@ -65359,6 +65360,7 @@ code {
     font-size: 1rem;
     font-weight: 400;
     color: #3F4254;
+    margin-bottom: 2px;
 }
 
 .form-group .invalid-feedback,

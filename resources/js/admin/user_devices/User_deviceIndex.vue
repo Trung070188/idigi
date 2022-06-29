@@ -104,42 +104,45 @@
                                 Add more device
                             </button>
                         </div>
-                        <div   class="row width-full" v-for="entry in entries" v-if="entry.id==auth.id">
-                            <div class="col-lg-12 body " v-for="device in entry.user_devices" >
-                                <form  class="form-inline"  >
-                                    <div  class="form-group mx-sm-3 mb-2">
-                                        <label>{{device.device_name}}</label>
-                                    </div>
-                                </form>
+                        <div>
+                            <div style="margin-top: 75px"  class="row" v-for="entry in entries" v-if="entry.id==auth.id">
+                                <div class="col-lg-12 body " v-for="device in entry.user_devices" >
+                                    <form  class="form-inline"  >
+                                        <div  class="form-group mx-sm-3 mb-2">
+                                            <label>{{device.device_name}}</label>
+                                        </div>
+                                    </form>
 
-                                <div  class="form-group mx-sm-3 mb-2" style="position: absolute;right:65px;margin-top: -33px;" v-if="device.status==1">
+                                    <div  class="form-group mx-sm-3 mb-2" style="position: absolute;right:65px;margin-top: -33px;" v-if="device.status==1">
 
-                                    <button type="button"
-                                            class="btn btn-flex btn-dark  fw-bolder " v-for="role in entry.roles"  v-if="role.id!==5"  @click="remove(device)">Delete device
-                                    </button>
-                                    <span v-for="role in entry.roles" v-if="role.id==5"
-                                          style="color: #f1c40f;margin-right: 5px" ><i class="fas fa-exclamation-circle" style="color: #f1c40f"></i> Delete request sent
+                                        <button type="button"
+                                                class="btn btn-flex btn-dark  fw-bolder " v-for="role in entry.roles"  v-if="role.id!==5"  @click="remove(device)">Delete device
+                                        </button>
+                                        <span v-for="role in entry.roles" v-if="role.id==5"
+                                              style="color: #f1c40f;margin-right: 5px" ><i class="fas fa-exclamation-circle" style="color: #f1c40f"></i> Delete request sent
                                        </span>
-                                    <button  type="button"
-                                             class="btn btn-flex btn-dark  fw-verify " style="margin-right: 5px" @click="editModalDevice(device.id,device.device_name,device.secret_key)" >
-                                        Get activity code
-                                    </button>
+                                        <button  type="button"
+                                                 class="btn btn-flex btn-dark  fw-verify " style="margin-right: 5px" @click="editModalDevice(device.id,device.device_name,device.secret_key)" >
+                                            Get activity code
+                                        </button>
 
-                                </div>
-                                <div  class="form-group mx-sm-3 mb-2" style="position: absolute;right:65px;margin-top: -33px;" v-if="device.status!==1">
-                                    <button  type="button"
-                                             class="btn btn-flex btn-secondary  fw-verify " style="margin-right: 5px" @click="editModalDevice(device.id,device.device_name,device.secret_key)" >
-                                        Get activity code
-                                    </button>
+                                    </div>
+                                    <div  class="form-group mx-sm-3 mb-2" style="position: absolute;right:30px;margin-top: -33px;" v-if="device.status!==1">
+                                        <button  type="button"
+                                                 class="btn btn-flex btn-secondary  fw-verify " style="margin-right: 5px" @click="editModalDevice(device.id,device.device_name,device.secret_key)" >
+                                            Get activity code
+                                        </button>
 
-                                    <button type="button"
-                                            class="btn btn-flex btn-danger  fw-bolder " v-for="role in entry.roles"  v-if="role.id!==5"  @click="remove(device)">Delete device
-                                    </button>
-                                    <button v-for="role in entry.roles" v-if="role.id==5" type="button"
-                                            class="btn btn-flex btn-info  fw-bolder " @click="Sent(device)">Delete device
-                                    </button>
+                                        <button type="button"
+                                                class="btn btn-flex btn-danger  fw-bolder " v-for="role in entry.roles"  v-if="role.id!==5"  @click="remove(device)">Delete device
+                                        </button>
+                                        <button v-for="role in entry.roles" v-if="role.id==5" type="button"
+                                                class="btn btn-flex btn-info  fw-bolder " @click="Sent(device)">Delete device
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
+
                         </div>
                     </div>
                 </div>
@@ -353,8 +356,8 @@
         top: 0px;
         background: #FFFFFF;
         border: 1px solid black;
-        border-radius: 44px;
-        margin-top: 70px;
+        border-radius: 20px;
+        margin-top: 8px;
     }
     .modal-devices{
         position: absolute;
