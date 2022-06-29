@@ -24,7 +24,7 @@
 
             <!-- logo -->
             <div class="logo">
-                <img src="{{asset('/images/logo.svg')}}">
+                <img src="{{asset('/images/imgpsh_fullsize_anim.png')}}">
             </div>
             <!-- ./ logo //// -->
             <h5 style="margin-top:20px;">Login</h5>

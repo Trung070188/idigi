@@ -45,43 +45,39 @@ class UsersController extends AdminBaseController
         $title = 'Users';
         $component = 'UserIndex';
         $roles = Role::query()->orderBy('role_name')->get();
-        $user=Auth::user();
-        foreach ($user->roles as $role)
-        {
-            if($role->role_name=='Super Administrator')
-            {
+        $user = Auth::user();
+        foreach ($user->roles as $role) {
+            if ($role->role_name == 'Super Administrator') {
                 $jsonData = [
                     'roles' => $roles
                 ];
                 return view('admin.layouts.vue', compact('title', 'component', 'jsonData'));
-            }
-            else{
-                return redirect('/xadmin/dashboard/index');
+            } else {
+                return redirect('/xadmin/lessons/index');
             }
         }
     }
+
     public function index_teacher(Request $request)
     {
         $title = 'Teacher';
         $component = 'TeacherIndex';
         $roles = Role::query()->orderBy('role_name')->get();
-        $user=Auth::user();
-        foreach ($user->roles as $role)
-        {
-            if($role->role_name=='Super Administrator' || $role->role_name=='Administrator')
-            {
+        $user = Auth::user();
+        foreach ($user->roles as $role) {
+            if ($role->role_name == 'Super Administrator' || $role->role_name == 'Administrator') {
                 $jsonData = [
                     'roles' => $roles
                 ];
                 return view('admin.layouts.vue', compact('title', 'component', 'jsonData'));
-            }
-            else{
-                return redirect('/xadmin/dashboard/index');
+            } else {
+                return redirect('/xadmin/lessons/index');
             }
 
         }
 
     }
+
     /**
      * Create new entry
      * @uri  /xadmin/users/create
@@ -92,19 +88,16 @@ class UsersController extends AdminBaseController
     {
         $component = 'UserForm';
         $title = 'Create users';
-        $roles = Role::query()->orderBy('id','ASC')->get();
-        $user=Auth::user();
-        foreach ($user->roles as $role)
-        {
-            if($role->role_name=='Super Administrator')
-            {
+        $roles = Role::query()->orderBy('id', 'ASC')->get();
+        $user = Auth::user();
+        foreach ($user->roles as $role) {
+            if ($role->role_name == 'Super Administrator') {
                 $jsonData = [
                     'roles' => $roles
                 ];
                 return view('admin.layouts.vue', compact('title', 'component', 'jsonData'));
-            }
-            else{
-                return redirect('/xadmin/dashboard/index');
+            } else {
+                return redirect('/xadmin/lessons/index');
             }
 
         }
@@ -116,18 +109,15 @@ class UsersController extends AdminBaseController
         $component = 'TeacherCreated';
         $title = 'Create Teacher';
         $roles = Role::query()->orderBy('role_name')->get();
-        $user=Auth::user();
-        foreach ($user->roles as $role)
-        {
-            if($role->role_name=='Super Administrator'||$role->role_name=='Administrator')
-            {
+        $user = Auth::user();
+        foreach ($user->roles as $role) {
+            if ($role->role_name == 'Super Administrator' || $role->role_name == 'Administrator') {
                 $jsonData = [
                     'roles' => $roles
                 ];
                 return view('admin.layouts.vue', compact('title', 'component', 'jsonData'));
-            }
-            else{
-                return redirect('/xadmin/dashboard/index');
+            } else {
+                return redirect('/xadmin/lessons/index');
             }
         }
 
@@ -148,22 +138,21 @@ class UsersController extends AdminBaseController
             throw new NotFoundHttpException();
         }
 
-        if(@$entry->fileImage){
-            $entry->file_image_new= [
+        if (@$entry->fileImage) {
+            $entry->file_image_new = [
                 'id' => @$entry->fileImage->id,
                 'uri' => @$entry->fileImage->url,
                 'is_image' => 1,
             ];
-        }else{
+        } else {
             $entry->file_image_new = NULL;
         }
 
         $roles = Role::query()->orderBy('role_name')->get();
 
-        $role='';
-        foreach ($entry->roles as $role_id)
-        {
-            $role=$role_id->role_name;
+        $role = '';
+        foreach ($entry->roles as $role_id) {
+            $role = $role_id->role_name;
 
         }
         /**
@@ -173,7 +162,7 @@ class UsersController extends AdminBaseController
         $component = 'ProfileForm';
         $jsonData = [
             'entry' => $entry,
-            'role'=>$role,
+            'role' => $role,
         ];
         return view('admin.layouts.vue', compact('title', 'component', 'jsonData'));
     }
@@ -188,7 +177,7 @@ class UsersController extends AdminBaseController
     {
 
         $id = $req->id;
-        $entry = User::with('roles')
+        $entry = User::query()
             ->where('id', $id)->first();
         if (!$entry) {
             throw new NotFoundHttpException();
@@ -197,29 +186,29 @@ class UsersController extends AdminBaseController
         /**
          * @var  User $entry
          */
-        $roles = Role::query()->orderBy('id','ASC')->get();
+        $roles = Role::query()->orderBy('id', 'ASC')->get();
+        if ($entry->roles) {
+            foreach ($entry->roles as $role) {
+                $name_role = $role->id;
+            }
+        }
         $title = 'Edit';
         $component = 'UserEdit';
-        $user=Auth::user();
-        foreach ($user->roles as $role)
-        {
-            if($role->role_name=='Super Administrator')
-            {
+        $user = Auth::user();
+        foreach ($user->roles as $role) {
+            if ($role->role_name == 'Super Administrator') {
                 $jsonData = [
                     'entry' => $entry,
-                    'roles'=>$roles,
+                    'roles' => $roles,
+                    @'name_role' => @$name_role
 
                 ];
                 return view('admin.layouts.vue', compact('title', 'component', 'jsonData'));
-            }
-            else{
-                return redirect('/xadmin/dashboard/index');
+            } else {
+                return redirect('/xadmin/lessons/index');
             }
         }
-
-
     }
-
 
     public function edit_teacher(Request $req)
     {
@@ -237,19 +226,16 @@ class UsersController extends AdminBaseController
 
         $title = 'Edit';
         $component = 'TeacherEdit';
-        $user=Auth::user();
-        foreach ($user->roles as $role)
-        {
-            if($role->role_name=='Super Administrator'|| $role->role_name=='Administrator')
-            {
+        $user = Auth::user();
+        foreach ($user->roles as $role) {
+            if ($role->role_name == 'Super Administrator' || $role->role_name == 'Administrator') {
                 $jsonData = [
                     'entry' => $entry,
                     'user_device' => $user_device
                 ];
                 return view('admin.layouts.vue', compact('title', 'component', 'jsonData'));
-            }
-            else{
-                return redirect('/xadmin/dashboard/index');
+            } else {
+                return redirect('/xadmin/lessons/index');
             }
         }
 
@@ -273,6 +259,7 @@ class UsersController extends AdminBaseController
             'message' => 'Đã xóa'
         ];
     }
+
     public function remove_device(Request $req)
     {
         $id = $req->id;
@@ -286,6 +273,7 @@ class UsersController extends AdminBaseController
             'message' => 'Đã xóa'
         ];
     }
+
     /**
      * @uri  /xadmin/users/save
      * @return  array
@@ -297,15 +285,15 @@ class UsersController extends AdminBaseController
         }
         $data = $req->get('entry');
         $rules = [
-            'old_password' => ['required', function ( $value, $fail) {
+            'old_password' => ['required', function ($value, $fail) {
                 if (!Hash::check($value, Auth::user()->password)) {
                     return $fail(__('The current password is incorrect.'));
                 }
             }]
         ];
         if (isset($data['id'])) {
-           $rules[ 'password'] = 'required||different:old_password';
-           $rules['confirm_password']='same:password';
+            $rules['password'] = 'required||different:old_password';
+            $rules['confirm_password'] = 'same:password';
         }
         $v = Validator::make($data, $rules);
 
@@ -326,9 +314,9 @@ class UsersController extends AdminBaseController
             }
 
 
-          {
-              $data['password'] = Hash::make($data['password']);
-          }
+            {
+                $data['password'] = Hash::make($data['password']);
+            }
             $entry->fill($data);
             $entry->save();
             return [
@@ -339,23 +327,24 @@ class UsersController extends AdminBaseController
         }
 
     }
+
     public function save_profile(Request $req)
     {
         if (!$req->isMethod('POST')) {
             return ['code' => 405, 'message' => 'Method not allow'];
         }
         $data = $req->get('entry');
-        $data_role=$req->all();
+        $data_role = $req->all();
         $roles = $req->roles;
         $rules = [
-            'username' => ['required',new ValiUser()],
-            'full_name'=>['required',new ValiFullname()],
+            'username' => ['required', new ValiUser()],
+            'full_name' => ['required', new ValiFullname()],
 //            'password' => '|max:191|confirmed',
         ];
 
         if (isset($data['id'])) {
             $user = User::find($data['id']);
-            $rules['email'] =['required','email',Rule::unique('users')->ignore($user->id),];
+            $rules['email'] = ['required', 'email', Rule::unique('users')->ignore($user->id),];
         }
         $v = Validator::make($data, $rules);
 
@@ -366,8 +355,8 @@ class UsersController extends AdminBaseController
             ];
         }
         $data['file_image_id'] = @$data['file_image_new']['id'];
-        if($data['file_image_id']){
-            $data['image'] = str_replace('APP_URL', '',  $data['file_image_new']['uri']);
+        if ($data['file_image_id']) {
+            $data['image'] = str_replace('APP_URL', '', $data['file_image_new']['uri']);
 
         }
         if (isset($data['id'])) {
@@ -387,7 +376,6 @@ class UsersController extends AdminBaseController
             $entry->save();
 
 
-
             return [
                 'code' => 0,
                 'message' => 'Đã cập nhật',
@@ -395,31 +383,29 @@ class UsersController extends AdminBaseController
             ];
         }
     }
+
     public function save(Request $req)
     {
         if (!$req->isMethod('POST')) {
             return ['code' => 405, 'message' => 'Method not allow'];
         }
         $data = $req->get('entry');
-        $data_role=$req->all();
-        $roles = $req->roles;
-        $users=User::with(['roles'])->orderBy('username')->get();
 
-
+        $data_role = $req->all();
         $rules = [
-            'full_name'=>['required',new ValiFullname()],
+            'full_name' => ['required', new ValiFullname()],
 //            'password' => '|max:191|confirmed',
         ];
         if (!isset($data['id'])) {
-            $rules['username'] =  ['required','unique:users,username',new ValiUser()];
-            $rules['email'] ='required|max:191|email|unique:users,email';
+            $rules['username'] = ['required', 'unique:users,username', new ValiUser()];
+            $rules['email'] = 'required|max:191|email|unique:users,email';
 
 //            $rules['password'] = 'required|max:191|confirmed';
 
         }
         if (isset($data['id'])) {
             $user = User::find($data['id']);
-            $rules['email'] =['required',Rule::unique('users')->ignore($user->id),];
+            $rules['email'] = ['required', Rule::unique('users')->ignore($user->id),];
 //            $rules['password'] = 'required|max:191|confirmed';
 
 
@@ -447,24 +433,18 @@ class UsersController extends AdminBaseController
             $entry->fill($data);
             $entry->save();
             UserRole::where('user_id', $entry->id)->delete();
-            foreach($users as $user)
-            {
-                foreach($user->roles as $role)
-                {
-                    if($data_role['name_role']==$role->id)
-                    {
-                        $data_role['user_id']=$entry->id;
-                        $data_role['role_id']=$role->id;
-                    }
-                }
-            }
-            if($data_role['name_role'])
-            {
-                UserRole::Create([
-                    'user_id'=>$data_role['user_id'],
-                    'role_id'=>$data_role['role_id']
-                ],$data_role);
 
+
+            if ($data_role['name_role']) {
+                UserRole::updateOrCreate([
+                    'user_id' => $entry->id,
+                    'role_id' => $data_role['name_role']
+                ],
+                    [
+                        'user_id' => $entry->id,
+                        'role_id' => $data_role['name_role']
+                    ]
+                );
             }
             return [
                 'code' => 0,
@@ -476,23 +456,15 @@ class UsersController extends AdminBaseController
             $data['password'] = Hash::make($data['password']);
             $entry->fill($data);
             $entry->save();
-            foreach($users as $user)
-            {
-                foreach($user->roles as $role)
-                {
-                    if($data_role['name_role']==$role->id)
-                    {
-                        $data_role['user_id']=$entry->id;
-                        $data_role['role_id']=$role->id;
-                    }
-                }
-            }
-            if($data_role['name_role'])
-            {
-                UserRole::Create([
-                    'user_id'=>@$data_role['user_id'],
-                    'role_id'=>@$data_role['role_id']
-                ],$data_role);
+
+            if ($data_role['name_role']) {
+                UserRole::updateOrCreate([
+                    'user_id' => @$entry->id,
+                    'role_id' => @$data_role['name_role']
+                ], [
+                    'user_id' => @$entry->id,
+                    'role_id' => @$data_role['name_role']
+                ]);
 
             }
 
@@ -526,6 +498,7 @@ class UsersController extends AdminBaseController
             'message' => 'Đã lưu'
         ];
     }
+
     /**
      * Ajax data for index page
      * @uri  /xadmin/users/data
@@ -534,7 +507,7 @@ class UsersController extends AdminBaseController
     public function data(Request $req)
     {
         $query = User::query()
-            ->with(['roles','fileImage'])
+            ->with(['roles', 'fileImage'])
             ->orderBy('id', 'ASC');
         $last_updated = User::query()->orderBy('updated_at', 'desc')->first()->updated_at;
         $roles = Role::with(['users'])->orderBy('role_name', 'ASC')->get();
@@ -542,9 +515,9 @@ class UsersController extends AdminBaseController
             $query->where('username', 'LIKE', '%' . $req->keyword . '%')
                 ->orWhere('email', 'LIKE', '%' . $req->keyword . '%')
                 ->orWhere('id', 'LIKE', '%' . $req->keyword . '%')
-                ->orWhere('state','LIKE','%'.$req->keyword . '%')
+                ->orWhere('state', 'LIKE', '%' . $req->keyword . '%')
                 ->orwhereHas('roles', function ($q) use ($req) {
-                    $q->where('role_name', 'LIKE', '%' . $req->keyword );
+                    $q->where('role_name', 'LIKE', '%' . $req->keyword);
                 });
         }
         if ($req->role) {
@@ -562,10 +535,9 @@ class UsersController extends AdminBaseController
             $query->where('state', 'LIKE', '%' . $req->state . '%');
         }
         $query->createdIn($req->created);
-        $limit=25;
-        if($req->limit)
-        {
-            $limit=$req->limit;
+        $limit = 25;
+        if ($req->limit) {
+            $limit = $req->limit;
         }
         $entries = $query->paginate($limit);
 
@@ -587,8 +559,8 @@ class UsersController extends AdminBaseController
                 'full_name' => $user->full_name,
                 'email' => $user->email,
                 'state' => $user->state,
-                'image'=>$user->image,
-                'file_image_id'=>$user->file_image_id,
+                'image' => $user->image,
+                'file_image_id' => $user->file_image_id,
                 'password' => $user->password,
                 'created_at' => $user->created_at,
                 'updated_at' => $user->updated_at,
@@ -607,6 +579,7 @@ class UsersController extends AdminBaseController
             ]
         ];
     }
+
     public function data_teacher(Request $req)
     {
         $query = User::query()
@@ -634,10 +607,9 @@ class UsersController extends AdminBaseController
             $query->where('state', 'LIKE', '%' . $req->state);
         }
         $query->createdIn($req->created);
-        $limit=25;
-        if($req->limit)
-        {
-            $limit=$req->limit;
+        $limit = 25;
+        if ($req->limit) {
+            $limit = $req->limit;
         }
         $entries = $query->paginate($limit);
         $users = $entries->items();
@@ -651,6 +623,7 @@ class UsersController extends AdminBaseController
             ]
         ];
     }
+
     public function export()
     {
         $keys = [

@@ -14,12 +14,16 @@
                             <div class=" col-sm-12">
                                 <input v-model="entry.id" type="hidden" name="id" value="">
                                 <div class="row">
-                                    <div  class="form-group  col-sm-4">
+                                    <div v-if="errors!==''"  class="form-group  col-sm-4">
                                         <label>Username <span class="text-danger">*</span></label>
                                         <input class="form-control nospace" placeholder="Enter the username" v-model="entry.username">
-
-                                        <error-label for="f_category_id" :errors="errors.username"></error-label>
+                                        <error-label  for="f_category_id" :errors="errors.username"></error-label>
                                     </div>
+                                    <div v-if="errors==''" class="form-group  col-sm-4">
+                                        <label>Username <span class="text-danger">*</span></label>
+                                        <input class="form-control nospace" placeholder="Enter the username" v-model="entry.username">
+                                    </div>
+
                                     <div class="form-group  col-sm-4">
                                         <label>Full name <span class="text-danger">*</span></label>
                                         <input class="form-control" placeholder="Enter the full name" v-model="entry.full_name">
@@ -60,7 +64,7 @@
 
                                     <label>Role</label>
                                     <div  class="form-group col-sm-2" v-for="role in roles">
-                                        <input  type="radio"  v-model="name_role" :value="role.id">
+                                        <input  type="radio"  v-model="rname_role" v-bind:value="role.id">
                                         <label>{{role.role_name}}</label>
                                     </div>
                                 </div>
@@ -188,6 +192,10 @@
         top: 40%;
         right: 5%
 
+    }
+    .form-group label
+    {
+        margin-bottom: 2px;
     }
 
 </style>

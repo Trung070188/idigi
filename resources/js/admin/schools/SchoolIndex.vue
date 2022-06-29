@@ -16,26 +16,23 @@
                                         <input @keydown.enter="doFilter($event)"
                                                v-model="filter.keyword"
                                                type="text"
-                                               class="form-control" placeholder="Tìm kiếm" value="">
+                                               class="form-control" placeholder="Search..." value="">
                                     </div>
-                                    <div class="form-group mx-sm-3 mb-2">
-                                        <button type="button" style="margin-left: 10px"
+                                    <div class="form-group mx-sm-3 mb-4">
+                                        <button type="button"
                                                 @click="isShowFilter = !isShowFilter"
-                                                class="btn btn-primary"> Tìm kiếm mở rộng
-                                            <i class="fa fa-caret-down" v-if="!isShowFilter"></i>
-                                            <i class="fa fa-caret-up" v-if="isShowFilter" aria-hidden="true"></i>
+                                                class="btn btn-primary" v-if="isShowFilter"> Close Adventure search
+                                            <i style="margin-left: 5px" class="fas fa-times"></i>
+
+                                        </button>
+                                        <button type="button"
+                                                @click="isShowFilter = !isShowFilter"
+                                                class="btn btn-primary" v-if="!isShowFilter"> Adventure search
+                                            <i class="fa fa-filter" v-if="!isShowFilter" aria-hidden="true"></i>
 
                                         </button>
 
-
                                     </div>
-                                    <div class="form-group mx-sm-3 mb-2">
-                                        <button @click="filterClear()" type="button"
-                                                class="btn btn-flex btn-light  fw-bolder ">Clear
-                                        </button>
-                                    </div>
-
-
                                 </form>
 
                                 <form class="col-lg-12" v-if="isShowFilter">
@@ -49,7 +46,7 @@
                                     </div>
 
                                     <div style="margin: auto 0">
-                                        <button type="button" class="btn btn-primary" @click="doFilter($event)">Tìm kiếm</button>
+                                        <button type="button" class="btn btn-primary" @click="doFilter($event)">Search</button>
                                     </div>
                                 </form>
                             </div>

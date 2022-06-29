@@ -109,7 +109,6 @@
         data() {
 
             return {
-                name_role:'',
                 showConfirm: false,
                 showPass: false,
                 types: [],
@@ -123,6 +122,9 @@
                     },
                 ],
                 entry: $json.entry || {
+                },
+                name_role: $json.name_role
+                    || {
                 },
                 roles: $json.roles || [],
                 role: $json.role || [],
