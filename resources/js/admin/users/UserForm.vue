@@ -52,8 +52,7 @@
                                         <input v-if="auto_gen==false"  class="form-control" :type="showConfirm ? 'text' : 'password'"
                                                v-model="entry.password_confirmation">
                                         <i @click="showConfirm = !showConfirm" class="fa fa-eye"></i>
-                                        <error-label for="f_category_id"
-                                                     :errors="errors.password_confirmation"></error-label>
+                                        <error-label for="f_category_id" :errors="errors.password_confirmation"></error-label>
                                     </div>
                                     <div class="form-group  col-sm-8">
                                         <input  type="checkbox" v-model="auto_gen">

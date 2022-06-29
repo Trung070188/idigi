@@ -4,7 +4,7 @@
             <label class="error" v-for="err in errors" v-text="err"></label>
         </template>
         <template v-else>
-            <label class="error">&nbsp;</label>
+
         </template>
 
     </div>

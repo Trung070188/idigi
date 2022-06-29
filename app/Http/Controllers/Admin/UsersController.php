@@ -406,7 +406,7 @@ class UsersController extends AdminBaseController
         if (isset($data['id'])) {
             $user = User::find($data['id']);
             $rules['email'] = ['required', Rule::unique('users')->ignore($user->id),];
-//            $rules['password'] = 'required|max:191|confirmed';
+            $rules['email'] = 'required|max:191|email|';
 
 
         }
