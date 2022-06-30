@@ -1,12 +1,19 @@
 <template>
     <div class="container-fluid" >
         <ActionBar type="index"
-                   createUrl="/xadmin/schools/create"
-                   :breadcrumbs="breadcrumbs"
-                   title="School"/>
+                   :breadcrumbs="breadcrumbs"/>
         <div class="row">
             <div class="col-lg-12">
                 <div class="card card-custom card-stretch gutter-b">
+                     <div class="card-header border-0 pt-5">
+                        <div class="title">
+                            <label>School</label>
+                        </div>
+                           <a :href="'/xadmin/schools/create'" class="btn btn-primary button-create " >
+                        Create new
+                    </a>
+                    </div>
+                    <hr>
                     <div class="card-header border-0 pt-5">
 
                         <div class="row width-full">
