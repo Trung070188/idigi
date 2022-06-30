@@ -37,11 +37,6 @@
                                             <i class="fa fa-filter" v-if="!isShowFilter" aria-hidden="true"></i>
                                         </button>
                                     </div>
-                                    <div class="form-group mx-sm-3 mb-4">
-                                        <button @click="filterClear()" type="button"
-                                                class="btn btn-flex btn-light  fw-bolder ">Clear
-                                        </button>
-                                    </div>
                                 </form>
 
                                 <form class="col-lg-12" v-if="isShowFilter">
