@@ -105,7 +105,7 @@
                         title: 'Users & Roles'
                     },
                     {
-                        title: 'Manage Role'
+                        title: 'Manage Roles'
                     },
                 ],
                 roles: [],

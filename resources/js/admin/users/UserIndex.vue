@@ -213,7 +213,7 @@
                         title: 'Users & Roles'
                     },
                     {
-                        title: 'Users'
+                        title: 'Manage Users'
                     },
                 ],
                 roles: $json.roles || [],
