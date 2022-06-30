@@ -3,11 +3,16 @@
         <ActionBar type="form" @save="save()"
                    :code="entry.id"
                    backUrl="/xadmin/inventories/index"
-                   :breadcrumbs = "breadcrumbs"
-                   title="Inventory"/>
+                   :breadcrumbs = "breadcrumbs"/>
         <div class="row">
             <div class="col-lg-12">
                 <div class="card card-custom card-stretch gutter-b">
+                    <div class="card-header border-0 pt-5">
+                        <div class="title">
+                            <label >{{title}}</label>
+                        </div>
+                    </div>
+                    <hr>
 
                     <div class="card-body d-flex flex-column" >
 
@@ -97,7 +102,7 @@
 
                         </div>
 
-                        <hr>
+                        <hr style="margin-top: 5px;" >
                         <div >
                             <button type="reset" @click="save()" class="btn btn-primary mr-2">Save</button>
                             <button type="reset" @click="backIndex()" class="btn btn-secondary">Cancel</button>
@@ -139,6 +144,7 @@
                         title: $json.entry ? 'Edit inventory' : 'Create new inventory',
                     },
                 ],
+                title: $json.entry ?  'Edit inventory' : 'Create new inventory',
                 entry: $json.entry || {},
                 isLoading: false,
                 errors: {}

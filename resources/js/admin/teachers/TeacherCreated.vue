@@ -4,11 +4,16 @@
                    :code="entry.id"
                    back-url="/xadmin/users/index"
                    :breadcrumbs="breadcrumbs"
-                   title="UserForm"/>
+                   />
         <div class="row">
             <div class="col-lg-12">
                 <div class="card card-custom card-stretch gutter-b">
-
+                    <div class="card-header border-0 pt-5">
+                        <div class="title">
+                            <label>Create new teacher</label>
+                        </div>
+                    </div>
+                    <hr>
                     <div class="card-body d-flex flex-column">
                         <div class="row">
                             <div class=" col-sm-12">
@@ -85,7 +90,7 @@
                         url: '/xadmin/users/index_teacher',
                     },
                     {
-                        title: $json.entry ? 'Edit User' : 'Create new Teachers',
+                        title: $json.entry ? 'Edit User' : 'Create new Teacher',
                     },
                 ],
                 entry: $json.entry || {

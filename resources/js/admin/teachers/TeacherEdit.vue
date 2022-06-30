@@ -3,8 +3,7 @@
         <ActionBar type="form" @save="save()"
                    :code="entry.id"
                    back-url="/xadmin/users/index"
-                   :breadcrumbs="breadcrumbs"
-                   title="TeacherEdit"/>
+                   :breadcrumbs="breadcrumbs"/>
         <div class="modal fade" style="margin-right:50px " id="deviceConfirm" tabindex="-1" role="dialog"
              aria-labelledby="deviceConfirm"
              aria-hidden="true">
@@ -29,9 +28,18 @@
         <div class="row">
             <div class="col-lg-12">
                 <div class="card card-custom card-stretch gutter-b">
+                     <div class="card-header border-0 pt-5">
+                        <div class="title">
+                            <label>Teacher details</label>
+                        </div>
+                        <button class="btn btn-primary button-create " @click="remove(entry)">
+                        Delete User <i class="fas fa-trash"></i>
+                    </button>
+                    </div>
+                    <hr>
 
                     <div class="card-body d-flex flex-column">
-                        <div class="row">
+                        <div class=" card-header border-0 pt-5 row" style="margin-top:-30px;margin-left: -35px;">
                             <div class=" col-sm-12">
                                 <input v-model="entry.id" type="hidden" name="id" value="">
                                 <div class="row">
@@ -65,12 +73,12 @@
                                 </div>
                             </div>
                         </div>
-                        <hr>
+                        <hr style="margin-top: 10px">
                         <div>
                             <button type="reset" @click="save()" class="btn btn-primary mr-2">Save change</button>
                             <button type="reset" @click="backIndex()" class="btn btn-secondary">Cancel</button>
                         </div>
-                        <hr>
+                        <hr style="margin-top: 10px">
                         <h2>Current registed devices</h2>
                         <table class=" table  table-head-custom table-head-bg table-vertical-center">
                             <thead>
@@ -162,7 +170,7 @@
                         url: '/xadmin/users/index_teacher',
                     },
                     {
-                        title: $json.entry ? 'Edit Teacher' : 'Create new User',
+                        title: $json.entry ? 'Teacher details' : 'Create new User',
                     },
                 ],
                 entry: $json.entry || {
@@ -218,7 +226,22 @@
                         location.replace('/xadmin/users/edit_teacher?id=' + res.id);
                     }
                 }
-            }
+            },
+             async remove(entry) {
+                if (!confirm('Xóa bản ghi: ' + entry.id)) {
+                    return false;
+                }
+
+                const res = await $post('/xadmin/users/remove', {id: entry.id});
+
+                if (res.code) {
+                    toastr.error(res.message);
+                } else {
+                    toastr.success(res.message);
+                }
+                  location.replace('/xadmin/users/index_teacher');
+                $router.updateQuery({page: this.paginate.currentPage, _: Date.now()});
+            },
         }
     }
 </script>

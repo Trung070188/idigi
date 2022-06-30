@@ -3,11 +3,24 @@
         <ActionBar type="form" @save="save()"
                    :code="entry.id"
                    backUrl="/xadmin/schools/index"
-                   :breadcrumbs = "breadcrumbs"
-                   title="School"/>
+                   :breadcrumbs = "breadcrumbs"/>
         <div class="row">
             <div class="col-lg-12">
                 <div class="card card-custom card-stretch gutter-b">
+                     <div class="card-header border-0 pt-5">
+                        <div class="title">
+                            <label v-if="title=='Create new school'">Create new school</label>
+                            <label v-if="title=='Edit school'">School details</label>
+                        </div>
+                         <button style="margin-left:640px" v-if="title=='Edit school'" class="btn btn-primary button-create " @click="remove(entry)">
+                        Teacher list <i class="fa fa-users"></i>
+                    </button>
+                        <button v-if="title=='Edit school'" class="btn btn-primary button-create " @click="remove(entry)">
+                        Delete User <i class="fas fa-trash"></i>
+                    </button>
+                    
+                    </div>
+                    <hr>
                     <div class="card-body d-flex flex-column" >
                         <div class="row">
                             <div class="col-lg-12">
@@ -88,7 +101,7 @@
                                 </div>
                             </div>
                         </div>
-                        <hr>
+                        <hr style="margin-top: 5px;">
                         <div >
                             <button type="reset" @click="save()" class="btn btn-primary mr-2">Save</button>
                             <button type="reset" @click="backIndex()" class="btn btn-secondary">Cancel</button>
@@ -120,6 +133,8 @@
                         title: $json.entry ? 'Edit school' : 'Create new school',
                     },
                 ],
+                title: $json.entry ? 'Edit school' : 'Create new school',
+
                 entry: $json.entry || {},
                 isLoading: false,
                 errors: {}

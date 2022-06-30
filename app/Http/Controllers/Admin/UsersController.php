@@ -189,7 +189,7 @@ class UsersController extends AdminBaseController
         $roles = Role::query()->orderBy('id', 'ASC')->get();
         if ($entry->roles) {
             foreach ($entry->roles as $role) {
-                $name_role = $role->id;
+                $name_role = $role->role_name;
             }
         }
         $title = 'Edit';

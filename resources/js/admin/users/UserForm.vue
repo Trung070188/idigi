@@ -3,11 +3,16 @@
         <ActionBar type="form" @save="save()"
                    :code="entry.id"
                    back-url="/xadmin/users/index"
-                   :breadcrumbs="breadcrumbs"
-                   title="User Created"/>
+                   :breadcrumbs="breadcrumbs"/>
         <div class="row">
             <div class="col-lg-12">
                 <div class="card card-custom card-stretch gutter-b">
+                    <div class="card-header border-0 pt-5">
+                        <div class="title">
+                            <label >Create new user</label>
+                        </div>
+                    </div>
+                    <hr>
 
                     <div class="card-body d-flex flex-column">
                         <div class="row">
@@ -132,7 +137,7 @@
                         url: '/xadmin/users/index',
                     },
                     {
-                        title: $json.entry ? 'Edit User' : 'Create new User',
+                        title: $json.entry ? 'Edit User' : 'Create new user',
                     },
                 ],
                 entry: $json.entry || {
@@ -188,7 +193,7 @@
 <style scoped>
     .fa-eye {
         position: absolute;
-        top: 40%;
+        top: 50%;
         right: 5%
 
     }
