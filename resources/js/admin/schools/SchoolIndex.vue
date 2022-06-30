@@ -49,6 +49,16 @@
                                             <input class="form-control" type="text" placeholder="Enter your school name" v-model="filter.school_name"/>
 
                                         </div>
+                                        <div class="form-group col-lg-3">
+                                            <label>Administrator name </label>
+                                            <input class="form-control" type="text" placeholder="Enter the administrator name" >
+
+                                        </div>
+                                        <div class="form-group col-lg-3">
+                                            <label>Region/City </label>
+                                            <input class="form-control" type="text" placeholder="Enter the region/city" >
+
+                                        </div>
 
                                     </div>
 
@@ -66,14 +76,16 @@
                         <div v-text="'Showing '+ from +' to '+ to +' of '+ paginate.totalRecord +' entries'" v-if="entries.length > 0"></div>
                         <table class=" table  table-head-custom table-head-bg table-vertical-center">
                             <thead>
-                            <tr> <th>ID</th>
-                                <th>School Name</th>
-                                <th>School Address</th>
-                                <th>No Of Users</th>
+                            <tr>
+                                <th>ID</th>
+                                <th>Name</th>
+                                <th>Address</th>
+                                <th>Administrator name</th>
+                                <th>Teacher</th>
                                 <th>Devices Per User</th>
-                                <th>Region/City</th>
-                                <th>License State</th>
-                            <th>Action</th>
+                                <th>Province</th>
+                                <th>License </th>
+                            <th></th>
                             </tr>
                             </thead>
                             <tbody>
@@ -81,6 +93,7 @@
                                 <td v-text="entry.id"></td>
                                 <td v-text="entry.school_name"></td>
                                 <td v-text="entry.school_address"></td>
+                                <td></td>
                                 <td v-text="entry.number_of_users"></td>
                                 <td v-text="entry.devices_per_user"></td>
                                 <td ></td>

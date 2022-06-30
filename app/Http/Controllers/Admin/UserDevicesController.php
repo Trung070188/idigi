@@ -251,10 +251,32 @@ class UserDevicesController extends AdminBaseController
      * @return  array
      */
     public function data(Request $req) {
-        $users=User::with(['user_devices','roles'])->orderBy('username','ASC')->get();
+       $devices=UserDevice::query()->with(['users'])->orderBy('created_at','ASC')->get();
+       $data=[];
+       foreach ($devices as $device)
+       {
+           $user=Auth::user();
+               if($device->user_id==$user->id)
+               {
+                   $role=$device->users->roles;
+                   $data[]=[
+                       'id'=>$device->id,
+                       'device_uid'=>$device->device_uid,
+                       'device_name'=>$device->device_name,
+                       'user_id'=>$device->user_id,
+                       'status'=>$device->status,
+                       'secret_key'=>$device->secret_key,
+                       'reason'=>$device->reason,
+                       'created_at'=>$device->created_at,
+                       'updated_at'=>$device->updated_at,
+                       'role'=>$role,
+                   ];
+               }
+           }
         return [
             'code' => 0,
-            'users'=>$users,
+            'data'=>$data,
+
         ];
     }
     public function data_approval(Request $req) {

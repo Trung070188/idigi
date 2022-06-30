@@ -12,14 +12,16 @@
                             <label v-if="title=='Create new school'">Create new school</label>
                             <label v-if="title=='Edit school'">School details</label>
                         </div>
-                         <button style="margin-left:640px" v-if="title=='Edit school'" class="btn btn-primary button-create " @click="remove(entry)">
-                        Teacher list <i class="fa fa-users"></i>
-                    </button>
-                        <button v-if="title=='Edit school'" class="btn btn-primary button-create " @click="remove(entry)">
-                        Delete User <i class="fas fa-trash"></i>
-                    </button>
-                    
+                        <div>
+                            <button style="margin: 0px 8px 25px;"  v-if="title=='Edit school'" class="btn btn-primary button-create " @click="remove(entry)">
+                                Teacher list <i class="fa fa-users"></i>
+                            </button>
+                            <button v-if="title=='Edit school'" class="btn btn-primary button-create " @click="remove(entry)">
+                                Delete User <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
                     </div>
+
                     <hr>
                     <div class="card-body d-flex flex-column" >
                         <div class="row">
@@ -119,6 +121,7 @@
     import ActionBar from "../includes/ActionBar";
     import QSelect from "../../components/QSelect";
     import Datepicker from "../../components/Datepicker";
+    import $router from "../../lib/SimpleRouter";
     export default {
         name: "SchoolsForm.vue",
         components: {ActionBar, QSelect, Datepicker},
@@ -163,7 +166,24 @@
                     }
 
                 }
-            }
+            },
+            async remove(entry) {
+                if (!confirm('Xóa bản ghi: ' + entry.id)) {
+                    return;
+                }
+
+                const res = await $post('/xadmin/schools/remove', {id: entry.id});
+
+                if (res.code) {
+                    toastr.error(res.message);
+                } else {
+                    toastr.success(res.message);
+                }
+                location.replace('/xadmin/schools/index');
+
+
+                $router.updateQuery({page: this.paginate.currentPage, _: Date.now()});
+            },
         }
     }
 </script>

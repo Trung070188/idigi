@@ -95,63 +95,55 @@
             <div class="col-lg-12">
                 <div class="card card-custom card-stretch gutter-b">
                     <div class="card-body d-flex flex-column" style="height: 563px" >
-                         <div class="card-header border-0 pt-5" style="margin: -24px -30px 12px;">
-                        <div class="title">
-                            <label>User Device</label>
+                        <div class="card-header border-0 pt-5" style="margin: -24px -30px 12px;">
+                            <div class="title">
+                                <label>User Device</label>
+                            </div>
+                            <div   class="row" >
+                                <button     v-if="entries.length<3 " type="button" class="col-lg-2 btn btn-primary modal-devices " @click="modalDevice()">
+                                    Add more device
+                                </button>
+                                <button  v-if="entries.length>=3" type="button" class="col-lg-2 btn btn-primary modal-devices " @click="closeModal()">
+                                    Add more device
+                                </button>
+                            </div>
                         </div>
-                            <div v-for="entry in entries"  class="row" v-if="entry.id==auth.id">
-                            <button     v-if="entry.user_devices.length<3 " type="button" class="col-lg-2 btn btn-primary modal-devices " @click="modalDevice()">
-                                Add more device
-                            </button>
-                            <button  v-if="entry.user_devices.length>=3" type="button" class="col-lg-2 btn btn-primary modal-devices " @click="closeModal()">
-                                Add more device
-                            </button>
-                        </div>
-                    </div>
-                    <hr>
-                        
-                        <!-- <div v-for="entry in entries"  class="row" v-if="entry.id==auth.id">
-                            <button     v-if="entry.user_devices.length<3 " type="button" class="col-lg-2 btn btn-primary modal-devices " @click="modalDevice()">
-                                Add more device
-                            </button>
-                            <button  v-if="entry.user_devices.length>=3" type="button" class="col-lg-2 btn btn-primary modal-devices " @click="closeModal()">
-                                Add more device
-                            </button>
-                        </div> -->
-                        <div>
-                            <div style="margin-top: 75px"  class="row" v-for="entry in entries" v-if="entry.id==auth.id">
-                                <div class="col-lg-12 body " v-for="device in entry.user_devices" >
+                        <hr>
+                        <div>Number of devices: {{entries.length}}/3</div>
+                        <div class="">
+                            <div style="margin-top: 75px"  class="row" v-for="entry in entries" >
+                                <div class="col-lg-12 body "  >
                                     <form  class="form-inline"  >
                                         <div  class="form-group mx-sm-3 mb-2">
-                                            <label>{{device.device_name}}</label>
+                                            <label>{{entry.device_name}}</label>
                                         </div>
                                     </form>
 
-                                    <div  class="form-group mx-sm-3 mb-2" style="position: absolute;right:65px;margin-top: -33px;" v-if="device.status==1">
+                                    <div  class="form-group mx-sm-3 mb-2" style="position: absolute;right:65px;margin-top: -33px;" v-if="entry.status==1">
 
                                         <button type="button"
-                                                class="btn btn-flex btn-dark  fw-bolder " v-for="role in entry.roles"  v-if="role.id!==5"  @click="remove(device)">Delete device
+                                                class="btn btn-flex btn-dark  fw-bolder " v-for="role in entry.role"  v-if="role.id!==5"  @click="remove(entry)">Delete device
                                         </button>
-                                        <span v-for="role in entry.roles" v-if="role.id==5"
+                                        <span v-for="role in entry.role" v-if="role.id==5"
                                               style="color: #f1c40f;margin-right: 5px" ><i class="fas fa-exclamation-circle" style="color: #f1c40f"></i> Delete request sent
                                        </span>
                                         <button  type="button"
-                                                 class="btn btn-flex btn-dark  fw-verify " style="margin-right: 5px" @click="editModalDevice(device.id,device.device_name,device.secret_key)" >
+                                                 class="btn btn-flex btn-dark  fw-verify " style="margin-right: 5px" @click="editModalDevice(entry.id,entry.device_name,entry.secret_key)" >
                                             Get activity code
                                         </button>
 
                                     </div>
-                                    <div  class="form-group mx-sm-3 mb-2" style="position: absolute;right:30px;margin-top: -33px;" v-if="device.status!==1">
+                                    <div  class="form-group mx-sm-3 mb-2" style="position: absolute;right:30px;margin-top: -33px;" v-if="entry.status!==1">
                                         <button  type="button"
-                                                 class="btn btn-flex btn-secondary  fw-verify " style="margin-right: 5px" @click="editModalDevice(device.id,device.device_name,device.secret_key)" >
+                                                 class="btn btn-flex btn-secondary  fw-verify " style="margin-right: 5px" @click="editModalDevice(entry.id,entry.device_name,entry.secret_key)" >
                                             Get activity code
                                         </button>
 
                                         <button type="button"
-                                                class="btn btn-flex btn-danger  fw-bolder " v-for="role in entry.roles"  v-if="role.id!==5"  @click="remove(device)">Delete device
+                                                class="btn btn-flex btn-danger  fw-bolder " v-for="role in entry.role"  v-if="role.id!==5"  @click="remove(entry)">Delete device
                                         </button>
-                                        <button v-for="role in entry.roles" v-if="role.id==5" type="button"
-                                                class="btn btn-flex btn-info  fw-bolder " @click="Sent(device)">Delete device
+                                        <button v-for="role in entry.role" v-if="role.id==5" type="button"
+                                                class="btn btn-flex btn-info  fw-bolder " @click="Sent(entry)">Delete device
                                         </button>
                                     </div>
                                 </div>
@@ -179,6 +171,7 @@
         components: {ActionBar},
         data() {
             return {
+              device:'',
                 curDevice:{},
                 isHidden:false,
                 token:'',
@@ -240,7 +233,8 @@
                 const res  = await $get('/xadmin/user_devices/data', query);
                 this.$loading(false);
                 this.paginate = res.paginate;
-                this.entries = res.users;
+                this.entries = res.data;
+                console.log(this.entries)
             },
             async remove(entry) {
                 if (!confirm('Xóa bản ghi: ' + entry.id)) {
@@ -361,17 +355,13 @@
     }
 
     .body{
-        padding: 20px;
-        /*max-width: 1612px;*/
-        box-sizing: border-box;
-        position: static;
+        padding: 23px;
         width: 100%;
-        left: 0px;
-        top: 0px;
+        left: 10px;
         background: #FFFFFF;
         border: 1px solid black;
         border-radius: 20px;
-        margin-top: 8px;
+        margin:-70px 0px 10px;
     }
     .modal-devices{
         position: absolute;

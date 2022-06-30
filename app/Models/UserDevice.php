@@ -20,6 +20,6 @@ class UserDevice extends BaseModel
     ];
     public function users()
     {
-        return $this->hasMany(User::class);
+        return $this->belongsTo(User::class,'user_id');
     }
 }
