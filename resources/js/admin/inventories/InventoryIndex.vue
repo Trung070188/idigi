@@ -1,13 +1,19 @@
 <template>
     <div class="container-fluid">
         <ActionBar type="index"
-
-                   createUrl="/xadmin/inventories/create"
-                   :breadcrumbs="breadcrumbs"
-                   title="Inventory"/>
+                   :breadcrumbs="breadcrumbs"/>
         <div class="row">
             <div class="col-lg-12">
                 <div class="card card-custom card-stretch gutter-b">
+                    <div class="card-header border-0 pt-5">
+                        <div class="title">
+                            <label>Inventory</label>
+                        </div>
+                           <a :href="'/xadmin/inventories/create'" class="btn btn-primary button-create " >
+                        Create new
+                    </a>
+                    </div>
+                    <hr>
                     <div class="card-header border-0 pt-5">
 
                         <div class="row width-full">

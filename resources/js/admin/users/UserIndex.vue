@@ -1,12 +1,19 @@
 <template>
     <div class="container-fluid">
         <ActionBar type="index"
-                   createUrl="/xadmin/users/create"
-                   :breadcrumbs="breadcrumbs"
-                   title="User"/>
+                   :breadcrumbs="breadcrumbs"/>
         <div class="row">
             <div class="col-lg-12">
                 <div class="card card-custom card-stretch gutter-b">
+                    <div class="card-header border-0 pt-5">
+                        <div class="title">
+                            <label>Manage users</label>
+                        </div>
+                           <a :href="'/xadmin/users/create'" class="btn btn-primary button-create " >
+                        Create new
+                    </a>
+                    </div>
+                    <hr>
                     <div class="card-header border-0 pt-5">
 
                         <div class="row width-full">
@@ -202,6 +209,9 @@
             return {
                 isShowFilter: isShowFilter,
                 breadcrumbs: [
+                    {
+                        title: 'Users & Roles'
+                    },
                     {
                         title: 'Users'
                     },

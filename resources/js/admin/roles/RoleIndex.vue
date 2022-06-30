@@ -1,15 +1,20 @@
 <template>
     <div class="container-fluid" >
         <ActionBar type="index"
-                   v-on:createWithFunction="showModalRole"
-                   :createFunction="1"
-                   title="RoleIndex"/>
+        :breadcrumbs="breadcrumbs"
+        />
         <div class="row">
             <div class="col-lg-12">
                 <div class="card card-custom card-stretch gutter-b">
-                    <div class="card-header border-0 pt-5">
+                     <div class="card-header border-0 pt-5">
+                        <div class="title">
+                            <label>Role</label>
+                        </div>
+                    <button class="btn btn-primary button-create " @click="showModalRole()"> Create new</button>
                     </div>
-                    <table class="table bg-white table-bordered">
+                    <hr>
+                    <div class="card-header border-0 pt-5">
+                        <table class="table bg-white table-bordered">
                         <tbody>
                         <tr>
                             <td></td>
@@ -36,6 +41,8 @@
                         </tr>
 
                     </table>
+                    </div>
+                    
 
 
                 </div>
@@ -95,7 +102,10 @@
             return {
                 breadcrumbs: [
                     {
-                        title: 'Roles'
+                        title: 'Users & Roles'
+                    },
+                    {
+                        title: 'Manage Role'
                     },
                 ],
                 roles: [],

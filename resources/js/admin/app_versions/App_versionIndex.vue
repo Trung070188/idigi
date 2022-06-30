@@ -1,14 +1,17 @@
 <template>
     <div class="container-fluid">
         <ActionBar type="index"
-                   :breadcrumbs="breadcrumbs"
-                   v-on:createWithFunction="showModalUpload"
-                   :createFunction="1"
-                   nameFunction="Upload App"
-                   title="Management Application Download"/>
+                   :breadcrumbs="breadcrumbs"/>
         <div class="row">
             <div class="col-lg-12">
                 <div class="card card-custom card-stretch gutter-b">
+                     <div class="card-header border-0 pt-5">
+                        <div class="title">
+                            <label>Management Application Download</label>
+                        </div>
+                    <button class="btn btn-primary button-create " @click="showModalUpload()">Upload App</button>
+                    </div>
+                    <hr>
 
                     <div id="accordion">
                         <div class="card">

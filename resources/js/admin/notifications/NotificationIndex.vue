@@ -1,11 +1,16 @@
 <template>
     <div class="container-fluid">
         <ActionBar type="index"
-                   :breadcrumbs="breadcrumbs"
-                   title="Notification"/>
+                   :breadcrumbs="breadcrumbs"/>
         <div class="row">
             <div class="col-lg-12">
                 <div class="card card-custom card-stretch gutter-b">
+                     <div class="card-header border-0 pt-5">
+                        <div class="title">
+                            <label>Notification</label>
+                        </div>
+                    </div>
+                    <hr>
                     <div class="card-header border-0 pt-5">
 
                         <div class="row width-full">

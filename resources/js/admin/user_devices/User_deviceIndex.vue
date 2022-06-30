@@ -1,8 +1,7 @@
 <template>
     <div class="container-fluid">
         <ActionBar type="index"
-                   :breadcrumbs="breadcrumbs"
-                   title="User Device"/>
+                   :breadcrumbs="breadcrumbs"/>
         <div class="modal fade" style="margin-right:50px " id="sentConfirm" tabindex="-1" role="dialog"
              aria-labelledby="sentConfirm"
              aria-hidden="true">
@@ -96,7 +95,11 @@
             <div class="col-lg-12">
                 <div class="card card-custom card-stretch gutter-b">
                     <div class="card-body d-flex flex-column" style="height: 563px" >
-                        <div v-for="entry in entries"  class="row" v-if="entry.id==auth.id">
+                         <div class="card-header border-0 pt-5" style="margin: -24px -30px 12px;">
+                        <div class="title">
+                            <label>User Device</label>
+                        </div>
+                            <div v-for="entry in entries"  class="row" v-if="entry.id==auth.id">
                             <button     v-if="entry.user_devices.length<3 " type="button" class="col-lg-2 btn btn-primary modal-devices " @click="modalDevice()">
                                 Add more device
                             </button>
@@ -104,6 +107,17 @@
                                 Add more device
                             </button>
                         </div>
+                    </div>
+                    <hr>
+                        
+                        <!-- <div v-for="entry in entries"  class="row" v-if="entry.id==auth.id">
+                            <button     v-if="entry.user_devices.length<3 " type="button" class="col-lg-2 btn btn-primary modal-devices " @click="modalDevice()">
+                                Add more device
+                            </button>
+                            <button  v-if="entry.user_devices.length>=3" type="button" class="col-lg-2 btn btn-primary modal-devices " @click="closeModal()">
+                                Add more device
+                            </button>
+                        </div> -->
                         <div>
                             <div style="margin-top: 75px"  class="row" v-for="entry in entries" v-if="entry.id==auth.id">
                                 <div class="col-lg-12 body " v-for="device in entry.user_devices" >
@@ -361,7 +375,7 @@
     }
     .modal-devices{
         position: absolute;
-        right: 20px;
+        right: 27px;
         max-width: 150px;
 
 

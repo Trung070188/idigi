@@ -1,13 +1,20 @@
 <template>
     <div class="container-fluid">
         <ActionBar type="index"
-                   :download="1"
-                   :breadcrumbs="breadcrumbs"
-                   v-on:download_lesson="openModal"
-                   title="Lesson"/>
+                   :breadcrumbs="breadcrumbs"/>
         <div class="row">
             <div class="col-lg-12">
                 <div class="card card-custom card-stretch gutter-b">
+                     <div class="card-header border-0 pt-5">
+                        <div class="title">
+                            <label>Lesson</label>
+                        </div>
+                           <!-- <a :href="'/xadmin/schools/create'" class="btn btn-primary button-create " >
+                        Create new
+                    </a> -->
+                    <button class="btn btn-primary button-create " @click="openModal()" > Download Lesson</button>
+                    </div>
+                    <hr>
                     <div class="card-header border-0 pt-5">
 
                         <div class="row width-full">
