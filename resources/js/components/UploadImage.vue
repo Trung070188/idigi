@@ -5,7 +5,7 @@
                 <li v-for="(file, index) in files">
                     <div v-if="file.is_image">
                         <a target="_blank" :href="file.url">
-                            <img  class="fm-img-preview" style="width:100%; height:100%; margin-left: 20px;" :src="file.url"/>
+                            <img  class="fm-img-preview":src="file.url"/>
                         </a>
                     </div>
 
@@ -201,6 +201,11 @@
 </script>
 
 <style scoped>
+    .fm-img-preview{
+        margin: 0px 25px 0px;
+        width:80%; height:80%;
+        border-radius: 50%;
+    }
     .fmi-preview {
         margin: 15px;
     }

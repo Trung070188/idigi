@@ -119,7 +119,7 @@
                                         </div>
                                     </form>
 
-                                    <div  class="form-group mx-sm-3 mb-2" style="position: absolute;right:65px;margin-top: -33px;" v-if="entry.status==1">
+                                    <div  class="form-group mx-sm-3 mb-2" style="position: absolute;right:24px;margin-top: -33px;" v-if="entry.status==1">
 
                                         <button type="button"
                                                 class="btn btn-flex btn-dark  fw-bolder " v-for="role in entry.role"  v-if="role.id!==5"  @click="remove(entry)">Delete device

@@ -58,8 +58,9 @@
                             <div class="row">
                                 <div class="col-md-3">
                                     <div class="user-info-left">
-                                        <div  class="profile-avatar-upload">
-                                            <div  class="profile-avatar-upload-c"
+                                        <div  class="profile-userpic">
+
+                                            <div  class="img-responsive"
                                                 >
                                                 <upload-image v-model="entry.file_image_new"  :hide-preview="true"></upload-image>
                                             </div>

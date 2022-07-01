@@ -37,11 +37,11 @@
                     <div class="d-flex align-items-center mb-10">
                         <!--begin::Symbol-->
                         <div class="symbol symbol-40  mr-5">
-                        <span v-if="image!==null" class="symbol" style="margin: 10px 0px 0px">
-                            <img :src="image" class="h-75 align-self-end" alt=""/>
+                        <span v-if="image!==null" class="symbol" style="margin: 10px 18px 0px">
+                            <img :src="image" class="h-75 align-self-end" style="border-radius: 50%" alt=""/>
                         </span>
-                            <span v-if="image==null" class="symbol symbol-lg-35 symbol-25 symbol-light-success">
-                                <span   class="symbol-label font-size-h5 font-weight-bold"><i class="fa fa-user"></i></span>
+                            <span v-if="image==null" class="symbol symbol-lg-35 symbol-25 symbol-light-success" style="margin: 10px 18px 0px">
+
                             </span>
                         </div>
                         <!--end::Symbol-->
@@ -200,4 +200,5 @@
 </script>
 
 <style scoped>
+
 </style>

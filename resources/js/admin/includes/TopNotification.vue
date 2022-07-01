@@ -2,10 +2,12 @@
     <div class="dropdown">
         <!--begin::Toggle-->
         <div class="topbar-item" data-toggle="dropdown" data-offset="10px,0px" style="margin-right: -12px;">
-            <div class="btn btn-icon btn-clean btn-dropdown btn-lg mr-1 pulse pulse-primary" style="margin-top: 10px">
+            <div class="btn btn-icon btn-dropdown btn-lg mr-1 pulse pulse-primary" style="margin-top: 10px;border-radius: 50%;">
 											<span class="svg-icon svg-icon-xl svg-icon-primary">
 												<!--begin::Svg Icon | path:assets/media/svg/icons/Code/Compiling.svg-->
-												<i class="fa fa-bell" style="width: 17px;line-height: 20px;"></i>
+                                                <div class="nva">
+                                                <i class="fa fa-bell" style="margin: 8px 0px 0px"></i>
+                                                </div>
                                                    <span v-for="notify in entries" class="notifiy_num"
                                                          v-if="notification>0 && notify.title=='Yêu cầu cấp quyền'">{{notification}}</span>
                                                 <span v-for="notify in entries" class="notifiy_num"
@@ -15,10 +17,10 @@
                                                 <!--end::Svg Icon-->
 											</span>
 
-                <span v-for="pulse_ring in entries" v-if="admin>0 && pulse_ring.title=='Yêu cầu xóa thiết bị'"
-                      class="pulse-ring"></span>
-                <span v-for="pulse_ring in entries" v-if="notification>0 && pulse_ring.title=='Yêu cầu cấp quyền'"
-                      class="pulse-ring"></span>
+<!--                <span v-for="pulse_ring in entries" v-if="admin>0 && pulse_ring.title=='Yêu cầu xóa thiết bị'"-->
+<!--                      class="pulse-ring"></span>-->
+<!--                <span v-for="pulse_ring in entries" v-if="notification>0 && pulse_ring.title=='Yêu cầu cấp quyền'"-->
+<!--                      class="pulse-ring"></span>-->
 
 
             </div>
@@ -171,14 +173,21 @@
     .notifiy_num {
         text-align: center;
         position: absolute;
-        top: 0px;
-        right: 7px;
+        margin: -21px -14px 10px;
         min-width: 15px;
         min-height: 17px;
         border-radius: 50%;
         background: red;
         color: #f1f1f1;
         font-family: Sans-Serif;
+    }
+    .nva{
+        position: absolute;
+        width: 40px;
+        height: 40px;
+        margin: -17px -35px 0px;
+        background: #EFF0F6;
+        border-radius: 50%;
     }
 
 
