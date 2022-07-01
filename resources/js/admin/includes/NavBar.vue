@@ -114,6 +114,6 @@
 
 <style scoped>
 .menu-sub-dropdown{
-    border: 1px solid #009ef7;
+    border: 1px solid #696CFF;
 }
 </style>

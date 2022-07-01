@@ -142,7 +142,7 @@ body {
 }
 
 .i-tab {
-    border: solid 1px #009ef7;
+    border: solid 1px #696CFF;
     padding: 0;
     border-radius: 5px;
     width: 100%;
@@ -160,7 +160,7 @@ body {
 }
 
 .i-tab-item.current {
-    background: #009ef7;
+    background: #696CFF;
 }
 
 .i-tab-item.current>h3 {

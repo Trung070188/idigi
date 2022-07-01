@@ -159,7 +159,7 @@
         text-align: center;
     }
     .q-tree-loading .fa {
-        color: #3699FF;
+        color: #696CFF;
     }
     .q-tree {
         overflow-y: auto;
