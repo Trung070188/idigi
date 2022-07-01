@@ -177,7 +177,7 @@ class UsersController extends AdminBaseController
     {
 
         $id = $req->id;
-        $entry = User::query()
+        $entry = User::query()->with(['roles'])
             ->where('id', $id)->first();
         if (!$entry) {
             throw new NotFoundHttpException();
@@ -187,9 +187,14 @@ class UsersController extends AdminBaseController
          * @var  User $entry
          */
         $roles = Role::query()->orderBy('id', 'ASC')->get();
+        foreach ($entry->roles as $role)
+        {
+            @$title_role=$role->role_name;
+        }
+
         if ($entry->roles) {
             foreach ($entry->roles as $role) {
-                $name_role = $role->role_name;
+                $name_role = $role->id;
             }
         }
         $title = 'Edit';
@@ -200,7 +205,8 @@ class UsersController extends AdminBaseController
                 $jsonData = [
                     'entry' => $entry,
                     'roles' => $roles,
-                    @'name_role' => @$name_role
+                    @'name_role' => @$name_role,
+                    @'title_role'=>@$title_role
 
                 ];
                 return view('admin.layouts.vue', compact('title', 'component', 'jsonData'));
@@ -208,6 +214,30 @@ class UsersController extends AdminBaseController
                 return redirect('/xadmin/lessons/index');
             }
         }
+    }
+    public function name_sideBar(Request $req)
+    {
+        $users=User::with(['roles'])->orderBy('username')->get();
+        $data=[];
+        foreach ($users as $user)
+        {
+            $userss=Auth::user();
+            if($user->id==$userss->id)
+            {
+                foreach($userss->roles as $roless)
+                {
+                    $role=$roless->role_name;
+                }
+                return[
+                    'username'=>$user->full_name,
+                    'role'=>$role,
+                    'image'=>$user->image,
+
+                ];
+
+            }
+        }
+//
     }
 
     public function edit_teacher(Request $req)
@@ -285,7 +315,7 @@ class UsersController extends AdminBaseController
         }
         $data = $req->get('entry');
         $rules = [
-            'old_password' => ['required', function ($value, $fail) {
+            'old_password' => ['required', function ($attribute,$value, $fail) {
                 if (!Hash::check($value, Auth::user()->password)) {
                     return $fail(__('The current password is incorrect.'));
                 }

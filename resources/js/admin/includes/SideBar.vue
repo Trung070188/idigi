@@ -32,10 +32,23 @@
                 <div
                     class="menu menu-column menu-title-gray-800 menu-state-title-primary menu-state-icon-primary menu-state-bullet-primary menu-arrow-gray-500"
                     id="#kt_aside_menu" data-kt-menu="true">
-                    <div class="menu-item">
-                        <div class="menu-content pt-8 pb-2">
-                            <span class="menu-section text-muted text-uppercase fs-8 ls-1">Menu</span>
+                    <div class="d-flex align-items-center mb-10">
+                        <!--begin::Symbol-->
+                        <div class="symbol symbol-40  mr-5">
+                        <span class="symbol" style="margin: 10px 0px 0px">
+                            <img :src="image" class="h-75 align-self-end" alt="" />
+                        </span>
+                    </div>
+                        <!--end::Symbol-->
+                        <!--begin::Text-->
+                        <div class="d-flex flex-column flex-grow-1 font-weight-bold">
+                            <span class="text-muted">{{entries}}</span>
+                            <span class="text-muted">{{role}}</span>
                         </div>
+                    </div>
+
+                    <div class="menu-item">
+
                     </div>
 
                     <template v-for="menu in menus" v-if="menu.show">
@@ -77,7 +90,8 @@
 </template>
 
 <script>
-import {clone} from "../../utils";
+    import {$get, clone} from "../../utils";
+    import $router from "../../lib/SimpleRouter";
 
 export default {
     name: "SideBar.vue",
@@ -131,8 +145,15 @@ export default {
         });
 
         return {
-            menus
+            menus,
+            entries:'',
+            role:'',
+            image:''
+
         }
+    },
+    mounted() {
+        this.load();
     },
 
     methods: {
@@ -142,7 +163,16 @@ export default {
             } else {
                 menu.showSubMenu = !menu.showSubMenu;
             }
-        }
+        },
+        async load() {
+            let query = $router.getQuery();
+            this.$loading(true);
+            const res = await $get('/xadmin/users/name_sideBar', query);
+            this.$loading(false);
+            this.entries = res.username;
+            this.role = res.role;
+            this.image=res.image;
+        },
     }
 }
 </script>

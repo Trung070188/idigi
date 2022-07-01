@@ -68,7 +68,7 @@
 
                                     <label>Role</label>
                                     <div  class="form-group col-sm-2" v-for="role in roles">
-                                        <input  type="radio"  v-model="rname_role" v-bind:value="role.id">
+                                        <input  type="radio"  v-model="name_role" v-bind:value="role.id">
                                         <label>{{role.role_name}}</label>
                                     </div>
                                 </div>

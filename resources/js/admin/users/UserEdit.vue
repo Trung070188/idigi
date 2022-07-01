@@ -9,7 +9,8 @@
                 <div class="card card-custom card-stretch gutter-b">
                      <div class="card-header border-0 pt-5">
                         <div class="title">
-                            <label>{{entry.full_name}} - {{name_role}}</label>
+                            <label>{{entry.full_name}} - {{title_role}}</label>
+
                         </div>
                            <button class="btn btn-primary button-create " @click="remove(entry)">
                         Delete User <i class="fas fa-trash"></i>
@@ -60,7 +61,7 @@
 
                                     <label>Role</label>
                                     <div  class="form-group col-sm-2" v-for="role in roles">
-                                        <input  type="radio"  v-model="name_role" :value="role.role_name">
+                                        <input  type="radio"  v-model="name_role" :value="role.id">
                                         <label>{{role.role_name}}</label>
                                     </div>
                                 </div>
@@ -136,6 +137,7 @@
                 },
                 roles: $json.roles || [],
                 role: $json.role || [],
+                title_role: $json.title_role || [],
                 isLoading: false,
                 errors: {}
             }
