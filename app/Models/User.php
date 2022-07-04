@@ -43,6 +43,7 @@ class User extends Authenticatable
         'password',
         'description',
         'state',
+        'sso_id',
     ];
 
     /**

@@ -3,12 +3,12 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
-use App\Providers\RouteServiceProvider;
-use App\User;
+use App\Models\User;
+use App\Support\CallApi;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
 use Illuminate\Validation\UnauthorizedException;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+
 
 class LoginController extends Controller
 {
@@ -30,12 +30,12 @@ class LoginController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = '/xadmin/lessons/index';
+    protected $redirectTo = '/xadmin/dashboard/index';
 
     /**
      * Attempt to log the user into the application.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
      * @return bool
      */
     protected function attemptLogin(Request $request)
@@ -75,7 +75,7 @@ class LoginController extends Controller
     /**
      * Handle a login request to the application.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Http\Response|\Illuminate\Http\JsonResponse
      *
      * @throws \Illuminate\Validation\ValidationException
@@ -86,6 +86,32 @@ class LoginController extends Controller
             throw new UnauthorizedException("Password sign in is not available");
         }
 
+        if($request->is_ismart){
+            $res = $this->loginSSO($request);
+
+            if($res['status_code'] == 200){
+               $body = json_decode($res['body'], true);
+                $userInfo = $this->getInfoSSO($body['access_token']);
+                $userData = [
+                    'username' => $userInfo['name'],
+                    'password' => '123456',
+                    'full_name' => $userInfo['ismartuser']['fullname'],
+                    'email' => $userInfo['ismartuser']['email'],
+                    'sso_id' => $userInfo['sub'],
+                    'state' => 1,
+                ];
+
+                $user = User::updateOrCreate([
+                    'sso_id' =>$userInfo['sub']
+                ], $userData);
+
+                \Auth::loginUsingId($user->id);
+
+            }else{
+
+                return $this->sendFailedLoginResponse($request);
+            }
+        }
         $this->validateLogin($request);
 
         // If the class is using the ThrottlesLogins trait, we can automatically throttle
@@ -108,6 +134,33 @@ class LoginController extends Controller
         $this->incrementLoginAttempts($request);
 
         return $this->sendFailedLoginResponse($request);
+    }
+
+    public function loginSSO(Request $request)
+    {
+        $data = [
+            'client_id' => env('CLIENT_ID'),
+            'grant_type' => 'password',
+            'username' => $request->login,
+            'password' => $request->password,
+        ];
+
+        $uri = env('SSO_URL') . "/connect/token";
+
+        $res = CallApi::sendRequest('POST', $uri, $data);
+
+        return $res;
+    }
+
+    public function getInfoSSO($accessToken){
+        $uri = env('SSO_URL')."/connect/userinfo";
+        $data = ['access_token' => $accessToken];
+
+        $res = CallApi::sendRequest('POST',$uri,  $data);
+        $body = json_decode($res['body'], true);
+
+        return $body;
+
     }
 
     /**
