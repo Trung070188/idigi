@@ -3,8 +3,10 @@
 namespace App\Http\Controllers\Admin;
 
 
+use App\Models\User;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use App\Models\AppVersion;
@@ -193,6 +195,19 @@ class AppVersionsController extends AdminBaseController
     public function data(Request $req)
     {
         $query = AppVersion::query()->orderBy('id', 'desc');
+        $users=User::with(['roles'])->orderBy('username')->get();
+        foreach ($users as $user)
+        {
+            $userss=Auth::user();
+            if($user->id==$userss->id)
+            {
+                foreach($userss->roles as $roless)
+                {
+                    $role=$roless->role_name;
+                }
+
+            }
+        }
 
         if ($req->keyword) {
             //$query->where('title', 'LIKE', '%' . $req->keyword. '%');
@@ -206,6 +221,7 @@ class AppVersionsController extends AdminBaseController
         return [
             'code' => 0,
             'data' => $entries->items(),
+            'role'=>$role,
             'paginate' => [
                 'currentPage' => $entries->currentPage(),
                 'lastPage' => $entries->lastPage(),

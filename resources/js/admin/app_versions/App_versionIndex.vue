@@ -4,16 +4,17 @@
                    :breadcrumbs="breadcrumbs"/>
         <div class="row">
             <div class="col-lg-12">
-                <div class="card card-custom card-stretch gutter-b">
+                <div v-if="role=='Super Administrator'" class="card card-custom card-stretch gutter-b">
                      <div class="card-header border-0 pt-5">
                         <div class="title">
+
                             <label>Management Application Download</label>
                         </div>
-                    <button class="btn btn-primary button-create " @click="showModalUpload()">Upload App</button>
+                    <button  class="btn btn-primary button-create " @click="showModalUpload()">Upload App</button>
                     </div>
                     <hr>
 
-                    <div id="accordion">
+                    <div  id="accordion" >
                         <div class="card">
                             <div class="card-header" id="headingOne">
                                 <h5 class="mb-0">
@@ -101,10 +102,44 @@
 
                     </div>
                 </div>
+                <div class="card card-custom card-stretch gutter-b">
+                    <div v-if="role=='Teacher'" class="card-body d-flex flex-column" style="height: 563px" >
+                        <div class="row" style="margin-top: 65px; margin-bottom: 50px">
+                            <h2  style="text-align: center;font-size: 30px">Tải iDIGI PC cho máy tính</h2>
+                            <h5 style="text-align: center;font-size:20px">Ứng dụng đã có mặt trên Windows và MacOS.</h5>
+                            <br>
+                            <br>
+
+                           <div  style="margin-left: 32%;font-size: 14px;">
+                               <label >.Cài đặt bài giảng số iDIGI thuận lợi và giảng dạy nhanh chóng.
+                               </label>
+                               <br>
+                               <label >.Sử dụng trực tuyến (online) và ngoại tuyến (offline) mà không gặp gián đoạn.</label>
+                               <br>
+                               <label>.Bảo mật bài giảng riêng cho thiết bị được đăng ký trước.</label>
+                           </div>
+                        </div>
+                        <div class="d-flex" style="margin: 0 auto">
+                            <div class="form-check form-check-inline">
+                               <button class="btn btn-primary">Download for Windows
+                               <i class="fas fa-th-large"></i>
+                               </button>
+                                <br>
+                                <label style="margin: 12px 34px 0px;">Windows_v2.1.4</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <button class="btn btn-primary">Download for MacOS
+                                    <i class=" fas fa-apple-alt"></i></button>
+                                <br>
+                                <label style="margin: 12px 34px 0px;">MacOS_v2.0.64</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
 
         </div>
-        <div class="modal" id="uploadApp" tabindex="-1">
+        <div  class="modal" id="uploadApp" tabindex="-1">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -219,6 +254,7 @@ export default {
             model: {
                 type:''
             },
+            role:'',
             errors: {},
             entries: [],
             totalVersionIos: 0,
@@ -312,6 +348,7 @@ export default {
             const res = await $get('/xadmin/app_versions/data', query);
             this.paginate = res.paginate;
             this.entries = res.data;
+            this.role=res.role;
             this.totalVersionIos = this.entries.filter(e => e.type == 'ios').length;
             this.totalVersionWindow = this.entries.filter(e => e.type == 'window').length;
             this.from = (this.paginate.currentPage - 1) * (this.limit) + 1;
