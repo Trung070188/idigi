@@ -1,11 +1,11 @@
 <template>
     <div ref="root">
-        <div class="fmi-preview" style="margin: 0px">
+        <div class="fmi-preview" >
             <ul class="fmi-preview-ul">
                 <li v-for="(file, index) in files">
                     <div v-if="file.is_image">
                         <a target="_blank" :href="file.url">
-                            <img  class="fm-img-preview":src="file.url"/>
+                            <img  class="fm-img-preview" :src="file.url"/>
                         </a>
                     </div>
 
@@ -202,12 +202,12 @@
 
 <style scoped>
     .fm-img-preview{
-        width:100%;
-        height:100%;
+        width:150px;
+        height:150px;
         border-radius: 50%;
     }
     .fmi-preview {
-        margin: 0px -20px 0px;
+        margin: 0px -56px 0px;
     }
 
     .fmi-dropdown {

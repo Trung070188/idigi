@@ -6,7 +6,7 @@
 											<span class="svg-icon svg-icon-xl svg-icon-primary">
 												<!--begin::Svg Icon | path:assets/media/svg/icons/Code/Compiling.svg-->
                                                 <div class="nva">
-                                                <i class="fa fa-bell" style="margin: 8px 0px 0px"></i>
+                                                <i class="fa fa-bell" style="margin: 11px 0px 0px"></i>
                                                 </div>
                                                    <span v-for="notify in entries" class="notifiy_num"
                                                          v-if="notification>0 && notify.title=='Yêu cầu cấp quyền'">{{notification}}</span>
@@ -173,7 +173,7 @@
     .notifiy_num {
         text-align: center;
         position: absolute;
-        margin: -21px -14px 10px;
+        margin: -20px -15px 10px;
         min-width: 15px;
         min-height: 17px;
         border-radius: 50%;
@@ -185,7 +185,7 @@
         position: absolute;
         width: 40px;
         height: 40px;
-        margin: -17px -35px 0px;
+        margin: -19px -35px 0px;
         background: #EFF0F6;
         border-radius: 50%;
     }

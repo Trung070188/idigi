@@ -80,15 +80,15 @@
 
                         <div data-kt-menu-trigger="click" data-kt-menu-attach="parent"
                              data-kt-menu-placement="bottom-end">
-                            <span class="" v-if="auth.image!==null">
+                            <span class="symbol symbol-25" v-if="auth.image!==null" >
                                 <span class="symbol-label font-size-h5 font-weight-bold"><img
                                     style="max-width: 40px ;border-radius:50%;" :src="auth.image">
                                 </span>
                             </span>
 
-                            <span v-if="auth.image==null" class="symbol symbol-lg-35 symbol-25 symbol-light-success">
-                                <span class="nva">
-                                    <i style="margin: 10px 14px 10px;" class="fa fa-user"></i>
+                            <span v-if="auth.image==null" class="symbol symbol-25 ">
+                                <span class="symbol-label font-size-h5 font-weight-bold">
+                                    <i style="max-width: 40px ;border-radius:50%;" class="fa fa-user"></i>
                                 </span>
                             </span>
                         </div>
