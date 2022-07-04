@@ -219,6 +219,12 @@ class AppVersionsController extends AdminBaseController
         }
 
         $entry = AppVersion::find($req->id);
+
+        if($req->is_default == 1){
+            AppVersion::where('is_default', 1)
+                ->where('type', $entry->type)
+                ->update(['is_default' => 0]);
+        }
         if (!$entry) {
             return [
                 'code' => 3,
