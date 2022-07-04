@@ -3,9 +3,8 @@
         <ActionBar type="form" @save="save()"
                    :code="entry.id"
                    back-url="dashboard/index"
-                   :breadcrumbs = "breadcrumbs"
-                   title="ProfileForm"/>
-        <div class="container bootstrap snippets bootdey">
+                   :breadcrumbs = "breadcrumbs"/>
+        <div class="  ">
 
             <!-- Modal -->
             <div class="modal fade" id="deviceConfirm" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
@@ -50,7 +49,19 @@
 
 
             <div class="row">
-                <div class="main-content">
+                <div class="col-lg-12">
+                <div class="card card-custom card-stretch gutter-b">
+                    <div class="card-header border-0 pt-5">
+                        <div class="title">
+                            <label>User profile</label>
+                        </div>
+
+                    </div>
+                    <hr>
+                    <div class="card-header border-0 pt-5">
+
+                        <div class="row width-full">
+                            <div class="col-lg-12">
 
                     <div class="tab-content profile-page">
                         <!-- PROFILE TAB CONTENT -->
@@ -58,12 +69,11 @@
                             <div class="row">
                                 <div class="col-md-3">
                                     <div class="user-info-left">
-                                        <div  class="profile-userpic">
+                                        <div  class="">
 
-                                            <div  class="img-responsive"
-                                                >
+
                                                 <upload-image v-model="entry.file_image_new"  :hide-preview="true"></upload-image>
-                                            </div>
+
                                         </div>
                                         <div class="contact" style="margin-top: 20px">
                                             <a href="#" class="btn-block" @click="modalDevice()">Change password</a>
@@ -107,6 +117,10 @@
                         </div>
 
                     </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 </div>
             </div>
         </div>

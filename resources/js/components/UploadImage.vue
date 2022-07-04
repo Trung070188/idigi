@@ -27,7 +27,7 @@
         <div class="fmi-dropdown" ref="dropdown">
             <input @change="fileChanged()" type="file" ref="uploader" style="display: none;width: 1px;height: 1px;"/>
             <button  ref="button" @click="toggleTooltip()" class="btn btn-primary btn-sm" type="button" >
-                Chọn ảnh
+                Change avatar
                 <i class="fas fa-camera"></i>
             </button>
             <div>
@@ -202,12 +202,12 @@
 
 <style scoped>
     .fm-img-preview{
-        margin: 0px 25px 0px;
-        width:80%; height:80%;
+        width:100%;
+        height:100%;
         border-radius: 50%;
     }
     .fmi-preview {
-        margin: 15px;
+        margin: 0px -20px 0px;
     }
 
     .fmi-dropdown {
@@ -252,10 +252,10 @@
     }
 
     .fmi-preview-ul {
-        padding-left: 0;
-        margin-left: 0;
+        padding-left: initial;
         list-style: none;
         display: flex;
+        margin: 0px 106px 10px;
     }
 
     .fmi-preview-ul li {
