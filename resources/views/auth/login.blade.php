@@ -40,11 +40,27 @@
                     </div>
                     <div class="form-group d-flex justify-content-between">
                         <div class="custom-control custom-checkbox">
-                            <input type="checkbox" class="custom-control-input" checked="" id="customCheck1">
+                            <input type="checkbox" class="custom-control-input" @if(old('remember')) checked @endif name="remember"  id="customCheck1">
                             <label class="custom-control-label" for="customCheck1">Remember me</label>
                         </div>
                     </div>
+                    <div class="form-group d-flex justify-content-between">
+                        <div class="custom-control custom-checkbox">
+                            <input type="checkbox" name="is_ismart" @if(old('is_ismart')) checked @endif class="custom-control-input" id="customCheck2">
+                            <label class="custom-control-label" for="customCheck2">Login with iSMART account</label>
+                        </div>
+                    </div>
                     @error('login')
+                    <div class="alert alert-danger" role="alert">
+                        <strong>{{ $message }}</strong>
+                    </div>
+                    @enderror
+                    @error('username')
+                    <div class="alert alert-danger" role="alert">
+                        <strong>{{ $message }}</strong>
+                    </div>
+                    @enderror
+                    @error('email')
                     <div class="alert alert-danger" role="alert">
                         <strong>{{ $message }}</strong>
                     </div>
