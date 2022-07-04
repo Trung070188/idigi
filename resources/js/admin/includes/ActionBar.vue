@@ -8,7 +8,7 @@
 
                 <ul class="breadcrumb breadcrumb-separatorless fw-bold fs-7 my-1">
                     <li class="breadcrumb-item text-muted">
-                        <a href="/xadmin" class="text-muted text-hover-primary">Home</a>
+                        <a href="/xadmin/lessons/index" class="text-muted text-hover-primary">Home</a>
                     </li>
 
                     <template v-if="breadcrumbs" v-for="breadcrumb in breadcrumbs">
