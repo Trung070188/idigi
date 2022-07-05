@@ -141,9 +141,6 @@
         <script src="/assets/plugins/ion-rangeslider/js/ion.rangeSlider.js"></script>
         <script src="/assets/js/jquery-ui.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
-<!--        <script type="text/javascript" src="{{ asset('packages/barryvdh/elfinder/js/elfinder.min.js') }}"></script>
-        <link rel="stylesheet" type="text/css" href="{{ asset('packages/barryvdh/elfinder/css/elfinder.min.css') }}">
-        <link rel="stylesheet" type="text/css" href="{{ asset('packages/barryvdh/elfinder/css/theme.css') }}">-->
 
         <script src="/assets/js/app.js"></script>
 

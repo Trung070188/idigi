@@ -6,12 +6,43 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>idigi</title>
     <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css"
-          integrity="sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l" crossorigin="anonymous">
-
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&amp;display=swap" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" ></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/line-awesome/1.3.0/line-awesome/css/line-awesome.min.css" rel="stylesheet" type="text/css" />
     <style>
         #loginForm .form-control {
             width: 100%;
+        }
+
+        #overlay {
+            position: fixed; /* Sit on top of the page content */
+            display: none;
+            width: 100%; /* Full width (cover the whole page) */
+            height: 100%; /* Full height (cover the whole page) */
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0,0,0,0.5); /* Black background with opacity */
+            z-index: 200000; /* Specify a stack order in case you're using a different order for other elements */
+            cursor: pointer; /* Add a pointer on hover */
+        }
+        #overlay  .text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            font-size: 50px;
+            color: white;
+            user-select: none;
+            transform: translate(-50%,-50%);
+            -ms-transform: translate(-50%,-50%);
+        }
+        .la-spin{
+            font-size:8rem!important;
+        }
+        .btn-action{
+            margin-right: 10px;
         }
 
     </style>
@@ -121,6 +152,11 @@
 
         </div>
     </div>
+    <div id="overlay">
+        <div class="la-3x text">
+            <i class="la la-spinner la-spin"></i>
+        </div>
+    </div>
 </div>
 <script src="https://apis.google.com/js/api:client.js"></script>
 <script>
@@ -140,9 +176,10 @@
     };
 
     function attachSignin(element) {
-        console.log(element.id);
+
         auth2.attachClickHandler(element, {},
             function (googleUser) {
+                $('#overlay').show();
                 var profile = googleUser.getBasicProfile();
 
                 var params = {
@@ -161,15 +198,17 @@
                     body: JSON.stringify(params),
                 }).then((response) => response.json())
                     .then((data) => {
+
                         if (data.code === 200) {
                             location.replace(data.redirect);
                         } else {
+                            $('#overlay').hide();
                             alert(data.message);
                         }
                     })
 
             }, function (error) {
-                alert(JSON.stringify(error, undefined, 2));
+                $('#overlay').hide();
             });
     }
 </script>
