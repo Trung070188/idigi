@@ -118,20 +118,33 @@
                                 <label>Bảo mật bài giảng riêng cho thiết bị được đăng ký trước.</label>
                             </div>
                         </div>
-                        <div class="d-flex" style="margin: 0 auto">
-                            <div class="form-check form-check-inline">
-                                <button class="btn btn-primary">Download for Windows
-                                    <i class="fas fa-th-large"></i>
-                                </button>
-                                <br>
-                                <label style="margin: 12px 34px 0px;">Windows_v2.1.4</label>
+                        <div class="col-lg-12" style="text-align: center;padding: 0 114px;" >
+                            <div class="row">
+                                <div class="col-lg-1"></div>
+                                <div class="col-lg-1"></div>
+                                <div class="col-lg-2"></div>
+                                <div class=" col-lg-2" v-for="entry in entries" v-if="entry.type=='window'&& entry.is_default==1" style="">
+
+                                    <a :href="entry.url">
+                                        <button class="btn btn-primary">Download for Windows
+                                            <i class="fas fa-th-large"></i>
+                                        </button>
+                                    </a>
+                                    <br>
+                                    <label style="margin: 12px 34px 0px;">{{entry.name}}</label>
+                                </div>
+                                <div class=" col-2" v-for="entry in entries" v-if="entry.type=='ios'&& entry.is_default==1" style="">
+
+                                    <a :href="entry.url">
+                                        <button class="btn btn-primary">Download for MacOS
+                                            <i class=" fas fa-apple-alt"></i>
+                                        </button>
+                                    </a>
+                                    <br>
+                                    <label style="margin: 12px 34px 0px;">{{entry.name}}</label>
+                                </div>
                             </div>
-                            <div class="form-check form-check-inline">
-                                <button class="btn btn-primary">Download for MacOS
-                                    <i class=" fas fa-apple-alt"></i></button>
-                                <br>
-                                <label style="margin: 12px 34px 0px;">MacOS_v2.0.64</label>
-                            </div>
+
                         </div>
                     </div>
                 </div>
