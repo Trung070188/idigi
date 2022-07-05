@@ -108,8 +108,6 @@ class LessonsController extends AdminBaseController
     {
         $ids = $req->ids;
         Lesson::whereIn('id', $ids)->delete();
-
-
         return [
             'code' => 0,
             'message' => 'Đã xóa'

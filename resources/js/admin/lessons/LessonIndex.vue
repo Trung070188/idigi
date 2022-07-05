@@ -5,14 +5,14 @@
         <div class="row">
             <div class="col-lg-12">
                 <div class="card card-custom card-stretch gutter-b">
-                     <div class="card-header border-0 pt-5">
+                    <div class="card-header border-0 pt-5">
                         <div class="title">
                             <label>Lesson</label>
                         </div>
-                           <!-- <a :href="'/xadmin/schools/create'" class="btn btn-primary button-create " >
-                        Create new
-                    </a> -->
-                    <button class="btn btn-primary button-create " @click="openModal()" > Download Lesson</button>
+                        <!-- <a :href="'/xadmin/schools/create'" class="btn btn-primary button-create " >
+                     Create new
+                 </a> -->
+                        <button class="btn btn-primary button-create " @click="openModal()"> Download Lesson</button>
                     </div>
                     <hr>
                     <div class="card-header border-0 pt-5">
@@ -109,8 +109,9 @@
                             <div v-text="'Showing '+ from +' to '+ to +' of '+ paginate.totalRecord +' entries'"
                                  v-if="entries.length > 0"></div>
                             <div style="margin-left: 20px" v-if="lessonIds.length > 0"> {{ lessonIds.length }} lesson
-                                selected <a href="javascript:;" @click="removeAll"
-                                            style="color: red; margin-left: 10px">clear all</a></div>
+                                selected
+                                <a href="javascript:;" @click="removeAll" style="color: red; margin-left: 10px">clear all</a>
+                            </div>
                         </div>
                         <table class=" table  table-head-custom table-head-bg table-vertical-center">
                             <thead>
@@ -188,7 +189,8 @@
                     <div class="modal-body">
                         <p>Bạn đang lựa chọn để tải về các bài học:</p>
                         <ul>
-                            <li v-for="lesson in lessons"><strong  style="word-break: break-word;">{{ lesson.name }}</strong></li>
+                            <li v-for="lesson in lessons"><strong style="word-break: break-word;">{{ lesson.name
+                                }}</strong></li>
 
                         </ul>
                         <p>Hãy chọn thiết bị để tải về các bài học này:</p>
@@ -211,223 +213,223 @@
 </template>
 
 <script>
-import {$get, $post, getTimeRangeAll} from "../../utils";
-import $router from '../../lib/SimpleRouter';
-import ActionBar from "../includes/ActionBar";
+    import {$get, $post, getTimeRangeAll} from "../../utils";
+    import $router from '../../lib/SimpleRouter';
+    import ActionBar from "../includes/ActionBar";
 
-let created = getTimeRangeAll();
-const $q = $router.getQuery();
+    let created = getTimeRangeAll();
+    const $q = $router.getQuery();
 
-export default {
-    name: "LessonsIndex.vue",
-    components: {ActionBar},
-    data() {
+    export default {
+        name: "LessonsIndex.vue",
+        components: {ActionBar},
+        data() {
 
-        let isShowFilter = false;
-        let filter = {
-            keyword: $q.keyword || '',
-            created: $q.created || '',
-            subject: $q.subject || '',
-            grade: $q.grade || '',
-            enabled: $q.enabled || ''
-        };
-        for (var key in filter) {
-            if (filter[key] != '') {
-                isShowFilter = true;
+            let isShowFilter = false;
+            let filter = {
+                keyword: $q.keyword || '',
+                created: $q.created || '',
+                subject: $q.subject || '',
+                grade: $q.grade || '',
+                enabled: $q.enabled || ''
+            };
+            for (var key in filter) {
+                if (filter[key] != '') {
+                    isShowFilter = true;
+                }
             }
-        }
-        return {
-            device: '',
-            devices: [],
-            lessonIds: [],
-            lessons: [],
-            allSelected: false,
-            breadcrumbs: [
-                {
-                    title: 'Lessons'
+            return {
+                device: '',
+                devices: [],
+                lessonIds: [],
+                lessons: [],
+                allSelected: false,
+                breadcrumbs: [
+                    {
+                        title: 'Lessons'
+                    },
+                ],
+                entries: [],
+                filter: filter,
+                isShowFilter: isShowFilter,
+                limit: $q.limit || 25,
+                from: 0,
+                to: 0,
+                paginate: {
+                    currentPage: 1,
+                    lastPage: 1,
+                    totalRecord: 0
                 },
-            ],
-            entries: [],
-            filter: filter,
-            isShowFilter: isShowFilter,
-            limit: $q.limit || 25,
-            from: 0,
-            to: 0,
-            paginate: {
-                currentPage: 1,
-                lastPage: 1,
-                totalRecord: 0
-            },
-            isConfirm: 0,
-        }
-    },
-    mounted() {
-        $router.on('/', this.load).init();
-        let self = this;
-        $.get('/xadmin/user_devices/getDeviceByUser', function (res) {
-            self.devices = res;
-        });
-    },
-    methods: {
-        openModalEntry(entry) {
-            this.isConfirm = 1;
-            this.lessons = [entry];
-            this.lessonIds = [entry.id];
-            $('#download-lesson').modal('show');
-        },
-
-        async downloadLesson() {
-            this.isConfirm = 0;
-            $('#overlay').show();
-            const res = await $post('/xadmin/lessons/downloadLesson', {
-                csrf: window.$csrf,
-                lessonIds: this.lessonIds,
-                device: this.device
-            });
-
-            window.location.href = res.url;
-            $('#overlay').hide();
-            $('#download-lesson').modal('hide');
-
-        },
-
-        openModal: function () {
-            this.isConfirm = 1;
-            if (this.lessons.length > 3) {
-                alert('Bạn chỉ được chọn tối đa 3 lesson');
-                return false;
+                isConfirm: 0,
             }
-            $('#download-lesson').modal('show');
         },
-        selectAll() {
-            if (this.allSelected) {
-                const selected = this.entries.map((u) => u.id);
-                this.lessonIds = selected;
-                this.lessons = this.entries
-            } else {
-                this.lessonIds = [];
-                this.lessons = [];
-            }
-
-        },
-        updateCheckAll() {
-            this.lessons = [];
-            if (this.lessonIds.length === this.entries.length) {
-                this.allSelected = true;
-            } else {
-                this.allSelected = false;
-            }
+        mounted() {
+            $router.on('/', this.load).init();
             let self = this;
-            self.lessonIds.forEach(function (e) {
-                self.entries.forEach(function (e1) {
-                    if (e1.id == e) {
-                        self.lessons.push(e1);
-                    }
-                })
-            })
-        },
-        edit: function (id, event) {
-            if (!$(event.target).hasClass('deleted')) {
-                window.location.href = '/xadmin/lessons/edit?id=' + id;
-            }
-
-        },
-        async load() {
-            let query = $router.getQuery();
-            this.$loading(true);
-            const res = await $get('/xadmin/lessons/data', query);
-            this.$loading(false);
-            this.paginate = res.paginate;
-            this.entries = res.data;
-            this.from = (this.paginate.currentPage - 1) * (this.limit) + 1;
-            this.to = (this.paginate.currentPage - 1) * (this.limit) + this.entries.length;
-        },
-        async remove(entry) {
-            if (!confirm('Xóa bản ghi: ' + entry.id)) {
-                return;
-            }
-
-            const res = await $post('/xadmin/lessons/remove', {id: entry.id});
-
-            if (res.code) {
-                toastr.error(res.message);
-            } else {
-                toastr.success(res.message);
-            }
-
-            $router.updateQuery({page: this.paginate.currentPage, _: Date.now()});
-        },
-
-        async removeAll() {
-            if (!confirm('Xóa bản ghi: ' + JSON.stringify(this.lessonIds))) {
-                return;
-            }
-
-            const res = await $post('/xadmin/lessons/removeAll', {ids: this.lessonIds});
-
-            if (res.code) {
-                toastr.error(res.message);
-            } else {
-                toastr.success(res.message);
-            }
-
-            $router.updateQuery({page: this.paginate.currentPage, _: Date.now()});
-        },
-
-        filterClear() {
-            for (var key in this.filter) {
-                this.filter[key] = '';
-            }
-
-            $router.setQuery({});
-        },
-        doFilter(event) {
-            if (event) {
-                event.preventDefault();
-            }
-            $router.setQuery(this.filter)
-        },
-        changeLimit() {
-            let params = $router.getQuery();
-            params['page'] = 1;
-            params['limit'] = this.limit;
-            $router.setQuery(params)
-        },
-
-        async toggleStatus(entry) {
-            const res = await $post('/xadmin/lessons/toggleStatus', {
-                id: entry.id,
-                status: entry.status
+            $.get('/xadmin/user_devices/getDeviceByUser', function (res) {
+                self.devices = res;
             });
-
-            if (res.code === 200) {
-                toastr.success(res.message);
-            } else {
-                toastr.error(res.message);
-            }
-
         },
-        onPageChange(page) {
-            $router.updateQuery({page: page})
+        methods: {
+            openModalEntry(entry) {
+                this.isConfirm = 1;
+                this.lessons = [entry];
+                this.lessonIds = [entry.id];
+                $('#download-lesson').modal('show');
+            },
+
+            async downloadLesson() {
+                this.isConfirm = 0;
+                $('#overlay').show();
+                const res = await $post('/xadmin/lessons/downloadLesson', {
+                    csrf: window.$csrf,
+                    lessonIds: this.lessonIds,
+                    device: this.device
+                });
+
+                window.location.href = res.url;
+                $('#overlay').hide();
+                $('#download-lesson').modal('hide');
+
+            },
+
+            openModal: function () {
+                this.isConfirm = 1;
+                if (this.lessons.length > 3) {
+                    alert('Bạn chỉ được chọn tối đa 3 lesson');
+                    return false;
+                }
+                $('#download-lesson').modal('show');
+            },
+            selectAll() {
+                if (this.allSelected) {
+                    const selected = this.entries.map((u) => u.id);
+                    this.lessonIds = selected;
+                    this.lessons = this.entries
+                } else {
+                    this.lessonIds = [];
+                    this.lessons = [];
+                }
+
+            },
+            updateCheckAll() {
+                this.lessons = [];
+                if (this.lessonIds.length === this.entries.length) {
+                    this.allSelected = true;
+                } else {
+                    this.allSelected = false;
+                }
+                let self = this;
+                self.lessonIds.forEach(function (e) {
+                    self.entries.forEach(function (e1) {
+                        if (e1.id == e) {
+                            self.lessons.push(e1);
+                        }
+                    })
+                })
+            },
+            edit: function (id, event) {
+                if (!$(event.target).hasClass('deleted')) {
+                    window.location.href = '/xadmin/lessons/edit?id=' + id;
+                }
+
+            },
+            async load() {
+                let query = $router.getQuery();
+                this.$loading(true);
+                const res = await $get('/xadmin/lessons/data', query);
+                this.$loading(false);
+                this.paginate = res.paginate;
+                this.entries = res.data;
+                this.from = (this.paginate.currentPage - 1) * (this.limit) + 1;
+                this.to = (this.paginate.currentPage - 1) * (this.limit) + this.entries.length;
+            },
+            async remove(entry) {
+                if (!confirm('Xóa bản ghi: ' + entry.id)) {
+                    return;
+                }
+
+                const res = await $post('/xadmin/lessons/remove', {id: entry.id});
+
+                if (res.code) {
+                    toastr.error(res.message);
+                } else {
+                    toastr.success(res.message);
+                }
+
+                $router.updateQuery({page: this.paginate.currentPage, _: Date.now()});
+            },
+
+            async removeAll() {
+                if (!confirm('Xóa bản ghi: ' + JSON.stringify(this.lessonIds))) {
+                    return;
+                }
+
+                const res = await $post('/xadmin/lessons/removeAll', {ids: this.lessonIds});
+
+                if (res.code) {
+                    toastr.error(res.message);
+                } else {
+                    toastr.success(res.message);
+                }
+
+                $router.updateQuery({page: this.paginate.currentPage, _: Date.now()});
+            },
+
+            filterClear() {
+                for (var key in this.filter) {
+                    this.filter[key] = '';
+                }
+
+                $router.setQuery({});
+            },
+            doFilter(event) {
+                if (event) {
+                    event.preventDefault();
+                }
+                $router.setQuery(this.filter)
+            },
+            changeLimit() {
+                let params = $router.getQuery();
+                params['page'] = 1;
+                params['limit'] = this.limit;
+                $router.setQuery(params)
+            },
+
+            async toggleStatus(entry) {
+                const res = await $post('/xadmin/lessons/toggleStatus', {
+                    id: entry.id,
+                    status: entry.status
+                });
+
+                if (res.code === 200) {
+                    toastr.success(res.message);
+                } else {
+                    toastr.error(res.message);
+                }
+
+            },
+            onPageChange(page) {
+                $router.updateQuery({page: page})
+            }
         }
     }
-}
 </script>
 
 <style scoped>
-ul.device {
-    list-style-type: none;
-}
+    ul.device {
+        list-style-type: none;
+    }
 
-select:required:invalid {
-    color: #adadad;
-}
+    select:required:invalid {
+        color: #adadad;
+    }
 
-option[value=""][disabled] {
-    display: none;
-}
+    option[value=""][disabled] {
+        display: none;
+    }
 
-option {
-    color: black;
-}
+    option {
+        color: black;
+    }
 </style>

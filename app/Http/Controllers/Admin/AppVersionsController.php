@@ -109,7 +109,7 @@ class AppVersionsController extends AdminBaseController
 
 
         $rules = [
-            'name' => 'required',
+            'name' => 'required|unique:app_versions,name',
             'type' => 'required',
             'file_0' => 'required',
             'release_date' => 'required',
