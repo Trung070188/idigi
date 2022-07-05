@@ -188,9 +188,7 @@
             },
             async load() {
                 let query = $router.getQuery();
-                this.$loading(true);
                 const res = await $get('/xadmin/users/name_sideBar', query);
-                this.$loading(false);
                 this.entries = res.username;
                 this.role = res.role;
                 this.image = res.image;
