@@ -188,7 +188,7 @@
                     <div class="modal-body">
                         <p>Bạn đang lựa chọn để tải về các bài học:</p>
                         <ul>
-                            <li v-for="lesson in lessons"><strong>{{ lesson.name }}</strong></li>
+                            <li v-for="lesson in lessons"><strong  style="word-break: break-word;">{{ lesson.name }}</strong></li>
 
                         </ul>
                         <p>Hãy chọn thiết bị để tải về các bài học này:</p>

@@ -207,7 +207,7 @@
         border-radius: 50%;
     }
     .fmi-preview {
-        margin: 0px -56px 0px;
+        margin: 0px -50px 0px;
     }
 
     .fmi-dropdown {
@@ -252,10 +252,10 @@
     }
 
     .fmi-preview-ul {
-        padding-left: initial;
-        list-style: none;
-        display: flex;
-        margin: 0px 106px 10px;
+        /*padding-left: initial;*/
+        /*list-style: none;*/
+        /*display: flex;*/
+        /*margin: 0px 106px 10px;*/
     }
 
     .fmi-preview-ul li {

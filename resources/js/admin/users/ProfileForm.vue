@@ -69,7 +69,7 @@
                             <div class="row">
                                 <div class="col-md-3">
                                     <div class="user-info-left">
-                                        <div  class="">
+                                        <div  class="contact">
 
 
                                                 <upload-image v-model="entry.file_image_new"  :hide-preview="true"></upload-image>
