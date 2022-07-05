@@ -5,20 +5,21 @@
         <div class="row">
             <div class="col-lg-12">
                 <div v-if="role=='Super Administrator'" class="card card-custom card-stretch gutter-b">
-                     <div class="card-header border-0 pt-5">
+                    <div class="card-header border-0 pt-5">
                         <div class="title">
 
                             <label>Management Application Download</label>
                         </div>
-                    <button  class="btn btn-primary button-create " @click="showModalUpload()">Upload App</button>
+                        <button class="btn btn-primary button-create " @click="showModalUpload()">Upload App</button>
                     </div>
                     <hr>
 
-                    <div  id="accordion" >
+                    <div id="accordion">
                         <div class="card">
                             <div class="card-header" id="headingOne">
                                 <h5 class="mb-0">
-                                    <button class="btn btn-link btn-border" data-toggle="collapse" data-target="#collapseOne"
+                                    <button class="btn btn-link btn-border" data-toggle="collapse"
+                                            data-target="#collapseOne"
                                             aria-expanded="true" aria-controls="collapseOne">
                                         Application for window({{ totalVersionWindow }} version)
                                     </button>
@@ -102,50 +103,26 @@
 
                     </div>
                 </div>
-                <div v-if="role=='Teacher'" class="card-header " >
-                    <div class="row width-full" >
-                        <div class="col-lg-12">
-                            <h2
-                                class="row"
-                                style="margin-left:50%;font-size: 30px"
-                            >
-                                Tải iDIGI PC cho máy tính
-                            </h2>
-                        </div>
-
-                        <div class="col-lg-12">
-                            <h5
-                                class="row"
-                                style="margin-left:48.6%;font-size:20px"
-                            >
-                                Ứng dụng đã có mặt trên Windows và MacOS.
-                            </h5>
-                        </div>
-
-                        <div class="col-lg-12">
-                            <div class="row" style="margin-left:46%">
-                                <label
-                                    >.Cài đặt bài giảng số iDIGI thuận lợi và
-                                    giảng dạy nhanh chóng.
+                <div class="card card-custom card-stretch gutter-b">
+                    <div v-if="role=='Teacher'" class="card-body d-flex flex-column" style="height: 563px" >
+                        <div class="" style="margin-top: 65px; margin-bottom: 50px">
+                            <h2  style="text-align: center;font-size: 30px">Tải iDIGI PC cho máy tính</h2>
+                            <h5 style="text-align: center;font-size:20px">Ứng dụng đã có mặt trên Windows và MacOS.</h5>
+                            <br>
+                            <div  style="text-align: center;font-size: 14px;">
+                                <label  >Cài đặt bài giảng số iDIGI thuận lợi và giảng dạy nhanh chóng.
                                 </label>
-                                <br />
-                                <label
-                                    >.Sử dụng trực tuyến (online) và ngoại tuyến
-                                    (offline) mà không gặp gián đoạn.</label
-                                >
-                                <br />
-                                <label
-                                    >.Bảo mật bài giảng riêng cho thiết bị được
-                                    đăng ký trước.</label
-                                >
+                                <br>
+                                <label  >Sử dụng trực tuyến (online) và ngoại tuyến (offline) mà không gặp gián đoạn.</label>
+                                <br>
+                                <label>Bảo mật bài giảng riêng cho thiết bị được đăng ký trước.</label>
                             </div>
                         </div>
-                      
-                        <div class="d-flex" style="margin-left:44%" >
+                        <div class="d-flex" style="margin: 0 auto">
                             <div class="form-check form-check-inline">
-                               <button class="btn btn-primary">Download for Windows
-                               <i class="fas fa-th-large"></i>
-                               </button>
+                                <button class="btn btn-primary">Download for Windows
+                                    <i class="fas fa-th-large"></i>
+                                </button>
                                 <br>
                                 <label style="margin: 12px 34px 0px;">Windows_v2.1.4</label>
                             </div>
@@ -161,7 +138,7 @@
             </div>
 
         </div>
-        <div  class="modal" id="uploadApp" tabindex="-1">
+        <div class="modal" id="uploadApp" tabindex="-1">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -173,8 +150,8 @@
                     <div class="modal-body">
 
                         <div id="overlay">
-                            <div class="la-3x text" >
-                                <i class="la la-spinner la-spin" ></i>
+                            <div class="la-3x text">
+                                <i class="la la-spinner la-spin"></i>
                             </div>
                         </div>
 
@@ -260,166 +237,169 @@
 </template>
 
 <script>
-import {$get, $post, forEach, getTimeRangeAll} from "../../utils";
-import $router from '../../lib/SimpleRouter';
-import ActionBar from "../includes/ActionBar";
+    import {$get, $post, forEach, getTimeRangeAll} from "../../utils";
+    import $router from '../../lib/SimpleRouter';
+    import ActionBar from "../includes/ActionBar";
 
 
-let created = getTimeRangeAll();
-const $q = $router.getQuery();
+    let created = getTimeRangeAll();
+    const $q = $router.getQuery();
 
-export default {
-    name: "App_versionsIndex.vue",
-    components: {ActionBar},
-    data() {
-        return {
-            model: {
-                type:''
-            },
-            role:'',
-            errors: {},
-            entries: [],
-            totalVersionIos: 0,
-            totalVersionWindow: 0,
-            curVersion: '',
-            breadcrumbs: [
-                {
-                    title: 'Download Application'
+    export default {
+        name: "App_versionsIndex.vue",
+        components: {ActionBar},
+        data() {
+            return {
+                model: {
+                    type: ''
                 },
-            ],
-        }
-    },
-    mounted() {
-        $router.on('/', this.load).init();
-    },
-    methods: {
-        showSetDefaultModal: function (id) {
-            this.curVersion = id;
-            $('#setDefault').modal('show');
-        },
-        showUnsetDefaultModal: function (id) {
-            this.curVersion = id;
-            $('#unsetDefault').modal('show');
-        },
-
-        showModalUpload() {
-            $('#uploadApp').modal('show');
-        },
-
-        async setDefaultVersion(isDefault) {
-
-            const res = await $post('/xadmin/app_versions/setDefaultVersion', {
-                id: this.curVersion,
-                is_default: isDefault
-            });
-
-            $('#setDefault').modal('hide');
-            $('#unsetDefault').modal('hide');
-
-            if (res.code) {
-                toastr.error(res.message);
-            } else {
-                this.errors = {};
-                $router.on('/', this.load).init();
-                toastr.success(res.message);
+                role: '',
+                errors: {},
+                entries: [],
+                totalVersionIos: 0,
+                totalVersionWindow: 0,
+                curVersion: '',
+                breadcrumbs: [
+                    {
+                        title: 'Download Application'
+                    },
+                ],
             }
-
         },
+        mounted() {
+            $router.on('/', this.load).init();
+        },
+        methods: {
+            showSetDefaultModal: function (id) {
+                this.curVersion = id;
+                $('#setDefault').modal('show');
+            },
+            showUnsetDefaultModal: function (id) {
+                this.curVersion = id;
+                $('#unsetDefault').modal('show');
+            },
 
-        async save() {
-            this.errors = {};
-            const files = this.$refs.uploader.files;
-            const formData = new FormData();
-            formData.append('_token', window.$csrf)
-            forEach(files, (v, k) => {
-                formData.append(k, v);
-            });
-            for (const [k, v] of Object.entries(this.model)) {
-                formData.append(k, v);
-            }
+            showModalUpload() {
+                $('#uploadApp').modal('show');
+            },
 
-            for (let i = 0; i < files.length; i++) {
-                formData.append('file_' + i, files[i]);
-            }
+            async setDefaultVersion(isDefault) {
 
-            $('#overlay').show();
-            let res = await fetch('/xadmin/app_versions/save', {
-                method: 'POST',
-                body: formData
-            })
-                .then((response) => response.json())
-                .catch((error) => {
-                    console.error('Error:', error);
+                const res = await $post('/xadmin/app_versions/setDefaultVersion', {
+                    id: this.curVersion,
+                    is_default: isDefault
                 });
 
-            $('#overlay').hide();
-            if (res.code) {
-                this.errors = res.errors;
-            } else {
-                $('#uploadApp').modal('hide');
-                this.model = {
-                    type: ''
+                $('#setDefault').modal('hide');
+                $('#unsetDefault').modal('hide');
+
+                if (res.code) {
+                    toastr.error(res.message);
+                } else {
+                    this.errors = {};
+                    $router.on('/', this.load).init();
+                    toastr.success(res.message);
                 }
-                $router.on('/', this.load).init();
-                toastr.success(res.message);
+
+            },
+
+            async save() {
+                this.errors = {};
+                const files = this.$refs.uploader.files;
+                const formData = new FormData();
+                formData.append('_token', window.$csrf)
+                forEach(files, (v, k) => {
+                    formData.append(k, v);
+                });
+                for (const [k, v] of Object.entries(this.model)) {
+                    formData.append(k, v);
+                }
+
+                for (let i = 0; i < files.length; i++) {
+                    formData.append('file_' + i, files[i]);
+                }
+
+                $('#overlay').show();
+                let res = await fetch('/xadmin/app_versions/save', {
+                    method: 'POST',
+                    body: formData
+                })
+                    .then((response) => response.json())
+                    .catch((error) => {
+                        console.error('Error:', error);
+                    });
+
+                $('#overlay').hide();
+                if (res.code) {
+                    this.errors = res.errors;
+                } else {
+                    $('#uploadApp').modal('hide');
+                    this.model = {
+                        type: ''
+                    }
+                    $router.on('/', this.load).init();
+                    toastr.success(res.message);
+                }
+
+            },
+            async load() {
+                let query = $router.getQuery();
+                const res = await $get('/xadmin/app_versions/data', query);
+                this.paginate = res.paginate;
+                this.entries = res.data;
+                this.role = res.role;
+                this.totalVersionIos = this.entries.filter(e => e.type == 'ios').length;
+                this.totalVersionWindow = this.entries.filter(e => e.type == 'window').length;
+                this.from = (this.paginate.currentPage - 1) * (this.limit) + 1;
+                this.to = (this.paginate.currentPage - 1) * (this.limit) + this.entries.length;
+            },
+            async remove(entry) {
+                if (!confirm('Xóa bản ghi: ' + entry.id)) {
+                    return;
+                }
+
+                const res = await $post('/xadmin/app_versions/remove', {id: entry.id});
+
+                if (res.code) {
+                    toastr.error(res.message);
+                } else {
+                    toastr.success(res.message);
+                }
+
+                $router.updateQuery({page: this.paginate.currentPage, _: Date.now()});
             }
 
-        },
-        async load() {
-            let query = $router.getQuery();
-            const res = await $get('/xadmin/app_versions/data', query);
-            this.paginate = res.paginate;
-            this.entries = res.data;
-            this.role=res.role;
-            this.totalVersionIos = this.entries.filter(e => e.type == 'ios').length;
-            this.totalVersionWindow = this.entries.filter(e => e.type == 'window').length;
-            this.from = (this.paginate.currentPage - 1) * (this.limit) + 1;
-            this.to = (this.paginate.currentPage - 1) * (this.limit) + this.entries.length;
-        },
-        async remove(entry) {
-            if (!confirm('Xóa bản ghi: ' + entry.id)) {
-                return;
-            }
-
-            const res = await $post('/xadmin/app_versions/remove', {id: entry.id});
-
-            if (res.code) {
-                toastr.error(res.message);
-            } else {
-                toastr.success(res.message);
-            }
-
-            $router.updateQuery({page: this.paginate.currentPage, _: Date.now()});
         }
-
     }
-}
 </script>
 
 <style scoped>
-.table td {
-    border-top: none;
-}
-.mb-0{
-    width:100%;
+    .table td {
+        border-top: none;
+    }
+
+    .mb-0 {
+        width: 100%;
 
 
-}
-.card-header{
-    background-color: rgba(0,0,0,.03)!important;
-}
-.btn-border{
-    text-align:left;
-    width:100%;
+    }
 
-}
+    .card-header {
+        background-color: rgba(0, 0, 0, .03) !important;
+    }
 
-.table {
-    border: 1px solid black;
-    border-collapse: collapse;
-    border-radius: 10px;
-    border-style: hidden;
-    box-shadow: 0 0 0 1px #666;
-}
+    .btn-border {
+        text-align: left;
+        width: 100%;
+
+    }
+
+    .table {
+        border: 1px solid black;
+        border-collapse: collapse;
+        border-radius: 10px;
+        border-style: hidden;
+        box-shadow: 0 0 0 1px #666;
+    }
 
 </style>
