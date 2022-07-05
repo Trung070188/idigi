@@ -86,32 +86,6 @@ class LoginController extends Controller
             throw new UnauthorizedException("Password sign in is not available");
         }
 
-        if($request->is_ismart){
-            $res = $this->loginSSO($request);
-
-            if($res['status_code'] == 200){
-               $body = json_decode($res['body'], true);
-                $userInfo = $this->getInfoSSO($body['access_token']);
-                $userData = [
-                    'username' => $userInfo['name'],
-                    'password' => '123456',
-                    'full_name' => $userInfo['ismartuser']['fullname'],
-                    'email' => $userInfo['ismartuser']['email'],
-                    'sso_id' => $userInfo['sub'],
-                    'state' => 1,
-                ];
-
-                $user = User::updateOrCreate([
-                    'sso_id' =>$userInfo['sub']
-                ], $userData);
-
-                \Auth::loginUsingId($user->id);
-
-            }else{
-
-                return $this->sendFailedLoginResponse($request);
-            }
-        }
         $this->validateLogin($request);
 
         // If the class is using the ThrottlesLogins trait, we can automatically throttle
