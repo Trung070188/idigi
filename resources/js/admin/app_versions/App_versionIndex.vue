@@ -102,24 +102,46 @@
 
                     </div>
                 </div>
-                <div class="card card-custom card-stretch gutter-b">
-                    <div v-if="role=='Teacher'" class="card-body d-flex flex-column" style="height: 563px" >
-                        <div class="row" style="margin-top: 65px; margin-bottom: 50px">
-                            <h2  style="text-align: center;font-size: 30px">Tải iDIGI PC cho máy tính</h2>
-                            <h5 style="text-align: center;font-size:20px">Ứng dụng đã có mặt trên Windows và MacOS.</h5>
-                            <br>
-                            <br>
-
-                           <div  style="margin-left: 32%;font-size: 14px;">
-                               <label >.Cài đặt bài giảng số iDIGI thuận lợi và giảng dạy nhanh chóng.
-                               </label>
-                               <br>
-                               <label >.Sử dụng trực tuyến (online) và ngoại tuyến (offline) mà không gặp gián đoạn.</label>
-                               <br>
-                               <label>.Bảo mật bài giảng riêng cho thiết bị được đăng ký trước.</label>
-                           </div>
+                <div v-if="role=='Teacher'" class="card-header " >
+                    <div class="row width-full" >
+                        <div class="col-lg-12">
+                            <h2
+                                class="row"
+                                style="margin-left:50%;font-size: 30px"
+                            >
+                                Tải iDIGI PC cho máy tính
+                            </h2>
                         </div>
-                        <div class="d-flex" style="margin: 0 auto">
+
+                        <div class="col-lg-12">
+                            <h5
+                                class="row"
+                                style="margin-left:48.6%;font-size:20px"
+                            >
+                                Ứng dụng đã có mặt trên Windows và MacOS.
+                            </h5>
+                        </div>
+
+                        <div class="col-lg-12">
+                            <div class="row" style="margin-left:46%">
+                                <label
+                                    >.Cài đặt bài giảng số iDIGI thuận lợi và
+                                    giảng dạy nhanh chóng.
+                                </label>
+                                <br />
+                                <label
+                                    >.Sử dụng trực tuyến (online) và ngoại tuyến
+                                    (offline) mà không gặp gián đoạn.</label
+                                >
+                                <br />
+                                <label
+                                    >.Bảo mật bài giảng riêng cho thiết bị được
+                                    đăng ký trước.</label
+                                >
+                            </div>
+                        </div>
+                      
+                        <div class="d-flex" style="margin-left:44%" >
                             <div class="form-check form-check-inline">
                                <button class="btn btn-primary">Download for Windows
                                <i class="fas fa-th-large"></i>
