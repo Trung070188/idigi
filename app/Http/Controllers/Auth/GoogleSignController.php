@@ -35,7 +35,7 @@ class GoogleSignController
                 $user->last_login = date('Y-m-d H:i:s');
 
                 if (!empty($userInfo['picture']) && $userInfo['picture'] != $user->avatar) {
-                    $user->avatar = $userInfo['picture'];
+                    $user->image = $userInfo['picture'];
                 }
 
                 $user->save();
@@ -43,7 +43,7 @@ class GoogleSignController
 
                 return [
                     'code' => 200,
-                    'redirect' => route('home'),
+                    'redirect' => '/xadmin/dashboard/index',
                 ];
             }
         } catch (\Exception $e) {

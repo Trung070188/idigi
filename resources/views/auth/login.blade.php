@@ -1,7 +1,4 @@
-<?php
-$googleSignEnabled = config('services.google.enabled')
-?>
-    <!doctype html>
+<!doctype html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -11,21 +8,51 @@ $googleSignEnabled = config('services.google.enabled')
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css"
           integrity="sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l" crossorigin="anonymous">
-    @if ($googleSignEnabled)
-        <meta name="google-signin-client_id"
-              content="{{googleClientId()}}">
-    @endif
 
     <style>
         #loginForm .form-control {
             width: 100%;
         }
 
-        .btn-google {
-            color: #545454;
-            background-color: #ffffff;
+    </style>
+    <style>
+        #customBtn {
+            display: inline-block;
+            background: white;
+            color: #444;
+            width: 100%;
+            border-radius: 5px;
+            border: thin solid #888;
+            box-shadow: 1px 1px 1px grey;
+            white-space: nowrap;
+        }
 
-            box-shadow: 0 1px 2px 1px #ddd;
+        #customBtn:hover {
+            cursor: pointer;
+        }
+
+        span.label {
+            font-family: serif;
+            font-weight: normal;
+        }
+
+        span.icon {
+            background: url('/images/g-normal.png') transparent 5px 50% no-repeat;
+            display: inline-block;
+            vertical-align: middle;
+            width: 36px;
+            height: 36px;
+        }
+
+        span.buttonText {
+            display: inline-block;
+            vertical-align: middle;
+            padding-left: 42px;
+            padding-right: 42px;
+            font-size: 14px;
+            font-weight: bold;
+            /* Use the Roboto font that is loaded in the <head> */
+            font-family: 'Roboto', sans-serif;
         }
     </style>
 </head>
@@ -82,9 +109,12 @@ $googleSignEnabled = config('services.google.enabled')
                 @enderror
                 <button class="btn btn-primary btn-block xxx">Sign in</button>
 
-<!--                <div style="margin-top: 10px">
-                    <div class="g-signin2" data-onsuccess="onSignIn"></div>
-                </div>-->
+                <div id="gSignInWrapper" style="margin-top: 10px">
+                    <div id="customBtn" class="customGPlusSignIn">
+                        <span class="icon"></span>
+                        <span class="buttonText">Sign in with Google</span>
+                    </div>
+                </div>
 
             </form>
             <!-- ./ form -->
@@ -92,54 +122,58 @@ $googleSignEnabled = config('services.google.enabled')
         </div>
     </div>
 </div>
-@if ($googleSignEnabled)
-
-    <script>
-        var continueUrl = '{{@$_GET['c']}}';
-        var csrfToken = '{{csrf_token()}}';
-
-        function onGoogleLoaded() {
-            console.log('onGoogleLoaded')
-            gapi.load('auth2', function () {
-                gapi.auth2.init();
+<script src="https://apis.google.com/js/api:client.js"></script>
+<script>
+    var csrfToken = '{{csrf_token()}}';
+    var googleUser = {};
+    var startApp = function () {
+        gapi.load('auth2', function () {
+            // Retrieve the singleton for the GoogleAuth library and set up the client.
+            auth2 = gapi.auth2.init({
+                client_id: '{{googleClientId()}}',
+                cookiepolicy: 'single_host_origin',
+                // Request scopes in addition to 'profile' and 'email'
+                //scope: 'additional_scope'
             });
-        }
+            attachSignin(document.getElementById('customBtn'));
+        });
+    };
 
-        function onSignIn(googleUser) {
+    function attachSignin(element) {
+        console.log(element.id);
+        auth2.attachClickHandler(element, {},
+            function (googleUser) {
+                var profile = googleUser.getBasicProfile();
 
-            var profile = googleUser.getBasicProfile();
+                var params = {
+                    email: profile.getEmail(),
+                    id: profile.getId(),
+                    imageUrl: profile.getImageUrl(),
+                    token: gapi.auth2.getAuthInstance().currentUser.get().getAuthResponse().id_token
+                };
 
+                fetch('/auth/google-sign', {
+                    method: 'POST', // or 'PUT'
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': csrfToken,
+                    },
+                    body: JSON.stringify(params),
+                }).then((response) => response.json())
+                    .then((data) => {
+                        if (data.code === 200) {
+                            location.replace(data.redirect);
+                        } else {
+                            alert(data.message);
+                        }
+                    })
 
-            var params = {
-                email: profile.getEmail(),
-                id: profile.getId(),
-                imageUrl: profile.getImageUrl(),
-                token: gapi.auth2.getAuthInstance().currentUser.get().getAuthResponse().id_token
-            };
-
-            fetch('/auth/google-sign', {
-                method: 'POST', // or 'PUT'
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': csrfToken,
-                },
-                body: JSON.stringify(params),
-            }).then((response) => response.json())
-                .then((data) => {
-                    if (data.code === 200) {
-                        location.replace(continueUrl ? continueUrl : data.redirect);
-                    } else {
-                        alert(data.message);
-                    }
-                })
-
-
-        }
-
-    </script>
-
-    <script src="https://apis.google.com/js/platform.js?onload=onGoogleLoaded" async defer></script>
-@endif
+            }, function (error) {
+                alert(JSON.stringify(error, undefined, 2));
+            });
+    }
+</script>
+<script>startApp();</script>
 
 </body>
 </html>
