@@ -170,8 +170,8 @@
 
                         <form>
                             <div class="form-group">
-                                <label for="file">File <span class="required"></span></label>
-                                <input type="file" ref="uploader" class="form-control-file" id="file">
+                                <label >File <span class="required"></span></label>
+                                <input type="file" ref="uploader" class="form-control-file" accept=".zip,.rar,.7zip" >
                                 <error-label :errors="errors.file_0"></error-label>
                             </div>
                             <div class="form-group">
@@ -283,6 +283,7 @@
             $router.on('/', this.load).init();
         },
         methods: {
+
             showSetDefaultModal: function (id) {
                 this.curVersion = id;
                 $('#setDefault').modal('show');
@@ -350,6 +351,7 @@
                     this.model = {
                         type: ''
                     }
+                    this.$refs.uploader.value=null;
                     $router.on('/', this.load).init();
                     toastr.success(res.message);
                 }
