@@ -100,7 +100,7 @@
                             </tr>
                             </thead>
                             <tbody v-for="entry in entries">
-                            <tr v-for="teacher in entry.roles" v-if="teacher.role_name==='Teacher'">
+                            <tr v-for="teacher in entry.roles" v-if="teacher.role_name==='Teacher' && entry.last_login!==null">
                                 <td v-text="entry.id"></td>
                                 <td v-text="entry.username"></td>
                                 <td v-text="entry.email"></td>

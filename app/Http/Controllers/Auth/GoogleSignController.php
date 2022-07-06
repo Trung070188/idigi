@@ -42,19 +42,10 @@ class GoogleSignController
 
                 $user->save();
                 Auth::login($user);
-
-                $payload = [
-                    'email' => $user->email,
-                    'username' =>$user->username,
-                    'expired' => strtotime(Carbon::now()->addHours(10))
-                ];
-
-                $jwt = JWT::encode($payload, env('SECRET_KEY_API'), 'HS256');
-
+                
                 return [
-                    'code' => 0,
-                    'access_token' => $jwt,
-                    'message' => 'Login success',
+                    'code' => 200,
+                    'redirect' => '/xadmin/lessons/index',
                 ];
             }
         } catch (\Exception $e) {
