@@ -67,18 +67,22 @@ class RequestRolesController extends AdminBaseController
     public function edit(Request $req)
     {
         $id=$req->id;
-        $entry = RequestRole::find($id);
+        $entry = RequestRole::with('users')->find($id);
+        $user=$entry->users;
         if (!$entry) {
             throw new NotFoundHttpException();
         }
-
+        $jsonData = [
+            'entry' => $entry,
+            'user' => $user,
+        ];
         /**
          * @var  RequestRole $entry
          */
 
         $title = 'Edit';
         $component = 'Request_roleForm';
-        return component($component, compact('title', 'entry'));
+        return view('admin.layouts.vue', compact('title', 'component', 'jsonData'));
     }
 
     /**
@@ -150,6 +154,11 @@ class RequestRolesController extends AdminBaseController
             'user_id' => $data['user_id'],
 
         ], $data);
+        $request_roles=RequestRole::query()->orderBy('id')->get();
+        foreach($$request_roles as $request_role)
+        {
+            $request_role=$$request_role->id;
+        }
 
         $data_device = new Notification();
         $data_device->status='new';
@@ -161,7 +170,7 @@ class RequestRolesController extends AdminBaseController
         }
         $data_device->channel='inapp';
         $data_device->user_id=$user->id;
-//        $data_device->url=url("/xadmin/request_roles/edit?user_id=$user->id");
+       $data_device->url=url("/xadmin/request_roles/edit?id=$request_role");
         $data_device->title='Yêu cầu cấp quyền';
         $data_device->save();
 
@@ -234,7 +243,6 @@ class RequestRolesController extends AdminBaseController
     {
         $id = $req->get('id');
         $entry = RequestRole::find($id);
-
         if (!$id) {
             return [
                 'code' => 404,
@@ -244,6 +252,20 @@ class RequestRolesController extends AdminBaseController
 
         $entry->status = $req->status ? 'Aprrove' : 'Waiting';
         $entry->save();
+        $user_role=new UserRole();
+        $user_role->user_id=$entry->user_id;
+        if($entry->role_name=='Teacher')
+        {
+        $user_role->role_id=5;
+        }
+        if($entry->role_name=='Moderator')
+        {
+            $user_role->role_id=12;
+
+        }
+        $user_role->save();
+
+        
 
         return [
             'code' => 200,

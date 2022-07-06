@@ -69,16 +69,15 @@
                                             <div class="row">
                                                 <div class="col-md-3">
                                                     <div class="user-info-left" >
-<!--                                                        <div  class="contact">-->
+                                               <div  class="contact">
+                                                    </div> 
+                                                        <div class="contact" style="margin-top: 20px" v-if="entry.status=='Aprrove'">
+                                                            <a href="#" class="btn-block" @click="modalDevice()">Reset password</a>
+                                                            <a href="/xadmin/logout" class=" btn-block">Deactive account</a>
 
-
-<!--                                                            <upload-image v-model="entry.file_image_new"  :hide-preview="true"></upload-image>-->
-
-<!--                                                        </div>-->
-                                                        <div class="contact" style="margin-top: 20px">
-                                                            <a href="#" class="btn-block" @click="modalDevice()">Change password</a>
-                                                            <a href="/xadmin/logout" class=" btn-block"> Log out</a>
-
+                                                        </div>
+                                                         <div class="contact" style="margin-top: 20px" v-if="entry.status=='Waiting'">
+                                                                <button class="btn btn-primary" @click="toggleStatus(entry)">Verify account</button>
                                                         </div>
 
                                                     </div>
@@ -88,18 +87,18 @@
                                                         <div class="basic-info">
                                                             <p class="data-row col-sm-6 " >
                                                                 <label >Fullname </label>
-                                                                <input  class="form-control" placeholder="Enter the full name"  />
+                                                                <input  class="form-control" placeholder="Enter the full name" v-model="user.full_name" />
                                                             </p>
                                                             <p class="data-row col-sm-6 " >
                                                                 <label >Email </label>
-                                                                <input  class="form-control" placeholder="Enter the full name"  />
+                                                                <input  class="form-control" placeholder="Enter the full name" v-model="user.email" />
                                                             <p class="data-row col-sm-6 " >
                                                                 <label >Username </label>
-                                                                <input  class="form-control" disabled  />
+                                                                <input  class="form-control" disabled  v-model="user.username" />
                                                             </p>
                                                             <div  class="data-row col-sm-6 " >
                                                                 <label   >Role </label>
-                                                                <input  class="form-control" disabled  />
+                                                                <input class="form-control" disabled  v-model="entry.role_name" />
                                                                 <div class="role">
 
                                                                 </div>
@@ -144,6 +143,7 @@
 
                 ],
                 entry: $json.entry || {},
+                user:$json.user ||{},
                 isLoading: false,
                 errors: {}
             }
@@ -154,6 +154,19 @@
             backIndex() {
 
                 window.location.href = '/xadmin/dashboard/index';
+            },
+              async toggleStatus(entry) {
+                const res = await $post('/xadmin/request_roles/toggleStatus', {
+                    id: entry.id,
+                    status: entry.status
+                });
+
+                if (res.code === 200) {
+                    toastr.success(res.message);
+                } else {
+                    toastr.error(res.message);
+                }
+
             },
 
         }
