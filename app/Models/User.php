@@ -42,6 +42,7 @@ class User extends Authenticatable
         'email',
         'password',
         'description',
+        'last_login',
         'state',
         'sso_id',
     ];

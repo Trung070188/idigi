@@ -43,7 +43,7 @@ class GoogleSignController
 
                 return [
                     'code' => 200,
-                    'redirect' => '/xadmin/dashboard/index',
+                    'redirect' => '/xadmin/lessons/index',
                 ];
             }
         } catch (\Exception $e) {

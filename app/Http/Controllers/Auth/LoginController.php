@@ -30,7 +30,7 @@ class LoginController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = '/xadmin/dashboard/index';
+    protected $redirectTo = '/xadmin/lessons/index';
 
     /**
      * Attempt to log the user into the application.

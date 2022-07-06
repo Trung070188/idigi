@@ -127,7 +127,7 @@
 
                                     <a :href="entry.url">
                                         <button class="btn btn-primary">Download for Windows
-                                            <i class="fas fa-th-large"></i>
+                                            <i class="bi bi-windows"></i>
                                         </button>
                                     </a>
                                     <br>
@@ -137,7 +137,7 @@
 
                                     <a :href="entry.url">
                                         <button class="btn btn-primary">Download for MacOS
-                                            <i class=" fas fa-apple-alt"></i>
+                                            <i style="margin:-3px 0px 0px" class="bi bi-apple"></i>
                                         </button>
                                     </a>
                                     <br>
