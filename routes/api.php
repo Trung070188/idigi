@@ -17,6 +17,11 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
-Route::group(['middleware' => ['client'], 'namespace' => 'Api'], function () {
+Route::group(['middleware' => ['auth_api'], 'namespace' => 'Api'], function () {
     Route::get('/get-all-lesson', 'LessonController@getAllLesson');
+});
+
+Route::group([ 'namespace' => 'Api'], function () {
+    Route::post('/login', 'LoginController@login');
+    Route::post('/auth/google-sign', 'GoogleSignController@login');
 });

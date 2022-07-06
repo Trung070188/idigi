@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Auth;
+namespace App\Http\Controllers\Api;
 
 use App\Models\User;
 use App\Http\Controllers\Controller;
@@ -18,7 +18,7 @@ class GoogleSignController
         $token = $req->token;
 
         try {
-            $aud = googleDesktopClientId();
+            $aud = googleClientId();
             $userInfo = curl_get_json('https://www.googleapis.com/oauth2/v3/tokeninfo?id_token='.$token);
 
             if (isset($userInfo['email']) && $userInfo['aud'] === $aud) {
@@ -30,7 +30,7 @@ class GoogleSignController
                 if (!$user) {
                     return [
                         'code' => 2,
-                        'message' => 'Login fail',
+                        'message' => 'Đăng nhập thất bại',
                     ];
                 }
 
@@ -54,7 +54,6 @@ class GoogleSignController
                 return [
                     'code' => 0,
                     'access_token' => $jwt,
-                    'message' => 'Login success',
                 ];
             }
         } catch (\Exception $e) {
@@ -63,7 +62,7 @@ class GoogleSignController
 
         return [
             'code' => 1,
-            'message' => 'Login fail',
+            'message' => 'Đăng nhập thất bại',
         ];
     }
 }

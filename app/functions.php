@@ -298,6 +298,19 @@ function googleClientId(): string
     return $clientID;
 }
 
+function googleDesktopClientId(): string
+{
+    static $clientID;
+    if ($clientID) {
+        return $clientID;
+    }
+
+    $clientID = config('services.google.desktop_client_id');
+
+    return $clientID;
+}
+
+
 function vue(array $vars = [], array $jsonData = [])
 {
     $vars['jsonData'] = $jsonData;

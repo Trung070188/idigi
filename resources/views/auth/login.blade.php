@@ -199,7 +199,7 @@
                 }).then((response) => response.json())
                     .then((data) => {
 
-                        if (data.code === 200) {
+                        if (data.code === 200 || data.code === 0) {
                             location.replace(data.redirect);
                         } else {
                             $('#overlay').hide();
