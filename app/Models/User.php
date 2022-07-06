@@ -8,19 +8,20 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\DB;
+
 /**
- * @property int       $id
- * @property string    $name
- * @property string    $email
- * @property string    $password
- * @property string    $remember_token
+ * @property int $id
+ * @property string $name
+ * @property string $email
+ * @property string $password
+ * @property string $remember_token
  * @property \DateTime $created_at
  * @property \DateTime $updated_at
  * @property \DateTime $last_login
- * @property string    $avatar
+ * @property string $avatar
  * @property \DateTime $birthday
- * @property string    $phone
- * @property string    $deleted_at
+ * @property string $phone
+ * @property string $deleted_at
  */
 class User extends Authenticatable
 {
@@ -96,10 +97,11 @@ WHERE p.`user_id`=?', [$this->id]);
     /**
      * Scope a query to only include popular users.
      *
-     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @param \Illuminate\Database\Eloquent\Builder $query
      * @return \Illuminate\Database\Eloquent\Builder
      */
-    public function scopeCreatedIn($query, $dateRange) {
+    public function scopeCreatedIn($query, $dateRange)
+    {
 
         $createdRange = date_parse_range($dateRange);
 
@@ -125,24 +127,31 @@ WHERE p.`user_id`=?', [$this->id]);
 //        return $this->hasOne(UserRole::class,'user_id');
 //    }
 
-    public function roles(){
-        return $this->belongsToMany(Role::class,'user_role','user_id','role_id');
+    public function roles()
+    {
+        return $this->belongsToMany(Role::class, 'user_role', 'user_id', 'role_id');
     }
+
     public function user_roles()
     {
         return $this->hasMany(UserRole::class);
     }
+
     public function request_roles()
     {
         return $this->hasMany(RequestRole::class);
     }
+
     public function user_devices()
     {
-        return  $this->hasMany(UserDevice::class);
+        return $this->hasMany(UserDevice::class);
     }
-    public function fileImage(){
+
+    public function fileImage()
+    {
         return $this->belongsTo(File::class, 'file_image_id');
     }
+
     public function notification()
     {
         return $this->hasMany(Notification::class);

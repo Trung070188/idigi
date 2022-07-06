@@ -31,7 +31,8 @@ return [
     ],
     "google" => [
         'enabled' => env('GOOGLE_SIGN_ENABLED', true),
-        "client_id" => env('GOOGLE_CLIENT_ID')
+        "client_id" => env('GOOGLE_CLIENT_ID'),
+        "desktop_client_id" => env('GOOGLE_DESKTOP_CLIENT_ID')
     ]
 
 ];

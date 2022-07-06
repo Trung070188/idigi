@@ -5,6 +5,8 @@ namespace App\Console\Commands;
 use App\Helpers\PhpDoc;
 use App\Models\Inventory;
 use App\Models\Product;
+use App\Models\User;
+use App\Support\CallApi;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
@@ -42,6 +44,44 @@ class TestCommand extends Command
      */
     public function handle()
     {
+
+        $data = [
+          'client_id' => env('CLIENT_ID'),
+          'grant_type' => 'password',
+          'username' => 'khoanda',
+          'password' => '123@123a',
+        ];
+       // dd($data);
+        $uri = env('SSO_URL')."/connect/token";
+
+        $res = CallApi::sendRequest('POST',$uri,  $data, 'form_params');
+        $body = json_decode($res['body'], true);
+
+        $data = [
+            'access_token' => $body['access_token']
+        ];
+        // dd($data);
+        $uri = env('SSO_URL')."/connect/userinfo";
+
+        $res = CallApi::sendRequest('POST',$uri,  $data, 'form_params');
+        $userInfo = json_decode($res['body'], true);
+
+        $userData = [
+            'username' => $userInfo['name'],
+            'password' => '123456',
+            'full_name' => $userInfo['ismartuser']['fullname'],
+            'email' => $userInfo['ismartuser']['email'],
+            'sso_id' => $userInfo['sub'],
+            'state' => 1,
+        ];
+
+        User::updateOrCreate([
+            'sso_id' =>$userInfo['sub']
+        ], $userData);
+
+
+
+        dd($body);
 
         $time_start = microtime(true);
         $zip_file = public_path('invoices.zip');

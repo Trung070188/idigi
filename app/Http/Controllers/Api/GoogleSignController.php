@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Auth;
+namespace App\Http\Controllers\Api;
 
 use App\Models\User;
 use App\Http\Controllers\Controller;
@@ -18,7 +18,7 @@ class GoogleSignController
         $token = $req->token;
 
         try {
-            $aud = googleClientId();
+            $aud = googleDesktopClientId();
             $userInfo = curl_get_json('https://www.googleapis.com/oauth2/v3/tokeninfo?id_token='.$token);
 
             if (isset($userInfo['email']) && $userInfo['aud'] === $aud) {
@@ -27,12 +27,14 @@ class GoogleSignController
                  */
                 $user = User::where('email', $userInfo['email'])->first();
 
+
                 if (!$user) {
                     return [
                         'code' => 2,
-                        'message' => 'Login fail',
+                        'message' => 'Đăng nhập thất bại',
                     ];
                 }
+
 
                 $user->last_login = date('Y-m-d H:i:s');
 
@@ -43,9 +45,17 @@ class GoogleSignController
                 $user->save();
                 Auth::login($user);
 
+                $payload = [
+                    'email' => $user->email,
+                    'username' =>$user->username,
+                    'expired' => strtotime(Carbon::now()->addHours(10))
+                ];
+
+                $jwt = JWT::encode($payload, env('SECRET_KEY_API'), 'HS256');
+
                 return [
-                    'code' => 200,
-                    'redirect' => '/xadmin/lessons/index',
+                    'code' => 0,
+                    'access_token' => $jwt,
                 ];
             }
         } catch (\Exception $e) {
@@ -54,7 +64,7 @@ class GoogleSignController
 
         return [
             'code' => 1,
-            'message' => 'Login fail',
+            'message' => 'Đăng nhập thất bại',
         ];
     }
 }
