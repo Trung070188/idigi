@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Models\RequestRole;
 use App\Models\Role;
 use App\Models\School;
 use App\Models\UserDevice;
@@ -155,6 +156,7 @@ class UsersController extends AdminBaseController
             $role = $role_id->role_name;
 
         }
+
         /**
          * @var  User $entry
          */
@@ -335,7 +337,6 @@ class UsersController extends AdminBaseController
         }
         if (isset($data['id'])) {
             $entry = User::find($data['id']);
-
             if (!$entry) {
                 return [
                     'code' => 3,
@@ -357,7 +358,6 @@ class UsersController extends AdminBaseController
         }
 
     }
-
     public function save_profile(Request $req)
     {
         if (!$req->isMethod('POST')) {
@@ -391,7 +391,7 @@ class UsersController extends AdminBaseController
         }
         if (isset($data['id'])) {
             $entry = User::find($data['id']);
-
+            $request_roles=RequestRole::query()->orderBy('id')->get();
             if (!$entry) {
                 return [
                     'code' => 3,
@@ -520,7 +520,7 @@ class UsersController extends AdminBaseController
                 'message' => 'Not Found'
             ];
         }
-        $entry->status = $req->status ? 1 : 0;
+        $entry->state = $req->state ? 0 : 1;
         $entry->save();
 
         return [

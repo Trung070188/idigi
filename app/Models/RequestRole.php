@@ -14,7 +14,7 @@ class RequestRole extends BaseModel
     protected $fillable = [
         'user_id',
         'status',
-        'reason',
+        'role_name',
         'content'
     ];
     public function users()

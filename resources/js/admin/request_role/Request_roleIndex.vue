@@ -19,14 +19,22 @@
                                     </div>
                                     <div class="d-flex" style="margin: 0 auto">
                                         <div class="form-check form-check-inline">
-                                            <input class="form-check-input" value="0" type="radio" name="radioFilter" id="filter-none" v-model="role">
-                                            <label class="form-check-label" for="filter-none">Tôi là giáo viên</label>
+                                            <input class="form-check-input" value="1" type="radio" name="radioFilter" id="filter-none" v-model="role">
+
+                                            <label class="form-check-label" for="filter-none">I’m teacher</label>
                                         </div>
                                         <div class="form-check form-check-inline">
-                                            <input class="form-check-input" value="1" type="radio" name="radioFilter" v-model="role" id="filter-1">
-                                            <label class="form-check-label text-nowrap" for="filter-1">Tôi là quản trị viên</label>
+                                            <input class="form-check-input" value="2" type="radio" name="radioFilter" v-model="role" id="filter-1">
+                                            <label class="form-check-label text-nowrap" for="filter-1">I’m moderator</label>
                                         </div>
                                     </div>
+<!--                                    <div class="row" v-if="role==1" style="margin-left: 42%;margin-top: 31px;">-->
+<!--                                        <div class=" col-sm-4">-->
+<!--                                            <label>School <span class="text-danger">*</span></label>-->
+<!--                                            <select class="form-control form-select" type="" placeholder="Enter the school" >-->
+<!--                                            </select>-->
+<!--                                        </div>-->
+<!--                                    </div>-->
                                     <div style="margin:0 auto; margin-top: 50px">
                                         <button class="btn btn-primary" :disabled="!role" @click="sendRequest">Yêu cầu cấp quyền</button>
                                     </div>

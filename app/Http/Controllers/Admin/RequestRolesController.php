@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Models\Notification;
 use App\Models\User;
+use App\Models\UserRole;
 use App\Notifications\InvoicePaid;
 use App\Notifications\RequestRoleNotification;
 use Illuminate\Contracts\View\View;
@@ -65,9 +66,8 @@ class RequestRolesController extends AdminBaseController
      */
     public function edit(Request $req)
     {
-        $id = $req->id;
+        $id=$req->id;
         $entry = RequestRole::find($id);
-
         if (!$entry) {
             throw new NotFoundHttpException();
         }
@@ -78,8 +78,6 @@ class RequestRolesController extends AdminBaseController
 
         $title = 'Edit';
         $component = 'Request_roleForm';
-
-
         return component($component, compact('title', 'entry'));
     }
 
@@ -132,40 +130,46 @@ class RequestRolesController extends AdminBaseController
         $user = Auth::user();
         $data['user_id'] = $user->id;
 
-        if ($data['role'] == 1) {
+        if ($data['role'] == 2) {
             $data['content'] = 'Tôi là quản trị viên';
-        } else {
+            $data['role_name']='Moderator';
+        }
+        if($data['role']==1) {
             $data['content'] = 'Tôi là giáo viên';
+            $data['role_name']='Teacher';
         }
         $data['status'] = 'Waiting';
         $users = User::with('roles')->orderBy('username')->get();
 
-        $data_device = new Notification();
-        $data_device->status='new';
-        if ($data['role'] == 1) {
-          $data_device->content=  'Tôi là quản trị viên';
-        } else {
-            $data_device->content=  'Tôi là giáo viên';
-        }
-        $data_device->channel='inapp';
-        $data_device->user_id=$user->id;
-        $data_device->url=url("xadmin/users/edit?id={$user->id}");
-        $data_device->title='Yêu cầu cấp quyền';
-        $data_device->save();
 
 
         RequestRole::updateOrCreate([
             'content' => $data['content'],
+            'role_name'=>$data['role_name'],
             'status' => 'Waiting',
             'user_id' => $data['user_id'],
+
         ], $data);
+
+        $data_device = new Notification();
+        $data_device->status='new';
+        if ($data['role'] == 2) {
+            $data_device->content=  'Tôi là quản trị viên';
+        }
+        if($data['role']==1) {
+            $data_device->content=  'Tôi là giáo viên';
+        }
+        $data_device->channel='inapp';
+        $data_device->user_id=$user->id;
+//        $data_device->url=url("/xadmin/request_roles/edit?user_id=$user->id");
+        $data_device->title='Yêu cầu cấp quyền';
+        $data_device->save();
 
         return [
             'code' => 0,
             'message' => 'Đã gửi yêu cầu cấp quyền thành công',
         ];
     }
-
     public function refuse(Request $req)
     {
         if (!$req->isMethod('POST')) {

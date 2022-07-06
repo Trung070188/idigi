@@ -68,7 +68,7 @@
                         <div class="tab-pane profile active" id="profile-tab">
                             <div class="row">
                                 <div class="col-md-3">
-                                    <div class="user-info-left">
+                                    <div class="user-info-left" >
                                         <div  class="contact">
 
 
@@ -80,6 +80,7 @@
                                             <a href="/xadmin/logout" class=" btn-block"> Log out</a>
 
                                         </div>
+
                                     </div>
                                 </div>
                                 <div class="col-md-9">
@@ -104,7 +105,6 @@
                                                 <input  class="form-control" disabled  />
                                                 <div class="role">
                                                    {{role}}
-
                                                 </div>
                                           </div>
                                             <div class="data-row col-sm-6 " >
