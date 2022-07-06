@@ -27,12 +27,14 @@ class GoogleSignController
                  */
                 $user = User::where('email', $userInfo['email'])->first();
 
+
                 if (!$user) {
                     return [
                         'code' => 2,
                         'message' => 'Đăng nhập thất bại',
                     ];
                 }
+
 
                 $user->last_login = date('Y-m-d H:i:s');
 

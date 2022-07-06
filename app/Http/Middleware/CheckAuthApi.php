@@ -3,6 +3,7 @@
 namespace App\Http\Middleware;
 
 use App\Models\Permission;
+use App\Models\User;
 use App\Providers\RouteServiceProvider;
 use Closure;
 use Firebase\JWT\JWT;
@@ -26,7 +27,29 @@ class CheckAuthApi
 
         try {
 
-            JWT::decode($token, new Key(env('SECRET_KEY_API'), 'HS256'));
+            $decoded = JWT::decode($token, new Key(env('SECRET_KEY_API'), 'HS256'));
+
+            $user = User::where('email', $decoded->email)->first();
+            $roles = $user->roles;
+            $check = 0;
+
+            if($roles){
+                foreach ($roles as $role){
+                    if($role->role_name == 'Teacher' || $role->role_name == 'Super Administrator' || $role->role_name == 'Administrator'){
+                        $check = 1;
+                    }
+                }
+
+            }
+
+            if ($check == 0) {
+                return response([
+                    'code' => 2,
+                    'message' => 'Bạn không có quyền truy cập',
+                ]);
+            }
+
+
             return $next($request);
 
         }catch (\Exception $e){
