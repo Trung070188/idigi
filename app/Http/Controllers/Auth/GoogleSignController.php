@@ -18,7 +18,7 @@ class GoogleSignController
         $token = $req->token;
 
         try {
-            $aud = googleDesktopClientId();
+            $aud = googleClientId();
             $userInfo = curl_get_json('https://www.googleapis.com/oauth2/v3/tokeninfo?id_token='.$token);
 
             if (isset($userInfo['email']) && $userInfo['aud'] === $aud) {
@@ -42,7 +42,7 @@ class GoogleSignController
 
                 $user->save();
                 Auth::login($user);
-                
+
                 return [
                     'code' => 200,
                     'redirect' => '/xadmin/lessons/index',
