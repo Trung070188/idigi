@@ -46,17 +46,10 @@ class UsersController extends AdminBaseController
         $title = 'Users';
         $component = 'UserIndex';
         $roles = Role::query()->orderBy('role_name')->get();
-        $user = Auth::user();
-        foreach ($user->roles as $role) {
-            if ($role->role_name == 'Super Administrator') {
                 $jsonData = [
                     'roles' => $roles
                 ];
                 return view('admin.layouts.vue', compact('title', 'component', 'jsonData'));
-            } else {
-                return redirect('/xadmin/lessons/index');
-            }
-        }
     }
 
     public function index_teacher(Request $request)
@@ -64,19 +57,10 @@ class UsersController extends AdminBaseController
         $title = 'Teacher';
         $component = 'TeacherIndex';
         $roles = Role::query()->orderBy('role_name')->get();
-        $user = Auth::user();
-        foreach ($user->roles as $role) {
-            if ($role->role_name == 'Super Administrator' || $role->role_name == 'Administrator') {
                 $jsonData = [
                     'roles' => $roles
                 ];
                 return view('admin.layouts.vue', compact('title', 'component', 'jsonData'));
-            } else {
-                return redirect('/xadmin/lessons/index');
-            }
-
-        }
-
     }
 
     /**
@@ -90,19 +74,10 @@ class UsersController extends AdminBaseController
         $component = 'UserForm';
         $title = 'Create users';
         $roles = Role::query()->orderBy('id', 'ASC')->get();
-        $user = Auth::user();
-        foreach ($user->roles as $role) {
-            if ($role->role_name == 'Super Administrator') {
                 $jsonData = [
                     'roles' => $roles
                 ];
                 return view('admin.layouts.vue', compact('title', 'component', 'jsonData'));
-            } else {
-                return redirect('/xadmin/lessons/index');
-            }
-
-        }
-
     }
 
     public function create_teacher(Request $req)
@@ -110,18 +85,10 @@ class UsersController extends AdminBaseController
         $component = 'TeacherCreated';
         $title = 'Create Teacher';
         $roles = Role::query()->orderBy('role_name')->get();
-        $user = Auth::user();
-        foreach ($user->roles as $role) {
-            if ($role->role_name == 'Super Administrator' || $role->role_name == 'Administrator') {
                 $jsonData = [
                     'roles' => $roles
                 ];
                 return view('admin.layouts.vue', compact('title', 'component', 'jsonData'));
-            } else {
-                return redirect('/xadmin/lessons/index');
-            }
-        }
-
     }
 
     /**
@@ -202,8 +169,6 @@ class UsersController extends AdminBaseController
         $title = 'Edit';
         $component = 'UserEdit';
         $user = Auth::user();
-        foreach ($user->roles as $role) {
-            if ($role->role_name == 'Super Administrator') {
                 $jsonData = [
                     'entry' => $entry,
                     'roles' => $roles,
@@ -212,11 +177,7 @@ class UsersController extends AdminBaseController
 
                 ];
                 return view('admin.layouts.vue', compact('title', 'component', 'jsonData'));
-            } else {
-                return redirect('/xadmin/lessons/index');
             }
-        }
-    }
     public function name_sideBar(Request $req)
     {
         $users=User::with(['roles'])->orderBy('username')->get();
@@ -259,18 +220,11 @@ class UsersController extends AdminBaseController
         $title = 'Edit';
         $component = 'TeacherEdit';
         $user = Auth::user();
-        foreach ($user->roles as $role) {
-            if ($role->role_name == 'Super Administrator' || $role->role_name == 'Administrator') {
                 $jsonData = [
                     'entry' => $entry,
                     'user_device' => $user_device
                 ];
                 return view('admin.layouts.vue', compact('title', 'component', 'jsonData'));
-            } else {
-                return redirect('/xadmin/lessons/index');
-            }
-        }
-
     }
 
     /**

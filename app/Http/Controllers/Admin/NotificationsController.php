@@ -246,11 +246,6 @@ class NotificationsController extends AdminBaseController
                 }
 
             }
-
-            $user = Auth::user();
-            foreach ($user->roles as $role) {
-
-                  if ( $role->role_name=='Super Administrator') {
                       $data[] = [
                           'id' => $entry->id,
                           'user_id' => $entry->user_id,
@@ -264,8 +259,8 @@ class NotificationsController extends AdminBaseController
                           'username' => $entry->user_name,
                           'role'=>$entry->role
                       ];
-                  }
-            }
+
+
 
         }
         return [
@@ -304,19 +299,12 @@ class NotificationsController extends AdminBaseController
         $admin=Notification::query()->where('title','=','Yêu cầu xóa thiết bị')
             ->Where('status','=','new')
             ->count();
-
         foreach ($entries as $entry) {
-
             foreach ($users as $user) {
                 if ($entry->user_id == $user->id) {
                     $entry->user_name = $user->username;
                 }
             }
-            $user = Auth::user();
-            foreach ($user->roles as $role) {
-                if($entry->title=='Yêu cầu cấp quyền')
-                {
-                    if ( $role->role_name=='Super Administrator') {
                         $data[] = [
                             'id' => $entry->id,
                             'user_id' => $entry->user_id,
@@ -329,30 +317,6 @@ class NotificationsController extends AdminBaseController
                             'updated_at' => $entry->updated_at,
                             'username' => $entry->user_name,
                         ];
-
-                    }
-
-                }
-                if($entry->title=='Yêu cầu xóa thiết bị')
-                {
-                    if ( $role->role_name=='Super Administrator' || $role->role_name=='Administrator') {
-                        $data[] = [
-                            'id' => $entry->id,
-                            'user_id' => $entry->user_id,
-                            'read_at' => $entry->read_at,
-                            'status' => $entry->status,
-                            'title' => $entry->title,
-                            'url' => $entry->url,
-                            'content' => $entry->content,
-                            'created_at' => $entry->created_at,
-                            'updated_at' => $entry->updated_at,
-                            'username' => $entry->user_name,
-                        ];
-
-                    }
-
-                }
-            }
         }
         return [
             'code' => 0,

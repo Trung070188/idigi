@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 
 use App\Models\Notification;
+use App\Models\School;
 use App\Models\User;
 use App\Models\UserRole;
 use App\Notifications\InvoicePaid;
@@ -37,13 +38,29 @@ class RequestRolesController extends AdminBaseController
      */
     public function index()
     {
+        $schools=School::query()->orderBy('school_name')->get();
+        $entries=RequestRole::query()->orderBy('id')->get();
+        $user=Auth::user();
+        $data=1;
+        foreach ($entries as $entry)
+        {
+            if($user->id==$entry->user_id)
+            {
+                $data=2;
+            }
+        }
+
         $user = Auth::user();
         if ($user->roles->count() > 0) {
             return redirect('/xadmin/lessons/index');
         }
+        $jsonData = [
+            'schools'=>$schools,
+            'data'=>$data,
+        ];
         $title = 'RequestRole';
         $component = 'Request_roleIndex';
-        return component($component, compact('title'));
+        return view('admin.layouts.vue', compact('title', 'component', 'jsonData'));
     }
 
     /**
@@ -155,7 +172,12 @@ class RequestRolesController extends AdminBaseController
         $data['status'] = 'Waiting';
         $users = User::with('roles')->orderBy('username')->get();
 
-
+        if($data['school'])
+        {
+            $school= User::find($user->id);
+            $school->school_id=$data['school'];
+            $school->save();
+        }
 
         RequestRole::updateOrCreate([
             'content' => $data['content'],
@@ -178,6 +200,7 @@ class RequestRolesController extends AdminBaseController
         if($data['role']==1) {
             $data_device->content=  'Tôi là giáo viên';
         }
+
         $data_device->channel='inapp';
         $data_device->user_id=$user->id;
        $data_device->url=url("/xadmin/request_roles/edit?id=$request_role");

@@ -3,11 +3,10 @@
         <div class="row">
             <div class="col-lg-12">
                 <div class="card card-custom card-stretch gutter-b">
-
                     <div class="row">
                         <div class="col-lg-12">
-                            <div class="card card-custom card-stretch gutter-b">
-                                <div class="card-body d-flex flex-column" style="height: 563px" >
+                            <div v-if="data==1" class="card card-custom card-stretch gutter-b"  >
+                                <div  class="card-body d-flex flex-column" style="height: 563px" >
                                     <div class="row" style="margin-top: 65px; margin-bottom: 50px">
                                         <label style="text-align: center">Tài khoản của bạn chưa được phân quyền để sử dụng!</label>
                                         <br>
@@ -28,18 +27,30 @@
                                             <label class="form-check-label text-nowrap" for="filter-1">I’m moderator</label>
                                         </div>
                                     </div>
-<!--                                    <div class="row" v-if="role==1" style="margin-left: 42%;margin-top: 31px;">-->
-<!--                                        <div class=" col-sm-4">-->
-<!--                                            <label>School <span class="text-danger">*</span></label>-->
-<!--                                            <select class="form-control form-select" type="" placeholder="Enter the school" >-->
-<!--                                            </select>-->
-<!--                                        </div>-->
-<!--                                    </div>-->
+                                    <div  class="row" v-if="role==1" style="margin-left: 42%;margin-top: 31px;">
+                                        <div   class=" col-sm-4">
+
+                                            <label>School <span class="text-danger">*</span></label>
+                                            <select  class="form-control form-select" v-model="school" type="" placeholder="Enter the school" >
+                                                <option v-for="school in schools" :value="school.id" >{{school.school_name}}</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
                                     <div style="margin:0 auto; margin-top: 50px">
                                         <button class="btn btn-primary" :disabled="!role" @click="sendRequest">Yêu cầu cấp quyền</button>
                                     </div>
                                 </div>
                             </div>
+                            <div class="card card-custom card-stretch gutter-b"  v-if="data==2">
+                                <div v-if="" class="card-body d-flex flex-column" style="height: 563px" >
+                                    <div class="row" style="margin-top: 65px; margin-bottom: 50px">
+                                        <label style="text-align: center">Yêu cầu cấp quyền trở thành teacher của bạn đang chờ duyệt!</label>
+                                    </div>
+
+                                </div>
+                            </div>
+
                         </div>
                     </div>
 
@@ -57,7 +68,10 @@
         name: "Request_roleIndex.vue",
         data() {
             return {
-                role: ''
+                school:'',
+                role: '',
+                schools:$json.schools||{},
+                data:$json.data||{},
             }
         },
         mounted() {
@@ -65,7 +79,7 @@
         },
         methods: {
             async sendRequest() {
-                const res = await $post('/xadmin/request_role/save', {role: this.role}, false);
+                const res = await $post('/xadmin/request_role/save', {role: this.role,school:this.school}, false);
                 toastr.success(res.message);
             }
 
