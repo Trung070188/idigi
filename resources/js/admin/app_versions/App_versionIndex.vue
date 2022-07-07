@@ -127,7 +127,7 @@
                                         </button>
                                     </a>
                                     <br>
-                                    <label style="margin: 12px 34px 0px;">{{entry.name}}</label>
+                                    <label style="margin: 3px 34px 20px;">{{entry.name}}</label>
                                 </div>
                                 <div  v-for="entry in entries" v-if="entry.type=='ios'&& entry.is_default==1" style="">
 
@@ -137,7 +137,7 @@
                                         </button>
                                     </a>
                                     <br>
-                                    <label style="margin: 12px 34px 0px;">{{entry.name}}</label>
+                                    <label style="margin: 4px 34px 0px;">{{entry.name}}</label>
                                 </div>
                         </div>
                     </div>

@@ -47,6 +47,7 @@ class RequestRolesController extends AdminBaseController
             if($user->id==$entry->user_id)
             {
                 $data=2;
+                $entry=$entry;
             }
         }
 
@@ -57,6 +58,7 @@ class RequestRolesController extends AdminBaseController
         $jsonData = [
             'schools'=>$schools,
             'data'=>$data,
+            'entry'=>$entry,
         ];
         $title = 'RequestRole';
         $component = 'Request_roleIndex';

@@ -43,9 +43,12 @@
                                 </div>
                             </div>
                             <div class="card card-custom card-stretch gutter-b"  v-if="data==2">
-                                <div v-if="" class="card-body d-flex flex-column" style="height: 563px" >
-                                    <div class="row" style="margin-top: 65px; margin-bottom: 50px">
+                                <div  class="card-body d-flex flex-column" style="height: 563px" >
+                                    <div class="row" style="margin-top: 65px; margin-bottom: 50px" v-if="entry.role_name=='Teacher'">
                                         <label style="text-align: center">Yêu cầu cấp quyền trở thành teacher của bạn đang chờ duyệt!</label>
+                                    </div>
+                                     <div class="row" style="margin-top: 65px; margin-bottom: 50px" v-if="entry.role_name=='Moderator'">
+                                        <label style="text-align: center">Yêu cầu cấp quyền trở thành Moderator của bạn đang chờ duyệt!</label>
                                     </div>
 
                                 </div>
@@ -72,6 +75,7 @@
                 role: '',
                 schools:$json.schools||{},
                 data:$json.data||{},
+                entry:$json.entry||{}
             }
         },
         mounted() {

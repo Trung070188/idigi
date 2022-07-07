@@ -1,7 +1,13 @@
 <template>
 
     <div id="kt_header" style="z-index: 97" class="header align-items-stretch"  >
+        
         <div class="container-fluid d-flex align-items-stretch justify-content-between">
+            <div class="d-flex align-items-center ms-1 ms-lg-3">
+                  <a href="/">
+                <img alt="Logo" src="/images/imgpsh_fullsize_anim.png" class="logo" style="height: 55px"/>
+            </a>
+            </div>
             <div class="d-flex align-items-center d-lg-none ms-n3 me-1" title="Show aside menu">
                 <div class="btn btn-icon btn-active-light-primary w-30px h-30px w-md-40px h-md-40px"
                      id="kt_aside_mobile_toggle">
