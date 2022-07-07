@@ -129,7 +129,7 @@
                                 $menu['subs'][] = [
                                     "name" => $child->name,
                                     "icon" => $child->icon,
-                                    'url' => $child->url,
+                                    'url' => $child->path,
                                 ];
                             }
                         }else{
@@ -208,6 +208,7 @@
                         $userPermissions[$rolePermission->permission->code] = 1;
                     }
                 }
+
             ?>
             window.$sideBarMenus = JSON.parse('{!! addslashes(json_encode($menus)) !!}');
             window.$permissions = JSON.parse('{!! addslashes(json_encode($userPermissions)) !!}');
