@@ -19,7 +19,6 @@ import Approval_device from "./admin/user_devices/Approval_device";
 import Request_roleIndex from "./admin/request_role/Request_roleIndex";
 import Request_roleForm from "./admin/request_role/Request_roleForm";
 import NotificationIndex from "./admin/notifications/NotificationIndex";
-import NotificationForm from "./admin/notifications/NotificationForm";
 import App_versionIndex from "./admin/app_versions/App_versionIndex";
 import UserEdit from "./admin/users/UserEdit";
 
@@ -46,6 +45,5 @@ export default {
     TeacherEdit,
     TeacherIndex,
     NotificationIndex,
-    NotificationForm,
     App_versionIndex,
 }

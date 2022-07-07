@@ -73,8 +73,9 @@
                                 <th>Sender</th>
                                 <th>Role</th>
                                 <th>Notification content</th>
-                                <th>View detail</th>
                                 <th></th>
+                                <th></th>
+
                             </tr>
                             </thead>
                             <tbody>
@@ -88,13 +89,16 @@
                                 <td v-if="entry.title==='Yêu cầu cấp quyền'">Yêu cầu cấp quyền</td>
                                 <td></td>
                                 <td v-if="entry.title==='Yêu cầu xóa thiết bị'">
-                                    <a :href="entry.url"><i style="font-size:1.3rem"
-                                                            class="fa fa-trash mr-1 deleted"></i></a>
+                                    <a :href="entry.url">View detail</a>
+                                    <a @click="remove(entry)" href="javascript:;" class="btn-trash deleted" style="margin: 0px 10px 0px;"><i
+                                        class="fa fa-trash mr-1 deleted"></i></a>
                                 </td>
                                 <td v-if="entry.title==='Yêu cầu cấp quyền'">
-                                    <a :href="entry.url"><i style="font-size:1.3rem"
-                                                            class="fas fa-file-export"></i></a>
+                                    <a :href="entry.url">View detail</a>
+                                    <a @click="remove(entry)" href="javascript:;" class="btn-trash deleted" style="margin: 0px 10px 0px;"><i
+                                        class="fa fa-trash mr-1 deleted"></i></a>
                                 </td>
+
 
                             </tr>
 

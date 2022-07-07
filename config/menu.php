@@ -61,23 +61,23 @@ return [
         "roles" => ['Super Administrator','Administrator']
     ],
 
-    [
-        "name" => "System",
-        "icon" => "fa fa-users",
-        "group" => 1,
-        'base' => '/xadmin/system',
-        "roles" => ['Super Administrator','Administrator'],
-        'subs' => [
-            [
-                "name" => "File Manager",
-                "icon" => "fa fa-files-o",
-                "url" => "/xadmin/elfinder",
-                "group" => 1,
-                "roles" => ['Super Administrator','Administrator']
-            ],
-
-        ]
-    ],
+//    [
+//        "name" => "System",
+//        "icon" => "fa fa-users",
+//        "group" => 1,
+//        'base' => '/xadmin/system',
+//        "roles" => ['Super Administrator','Administrator'],
+//        'subs' => [
+//            [
+//                "name" => "File Manager",
+//                "icon" => "fa fa-files-o",
+//                "url" => "/xadmin/elfinder",
+//                "group" => 1,
+//                "roles" => ['Super Administrator','Administrator']
+//            ],
+//
+//        ]
+//    ],
     [
         "name" => "Manage devices",
         "icon" => "	fas fa-laptop",

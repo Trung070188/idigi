@@ -69,7 +69,7 @@
                                             <div class="row">
                                                 <div class="col-md-3">
                                                     <div class="user-info-left">
-                                                        <div class="contact">
+                                                        <div class="nva">
 
                                                         </div>
                                                         <div class="contact" style="margin-top: 20px"
@@ -298,6 +298,13 @@
 
     option {
         color: black;
+    }
+    .nva{
+        width: 150px;
+        height: 150px;
+        margin: 0 auto;
+        background: #EFF0F6;
+        border-radius: 50%;
     }
 
 
