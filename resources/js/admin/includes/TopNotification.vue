@@ -10,36 +10,54 @@
                                                 </div>
                                                    <span v-for="notify in entries" class="notifiy_num"
                                                          v-if="notification>0 && notify.title=='Yêu cầu cấp quyền'">{{notification}}</span>
+                                                <span v-for="notify in entries" class="notifiy_num"
+                                                      v-if="admin>0 && notify.title=='Yêu cầu xóa thiết bị'">{{admin}}</span>
+
+
                                                 <!--end::Svg Icon-->
 											</span>
 
-<!--                <span v-for="pulse_ring in entries" v-if="admin>0 && pulse_ring.title=='Yêu cầu xóa thiết bị'"-->
-<!--                      class="pulse-ring"></span>-->
-<!--                <span v-for="pulse_ring in entries" v-if="notification>0 && pulse_ring.title=='Yêu cầu cấp quyền'"-->
-<!--                      class="pulse-ring"></span>-->
+                <!--                <span v-for="pulse_ring in entries" v-if="admin>0 && pulse_ring.title=='Yêu cầu xóa thiết bị'"-->
+                <!--                      class="pulse-ring"></span>-->
+                <!--                <span v-for="pulse_ring in entries" v-if="notification>0 && pulse_ring.title=='Yêu cầu cấp quyền'"-->
+                <!--                      class="pulse-ring"></span>-->
 
 
             </div>
         </div>
         <!--end::Toggle-->
         <!--begin::Dropdown-->
-        <div   class="dropdown-menu dropdown-menu-right dropdown-menu-anim-up dropdown-menu-lg">
+        <div  v-for="entry in entries" class="dropdown-menu dropdown-menu-right dropdown-menu-anim-up dropdown-menu-lg">
             <form v-if="entries.length>0">
                 <!--begin::Header-->
-                    <div
-                         class="d-flex flex-column pt-12 bgi-size-cover bgi-no-repeat rounded-top"
-                         style="background-image: url(/assets/media/misc/bg-1.jpg)">
-                        <!--begin::Title-->
-                        <h4 v-if="notification>0"
-                            class="d-flex flex-center rounded-top">
-                            <span class="text-white">User Notifications</span>
-                            <span class="btn btn-text btn-success btn-sm font-weight-bold btn-font-md ml-2">{{notification}} new</span>
-                        </h4>
-                        <h4 v-if="notification==0"
-                            class="d-flex flex-center rounded-top">
-                            <span class="text-white">No Notifications</span>
-                        </h4>
-                    </div>
+                <div v-if="entry.title=='Yêu cầu cấp quyền'"
+                     class="d-flex flex-column pt-12 bgi-size-cover bgi-no-repeat rounded-top"
+                     style="background-image: url(/assets/media/misc/bg-1.jpg)">
+                    <!--begin::Title-->
+                    <h4 v-if="notification>0"
+                        class="d-flex flex-center rounded-top">
+                        <span class="text-white">User Notifications</span>
+                        <span class="btn btn-text btn-success btn-sm font-weight-bold btn-font-md ml-2">{{notification}} new</span>
+                    </h4>
+                    <h4 v-if="notification==0"
+                        class="d-flex flex-center rounded-top">
+                        <span class="text-white">No Notifications</span>
+                    </h4>
+                </div>
+                <div  v-if="entry.title=='Yêu cầu xóa thiết bị'"
+                      class="d-flex flex-column pt-12 bgi-size-cover bgi-no-repeat rounded-top"
+                      style="background-image: url(/assets/media/misc/bg-1.jpg)">
+                    <!--begin::Title-->
+                    <h4 v-if="admin>0"
+                        class="d-flex flex-center rounded-top">
+                        <span class="text-white">User Notifications</span>
+                        <span class="btn btn-text btn-success btn-sm font-weight-bold btn-font-md ml-2">{{admin}} new</span>
+                    </h4>
+                    <h4 v-if="admin==0"
+                        class="d-flex flex-center rounded-top">
+                        <span class="text-white">No Notifications</span>
+                    </h4>
+                </div>
                 <div class="tab-content" style="overflow: auto;height: 200px;">
                     <div v-for="entry in entries" class="tab-pane active" id="topbar_notifications_events"
                          role="tabpanel">
@@ -90,6 +108,8 @@
                     <h4 class="d-flex flex-center rounded-top">
                         <span class="text-white">No Notifications</span>
                     </h4>
+
+
                 </div>
                 <div class="tab-content" style="overflow: auto;height: 200px;">
                     <!--begin::Nav-->

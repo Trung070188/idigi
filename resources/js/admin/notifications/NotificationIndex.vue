@@ -90,12 +90,12 @@
                                 <td></td>
                                 <td v-if="entry.title==='Yêu cầu xóa thiết bị'">
                                     <a :href="entry.url">View detail</a>
-                                    <a @click="remove(entry)" href="javascript:;" class="btn-trash deleted" style="margin: 0px 10px 0px;"><i
+                                    <a v-if="permissions['025']" @click="remove(entry)" href="javascript:;" class="btn-trash deleted" style="margin: 0px 10px 0px;"><i
                                         class="fa fa-trash mr-1 deleted"></i></a>
                                 </td>
                                 <td v-if="entry.title==='Yêu cầu cấp quyền'">
-                                    <a :href="entry.url">View detail</a>
-                                    <a @click="remove(entry)" href="javascript:;" class="btn-trash deleted" style="margin: 0px 10px 0px;"><i
+                                    <a v-if="permissions['026']" :href="entry.url">View detail</a>
+                                    <a v-if="permissions['025']" @click="remove(entry)" href="javascript:;" class="btn-trash deleted" style="margin: 0px 10px 0px;"><i
                                         class="fa fa-trash mr-1 deleted"></i></a>
                                 </td>
 
@@ -132,7 +132,7 @@
 </template>
 
 <script>
-    import {$get, $post, getTimeRangeAll} from "../../utils";
+    import {$get, $post, getTimeRangeAll,clone} from "../../utils";
     import $router from '../../lib/SimpleRouter';
     import ActionBar from "../includes/ActionBar";
 
@@ -143,6 +143,8 @@
         name: "NotificationsIndex.vue",
         components: {ActionBar},
         data() {
+            const permissions = clone(window.$permissions)
+
             let isShowFilter = false;
             let filter = {
                 keyword: $q.keyword || '',
@@ -155,6 +157,7 @@
                 }
             }
             return {
+                permissions,
 
                 unreadNotifications: {},
                 entries: [],

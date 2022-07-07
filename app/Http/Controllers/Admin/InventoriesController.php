@@ -32,8 +32,6 @@ class InventoriesController extends AdminBaseController
      */
     public function __construct()
     {
-        $this->middleware('CheckInventories');
-
     }
     public function index()
     {

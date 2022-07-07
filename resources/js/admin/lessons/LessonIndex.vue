@@ -12,7 +12,7 @@
                         <!-- <a :href="'/xadmin/schools/create'" class="btn btn-primary button-create " >
                      Create new
                  </a> -->
-                        <button class="btn btn-primary button-create " @click="openModal()"> Download Lesson</button>
+                        <button class="btn btn-primary button-create " @click="openModal()" v-if="permissions['011']"> Download Lesson</button>
                     </div>
                     <hr>
                     <div class="card-header border-0 pt-5">
@@ -110,7 +110,7 @@
                                  v-if="entries.length > 0"></div>
                             <div style="margin-left: 20px" v-if="lessonIds.length > 0"> {{ lessonIds.length }} lesson
                                 selected
-                                <a href="javascript:;" @click="removeAll" style="color: red; margin-left: 10px">clear all</a>
+                                <a  v-if="permissions['012']" href="javascript:;" @click="removeAll" style="color: red; margin-left: 10px">clear all</a>
                             </div>
                         </div>
                         <table class=" table  table-head-custom table-head-bg table-vertical-center">
@@ -138,9 +138,9 @@
 
                                 <td class="">
                                     <!--                                    <a :href="'/xadmin/lessons/edit?id='+entry.id" style="margin-right: 10px"><i style="font-size:1.3rem" class="fa fa-edit"></i></a>-->
-                                    <a @click="openModalEntry(entry)" href="javascript:;" class=" btn-action"><i
+                                    <a @click="openModalEntry(entry)" href="javascript:;" class=" btn-action" ><i
                                         class="fa fa-download"></i></a>
-                                    <a @click="remove(entry)" href="javascript:;" class="btn-trash btn-action "><i
+                                    <a v-if="permissions['012']" @click="remove(entry)" href="javascript:;" class="btn-trash btn-action "><i
                                         class="fa fa-trash "></i></a>
 
                                 </td>
@@ -213,7 +213,7 @@
 </template>
 
 <script>
-    import {$get, $post, getTimeRangeAll} from "../../utils";
+    import {$get, $post, getTimeRangeAll, clone} from "../../utils";
     import $router from '../../lib/SimpleRouter';
     import ActionBar from "../includes/ActionBar";
 
@@ -224,6 +224,7 @@
         name: "LessonsIndex.vue",
         components: {ActionBar},
         data() {
+            const permissions = clone(window.$permissions)
 
             let isShowFilter = false;
             let filter = {
@@ -239,6 +240,7 @@
                 }
             }
             return {
+                permissions,
                 device: '',
                 devices: [],
                 lessonIds: [],

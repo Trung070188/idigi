@@ -9,7 +9,7 @@
                         <div class="title">
                             <label>Manage users</label>
                         </div>
-                           <a :href="'/xadmin/users/create'" class="btn btn-primary button-create " >
+                           <a v-if="permissions['001']" :href="'/xadmin/users/create'" class="btn btn-primary button-create " >
                         Create new
                     </a>
                     </div>
@@ -142,9 +142,9 @@
                                 <td v-if="entry.state==1">Yes</td>
                                 <td v-if="entry.state==0">No</td>
                                 <td>
-                                    <a :href="'/xadmin/users/edit?id='+entry.id"><i style="font-size:1.3rem"
+                                    <a v-if="permissions['002']" :href="'/xadmin/users/edit?id='+entry.id"><i style="font-size:1.3rem"
                                                                                     class="fa fa-edit"></i></a>
-                                    <a @click="remove(entry)" href="javascript:;" class="btn-trash deleted"><i
+                                    <a v-if="permissions['003']" @click="remove(entry)" href="javascript:;" class="btn-trash deleted"><i
                                         class="fa fa-trash mr-1 deleted"></i></a>
                                 </td>
                             </tr>
@@ -178,7 +178,7 @@
 </template>
 
 <script>
-    import {$get, $post, getTimeRangeAll} from "../../utils";
+    import {$get, $post, getTimeRangeAll,clone} from "../../utils";
     import $router from '../../lib/SimpleRouter';
     import ActionBar from "../includes/ActionBar";
     import SwitchButton from "../../components/SwitchButton";
@@ -191,6 +191,7 @@
         name: "UsersIndex.vue",
         components: {ActionBar, SwitchButton},
         data() {
+            const permissions = clone(window.$permissions)
             let isShowFilter = false;
             let filter = {
                 keyword: $q.keyword || '',
@@ -207,6 +208,7 @@
                 }
             }
             return {
+                permissions,
                 isShowFilter: isShowFilter,
                 breadcrumbs: [
                     {

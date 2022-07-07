@@ -119,11 +119,7 @@
                             </div>
                         </div>
                         <div class="col-lg-12" style="text-align: center;padding: 0 114px;" >
-                            <div class="row">
-                                <div class="col-lg-1"></div>
-                                <div class="col-lg-1"></div>
-                                <div class="col-lg-2"></div>
-                                <div class=" col-lg-2" v-for="entry in entries" v-if="entry.type=='window'&& entry.is_default==1" style="">
+                                <div v-for="entry in entries" v-if="entry.type=='window'&& entry.is_default==1" style="">
 
                                     <a :href="entry.url">
                                         <button class="btn btn-primary">Download for Windows
@@ -133,7 +129,7 @@
                                     <br>
                                     <label style="margin: 12px 34px 0px;">{{entry.name}}</label>
                                 </div>
-                                <div class=" col-2" v-for="entry in entries" v-if="entry.type=='ios'&& entry.is_default==1" style="">
+                                <div  v-for="entry in entries" v-if="entry.type=='ios'&& entry.is_default==1" style="">
 
                                     <a :href="entry.url">
                                         <button class="btn btn-primary">Download for MacOS
@@ -143,8 +139,6 @@
                                     <br>
                                     <label style="margin: 12px 34px 0px;">{{entry.name}}</label>
                                 </div>
-                            </div>
-
                         </div>
                     </div>
                 </div>

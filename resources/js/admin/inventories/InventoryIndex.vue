@@ -9,7 +9,7 @@
                         <div class="title">
                             <label>Inventory</label>
                         </div>
-                           <a :href="'/xadmin/inventories/create'" class="btn btn-primary button-create " >
+                           <a :href="'/xadmin/inventories/create'" class="btn btn-primary button-create " v-if="permissions['007']" >
                         Create new
                     </a>
                     </div>
@@ -145,8 +145,8 @@
                                 <td v-text=" d(entry.created_at)"></td>
 
                                 <td>
-                                    <a :href="'/xadmin/inventories/edit?id='+entry.id" style="margin-right: 10px"><i style="font-size:1.3rem" class="fa fa-edit"></i></a>
-                                    <a @click="remove(entry)" href="javascript:;" class="btn-trash deleted"><i
+                                    <a :href="'/xadmin/inventories/edit?id='+entry.id" style="margin-right: 10px"><i style="font-size:1.3rem" class="fa fa-edit" v-if="permissions['008']"></i></a>
+                                    <a v-if="permissions['010']" @click="remove(entry)" href="javascript:;" class="btn-trash deleted"><i
                                         class="fa fa-trash mr-1 deleted"></i></a>
                                 </td>
                             </tr>
@@ -170,21 +170,16 @@
                                 <Paginate :value="paginate" :pagechange="onPageChange"></Paginate>
                             </div>
                         </div>
-
-
                     </div>
                 </div>
             </div>
-
         </div>
-
-
     </div>
 
 </template>
 
 <script>
-    import {$get, $post, getTimeRangeAll} from "../../utils";
+    import {$get, $post, getTimeRangeAll,clone} from "../../utils";
     import $router from '../../lib/SimpleRouter';
     import ActionBar from "../includes/ActionBar";
     import SwitchButton from "../../components/SwitchButton";
@@ -197,6 +192,7 @@
         name: "InventoriesIndex.vue",
         components: {ActionBar, SwitchButton},
         data() {
+            const permissions = clone(window.$permissions)
             let isShowFilter = false;
             let filter = {
                 keyword: $q.keyword || '',
@@ -212,6 +208,7 @@
                 }
             }
             return {
+                permissions,
                 last_updated:[],
                 isShowFilter: isShowFilter,
                 breadcrumbs: [
