@@ -121,7 +121,7 @@
                             $menu = [
                                 "name" => $groupPermission->name,
                                 "icon" => $groupPermission->icon,
-                                'url' => $groupPermission->url,
+                                'url' => $groupPermission->path,
                                 'base' => $groupPermission->base,
                                 'subs' => [],
                             ];
@@ -136,7 +136,7 @@
                             $menu = [
                                 "name" => $groupPermission->name,
                                 "icon" => $groupPermission->icon,
-                                'url' => $groupPermission->url
+                                'url' => $groupPermission->path
                             ];
                         }
 
@@ -161,7 +161,7 @@
                                 $menu = [
                                     "name" => $groupPermission->name,
                                     "icon" => $groupPermission->icon,
-                                    'url' => $groupPermission->url,
+                                    'url' => $groupPermission->path,
                                     'subs' => [],
                                 ];
 
@@ -169,14 +169,14 @@
                                     $menu['subs'][] = [
                                         "name" => $child->name,
                                         "icon" => $child->icon,
-                                        'url' => $child->url,
+                                        'url' => $child->path,
                                     ];
                                 }
                             }else{
                                 $menu = [
                                     "name" => $groupPermission->name,
                                     "icon" => $groupPermission->icon,
-                                    'url' => $groupPermission->url
+                                    'url' => $groupPermission->path
                                 ];
                             }
 
