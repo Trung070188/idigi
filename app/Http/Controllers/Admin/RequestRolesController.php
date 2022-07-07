@@ -69,12 +69,22 @@ class RequestRolesController extends AdminBaseController
         $id=$req->id;
         $entry = RequestRole::with('users')->find($id);
         $user=$entry->users;
+        $roless=$user->roles;
+       foreach ($roless as $roles)
+       {
+           $roles=$roles->role_name;
+
+
+       }
+        $school=$user->schools;
         if (!$entry) {
             throw new NotFoundHttpException();
         }
         $jsonData = [
             'entry' => $entry,
             'user' => $user,
+            'school'=>$school,
+            'roles'=>$roles,
         ];
         /**
          * @var  RequestRole $entry
@@ -155,9 +165,9 @@ class RequestRolesController extends AdminBaseController
 
         ], $data);
         $request_roles=RequestRole::query()->orderBy('id')->get();
-        foreach($$request_roles as $request_role)
+        foreach($request_roles as $request_role)
         {
-            $request_role=$$request_role->id;
+            $request_role=$request_role->id;
         }
 
         $data_device = new Notification();
@@ -179,7 +189,7 @@ class RequestRolesController extends AdminBaseController
             'message' => 'Đã gửi yêu cầu cấp quyền thành công',
         ];
     }
-    public function refuse(Request $req)
+    public function save_role(Request $req)
     {
         if (!$req->isMethod('POST')) {
             return ['code' => 405, 'message' => 'Method not allow'];
@@ -188,8 +198,6 @@ class RequestRolesController extends AdminBaseController
         $data = $req->get('entry');
 
         $rules = [
-            'reason' => 'required|max:100',
-//    'role_description' => 'max:255',
         ];
 
         $v = Validator::make($data, $rules);
@@ -212,9 +220,23 @@ class RequestRolesController extends AdminBaseController
                     'message' => 'Không tìm thấy',
                 ];
             }
+            $data_role=$req->all();
+            UserRole::where('user_id', $entry->user_id)->delete();
+            if($data_role['role'])
+            {
+                UserRole::updateOrCreate(
+                    [
+                    'user_id'=>$entry->user_id,
+                    'role_id'=>$data_role['role'],
+                ],
+                    [
+                        'user_id'=>$entry->user_id,
+                        'role_id'=>$data_role['role'],
+                    ]
+                );
+            }
 
             $entry->fill($data);
-            $entry->status = 'Refuse';
             $entry->save();
 
 
@@ -265,7 +287,7 @@ class RequestRolesController extends AdminBaseController
         }
         $user_role->save();
 
-        
+
 
         return [
             'code' => 200,

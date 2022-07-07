@@ -37,6 +37,7 @@ class User extends Authenticatable
         'username',
         'full_name',
         'phone',
+        'school_id',
         'class',
         'image',
         'file_image_id',
@@ -155,6 +156,10 @@ WHERE p.`user_id`=?', [$this->id]);
     public function notification()
     {
         return $this->hasMany(Notification::class);
+    }
+    public function schools()
+    {
+        return $this->belongsTo(School::class,'school_id');
     }
 
 }

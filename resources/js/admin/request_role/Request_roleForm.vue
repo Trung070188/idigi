@@ -3,49 +3,49 @@
         <ActionBar type="form" @save="save()"
                    :code="entry.id"
                    back-url="dashboard/index"
-                   :breadcrumbs = "breadcrumbs"/>
+                   :breadcrumbs="breadcrumbs"/>
         <div class="  ">
 
             <!-- Modal -->
-<!--            <div class="modal fade" id="deviceConfirm" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">-->
-<!--                <div class="modal-dialog modal-dialog-centered" role="document">-->
-<!--                    <div class="modal-content">-->
-<!--                        <div class="modal-header">-->
-<!--                            <h5 class="modal-title" id="exampleModalLongTitle">Change password</h5>-->
-<!--                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">-->
-<!--                                <span aria-hidden="true">&times;</span>-->
-<!--                            </button>-->
-<!--                        </div>-->
-<!--                        <div class="modal-body">-->
-<!--                            <div class="form-group">-->
-<!--                                <label>Current Password <span class="text-danger">*</span></label>-->
-<!--                                <input id="f_role_name" v-model="entry.old_password" type="password" name="old_password" class="form-control"-->
-<!--                                       placeholder="" >-->
-<!--                                <error-label for="f_role_name"  :errors="errors.old_password" ></error-label>-->
-<!--                            </div>-->
-<!--                            <div class="form-group">-->
-<!--                                <label>New Password <span class="text-danger">*</span></label>-->
-<!--                                <input id="f_role_description" v-model="entry.password" type="password" name="password" class="form-control "-->
-<!--                                       placeholder="" >-->
+            <!--            <div class="modal fade" id="deviceConfirm" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">-->
+            <!--                <div class="modal-dialog modal-dialog-centered" role="document">-->
+            <!--                    <div class="modal-content">-->
+            <!--                        <div class="modal-header">-->
+            <!--                            <h5 class="modal-title" id="exampleModalLongTitle">Change password</h5>-->
+            <!--                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">-->
+            <!--                                <span aria-hidden="true">&times;</span>-->
+            <!--                            </button>-->
+            <!--                        </div>-->
+            <!--                        <div class="modal-body">-->
+            <!--                            <div class="form-group">-->
+            <!--                                <label>Current Password <span class="text-danger">*</span></label>-->
+            <!--                                <input id="f_role_name" v-model="entry.old_password" type="password" name="old_password" class="form-control"-->
+            <!--                                       placeholder="" >-->
+            <!--                                <error-label for="f_role_name"  :errors="errors.old_password" ></error-label>-->
+            <!--                            </div>-->
+            <!--                            <div class="form-group">-->
+            <!--                                <label>New Password <span class="text-danger">*</span></label>-->
+            <!--                                <input id="f_role_description" v-model="entry.password" type="password" name="password" class="form-control "-->
+            <!--                                       placeholder="" >-->
 
-<!--                                <error-label for="f_role_description"  :errors="errors.password"></error-label>-->
+            <!--                                <error-label for="f_role_description"  :errors="errors.password"></error-label>-->
 
-<!--                            </div>-->
-<!--                            <div class="form-group">-->
-<!--                                <label>Confirm New Password <span class="text-danger">*</span></label>-->
-<!--                                <input  name="new_password_confirmation" v-model="entry.confirm_password" type="password" class="form-control"-->
-<!--                                        placeholder="" >-->
-<!--                                <error-label for="f_role_description" :errors="errors.confirm_password" ></error-label>-->
+            <!--                            </div>-->
+            <!--                            <div class="form-group">-->
+            <!--                                <label>Confirm New Password <span class="text-danger">*</span></label>-->
+            <!--                                <input  name="new_password_confirmation" v-model="entry.confirm_password" type="password" class="form-control"-->
+            <!--                                        placeholder="" >-->
+            <!--                                <error-label for="f_role_description" :errors="errors.confirm_password" ></error-label>-->
 
-<!--                            </div>-->
-<!--                        </div>-->
-<!--                        <div class="modal-footer">-->
-<!--                            <button type="button" class="btn btn-secondary" data-dismiss="modal" @click="CloseModal()">Close</button>-->
-<!--                            <button type="button" class="btn btn-primary" @click="updatePassword()">Save changes</button>-->
-<!--                        </div>-->
-<!--                    </div>-->
-<!--                </div>-->
-<!--            </div>-->
+            <!--                            </div>-->
+            <!--                        </div>-->
+            <!--                        <div class="modal-footer">-->
+            <!--                            <button type="button" class="btn btn-secondary" data-dismiss="modal" @click="CloseModal()">Close</button>-->
+            <!--                            <button type="button" class="btn btn-primary" @click="updatePassword()">Save changes</button>-->
+            <!--                        </div>-->
+            <!--                    </div>-->
+            <!--                </div>-->
+            <!--            </div>-->
 
 
             <div class="row">
@@ -68,16 +68,23 @@
                                         <div class="tab-pane profile active" id="profile-tab">
                                             <div class="row">
                                                 <div class="col-md-3">
-                                                    <div class="user-info-left" >
-                                               <div  class="contact">
-                                                    </div> 
-                                                        <div class="contact" style="margin-top: 20px" v-if="entry.status=='Aprrove'">
-                                                            <a href="#" class="btn-block" @click="modalDevice()">Reset password</a>
-                                                            <a href="/xadmin/logout" class=" btn-block">Deactive account</a>
+                                                    <div class="user-info-left">
+                                                        <div class="contact">
 
                                                         </div>
-                                                         <div class="contact" style="margin-top: 20px" v-if="entry.status=='Waiting'">
-                                                                <button class="btn btn-primary" @click="toggleStatus(entry)">Verify account</button>
+                                                        <div class="contact" style="margin-top: 20px"
+                                                             v-if="entry.status=='Aprrove'">
+                                                            <a href="#" class="btn-block" @click="modalDevice()">Reset
+                                                                password</a>
+                                                            <a href="/xadmin/logout" class=" btn-block">Deactive
+                                                                account</a>
+
+                                                        </div>
+                                                        <div class="contact" style="margin-top: 20px"
+                                                             v-if="entry.status=='Waiting'">
+                                                            <button class="btn btn-primary"
+                                                                    @click="toggleStatus(entry)">Verify account
+                                                            </button>
                                                         </div>
 
                                                     </div>
@@ -85,26 +92,53 @@
                                                 <div class="col-md-9">
                                                     <div class="user-info-right">
                                                         <div class="basic-info">
-                                                            <p class="data-row col-sm-6 " >
-                                                                <label >Fullname </label>
-                                                                <input  class="form-control" placeholder="Enter the full name" v-model="user.full_name" />
+                                                            <p class="data-row col-sm-6 ">
+                                                                <label>Fullname </label>
+                                                                <input class="form-control" disabled
+                                                                       placeholder="Enter the full name"
+                                                                       v-model="user.full_name"/>
                                                             </p>
-                                                            <p class="data-row col-sm-6 " >
-                                                                <label >Email </label>
-                                                                <input  class="form-control" placeholder="Enter the full name" v-model="user.email" />
-                                                            <p class="data-row col-sm-6 " >
-                                                                <label >Username </label>
-                                                                <input  class="form-control" disabled  v-model="user.username" />
+                                                            <p class="data-row col-sm-6 ">
+                                                                <label>Email </label>
+                                                                <input class="form-control" disabled
+                                                                       placeholder="Enter the full name"
+                                                                       v-model="user.email"/>
+                                                            <p class="data-row col-sm-6 ">
+                                                                <label>Username </label>
+                                                                <input class="form-control" disabled
+                                                                       v-model="user.username"/>
                                                             </p>
-                                                            <div  class="data-row col-sm-6 " >
-                                                                <label   >Role </label>
-                                                                <input class="form-control" disabled  v-model="entry.role_name" />
-                                                                <div class="role">
-
-                                                                </div>
+                                                            <div class="data-row col-sm-6 " v-if="entry.status=='Waiting'">
+                                                                <label>Role </label>
+                                                                <input class="form-control" disabled
+                                                                       v-model="entry.role_name"/>
                                                             </div>
-                                                            <div class="data-row col-sm-6 " >
-                                                                <button type="reset"  class="btn btn-primary mr-2">Save</button>
+                                                            <div class="data-row col-sm-6 " v-if="entry.status=='Aprrove' && entry.role_name=='Teacher'" >
+                                                                <label>Role </label>
+                                                                <input class="form-control" disabled
+                                                                       v-model="entry.role_name"/>
+                                                            </div>
+                                                            <div class="data-row col-sm-6 " v-if="entry.status=='Aprrove' && entry.role_name=='Moderator'">
+                                                                <label>Role </label>
+                                                                <select class="form-control form-select" required
+                                                                       v-model="role">
+                                                                    <option value="" disabled selected>{{roles}}</option>
+                                                                    <option  value="2">Administrator</option>
+                                                                    <option value="13">Partner</option>
+                                                                    <option value="5">Teacher</option>
+                                                                </select>
+
+
+                                                            </div>
+                                                            <div class="data-row col-sm-6 " v-if="entry.status=='Aprrove' && entry.role_name=='Teacher'">
+                                                                <label>School </label>
+                                                                <input class="form-control" disabled
+                                                                       v-model="school.school_name"/>
+                                                            </div>
+
+                                                            <div class="data-row col-sm-6 " style="margin: 22px 0px 0px;">
+                                                                <button  class="btn btn-primary" @click="save_role()">Save
+                                                                </button>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -130,20 +164,24 @@
     import FileManagerInput from "../../components/FileManagerInput";
     import ActionBar from "../includes/ActionBar";
     import UploadImage from "../../components/UploadImage";
+
     export default {
         name: "Request_roleForm.vue",
-        components: { ActionBar,UploadImage},
+        components: {ActionBar, UploadImage},
         data() {
             return {
-                check_role:[],
+                check_role: [],
                 breadcrumbs: [
                     {
-                        title:''
+                        title: ''
                     },
 
                 ],
+                role:'',
                 entry: $json.entry || {},
-                user:$json.user ||{},
+                user: $json.user || {},
+                school:$json.school||{},
+                roles:$json.roles||{},
                 isLoading: false,
                 errors: {}
             }
@@ -155,7 +193,7 @@
 
                 window.location.href = '/xadmin/dashboard/index';
             },
-              async toggleStatus(entry) {
+            async toggleStatus(entry) {
                 const res = await $post('/xadmin/request_roles/toggleStatus', {
                     id: entry.id,
                     status: entry.status
@@ -166,8 +204,27 @@
                 } else {
                     toastr.error(res.message);
                 }
-
+                location.replace('/xadmin/request_roles/edit?id=' + entry.id);
             },
+            async save_role() {
+                this.isLoading = true;
+                const res = await $post('/xadmin/request_roles/save_role', {entry: this.entry, role: this.role}, false);
+
+                this.isLoading = false;
+                if (res.errors) {
+                    this.errors = res.errors;
+                    return;
+                }
+                if (res.code) {
+                    toastr.error(res.message);
+                } else {
+                    this.errors = {};
+                    toastr.success(res.message);
+                    if (!this.entry.id) {
+                        location.replace('/xadmin/request_roles/edit?id=' + res.id);
+                    }
+                }
+            }
 
         }
     }
@@ -199,8 +256,8 @@
         margin-bottom: 20px;
     }
 
-    .user-info-left .btn{
-        border-radius:0px;
+    .user-info-left .btn {
+        border-radius: 0px;
     }
 
     .profile .user-info-left ul.social a {
@@ -221,12 +278,9 @@
     .form-horizontal .control-label {
         text-align: left;
     }
-    .role{
-        margin-bottom: 22px;
-        margin-top: -26px;
-        margin-left: 14px;
-    }
-    .btn-block{
+
+
+    .btn-block {
         background: #000000;
         color: #f1f1f1;
         border: 1px solid #000000;
@@ -237,6 +291,14 @@
 
     }
 
+
+    option[value=""][disabled] {
+        display: none;
+    }
+
+    option {
+        color: black;
+    }
 
 
 

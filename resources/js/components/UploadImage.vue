@@ -261,7 +261,7 @@
 
     .fmi-preview-ul li {
         display: inline-block;
-        margin-left: 5px;
+        /*margin-left: 5px;*/
         position: relative;
         /*width: 80px;
         height: auto;*/

@@ -28,7 +28,4 @@ class School extends BaseModel
     'number_of_users',
     'devices_per_user',
 ];
-    public function users(){
-        return $this->hasMany(User::class);
-    }
 }
