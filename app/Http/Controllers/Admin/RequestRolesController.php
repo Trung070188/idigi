@@ -84,7 +84,7 @@ class RequestRolesController extends AdminBaseController
             'entry' => $entry,
             'user' => $user,
             'school'=>$school,
-            'roles'=>$roles,
+            @'roles'=>@$roles,
         ];
         /**
          * @var  RequestRole $entry
@@ -274,6 +274,7 @@ class RequestRolesController extends AdminBaseController
 
         $entry->status = $req->status ? 'Aprrove' : 'Waiting';
         $entry->save();
+        UserRole::where('user_id', $entry->user_id)->delete();
         $user_role=new UserRole();
         $user_role->user_id=$entry->user_id;
         if($entry->role_name=='Teacher')

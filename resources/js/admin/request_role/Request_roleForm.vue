@@ -130,13 +130,13 @@
 
 
                                                             </div>
-                                                            <div class="data-row col-sm-6 " v-if="entry.status=='Aprrove' && entry.role_name=='Teacher'">
+                                                            <div class="data-row col-sm-6 " style="margin: 14px 0px 0px;" v-if="entry.status=='Aprrove' && entry.role_name=='Teacher'">
                                                                 <label>School </label>
                                                                 <input class="form-control" disabled
                                                                        v-model="school.school_name"/>
                                                             </div>
 
-                                                            <div class="data-row col-sm-6 " style="margin: 22px 0px 0px;">
+                                                            <div  v-if="entry.status=='Aprrove' && entry.role_name=='Moderator'" class="data-row col-sm-6 " style="margin: 22px 0px 0px;">
                                                                 <button  class="btn btn-primary" @click="save_role()">Save
                                                                 </button>
                                                             </div>
