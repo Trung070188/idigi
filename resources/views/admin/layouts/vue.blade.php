@@ -88,16 +88,10 @@
         <script>
             window.$json = JSON.parse('{!! addslashes(json_encode($jsonData?? new stdClass())) !!}');
             window.$componentName = '{{$component}}';
-            window.$sideBarMenus = JSON.parse('{!! addslashes(json_encode(config('menu'))) !!}');
             window.$csrf = '{{csrf_token()}}';
             window.$pageTitle = '{{$title}}';
             <?php
                 $user = auth_user();
-                $roles = $user->roles;
-                $roleUser = [];
-                foreach ($roles as $role){
-                    $roleUser[] = $role->role_name;
-                }
                 $auth = [
                     'id' => $user->id,
                     'email' => $user->email,
@@ -105,9 +99,120 @@
                     'image'=>$user->image,
                 ];
 
+                //menu
+                $groupPermissions = \App\Models\GroupPermission::with(['permissions.roles', 'permissions', 'childs'])
+                    ->where('parent_id', NULL)
+                    ->get();
+                $roles = $user->roles;
+                $menus = [];
+                $isAdmin = 0;
+
+                foreach ($roles as $role) {
+                    if ($role->role_name == 'Super Administrator') {
+                        $isAdmin = 1;
+                    }
+                }
+
+                if($isAdmin == 1){
+                    foreach ($groupPermissions as $groupPermission) {
+
+                        if ($groupPermission->childs->count() > 0) {
+
+                            $menu = [
+                                "name" => $groupPermission->name,
+                                "icon" => $groupPermission->icon,
+                                'url' => $groupPermission->url,
+                                'base' => $groupPermission->base,
+                                'subs' => [],
+                            ];
+                            foreach ($groupPermission->childs as $child) {
+                                $menu['subs'][] = [
+                                    "name" => $child->name,
+                                    "icon" => $child->icon,
+                                    'url' => $child->url,
+                                ];
+                            }
+                        }else{
+                            $menu = [
+                                "name" => $groupPermission->name,
+                                "icon" => $groupPermission->icon,
+                                'url' => $groupPermission->url
+                            ];
+                        }
+
+                        $menus[] = $menu;
+
+                    }
+                }else{
+                    foreach ($groupPermissions as $groupPermission) {
+                        $check = 0;
+                        $permissionRoles = explode(';', $groupPermission->role_id);
+                        foreach ($permissionRoles as $permissionRole){
+                            foreach ($roles as $role){
+                                if($permissionRole == $role->id){
+                                    $check = 1;
+                                }
+                            }
+                        }
+
+                        if($check == 1){
+                            if ($groupPermission->childs->count() > 0) {
+
+                                $menu = [
+                                    "name" => $groupPermission->name,
+                                    "icon" => $groupPermission->icon,
+                                    'url' => $groupPermission->url,
+                                    'subs' => [],
+                                ];
+
+                                foreach ($groupPermission->childs as $child) {
+                                    $menu['subs'][] = [
+                                        "name" => $child->name,
+                                        "icon" => $child->icon,
+                                        'url' => $child->url,
+                                    ];
+                                }
+                            }else{
+                                $menu = [
+                                    "name" => $groupPermission->name,
+                                    "icon" => $groupPermission->icon,
+                                    'url' => $groupPermission->url
+                                ];
+                            }
+
+                            $menus[] = $menu;
+                        }
+
+                    }
+                }
+                //end menu
+
+                //Permission
+                $userPermissions = [];
+                $roleIds = [];
+                foreach ($roles as $role){
+                    $roleIds[] = $role->id;
+                }
+
+                if($isAdmin == 1){
+                    $permissions = \App\Models\Permission::get();
+
+                    foreach ($permissions as $permission){
+                        $userPermissions[$permission->code] = 1;
+                    }
+                }else{
+                    $rolePermissions = \App\Models\RoleHasPermission::whereIn('role_id', $roleIds)
+                        ->with(['permission'])->get();
+
+                    foreach ($rolePermissions as $rolePermission){
+                        $userPermissions[$rolePermission->permission->code] = 1;
+                    }
+                }
             ?>
+            window.$sideBarMenus = JSON.parse('{!! addslashes(json_encode($menus)) !!}');
+            window.$permissions = JSON.parse('{!! addslashes(json_encode($userPermissions)) !!}');
             window.$auth =  JSON.parse('{!! addslashes(json_encode($auth)) !!}');
-            window.$roles =  JSON.parse('{!! addslashes(json_encode($roleUser)) !!}');
+
 
             function autoGrow(element) {
                 element.style.height = "5px";

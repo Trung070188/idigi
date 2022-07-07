@@ -23,9 +23,18 @@ class GroupPermission extends BaseModel
     protected $fillable = [
         'name',
         'description',
+        'parent_id',
     ];
 
     public function permissions(){
         return $this->hasMany(Permission::class);
+    }
+
+    public function parent(){
+        return $this->belongsTo(GroupPermission::class, 'parent_id');
+    }
+
+    public function childs(){
+        return $this->hasMany(GroupPermission::class, 'parent_id');
     }
 }

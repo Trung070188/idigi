@@ -34,4 +34,8 @@ class Permission extends BaseModel
         return $this->belongsToMany(Role::class, 'role_has_permissions');
 
     }
+
+    public function groupPermission(){
+        return $this->belongsTo(GroupPermission::class, 'group_permission_id');
+    }
 }

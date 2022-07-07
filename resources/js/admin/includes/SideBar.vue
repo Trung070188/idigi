@@ -75,7 +75,7 @@
 
                     </div>
 
-                    <template v-for="menu in menus" v-if="menu.show">
+                    <template v-for="menu in menus" >
                         <div data-kt-menu-trigger="click" :class="{'show': menu.active ,'here': menu.active}"
                              class="menu-item menu-accordion" v-if="menu.subs">
                             <span class="menu-link">
@@ -86,7 +86,7 @@
                                 <span class="menu-arrow"></span>
                             </span>
                             <div class="menu-sub menu-sub-accordion menu-active-bg">
-                                <div class="menu-item" v-for="sub in menu.subs" v-if="sub.show">
+                                <div class="menu-item" v-for="sub in menu.subs">
                                     <a class="menu-link" :href="sub.url" :class="{'active': sub.active}">
                                         <span class="menu-bullet">
                                             <span class="bullet bullet-dot"></span>
@@ -122,36 +122,12 @@
         data() {
             const menus = clone(window.$sideBarMenus);
             const pathname = location.pathname.split('?')[0];
-            const roles = clone(window.$roles);
 
             menus.forEach(menu => {
                 menu.showSubMenu = false;
-                menu.show = false;
                 menu.active = false;
                 if (!menu.base) {
                     menu.base = menu.url;
-                }
-                roles.forEach(role => {
-                    menu.roles.forEach(role1 => {
-                        if (role === role1) {
-                            menu.show = true;
-                        }
-                    })
-                });
-
-                if (menu.subs) {
-                    menu.subs.forEach(sub => {
-                        sub.show = false;
-                        roles.forEach(role => {
-                            sub.roles.forEach(role1 => {
-
-                                if (role === role1) {
-                                    sub.show = true;
-
-                                }
-                            })
-                        });
-                    });
                 }
 
                 if (pathname.indexOf(menu.base) >= 0) {

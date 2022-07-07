@@ -200,8 +200,11 @@ class RolesController extends AdminBaseController
     {
         $roles = Role::query()
             ->with(['permissions'])
+            ->where('role_name', '<>','Super Administrator')
             ->orderBy('id', 'ASC')->get();
-        $groupPermissions = GroupPermission::with(['permissions'])->orderBy('name', 'ASC')->get();
+        $groupPermissions = GroupPermission::with(['permissions'])
+            ->whereDoesntHave('childs')
+            ->orderBy('name', 'ASC')->get();
 
         $data = [];
 
@@ -246,52 +249,6 @@ class RolesController extends AdminBaseController
         ];
     }
 
-    public function export()
-    {
-        $keys = [
-            'role_name' => ['A', 'role_name'],
-            'role_description' => ['B', 'role_description'],
-        ];
-
-        $query = Role::query()->orderBy('id', 'desc');
-
-        $entries = $query->paginate();
-        $spreadsheet = new Spreadsheet();
-        $sheet = $spreadsheet->getActiveSheet();
-
-        foreach ($keys as $key => $v) {
-            if (is_string($v)) {
-                $sheet->setCellValue($v . "1", $key);
-            } elseif (is_array($v)) {
-                list($c, $n) = $v;
-                $sheet->setCellValue($c . "1", $n);
-            }
-        }
-
-
-        foreach ($entries as $index => $entry) {
-            $idx = $index + 2;
-            foreach ($keys as $key => $v) {
-                if (is_string($v)) {
-                    $sheet->setCellValue("$v$idx", data_get($entry->toArray(), $key));
-                } elseif (is_array($v)) {
-                    list($c, $n) = $v;
-                    $sheet->setCellValue("$c$idx", data_get($entry->toArray(), $key));
-                }
-            }
-        }
-        $writer = new Xlsx($spreadsheet);
-        // We'll be outputting an excel file
-        header('Content-type: application/vnd.ms-excel');
-        $filename = uniqid() . '-' . date('Y_m_d H_i') . ".xlsx";
-
-        // It will be called file.xls
-        header('Content-Disposition: attachment; filename="' . $filename . '"');
-
-        // Write file to the browser
-        $writer->save('php://output');
-        die;
-    }
 
     public function changeRolePermission(Request $req)
     {
@@ -299,19 +256,83 @@ class RolesController extends AdminBaseController
         $permissionId = $req->permission_id;
         $check = $req->check;
 
+        $permission = Permission::where('id', $permissionId)->first();
+        $groupPermission = GroupPermission::where('id', $permission->group_permission_id)->first();
+        $childCount = Permission::where('group_permission_id', $permission->group_permission_id)
+            ->whereHas('roles', function ($q) use ($roleId){
+                $q->where('id', $roleId);
+            })
+            ->where('id', '<>', $permissionId)->count();
 
-        if ($check == 0) {
+
+        if ($check == false) {
             RoleHasPermission::where('role_id', $roleId)
                 ->where('permission_id', $permissionId)
                 ->delete();
+
+            if($groupPermission && $childCount == 0){//Xóa role ở group
+
+                $permissionRole = $groupPermission->role_id;
+                $newRole = [];
+                $roles = explode(';', $permissionRole);
+                foreach ($roles as $role){
+                    if($role != $roleId){
+                        $newRole[] = $role;
+                    }
+                }
+                $groupPermission->role_id = implode(';', $newRole);
+                $groupPermission->save();
+
+                if($groupPermission->parent_id){//Xóa role ở parent_group
+                    $parentPermission = GroupPermission::where('id', $groupPermission->parent_id)->first();
+                    $childCount = GroupPermission::where('parent_id', $groupPermission->parent_id)
+                        ->where('id','<>', $groupPermission->id)
+                        ->count();
+
+                    if($childCount == 0){
+                        $permissionRole = $parentPermission->role_id;
+                        $newRole = [];
+                        $roles = explode(';', $permissionRole);
+                        foreach ($roles as $role){
+                            if($role != $roleId){
+                                $newRole[] = $role;
+                            }
+                        }
+                        $parentPermission->role_id = implode(';', $newRole);
+                        $parentPermission->save();
+                    }
+                }
+
+            }
+
         } else {
             RoleHasPermission::updateOrCreate([
                 'role_id' => $roleId,
                 'permission_id' => $permissionId
             ],
                 ['role_id' => $roleId,
-                    'permission_id' => $permissionId
+                'permission_id' => $permissionId
                 ]);
+
+            if($groupPermission){
+                $roles = explode(';', $groupPermission->role_id);
+                if(!in_array($roleId, $roles)){
+                    $roles[] = $roleId;
+                    $groupPermission->role_id = implode(';', $roles);
+                    $groupPermission->save();
+
+                    if($groupPermission->parent_id){
+                        $parentPermission = GroupPermission::where('id', $groupPermission->parent_id)->first();
+                        $roles = explode(';', $parentPermission->role_id);
+                        if(!in_array($roleId, $roles)){
+                            $roles[] = $roleId;
+                            $parentPermission->role_id = implode(';', $roles);
+                            $parentPermission->save();
+                        }
+
+                    }
+                }
+            }
         }
 
         return [
