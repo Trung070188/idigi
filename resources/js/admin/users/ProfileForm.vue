@@ -188,21 +188,16 @@
                 this.isLoading = true;
                 const res = await $post('/xadmin/users/updatePassword',{entry: this.entry}, false);
                 console.log(res);
+                location.replace('/xadmin/users/profile?id=' + res.id);
                 this.isLoading = false;
                 if (res.errors) {
                     this.errors = res.errors;
-                    return;
                 }
                 if (res.code) {
                     toastr.error(res.message);
                 } else {
                     this.errors = {};
                     toastr.success(res.message);
-                    if (!this.entry.id) {
-                        location.replace('/xadmin/users/profile?id=' + res.id);
-                    }
-
-
                 }
             }
         }

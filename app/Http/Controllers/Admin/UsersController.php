@@ -377,15 +377,28 @@ class UsersController extends AdminBaseController
 
         $data_role = $req->all();
         $rules = [
-            'full_name' => ['required', new ValiFullname()],
+            'full_name' => ['required', function ($attribute,$value, $fail) {
+                if (preg_match('/[\'\/~`\!@#\$%\^&\*\(\)_\-\+=\{\}\[\]\|;:"\<\>,\.\?\\\]/', $value)) {
+                    return $fail(__(' The :attribute no special characters'));
+                }
+            },
+                 function ($attribute,$value, $fail) {
+                     if (preg_match('/[0-9]/', $value)) {
+                         return $fail(__(' The :attribute not a number'));
+                    }
+                },
+                ],
 //            'password' => '|max:191|confirmed',
         ];
         if (!isset($data['id'])) {
-            $rules['username'] = ['required', 'unique:users,username', new ValiUser()];
+            $rules['username'] = ['required','min:8', 'unique:users,username', function ($attribute,$value, $fail) {
+                if (preg_match('/[\'\/~`\!@#\$%\^&\*\(\)_\-\+=\{\}\[\]\|;:"\<\>,\.\?\\\]/', $value)) {
+                    return $fail(__(' The :attribute no special characters'));
+                }
+            },];
             $rules['email'] = 'required|max:191|email|unique:users,email';
 
 //            $rules['password'] = 'required|max:191|confirmed';
-
         }
         if (isset($data['id'])) {
             $user = User::find($data['id']);
@@ -394,7 +407,9 @@ class UsersController extends AdminBaseController
 
 
         }
-        $v = Validator::make($data, $rules);
+        $customMessages=[
+        ];
+        $v = Validator::make($data, $rules,$customMessages);
 
         if ($v->fails()) {
             return [

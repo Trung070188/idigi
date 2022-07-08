@@ -25,8 +25,8 @@
                             <span style="color:#fff" class="logo ">{{entries}}</span>
 
                             <span style="color:#fff" class="logo">{{role}}</span>
-                         
-                          
+
+
                     </div>
 
                         <div style="margin:0px 15px 0px" id="kt_aside_toggle" class="btn btn-icon w-auto px-0 btn-active-color-primary aside-toggle"
@@ -62,7 +62,8 @@
 
             <!--            </div>-->
         </div>
-        <hr style="margin: 0px">
+        <br>
+        <br>
         <div class="aside-menu flex-column-fluid">
             <div class="hover-scroll-overlay-y my-5 my-lg-5" id="kt_aside_menu_wrapper" data-kt-scroll="true"
                  data-kt-scroll-activate="{default: false, lg: true}" data-kt-scroll-height="auto"

@@ -85,6 +85,7 @@
             async sendRequest() {
                 const res = await $post('/xadmin/request_role/save', {role: this.role,school:this.school}, false);
                 toastr.success(res.message);
+                location.replace('/xadmin/request_role/index');
             }
 
         }
