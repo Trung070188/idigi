@@ -212,7 +212,7 @@
 
     .fmi-dropdown {
         position: relative;
-        margin-left:20px;
+        margin-left:8px;
     }
 
     .fmi-dropdown-menu {
@@ -253,6 +253,7 @@
     }
 
     .fmi-preview-ul {
+        margin-left: -16px;
         /*padding-left: initial;*/
         /*list-style: none;*/
         /*display: flex;*/

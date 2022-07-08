@@ -321,14 +321,30 @@ class UsersController extends AdminBaseController
         $data_role = $req->all();
         $roles = $req->roles;
         $rules = [
-            'username' => ['required', new ValiUser()],
-            'full_name' => ['required', new ValiFullname()],
+            'username' => ['required','min:8', 'unique:users,username', function ($attribute,$value, $fail) {
+                if (preg_match('/[\'\/~`\!@#\$%\^&\*\(\)_\-\+=\{\}\[\]\|;:"\<\>,\.\?\\\]/', $value)) {
+                    return $fail(__(' The :attribute no special characters'));
+                }
+            },],
+            'full_name' => ['required', function ($attribute,$value, $fail) {
+                if (preg_match('/[\'\/~`\!@#\$%\^&\*\(\)_\-\+=\{\}\[\]\|;:"\<\>,\.\?\\\]/', $value)) {
+                    return $fail(__(' The :attribute no special characters'));
+                }
+            },
+                function ($attribute,$value, $fail) {
+                    if (preg_match('/[0-9]/', $value)) {
+                        return $fail(__(' The :attribute not a number'));
+                    }
+                },
+            ],
 //            'password' => '|max:191|confirmed',
         ];
 
         if (isset($data['id'])) {
             $user = User::find($data['id']);
             $rules['email'] = ['required', 'email', Rule::unique('users')->ignore($user->id),];
+            $rules['username'] = ['required', Rule::unique('users')->ignore($user->id),];
+
         }
         $v = Validator::make($data, $rules);
 
@@ -398,14 +414,14 @@ class UsersController extends AdminBaseController
             },];
             $rules['email'] = 'required|max:191|email|unique:users,email';
 
+            ;
+
+
 //            $rules['password'] = 'required|max:191|confirmed';
         }
         if (isset($data['id'])) {
             $user = User::find($data['id']);
-            $rules['email'] = ['required', Rule::unique('users')->ignore($user->id),];
-            $rules['email'] = 'required|max:191|email|';
-
-
+            $rules['email'] = ['required', 'email', Rule::unique('users')->ignore($user->id),];
         }
         $customMessages=[
         ];

@@ -5,13 +5,17 @@
             <div class="btn btn-icon btn-dropdown btn-lg mr-1 pulse pulse-primary" style="margin-top: 10px;border-radius: 50%;">
 											<span class="svg-icon svg-icon-xl svg-icon-primary">
 												<!--begin::Svg Icon | path:assets/media/svg/icons/Code/Compiling.svg-->
-                                                <div class="nva">
-                                                <i class="fa fa-bell" style="margin: 11px 0px 0px"></i>
+                                                <div class="nva" v-if="status!==1">
+                                                <i  class="fa fa-bell" style="margin: 11px 0px 0px"></i>
+
                                                 </div>
-                                                   <span v-for="notify in entries" class="notifiy_num"
-                                                         v-if="notification>0 && notify.title=='Yêu cầu cấp quyền'">{{notification}}</span>
-                                                <span v-for="notify in entries" class="notifiy_num"
-                                                      v-if="admin>0 && notify.title=='Yêu cầu xóa thiết bị'">{{admin}}</span>
+                                                <div class="nva" v-if="status==1">
+                                                        <i  class="fa fa-bell" style="margin: 11px 0px 0px"></i>
+                                                </div>
+                                                   <span  class="notifiy_num"
+                                                         v-if="notification>0 && status==2">{{notification}}</span>
+                                                <span  class="notifiy_num"
+                                                      v-if="admin>0 && status==3">{{admin}}</span>
 
 
                                                 <!--end::Svg Icon-->
@@ -27,38 +31,41 @@
         </div>
         <!--end::Toggle-->
         <!--begin::Dropdown-->
-        <div  v-for="entry in entries" class="dropdown-menu dropdown-menu-right dropdown-menu-anim-up dropdown-menu-lg">
-            <form v-if="entries.length>0">
+        <div  class="dropdown-menu dropdown-menu-right dropdown-menu-anim-up dropdown-menu-lg">
+            <form v-if="status!==1">
                 <!--begin::Header-->
-                <div v-if="entry.title=='Yêu cầu cấp quyền'"
-                     class="d-flex flex-column pt-12 bgi-size-cover bgi-no-repeat rounded-top"
-                     style="background-image: url(/assets/media/misc/bg-1.jpg)">
-                    <!--begin::Title-->
-                    <h4 v-if="notification>0"
-                        class="d-flex flex-center rounded-top">
-                        <span class="text-white">User Notifications</span>
-                        <span class="btn btn-text btn-success btn-sm font-weight-bold btn-font-md ml-2">{{notification}} new</span>
-                    </h4>
-                    <h4 v-if="notification==0"
-                        class="d-flex flex-center rounded-top">
-                        <span class="text-white">No Notifications</span>
-                    </h4>
-                </div>
-                <div  v-if="entry.title=='Yêu cầu xóa thiết bị'"
-                      class="d-flex flex-column pt-12 bgi-size-cover bgi-no-repeat rounded-top"
-                      style="background-image: url(/assets/media/misc/bg-1.jpg)">
-                    <!--begin::Title-->
-                    <h4 v-if="admin>0"
-                        class="d-flex flex-center rounded-top">
-                        <span class="text-white">User Notifications</span>
-                        <span class="btn btn-text btn-success btn-sm font-weight-bold btn-font-md ml-2">{{admin}} new</span>
-                    </h4>
-                    <h4 v-if="admin==0"
-                        class="d-flex flex-center rounded-top">
-                        <span class="text-white">No Notifications</span>
-                    </h4>
-                </div>
-                <div class="tab-content" style="overflow: auto;height: 200px;">
+
+                    <div v-if="status==2"
+                         class="d-flex flex-column pt-12 bgi-size-cover bgi-no-repeat rounded-top"
+                         style="background-image: url(/assets/media/misc/bg-1.jpg)">
+                        <!--begin::Title-->
+                        <h4 v-if="notification>0"
+                            class="d-flex flex-center rounded-top">
+                            <span class="text-white">User Notifications</span>
+                            <span class="btn btn-text btn-success btn-sm font-weight-bold btn-font-md ml-2">{{notification}} new</span>
+                        </h4>
+                        <h4 v-if="notification==0"
+                            class="d-flex flex-center rounded-top">
+                            <span class="text-white">No Notifications</span>
+                        </h4>
+                    </div>
+                    <div  v-if="status==3"
+                          class="d-flex flex-column pt-12 bgi-size-cover bgi-no-repeat rounded-top"
+                          style="background-image: url(/assets/media/misc/bg-1.jpg)">
+                        <!--begin::Title-->
+                        <h4 v-if="admin>0"
+                            class="d-flex flex-center rounded-top">
+                            <span class="text-white">User Notifications</span>
+                            <span class="btn btn-text btn-success btn-sm font-weight-bold btn-font-md ml-2">{{admin}} new</span>
+                        </h4>
+                        <h4 v-if="admin==0"
+                            class="d-flex flex-center rounded-top">
+                            <span class="text-white">No Notifications</span>
+                        </h4>
+                    </div>
+
+
+                <div class="tab-content" style="overflow: auto;height: 200px;" v-if="status!==1">
                     <div v-for="entry in entries" class="tab-pane active" id="topbar_notifications_events"
                          role="tabpanel">
                         <div class="navi navi-hover scroll my-4" data-scroll="true"
@@ -102,7 +109,7 @@
                 </div>
 
             </form>
-            <form v-if="entries.length==0">
+            <form v-if="status==1">
                 <div class="d-flex flex-column pt-12 bgi-size-cover bgi-no-repeat rounded-top"
                      style="background-image: url(/assets/media/misc/bg-1.jpg)">
                     <h4 class="d-flex flex-center rounded-top">
@@ -141,6 +148,7 @@
 
         data() {
             return {
+                status:'',
                 admin: '',
                 notification: '',
                 entries: [],
@@ -154,6 +162,7 @@
                 this.entries = res.data.entries;
                 this.notification = res.data.notification;
                 this.admin = res.data.admin;
+                this.status=res.data.status;
 
             },
             async abc(entry) {
@@ -173,19 +182,20 @@
     .notifiy_num {
         text-align: center;
         position: absolute;
-        margin: -20px -15px 10px;
-        min-width: 15px;
+        margin: -20px -16px 10px;
+        min-width: 17px;
         min-height: 17px;
         border-radius: 50%;
         background: red;
         color: #f1f1f1;
-        font-family: Sans-Serif;
+
     }
     .nva{
         position: absolute;
         width: 40px;
         height: 40px;
-        margin: -19px -35px 0px;
+        margin-top: -19px;
+        margin-left: -37px;
         background: #EFF0F6;
         border-radius: 50%;
     }

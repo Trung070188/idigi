@@ -1,7 +1,7 @@
 <template>
 
     <div id="kt_header" style="z-index: 97" class="header align-items-stretch"  >
-        
+
         <div class="container-fluid d-flex align-items-stretch justify-content-between">
             <div class="d-flex align-items-center ms-1 ms-lg-3">
                   <a href="/">
@@ -87,7 +87,7 @@
                         <div data-kt-menu-trigger="click" data-kt-menu-attach="parent"
                              data-kt-menu-placement="bottom-end">
                             <span class="symbol symbol-25" v-if="auth.image!==null" >
-                                <span class="symbol-label font-size-h5 font-weight-bold"><img
+                                <span class="symbol-label font-size-h5 font-weight-bold "><img
                                     style="max-width: 40px ;border-radius:50%;" :src="auth.image">
                                 </span>
                             </span>

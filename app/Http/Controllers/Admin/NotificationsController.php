@@ -300,6 +300,7 @@ class NotificationsController extends AdminBaseController
         $entries = $query->paginate($limit);
         $data = [
         ];
+        $status=1;
         $notification=Notification::query()->where('status','=','new')->count();
         $admin=Notification::query()->where('title','=','Yêu cầu xóa thiết bị')
             ->Where('status','=','new')
@@ -314,9 +315,12 @@ class NotificationsController extends AdminBaseController
             }
             $user = Auth::user();
             foreach ($user->roles as $role) {
-                if($entry->title=='Yêu cầu cấp quyền')
+                if($entry->title=='Yêu cầu cấp quyền' || $entry->title=='Yêu cầu xóa thiết bị')
                 {
+
+
                     if ( $role->role_name=='Super Administrator') {
+                        $status=2;
                         $data[] = [
                             'id' => $entry->id,
                             'user_id' => $entry->user_id,
@@ -335,7 +339,10 @@ class NotificationsController extends AdminBaseController
                 }
                 if($entry->title=='Yêu cầu xóa thiết bị')
                 {
-                    if ( $role->role_name=='Super Administrator' || $role->role_name=='Administrator') {
+
+                    if ( $role->role_name=='Administrator') {
+                        $status=3;
+
                         $data[] = [
                             'id' => $entry->id,
                             'user_id' => $entry->user_id,
@@ -359,7 +366,8 @@ class NotificationsController extends AdminBaseController
             'data' =>[
                 'entries'=>$data,
                 'notification'=>$notification,
-                'admin'=>$admin
+                'admin'=>$admin,
+                'status'=>$status,
 
             ]
 
