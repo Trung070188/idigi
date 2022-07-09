@@ -206,11 +206,12 @@ class UsersController extends AdminBaseController
     public function edit_teacher(Request $req)
     {
         $id = $req->id;
-        $entry = User::query()
+        $entry = User::query()->with('schools')
             ->where('id', $id)->first();
         if (!$entry) {
             throw new NotFoundHttpException();
         }
+        $schools=($entry->schools);
         $user_device = UserDevice::query()->orderBy('id', 'DESC')->get();
 
         /**
@@ -222,7 +223,8 @@ class UsersController extends AdminBaseController
         $user = Auth::user();
                 $jsonData = [
                     'entry' => $entry,
-                    'user_device' => $user_device
+                    'user_device' => $user_device,
+                    'schools'=>$schools
                 ];
                 return view('admin.layouts.vue', compact('title', 'component', 'jsonData'));
     }

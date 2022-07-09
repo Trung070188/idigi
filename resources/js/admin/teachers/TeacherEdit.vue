@@ -57,8 +57,8 @@
                                     </div>
                                     <div class="form-group  col-sm-4">
                                         <label>School <span class="text-danger">*</span></label>
-                                        <input class="form-control" v-model="entry.school_id">
-                                        <error-label for="f_category_id" :errors="errors.school_id"></error-label>
+                                        <input class="form-control" v-model="schools.school_name">
+                                        <error-label for="f_category_id" :errors="errors.school_name"></error-label>
                                     </div>
                                     <div class="form-group  col-sm-4">
                                         <label>Phone number <span class="text-danger">*</span></label>
@@ -177,6 +177,7 @@
                     roles: []
                 },
                 user_device: $json.user_device || [],
+                schools:$json.schools || [],
                 isLoading: false,
                 errors: {}
             }
