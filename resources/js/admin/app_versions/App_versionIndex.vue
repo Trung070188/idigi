@@ -103,8 +103,8 @@
 
                     </div>
                 </div>
-                <div class="card card-custom card-stretch gutter-b">
-                    <div v-if="role=='Teacher' || role=='Administrator'" class="card-body d-flex flex-column" style="height: 563px" >
+                <div class="card card-custom card-stretch gutter-b" v-if="role=='Teacher' || role=='Administrator'">
+                    <div  class="card-body d-flex flex-column" style="height: 563px" >
                         <div class="" style="margin-top: 65px; margin-bottom: 50px">
                             <h2  style="text-align: center;font-size: 30px">Tải iDIGI PC cho máy tính</h2>
                             <h5 style="text-align: center;font-size:20px">Ứng dụng đã có mặt trên Windows và MacOS.</h5>
