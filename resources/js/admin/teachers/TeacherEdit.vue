@@ -9,18 +9,19 @@
              aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered popup-main-1" role="document"
                  style="max-width: 500px;">
-                <div class="modal-content box-shadow-main paymment-status" style="margin-right:20px; left:140px">
+
+                <div  class="modal-content box-shadow-main paymment-status" style="margin-right:20px; left:140px">
                     <div class="close-popup" data-dismiss="modal"></div>
-                    <h3 class="popup-title success" style="text-align: center">Remove teacher device</h3>
-                    <div class="content" style="text-align: center">
-                        <p>Bạn có chắc chắn muốn hủy đăng ký thiết bị Device name của giáo viên không?</p>
-                          <p>  Giáo viên sẽ không thể tiếp tục sử dụng thiết bị này để cài đặt bài giảng.</p>
+                    <h3 class="popup-title success" style="text-align: center;margin:15px 0px 0px" >Delete device </h3>
+                    <div class="content" style="text-align: center;" v-for="device in user_device" v-if="device.id==currId">
+                        <p>Bạn có chắc chắn muốn xóa thiết bị “{{device.device_name}}”
+                            của giáo viên “{{entry.full_name}}”??</p>
                     </div>
                     <div class="form-group d-flex justify-content-between" style="margin: auto;margin-bottom: 20px">
                         <button class="btn btn-primary ito-btn-add" data-dismiss="modal" style="margin-right: 5px" data-bs-dismiss="modal">
                            Cancel
                         </button>
-                        <button v-for="device in user_device" v-if="device.id==currId" class="btn btn-danger ito-btn-small" data-dismiss="modal" @click="remove_device(device)" >Accept remove</button>
+                        <button v-for="device in user_device" v-if="device.id==currId" class="btn btn-danger ito-btn-small" data-dismiss="modal" @click="remove_device(device)" >Yes</button>
                     </div>
                 </div>
             </div>
@@ -57,7 +58,7 @@
                                     </div>
                                     <div class="form-group  col-sm-4">
                                         <label>School <span class="text-danger">*</span></label>
-                                        <input class="form-control" v-model="schools.school_name">
+                                        <input class="form-control" v-model="schools.school_name" disabled>
                                         <error-label for="f_category_id" :errors="errors.school_name"></error-label>
                                     </div>
                                     <div class="form-group  col-sm-4">
@@ -67,7 +68,7 @@
                                     </div>
                                     <div class="form-group  col-sm-4">
                                         <label>Email <span class="text-danger">*</span></label>
-                                        <input class="form-control" v-model="entry.email">
+                                        <input class="form-control" v-model="entry.email" disabled>
                                         <error-label for="f_category_id" :errors="errors.email"></error-label>
                                     </div>
                                 </div>

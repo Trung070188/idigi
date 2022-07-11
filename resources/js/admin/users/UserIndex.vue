@@ -24,7 +24,7 @@
                                                v-model="filter.keyword"
                                                type="text"
                                                style="width: 400px"
-                                               class="form-control " placeholder="Search ID,username,email,role..."
+                                               class="form-control " placeholder="Search ID, username, email, role..."
                                                value="">
                                     </div>
                                     <div class="form-group mx-sm-3 mb-4">
@@ -104,7 +104,7 @@
                        <div>
                            <div  @click="filterClear()">
                               <span style="float: right; margin:0px 0px -20px">
-                                Resfesh List
+                               Refresh list
                                   <i class="fas fa-sync"></i>
                               </span>
                            </div>
