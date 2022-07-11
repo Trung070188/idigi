@@ -73,9 +73,10 @@
                                     </div>
                                 </div>
                                 <div class="row" v-if="name_role==2||name_role==5">
-                                    <div class="form-group  col-sm-4">
+                                    <div class="form-group  col-sm-4" >
                                         <label>School <span class="text-danger">*</span></label>
-                                        <select class="form-control form-select" type="" placeholder="Enter the school" >
+                                        <select  class="form-control form-select" type="" placeholder="Enter the school" v-model="user_school">
+                                            <option v-for="school in schools" :value="school.id">{{school.school_name}}</option>
 
                                         </select>
                                     </div>
@@ -125,6 +126,7 @@
         data() {
 
             return {
+                user_school:'',
                 name_role:'',
                 auto_gen:true,
                 showConfirm: false,
@@ -143,6 +145,7 @@
                     role: []
                 },
                 roles: $json.roles || [],
+                schools:$json.schools||[],
                 isLoading: false,
                 errors: {}
             }
@@ -168,7 +171,7 @@
                 console.log(this.role);
 
                 this.isLoading = true;
-                const res = await $post('/xadmin/users/save', {entry: this.entry, name_role: this.name_role}, false);
+                const res = await $post('/xadmin/users/save', {entry: this.entry, name_role: this.name_role,user_school:this.user_school}, false);
 
                 this.isLoading = false;
                 if (res.errors) {

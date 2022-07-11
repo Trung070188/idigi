@@ -32,7 +32,7 @@
                  style="max-width: 500px;">
                 <div class="modal-content box-shadow-main paymment-status" style="margin-right:20px; left:140px">
                     <div class="close-popup" data-dismiss="modal"></div>
-                    <h3 style="margin:20px auto;font-weight: bold;" class="popup-title success">Add more device</h3>
+                    <h3 style="margin:20px auto;font-weight: 500;" class="popup-title success">Add more device</h3>
                     <div class="content" style="margin: 0 20px 20px">
                         <p>Bước 1 :Sử dụng máy tính mà bạn muốn thêm thiết bị mở ứng dụng IDIGI trên Desktop</p>
                         <p>Bước 2:Nhấn vào nút "Get device information" và copy đoạn mã thông tin thiết bị </p>
@@ -56,9 +56,9 @@
              aria-labelledby="editdeviceConfirm"
              aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered popup-main-1" role="document">
-                <div class="modal-content">
+                <div class="modal-content" style="margin-right:20px; left:140px">
                     <div class="close-popup" data-dismiss="modal"></div>
-                    <h2 style="margin-top: 30px" class="popup-title success">Thông tin device</h2>
+                    <h3 style="margin:20px auto;font-weight: 500;" class="popup-title success"> Get activity code</h3>
                     <div class="content">
                         <label>Device Name</label>
                         <input type="text" class="form-control " placeholder="Device name" aria-label=""
@@ -66,11 +66,11 @@
                                disabled>
                         <error-label for="f_category_id" :errors="errors.device_name"></error-label>
                         <div>
-                            <button  type="button" class="generate" v-on:click="genToken"> Generate Key</button>
+                            <button  type="button" class="btn btn-primary" v-on:click="genToken"> Generate Key</button>
                         </div>
-                        <div style="text-align:right"><button type="button" v-if="token" class="btn-primary" v-on:click="copyTextToken" title="Copy Token"> Copy</button></div>
+                        <div style="text-align:right"><button type="button" v-if="token" class="btn btn-primary" v-on:click="copyTextToken" title="Copy Token" style="padding: 5px 20px;margin:0px 7px 10px"> Copy</button></div>
 
-                        <div v-if="token" style="font-size: 16px; word-wrap: break-word;white-space: pre-wrap;word-break: normal;">{{token}}</div>
+                        <div v-if="token" style="font-size: 14px; word-wrap: break-word;white-space: pre-wrap;word-break: normal;background-color: #f7f7f9;">{{token}}</div>
                     </div>
 
 
@@ -82,9 +82,9 @@
              aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered popup-main-1" role="document"
                  style="max-width: 500px;">
-                <div class="modal-content box-shadow-main paymment-status" style="margin-right:20px; left:140px;margin-bottom: 200px;padding: 20px">
+                <div class="modal-content box-shadow-main paymment-status" style="left:140px;text-align: center; padding: 27px 0px 10px;">
                     <div class="close-popup" data-dismiss="modal"></div>
-                    <h3 class="popup-title success" style="margin-left:100px">Can not add more devices</h3>
+                    <h3 class="popup-title success" style="margin-left:25px">Can not add more devices</h3>
                     <div class="content">
                         <p>Bạn chỉ được truy cập vào tối đa 3 thiết bị, hãy xóa bớt thiết bị cũ nếu muốn truy cập vào thiết bị mới.</p>
                     </div>
@@ -128,14 +128,14 @@
                                               style="color: #f1c40f;margin-right: 5px" ><i class="fas fa-exclamation-circle" style="color: #f1c40f"></i> Delete request sent
                                        </span>
                                         <button  type="button"
-                                                 class="btn btn-flex btn-dark  fw-verify " style="margin-right: 5px" @click="editModalDevice(entry.id,entry.device_name,entry.secret_key)" >
+                                                 class="btn btn-primary " style="margin-right: 5px" @click="editModalDevice(entry.id,entry.device_name,entry.secret_key)" >
                                             Get activity code
                                         </button>
 
                                     </div>
                                     <div  class="form-group mx-sm-3 mb-2" style="position: absolute;right:30px;margin-top: -33px;" v-if="entry.status!==1">
                                         <button  type="button"
-                                                 class="btn btn-flex btn-secondary  fw-verify " style="margin-right: 5px" @click="editModalDevice(entry.id,entry.device_name,entry.secret_key)" >
+                                                 class="btn btn-primary" style="margin-right: 5px" @click="editModalDevice(entry.id,entry.device_name,entry.secret_key)" >
                                             Get activity code
                                         </button>
 
@@ -143,7 +143,7 @@
                                                 class="btn btn-flex btn-danger  fw-bolder " v-for="role in entry.role"  v-if="role.id!==5"  @click="remove(entry)">Delete device
                                         </button>
                                         <button v-for="role in entry.role" v-if="role.id==5" type="button"
-                                                class="btn btn-flex btn-info  fw-bolder " @click="Sent(entry)">Delete device
+                                                class="btn btn-flex btn-danger  fw-bolder " @click="Sent(entry)">Delete device
                                         </button>
                                     </div>
                                 </div>
@@ -345,7 +345,7 @@
         margin-left: 160px;
     }
     .content{
-        margin: 30px;
+       margin: -10px 39px 14px;
     }
     .form-control{
         max-width: 400px;
@@ -370,13 +370,6 @@
 
 
     }
-    .generate{
-        padding: 8px 18px;
-        border-radius: 8px;
-        margin-bottom: 40px;
-        background: #008cff;
-        color: #ffffff;
-
-    }
+    
 
 </style>

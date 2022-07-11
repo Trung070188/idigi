@@ -68,9 +68,7 @@
                                 <div class="row" v-if="name_role==2 || name_role==5">
                                     <div class="form-group  col-sm-4">
                                         <label>School <span class="text-danger">*</span></label>
-                                        <select class="form-control form-select" type="" placeholder="Enter the school" >
-
-                                        </select>
+                                        <input class="form-control " type="" placeholder="Enter the school" v-model="school.school_name"  disabled/>
                                     </div>
                                 </div>
                                 <div class="row">
@@ -135,6 +133,7 @@
                 name_role: $json.name_role
                     || {
                 },
+                school:$json.school||[],
                 roles: $json.roles || [],
                 role: $json.role || [],
                 title_role: $json.title_role || [],
@@ -154,7 +153,7 @@
             },
             async save() {
                 this.isLoading = true;
-                const res = await $post('/xadmin/users/save', {entry: this.entry, name_role: this.name_role}, false);
+                const res = await $post('/xadmin/users/save', {entry: this.entry, name_role: this.name_role,user_school:this.user_school}, false);
                 this.isLoading = false;
                 if (res.errors) {
                     this.errors = res.errors;
