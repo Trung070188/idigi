@@ -101,20 +101,16 @@
                         <div
                             class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-800 menu-state-bg menu-state-primary fw-bold py-4 fs-6 w-165px"
                             data-kt-menu="true">
-
                             <div class="menu-item px-5">
                                 <!--                                    <a v-for="entry in entries" :href="'/xadmin/users/profile?id='+entry.id" ><i style="font-size:1.3rem" class="fa fa-edit"></i></a>-->
-                                <a :href="'/xadmin/users/profile?id='+auth.id" class="menu-link px-1">
-
-                                    <button class="btn btn-primary" style="margin-left:10px">View Profile</button></a>
+                                <a :href="'/xadmin/users/profile?id='+auth.id" class="menu-link px-5">View Profile <i class="bi bi-person-circle" style="margin-left:4px"></i></a>
                             </div>
 
-                            <div class="menu-item px-1">
-                                <a href="/xadmin/logout" class="menu-link px-5">
 
-                                   <button class="btn btn-primary" style="width: 109px;margin-left:10px">Log Out</button></a>
+                            <div class="menu-item px-5">
+                                <a href="/xadmin/logout" class="menu-link px-5">Log Out   <i class="bi bi-box-arrow-right" style="margin-left:30px"></i></a>
+
                             </div>
-
                         </div>
 
                     </div>
