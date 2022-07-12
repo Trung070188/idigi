@@ -24,4 +24,5 @@ Route::group(['middleware' => ['auth_api'], 'namespace' => 'Api'], function () {
 Route::group([ 'namespace' => 'Api'], function () {
     Route::post('/login', 'LoginController@login');
     Route::post('/auth/google-sign', 'GoogleSignController@login');
+    Route::get('/check-device', 'CheckDeviceController@checkDevice');
 });

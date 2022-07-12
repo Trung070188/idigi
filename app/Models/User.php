@@ -69,31 +69,6 @@ class User extends Authenticatable
     ];
 
 
-    /**
-     * @param $id
-     * @return bool
-     */
-    public function hasGroup($id): bool
-    {
-        static $map = [];
-
-        if (empty($map)) {
-            $userGroups = DB::select('SELECT * FROM user_groups p
-INNER JOIN groups g ON g.`id`=p.`group_id`
-WHERE p.`user_id`=?', [$this->id]);
-            foreach ($userGroups as $g) {
-                $map[$g->group_id] = true;
-            }
-            //dd($userGroups);
-        }
-
-
-        if (isset($map[Role::SUPER_USER])) {
-            return true;
-        }
-
-        return isset($map[$id]);
-    }
 
     /**
      * Scope a query to only include popular users.
