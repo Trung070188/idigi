@@ -52,7 +52,7 @@ class UsersController extends AdminBaseController
                 return view('admin.layouts.vue', compact('title', 'component', 'jsonData'));
     }
 
-    public function index_teacher(Request $request)
+    public function teacher(Request $request)
     {
         $title = 'Teacher';
         $component = 'TeacherIndex';
