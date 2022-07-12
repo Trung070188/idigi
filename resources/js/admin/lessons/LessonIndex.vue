@@ -201,9 +201,9 @@
                     </div>
                     <div class="modal-footer" style="justify-content: center">
                         <button type="button" class="btn btn-primary"
-                                @click="downloadLesson">Download for Windows  <i class="bi bi-windows"></i>
+                                @click="downloadLesson" :disabled="lessons.length == 0 || !device || isConfirm == 0"> Download for Windows  <i class="bi bi-windows"></i>
                         </button>
-                        <button type="button" class="btn btn-primary"
+                        <button type="button" class="btn btn-primary"  @click="downloadLesson" :disabled="lessons.length == 0 || !device || isConfirm == 0"
                               >
                             Download for MacOS <i style="margin:-3px 0px 0px" class="bi bi-apple"></i>
                         </button>
