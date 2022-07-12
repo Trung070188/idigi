@@ -123,6 +123,7 @@
                                                                 <select class="form-control form-select" required
                                                                        v-model="role">
                                                                     <option value="" disabled selected>{{roles}}</option>
+                                                                    <option value="12">Moderator</option>
                                                                     <option  value="2">Administrator</option>
                                                                     <option value="13">Partner</option>
                                                                     <option value="5">Teacher</option>

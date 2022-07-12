@@ -73,9 +73,11 @@ class UsersController extends AdminBaseController
     {
         $component = 'UserForm';
         $title = 'Create users';
+        $schools=School::query()->orderBy('id')->get();
         $roles = Role::query()->orderBy('id', 'ASC')->get();
                 $jsonData = [
-                    'roles' => $roles
+                    'roles' => $roles,
+                    'schools'=>$schools,
                 ];
                 return view('admin.layouts.vue', compact('title', 'component', 'jsonData'));
     }
@@ -146,8 +148,9 @@ class UsersController extends AdminBaseController
     {
 
         $id = $req->id;
-        $entry = User::query()->with(['roles'])
+        $entry = User::query()->with(['roles','schools'])
             ->where('id', $id)->first();
+            $school=($entry->schools);
         if (!$entry) {
             throw new NotFoundHttpException();
         }
@@ -166,10 +169,12 @@ class UsersController extends AdminBaseController
                 $name_role = $role->id;
             }
         }
+       $school=$entry->schools;
         $title = 'Edit';
         $component = 'UserEdit';
         $user = Auth::user();
                 $jsonData = [
+                    'school'=>$school,
                     'entry' => $entry,
                     'roles' => $roles,
                     @'name_role' => @$name_role,
@@ -470,6 +475,10 @@ class UsersController extends AdminBaseController
         } else {
             $entry = new User();
             $data['password'] = Hash::make($data['password']);
+            if(@$data['user_school'])
+            {
+                $entry->school_id=$data['user_school'];
+            }
             $entry->fill($data);
             $entry->save();
 
