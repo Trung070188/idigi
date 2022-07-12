@@ -130,17 +130,20 @@
                 menu.showSubMenu = false;
                 menu.active = false;
                 if (!menu.base) {
-                    menu.base = menu.url;
+                    if (pathname.indexOf(menu.url) >= 0) {
+                        menu.active = true;
+                        menu.showSubMenu = true;
+                    }
                 }
 
-                if (pathname.indexOf(menu.base) >= 0) {
+                if (menu.base) {
 
-                    menu.active = true;
-                    menu.showSubMenu = true;
                     if (menu.subs) {
                         menu.subs.forEach(sub => {
                             if (pathname.indexOf(sub.url) >= 0) {
                                 sub.active = true;
+                                menu.active = true;
+                                menu.showSubMenu = true;
                             }
                         })
                     }
