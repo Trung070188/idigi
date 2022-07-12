@@ -23,11 +23,11 @@
                     </span>
                 </div>
             </div>
-            <div class="d-flex align-items-center flex-grow-1 flex-lg-grow-0">
-                <a href="/" class="d-lg-none">
-                    <img alt="Logo" src="/images/imgpsh_fullsize_anim.png" class="h-30px"/>
-                </a>
-            </div>
+<!--            <div class="d-flex align-items-center flex-grow-1 flex-lg-grow-0">-->
+<!--                <a href="/" class="d-lg-none">-->
+<!--                    <img alt="Logo" src="/images/imgpsh_fullsize_anim.png" class="h-30px"/>-->
+<!--                </a>-->
+<!--            </div>-->
 
             <div class="d-flex align-items-stretch justify-content-between flex-lg-grow-1">
                 <div class="d-flex align-items-stretch" id="kt_header_nav">
@@ -99,16 +99,20 @@
                             </span>
                         </div>
                         <div
-                            class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-800 menu-state-bg menu-state-primary fw-bold py-4 fs-6 w-275px"
+                            class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-800 menu-state-bg menu-state-primary fw-bold py-4 fs-6 w-165px"
                             data-kt-menu="true">
 
                             <div class="menu-item px-5">
                                 <!--                                    <a v-for="entry in entries" :href="'/xadmin/users/profile?id='+entry.id" ><i style="font-size:1.3rem" class="fa fa-edit"></i></a>-->
-                                <a :href="'/xadmin/users/profile?id='+auth.id" class="menu-link px-5">View Profile</a>
+                                <a :href="'/xadmin/users/profile?id='+auth.id" class="menu-link px-1">
+
+                                    <button class="btn btn-primary" style="margin-left:10px">View Profile</button></a>
                             </div>
 
-                            <div class="menu-item px-5">
-                                <a href="/xadmin/logout" class="menu-link px-5">Log Out</a>
+                            <div class="menu-item px-1">
+                                <a href="/xadmin/logout" class="menu-link px-5">
+
+                                   <button class="btn btn-primary" style="width: 109px;margin-left:10px">Log Out</button></a>
                             </div>
 
                         </div>

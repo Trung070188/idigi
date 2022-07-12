@@ -180,7 +180,7 @@
 
 <style scoped>
     .notifiy_num {
-        text-align: center;
+        padding:2px;
         position: absolute;
         margin: -20px -16px 10px;
         min-width: 17px;
