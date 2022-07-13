@@ -71,8 +71,14 @@
                                     <div class="row">
                                         <div class="form-group col-lg-3">
                                             <label>Creation time </label>
-                                            <Daterangepicker v-model="filter.created"
-                                                             placeholder="Creation date"></Daterangepicker>
+                                            <Daterangepicker v-model="filter.created" class="active"
+                                                             placeholder="Creation date" readonly></Daterangepicker>
+                                            <span v-if="filter.created!==''" class="svg-icon svg-icon-2 svg-icon-lg-1 me-0" @click="filterClear">
+                                            <svg type="button" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" style="float: right;margin: -32px 3px 0px;">
+                                            <rect opacity="0.5" x="6" y="17.3137" width="16" height="2" rx="1" transform="rotate(-45 6 17.3137)" fill="black" />
+                                                        <rect x="7.41422" y="6" width="16" height="2" rx="1" transform="rotate(45 7.41422 6)" fill="black" />
+                                            </svg>
+                                            </span>
                                         </div>
                                         <div class="form-group col-lg-3">
                                             <label>Active</label>

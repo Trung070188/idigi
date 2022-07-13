@@ -146,10 +146,6 @@
         margin: -22px -16px 0px;
         background: #EFF0F6;
         border-radius: 50%;
-
-    }
-    a:hover{
-        color: #3699FF;
     }
 
 

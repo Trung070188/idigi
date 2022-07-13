@@ -150,7 +150,6 @@ class UsersController extends AdminBaseController
         $id = $req->id;
         $entry = User::query()->with(['roles','schools'])
             ->where('id', $id)->first();
-            $school=($entry->schools);
         if (!$entry) {
             throw new NotFoundHttpException();
         }
@@ -169,11 +168,16 @@ class UsersController extends AdminBaseController
                 $name_role = $role->id;
             }
         }
-       $school=$entry->schools;
+       $trung=$entry->schools;
+        $school=$trung->school_name;
+
+
+        $schools=School::query()->orderBy('school_name','ASC')->get();
         $title = 'Edit';
         $component = 'UserEdit';
         $user = Auth::user();
                 $jsonData = [
+                    'schools'=>$schools,
                     'school'=>$school,
                     'entry' => $entry,
                     'roles' => $roles,
@@ -475,10 +479,7 @@ class UsersController extends AdminBaseController
         } else {
             $entry = new User();
             $data['password'] = Hash::make($data['password']);
-            if(@$data['user_school'])
-            {
-                $entry->school_id=$data['user_school'];
-            }
+
             $entry->fill($data);
             $entry->save();
 

@@ -1,4 +1,5 @@
 <template>
+
     <div class="container-fluid">
         <ActionBar type="form" @save="save()"
                    :code="entry.id"
@@ -112,7 +113,7 @@
                                                 </div>
                                           </div>
                                             <div class="data-row col-sm-6 " >
-                                                <button type="reset" @click="save_profile()" :disabled="isDisabled" class="btn btn-primary mr-2">Save</button>
+                                                <button type="reset" @click="save_profile()" :disabled="!changed" class="btn btn-primary mr-2">Save</button>
                                             </div>
                                         </div>
                                     </div>
@@ -132,18 +133,20 @@
         </div>
 
 </template>
-
 <script>
     import {$get, $post} from "../../utils";
     import FileManagerInput from "../../components/FileManagerInput";
     import ActionBar from "../includes/ActionBar";
     import UploadImage from "../../components/UploadImage";
+    import _ from 'lodash';
     export default {
         name: "ProfileForm.vue",
         components: { ActionBar,UploadImage},
-       
+
         data() {
             return {
+                changed: false,
+                isSaved:true,
                 notYetClicked: true,
                 check_role:[],
                 breadcrumbs: [
@@ -158,10 +161,14 @@
                 errors: {}
             }
         },
-         computed:{
-            isDisabled()
-            {
-                this.entry.email !=''
+        watch: {
+            entry: {
+                handler(value){
+                    if(value) {
+                        this.changed = !_.isEqual(value, this.actual);
+                    }
+                },
+                deep: true,
             }
         },
         mounted() {
@@ -198,7 +205,7 @@
             },
             async updatePassword() {
                 this.isLoading = true;
-                const res = await $post('/xadmin/users/updatePassword',{entry: this.entry}, false);               
+                const res = await $post('/xadmin/users/updatePassword',{entry: this.entry}, false);
                 this.isLoading = false;
                 if (res.errors) {
                     this.errors = res.errors;
@@ -215,7 +222,6 @@
         }
     }
 </script>
-
 <style scoped>
 
 

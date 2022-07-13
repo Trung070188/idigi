@@ -82,8 +82,14 @@
                                     <div class="row">
                                         <div class="form-group col-lg-3">
                                             <label >Creation date </label>
-                                            <Daterangepicker v-model="filter.created"
-                                                             placeholder="Creation date"></Daterangepicker>
+                                            <Daterangepicker v-model="filter.created" class="active"
+                                                             placeholder="Creation date" readonly></Daterangepicker>
+                                            <span v-if="filter.created!==''" class="svg-icon svg-icon-2 svg-icon-lg-1 me-0" @click="filterClear">
+                                            <svg type="button" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" style="float: right;margin: -32px 3px 0px;">
+                                            <rect opacity="0.5" x="6" y="17.3137" width="16" height="2" rx="1" transform="rotate(-45 6 17.3137)" fill="black" />
+                                                        <rect x="7.41422" y="6" width="16" height="2" rx="1" transform="rotate(45 7.41422 6)" fill="black" />
+                                            </svg>
+                                        </span>
                                         </div>
                                         <div class="form-group col-lg-3">
                                             <label >Active</label>
@@ -103,6 +109,20 @@
 
                         </div>
 
+                    </div>
+                    <div class="modal fade" style="margin-right:50px;border:2px solid #333333  " id="deviceConfirm" tabindex="-1" role="dialog"
+                         aria-labelledby="deviceConfirm"
+                         aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered popup-main-1" role="document"
+                             style="max-width: 500px;">
+                            <div class="modal-content box-shadow-main paymment-status" style="left:140px;text-align: center; padding: 27px 0px 10px;">
+                                <div class="close-popup" data-dismiss="modal"></div>
+                                <h3 class="popup-title success" >Delete user</h3>
+                                <div class="content">
+                                    <p>Can not delete Super Administrator account!</p>
+                                </div>
+                            </div>
+                        </div>
                     </div>
 
 
@@ -150,7 +170,9 @@
                                 <td>
                                     <a v-if="permissions['002']" :href="'/xadmin/users/edit?id='+entry.id"><i style="font-size:1.3rem"
                                                                                     class="fa fa-edit"></i></a>
-                                    <a v-if="permissions['003']" @click="remove(entry)" href="javascript:;" class="btn-trash deleted"><i
+                                    <a v-if="permissions['003'] && entry.role!=='Super Administrator'" @click="remove(entry)" href="javascript:;" class="btn-trash deleted"><i
+                                        class="fa fa-trash mr-1 deleted"></i></a>
+                                    <a v-if="permissions['003'] && entry.role=='Super Administrator'"  @click="modalDevice()" href="javascript:;" class="btn-trash deleted"><i
                                         class="fa fa-trash mr-1 deleted"></i></a>
                                 </td>
                             </tr>
@@ -242,6 +264,9 @@
             $router.on('/', this.load).init();
         },
         methods: {
+            modalDevice() {
+                $('#deviceConfirm').modal('show');
+            },
 
             // edit: function (id, event){
             //     if (!$(event.target).hasClass('deleted')) {
