@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 
 <?php
-    $pageTitle = isset($title) ? $title . ' - idgi' : 'idgi';
+    $pageTitle = isset($title) ? $title . ' - idigi' : 'idigi';
     $title = isset($title) ? $title : '';
 ?>
 

@@ -72,7 +72,7 @@
 
             var tmp = this.value ? this.value.split('_') : [];
             var startDate = tmp[0] ? moment(tmp[0]) :moment();
-            var endDate =  tmp[3] ? moment(tmp[3]) : moment();
+            var endDate =  tmp[0] ? moment(tmp[0]) : moment();
 
 
             $( this.$el).daterangepicker({
