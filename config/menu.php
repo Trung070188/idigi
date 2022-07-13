@@ -48,7 +48,7 @@ return [
         "name" => "Teacher",
         "icon" => "	fas fa-landmark",
         "group" => 1,
-        "url" => "/xadmin/users/index_teacher",
+        "url" => "/xadmin/users/teacher",
         "roles" => ['Super Administrator','Administrator']
 
     ],

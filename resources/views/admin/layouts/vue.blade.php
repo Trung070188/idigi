@@ -249,7 +249,6 @@
         <script src="/assets/plugins/ion-rangeslider/js/ion.rangeSlider.js"></script>
         <script src="/assets/js/jquery-ui.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
-
         <script src="/assets/js/app.js"></script>
 
 	</body>

@@ -1,7 +1,7 @@
 <template>
     <input ref="input"  name="time" :placeholder="placeholder"
-            autocomplete="off"
-            :class="className" >
+           autocomplete="off"
+           :class="className" >
 </template>
 
 <script>
@@ -51,11 +51,11 @@
             }
         },
         watch: {
-           value: function () {
+            value: function () {
                 if (!this.value) {
                     this.$el.value = '';
                 }
-           }
+            }
         },
         mounted: function () {
 
@@ -72,7 +72,7 @@
 
             var tmp = this.value ? this.value.split('_') : [];
             var startDate = tmp[0] ? moment(tmp[0]) :moment();
-            var endDate =  tmp[1] ? moment(tmp[1]) : moment();
+            var endDate =  tmp[3] ? moment(tmp[3]) : moment();
 
 
             $( this.$el).daterangepicker({
@@ -96,7 +96,7 @@
             })
 
 
-           // var _query  = $router.getQuery();
+            // var _query  = $router.getQuery();
             if (this.value) {
                 this.$el.value = startDate.format('DD/MM/YYYY') + ' -- ' + endDate.format('DD/MM/YYYY');
             }
