@@ -139,6 +139,7 @@
                 </div>
                 @enderror
                 <button class="btn btn-primary btn-block xxx">Sign in</button>
+                Or
 
                 <div id="gSignInWrapper" style="margin-top: 10px">
                     <div id="customBtn" class="customGPlusSignIn">
