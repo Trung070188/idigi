@@ -88,17 +88,21 @@
                                         <div class="basic-info">
                                             <p class="data-row col-sm-6 " >
                                                 <label >Fullname </label>
-                                                <input  class="form-control" placeholder="Enter the full name" v-model="entry.full_name" />
+                                                <input  class="form-control" placeholder="Enter the full name" v-model="entry.full_name"  />
+                                                <error-label for="f_category_id"
+                                                             :errors="errors.full_name"></error-label>
                                             </p>
                                             <p class="data-row col-sm-6 " >
                                                 <label >Email </label>
-                                                <input  class="form-control" placeholder="Enter the full name" v-model="entry.email" />
+                                                <input  class="form-control" placeholder="Enter the full name" v-model="entry.email"  />
                                                 <error-label for="f_category_id"
                                                              :errors="errors.email"></error-label>
                                             </p>
                                             <p class="data-row col-sm-6 " >
                                                 <label >Username </label>
-                                                <input  class="form-control" disabled v-model="entry.username" />
+                                                <input  class="form-control" disabled v-model="entry.username"  />
+                                                <error-label for="f_category_id"
+                                                             :errors="errors.username"></error-label>
                                             </p>
                                             <div  class="data-row col-sm-6 " >
                                                 <label   >Role </label>
@@ -108,7 +112,7 @@
                                                 </div>
                                           </div>
                                             <div class="data-row col-sm-6 " >
-                                                <button type="reset" @click="save_profile()" class="btn btn-primary mr-2">Save</button>
+                                                <button type="reset" @click="save_profile()" :disabled="isDisabled" class="btn btn-primary mr-2">Save</button>
                                             </div>
                                         </div>
                                     </div>
@@ -137,8 +141,10 @@
     export default {
         name: "ProfileForm.vue",
         components: { ActionBar,UploadImage},
+       
         data() {
             return {
+                notYetClicked: true,
                 check_role:[],
                 breadcrumbs: [
                     {
@@ -150,6 +156,12 @@
                 role:$json.role || [],
                 isLoading: false,
                 errors: {}
+            }
+        },
+         computed:{
+            isDisabled()
+            {
+                this.entry.email !=''
             }
         },
         mounted() {
@@ -186,9 +198,7 @@
             },
             async updatePassword() {
                 this.isLoading = true;
-                const res = await $post('/xadmin/users/updatePassword',{entry: this.entry}, false);
-                console.log(res);
-                location.replace('/xadmin/users/profile?id=' + res.id);
+                const res = await $post('/xadmin/users/updatePassword',{entry: this.entry}, false);               
                 this.isLoading = false;
                 if (res.errors) {
                     this.errors = res.errors;
@@ -198,7 +208,9 @@
                 } else {
                     this.errors = {};
                     toastr.success(res.message);
+                     location.replace('/xadmin/users/profile?id=' + res.id);
                 }
+
             }
         }
     }
