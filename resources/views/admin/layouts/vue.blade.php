@@ -25,7 +25,7 @@
         <link href="/assets/plugins/ion-rangeslider/css/ion.rangeSlider.skinFlat.css" rel="stylesheet">
         <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet">
         <link href="{{ asset('/assets/css/viewer.min.css') }}" rel="stylesheet" type="text/css" />
-        <!--<link href="{{ asset('assets/css/style.bundle.css') }}" rel="stylesheet" type="text/css" />-->
+        <link href="{{ asset('assets/css/style.bundle.css') }}" rel="stylesheet" type="text/css" />
         <link href="{{ asset('themes/admin/assets/css/style.bundle.css') }}" rel="stylesheet" type="text/css" />
         <link rel="stylesheet" href="/assets/css/jquery-ui.css">
         <link rel="stylesheet" href="/assets/css/style.css">
