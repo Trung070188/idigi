@@ -72,11 +72,10 @@
 
             var tmp = this.value ? this.value.split('_') : [];
             var startDate = tmp[0] ? moment(tmp[0]) :moment();
-            var endDate =  tmp[0] ? moment(tmp[0]) : moment();
+            var endDate =  tmp[1] ? moment(tmp[1]) : moment();
 
 
             $( this.$el).daterangepicker({
-
                 autoUpdateInput: false,
                 startDate:  startDate ,
                 endDate:  endDate,
@@ -87,14 +86,6 @@
                 this.$emit('input', start.format('YYYY-MM-DD') + '_'+ end.format('YYYY-MM-DD'));
                 this.$el.value = start.format('DD/MM/YYYY') + ' -- ' + end.format('DD/MM/YYYY');
             });
-
-            const self = this
-            $( this.$el).on('change',  function () {
-                if (!self.$el.value) {
-                    self.$emit('input', '');
-                }
-            })
-
 
             // var _query  = $router.getQuery();
             if (this.value) {
