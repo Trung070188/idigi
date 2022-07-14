@@ -161,6 +161,44 @@ class UserDevicesController extends AdminBaseController
         }
 
     }
+    public function save_name(Request $req) {
+
+        if (!$req->isMethod('POST')) {
+            return ['code' => 405, 'message' => 'Method not allow'];
+        }
+        $data = $req->get('entry');
+
+        $rules = [
+    'device_name' => 'required|max:45',
+        ];
+
+        $v = Validator::make($data, $rules);
+
+        if ($v->fails()) {
+            return [
+                'code' => 2,
+                'errors' => $v->errors()
+            ];
+        }
+        if (isset($data['id'])) {
+            $entry = UserDevice::find($data['id']);
+
+            if (!$entry) {
+                return [
+                    'code' => 3,
+                    'message' => 'Không tìm thấy',
+                ];
+            }
+            $entry->fill($data);
+            $entry->save();
+
+            return [
+                'code' => 0,
+                'message' => 'Đã cập nhật',
+                'id' => $entry->id,
+            ];
+        }
+    }
     public function savesend(Request $request) {
         if (!$request->isMethod('POST')) {
             return ['code' => 405, 'message' => 'Method not allow'];

@@ -52,13 +52,37 @@
                 </div>
             </div>
         </div>
+        <div class="modal fade" id="editDeviceName" tabindex="-1" role="dialog"
+             aria-labelledby="editDeviceName"
+             aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered popup-main-1" role="document">
+                <div class="modal-content" style="margin-right:20px; left:140px">
+                    <div class="close-popup" data-dismiss="modal"></div>
+                    <h3 style="margin:20px auto;font-weight: 500;" class="popup-title success">Edit device name</h3>
+                    <div class="content">
+                        <label>Device Name</label>
+                        <input type="text" class="form-control " placeholder="Device name" aria-label=""
+                               style="margin-bottom: 10px" aria-describedby="basic-addon1" v-model="Edit_name.device_name">
+                        <error-label for="f_category_id" :errors="errors.device_name"></error-label>
+                                <div style="text-align:center">
+                                    <button class="btn btn-primary" @click="save_name" >Save</button>
+                                </div>
+
+
+
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
         <div class="modal fade" id="editdeviceConfirm" tabindex="-1" role="dialog"
              aria-labelledby="editdeviceConfirm"
              aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered popup-main-1" role="document">
                 <div class="modal-content" style="margin-right:20px; left:140px">
                     <div class="close-popup" data-dismiss="modal"></div>
-                    <h3 style="margin:20px auto;font-weight: 500;" class="popup-title success"> Get activity code</h3>
+                    <h3 style="margin:20px auto;font-weight: 500;" class="popup-title success">  Get confirmation code</h3>
                     <div class="content">
                         <label>Device Name</label>
                         <input type="text" class="form-control " placeholder="Device name" aria-label=""
@@ -115,7 +139,10 @@
                                 <div class="col-lg-12 body "  >
                                     <form  class="form-inline"  >
                                         <div  class="form-group mx-sm-3 mb-2">
-                                            <label>{{entry.device_name}}</label>
+                                            <label>{{entry.device_name}}
+                                                <i  type="button" class="bi bi-pencil-square" style="margin:0px 15px 0px;color:#333333" @click="saveEditName(entry)"></i>
+                                            </label>
+
                                         </div>
                                     </form>
 
@@ -129,14 +156,14 @@
                                        </span>
                                         <button  type="button"
                                                  class="btn btn-primary " style="margin-right: 5px" @click="editModalDevice(entry.id,entry.device_name,entry.secret_key)" >
-                                            Get activity code
+                                            Get confirmation code
                                         </button>
 
                                     </div>
                                     <div  class="form-group mx-sm-3 mb-2" style="position: absolute;right:30px;margin-top: -33px;" v-if="entry.status!==1">
                                         <button  type="button"
                                                  class="btn btn-primary" style="margin-right: 5px" @click="editModalDevice(entry.id,entry.device_name,entry.secret_key)" >
-                                            Get activity code
+                                            Get confirmation code
                                         </button>
 
                                         <button type="button"
@@ -171,11 +198,13 @@
         components: {ActionBar},
         data() {
             return {
+
               device:'',
                 curDevice:{},
                 isHidden:false,
                 token:'',
                 secret_key:"",
+                Edit_name:'',
                 device_name:"",
                 editDevice:"",
                 breadcrumbs: [
@@ -201,6 +230,10 @@
             Sent: function (device = {}){
                 $('#sentConfirm').modal('show');
                 this.curDevice = device;
+            },
+            saveEditName:function(deviceEditName={}){
+                $('#editDeviceName').modal('show');
+                this.Edit_name=deviceEditName;
             },
             Cancel()
             {
@@ -259,6 +292,27 @@
                     entry: this.curDevice,
                 }, false);
                 console.log(res);
+                this.isLoading = false;
+                if (res.errors) {
+                    this.errors = res.errors;
+                    return;
+                }
+                if (res.code) {
+                    toastr.error(res.message);
+                } else {
+                    this.errors = {};
+                    toastr.success(res.message);
+                    if (!this.entry.id) {
+                        location.replace('/xadmin/user_devices/index');
+                    }
+
+                }
+            },
+            async save_name() {
+                this.isLoading = true;
+                const res = await $post('/xadmin/user_devices/save_name', {
+                    entry: this.Edit_name,
+                }, false);
                 this.isLoading = false;
                 if (res.errors) {
                     this.errors = res.errors;
@@ -370,6 +424,6 @@
 
 
     }
-    
+
 
 </style>

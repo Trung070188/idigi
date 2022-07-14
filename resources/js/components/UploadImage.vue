@@ -25,17 +25,20 @@
             </ul>
         </div>
         <div class="fmi-dropdown" ref="dropdown">
-            <input @change="fileChanged()" type="file" ref="uploader" style="display: none;width: 1px;height: 1px;"/>
-            <button  ref="button" @click="toggleTooltip()" class="btn btn-primary btn-sm" type="button" >
-                Change avatar
-                <i class="fas fa-camera"></i>
-            </button>
+            <input @change="fileChanged()" type="file" ref="uploader" accept="image/*" style="display: none;width: 1px;height: 1px;"/>
+            <a class="" href="#" @click.prevent="chooseFile()">
+                <button  ref="button" @click="toggleTooltip()" class="btn btn-primary btn-sm" type="button" >
+                    Change avatar
+                    <i class="fas fa-camera"></i>
+                </button>
+            </a>
+
             <div>
                 <span class="qinput-error-label" v-if="errorMessage">{{ errorMessage }}</span>
             </div>
             <div class="fmi-dropdown-menu" v-if="showToolTip" ref="tooltip">
                 <a class="fmi-dropdown-item" href="#" @click.prevent="chooseFile()">Tải file</a>
-                <a class="fmi-dropdown-item" href="#" @click.prevent="showModal()">Chọn file từ thư viện</a>
+
             </div>
         </div>
         <div>
