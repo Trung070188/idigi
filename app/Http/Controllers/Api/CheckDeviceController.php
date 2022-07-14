@@ -22,24 +22,44 @@ class CheckDeviceController extends Controller
 
         $user = User::where('username', $request->username)
             ->orWhere('email', $request->username)
-            ->whereHas('user_devices', function ($q) use ($request){
-                $q->where('device_uid', $request->device_unique);
-            })
+            ->with(['user_devices'])
             ->first();
 
         if($user){
+            $count = 0;
+            if($user->user_devices){
+                foreach ($user->user_devices as $device){
+                    $count ++ ;
 
-            return [
-                'code' => 0,
-                'msg' => 'Device Id đã tồn tại',
+                    if($device->device_uid == $request->device_unique){
+                        return [
+                            'code' => 0,
+                            'msg' => 'Device Id đã tồn tại',
 
-            ];
+                        ];
+                    }
+                }
+                if($count > 2){
+                    return [
+                        'code' => 2,
+                        'msg' => 'Đã đủ 3 device',
+
+                    ];
+                }else{
+                    return [
+                        'code' => 1,
+                        'msg' => 'Số device hiện tại là '.$count,
+
+                    ];
+                }
+            }
+
 
         }
 
         return [
-            'code' => 1,
-            'msg' => 'Device Id không  tồn tại',
+            'code' => 3,
+            'msg' => 'Username  tồn tại',
         ];
 
     }
