@@ -59,7 +59,7 @@ class CheckDeviceController extends Controller
 
         return [
             'code' => 3,
-            'msg' => 'Username  tồn tại',
+            'msg' => 'Username khong  tồn tại',
         ];
 
     }
