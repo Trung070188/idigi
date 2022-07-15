@@ -1,6 +1,6 @@
 <template>
     <div class="container-fluid">
-        
+
         <ActionBar type="index"
                    :breadcrumbs="breadcrumbs" title = "Lesson Manager - Lessons"/>
 
@@ -124,7 +124,7 @@
                                  v-if="entries.length > 0"></div>
                             <div style="margin-left: 20px" v-if="lessonIds.length > 0"> {{ lessonIds.length }} lesson
                                 selected
-                                <a  v-if="permissions['012']" href="javascript:;" @click="removeAll" style="color: red; margin-left: 10px">clear all</a>
+                                <a   href="javascript:;" @click="removeAll" style="color: red; margin-left: 10px">clear all</a>
                             </div>
                         </div>
                         <table class=" table  table-head-custom table-head-bg table-vertical-center">
@@ -134,7 +134,7 @@
                                     <div class="form-check form-check-sm form-check-custom form-check-solid">
                                         <input class="form-check-input" type="checkbox" v-model="allSelected" @change="selectAll()">
                                     </div>
-                                </td>                                
+                                </td>
                                 <th class="text-center">ID</th>
                                 <th>Name</th>
                                 <th class="text-center">Grade</th>
@@ -150,7 +150,7 @@
                                     <div class="form-check form-check-sm form-check-custom form-check-solid">
                                         <input class="form-check-input" type="checkbox" v-model="lessonIds" :value="entry.id" @change="updateCheckAll">
                                     </div>
-                                </td>                                    
+                                </td>
                                 <td class="text-center" v-text="entry.id"></td>
                                 <td v-text="entry.name"></td>
                                 <td class="text-center" v-text="entry.grade"></td>
@@ -388,19 +388,20 @@
             },
 
             async removeAll() {
-                if (!confirm('Xóa bản ghi: ' + JSON.stringify(this.lessonIds))) {
-                    return;
-                }
-
-                const res = await $post('/xadmin/lessons/removeAll', {ids: this.lessonIds});
-
-                if (res.code) {
-                    toastr.error(res.message);
-                } else {
-                    toastr.success(res.message);
-                }
-
-                $router.updateQuery({page: this.paginate.currentPage, _: Date.now()});
+                $('input:checkbox').each(function() { this.checked = false; });
+                // if (!confirm('Xóa bản ghi: ' + JSON.stringify(this.lessonIds))) {
+                //     return;
+                // }
+                //
+                // const res = await $post('/xadmin/lessons/removeAll', {ids: this.lessonIds});
+                //
+                // if (res.code) {
+                //     toastr.error(res.message);
+                // } else {
+                //     toastr.success(res.message);
+                // }
+                //
+                // $router.updateQuery({page: this.paginate.currentPage, _: Date.now()});
             },
 
             filterClear() {
