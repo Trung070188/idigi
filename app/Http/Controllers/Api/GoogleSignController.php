@@ -60,7 +60,7 @@ class GoogleSignController
                     if ($check == 0) {
                         UserDevice::create([
                             'device_uid' => $req->device_unique,
-                            'device_name' => $user->username,
+                            'device_name' => $req->device_name,
                             'user_id' => $user->id,
                             'status' => 2,
                             'secret_key' => (Str::random(10))

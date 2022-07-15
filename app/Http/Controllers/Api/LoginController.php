@@ -26,6 +26,7 @@ class LoginController extends Controller
             ->orWhere('email', $request->username)
             ->first();
 
+
         if($user){
 
             if(\Hash::check($request->password, $user->password)){
@@ -49,11 +50,12 @@ class LoginController extends Controller
                     if($check == 0){
                             UserDevice::create([
                                 'device_uid' => $request->device_unique,
-                                'device_name' => $user->username,
+                                'device_name' => $request->device_name,
                                 'user_id' => $user->id,
                                 'status' => 2,
                                 'secret_key' => (Str::random(10))
                             ]);
+
                     }
 
                 }
