@@ -1,7 +1,9 @@
 <template>
     <div class="container-fluid">
+        
         <ActionBar type="index"
-                   :breadcrumbs="breadcrumbs"/>
+                   :breadcrumbs="breadcrumbs" title = "Lesson Manager - Lessons"/>
+
         <div class="row">
             <div class="col-lg-12">
                 <div class="card card-custom card-stretch gutter-b">
@@ -128,27 +130,35 @@
                         <table class=" table  table-head-custom table-head-bg table-vertical-center">
                             <thead>
                             <tr>
-                                <th><input type="checkbox" v-model="allSelected" @change="selectAll()"/> ID</th>
+                                <td width = "25">
+                                    <div class="form-check form-check-sm form-check-custom form-check-solid">
+                                        <input class="form-check-input" type="checkbox" v-model="allSelected" @change="selectAll()">
+                                    </div>
+                                </td>                                
+                                <th class="text-center">ID</th>
                                 <th>Name</th>
-                                <th>Grade</th>
-                                <th>Subject</th>
-                                <th>Active</th>
-                                <th>Creation Date</th>
-                                <th>Action</th>
+                                <th class="text-center">Grade</th>
+                                <th class="text-center">Subject</th>
+                                <th class="text-center">Active</th>
+                                <th class="text-center">Creation Date</th>
+                                <th class="text-center">Action</th>
                             </tr>
                             </thead>
                             <tbody>
                             <tr v-for="entry in entries">
-                                <td><input type="checkbox" class="deleted" v-model="lessonIds" :value="entry.id"
-                                           @change="updateCheckAll"/> {{ entry.id }}
-                                </td>
+                                <td class="text-center">
+                                    <div class="form-check form-check-sm form-check-custom form-check-solid">
+                                        <input class="form-check-input" type="checkbox" v-model="lessonIds" :value="entry.id" @change="updateCheckAll">
+                                    </div>
+                                </td>                                    
+                                <td class="text-center" v-text="entry.id"></td>
                                 <td v-text="entry.name"></td>
-                                <td v-text="entry.grade"></td>
-                                <td v-text="entry.subject"></td>
-                                <td v-text="entry.enabled == 0 ? 'No' : 'Yes'"></td>
-                                <td v-text=" d(entry.created_at)"></td>
+                                <td class="text-center" v-text="entry.grade"></td>
+                                <td class="text-center" v-text="entry.subject"></td>
+                                <td class="text-center" v-text="entry.enabled == 0 ? 'No' : 'Yes'"></td>
+                                <td class="text-center" v-text=" d(entry.created_at)"></td>
 
-                                <td class="">
+                                <td class="text-center">
                                     <!--                                    <a :href="'/xadmin/lessons/edit?id='+entry.id" style="margin-right: 10px"><i style="font-size:1.3rem" class="fa fa-edit"></i></a>-->
                                     <a @click="openModalEntry(entry)" href="javascript:;" class=" btn-action" ><i
                                         class="fa fa-download"></i></a>
@@ -173,7 +183,7 @@
                                     </select>
                                 </div>
                             </div>
-                            <div style="float: right;margin: 10px">
+                            <div style="float: right; margin: 10px">
                                 <Paginate :value="paginate" :pagechange="onPageChange"></Paginate>
                             </div>
                         </div>
