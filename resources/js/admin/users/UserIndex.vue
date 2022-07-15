@@ -155,7 +155,6 @@
                                 <th>Creation Date</th>
                                 <th>Active</th>
                                 <th>Action</th>
-                                <th>trung</th>
                             </tr>
                             </thead>
                             <tbody>
