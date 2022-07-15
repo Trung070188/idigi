@@ -42,11 +42,13 @@ class GoogleSignController
 
                 $totalDevice = 0;
                 $check = 0;
+                $secret = '';
                 if ($user->user_devices) {
                     foreach ($user->user_devices as $device) {
                         $totalDevice++;
                         if ($device->device_uid == $req->device_unique) {
                             $check = 1;
+                            $secret = $device->secret_key;
                         }
                     }
                 }
@@ -58,12 +60,13 @@ class GoogleSignController
                     ];
                 } else {
                     if ($check == 0) {
+                        $secret = (Str::random(10));
                         UserDevice::create([
                             'device_uid' => $req->device_unique,
                             'device_name' => $req->device_name,
                             'user_id' => $user->id,
                             'status' => 2,
-                            'secret_key' => (Str::random(10))
+                            'secret_key' => $secret
                         ]);
                     }
 
@@ -82,7 +85,8 @@ class GoogleSignController
                 $payload = [
                     'email' => $user->email,
                     'username' => $user->username,
-                    'expired' => strtotime(Carbon::now()->addHours(10))
+                    'expired' => strtotime(Carbon::now()->addHours(10)),
+                    'secret_key' => $secret
                 ];
 
                 $jwt = JWT::encode($payload, env('SECRET_KEY_API'), 'HS256');

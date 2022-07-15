@@ -20,41 +20,46 @@ class LoginController extends Controller
 
     }
 
-    public function Login(Request  $request){
+    public function Login(Request $request)
+    {
 
         $user = User::where('username', $request->username)
             ->orWhere('email', $request->username)
             ->first();
 
 
-        if($user){
+        if ($user) {
 
-            if(\Hash::check($request->password, $user->password)){
+            if (\Hash::check($request->password, $user->password)) {
                 $totalDevice = 0;
                 $check = 0;
-                if($user->user_devices){
-                    foreach ($user->user_devices as $device){
-                        $totalDevice ++;
-                        if($device->device_uid == $request->device_unique){
+                $secret = '';
+
+                if ($user->user_devices) {
+                    foreach ($user->user_devices as $device) {
+                        $totalDevice++;
+                        if ($device->device_uid == $request->device_unique) {
                             $check = 1;
+                            $secret = $device->secret_key;
                         }
                     }
                 }
 
-                if($check == 0 && $totalDevice > 2){
+                if ($check == 0 && $totalDevice > 2) {
                     return [
                         'code' => 3,
                         'message' => 'Bạn đã đăng ký quá nhiều thiết bị',
                     ];
-                }else{
-                    if($check == 0){
-                            UserDevice::create([
-                                'device_uid' => $request->device_unique,
-                                'device_name' => $request->device_name,
-                                'user_id' => $user->id,
-                                'status' => 2,
-                                'secret_key' => (Str::random(10))
-                            ]);
+                } else {
+                    if ($check == 0) {
+                        $secret = (Str::random(10));
+                        UserDevice::create([
+                            'device_uid' => $request->device_unique,
+                            'device_name' => $request->device_name,
+                            'user_id' => $user->id,
+                            'status' => 2,
+                            'secret_key' => $secret
+                        ]);
 
                     }
 
@@ -63,8 +68,9 @@ class LoginController extends Controller
 
                 $payload = [
                     'email' => $user->email,
-                    'username' =>$user->username,
-                    'expired' => strtotime(Carbon::now()->addHours(10))
+                    'username' => $user->username,
+                    'expired' => strtotime(Carbon::now()->addHours(10)),
+                    'secret_key' => $secret
                 ];
                 $jwt = JWT::encode($payload, env('SECRET_KEY_API'), 'HS256');
 
