@@ -108,7 +108,7 @@
                             <tr v-for="device in user_device" v-if=" device.user_id===entry.id && device.status===1 ">
                                 <td v-text="device.id"></td>
                                 <td v-text="device.device_name"></td>
-                                <td v-text="device.device_uid"></td>
+                                <td v-text="device.device_uid" style="word-break: break-word;"></td>
                                 <td v-text="d(device.created_at)"></td>
                                 <td style="color: #f1c40f">Deleting request</td>
                                 <td>
