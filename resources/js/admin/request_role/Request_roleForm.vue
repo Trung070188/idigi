@@ -120,7 +120,7 @@
                                                             </div>
                                                             <div class="data-row col-sm-6 " v-if="entry.status=='Aprrove' && entry.role_name=='Moderator'">
                                                                 <label>Role </label>
-                                                                <select class="form-control form-select" required
+                                                                <select @change="save_role()" class="form-control form-select" required
                                                                        v-model="role">
                                                                     <option value="" disabled selected>{{roles}}</option>
                                                                     <option value="12">Moderator</option>
@@ -137,10 +137,10 @@
                                                                        v-model="school.school_name"/>
                                                             </div>
 
-                                                            <div  v-if="entry.status=='Aprrove' && entry.role_name=='Moderator'" class="data-row col-sm-6 " style="margin: 22px 0px 0px;">
+                                                            <!-- <div  v-if="entry.status=='Aprrove' && roles!=='Moderator' && role_name=='Moderator'" class="data-row col-sm-6 " style="margin: 22px 0px 0px;">
                                                                 <button  class="btn btn-primary" @click="save_role()">Save
                                                                 </button>
-                                                            </div>
+                                                            </div> -->
                                                         </div>
                                                     </div>
                                                 </div>

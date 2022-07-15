@@ -108,7 +108,7 @@
                             <tr v-for="device in user_device" v-if=" device.user_id===entry.id && device.status===1 ">
                                 <td v-text="device.id"></td>
                                 <td v-text="device.device_name"></td>
-                                <td v-text="device.device_uid"></td>
+                                <td v-text="device.device_uid" style="word-break: break-word;"></td>
                                 <td v-text="d(device.created_at)"></td>
                                 <td style="color: #f1c40f">Deleting request</td>
                                 <td>
@@ -168,7 +168,7 @@
                 breadcrumbs: [
                     {
                         title: 'Techers',
-                        url: '/xadmin/users/index_teacher',
+                        url: '/xadmin/users/teacher',
                     },
                     {
                         title: $json.entry ? 'Teacher details' : 'Create new User',
@@ -241,7 +241,7 @@
                 } else {
                     toastr.success(res.message);
                 }
-                  location.replace('/xadmin/users/index_teacher');
+                  location.replace('/xadmin/users/teacher');
                 $router.updateQuery({page: this.paginate.currentPage, _: Date.now()});
             },
         }

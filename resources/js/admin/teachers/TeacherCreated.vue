@@ -2,7 +2,7 @@
     <div class="container-fluid">
         <ActionBar type="form" @save="save()"
                    :code="entry.id"
-                   back-url="/xadmin/users/index"
+                   back-url="/xadmin/users/teacher"
                    :breadcrumbs="breadcrumbs"
                    />
         <div class="row">
@@ -87,7 +87,7 @@
                 breadcrumbs: [
                     {
                         title: 'Teachers',
-                        url: '/xadmin/users/index_teacher',
+                        url: '/xadmin/users/teacher',
                     },
                     {
                         title: $json.entry ? 'Edit User' : 'Create new Teacher',
