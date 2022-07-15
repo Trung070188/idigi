@@ -168,7 +168,7 @@
                 breadcrumbs: [
                     {
                         title: 'Techers',
-                        url: '/xadmin/users/index_teacher',
+                        url: '/xadmin/users/teacher',
                     },
                     {
                         title: $json.entry ? 'Teacher details' : 'Create new User',
@@ -241,7 +241,7 @@
                 } else {
                     toastr.success(res.message);
                 }
-                  location.replace('/xadmin/users/index_teacher');
+                  location.replace('/xadmin/users/teacher');
                 $router.updateQuery({page: this.paginate.currentPage, _: Date.now()});
             },
         }
