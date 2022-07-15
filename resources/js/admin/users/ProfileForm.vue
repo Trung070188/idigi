@@ -107,13 +107,10 @@
                                             </p>
                                             <div  class="data-row col-sm-6 " >
                                                 <label   >Role </label>
-                                                <input  class="form-control" disabled  />
-                                                <div class="role">
-                                                   {{role}}
-                                                </div>
+                                                <input  class="form-control" disabled  v-model="role" />       
                                           </div>
                                             <div class="data-row col-sm-6 " >
-                                                <button type="reset" @click="save_profile()" :disabled="!changed" class="btn btn-primary mr-2">Save</button>
+                                                <button type="reset" @click="save_profile()" :disabled="!changed" class="btn btn-primary mr-2" style="margin:14px 0px 0px">Save</button>
                                             </div>
                                         </div>
                                     </div>
@@ -269,11 +266,6 @@
 
     .form-horizontal .control-label {
         text-align: left;
-    }
-    .role{
-        margin-bottom: 22px;
-        margin-top: -26px;
-        margin-left: 14px;
     }
     .btn-block{
         background: #000000;
