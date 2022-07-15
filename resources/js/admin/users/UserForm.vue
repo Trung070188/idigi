@@ -75,7 +75,7 @@
                                 <div class="row" v-if="name_role==2||name_role==5">
                                     <div class="form-group  col-sm-4" >
                                         <label>School <span class="text-danger">*</span></label>
-                                        <select  class="form-control form-select" type="" placeholder="Enter the school" v-model="user_school">
+                                        <select  class="form-control form-select" type="" placeholder="Enter the school" v-model="entry.school_id">
                                             <option v-for="school in schools" :value="school.id">{{school.school_name}}</option>
 
                                         </select>
@@ -185,7 +185,7 @@
                     toastr.success(res.message);
                     location.replace('/xadmin/users/index');
                      if (!this.entry.id) {
-                         location.replace('/xadmin/users/edit?id=' + res.id);
+                         location.replace('/xadmin/users/index');
                      }
                 }
             }

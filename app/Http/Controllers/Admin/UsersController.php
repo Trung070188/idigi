@@ -168,14 +168,14 @@ class UsersController extends AdminBaseController
                 $name_role = $role->id;
             }
         }
-        $school=$entry->schools->school_name;
+        @$school=$entry->schools->school_name;
         $schools=School::query()->orderBy('school_name','ASC')->get();
         $title = 'Edit';
         $component = 'UserEdit';
         $user = Auth::user();
                 $jsonData = [
                     'schools'=>$schools,
-                    'school'=>$school,
+                    @'school'=>$school,
                     'entry' => $entry,
                     'roles' => $roles,
                     @'name_role' => @$name_role,
