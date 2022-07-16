@@ -178,7 +178,7 @@
                                 <label>Type <span class="required"></span></label>
                                 <select v-model="model.type" class="form-control">
                                     <option value="">---</option>
-                                    <option value="ios">ios</option>
+                                    <option value="ios">Mac OS</option>
                                     <option value="window">window</option>
                                 </select>
                                 <error-label :errors="errors.type"></error-label>

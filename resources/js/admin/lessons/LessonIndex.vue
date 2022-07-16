@@ -3,6 +3,45 @@
 
         <ActionBar type="index"
                    :breadcrumbs="breadcrumbs" title = "Lesson Manager - Lessons"/>
+                      <div class="modal" id="download-lesson" tabindex="-1">
+            <div id="overlay">
+                <div class="la-3x text">
+                    <i class="la la-spinner la-spin"></i>
+                </div>
+            </div>
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Download Lesson</h5>
+                        <button type="button" class="close" data-bs-dismiss="modal">
+                            &times;
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <p>Bạn đang lựa chọn để tải về các bài học:</p>
+                        <ul>
+                            <li v-for="lesson in lessons"><strong style="word-break: break-word;">{{ lesson.name
+                                }}</strong></li>
+
+                        </ul>
+                        <p>Hãy chọn thiết bị để tải về các bài học này:</p>
+                        <ul class="device">
+                            <li v-for="_device in devices"><input type="radio" v-model="device" :value="_device.id"/>
+                                <strong>{{ _device.device_name }}</strong></li>
+                        </ul>
+                    </div>
+                    <div class="modal-footer" style="justify-content: center">
+                        <button type="button" class="btn btn-primary"
+                                @click="downloadLesson" :disabled="lessons.length == 0 || !device || isConfirm == 0"> Download for Windows  <i class="bi bi-windows"></i>
+                        </button>
+                        <button type="button" class="btn btn-primary"  @click="downloadLesson" :disabled="lessons.length == 0 || !device || isConfirm == 0"
+                              >
+                            Download for MacOS <i style="margin:-3px 0px 0px" class="bi bi-apple"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
 
         <div class="row">
             <div class="col-lg-12">
@@ -24,14 +63,15 @@
                                             </span>
                                             <!--end::Svg Icon-->
                                             <input type="text" data-kt-filemanager-table-filter = "search" class="form-control form-control-solid w-250px ps-15" @keydown.enter="doFilter($event)" v-model="filter.keyword" placeholder="Search..." value="" />
-                                        </div>
-
-                                        <span v-if="filter.keyword!==''" class="svg-icon svg-icon-2 svg-icon-lg-1 me-0" @click="filterClear()">
+                                              <span v-if="filter.keyword!==''" class="svg-icon svg-icon-2 svg-icon-lg-1 me-0" @click="filterClear">
                                             <svg type="button" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" style="margin: 3px -25px 0px;">
                                             <rect opacity="0.5" x="6" y="17.3137" width="16" height="2" rx="1" transform="rotate(-45 6 17.3137)" fill="black" />
                                                         <rect x="7.41422" y="6" width="16" height="2" rx="1" transform="rotate(45 7.41422 6)" fill="black" />
                                             </svg>
                                         </span>
+                                        </div>
+
+                                      
                                     </div>
                                     <div class="form-group mx-sm-3 mb-4">
                                         <button type="button" style="margin-left: 10px"
@@ -46,16 +86,15 @@
                                             <i class="fa fa-filter" v-if="!isShowFilter" aria-hidden="true"></i>
                                         </button>
 
-                                        <button class="btn btn-primary button-create" style="margin: 0 0 0 15px" @click="openModal()" v-if="permissions['011']"> Download Lesson</button>
+
 
                                     </div>
-                                    <!--                                    <div class="form-group mx-sm-3 mb-2">-->
-                                    <!--                                        <button @click="filterClear()" type="button"-->
-                                    <!--                                                class="btn btn-flex btn-light  fw-bolder ">Clear-->
-                                    <!--                                        </button>-->
-                                    <!--                                    </div>-->
-
                                 </form>
+                            <button class="btn btn-primary button-create" style="margin: -95px 0px 0px 481px;" @click="openModal()" v-if="permissions['011']"> Download Lesson</button>
+
+                            
+
+
                                 <form class="col-lg-12" v-if="isShowFilter">
                                     <div class="row">
                                         <div class="form-group col-lg-3">
@@ -93,12 +132,7 @@
                                             <label>Creation time </label>
                                             <Daterangepicker v-model="filter.created" class="active"
                                                              placeholder="Creation date" readonly></Daterangepicker>
-                                            <span v-if="filter.created!==''" class="svg-icon svg-icon-2 svg-icon-lg-1 me-0" @click="filterClear()">
-                                            <svg type="button" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" style="float: right;margin: -32px 3px 0px;">
-                                            <rect opacity="0.5" x="6" y="17.3137" width="16" height="2" rx="1" transform="rotate(-45 6 17.3137)" fill="black" />
-                                                        <rect x="7.41422" y="6" width="16" height="2" rx="1" transform="rotate(45 7.41422 6)" fill="black" />
-                                            </svg>
-                                            </span>
+                                           
                                         </div>              
                                         <div class="form-group col-lg-2">
                                             <label>Active</label>
@@ -213,51 +247,12 @@
                             </div>
                         </div>
 
-
                     </div>
                 </div>
             </div>
 
         </div>
-        <div class="modal" id="download-lesson" tabindex="-1">
-            <div id="overlay">
-                <div class="la-3x text">
-                    <i class="la la-spinner la-spin"></i>
-                </div>
-            </div>
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">Download Lesson</h5>
-                        <button type="button" class="close" data-bs-dismiss="modal">
-                            &times;
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <p>Bạn đang lựa chọn để tải về các bài học:</p>
-                        <ul>
-                            <li v-for="lesson in lessons"><strong style="word-break: break-word;">{{ lesson.name
-                                }}</strong></li>
-
-                        </ul>
-                        <p>Hãy chọn thiết bị để tải về các bài học này:</p>
-                        <ul class="device">
-                            <li v-for="_device in devices"><input type="radio" v-model="device" :value="_device.id"/>
-                                <strong>{{ _device.device_name }}</strong></li>
-                        </ul>
-                    </div>
-                    <div class="modal-footer" style="justify-content: center">
-                        <button type="button" class="btn btn-primary"
-                                @click="downloadLesson" :disabled="lessons.length == 0 || !device || isConfirm == 0"> Download for Windows  <i class="bi bi-windows"></i>
-                        </button>
-                        <button type="button" class="btn btn-primary"  @click="downloadLesson" :disabled="lessons.length == 0 || !device || isConfirm == 0"
-                              >
-                            Download for MacOS <i style="margin:-3px 0px 0px" class="bi bi-apple"></i>
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
+     
     </div>
 
 </template>
@@ -345,7 +340,7 @@
 
             },
 
-            openModal: function () {
+            openModal() {
                 this.isConfirm = 1;
                 if (this.lessons.length > 3) {
                     alert('Bạn chỉ được chọn tối đa 3 lesson');
