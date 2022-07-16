@@ -34,6 +34,8 @@ class LoginController extends Controller
                 $totalDevice = 0;
                 $check = 0;
                 $secret = '';
+                $deviceName = '';
+                $deviceID = '';
 
                 if ($user->user_devices) {
                     foreach ($user->user_devices as $device) {
@@ -41,6 +43,8 @@ class LoginController extends Controller
                         if ($device->device_uid == $request->device_unique) {
                             $check = 1;
                             $secret = $device->secret_key;
+                            $deviceName = $device->device_name;
+                            $deviceID = $device->device_uid;
                         }
                     }
                 }
@@ -53,6 +57,9 @@ class LoginController extends Controller
                 } else {
                     if ($check == 0) {
                         $secret = (Str::random(10));
+                        $deviceName = $request->device_name;
+                        $deviceID = $request->device_uid;
+
                         UserDevice::create([
                             'device_uid' => $request->device_unique,
                             'device_name' => $request->device_name,
@@ -69,6 +76,9 @@ class LoginController extends Controller
                 $payload = [
                     'email' => $user->email,
                     'username' => $user->username,
+                    'user_id' => $user->id,
+                    'device_uid' => $deviceID,
+                    'device_name' => $deviceName,
                     'expired' => strtotime(Carbon::now()->addHours(10)),
                     'secret_key' => $secret
                 ];
