@@ -51,7 +51,7 @@
 
                         <div class="row form-filter width-full">
                             <div class="col-lg-12">
-                                <form class="form-inline">
+                                <div class="form-inline">
                                     <div class="form-group mx-sm-3 mb-4">
                                         <div class="d-flex align-items-center position-relative my-1">
                                             <!--begin::Svg Icon | path: icons/duotune/general/gen021.svg-->
@@ -85,12 +85,13 @@
                                                 class="btn btn-primary" v-if="!isShowFilter"> Adventure search
                                             <i class="fa fa-filter" v-if="!isShowFilter" aria-hidden="true"></i>
                                         </button>
-
-
+                                        <button class="btn btn-primary button-create" @click="openModal()" style="margin:0 0 0 15px" v-if="permissions['011']"> Download Lesson</button>
 
                                     </div>
-                                </form>
-                            <button class="btn btn-primary button-create" style="margin: -95px 0px 0px 481px;" @click="openModal()" v-if="permissions['011']"> Download Lesson</button>
+                                </div>
+                              
+
+                               
 
                             
 
