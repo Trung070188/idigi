@@ -89,7 +89,7 @@ class GoogleSignController
                     'secret_key' => $secret
                 ];
 
-                $jwt = JWT::encode($payload, env('SECRET_KEY_API'), 'HS256');
+                $jwt = JWT::encode($payload, env('SECRET_KEY'), 'HS256');
 
                 return [
                     'code' => 0,

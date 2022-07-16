@@ -27,7 +27,7 @@ class CheckAuthApi
 
         try {
 
-            $decoded = JWT::decode($token, new Key(env('SECRET_KEY_API'), 'HS256'));
+            $decoded = JWT::decode($token, new Key(env('SECRET_KEY'), 'HS256'));
 
             $user = User::where('email', $decoded->email)->first();
             $roles = $user->roles;

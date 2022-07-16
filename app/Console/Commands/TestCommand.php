@@ -3,8 +3,11 @@
 namespace App\Console\Commands;
 
 use App\Helpers\PhpDoc;
+use App\Models\GroupPermission;
 use App\Models\Inventory;
+use App\Models\Permission;
 use App\Models\Product;
+use App\Models\RoleHasPermission;
 use App\Models\User;
 use App\Support\CallApi;
 use Illuminate\Console\Command;
@@ -45,25 +48,134 @@ class TestCommand extends Command
     public function handle()
     {
 
-        $data = [
-          'client_id' => env('CLIENT_ID'),
-          'grant_type' => 'password',
-          'username' => 'khoanda',
-          'password' => '123@123a',
-        ];
-       // dd($data);
-        $uri = env('SSO_URL')."/connect/token";
+        dd(parse_url('http://localhost:8888/xadmin/request_roles/edit?id=45'));
+        $userPermissions = [];
+        $user = User::find(2);
+        $roles = $user->roles;
+        $roleIds = [];
+        foreach ($roles as $role){
+            $roleIds[] = $role->id;
+        }
 
-        $res = CallApi::sendRequest('POST',$uri,  $data, 'form_params');
+        $rolePermissions = RoleHasPermission::whereIn('role_id', $roleIds)
+            ->with(['permission'])->get();
+
+        foreach ($rolePermissions as $rolePermission){
+            $userPermissions[$rolePermission->permission->code] = 1;
+        }
+
+        dd($userPermissions);
+
+
+
+        $groupPermissions = GroupPermission::with(['permissions.roles', 'permissions', 'childs'])
+            ->get();
+
+        $user = User::find(2);
+        $roles = $user->roles;
+        $menus = [];
+        $isAdmin = 0;
+
+        foreach ($roles as $role) {
+            if ($role->role_name == 'Super Administrator') {
+                $isAdmin = 1;
+            }
+        }
+
+        if($isAdmin == 1){
+            foreach ($groupPermissions as $groupPermission) {
+
+                if ($groupPermission->childs->count() > 0) {
+
+                    $menu = [
+                        "name" => $groupPermission->name,
+                        "icon" => $groupPermission->icon,
+                        'url' => $groupPermission->url,
+                        'subs' => [],
+                    ];
+                    foreach ($groupPermission->childs as $child) {
+                        $menu['subs'][] = [
+                            "name" => $child->name,
+                            "icon" => $child->icon,
+                            'url' => $child->url,
+                        ];
+                    }
+                }else{
+                    $menu = [
+                        "name" => $groupPermission->name,
+                        "icon" => $groupPermission->icon,
+                        'url' => $groupPermission->url
+                    ];
+                }
+
+                $menus[] = $menu;
+
+            }
+        }else{
+            foreach ($groupPermissions as $groupPermission) {
+                $check = 0;
+                $permissionRoles = explode(';', $groupPermission->role_id);
+                foreach ($permissionRoles as $permissionRole){
+                    foreach ($roles as $role){
+                        if($permissionRole == $role->id){
+                            $check = 1;
+                        }
+                    }
+                }
+
+                if($check == 1){
+                    if ($groupPermission->childs->count() > 0) {
+
+                        $menu = [
+                            "name" => $groupPermission->name,
+                            "icon" => $groupPermission->icon,
+                            'url' => $groupPermission->url,
+                            'subs' => [],
+                        ];
+
+                        foreach ($groupPermission->childs as $child) {
+                            $menu['subs'][] = [
+                                "name" => $child->name,
+                                "icon" => $child->icon,
+                                'url' => $child->url,
+                            ];
+                        }
+                    }else{
+                        $menu = [
+                            "name" => $groupPermission->name,
+                            "icon" => $groupPermission->icon,
+                            'url' => $groupPermission->url
+                        ];
+                    }
+
+                    $menus[] = $menu;
+                }
+
+            }
+        }
+
+
+        dd($menus);
+
+        $data = [
+            'client_id' => env('CLIENT_ID'),
+            'grant_type' => 'password',
+            'username' => 'khoanda',
+            'password' => '123@123a',
+        ];
+        // dd($data);
+        $uri = env('SSO_URL') . "/connect/token";
+
+        $res = CallApi::sendRequest('POST', $uri, $data, 'form_params');
         $body = json_decode($res['body'], true);
 
         $data = [
             'access_token' => $body['access_token']
         ];
         // dd($data);
-        $uri = env('SSO_URL')."/connect/userinfo";
+        $uri = env('SSO_URL') . "/connect/userinfo";
 
-        $res = CallApi::sendRequest('POST',$uri,  $data, 'form_params');
+        $res = CallApi::sendRequest('POST', $uri, $data, 'form_params');
         $userInfo = json_decode($res['body'], true);
 
         $userData = [
@@ -76,9 +188,8 @@ class TestCommand extends Command
         ];
 
         User::updateOrCreate([
-            'sso_id' =>$userInfo['sub']
+            'sso_id' => $userInfo['sub']
         ], $userData);
-
 
 
         dd($body);
@@ -89,8 +200,8 @@ class TestCommand extends Command
         $zip->open($zip_file, \ZipArchive::CREATE | \ZipArchive::OVERWRITE);
         $zip->setPassword('123456');
         $invoice_file = 'sample.pdf';
-        $zip->addFile( public_path('Sample-Video-File-For-Testing.mp4'),'Sample-Video-File-For-Testing.mp4');
-        $zip->addFile( public_path('Sample-Video-File-For-Testing - Copy.mp4'),'Sample-Video-File-For-Testing - Copy.mp4');
+        $zip->addFile(public_path('Sample-Video-File-For-Testing.mp4'), 'Sample-Video-File-For-Testing.mp4');
+        $zip->addFile(public_path('Sample-Video-File-For-Testing - Copy.mp4'), 'Sample-Video-File-For-Testing - Copy.mp4');
         /*$zip->setEncryptionName('test.pdf', \ZipArchive::EM_AES_256, '123456');*/
         $zip->close();
 

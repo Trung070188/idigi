@@ -72,7 +72,7 @@ class LoginController extends Controller
                     'expired' => strtotime(Carbon::now()->addHours(10)),
                     'secret_key' => $secret
                 ];
-                $jwt = JWT::encode($payload, env('SECRET_KEY_API'), 'HS256');
+                $jwt = JWT::encode($payload, env('SECRET_KEY'), 'HS256');
 
 
                 return [
