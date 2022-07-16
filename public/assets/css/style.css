@@ -219,3 +219,11 @@ body {
 .form-filter .form-group {
     text-align: left !important;
 }
+
+.btn.btn-icon i {
+    font-size: 12px
+}
+
+.modal-body {
+    text-align: left;
+}
