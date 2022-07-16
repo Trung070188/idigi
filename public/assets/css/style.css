@@ -1,5 +1,6 @@
 body {
     background-color: #F5F5F5;
+    font-family: 'Poppins', sans-serif;
 }
 
 .width-full {
@@ -8,6 +9,19 @@ body {
 
 .m0 {
     margin: 0;
+}
+
+.ml-10 {
+    margin-left: 10px;
+}
+
+.d-flex {
+    display: flex;
+    text-align: center;
+}
+
+.flex-1 {
+    flex: 1;
 }
 
 .form-inline {
@@ -50,8 +64,8 @@ body {
 
 .form-filter .form-control,
 .form-filter .form-select {
-    min-width: 250px;
-    max-width: 300px;
+    /*min-width: 250px;
+    max-width: 300px;*/
 }
 
 .form-select.form-select-solid {
@@ -184,4 +198,32 @@ body {
 
 .form-switch {
     padding-left: 0;
+}
+
+.btn-trash.btn-action {
+    vertical-align: middle;
+}
+
+.menu.menu-sub {
+    width: 250px !important;
+}
+
+.menu.menu-sub>.menu-item>.menu-link {
+    display: flex;
+}
+
+.menu.menu-sub>.menu-item>.menu-link>span {
+    flex: 1;
+}
+
+.form-filter .form-group {
+    text-align: left !important;
+}
+
+.btn.btn-icon i {
+    font-size: 12px
+}
+
+.modal-body {
+    text-align: left;
 }

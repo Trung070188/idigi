@@ -1,25 +1,16 @@
 <template>
     <div class="container-fluid">
-        
+
         <ActionBar type="index"
                    :breadcrumbs="breadcrumbs" title = "Lesson Manager - Lessons"/>
 
         <div class="row">
             <div class="col-lg-12">
                 <div class="card card-custom card-stretch gutter-b">
-                    <div class="card-header border-0 pt-5">
-                        <div class="title">
-                            <label>Lesson</label>
-                        </div>
-                        <!-- <a :href="'/xadmin/schools/create'" class="btn btn-primary button-create " >
-                     Create new
-                 </a> -->
-                        <button class="btn btn-primary button-create " @click="openModal()" v-if="permissions['011']"> Download Lesson</button>
-                    </div>
-                    <hr>
+
                     <div class="card-header border-0 pt-5">
 
-                        <div class="row width-full">
+                        <div class="row form-filter width-full">
                             <div class="col-lg-12">
                                 <form class="form-inline">
                                     <div class="form-group mx-sm-3 mb-4">
@@ -44,8 +35,9 @@
                                                 @click="isShowFilter = !isShowFilter"
                                                 class="btn btn-primary" v-if="!isShowFilter"> Adventure search
                                             <i class="fa fa-filter" v-if="!isShowFilter" aria-hidden="true"></i>
-
                                         </button>
+
+                                        <button class="btn btn-primary button-create" style="margin: 0 0 0 15px" @click="openModal()" v-if="permissions['011']"> Download Lesson</button>
 
                                     </div>
                                     <!--                                    <div class="form-group mx-sm-3 mb-2">-->
@@ -57,7 +49,7 @@
                                 </form>
                                 <form class="col-lg-12" v-if="isShowFilter">
                                     <div class="row">
-                                        <div class="form-group col-lg-4">
+                                        <div class="form-group col-lg-3">
                                             <label>Name </label>
                                             <input class="form-control" placeholder="Enter the lesson name"
                                                    v-model="filter.subject"/>
@@ -88,8 +80,6 @@
                                                 <option value="9">9</option>
                                             </select>
                                         </div>
-                                    </div>
-                                    <div class="row">
                                         <div class="form-group col-lg-3">
                                             <label>Creation time </label>
                                             <Daterangepicker v-model="filter.created" class="active"
@@ -100,18 +90,17 @@
                                                         <rect x="7.41422" y="6" width="16" height="2" rx="1" transform="rotate(45 7.41422 6)" fill="black" />
                                             </svg>
                                             </span>
-                                        </div>
-                                        <div class="form-group col-lg-3">
+                                        </div>              
+                                        <div class="form-group col-lg-2">
                                             <label>Active</label>
                                             <div>
                                                 <switch-button v-model="filter.enabled"></switch-button>
                                             </div>
 
-                                        </div>
+                                        </div>                                                                  
                                     </div>
                                     <div style="margin: auto 0">
-                                        <button type="button" class="btn btn-primary" @click="doFilter($event)">Search
-                                        </button>
+                                        <button type="button" class="btn btn-primary" @click="doFilter($event)">Search</button>
                                     </div>
                                 </form>
                             </div>
@@ -124,7 +113,7 @@
                                  v-if="entries.length > 0"></div>
                             <div style="margin-left: 20px" v-if="lessonIds.length > 0"> {{ lessonIds.length }} lesson
                                 selected
-                                <a  v-if="permissions['012']" href="javascript:;" @click="removeAll" style="color: red; margin-left: 10px">clear all</a>
+                                <a   href="javascript:;" @click="removeAll" style="color: red; margin-left: 10px">clear all</a>
                             </div>
                         </div>
                         <table class=" table  table-head-custom table-head-bg table-vertical-center">
@@ -134,7 +123,7 @@
                                     <div class="form-check form-check-sm form-check-custom form-check-solid">
                                         <input class="form-check-input" type="checkbox" v-model="allSelected" @change="selectAll()">
                                     </div>
-                                </td>                                
+                                </td>
                                 <th class="text-center">ID</th>
                                 <th>Name</th>
                                 <th class="text-center">Grade</th>
@@ -150,7 +139,7 @@
                                     <div class="form-check form-check-sm form-check-custom form-check-solid">
                                         <input class="form-check-input" type="checkbox" v-model="lessonIds" :value="entry.id" @change="updateCheckAll">
                                     </div>
-                                </td>                                    
+                                </td>
                                 <td class="text-center" v-text="entry.id"></td>
                                 <td v-text="entry.name"></td>
                                 <td class="text-center" v-text="entry.grade"></td>
@@ -160,11 +149,16 @@
 
                                 <td class="text-center">
                                     <!--                                    <a :href="'/xadmin/lessons/edit?id='+entry.id" style="margin-right: 10px"><i style="font-size:1.3rem" class="fa fa-edit"></i></a>-->
-                                    <a @click="openModalEntry(entry)" href="javascript:;" class=" btn-action" ><i
-                                        class="fa fa-download"></i></a>
-                                    <a v-if="permissions['012']" @click="remove(entry)" href="javascript:;" class="btn-trash btn-action "><i
-                                        class="fa fa-trash "></i></a>
-
+                                    <a @click="openModalEntry(entry)" href="javascript:;" class=" btn-action" >
+                                        <button type="button" class="btn btn-sm btn-icon btn-light btn-active-light-primary">
+                                            <i class="fa fa-download"></i>
+                                        </button>
+                                    </a>
+                                    <a v-if="permissions['012']" @click="remove(entry)" href="javascript:;" class="btn-trash btn-action">
+                                        <button type="button" class="btn btn-sm btn-icon btn-light btn-active-light-primary">
+                                            <i class="fa fa-trash"></i>
+                                        </button>
+                                    </a>
                                 </td>
                             </tr>
                             </tbody>
@@ -388,19 +382,20 @@
             },
 
             async removeAll() {
-                if (!confirm('Xóa bản ghi: ' + JSON.stringify(this.lessonIds))) {
-                    return;
-                }
-
-                const res = await $post('/xadmin/lessons/removeAll', {ids: this.lessonIds});
-
-                if (res.code) {
-                    toastr.error(res.message);
-                } else {
-                    toastr.success(res.message);
-                }
-
-                $router.updateQuery({page: this.paginate.currentPage, _: Date.now()});
+                $('input:checkbox').each(function() { this.checked = false; });
+                // if (!confirm('Xóa bản ghi: ' + JSON.stringify(this.lessonIds))) {
+                //     return;
+                // }
+                //
+                // const res = await $post('/xadmin/lessons/removeAll', {ids: this.lessonIds});
+                //
+                // if (res.code) {
+                //     toastr.error(res.message);
+                // } else {
+                //     toastr.success(res.message);
+                // }
+                //
+                // $router.updateQuery({page: this.paginate.currentPage, _: Date.now()});
             },
 
             filterClear() {

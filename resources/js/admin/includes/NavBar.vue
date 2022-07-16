@@ -103,12 +103,12 @@
                             data-kt-menu="true">
                             <div class="menu-item px-5">
                                 <!--                                    <a v-for="entry in entries" :href="'/xadmin/users/profile?id='+entry.id" ><i style="font-size:1.3rem" class="fa fa-edit"></i></a>-->
-                                <a :href="'/xadmin/users/profile?id='+auth.id" class="menu-link px-5">View Profile <i class="bi bi-person-circle" style="margin-left:4px"></i></a>
+                                <a :href="'/xadmin/users/profile?id='+auth.id" class="menu-link px-5"><span>View Profile</span> <i class="bi bi-person-circle" style="margin-left:4px"></i></a>
                             </div>
 
 
                             <div class="menu-item px-5">
-                                <a href="/xadmin/logout" class="menu-link px-5">Log Out   <i class="bi bi-box-arrow-right" style="margin-left:30px"></i></a>
+                                <a href="/xadmin/logout" class="menu-link px-5"><span>Log Out</span>   <i class="bi bi-box-arrow-right" style="margin-left:30px"></i></a>
 
                             </div>
                         </div>
