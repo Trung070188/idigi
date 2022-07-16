@@ -278,6 +278,8 @@
                     toastr.error(res.message);
                 } else {
                     toastr.success(res.message);
+                    location.replace('/xadmin/user_devices/index');
+
                 }
             },
             changeLimit() {
