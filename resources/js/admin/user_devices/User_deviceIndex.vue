@@ -1,7 +1,7 @@
 <template>
     <div class="container-fluid">
         <ActionBar type="index"
-                   :breadcrumbs="breadcrumbs"/>
+                   :breadcrumbs="breadcrumbs" title = "User Device Manager"/>
         <div class="modal fade" style="margin-right:50px " id="sentConfirm" tabindex="-1" role="dialog"
              aria-labelledby="sentConfirm"
              aria-hidden="true">
@@ -123,8 +123,8 @@
                             <div class="title">
                                 <label>User Device</label>
                             </div>
-                            <div   class="row" >
-                                <button     v-if="entries.length<3 " type="button" class="col-lg-2 btn btn-primary modal-devices " @click="modalDevice()">
+                            <div class="row" >
+                                <button v-if="entries.length<3 " type="button" class="col-lg-2 btn btn-primary modal-devices " @click="modalDevice()">
                                     Add more device
                                 </button>
                                 <button  v-if="entries.length>=3" type="button" class="col-lg-2 btn btn-primary modal-devices " @click="closeModal()">

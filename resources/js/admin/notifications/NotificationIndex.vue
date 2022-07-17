@@ -1,27 +1,34 @@
 <template>
     <div class="container-fluid">
         <ActionBar type="index"
-                   :breadcrumbs="breadcrumbs"/>
+                   :breadcrumbs="breadcrumbs" title = "Notification Manager - Notifications"/>
         <div class="row">
             <div class="col-lg-12">
                 <div class="card card-custom card-stretch gutter-b">
-                     <div class="card-header border-0 pt-5">
-                        <div class="title">
-                            <label>Notification</label>
-                        </div>
-                    </div>
-                    <hr>
+
                     <div class="card-header border-0 pt-5">
 
                         <div class="row width-full">
                             <div class="col-lg-12">
                                 <form class="form-inline">
                                     <div class="form-group mx-sm-3 mb-4">
-                                        <input
-                                            @keydown.enter="doFilter('keyword', filter.keyword, $event)"
-                                            v-model="filter.keyword"
-                                            type="text"
-                                            class="form-control" placeholder="Search content" value="">
+                                        <div class="d-flex align-items-center position-relative my-1">
+                                            <!--begin::Svg Icon | path: icons/duotune/general/gen021.svg-->
+                                            <span class="svg-icon svg-icon-1 position-absolute">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                                    <rect opacity="0.5" x="17.0365" y="15.1223" width="8.15546" height="2" rx="1" transform="rotate(45 17.0365 15.1223)" fill="black"></rect>
+                                                    <path d="M11 19C6.55556 19 3 15.4444 3 11C3 6.55556 6.55556 3 11 3C15.4444 3 19 6.55556 19 11C19 15.4444 15.4444 19 11 19ZM11 5C7.53333 5 5 7.53333 5 11C5 14.4667 7.53333 17 11 17C14.4667 17 17 14.4667 17 11C17 7.53333 14.4667 5 11 5Z" fill="black"></path>
+                                                </svg>
+                                            </span>
+                                            <!--end::Svg Icon-->
+                                            <input type="text" data-kt-filemanager-table-filter = "search" class="form-control form-control-solid w-250px ps-15" @keydown.enter="doFilter($event)" v-model="filter.keyword" placeholder="Search..." value="" />
+                                              <span v-if="filter.keyword!==''" class="svg-icon svg-icon-2 svg-icon-lg-1 me-0" @click="filterClear">
+                                            <svg type="button" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" style="margin: 3px -25px 0px;">
+                                            <rect opacity="0.5" x="6" y="17.3137" width="16" height="2" rx="1" transform="rotate(-45 6 17.3137)" fill="black" />
+                                                        <rect x="7.41422" y="6" width="16" height="2" rx="1" transform="rotate(45 7.41422 6)" fill="black" />
+                                            </svg>
+                                        </span>
+                                        </div>
                                     </div>
                                     <div class="form-group mx-sm-3 mb-4">
                                         <button type="button" style="margin-left: 10px"
@@ -70,9 +77,9 @@
                             <thead>
                             <tr>
                                 <th>Time</th>
-                                <th>Sender</th>
-                                <th>Role</th>
-                                <th>Notification content</th>
+                                <th class="text-center">Sender</th>
+                                <th class="text-center">Role</th>
+                                <th class="text-center">Notification content</th>
                                 <th></th>
                                 <th></th>
 
@@ -81,22 +88,34 @@
                             <tbody>
                             <tr v-for="entry in entries">
                                 <td v-text=" d(entry.created_at)"></td>
-                                <td v-text="entry.username"></td>
+                                <td class="text-center" v-text="entry.username"></td>
                                 <!--                            <td v-if="entry.title==='Yêu cầu xóa thiết bị'">{{entry.username}}</td>-->
                                 <!--                            <td v-if="entry.title==='Yêu cầu cấp quyền'">{{entry.username}}</td>-->
-                                <td v-text="entry.role"></td>
-                                <td v-if="entry.title==='Yêu cầu xóa thiết bị'">Yêu cầu xóa thiết bị</td>
-                                <td v-if="entry.title==='Yêu cầu cấp quyền'">Yêu cầu cấp quyền</td>
+                                <td class="text-center" v-text="entry.role"></td>
+                                <td class="text-center" v-if="entry.title==='Yêu cầu xóa thiết bị'">Yêu cầu xóa thiết bị</td>
+                                <td class="text-center" v-if="entry.title==='Yêu cầu cấp quyền'">Yêu cầu cấp quyền</td>
                                 <td></td>
-                                <td v-if="entry.title==='Yêu cầu xóa thiết bị'">
+                                <td class="text-center" v-if="entry.title==='Yêu cầu xóa thiết bị'">
                                     <a :href="entry.url">View detail</a>
-                                    <a v-if="permissions['025']" @click="remove(entry)" href="javascript:;" class="btn-trash deleted" style="margin: 0px 10px 0px;"><i
-                                        class="fa fa-trash mr-1 deleted"></i></a>
+                                    <!--<a v-if="permissions['025']" @click="remove(entry)" href="javascript:;" class="btn-trash deleted" style="margin: 0px 10px 0px;"><i
+                                        class="fa fa-trash mr-1 deleted"></i></a>-->
+
+                                    <a  v-if="permissions['025']" @click="remove(entry)" href="javascript:;">
+                                        <button type="button" class="btn btn-sm btn-icon btn-light btn-active-light-primary">
+                                            <i class="fa fa-trash mr-1 deleted"></i>
+                                        </button>
+                                    </a>                                            
                                 </td>
-                                <td v-if="entry.title==='Yêu cầu cấp quyền'">
+                                <td class="text-center" v-if="entry.title==='Yêu cầu cấp quyền'">
                                     <a v-if="permissions['026']" :href="entry.url">View detail</a>
-                                    <a v-if="permissions['025']" @click="remove(entry)" href="javascript:;" class="btn-trash deleted" style="margin: 0px 10px 0px;"><i
-                                        class="fa fa-trash mr-1 deleted"></i></a>
+                                    <!--<a v-if="permissions['025']" @click="remove(entry)" href="javascript:;" class="btn-trash deleted" style="margin: 0px 10px 0px;"><i
+                                        class="fa fa-trash mr-1 deleted"></i></a>-->
+
+                                    <a  v-if="permissions['025']" @click="remove(entry)" href="javascript:;">
+                                        <button type="button" class="btn btn-sm btn-icon btn-light btn-active-light-primary">
+                                            <i class="fa fa-trash mr-1 deleted"></i>
+                                        </button>
+                                    </a>                                          
                                 </td>
 
 

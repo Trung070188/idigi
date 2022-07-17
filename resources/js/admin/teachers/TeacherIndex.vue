@@ -1,37 +1,36 @@
 <template>
     <div class="container-fluid">
         <ActionBar type="index"
-                   :breadcrumbs="breadcrumbs"/>
+                   :breadcrumbs="breadcrumbs" title = "Teacher Manager - Teachers"/>
         <div class="row">
             <div class="col-lg-12">
                 <div class="card card-custom card-stretch gutter-b">
-                    <div class="card-header border-0 pt-5">
-                        <div class="title">
-                            <label>Teacher</label>
-                        </div>
-                           <a v-if="permissions['013']" :href="'/xadmin/users/create_teacher'" class="btn btn-primary button-create " >
-                        Create new
-                    </a>
-                    </div>
-                    <hr>
+     
                     <div class="card-header border-0 pt-5">
 
                         <div class="row width-full">
                             <div class="col-lg-12">
                                 <form class="form-inline">
                                     <div class="form-group mx-sm-3 mb-4">
-                                        <input @keydown.enter="doFilter('keyword', filter.keyword, $event)"
-                                               v-model="filter.keyword"
-                                               type="text"
-                                               class="form-control" placeholder="Search..." value="">
-                                        <span v-if="filter.keyword!==''" class="svg-icon svg-icon-2 svg-icon-lg-1 me-0" @click="filterClear">
+                                        <div class="d-flex align-items-center position-relative my-1">
+                                            <!--begin::Svg Icon | path: icons/duotune/general/gen021.svg-->
+                                            <span class="svg-icon svg-icon-1 position-absolute">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                                    <rect opacity="0.5" x="17.0365" y="15.1223" width="8.15546" height="2" rx="1" transform="rotate(45 17.0365 15.1223)" fill="black"></rect>
+                                                    <path d="M11 19C6.55556 19 3 15.4444 3 11C3 6.55556 6.55556 3 11 3C15.4444 3 19 6.55556 19 11C19 15.4444 15.4444 19 11 19ZM11 5C7.53333 5 5 7.53333 5 11C5 14.4667 7.53333 17 11 17C14.4667 17 17 14.4667 17 11C17 7.53333 14.4667 5 11 5Z" fill="black"></path>
+                                                </svg>
+                                            </span>
+                                            <!--end::Svg Icon-->
+                                            <input type="text" data-kt-filemanager-table-filter = "search" class="form-control form-control-solid w-250px ps-15" @keydown.enter="doFilter($event)" v-model="filter.keyword" placeholder="Search..." value="" />
+                                              <span v-if="filter.keyword!==''" class="svg-icon svg-icon-2 svg-icon-lg-1 me-0" @click="filterClear">
                                             <svg type="button" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" style="margin: 3px -25px 0px;">
                                             <rect opacity="0.5" x="6" y="17.3137" width="16" height="2" rx="1" transform="rotate(-45 6 17.3137)" fill="black" />
                                                         <rect x="7.41422" y="6" width="16" height="2" rx="1" transform="rotate(45 7.41422 6)" fill="black" />
                                             </svg>
                                         </span>
-
+                                        </div>
                                     </div>
+
                                     <div class="form-group mx-sm-3 mb-4">
                                         <button type="button" style="margin-left: 10px"
                                                 @click="isShowFilter = !isShowFilter"
@@ -43,6 +42,10 @@
                                                 class="btn btn-primary" v-if="!isShowFilter"> Adventure search
                                             <i class="fa fa-filter" v-if="!isShowFilter" aria-hidden="true"></i>
                                         </button>
+                                        <a v-if="permissions['013']" :href="'/xadmin/users/create_teacher'">
+                                            <button class="btn btn-primary button-create" style="margin:0 0 0 15px"> Create new</button>
+                                        </a>
+
                                     </div>
                                 </form>
 
@@ -97,37 +100,64 @@
                     </div>
 
                     <div class="card-body d-flex flex-column">
-                        <div v-text="'Showing '+ from +' to '+ to +' of '+ paginate.totalRecord +' entries'"
-                             v-if="entries.length > 0"></div>
+                        <div class="d-flex flex-stack">
+                            
+                            <div class="badge badge-lg badge-light-primary mb-15">
+                                <div class="d-flex align-items-center flex-wrap">
+
+                                    <span class="svg-icon svg-icon-2x svg-icon-primary mx-1">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                            <path d="M12.6343 12.5657L8.45001 16.75C8.0358 17.1642 8.0358 17.8358 8.45001 18.25C8.86423 18.6642 9.5358 18.6642 9.95001 18.25L15.4929 12.7071C15.8834 12.3166 15.8834 11.6834 15.4929 11.2929L9.95001 5.75C9.5358 5.33579 8.86423 5.33579 8.45001 5.75C8.0358 6.16421 8.0358 6.83579 8.45001 7.25L12.6343 11.4343C12.9467 11.7467 12.9467 12.2533 12.6343 12.5657Z" fill="black"></path>
+                                        </svg>
+                                    </span>
+                                    
+                                    <div v-text="'Showing '+ from +' to '+ to +' of '+ paginate.totalRecord +' entries'" v-if="entries.length > 0"></div>
+
+                                </div>
+                            </div>
+                        </div>
+
                         <table class=" table  table-head-custom table-head-bg table-vertical-center">
                             <thead>
                             <tr>
-                                <th>ID</th>
-                                <th>Teacher name</th>
-                                <th>Teacher email</th>
-                                <th>Class</th>
-                                <th>Teacher phone number</th>
-                                <th>Registed devices</th>
-                                <th>Creation Date</th>
-                                <th>Status</th>
+                                <th class="text-center">ID</th>
+                                <th class="text-center">Teacher name</th>
+                                <th class="text-center">Teacher email</th>
+                                <th class="text-center">Class</th>
+                                <th class="text-center">Teacher phone number</th>
+                                <th class="text-center">Registed devices</th>
+                                <th class="text-center">Creation Date</th>
+                                <th class="text-center">Status</th>
                                 <th></th>
                             </tr>
                             </thead>
                             <tbody v-for="entry in entries">
                             <tr v-for="teacher in entry.roles" v-if="teacher.role_name==='Teacher' && entry.last_login!==null">
-                                <td v-text="entry.id"></td>
-                                <td v-text="entry.username"></td>
-                                <td v-text="entry.email"></td>
-                                <td v-text="entry.class"></td>
-                                <td v-text="entry.phone"></td>
-                                <td>{{entry.user_devices.length}} / 3</td>
-                                <td v-text=" d(entry.created_at)"></td>
-                                <td v-text="entry.state===0 ? 'No' : 'Yes'"></td>
-                                <td>
-                                    <a v-if="permissions['014']" :href="'/xadmin/users/edit_teacher?id='+entry.id"><i style="font-size:1.3rem"
+                                <td class="text-center" v-text="entry.id"></td>
+                                <td class="text-center" v-text="entry.username"></td>
+                                <td class="text-center" v-text="entry.email"></td>
+                                <td class="text-center" v-text="entry.class"></td>
+                                <td class="text-center" v-text="entry.phone"></td>
+                                <td class="text-center">{{entry.user_devices.length}} / 3</td>
+                                <td class="text-center" v-text=" d(entry.created_at)"></td>
+                                <td class="text-center" v-text="entry.state===0 ? 'No' : 'Yes'"></td>
+                                <td class="text-center">
+                                    <!--<a v-if="permissions['014']" :href="'/xadmin/users/edit_teacher?id='+entry.id"><i style="font-size:1.3rem"
                                                                                             class="fa fa-edit"></i></a>
                                     <a v-if="permissions['015']" @click="remove(entry)" href="javascript:;" class="btn-trash deleted"><i
-                                        class="fa fa-trash mr-1 deleted"></i></a>
+                                        class="fa fa-trash mr-1 deleted"></i></a>-->
+
+                                    <a v-if="permissions['014']" :href="'/xadmin/users/edit_teacher?id='+entry.id">
+                                        <button type="button" class="btn btn-sm btn-icon btn-light btn-active-light-primary">
+                                            <i class="fa fa-edit"></i>
+                                        </button>
+                                    </a>                                        
+                                    <a v-if="permissions['015']" @click="remove(entry)" href="javascript:;">
+                                        <button type="button" class="btn btn-sm btn-icon btn-light btn-active-light-primary">
+                                            <i class="fa fa-trash mr-1 deleted"></i>
+                                        </button>
+                                    </a>  
+
                                 </td>
                             </tr>
                             </tbody>
