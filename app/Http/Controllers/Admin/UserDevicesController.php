@@ -228,6 +228,14 @@ class UserDevicesController extends AdminBaseController
         $entry->secret_key=(Str::random(10));
         $entry->status=2;
         $entry->fill($data);
+        $token = $entry->device_uid;
+        $tokenParts = explode(".", $token);  
+        $tokenPayload = base64_decode($tokenParts[1]);
+        $jwtPayload = json_decode($tokenPayload);
+      $uid= $jwtPayload->device_uid;
+   
+
+        $entry->device_uid=$uid;
         $entry->save();
         return [
             'code' => 0,
