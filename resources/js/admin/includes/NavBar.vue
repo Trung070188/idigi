@@ -227,9 +227,7 @@
 </script>
 
 <style scoped>
-    .menu-sub-dropdown {
-        border: 1px solid #696CFF;
-    }
+
     .nva{
         position: absolute;
         width: 40px;
@@ -238,7 +236,5 @@
         background: #EFF0F6;
         border-radius: 50%;
     }
-
-
 
 </style>

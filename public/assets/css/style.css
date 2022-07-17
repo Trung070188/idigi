@@ -221,6 +221,7 @@ body {
 
 .form-filter .form-group {
     text-align: left !important;
+    margin-bottom: 0 !important;
 }
 
 .btn.btn-icon i {
