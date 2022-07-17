@@ -70,8 +70,6 @@
                                             </svg>
                                         </span>
                                         </div>
-
-                                      
                                     </div>
                                     <div class="form-group mx-sm-3 mb-4">
                                         <button type="button" style="margin-left: 10px"
@@ -90,12 +88,6 @@
                                     </div>
                                 </div>
                               
-
-                               
-
-                            
-
-
                                 <form class="col-lg-12" v-if="isShowFilter">
                                     <div class="row">
                                         <div class="form-group col-lg-3">
