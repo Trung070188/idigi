@@ -15,7 +15,7 @@
                                     <span class="menu-arrow d-lg-none"></span>
                                 </span>
                                 <div class="menu-sub menu-sub-lg-down-accordion menu-sub-lg-dropdown menu-rounded-0 py-lg-4 w-lg-225px">
-                                    <div v-for="sub in menu.subs" data-kt-menu-trigger="{default:'click', lg: 'hover'}" data-kt-menu-placement="right-start" class="menu-item menu-lg-down-accordion">
+                                    <div v-for="sub in menu.subs" data-kt-menu-placement="right-start" class="menu-item menu-lg-down-accordion">
                                         <a :href="sub.url" class="menu-link">
                                             <span class="menu-bullet">
                                                 <span class="bullet bullet-dot"></span>
