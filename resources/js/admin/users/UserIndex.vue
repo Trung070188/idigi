@@ -1,38 +1,36 @@
 <template>
     <div class="container-fluid">
         <ActionBar type="index"
-                   :breadcrumbs="breadcrumbs"/>
+                   :breadcrumbs="breadcrumbs"  title = "User Manager - Users"/>
         <div class="row">
             <div class="col-lg-12">
                 <div class="card card-custom card-stretch gutter-b">
-                    <div class="card-header border-0 pt-5">
-                        <div class="title">
-                            <label>Manage users</label>
-                        </div>
-                           <a v-if="permissions['001']" :href="'/xadmin/users/create'" class="btn btn-primary button-create " >
-                        Create new
-                    </a>
-                    </div>
-                    <hr>
+
                     <div class="card-header border-0 pt-5">
 
                         <div class="row width-full">
                             <div class="col-lg-12">
                                 <form class="form-inline">
-                                    <div class="form-group mx-sm-3 mb-4" >
-                                        <input @keydown.enter="doFilter('keyword', filter.keyword, $event)"
-                                               v-model="filter.keyword"
-                                               type="text"
-                                               style="width: 400px"
-                                               class="form-control " placeholder="Search ID, username, email, role..."
-                                               value="">
-                                        <span v-if="filter.keyword!==''" class="svg-icon svg-icon-2 svg-icon-lg-1 me-0" @click="filterClear">
+                                    <div class="form-group mx-sm-3 mb-4">
+                                        <div class="d-flex align-items-center position-relative my-1">
+                                            <!--begin::Svg Icon | path: icons/duotune/general/gen021.svg-->
+                                            <span class="svg-icon svg-icon-1 position-absolute">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                                    <rect opacity="0.5" x="17.0365" y="15.1223" width="8.15546" height="2" rx="1" transform="rotate(45 17.0365 15.1223)" fill="black"></rect>
+                                                    <path d="M11 19C6.55556 19 3 15.4444 3 11C3 6.55556 6.55556 3 11 3C15.4444 3 19 6.55556 19 11C19 15.4444 15.4444 19 11 19ZM11 5C7.53333 5 5 7.53333 5 11C5 14.4667 7.53333 17 11 17C14.4667 17 17 14.4667 17 11C17 7.53333 14.4667 5 11 5Z" fill="black"></path>
+                                                </svg>
+                                            </span>
+                                            <!--end::Svg Icon-->
+                                            <input type="text" data-kt-filemanager-table-filter = "search" class="form-control form-control-solid w-250px ps-15" @keydown.enter="doFilter($event)" v-model="filter.keyword" placeholder="Search ID, username, email, role...." value="" />
+                                              <span v-if="filter.keyword!==''" class="svg-icon svg-icon-2 svg-icon-lg-1 me-0" @click="filterClear">
                                             <svg type="button" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" style="margin: 3px -25px 0px;">
                                             <rect opacity="0.5" x="6" y="17.3137" width="16" height="2" rx="1" transform="rotate(-45 6 17.3137)" fill="black" />
                                                         <rect x="7.41422" y="6" width="16" height="2" rx="1" transform="rotate(45 7.41422 6)" fill="black" />
                                             </svg>
                                         </span>
+                                        </div>
                                     </div>
+
                                     <div class="form-group mx-sm-3 mb-4">
                                         <button type="button"
                                                 @click="isShowFilter = !isShowFilter"
@@ -44,8 +42,10 @@
                                                 @click="isShowFilter = !isShowFilter"
                                                 class="btn btn-primary" v-if="!isShowFilter"> Adventure search
                                             <i class="fa fa-filter" v-if="!isShowFilter" aria-hidden="true"></i>
-
                                         </button>
+                                        <a v-if="permissions['001']" :href="'/xadmin/users/create'">
+                                            <button class="btn btn-primary button-create" style="margin:0 0 0 15px"> Create new</button>
+                                        </a>                                        
 
                                     </div>
                                 </form>
@@ -168,12 +168,29 @@
                                 <td v-if="entry.state==1">Yes</td>
                                 <td v-if="entry.state==0">No</td>
                                 <td>
-                                    <a v-if="permissions['002']" :href="'/xadmin/users/edit?id='+entry.id"><i style="font-size:1.3rem"
+                                    <!--<a v-if="permissions['002']" :href="'/xadmin/users/edit?id='+entry.id"><i style="font-size:1.3rem"
                                                                                     class="fa fa-edit"></i></a>
                                     <a v-if="permissions['003'] && entry.role!=='Super Administrator'" @click="remove(entry)" href="javascript:;" class="btn-trash deleted"><i
                                         class="fa fa-trash mr-1 deleted"></i></a>
                                     <a v-if="permissions['003'] && entry.role=='Super Administrator'"  @click="modalDevice()" href="javascript:;" class="btn-trash deleted"><i
-                                        class="fa fa-trash mr-1 deleted"></i></a>
+                                        class="fa fa-trash mr-1 deleted"></i></a>-->
+                                        
+                                    <a v-if="permissions['002']" :href="'/xadmin/users/edit?id='+entry.id">
+                                        <button type="button" class="btn btn-sm btn-icon btn-light btn-active-light-primary">
+                                            <i class="fa fa-edit"></i>
+                                        </button>
+                                    </a>                                        
+                                    <a v-if="permissions['003'] && entry.role!=='Super Administrator'" @click="remove(entry)" href="javascript:;">
+                                        <button type="button" class="btn btn-sm btn-icon btn-light btn-active-light-primary">
+                                            <i class="fa fa-trash mr-1 deleted"></i>
+                                        </button>
+                                    </a>  
+                                    <a v-if="permissions['003'] && entry.role=='Super Administrator'"  @click="modalDevice()" href="javascript:;">
+                                        <button type="button" class="btn btn-sm btn-icon btn-light btn-active-light-primary">
+                                            <i class="fa fa-trash mr-1 deleted"></i>
+                                        </button>
+                                    </a>  
+
                                 </td>
                             </tr>
                             </tbody>

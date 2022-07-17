@@ -1,8 +1,7 @@
 <template>
     <div class="container-fluid" >
         <ActionBar type="index"
-        :breadcrumbs="breadcrumbs"
-        />
+        :breadcrumbs="breadcrumbs" title = "User Manager - Roles"/>
         <div class="row">
             <div class="col-lg-12">
                 <div class="card card-custom card-stretch gutter-b">
