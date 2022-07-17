@@ -6,11 +6,11 @@
 											<span class="svg-icon svg-icon-xl svg-icon-primary">
 												<!--begin::Svg Icon | path:assets/media/svg/icons/Code/Compiling.svg-->
                                                 <div class="nva" v-if="status!==1">
-                                                <i  class="fa fa-bell" style="margin: 11px 0px 0px"></i>
+                                                <i  class="fa fa-bell" style="margin: 11px 0px 0px; font-size: 16px"></i>
 
                                                 </div>
                                                 <div class="nva" v-if="status==1">
-                                                        <i  class="fa fa-bell" style="margin: 11px 0px 0px"></i>
+                                                        <i  class="fa fa-bell" style="margin: 11px 0px 0px; font-size: 16px"></i>
                                                 </div>
                                                    <span  class="notifiy_num"
                                                          v-if="notification>0 && status==2">{{notification}}</span>
