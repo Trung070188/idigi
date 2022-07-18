@@ -49,7 +49,7 @@
 
                     <div class="card-header border-0 pt-5">
 
-                        <div class="row form-filter width-full">
+                        <div class="row width-full">
                             <div class="col-lg-12">
                                 <div class="form-inline">
                                     <div class="form-group mx-sm-3 mb-4">
@@ -87,7 +87,7 @@
 
                                     </div>
                                 </div>
-                              
+
                                 <form class="col-lg-12" v-if="isShowFilter">
                                     <div class="row">
                                         <div class="form-group col-lg-3">
@@ -125,15 +125,15 @@
                                             <label>Creation time </label>
                                             <Daterangepicker v-model="filter.created" class="active"
                                                              placeholder="Creation date" readonly></Daterangepicker>
-                                           
-                                        </div>              
+
+                                        </div>
                                         <div class="form-group col-lg-2">
                                             <label>Active</label>
                                             <div>
                                                 <switch-button v-model="filter.enabled"></switch-button>
                                             </div>
 
-                                        </div>                                                                  
+                                        </div>
                                     </div>
                                     <div style="margin: auto 0">
                                         <button type="button" class="btn btn-primary" @click="doFilter($event)">Search</button>
@@ -145,7 +145,7 @@
 
                     <div class="card-body d-flex flex-column">
                         <div class="d-flex flex-stack">
-                            
+
                             <div class="badge badge-lg badge-light-primary mb-15">
                                 <div class="d-flex align-items-center flex-wrap">
 
@@ -154,7 +154,7 @@
                                             <path d="M12.6343 12.5657L8.45001 16.75C8.0358 17.1642 8.0358 17.8358 8.45001 18.25C8.86423 18.6642 9.5358 18.6642 9.95001 18.25L15.4929 12.7071C15.8834 12.3166 15.8834 11.6834 15.4929 11.2929L9.95001 5.75C9.5358 5.33579 8.86423 5.33579 8.45001 5.75C8.0358 6.16421 8.0358 6.83579 8.45001 7.25L12.6343 11.4343C12.9467 11.7467 12.9467 12.2533 12.6343 12.5657Z" fill="black"></path>
                                         </svg>
                                     </span>
-                                    
+
                                     <div v-text="'Showing '+ from +' to '+ to +' of '+ paginate.totalRecord +' entries'" v-if="entries.length > 0"></div>
 
                                     <template v-if="lessonIds.length > 0">
@@ -164,7 +164,7 @@
                                             </svg>
                                         </span>
 
-                                        <div> 
+                                        <div>
                                             {{ lessonIds.length }} lesson selected
                                             <a href="javascript:;" @click="removeAll" style="color: red; margin-left: 10px">clear all</a>
                                         </div>
@@ -173,7 +173,7 @@
                                 </div>
                             </div>
                         </div>
-                                    
+
                         <table class=" table  table-head-custom table-head-bg table-vertical-center">
                             <thead>
                             <tr>
@@ -245,7 +245,7 @@
             </div>
 
         </div>
-     
+
     </div>
 
 </template>
