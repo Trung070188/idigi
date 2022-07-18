@@ -48,7 +48,7 @@
                 </div>
             </div>
 
-            <!--<div class="card mb-5 mb-xl-10">
+            <div class="card mb-5 mb-xl-10">
                 <div class="card-body pt-9 pb-0">
                     <div class="d-flex flex-wrap flex-sm-nowrap mb-3">
                         <div class="me-7 mb-4">
@@ -56,7 +56,7 @@
                                 <div class="image-input-wrapper w-160px h-160px" :style="'background-image: url('+entry.file_image_new.uri+')'"></div>
                                 <label class="btn btn-icon btn-circle btn-active-color-primary w-25px h-25px bg-body shadow" data-kt-image-input-action="change" data-bs-toggle="tooltip" title="" data-bs-original-title="Change avatar">
                                     <i class="bi bi-pencil-fill fs-7"></i>
-                                    <input type="file" name="avatar" accept=".png, .jpg, .jpeg">
+                                    <input type="file" @change="fileChanged()" ref="uploader" name="avatar" accept=".png, .jpg, .jpeg" />
                                     <input type="hidden" name="avatar_remove">
                                 </label>
                                 <span class="btn btn-icon btn-circle btn-active-color-primary w-25px h-25px bg-body shadow" data-kt-image-input-action="cancel" data-bs-toggle="tooltip" title="" data-bs-original-title="Cancel avatar">
@@ -95,7 +95,7 @@
                                     </div>
                                 </div>
                                 <div class="d-flex my-4">
-                                    <a href="#" class="btn btn-sm btn-primary me-3">Change Avatar</a>
+                                    <a href="#" class="btn btn-sm btn-primary me-3" @click="chooseFile()">Change Avatar</a>
                                     <a href="#" class="btn btn-sm btn-primary me-3" @click="modalDevice()">Set Password</a>
                                 </div>                                
 
@@ -130,9 +130,60 @@
                         </div>
                     </div>
                 </div>
-            </div>-->
+            </div>
 
-            <div class="row">
+            <div class="card mb-5 mb-xl-10">
+                <div class="card-header border-0 cursor-pointer" role="button" data-bs-toggle="collapse" data-bs-target="#kt_account_profile_details" aria-expanded="true" aria-controls="kt_account_profile_details">
+                    <div class="card-title m-0">
+                        <h3 class="fw-bolder m-0">Profile Details</h3>
+                    </div>
+                </div>
+                <div id="kt_account_settings_profile_details" class="collapse show">
+                    <form id="kt_account_profile_details_form" class="form fv-plugins-bootstrap5 fv-plugins-framework" novalidate="novalidate">
+                        <div class="card-body border-top p-9">
+                            <div class="row mb-6">
+                                <label class="col-lg-2 col-form-label fw-bold fs-6">Fullname</label>
+
+                                <div class="col-lg-10 fv-row fv-plugins-icon-container">
+                                    <input type="text" name="full_name" class="form-control form-control-lg form-control-solid" placeholder="Enter the Fullname" v-model="entry.full_name" />
+                                    <div class="fv-plugins-message-container invalid-feedback" v-if="errors.full_name">{{errors.full_name}}</div>
+                                </div>
+                            </div>
+                            <div class="row mb-6">
+                                <label class="col-lg-2 col-form-label fw-bold fs-6">Email</label>
+
+                                <div class="col-lg-10 fv-row fv-plugins-icon-container">
+                                    <input type="text" name="email" class="form-control form-control-lg form-control-solid" placeholder="Enter the email" v-model="entry.email" />
+                                    <div class="fv-plugins-message-container invalid-feedback" v-if="errors.email">{{errors.email}}</div>
+                                </div>
+                            </div>
+                            <div class="row mb-6">
+                                <label class="col-lg-2 col-form-label fw-bold fs-6">Username</label>
+
+                                <div class="col-lg-10 fv-row fv-plugins-icon-container">
+                                    <input type="text" name="username" class="form-control form-control-lg form-control-solid" placeholder="Enter the username" v-model="entry.username" disabled />
+                                    <div class="fv-plugins-message-container invalid-feedback" v-if="errors.username">{{errors.username}}</div>
+                                </div>
+                            </div>
+                            <div class="row mb-6">
+                                <label class="col-lg-2 col-form-label fw-bold fs-6">Role</label>
+
+                                <div class="col-lg-10 fv-row fv-plugins-icon-container">
+                                    <input type="text" name="role" class="form-control form-control-lg form-control-solid" placeholder="Enter the role" v-model="role" disabled />
+                                    <div class="fv-plugins-message-container invalid-feedback" v-if="errors.role">{{errors.role}}</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card-footer d-flex justify-content-end py-6 px-9">
+                            <button type="button" class="btn btn-primary" @click="save_profile()" :disabled="!changed">Save Changes</button>
+                        </div>
+                    
+                    </form>
+                </div>
+            </div>            
+
+            <!--<div class="row">
                 <div class="col-lg-12">
                 <div class="card card-custom card-stretch gutter-b">
                     <div class="card-header border-0 pt-5">
@@ -148,7 +199,6 @@
                             <div class="col-lg-12">
 
                     <div class="tab-content profile-page">
-                        <!-- PROFILE TAB CONTENT -->
                         <div class="tab-pane profile active" id="profile-tab">
                             <div class="row">
                                 <div class="col-md-3">
@@ -200,20 +250,21 @@
                             </div>
                         </div>
 
-                    </div>
+                        </div>
                             </div>
                         </div>
                     </div>
                 </div>
                 </div>
-            </div>
-        </div>
+            </div>-->
 
         </div>
+
+    </div>
 
 </template>
 <script>
-    import {$get, $post} from "../../utils";
+    import {$get, $post, $upload} from "../../utils";
     import FileManagerInput from "../../components/FileManagerInput";
     import ActionBar from "../includes/ActionBar";
     import UploadImage from "../../components/UploadImage";
@@ -260,7 +311,6 @@
                 $('#deviceConfirm').modal('hide');
             },
             backIndex() {
-
                 window.location.href = '/xadmin/dashboard/index';
             },
             async save_profile() {
@@ -294,10 +344,36 @@
                 } else {
                     this.errors = {};
                     toastr.success(res.message);
-                     location.replace('/xadmin/users/profile?id=' + res.id);
+                    location.replace('/xadmin/users/profile?id=' + res.id);
+                }
+            },
+            chooseFile() {
+                this.$refs.uploader.click();
+            },        
+            fileMap(file) {
+                return {
+                    id: file.id,
+                    uri: file.url
+                };
+            },            
+            async fileChanged() {
+                const files = this.$refs.uploader.files;
+                
+                if (files.length > 0) {
+                    const res = await $upload('/xadmin/files/upload', files);
+                    if (res.code !== 200) {
+                        toastr.error(res.message);
+                    } else {
+                        toastr.success(res.message);
+
+                        this.entry.file_image_new = this.fileMap(res.file);
+
+                        console.log(this.entry);
+                    }
+
                 }
 
-            }
+            },                
         }
     }
 </script>
