@@ -231,3 +231,9 @@ body {
 .modal-body {
     text-align: left;
 }
+
+@media (min-width: 992px) {
+    .content {
+        padding: 30px 0;
+    }
+}

@@ -54,17 +54,17 @@
                         <div class="me-7 mb-4">
                             <div class="image-input image-input-outline" data-kt-image-input="true" style="background-image: url(/themes/admin/assets/media/avatars/blank.png)">
                                 <div class="image-input-wrapper w-160px h-160px" :style="'background-image: url('+entry.file_image_new.uri+')'"></div>
-                                <label class="btn btn-icon btn-circle btn-active-color-primary w-25px h-25px bg-body shadow" data-kt-image-input-action="change" data-bs-toggle="tooltip" title="" data-bs-original-title="Change avatar">
-                                    <i class="bi bi-pencil-fill fs-7"></i>
+                                <label class="" data-kt-image-input-action="change" data-bs-toggle="tooltip" title="" data-bs-original-title="Change avatar">
+                                    <!--<i class="bi bi-pencil-fill fs-7"></i>-->
                                     <input type="file" @change="fileChanged()" ref="uploader" name="avatar" accept=".png, .jpg, .jpeg" />
                                     <input type="hidden" name="avatar_remove">
                                 </label>
-                                <span class="btn btn-icon btn-circle btn-active-color-primary w-25px h-25px bg-body shadow" data-kt-image-input-action="cancel" data-bs-toggle="tooltip" title="" data-bs-original-title="Cancel avatar">
+                                <!--<span class="btn btn-icon btn-circle btn-active-color-primary w-25px h-25px bg-body shadow" data-kt-image-input-action="cancel" data-bs-toggle="tooltip" title="" data-bs-original-title="Cancel avatar">
                                     <i class="bi bi-x fs-2"></i>
                                 </span>
                                 <span class="btn btn-icon btn-circle btn-active-color-primary w-25px h-25px bg-body shadow" data-kt-image-input-action="remove" data-bs-toggle="tooltip" title="" data-bs-original-title="Remove avatar">
                                     <i class="bi bi-x fs-2"></i>
-                                </span>
+                                </span>-->
                             </div>
 
                         </div>

@@ -108,19 +108,9 @@
 
                     <div class="d-flex align-items-center ms-1 ms-lg-3" id="kt_header_user_menu_toggle">
 
-                        <div data-kt-menu-trigger="click" data-kt-menu-attach="parent"
-                             data-kt-menu-placement="bottom-end">
-                            <span class="symbol symbol-25" v-if="auth.image!==null">
-                                <span class="symbol-label font-size-h5 font-weight-bold "><img
-                                    style="max-width: 40px ;border-radius:50%;" :src="auth.image">
-                                </span>
-                            </span>
-
-                            <span v-if="auth.image==null" class="symbol symbol-25 ">
-                                <span class="symbol-label font-size-h5 font-weight-bold">
-                                    <i style="max-width: 40px ;border-radius:50%;" class="fa fa-user"></i>
-                                </span>
-                            </span>
+                        <div class="cursor-pointer symbol symbol-30px symbol-md-40px" data-kt-menu-trigger="click" data-kt-menu-attach="parent" data-kt-menu-placement="bottom-end">
+                            <img :src="auth.image" alt="user" v-if="auth.image!==null" />
+                            <i style="max-width: 40px ;border-radius:50%;" class="fa fa-user" v-else></i>
                         </div>
 
                         <div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-800 menu-state-bg menu-state-primary fw-bold py-4 fs-6 w-275px" data-kt-menu="true" style="">
