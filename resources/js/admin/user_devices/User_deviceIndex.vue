@@ -101,6 +101,7 @@
                 </div>
             </div>
         </div>
+
         <div class="modal fade" style="margin-right:50px;border:2px solid #333333  " id="deviceConfirmLimit" tabindex="-1" role="dialog"
              aria-labelledby="deviceConfirmLimit"
              aria-hidden="true">
@@ -115,6 +116,43 @@
                 </div>
             </div>
         </div>
+
+        <!--<div class="row">
+            <div class="col-lg-12">
+                <div class="card card-custom card-stretch gutter-b">
+                    <div class="card-body d-flex flex-column">
+                        <table class=" table  table-head-custom table-head-bg table-vertical-center">
+                            <thead>
+                            <tr>
+                                <th class="text-center" width = "50">ID</th>
+                                <th>Device</th>
+                                <th width = "150"></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                                <tr v-for="entry in entries">
+                                    <td class="text-center" v-text="entry.id"></td>
+                                    <td v-text="entry.device_name"></td>
+                                    <td class="text-right">
+                                        <a href="#" @click="saveEditName(entry)">
+                                            <button type="button" class="btn btn-sm btn-icon btn-light btn-active-light-primary">
+                                                <i class="fa fa-edit"></i>
+                                            </button>
+                                        </a>                                        
+                                        <a @click="remove(entry)" href="javascript:;">
+                                            <button type="button" class="btn btn-sm btn-icon btn-light btn-active-light-primary">
+                                                <i class="fa fa-trash mr-1 deleted"></i>
+                                            </button>
+                                        </a>  
+                                    </td>
+                                </tr>                
+                            </tbody>
+                        </table>            
+                    </div>
+                </div>
+            </div>
+        </div>-->
+
         <div class="row">
             <div class="col-lg-12">
                 <div class="card card-custom card-stretch gutter-b">
