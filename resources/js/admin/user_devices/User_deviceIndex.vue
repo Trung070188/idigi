@@ -300,12 +300,12 @@
                                         <!--end::Menu item-->
                                         <!--begin::Menu item-->
                                         <div class="menu-item px-3"  v-for="role in entry.role">
-                                            <a v-if="role.id!==5" @click="remove(entry)" data-kt-subscriptions-table-filter="delete_row" class="menu-link px-3">Delete</a>
-                                            <a v-if="role.id==5 && entry.status==2 " @click="Sent(entry)" data-kt-subscriptions-table-filter="delete_row" class="menu-link px-3">Delete</a>
+                                            <a class="menu-link text-danger px-3" v-if="role.id!==5" @click="remove(entry)" data-kt-subscriptions-table-filter="delete_row">Delete</a>
+                                            <a class="menu-link text-danger px-3" v-if="role.id==5 && entry.status==2 " @click="Sent(entry)" data-kt-subscriptions-table-filter="delete_row" >Delete</a>
 
                                         </div>
                                         <div class="menu-item px-3"  v-for="role in entry.role">
-                                            <a v-if="role.id==5 && entry.status==1"  data-kt-subscriptions-table-filter="delete_row" class="menu-link px-3" >Delete</a>
+                                            <a v-if="role.id==5 && entry.status==1"  data-kt-subscriptions-table-filter="delete_row" class="menu-link text-danger px-3" >Delete</a>
                                         </div>
                                         <!--end::Menu item-->
                                     </div>
