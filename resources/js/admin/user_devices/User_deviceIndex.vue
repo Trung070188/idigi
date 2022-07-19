@@ -244,9 +244,9 @@
                     </div>
 
 
-                    <div class="card-body d-flex flex-column">
-                        <div class="d-flex flex-stack">
-    <div class="badge badge-lg badge-light-primary mb-15">
+                    <div class="tab-content">
+                        <div class="d-flex flex-stack pt-4 pl-9 pr-9">
+                        <div class="badge badge-lg badge-light-primary mb-15">
                                 <div class="d-flex align-items-center flex-wrap">
 
 
@@ -259,8 +259,8 @@
                             </div>
                         </div>
 
-                        <table class=" table  table-head-custom table-head-bg table-vertical-center">
-                            <thead>
+                        <table class="table table-row-bordered align-middle gy-4 gs-9">
+                            <thead class="border-bottom border-gray-200 fs-6 text-gray-600 fw-bolder bg-light bg-opacity-75">
                             <tr>
                                 <th class="text-center">Device Name</th>
                                 <th class="text-center">Status</th>
