@@ -6,15 +6,12 @@
             <div class="col-lg-12">
                 <div class="card card-custom card-stretch gutter-b">
 
-                    <div class="card-header border-0 pt-5">
+                    <div class="card-header border-0 pt-6">
 
-                        <div class="row width-full">
-                            <div class="col-lg-12">
-                                <div class="form-inline">
-                                    <div class="form-group mx-sm-3 mb-4">
-                                        <div class="d-flex align-items-center position-relative my-1">
+                            <div class="card-title">
+                                    <div class="d-flex align-items-center position-relative my-1">
                                             <!--begin::Svg Icon | path: icons/duotune/general/gen021.svg-->
-                                            <span class="svg-icon svg-icon-1 position-absolute">
+                                            <span class="svg-icon svg-icon-1 position-absolute ms-6">
                                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
                                                     <rect opacity="0.5" x="17.0365" y="15.1223" width="8.15546" height="2" rx="1" transform="rotate(45 17.0365 15.1223)" fill="black"></rect>
                                                     <path d="M11 19C6.55556 19 3 15.4444 3 11C3 6.55556 6.55556 3 11 3C15.4444 3 19 6.55556 19 11C19 15.4444 15.4444 19 11 19ZM11 5C7.53333 5 5 7.53333 5 11C5 14.4667 7.53333 17 11 17C14.4667 17 17 14.4667 17 11C17 7.53333 14.4667 5 11 5Z" fill="black"></path>
@@ -28,28 +25,52 @@
                                                         <rect x="7.41422" y="6" width="16" height="2" rx="1" transform="rotate(45 7.41422 6)" fill="black" style="fill:red"/>
                                             </svg>
                                         </span>
-                                        </div>
                                     </div>
-                                    <div class="form-group mx-sm-3 mb-4">
+                            </div>
+                              <div class="card-toolbar">
+                                    <div
+                                    class="d-flex justify-content-end"
+                                    data-kt-customer-table-toolbar="base"
+                                    v-if="schoolIds == ''">
                                         <button type="button"
                                                 @click="isShowFilter = !isShowFilter"
-                                                class="btn btn-primary" v-if="isShowFilter"> Close Adventure search
+                                                class="btn btn-primary" v-if="isShowFilter">  Close Advanced Search
                                             <i style="margin-left: 5px" class="fas fa-times"></i>
 
                                         </button>
                                         <button type="button"
                                                 @click="isShowFilter = !isShowFilter"
-                                                class="btn btn-primary" v-if="!isShowFilter"> Adventure search
+                                                class="btn btn-primary" v-if="!isShowFilter"> Advanced Search
                                             <i class="fa fa-filter" v-if="!isShowFilter" aria-hidden="true"></i>
                                         </button>
                                         <a :href="'/xadmin/schools/create'" >
-                                            <button class="btn btn-primary button-create" style="margin:0 0 0 15px"> Create new</button>
+                                            <button class="btn btn-primary button-create" style="margin:0 0 0 15px"> Create New</button>
                                         </a>
 
                                     </div>
                                 </div>
-
-                                <form class="col-lg-12" v-if="isShowFilter">
+                                
+                                  <div
+                                    class="d-flex justify-content-end align-items-center d-none"
+                                    data-kt-customer-table-toolbar="selected"
+                                    v-if="schoolIds != ''">
+                            <div class="fw-bolder me-5">
+                                <span
+                                    class="me-2"
+                                    data-kt-customer-table-select="selected_count"
+                                ></span
+                                >{{ schoolIds.length }} Selected
+                            </div>
+                            <button
+                                @click="removeAll"
+                                type="button"
+                                class="btn btn-danger"
+                                data-kt-customer-table-select="delete_selected"
+                            >
+                                Delete Selected
+                            </button>
+                        </div>
+                         <form class="col-lg-12" v-if="isShowFilter">
                                     <div class="row">
                                         <div class="form-group col-lg-3">
                                             <label>School name </label>
@@ -73,11 +94,10 @@
                                         <button type="button" class="btn btn-primary" @click="doFilter($event)">Search</button>
                                     </div>
                                 </form>
-                            </div>
-
-                        </div>
 
                     </div>
+
+                       
 
                     <div class="tab-content">
 
@@ -101,6 +121,18 @@
                         <table class="table table-row-bordered align-middle gy-4 gs-9">
                             <thead class="border-bottom border-gray-200 fs-6 text-gray-600 fw-bolder bg-light bg-opacity-75">
                             <tr>
+                                <td width="25">
+                                        <div
+                                            class="form-check form-check-sm form-check-custom form-check-solid"
+                                        >
+                                            <input
+                                                class="form-check-input"
+                                                type="checkbox"
+                                                v-model="allSelected"
+                                                @change="selectAll()"
+                                            />
+                                        </div>
+                                    </td>
                                 <th class="">ID</th>
                                 <th class="">Name</th>
                                 <th class="">Address</th>
@@ -114,6 +146,19 @@
                             </thead>
                             <tbody>
                             <tr v-for="entry in entries">
+                                 <td class="">
+                                        <div
+                                            class="form-check form-check-sm form-check-custom form-check-solid"
+                                        >
+                                            <input
+                                                class="form-check-input"
+                                                type="checkbox"
+                                                v-model="schoolIds"
+                                                :value="entry.id"
+                                                @change="updateCheckAll"
+                                            />
+                                        </div>
+                                    </td>
                                 <td class="" v-text="entry.id"></td>
                                 <td class="" v-text="entry.school_name"></td>
                                 <td class="" v-text="entry.school_address"></td>
@@ -195,6 +240,9 @@
                 }
             }
             return {
+            school: [],
+            schoolIds: [],
+            allSelected: false,
                 breadcrumbs: [
                     {
                         title: 'Schools'
@@ -284,7 +332,51 @@
             onPageChange(page) {
                 $router.updateQuery({page: page})
             }
-        }
+        },
+         selectAll() {
+             console.log('trung');
+            if (this.allSelected) {
+                const selected = this.entries.map(u => u.id);
+                this.schoolIds = selected;
+                this.school = this.entries;
+            } else {
+                this.schoolIds = [];
+                this.school = [];
+            }
+        },
+        updateCheckAll() {
+            this.school = [];
+            if (this.schoolIds.length === this.entries.length) {
+                this.allSelected = true;
+            } else {
+                this.allSelected = false;
+            }
+            let self = this;
+            self.schoolIds.forEach(function(e) {
+                self.entries.forEach(function(e1) {
+                    if (e1.id == e) {
+                        self.school.push(e1);
+                    }
+                });
+            });
+        },
+         async removeAll()
+            {
+                if (!confirm('Xóa bản ghi: ' + JSON.stringify(this.schoolIds))) {
+                    return;
+                }
+
+                const res = await $post('/xadmin/schools/removeAll', {ids: this.schoolIds});
+
+                if (res.code) {
+                    toastr.error(res.message);
+                } else {
+                    toastr.success(res.message);
+                }
+
+                $router.updateQuery({page: this.paginate.currentPage, _: Date.now()});
+
+            }
     }
 </script>
 

@@ -6,15 +6,15 @@
             <div class="col-lg-12">
                 <div class="card card-custom card-stretch gutter-b">
 
-                    <div class="card-header border-0 pt-5">
+                    <div class="card-header border-0 pt-6">
 
-                        <div class="row width-full">
-                            <div class="col-lg-12">
-                                <form class="form-inline">
-                                    <div class="form-group mx-sm-3 mb-4">
+                        
+                        <div class="card-title">
+                            <div
+                                class="d-flex align-items-center position-relative my-1">
                                         <div class="d-flex align-items-center position-relative my-1">
                                             <!--begin::Svg Icon | path: icons/duotune/general/gen021.svg-->
-                                            <span class="svg-icon svg-icon-1 position-absolute">
+                                            <span class="svg-icon svg-icon-1 position-absolute ms-6">
                                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
                                                     <rect opacity="0.5" x="17.0365" y="15.1223" width="8.15546" height="2" rx="1" transform="rotate(45 17.0365 15.1223)" fill="black"></rect>
                                                     <path d="M11 19C6.55556 19 3 15.4444 3 11C3 6.55556 6.55556 3 11 3C15.4444 3 19 6.55556 19 11C19 15.4444 15.4444 19 11 19ZM11 5C7.53333 5 5 7.53333 5 11C5 14.4667 7.53333 17 11 17C14.4667 17 17 14.4667 17 11C17 7.53333 14.4667 5 11 5Z" fill="black"></path>
@@ -30,22 +30,49 @@
                                         </span>
                                         </div>
                                     </div>
-                                    <div class="form-group mx-sm-3 mb-4">
+                                    
+                                </div>
+                                    <div class="card-toolbar">
+                                        <div
+                                        class="d-flex justify-content-end"
+                                        data-kt-customer-table-toolbar="base"
+                                        v-if="notificationIds == ''"
+                                        >
                                         <button type="button" style="margin-left: 10px"
                                                 @click="isShowFilter = !isShowFilter"
-                                                class="btn btn-primary" v-if="isShowFilter"> Close Adventure search
+                                                class="btn btn-primary" v-if="isShowFilter"> Close  Advanced Search
                                             <i style="margin-left: 5px" class="fas fa-times"></i>
 
                                         </button>
                                         <button type="button" style="margin-left: 10px"
                                                 @click="isShowFilter = !isShowFilter"
-                                                class="btn btn-primary" v-if="!isShowFilter"> Adventure search
+                                                class="btn btn-primary" v-if="!isShowFilter">  Advanced Search
                                             <i class="fa fa-filter" v-if="!isShowFilter" aria-hidden="true"></i>
 
                                         </button>
+                                        </div>
 
                                     </div>
-                                </form>
+                                     <div
+                                        class="d-flex justify-content-end align-items-center d-none"
+                                        data-kt-customer-table-toolbar="selected"
+                                        v-if="notificationIds != ''" >
+                            <div class="fw-bolder me-5">
+                                <span
+                                    class="me-2"
+                                    data-kt-customer-table-select="selected_count"
+                                ></span
+                                >{{ notificationIds.length }} Selected
+                            </div>
+                            <button
+                                @click="removeAll"
+                                type="button"
+                                class="btn btn-danger"
+                                data-kt-customer-table-select="delete_selected"
+                            >
+                                Delete Selected
+                            </button>
+                        </div>
                                 <form class="col-lg-12" v-if="isShowFilter">
                                     <div class="row">
                                         <div class="form-group col-lg-4">
@@ -70,12 +97,23 @@
                                     </div>
                                 </form>
                             </div>
-                        </div>
-                    </div>
+                       
                     <div class="card-body d-flex flex-column">
                         <table class=" table  table-head-custom table-head-bg table-vertical-center">
                             <thead>
                             <tr>
+                                 <td width="25">
+                                        <div
+                                            class="form-check form-check-sm form-check-custom form-check-solid"
+                                        >
+                                            <input
+                                                class="form-check-input"
+                                                type="checkbox"
+                                                v-model="allSelected"
+                                                @change="selectAll()"
+                                            />
+                                        </div>
+                                    </td>
                                 <th>Time</th>
                                 <th class="">Sender</th>
                                 <th class="">Role</th>
@@ -87,6 +125,19 @@
                             </thead>
                             <tbody>
                             <tr v-for="entry in entries">
+                                 <td class="">
+                                        <div
+                                            class="form-check form-check-sm form-check-custom form-check-solid"
+                                        >
+                                            <input
+                                                class="form-check-input"
+                                                type="checkbox"
+                                                v-model="notificationIds"
+                                                :value="entry.id"
+                                                @change="updateCheckAll"
+                                            />
+                                        </div>
+                                    </td>
                                 <td v-text=" d(entry.created_at)"></td>
                                 <td class="" v-text="entry.username"></td>
                                 <!--                            <td v-if="entry.title==='Yêu cầu xóa thiết bị'">{{entry.username}}</td>-->
@@ -176,6 +227,8 @@
                 }
             }
             return {
+                notificationIds:[],
+                notifcation:[],
                 permissions,
 
                 unreadNotifications: {},
@@ -268,7 +321,51 @@
             },
             onPageChange(page) {
                 $router.updateQuery({page: page})
+            },
+              selectAll() {
+            if (this.allSelected) {
+                const selected = this.entries.map(u => u.id);
+                this.notificationIds = selected;
+                this.notification = this.entries;
+            } else {
+                this.notificationIds = [];
+                this.notification = [];
             }
+        },
+            updateCheckAll() {
+            this.inventory = [];
+            if (this.notificationIds.length === this.entries.length) {
+                this.allSelected = true;
+            } else {
+                this.allSelected = false;
+            }
+            let self = this;
+            self.notificationIds.forEach(function(e) {
+                self.entries.forEach(function(e1) {
+                    if (e1.id == e) {
+                        self.notification.push(e1);
+                    }
+                });
+            });
+        },
+         async removeAll()
+            {
+                if (!confirm('Xóa bản ghi: ' + JSON.stringify(this.notificationIds))) {
+                    return;
+                }
+
+                const res = await $post('/xadmin/notifications/removeAll', {ids: this.notificationIds});
+
+                if (res.code) {
+                    toastr.error(res.message);
+                } else {
+                    toastr.success(res.message);
+                }
+
+                $router.updateQuery({page: this.paginate.currentPage, _: Date.now()});
+
+            }
+
         }
     }
 </script>

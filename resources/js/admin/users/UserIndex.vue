@@ -6,15 +6,17 @@
             <div class="col-lg-12">
                 <div class="card card-custom card-stretch gutter-b">
 
-                    <div class="card-header border-0 pt-5">
+                    <div class="card-header border-0 pt-6">
+                        <div class="card-title">
 
-                        <div class="row width-full">
-                            <div class="col-lg-12">
-                                <div class="form-inline">
-                                    <div class="form-group mx-sm-3 mb-4">
+                            <div
+                                class="d-flex align-items-center position-relative my-1"
+                            >
+                        
+                                
                                         <div class="d-flex align-items-center position-relative my-1">
                                             <!--begin::Svg Icon | path: icons/duotune/general/gen021.svg-->
-                                            <span class="svg-icon svg-icon-1 position-absolute">
+                                            <span class="svg-icon svg-icon-1 position-absolute ms-6">
                                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
                                                     <rect opacity="0.5" x="17.0365" y="15.1223" width="8.15546" height="2" rx="1" transform="rotate(45 17.0365 15.1223)" fill="black"></rect>
                                                     <path d="M11 19C6.55556 19 3 15.4444 3 11C3 6.55556 6.55556 3 11 3C15.4444 3 19 6.55556 19 11C19 15.4444 15.4444 19 11 19ZM11 5C7.53333 5 5 7.53333 5 11C5 14.4667 7.53333 17 11 17C14.4667 17 17 14.4667 17 11C17 7.53333 14.4667 5 11 5Z" fill="black"></path>
@@ -28,28 +30,58 @@
                                                         <rect x="7.41422" y="6" width="16" height="2" rx="1" transform="rotate(45 7.41422 6)" fill="black" style="fill:red" />
                                             </svg>
                                         </span>
-                                        </div>
-                                    </div>
+                                        
 
-                                    <div class="form-group mx-sm-3 mb-4">
+                                
+                                </div>
+
+                            </div>
+                    </div>
+                        <div class="card-toolbar">
+                            <div
+                                class="d-flex justify-content-end"
+                                data-kt-customer-table-toolbar="base"
+                                v-if="userIds == ''"
+                            >
                                         <button type="button"
                                                 @click="isShowFilter = !isShowFilter"
-                                                class="btn btn-primary" v-if="isShowFilter"> Close Adventure search
+                                                class="btn btn-primary" v-if="isShowFilter"> Close Advanced Search
                                             <i style="margin-left: 5px" class="fas fa-times"></i>
 
                                         </button>
                                         <button type="button"
                                                 @click="isShowFilter = !isShowFilter"
-                                                class="btn btn-primary" v-if="!isShowFilter"> Adventure search
+                                                class="btn btn-primary" v-if="!isShowFilter"> Advanced Search
                                             <i class="fa fa-filter" v-if="!isShowFilter" aria-hidden="true"></i>
                                         </button>
                                         <a v-if="permissions['001']" :href="'/xadmin/users/create'">
-                                            <button class="btn btn-primary button-create" style="margin:0 0 0 15px"> Create new</button>
+                                            <button class="btn btn-primary button-create" style="margin:0 0 0 15px"> Create New</button>
                                         </a>
 
                                     </div>
-                                </div>
-
+                        </div>
+                           <div
+                            class="d-flex justify-content-end align-items-center d-none"
+                            data-kt-customer-table-toolbar="selected"
+                            v-if="userIds != ''"
+                        >
+                            <div class="fw-bolder me-5">
+                                <span
+                                    class="me-2"
+                                    data-kt-customer-table-select="selected_count"
+                                ></span
+                                >{{ userIds.length }} Selected
+                            </div>
+                            <button
+                                @click="removeAll"
+                                type="button"
+                                class="btn btn-danger"
+                                data-kt-customer-table-select="delete_selected"
+                            >
+                                Delete Selected
+                            </button>
+                        </div>
+                        
                                 <form class="col-lg-12" v-if="isShowFilter">
                                     <div class="row">
                                         <div class="form-group col-lg-3">
@@ -104,12 +136,9 @@
                                     </div>
 
                                 </form>
-
-                            </div>
-
-                        </div>
-
                     </div>
+
+                       
                     <div class="modal fade" style="margin-right:50px;border:2px solid #333333  " id="deviceConfirm" tabindex="-1" role="dialog"
                          aria-labelledby="deviceConfirm"
                          aria-hidden="true">
@@ -160,6 +189,18 @@
                         <table class="table table-row-bordered align-middle gy-4 gs-9">
                             <thead class="border-bottom border-gray-200 fs-6 text-gray-600 fw-bolder bg-light bg-opacity-75">
                             <tr>
+                                <td width="25">
+                                        <div
+                                            class="form-check form-check-sm form-check-custom form-check-solid"
+                                        >
+                                            <input
+                                                class="form-check-input"
+                                                type="checkbox"
+                                                v-model="allSelected"
+                                                @change="selectAll()"
+                                            />
+                                        </div>
+                                    </td>
                                 <th>ID</th>
                                 <th  class="">Username</th>
                                 <th  class="">FullName</th>
@@ -172,6 +213,19 @@
                             </thead>
                             <tbody>
                             <tr v-for="entry in entries">
+                                <td class="">
+                                        <div
+                                            class="form-check form-check-sm form-check-custom form-check-solid"
+                                        >
+                                            <input
+                                                class="form-check-input"
+                                                type="checkbox"
+                                                v-model="userIds"
+                                                :value="entry.id"
+                                                @change="updateCheckAll"
+                                            />
+                                        </div>
+                                    </td>
                                 <td   v-text="entry.id"></td>
                                 <td  class="" v-text="entry.username"></td>
                                 <td  class="" v-text="entry.full_name"></td>
@@ -179,7 +233,7 @@
                                 <td  class="" v-text="entry.role"></td>
                                 <td  class="" v-text=" d(entry.created_at)"></td>
                                 <td  class="" v-if="entry.state==1">Yes</td>
-                                <td   class=""v-if="entry.state==0">No</td>
+                                <td   class="" v-if="entry.state==0">No</td>
                                 <td  class="">
                                     <!--<a v-if="permissions['002']" :href="'/xadmin/users/edit?id='+entry.id"><i style="font-size:1.3rem"
                                                                                     class="fa fa-edit"></i></a>
@@ -269,6 +323,10 @@
                 }
             }
             return {
+            user: [],
+            userIds: [],
+            allSelected: false,
+
                 permissions,
                 isShowFilter: isShowFilter,
                 breadcrumbs: [
@@ -367,6 +425,49 @@
             },
             onPageChange(page) {
                 $router.updateQuery({page: page})
+            },
+             selectAll() {
+            if (this.allSelected) {
+                const selected = this.entries.map(u => u.id);
+                this.userIds = selected;
+                this.user = this.entries;
+            } else {
+                this.userIds = [];
+                this.user = [];
+            }
+        },
+         updateCheckAll() {
+            this.user = [];
+            if (this.userIds.length === this.entries.length) {
+                this.allSelected = true;
+            } else {
+                this.allSelected = false;
+            }
+            let self = this;
+            self.userIds.forEach(function(e) {
+                self.entries.forEach(function(e1) {
+                    if (e1.id == e) {
+                        self.user.push(e1);
+                    }
+                });
+            });
+        },
+         async removeAll()
+            {
+                if (!confirm('Xóa bản ghi: ' + JSON.stringify(this.userIds))) {
+                    return;
+                }
+
+                const res = await $post('/xadmin/users/removeAll', {ids: this.userIds});
+
+                if (res.code) {
+                    toastr.error(res.message);
+                } else {
+                    toastr.success(res.message);
+                }
+
+                $router.updateQuery({page: this.paginate.currentPage, _: Date.now()});
+
             }
         }
     }

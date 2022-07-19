@@ -426,5 +426,14 @@ class NotificationsController extends AdminBaseController
         $writer->save('php://output');
         die;
     }
+    public function removeAll(Request $req)
+    {
+        $ids = $req->ids;
+        Notification::whereIn('id', $ids)->delete();
+        return [
+            'code' => 0,
+            'message' => 'Đã xóa'
+        ];
+    }
 
 }

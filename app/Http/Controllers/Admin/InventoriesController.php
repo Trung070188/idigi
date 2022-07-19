@@ -338,5 +338,14 @@ class InventoriesController extends AdminBaseController
         $writer->save('php://output');
         die;
     }
+    public function removeAll(Request $req)
+    {
+        $ids = $req->ids;
+        Inventory::whereIn('id', $ids)->delete();
+        return [
+            'code' => 0,
+            'message' => 'Đã xóa'
+        ];
+    }
 
 }

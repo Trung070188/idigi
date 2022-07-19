@@ -223,30 +223,106 @@
             <div class="col-lg-12">
                 <div class="card card-custom card-stretch gutter-b">
 
-                    <div class="card-header border-0 pt-5">
+                    <div class="card-header border-0 pt-6">
 
-                        <div class="row width-full">
-                            <div class="col-lg-12" >
-                                <div >
-                                    <div class="form-group mx-sm-3 mb-4" >
+                        <div class="card-title">
+                            <div
+                                class="d-flex align-items-center position-relative my-1"
+                            >
+                              <span
+                                    class="svg-icon svg-icon-1 position-absolute ms-6"
+                                >
+                                    <svg
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        width="24"
+                                        height="24"
+                                        viewBox="0 0 24 24"
+                                        fill="none"
+                                    >
+                                        <rect
+                                            opacity="0.5"
+                                            x="17.0365"
+                                            y="15.1223"
+                                            width="8.15546"
+                                            height="2"
+                                            rx="1"
+                                            transform="rotate(45 17.0365 15.1223)"
+                                            fill="black"
+                                        ></rect>
+                                        <path
+                                            d="M11 19C6.55556 19 3 15.4444 3 11C3 6.55556 6.55556 3 11 3C15.4444 3 19 6.55556 19 11C19 15.4444 15.4444 19 11 19ZM11 5C7.53333 5 5 7.53333 5 11C5 14.4667 7.53333 17 11 17C14.4667 17 17 14.4667 17 11C17 7.53333 14.4667 5 11 5Z"
+                                            fill="black"
+                                        ></path>
+                                    </svg>
+                                </span>
+                                  <input
+                                    type="text"
+                                    data-kt-filemanager-table-filter="search"
+                                    class="form-control form-control-solid w-250px ps-15"
+                                   
+                                   
+                                    placeholder="Search..."
+                                    value=""
+                                />
+                                <span
+                                   
+                                    class="svg-icon svg-icon-2 svg-icon-lg-1 me-0"
+                                   
+                                >
+                                    <!-- <svg
+                                        type="button"
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        width="24"
+                                        height="24"
+                                        viewBox="0 0 24 24"
+                                        fill="none"
+                                        style="margin: 3px -25px 0px;"
+                                    >
+                                        <rect
+                                            opacity="0.5"
+                                            x="6"
+                                            y="17.3137"
+                                            width="16"
+                                            height="2"
+                                            rx="1"
+                                            transform="rotate(-45 6 17.3137)"
+                                            fill="black"
+                                            style="fill:red"
+                                        />
+                                        <rect
+                                            x="7.41422"
+                                            y="6"
+                                            width="16"
+                                            height="2"
+                                            rx="1"
+                                            transform="rotate(45 7.41422 6)"
+                                            fill="black"
+                                            style="fill:red"
+                                        />
+                                    </svg> -->
+                                </span>
+                               
+
+                            </div>
+                        </div>
+                       <div class="card-toolbar">
+                            <div
+                                class="d-flex justify-content-end"
+                                data-kt-customer-table-toolbar="base"
+                               
+                            >  
                                 <button v-if="entries.length<3 " type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#kt_modal_add_customer" @click="modalDevice()">Add More Device</button>
                                 <button  v-if="entries.length>=3" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#kt_modal_add_customer" @click="closeModal()">Add More Device</button>
 
                                     </div>
 
                                 </div>
-
-                            </div>
-                        </div>
-
-
-
+                                
+                               
                     </div>
-
-
-                    <div class="tab-content">
+                      <div class="tab-content">
                         <div class="d-flex flex-stack pt-4 pl-9 pr-9">
-                        <div class="badge badge-lg badge-light-primary mb-15">
+                            <div class="badge badge-lg badge-light-primary mb-15">
                                 <div class="d-flex align-items-center flex-wrap">
 
 
@@ -290,22 +366,23 @@
                                     <div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-bold fs-7 w-125px py-4" data-kt-menu="true">
                                         <!--begin::Menu item-->
                                         <div class="menu-item px-3">
+                                            <a @click="saveEditName(entry)" class="menu-link px-3">Rename</a>
+                                        </div>
+                                        <div class="menu-item px-3">
                                             <a @click="editModalDevice(entry.id,entry.device_name,entry.secret_key)" class="menu-link px-3">Get confirmation code</a>
                                         </div>
                                         <!--end::Menu item-->
                                         <!--begin::Menu item-->
-                                        <div class="menu-item px-3">
-                                            <a @click="saveEditName(entry)" class="menu-link px-3">Edit</a>
-                                        </div>
+                                        
                                         <!--end::Menu item-->
                                         <!--begin::Menu item-->
                                         <div class="menu-item px-3"  v-for="role in entry.role">
-                                            <a class="menu-link text-danger px-3" v-if="role.id!==5" @click="remove(entry)" data-kt-subscriptions-table-filter="delete_row">Delete</a>
-                                            <a class="menu-link text-danger px-3" v-if="role.id==5 && entry.status==2 " @click="Sent(entry)" data-kt-subscriptions-table-filter="delete_row" >Delete</a>
+                                            <a class="menu-link text-danger px-3" v-if="role.id!==5" @click="remove(entry)" data-kt-subscriptions-table-filter="delete_row">Remove</a>
+                                            <a class="menu-link text-danger px-3" v-if="role.id==5 && entry.status==2 " @click="Sent(entry)" data-kt-subscriptions-table-filter="delete_row" >Remove</a>
 
                                         </div>
                                         <div class="menu-item px-3"  v-for="role in entry.role">
-                                            <a v-if="role.id==5 && entry.status==1"  data-kt-subscriptions-table-filter="delete_row" class="menu-link text-danger px-3" >Delete</a>
+                                            <a v-if="role.id==5 && entry.status==1"  data-kt-subscriptions-table-filter="delete_row" class="menu-link text-danger px-3" >Remove</a>
                                         </div>
                                         <!--end::Menu item-->
                                     </div>
@@ -319,12 +396,17 @@
                         </table>
 
                     </div>
+                   
+
+
+                   
                 </div>
             </div>
 
         </div>
-
     </div>
+
+   
 
 
 </template>
