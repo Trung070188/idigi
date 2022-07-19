@@ -9,15 +9,15 @@
                  style="max-width: 500px;">
                 <div class="modal-content box-shadow-main paymment-status" style="margin-right:20px; left:140px">
                     <div class="close-popup" data-dismiss="modal"></div>
-                    <h3 class="popup-title success" style="margin-top: 20px">Delete device</h3>
+                    <h3 class="popup-title success" style="margin-top: 20px">Delete Device</h3>
                     <div class="content" style="text-align: center;margin: 0px">
                         <p>Yêu cầu xóa thiết bị khỏi danh sách cần có phê duyệt của Admin.</p>
                         <p > Bạn có muốn gửi yêu cầu tới Admin không? </p>
                     </div>
                     <div  class="form-group d-flex justify-content-between" >
-                        <button  class="btn btn-dark ito-btn-small" data-dismiss="modal" @click="Cancel()" style="margin-left: 110px">Cancel</button>
+                        <button  class="btn btn-light ito-btn-add" data-dismiss="modal" @click="Cancel()" style="margin-left: 110px">Cancel</button>
 
-                        <button   class="btn btn-light ito-btn-add"  data-dismiss="modal"  style="margin-right: 150px" @click="save">
+                        <button   class="btn btn-primary"  data-dismiss="modal"  style="margin-right: 150px" @click="save">
                             Send request
                         </button>
                     </div>
@@ -138,16 +138,16 @@
                                             <button type="button" class="btn btn-sm btn-icon btn-light btn-active-light-primary">
                                                 <i class="fa fa-edit"></i>
                                             </button>
-                                        </a>                                        
+                                        </a>
                                         <a @click="remove(entry)" href="javascript:;">
                                             <button type="button" class="btn btn-sm btn-icon btn-light btn-active-light-primary">
                                                 <i class="fa fa-trash mr-1 deleted"></i>
                                             </button>
-                                        </a>  
+                                        </a>
                                     </td>
-                                </tr>                
+                                </tr>
                             </tbody>
-                        </table>            
+                        </table>
                     </div>
                 </div>
             </div>
@@ -233,7 +233,7 @@
                                 <button  v-if="entries.length>=3" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#kt_modal_add_customer" @click="closeModal()">Add More Device</button>
 
                                     </div>
-                                    
+
                                 </div>
 
                             </div>
@@ -242,18 +242,18 @@
 
 
                     </div>
-                    
+
 
                     <div class="card-body d-flex flex-column">
                         <div class="d-flex flex-stack">
     <div class="badge badge-lg badge-light-primary mb-15">
                                 <div class="d-flex align-items-center flex-wrap">
 
-                                   
+
 
                                     <div  v-if="entries.length > 0">Number of devices: {{entries.length}}/3</div>
 
-                                  
+
 
                                 </div>
                             </div>
@@ -264,41 +264,50 @@
                             <tr>
                                 <th class="text-center">Device Name</th>
                                 <th class="text-center">Status</th>
-                                 <th class="text-center">Action</th>                               
+                                 <th class="text-center">Action</th>
                             </tr>
                             </thead>
                             <tbody >
                             <tr v-for="entry in entries">
                                     <td class="text-center" v-text="entry.device_name"></td>
-                                    <td class="text-center" v-if="entry.status==2" style="color: #50cd89;">Active</td>
-                                    <td class="text-center" v-if="entry.status==1" style="color:#ffc700;">Delete request sent</td>
                                     <td class="text-center" >
-                                      
+                                        <span v-if="entry.status==2"  class="status">Active</span>
+                                        <span v-if="entry.status==1"  class="status-request">Delete request sent</span>
+
+                                    </td>
+<!--                                    <td class="" v-if="entry.status==1" style="color:#ffc700;">Delete request sent</td>-->
+                                    <td class="text-center" >
+
                                         <a class="btn-action" type="button" @click="editModalDevice(entry.id,entry.device_name,entry.secret_key)">
-                                            
+
                                             Get confirmation code
-                                       
+
                                         </a>
                                           <a >
                                         <button type="button" class="btn btn-sm btn-icon btn-light btn-active-light-primary " @click="saveEditName(entry)">
                                             <i class="fa fa-edit"></i>
                                         </button>
-                                    </a>                                        
+                                    </a>
                                     <a v-for="role in entry.role" v-if="role.id!==5" @click="remove(entry)" href="javascript:;">
                                         <button type="button" class="btn btn-sm btn-icon btn-light btn-active-light-primary">
                                             <i class="fa fa-trash mr-1 deleted"></i>
                                         </button>
-                                    </a>   
+                                    </a>
                                      <a  v-for="role in entry.role" v-if="role.id==5 && entry.status==2" @click="Sent(entry)" href="javascript:;">
                                         <button type="button" class="btn btn-sm btn-icon btn-light btn-active-light-primary">
                                             <i class="fa fa-trash mr-1 deleted"></i>
                                         </button>
-                                    </a>     
+                                    </a>
+                                        <a  v-for="role in entry.role" v-if="role.id==5 && entry.status==1" href="javascript:;" >
+                                            <button type="button" class="btn btn-sm btn-icon btn-light btn-active-light-primary"  @click="Sent(entry)" disabled>
+                                                <i class="fa fa-trash mr-1 deleted" ></i>
+                                            </button>
+                                        </a>
                                     </td>
 
-                             
+
                             </tr>
-                            
+
                             </tbody>
                         </table>
 
@@ -561,7 +570,25 @@
     color: #fff;
     border-radius: 0.475rem;
 }
-    
+    .status{
+        color: #50cd89;
+        background-color: #e8fff3;
+        padding: 0.5em 0.85em;
+        font-size: .85rem;
+        font-weight: 600;
+        border-radius: 0.475rem;
+
+    }
+    .status-request{
+       background-color: #fff8dd;
+        padding: 0.5em 0.85em;
+        font-size: .85rem;
+        font-weight: 600;
+        border-radius: 0.475rem;
+        color:#ffc700;
+
+    }
+
 
 
 </style>
