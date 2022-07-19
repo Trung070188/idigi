@@ -5,7 +5,7 @@ const primary = '#6993FF';
 const success = '#1BC5BD';
 const info = '#8950FC';
 const warning = '#FFA800';
-const danger = '#F64E60';
+const danger = '#f1416c';
 
 // Class definition
 function generateBubbleData(baseval, count, yrange) {

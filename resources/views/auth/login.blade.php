@@ -13,9 +13,11 @@ License: For each use you must have a valid license purchased only from above li
 <html lang="en">
 	<!--begin::Head-->
 	<head>
-		<title>idigi</title>
+		<title>iDIGI</title>
 		<meta charset="utf-8" />
 		<!--begin::Fonts-->
+        <link rel="shortcut icon" href="/themes/admin/assets/media/logos/favicon.ico" />
+
 		<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700" />
 		<!--end::Fonts-->
 		<!--begin::Global Stylesheets Bundle(used by all pages)-->
