@@ -24,8 +24,8 @@
                                             <input type="text" data-kt-filemanager-table-filter = "search" class="form-control form-control-solid w-250px ps-15" @keydown.enter="doFilter($event)" v-model="filter.keyword" placeholder="Search ID, username, email, role...." value="" />
                                               <span v-if="filter.keyword!==''" class="svg-icon svg-icon-2 svg-icon-lg-1 me-0" @click="filterClear">
                                             <svg type="button" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" style="margin: 3px -25px 0px;">
-                                            <rect opacity="0.5" x="6" y="17.3137" width="16" height="2" rx="1" transform="rotate(-45 6 17.3137)" fill="black" />
-                                                        <rect x="7.41422" y="6" width="16" height="2" rx="1" transform="rotate(45 7.41422 6)" fill="black" />
+                                            <rect opacity="0.5" x="6" y="17.3137" width="16" height="2" rx="1" transform="rotate(-45 6 17.3137)" fill="black" style="fill:red" />
+                                                        <rect x="7.41422" y="6" width="16" height="2" rx="1" transform="rotate(45 7.41422 6)" fill="black" style="fill:red" />
                                             </svg>
                                         </span>
                                         </div>
@@ -45,7 +45,7 @@
                                         </button>
                                         <a v-if="permissions['001']" :href="'/xadmin/users/create'">
                                             <button class="btn btn-primary button-create" style="margin:0 0 0 15px"> Create new</button>
-                                        </a>                                        
+                                        </a>
 
                                     </div>
                                 </div>
@@ -86,8 +86,8 @@
                                                              placeholder="Creation date" readonly></Daterangepicker>
                                             <span v-if="filter.created!==''" class="svg-icon svg-icon-2 svg-icon-lg-1 me-0" @click="filterClear">
                                             <svg type="button" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" style="float: right;margin: -32px 3px 0px;">
-                                            <rect opacity="0.5" x="6" y="17.3137" width="16" height="2" rx="1" transform="rotate(-45 6 17.3137)" fill="black" />
-                                                        <rect x="7.41422" y="6" width="16" height="2" rx="1" transform="rotate(45 7.41422 6)" fill="black" />
+                                            <rect opacity="0.5" x="6" y="17.3137" width="16" height="2" rx="1" transform="rotate(-45 6 17.3137)" fill="black" style="fill:red"/>
+                                                        <rect x="7.41422" y="6" width="16" height="2" rx="1" transform="rotate(45 7.41422 6)" fill="black" style="fill:red"/>
                                             </svg>
                                         </span>
                                         </div>
@@ -174,22 +174,22 @@
                                         class="fa fa-trash mr-1 deleted"></i></a>
                                     <a v-if="permissions['003'] && entry.role=='Super Administrator'"  @click="modalDevice()" href="javascript:;" class="btn-trash deleted"><i
                                         class="fa fa-trash mr-1 deleted"></i></a>-->
-                                        
+
                                     <a v-if="permissions['002']" :href="'/xadmin/users/edit?id='+entry.id">
                                         <button type="button" class="btn btn-sm btn-icon btn-light btn-active-light-primary">
                                             <i class="fa fa-edit"></i>
                                         </button>
-                                    </a>                                        
+                                    </a>
                                     <a v-if="permissions['003'] && entry.role!=='Super Administrator'" @click="remove(entry)" href="javascript:;">
                                         <button type="button" class="btn btn-sm btn-icon btn-light btn-active-light-primary">
                                             <i class="fa fa-trash mr-1 deleted"></i>
                                         </button>
-                                    </a>  
+                                    </a>
                                     <a v-if="permissions['003'] && entry.role=='Super Administrator'"  @click="modalDevice()" href="javascript:;">
                                         <button type="button" class="btn btn-sm btn-icon btn-light btn-active-light-primary">
                                             <i class="fa fa-trash mr-1 deleted"></i>
                                         </button>
-                                    </a>  
+                                    </a>
 
                                 </td>
                             </tr>

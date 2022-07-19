@@ -25,8 +25,8 @@
                                             <input type="text" data-kt-filemanager-table-filter = "search" class="form-control form-control-solid w-250px ps-15" @keydown.enter="doFilter($event)" v-model="filter.keyword" placeholder="Search..." value="" />
                                               <span v-if="filter.keyword!==''" class="svg-icon svg-icon-2 svg-icon-lg-1 me-0" @click="filterClear">
                                             <svg type="button" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" style="margin: 3px -25px 0px;">
-                                            <rect opacity="0.5" x="6" y="17.3137" width="16" height="2" rx="1" transform="rotate(-45 6 17.3137)" fill="black" />
-                                                        <rect x="7.41422" y="6" width="16" height="2" rx="1" transform="rotate(45 7.41422 6)" fill="black" />
+                                            <rect opacity="0.5" x="6" y="17.3137" width="16" height="2" rx="1" transform="rotate(-45 6 17.3137)" fill="black"  style="fill:red"/>
+                                                        <rect x="7.41422" y="6" width="16" height="2" rx="1" transform="rotate(45 7.41422 6)" fill="black" style="fill:red" />
                                             </svg>
                                         </span>
                                         </div>
@@ -111,8 +111,8 @@
                                                              placeholder="Creation date" readonly></Daterangepicker>
                                             <span v-if="filter.created!==''" class="svg-icon svg-icon-2 svg-icon-lg-1 me-0" @click="filterClear">
                                             <svg type="button" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" style="float: right;margin: -32px 3px 0px;">
-                                            <rect opacity="0.5" x="6" y="17.3137" width="16" height="2" rx="1" transform="rotate(-45 6 17.3137)" fill="black" />
-                                                        <rect x="7.41422" y="6" width="16" height="2" rx="1" transform="rotate(45 7.41422 6)" fill="black" />
+                                            <rect opacity="0.5" x="6" y="17.3137" width="16" height="2" rx="1" transform="rotate(-45 6 17.3137)" fill="black" style="fill:red" />
+                                                        <rect x="7.41422" y="6" width="16" height="2" rx="1" transform="rotate(45 7.41422 6)" fill="black" style="fill:red" />
                                             </svg>
                                             </span>
                                         </div>
@@ -137,7 +137,7 @@
                     <div class="card-body d-flex flex-column">
 
                         <div class="d-flex flex-stack">
-                            
+
                             <div class="badge badge-lg badge-light-primary mb-15">
                                 <div class="d-flex align-items-center flex-wrap">
 
@@ -146,7 +146,7 @@
                                             <path d="M12.6343 12.5657L8.45001 16.75C8.0358 17.1642 8.0358 17.8358 8.45001 18.25C8.86423 18.6642 9.5358 18.6642 9.95001 18.25L15.4929 12.7071C15.8834 12.3166 15.8834 11.6834 15.4929 11.2929L9.95001 5.75C9.5358 5.33579 8.86423 5.33579 8.45001 5.75C8.0358 6.16421 8.0358 6.83579 8.45001 7.25L12.6343 11.4343C12.9467 11.7467 12.9467 12.2533 12.6343 12.5657Z" fill="black"></path>
                                         </svg>
                                     </span>
-                                    
+
                                     <div v-text="'Showing '+ from +' to '+ to +' of '+ paginate.totalRecord +' entries'" v-if="entries.length > 0"></div>
 
                                 </div>
@@ -185,12 +185,12 @@
                                         <button type="button" class="btn btn-sm btn-icon btn-light btn-active-light-primary">
                                             <i class="fa fa-edit"></i>
                                         </button>
-                                    </a>                                        
+                                    </a>
                                     <a @click="remove(entry)" href="javascript:;" v-if="permissions['010']">
                                         <button type="button" class="btn btn-sm btn-icon btn-light btn-active-light-primary">
                                             <i class="fa fa-trash mr-1 deleted"></i>
                                         </button>
-                                    </a>                                        
+                                    </a>
                                 </td>
                             </tr>
                             </tbody>

@@ -24,8 +24,8 @@
                                             <input type="text" data-kt-filemanager-table-filter = "search" class="form-control form-control-solid w-250px ps-15" @keydown.enter="doFilter($event)" v-model="filter.keyword" placeholder="Search..." value="" />
                                               <span v-if="filter.keyword!==''" class="svg-icon svg-icon-2 svg-icon-lg-1 me-0" @click="filterClear">
                                             <svg type="button" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" style="margin: 3px -25px 0px;">
-                                            <rect opacity="0.5" x="6" y="17.3137" width="16" height="2" rx="1" transform="rotate(-45 6 17.3137)" fill="black" />
-                                                        <rect x="7.41422" y="6" width="16" height="2" rx="1" transform="rotate(45 7.41422 6)" fill="black" />
+                                            <rect opacity="0.5" x="6" y="17.3137" width="16" height="2" rx="1" transform="rotate(-45 6 17.3137)" fill="black" style="fill:red" />
+                                                        <rect x="7.41422" y="6" width="16" height="2" rx="1" transform="rotate(45 7.41422 6)" fill="black" style="fill:red" />
                                             </svg>
                                         </span>
                                         </div>
@@ -104,7 +104,7 @@
                                         <button type="button" class="btn btn-sm btn-icon btn-light btn-active-light-primary">
                                             <i class="fa fa-trash mr-1 deleted"></i>
                                         </button>
-                                    </a>                                            
+                                    </a>
                                 </td>
                                 <td class="text-center" v-if="entry.title==='Yêu cầu cấp quyền'">
                                     <a v-if="permissions['026']" :href="entry.url">View detail</a>
@@ -115,7 +115,7 @@
                                         <button type="button" class="btn btn-sm btn-icon btn-light btn-active-light-primary">
                                             <i class="fa fa-trash mr-1 deleted"></i>
                                         </button>
-                                    </a>                                          
+                                    </a>
                                 </td>
 
 
