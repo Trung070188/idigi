@@ -42,7 +42,7 @@ body {
 
 .table th {
     font-weight: bold;
-    text-transform: uppercase;
+    /*text-transform: uppercase;*/
 }
 
 .dataTables_wrapper table tr:hover {
@@ -71,10 +71,10 @@ body {
     max-width: 300px;*/
 }
 
-.form-select.form-select-solid {
+/*.form-select.form-select-solid {
     background-color: #fff;
     border: 1px solid #e4e6ef;
-}
+}*/
 
 .form-select.form-select-solid[aria-disabled=true] {
     background-color: #eef3f7;
