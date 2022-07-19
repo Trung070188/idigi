@@ -58,6 +58,7 @@
             }
         },
         mounted: function () {
+            var self = this;
 
 
             var ranges =  {
@@ -85,6 +86,10 @@
             },  (start, end) => {
                 this.$emit('input', start.format('YYYY-MM-DD') + '_'+ end.format('YYYY-MM-DD'));
                 this.$el.value = start.format('DD/MM/YYYY') + ' -- ' + end.format('DD/MM/YYYY');
+            });
+            $(this.$el).on('apply.daterangepicker', function(ev, picker) {
+                self.$emit('input', picker.startDate.format('YYYY-MM-DD') + '_'+picker.endDate.format('YYYY-MM-DD'));
+                self.$el.value = picker.startDate.format('DD/MM/YYYY') + ' -- '+ picker.endDate.format('DD/MM/YYYY');
             });
 
             // var _query  = $router.getQuery();
