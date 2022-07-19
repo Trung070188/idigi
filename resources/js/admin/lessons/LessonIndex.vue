@@ -92,8 +92,9 @@
                                     <div class="row">
                                         <div class="form-group col-lg-3">
                                             <label>Name </label>
-                                            <input class="form-control" placeholder="Enter the lesson name"
-                                                   v-model="filter.subject"/>
+                                            <input  @keydown.enter="doFilter('name', filter.name, $event)"
+                                                class="form-control" placeholder="Enter the lesson name"
+                                                   v-model="filter.name"/>
                                         </div>
                                         <div class="form-group col-lg-2">
                                             <label>Subject </label>
@@ -280,6 +281,7 @@
             let filter = {
                 keyword: $q.keyword || '',
                 created: $q.created || '',
+                name:$q.name||'',
                 subject: $q.subject || '',
                 grade: $q.grade || '',
                 enabled: $q.enabled || ''
@@ -413,20 +415,8 @@
             },
 
             async removeAll() {
+                this.lessonIds = [];
                 $('input:checkbox').each(function() { this.checked = false; });
-                // if (!confirm('Xóa bản ghi: ' + JSON.stringify(this.lessonIds))) {
-                //     return;
-                // }
-                //
-                // const res = await $post('/xadmin/lessons/removeAll', {ids: this.lessonIds});
-                //
-                // if (res.code) {
-                //     toastr.error(res.message);
-                // } else {
-                //     toastr.success(res.message);
-                // }
-                //
-                // $router.updateQuery({page: this.paginate.currentPage, _: Date.now()});
             },
 
             filterClear() {
@@ -436,10 +426,8 @@
 
                 $router.setQuery({});
             },
-            doFilter(event) {
-                if (event) {
-                    event.preventDefault();
-                }
+            doFilter() {
+
                 $router.setQuery(this.filter)
             },
             changeLimit() {

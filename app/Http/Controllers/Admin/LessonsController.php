@@ -214,6 +214,9 @@ class LessonsController extends AdminBaseController
         if ($req->keyword) {
             $query->where('name', 'LIKE', '%' . $req->keyword . '%');
         }
+        if ($req->name) {
+            $query->where('name',  $req->name);
+        }
         if ($req->subject) {
             $query->where('subject', $req->subject);
 
