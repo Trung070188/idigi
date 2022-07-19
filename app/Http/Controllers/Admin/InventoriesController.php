@@ -252,7 +252,7 @@ class InventoriesController extends AdminBaseController
             $query->where('grade',  $req->grade);
         }
 
-        if ($req->enabled) {
+        if ($req->enabled!='') {
             $query->where('enabled',  $req->enabled);
         }
 
