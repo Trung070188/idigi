@@ -6,6 +6,7 @@ use App\Models\Notification;
 use App\Models\User;
 use App\Notifications\InvoicePaid;
 use Firebase\JWT\JWT;
+use Firebase\JWT\Key;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
@@ -228,18 +229,13 @@ class UserDevicesController extends AdminBaseController
         $entry->secret_key=(Str::random(10));
         $entry->status=2;
         $entry->fill($data);
-       $token = $entry->device_uid;
-        $tokenParts = explode(".", $token); 
-        
-        if($tokenParts[0]=='eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9')
+        $token = $entry->device_uid;
+        try {
+            $decoded = JWT::decode($token, new Key(env('SECRET_KEY'), 'HS256'));
+            $entry->device_uid=$decoded->device_uid;
+        }catch (\Exception $e)
         {
-            $tokenPayload = base64_decode($tokenParts[1]);
-            $jwtPayload = json_decode($tokenPayload);
-            $uid= $jwtPayload->device_uid;
-            $entry->device_uid=$uid;
-        }
-        else{
-                $entry->device_uid=$tokenParts[0];
+
         }
       
         $entry->save();

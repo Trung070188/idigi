@@ -153,7 +153,7 @@
             </div>
         </div>-->
 
-        <div class="row">
+        <!-- <div class="row">
             <div class="col-lg-12">
                 <div class="card card-custom card-stretch gutter-b">
                     <div class="card-body d-flex flex-column" style="height: 563px" >
@@ -218,7 +218,96 @@
                     </div>
                 </div>
             </div>
+        </div> -->
+          <div class="row">
+            <div class="col-lg-12">
+                <div class="card card-custom card-stretch gutter-b">
+
+                    <div class="card-header border-0 pt-5">
+
+                        <div class="row width-full">
+                            <div class="col-lg-12" >
+                                <div >
+                                    <div class="form-group mx-sm-3 mb-4" >
+                                <button v-if="entries.length<3 " type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#kt_modal_add_customer" @click="modalDevice()">Add More Device</button>
+                                <button  v-if="entries.length>=3" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#kt_modal_add_customer" @click="closeModal()">Add More Device</button>
+
+                                    </div>
+                                    
+                                </div>
+
+                            </div>
+                        </div>
+
+
+
+                    </div>
+                    
+
+                    <div class="card-body d-flex flex-column">
+                        <div class="d-flex flex-stack">
+    <div class="badge badge-lg badge-light-primary mb-15">
+                                <div class="d-flex align-items-center flex-wrap">
+
+                                   
+
+                                    <div  v-if="entries.length > 0">Number of devices: {{entries.length}}/3</div>
+
+                                  
+
+                                </div>
+                            </div>
+                        </div>
+
+                        <table class=" table  table-head-custom table-head-bg table-vertical-center">
+                            <thead>
+                            <tr>
+                                <th class="text-center">Device Name</th>
+                                <th class="text-center">Status</th>
+                                 <th class="text-center">Action</th>                               
+                            </tr>
+                            </thead>
+                            <tbody >
+                            <tr v-for="entry in entries">
+                                    <td class="text-center" v-text="entry.device_name"></td>
+                                    <td class="text-center" v-if="entry.status==2" style="color: #50cd89;">Active</td>
+                                    <td class="text-center" v-if="entry.status==1" style="color:#ffc700;">Delete request sent</td>
+                                    <td class="text-center" >
+                                      
+                                        <a class="btn-action" type="button" @click="editModalDevice(entry.id,entry.device_name,entry.secret_key)">
+                                            
+                                            Get confirmation code
+                                       
+                                        </a>
+                                          <a >
+                                        <button type="button" class="btn btn-sm btn-icon btn-light btn-active-light-primary " @click="saveEditName(entry)">
+                                            <i class="fa fa-edit"></i>
+                                        </button>
+                                    </a>                                        
+                                    <a v-for="role in entry.role" v-if="role.id!==5" @click="remove(entry)" href="javascript:;">
+                                        <button type="button" class="btn btn-sm btn-icon btn-light btn-active-light-primary">
+                                            <i class="fa fa-trash mr-1 deleted"></i>
+                                        </button>
+                                    </a>   
+                                     <a  v-for="role in entry.role" v-if="role.id==5 && entry.status==2" @click="Sent(entry)" href="javascript:;">
+                                        <button type="button" class="btn btn-sm btn-icon btn-light btn-active-light-primary">
+                                            <i class="fa fa-trash mr-1 deleted"></i>
+                                        </button>
+                                    </a>     
+                                    </td>
+
+                             
+                            </tr>
+                            
+                            </tbody>
+                        </table>
+
+                    </div>
+                </div>
+            </div>
+
         </div>
+
     </div>
 
 
@@ -464,6 +553,15 @@
 
 
     }
+    .btn-action{
+        background: #696CFF;
+    padding: 0.5em 0.85em;
+    font-size: .85rem;
+    font-weight: 500;
+    color: #fff;
+    border-radius: 0.475rem;
+}
+    
 
 
 </style>

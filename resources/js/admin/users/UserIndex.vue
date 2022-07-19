@@ -10,7 +10,7 @@
 
                         <div class="row width-full">
                             <div class="col-lg-12">
-                                <form class="form-inline">
+                                <div class="form-inline">
                                     <div class="form-group mx-sm-3 mb-4">
                                         <div class="d-flex align-items-center position-relative my-1">
                                             <!--begin::Svg Icon | path: icons/duotune/general/gen021.svg-->
@@ -48,7 +48,7 @@
                                         </a>                                        
 
                                     </div>
-                                </form>
+                                </div>
 
                                 <form class="col-lg-12" v-if="isShowFilter">
                                     <div class="row">
