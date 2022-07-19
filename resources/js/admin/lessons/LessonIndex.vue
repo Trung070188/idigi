@@ -191,30 +191,30 @@
                                         <input class="form-check-input" type="checkbox" v-model="allSelected" @change="selectAll()">
                                     </div>
                                 </td>
-                                <th class="text-center">ID</th>
+                                <th class="">ID</th>
                                 <th>Name of lesson</th>
-                                <th class="text-center">Grade</th>
-                                <th class="text-center">Subject</th>
-                                <th class="text-center">Active</th>
-                                <th class="text-center">Creation Date</th>
-                                <th class="text-center">Action</th>
+                                <th class="">Grade</th>
+                                <th class="">Subject</th>
+                                <th class="">Active</th>
+                                <th class="">Creation Date</th>
+                                <th class="">Action</th>
                             </tr>
                             </thead>
                             <tbody>
                             <tr v-for="entry in entries">
-                                <td class="text-center">
+                                <td class="">
                                     <div class="form-check form-check-sm form-check-custom form-check-solid">
                                         <input class="form-check-input" type="checkbox" v-model="lessonIds" :value="entry.id" @change="updateCheckAll">
                                     </div>
                                 </td>
-                                <td class="text-center" v-text="entry.id"></td>
+                                <td class="" v-text="entry.id"></td>
                                 <td v-text="entry.name"></td>
-                                <td class="text-center" v-text="entry.grade"></td>
-                                <td class="text-center" v-text="entry.subject"></td>
-                                <td class="text-center" v-text="entry.enabled == 0 ? 'No' : 'Yes'"></td>
-                                <td class="text-center" v-text=" d(entry.created_at)"></td>
+                                <td class="" v-text="entry.grade"></td>
+                                <td class="" v-text="entry.subject"></td>
+                                <td class="" v-text="entry.enabled == 0 ? 'No' : 'Yes'"></td>
+                                <td class="" v-text=" d(entry.created_at)"></td>
 
-                                <td class="text-center">
+                                <td class="">
                                     <!--                                    <a :href="'/xadmin/lessons/edit?id='+entry.id" style="margin-right: 10px"><i style="font-size:1.3rem" class="fa fa-edit"></i></a>-->
                                     <a @click="openModalEntry(entry)" href="javascript:;" class=" btn-action" >
                                         <button type="button" class="btn btn-sm btn-icon btn-light btn-active-light-primary">

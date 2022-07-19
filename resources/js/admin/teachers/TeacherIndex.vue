@@ -120,28 +120,28 @@
                         <table class="table table-row-bordered align-middle gy-4 gs-9">
                             <thead class="border-bottom border-gray-200 fs-6 text-gray-600 fw-bolder bg-light bg-opacity-75">
                             <tr>
-                                <th class="text-center">ID</th>
-                                <th class="text-center">Teacher name</th>
-                                <th class="text-center">Teacher email</th>
-                                <th class="text-center">Class</th>
-                                <th class="text-center">Teacher phone number</th>
-                                <th class="text-center">Registed devices</th>
-                                <th class="text-center">Creation Date</th>
-                                <th class="text-center">Status</th>
+                                <th class="">ID</th>
+                                <th class="">Teacher name</th>
+                                <th class="">Teacher email</th>
+                                <th class="">Class</th>
+                                <th class="">Teacher phone number</th>
+                                <th class="">Registed devices</th>
+                                <th class="">Creation Date</th>
+                                <th class="">Status</th>
                                 <th></th>
                             </tr>
                             </thead>
                             <tbody v-for="entry in entries">
                             <tr v-for="teacher in entry.roles" v-if="teacher.role_name==='Teacher' && entry.last_login!==null">
-                                <td class="text-center" v-text="entry.id"></td>
-                                <td class="text-center" v-text="entry.username"></td>
-                                <td class="text-center" v-text="entry.email"></td>
-                                <td class="text-center" v-text="entry.class"></td>
-                                <td class="text-center" v-text="entry.phone"></td>
-                                <td class="text-center">{{entry.user_devices.length}} / 3</td>
-                                <td class="text-center" v-text=" d(entry.created_at)"></td>
-                                <td class="text-center" v-text="entry.state===0 ? 'No' : 'Yes'"></td>
-                                <td class="text-center">
+                                <td class="" v-text="entry.id"></td>
+                                <td class="" v-text="entry.username"></td>
+                                <td class="" v-text="entry.email"></td>
+                                <td class="" v-text="entry.class"></td>
+                                <td class="" v-text="entry.phone"></td>
+                                <td class="">{{entry.user_devices.length}} / 3</td>
+                                <td class="" v-text=" d(entry.created_at)"></td>
+                                <td class="" v-text="entry.state===0 ? 'No' : 'Yes'"></td>
+                                <td class="">
                                     <!--<a v-if="permissions['014']" :href="'/xadmin/users/edit_teacher?id='+entry.id"><i style="font-size:1.3rem"
                                                                                             class="fa fa-edit"></i></a>
                                     <a v-if="permissions['015']" @click="remove(entry)" href="javascript:;" class="btn-trash deleted"><i

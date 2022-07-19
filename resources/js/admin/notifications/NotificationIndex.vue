@@ -77,9 +77,9 @@
                             <thead>
                             <tr>
                                 <th>Time</th>
-                                <th class="text-center">Sender</th>
-                                <th class="text-center">Role</th>
-                                <th class="text-center">Notification content</th>
+                                <th class="">Sender</th>
+                                <th class="">Role</th>
+                                <th class="">Notification content</th>
                                 <th></th>
                                 <th></th>
 
@@ -88,14 +88,14 @@
                             <tbody>
                             <tr v-for="entry in entries">
                                 <td v-text=" d(entry.created_at)"></td>
-                                <td class="text-center" v-text="entry.username"></td>
+                                <td class="" v-text="entry.username"></td>
                                 <!--                            <td v-if="entry.title==='Yêu cầu xóa thiết bị'">{{entry.username}}</td>-->
                                 <!--                            <td v-if="entry.title==='Yêu cầu cấp quyền'">{{entry.username}}</td>-->
-                                <td class="text-center" v-text="entry.role"></td>
-                                <td class="text-center" v-if="entry.title==='Yêu cầu xóa thiết bị'">Yêu cầu xóa thiết bị</td>
-                                <td class="text-center" v-if="entry.title==='Yêu cầu cấp quyền'">Yêu cầu cấp quyền</td>
+                                <td class="" v-text="entry.role"></td>
+                                <td class="" v-if="entry.title==='Yêu cầu xóa thiết bị'">Yêu cầu xóa thiết bị</td>
+                                <td class="" v-if="entry.title==='Yêu cầu cấp quyền'">Yêu cầu cấp quyền</td>
                                 <td></td>
-                                <td class="text-center" v-if="entry.title==='Yêu cầu xóa thiết bị'">
+                                <td class="" v-if="entry.title==='Yêu cầu xóa thiết bị'">
                                     <a :href="entry.url">View detail</a>
                                     <!--<a v-if="permissions['025']" @click="remove(entry)" href="javascript:;" class="btn-trash deleted" style="margin: 0px 10px 0px;"><i
                                         class="fa fa-trash mr-1 deleted"></i></a>-->
@@ -106,7 +106,7 @@
                                         </button>
                                     </a>
                                 </td>
-                                <td class="text-center" v-if="entry.title==='Yêu cầu cấp quyền'">
+                                <td class="" v-if="entry.title==='Yêu cầu cấp quyền'">
                                     <a v-if="permissions['026']" :href="entry.url">View detail</a>
                                     <!--<a v-if="permissions['025']" @click="remove(entry)" href="javascript:;" class="btn-trash deleted" style="margin: 0px 10px 0px;"><i
                                         class="fa fa-trash mr-1 deleted"></i></a>-->

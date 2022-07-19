@@ -156,27 +156,27 @@
                         <table class="table table-row-bordered align-middle gy-4 gs-9">
                             <thead class="border-bottom border-gray-200 fs-6 text-gray-600 fw-bolder bg-light bg-opacity-75">
                             <tr>
-                                <th class="text-center">ID</th>
+                                <th class="">ID</th>
                                 <th>Name<button class="btn-sort" @click="onSort('name')">
                                     <i class="fa fa-sort"></i>
                                 </button></th>
-                                <th class="text-center">Grade</th>
-                                <th class="text-center">Type</th>
-                                <th class="text-center">Active</th>
-                                <th class="text-center">Creation Date</th>
-                                <th class="text-center">Action</th>
+                                <th class="">Grade</th>
+                                <th class="">Type</th>
+                                <th class="">Active</th>
+                                <th class="">Creation Date</th>
+                                <th class="">Action</th>
                             </tr>
                             </thead>
                             <tbody>
                             <tr v-for="entry in entries">
-                                <td class="text-center" v-text="entry.id"></td>
+                                <td class="" v-text="entry.id"></td>
                                 <td v-text="entry.name"></td>
-                                <td class="text-center" v-text="entry.grade"></td>
-                                <td class="text-center" v-text="entry.type"></td>
-                                <td class="text-center" v-text="entry.enabled == 0 ? 'No' : 'Yes'"></td>
-                                <td class="text-center" v-text=" d(entry.created_at)"></td>
+                                <td class="" v-text="entry.grade"></td>
+                                <td class="" v-text="entry.type"></td>
+                                <td class="" v-text="entry.enabled == 0 ? 'No' : 'Yes'"></td>
+                                <td class="" v-text=" d(entry.created_at)"></td>
 
-                                <td class="text-center">
+                                <td class="">
                                     <!--<a :href="'/xadmin/inventories/edit?id='+entry.id" style="margin-right: 10px"><i style="font-size:1.3rem" class="fa fa-edit" v-if="permissions['008']"></i></a>
                                     <a v-if="permissions['010']" @click="remove(entry)" href="javascript:;" class="btn-trash deleted"><i
                                         class="fa fa-trash mr-1 deleted"></i></a>-->

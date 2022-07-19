@@ -124,14 +124,14 @@
                         <table class=" table  table-head-custom table-head-bg table-vertical-center">
                             <thead>
                             <tr>
-                                <th class="text-center" width = "50">ID</th>
+                                <th class="" width = "50">ID</th>
                                 <th>Device</th>
                                 <th width = "150"></th>
                             </tr>
                             </thead>
                             <tbody>
                                 <tr v-for="entry in entries">
-                                    <td class="text-center" v-text="entry.id"></td>
+                                    <td class="" v-text="entry.id"></td>
                                     <td v-text="entry.device_name"></td>
                                     <td class="text-right">
                                         <a href="#" @click="saveEditName(entry)">
@@ -262,20 +262,22 @@
                         <table class="table table-row-bordered align-middle gy-4 gs-9">
                             <thead class="border-bottom border-gray-200 fs-6 text-gray-600 fw-bolder bg-light bg-opacity-75">
                             <tr>
-                                <th class="text-center">Device Name</th>
-                                <th class="text-center">Status</th>
-                                 <th class="text-center">Action</th>
+                                <th class="">Device Name</th>
+                                <th class="">Status</th>
+                                <th>Creation Date</th>
+                                 <th class="">Action</th>
                             </tr>
                             </thead>
                             <tbody >
                             <tr v-for="entry in entries">
-                                    <td class="text-center" v-text="entry.device_name" ></td>
-                                    <td class="text-center" >
+                                    <td class="" v-text="entry.device_name" ></td>
+                                    <td class="" >
                                         <span class="status" v-if="entry.status==2">Active</span>
                                         <span   class="status-request" v-if="entry.status==1 ">Delete request sent</span>
 
                                     </td>
-                                <td class="text-center">
+                                    <td v-text="d(entry.created_at)"></td>
+                                <td class="">
                                     <a href="list.html#" class="btn btn-light btn-active-light-primary btn-sm" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">Actions
                                         <!--begin::Svg Icon | path: icons/duotune/arrows/arr072.svg-->
                                         <span class="svg-icon svg-icon-5 m-0">

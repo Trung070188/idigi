@@ -161,26 +161,26 @@
                             <thead class="border-bottom border-gray-200 fs-6 text-gray-600 fw-bolder bg-light bg-opacity-75">
                             <tr>
                                 <th>ID</th>
-                                <th  class="text-center">Username</th>
-                                <th  class="text-center">FullName</th>
-                                <th  class="text-center">Email</th>
-                                <th  class="text-center">Role</th>
-                                <th  class="text-center">Creation Date</th>
-                                <th  class="text-center">Active</th>
-                                <th  class="text-center">Action</th>
+                                <th  class="">Username</th>
+                                <th  class="">FullName</th>
+                                <th  class="">Email</th>
+                                <th  class="">Role</th>
+                                <th  class="">Creation Date</th>
+                                <th  class="">Active</th>
+                                <th  class="">Action</th>
                             </tr>
                             </thead>
                             <tbody>
                             <tr v-for="entry in entries">
                                 <td   v-text="entry.id"></td>
-                                <td  class="text-center" v-text="entry.username"></td>
-                                <td  class="text-center" v-text="entry.full_name"></td>
-                                <td  class="text-center" v-text="entry.email"></td>
-                                <td  class="text-center" v-text="entry.role"></td>
-                                <td  class="text-center" v-text=" d(entry.created_at)"></td>
-                                <td  class="text-center" v-if="entry.state==1">Yes</td>
-                                <td   class="text-center"v-if="entry.state==0">No</td>
-                                <td  class="text-center">
+                                <td  class="" v-text="entry.username"></td>
+                                <td  class="" v-text="entry.full_name"></td>
+                                <td  class="" v-text="entry.email"></td>
+                                <td  class="" v-text="entry.role"></td>
+                                <td  class="" v-text=" d(entry.created_at)"></td>
+                                <td  class="" v-if="entry.state==1">Yes</td>
+                                <td   class=""v-if="entry.state==0">No</td>
+                                <td  class="">
                                     <!--<a v-if="permissions['002']" :href="'/xadmin/users/edit?id='+entry.id"><i style="font-size:1.3rem"
                                                                                     class="fa fa-edit"></i></a>
                                     <a v-if="permissions['003'] && entry.role!=='Super Administrator'" @click="remove(entry)" href="javascript:;" class="btn-trash deleted"><i
