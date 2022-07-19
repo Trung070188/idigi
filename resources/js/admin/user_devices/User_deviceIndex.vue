@@ -269,42 +269,13 @@
                             </thead>
                             <tbody >
                             <tr v-for="entry in entries">
-                                    <td class="text-center" ></td>
+                                    <td class="text-center" v-text="entry.device_name" ></td>
                                     <td class="text-center" >
-                                        <span class="status">Active</span>
-                                        <span   class="status-request">Delete request sent</span>
+                                        <span class="status" v-if="entry.status==2">Active</span>
+                                        <span   class="status-request" v-if="entry.status==1 ">Delete request sent</span>
 
                                     </td>
-<!--                                    <td class="" v-if="entry.status==1" style="color:#ffc700;">Delete request sent</td>-->
-<!--                                    <td class="text-center" >-->
-
-<!--                                        <a class="btn-action" type="button" @click="editModalDevice(entry.id,entry.device_name,entry.secret_key)">-->
-
-<!--                                            Get confirmation code-->
-
-<!--                                        </a>-->
-<!--                                          <a >-->
-<!--                                        <button type="button" class="btn btn-sm btn-icon btn-light btn-active-light-primary " @click="saveEditName(entry)">-->
-<!--                                            <i class="fa fa-edit"></i>-->
-<!--                                        </button>-->
-<!--                                    </a>-->
-<!--                                    <a v-for="role in entry.role" v-if="role.id!==5" @click="remove(entry)" href="javascript:;">-->
-<!--                                        <button type="button" class="btn btn-sm btn-icon btn-light btn-active-light-primary">-->
-<!--                                            <i class="fa fa-trash mr-1 deleted"></i>-->
-<!--                                        </button>-->
-<!--                                    </a>-->
-<!--                                     <a  v-for="role in entry.role" v-if="role.id==5 && entry.status==2" @click="Sent(entry)" href="javascript:;">-->
-<!--                                        <button type="button" class="btn btn-sm btn-icon btn-light btn-active-light-primary">-->
-<!--                                            <i class="fa fa-trash mr-1 deleted"></i>-->
-<!--                                        </button>-->
-<!--                                    </a>-->
-<!--                                        <a  v-for="role in entry.role" v-if="role.id==5 && entry.status==1" href="javascript:;" >-->
-<!--                                            <button type="button" class="btn btn-sm btn-icon btn-light btn-active-light-primary"  @click="Sent(entry)" disabled>-->
-<!--                                                <i class="fa fa-trash mr-1 deleted" ></i>-->
-<!--                                            </button>-->
-<!--                                        </a>-->
-<!--                                    </td>-->
-                                <td class="text-end">
+                                <td class="text-center">
                                     <a href="list.html#" class="btn btn-light btn-active-light-primary btn-sm" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">Actions
                                         <!--begin::Svg Icon | path: icons/duotune/arrows/arr072.svg-->
                                         <span class="svg-icon svg-icon-5 m-0">
@@ -317,17 +288,22 @@
                                     <div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-bold fs-7 w-125px py-4" data-kt-menu="true">
                                         <!--begin::Menu item-->
                                         <div class="menu-item px-3">
-                                            <a href="add.html" class="menu-link px-3">View</a>
+                                            <a @click="editModalDevice(entry.id,entry.device_name,entry.secret_key)" class="menu-link px-3">Get confirmation code</a>
                                         </div>
                                         <!--end::Menu item-->
                                         <!--begin::Menu item-->
                                         <div class="menu-item px-3">
-                                            <a href="add.html" class="menu-link px-3">Edit</a>
+                                            <a @click="saveEditName(entry)" class="menu-link px-3">Edit</a>
                                         </div>
                                         <!--end::Menu item-->
                                         <!--begin::Menu item-->
-                                        <div class="menu-item px-3">
-                                            <a href="list.html#" data-kt-subscriptions-table-filter="delete_row" class="menu-link px-3">Delete</a>
+                                        <div class="menu-item px-3"  v-for="role in entry.role">
+                                            <a v-if="role.id!==5" @click="remove(entry)" data-kt-subscriptions-table-filter="delete_row" class="menu-link px-3">Delete</a>
+                                            <a v-if="role.id==5 && entry.status==2 " @click="Sent(entry)" data-kt-subscriptions-table-filter="delete_row" class="menu-link px-3">Delete</a>
+
+                                        </div>
+                                        <div class="menu-item px-3"  v-for="role in entry.role">
+                                            <a v-if="role.id==5 && entry.status==1"  data-kt-subscriptions-table-filter="delete_row" class="menu-link px-3" >Delete</a>
                                         </div>
                                         <!--end::Menu item-->
                                     </div>
@@ -336,74 +312,7 @@
 
 
                             </tr>
-                            <tr >
-                                <td class="text-center" ></td>
-                                <td class="text-center" >
-                                    <span class="status">Active</span>
-                                    <span   class="status-request">Delete request sent</span>
 
-                                </td>
-                                <!--                                    <td class="" v-if="entry.status==1" style="color:#ffc700;">Delete request sent</td>-->
-                                <!--                                    <td class="text-center" >-->
-
-                                <!--                                        <a class="btn-action" type="button" @click="editModalDevice(entry.id,entry.device_name,entry.secret_key)">-->
-
-                                <!--                                            Get confirmation code-->
-
-                                <!--                                        </a>-->
-                                <!--                                          <a >-->
-                                <!--                                        <button type="button" class="btn btn-sm btn-icon btn-light btn-active-light-primary " @click="saveEditName(entry)">-->
-                                <!--                                            <i class="fa fa-edit"></i>-->
-                                <!--                                        </button>-->
-                                <!--                                    </a>-->
-                                <!--                                    <a v-for="role in entry.role" v-if="role.id!==5" @click="remove(entry)" href="javascript:;">-->
-                                <!--                                        <button type="button" class="btn btn-sm btn-icon btn-light btn-active-light-primary">-->
-                                <!--                                            <i class="fa fa-trash mr-1 deleted"></i>-->
-                                <!--                                        </button>-->
-                                <!--                                    </a>-->
-                                <!--                                     <a  v-for="role in entry.role" v-if="role.id==5 && entry.status==2" @click="Sent(entry)" href="javascript:;">-->
-                                <!--                                        <button type="button" class="btn btn-sm btn-icon btn-light btn-active-light-primary">-->
-                                <!--                                            <i class="fa fa-trash mr-1 deleted"></i>-->
-                                <!--                                        </button>-->
-                                <!--                                    </a>-->
-                                <!--                                        <a  v-for="role in entry.role" v-if="role.id==5 && entry.status==1" href="javascript:;" >-->
-                                <!--                                            <button type="button" class="btn btn-sm btn-icon btn-light btn-active-light-primary"  @click="Sent(entry)" disabled>-->
-                                <!--                                                <i class="fa fa-trash mr-1 deleted" ></i>-->
-                                <!--                                            </button>-->
-                                <!--                                        </a>-->
-                                <!--                                    </td>-->
-                                <td class="text-end">
-                                    <a href="list.html#" class="btn btn-light btn-active-light-primary btn-sm" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">Actions
-                                        <!--begin::Svg Icon | path: icons/duotune/arrows/arr072.svg-->
-                                        <span class="svg-icon svg-icon-5 m-0">
-															<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-																<path d="M11.4343 12.7344L7.25 8.55005C6.83579 8.13583 6.16421 8.13584 5.75 8.55005C5.33579 8.96426 5.33579 9.63583 5.75 10.05L11.2929 15.5929C11.6834 15.9835 12.3166 15.9835 12.7071 15.5929L18.25 10.05C18.6642 9.63584 18.6642 8.96426 18.25 8.55005C17.8358 8.13584 17.1642 8.13584 16.75 8.55005L12.5657 12.7344C12.2533 13.0468 11.7467 13.0468 11.4343 12.7344Z" fill="black" />
-															</svg>
-														</span>
-                                        <!--end::Svg Icon--></a>
-                                    <!--begin::Menu-->
-                                    <div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-bold fs-7 w-125px py-4" data-kt-menu="true">
-                                        <!--begin::Menu item-->
-                                        <div class="menu-item px-3">
-                                            <a href="add.html" class="menu-link px-3">View</a>
-                                        </div>
-                                        <!--end::Menu item-->
-                                        <!--begin::Menu item-->
-                                        <div class="menu-item px-3">
-                                            <a href="add.html" class="menu-link px-3">Edit</a>
-                                        </div>
-                                        <!--end::Menu item-->
-                                        <!--begin::Menu item-->
-                                        <div class="menu-item px-3">
-                                            <a href="list.html#" data-kt-subscriptions-table-filter="delete_row" class="menu-link px-3">Delete</a>
-                                        </div>
-                                        <!--end::Menu item-->
-                                    </div>
-                                    <!--end::Menu-->
-                                </td>
-
-
-                            </tr>
                             </tbody>
                         </table>
 
@@ -497,6 +406,9 @@
                 this.$loading(true);
                 const res  = await $get('/xadmin/user_devices/data', query);
                 this.$loading(false);
+                setTimeout(function (){
+                    KTMenu.createInstances();
+                }, 0)
                 this.paginate = res.paginate;
                 this.entries = res.data;
                 console.log(this.entries)
