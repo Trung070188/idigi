@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <!--
 Author: Keenthemes
-Product Name: Metronic - Bootstrap 5 HTML, VueJS, React, Angular & Laravel Admin Dashboard Theme 
+Product Name: Metronic - Bootstrap 5 HTML, VueJS, React, Angular & Laravel Admin Dashboard Theme
 Purchase: https://1.envato.market/EA4JP
 Website: http://www.keenthemes.com
 Contact: support@keenthemes.com
@@ -61,7 +61,7 @@ License: For each use you must have a valid license purchased only from above li
             }
 
         </style>
-                
+
 	</head>
 	<!--end::Head-->
 	<!--begin::Body-->
@@ -75,7 +75,7 @@ License: For each use you must have a valid license purchased only from above li
 					<!--begin::Logo-->
 					<a href="/" class="mb-12">
 						<!--<img alt="Logo" src="/images/Logo_iDIGI.png" class="h-40px" />-->
-                        <img src="{{asset('/images/imgpsh_fullsize_anim.png')}}" style="height: 60px;"/>
+                        <img src="{{asset('/images/imgpsh_fullsize_anim.png')}}" style="height: 100px;"/>
 					</a>
 					<!--end::Logo-->
 					<!--begin::Wrapper-->
@@ -87,7 +87,7 @@ License: For each use you must have a valid license purchased only from above li
 							<!--begin::Heading-->
 							<div class="text-center mb-10">
 								<!--begin::Title-->
-								<h1 class="text-dark mb-3">Sign In to iDIGI</h1>
+								<h1 class="text-dark mb-3">Sign In</h1>
 								<!--end::Title-->
 							</div>
 
@@ -101,10 +101,10 @@ License: For each use you must have a valid license purchased only from above li
 								<input class="form-control form-control-lg form-control-solid" type="text" name="login" autocomplete="off" placeholder="Username or Email" value="{{ old('login') }}" />
 								<!--end::Input-->
                                 @error('login')
-                                <div class="fv-plugins-message-container invalid-feedback"><div data-field="email" data-validator="notEmpty">{{ $message }}</div></div>                                
+                                <div class="fv-plugins-message-container invalid-feedback"><div data-field="email" data-validator="notEmpty">{{ $message }}</div></div>
                                 @enderror
                                 @error('username')
-                                <div class="fv-plugins-message-container invalid-feedback"><div data-field="email" data-validator="notEmpty">{{ $message }}</div></div>                                
+                                <div class="fv-plugins-message-container invalid-feedback"><div data-field="email" data-validator="notEmpty">{{ $message }}</div></div>
                                 @enderror
 							</div>
 							<!--end::Input group-->
@@ -121,14 +121,14 @@ License: For each use you must have a valid license purchased only from above li
 								<input class="form-control form-control-lg form-control-solid" type="password" name="password" placeholder="Password" autocomplete="off" />
 								<!--end::Input-->
                                 @error('password')
-                                <div class="fv-plugins-message-container invalid-feedback"><div data-field="email" data-validator="notEmpty">{{ $message }}</div></div>                                
-                                @enderror                                
+                                <div class="fv-plugins-message-container invalid-feedback"><div data-field="email" data-validator="notEmpty">{{ $message }}</div></div>
+                                @enderror
 							</div>
 
                             <div class="fv-row mb-10 fv-plugins-icon-container fv-plugins-bootstrap5-row-invalid">
 								<label class="form-check form-check-custom form-check-solid form-check-inline mb-5">
 									<input class="form-check-input" type="checkbox" name="remember" id="customCheck1" @if(old('remember')) checked @endif>
-									<span class="form-check-label fw-bold text-gray-700">Remember me 
+									<span class="form-check-label fw-bold text-gray-700">Remember me
 								</label>
                             </div>
 
@@ -138,7 +138,7 @@ License: For each use you must have a valid license purchased only from above li
 								<!--begin::Submit button-->
 								<button type="submit" id="kt_sign_in_submit" class="btn btn-lg btn-primary w-100 mb-5">
 									<span class="indicator-label">Continue</span>
-									<span class="indicator-progress">Please wait... 
+									<span class="indicator-progress">Please wait...
 									<span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
 								</button>
 								<!--end::Submit button-->
