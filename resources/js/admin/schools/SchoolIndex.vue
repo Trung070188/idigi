@@ -66,7 +66,7 @@
                                     schoolIds.length }} Selected
                                 </div>
                                 <button type="button" class="btn btn-danger"
-                                        data-kt-customer-table-select="delete_selected">Delete Selected
+                                        data-kt-customer-table-select="delete_selected" @click="removeAll">Delete Selected
                                 </button>
                             </div>
 
@@ -123,8 +123,8 @@
                             </div>
                         </div>
 
-                        <table class=" table  table-head-custom table-head-bg table-vertical-center">
-                            <thead>
+                        <table class="table table-row-bordered align-middle gy-4 gs-9">
+                            <thead class="border-bottom border-gray-200 fs-6 text-gray-600 fw-bolder bg-light bg-opacity-75">
                             <tr>
                                 <td width="25">
                                     <div class="form-check form-check-sm form-check-custom form-check-solid">
@@ -352,12 +352,25 @@
                     })
                 })
             },
-            async removeAll() {
-                this.schoolIds = [];
-                $('input:checkbox').each(function () {
-                    this.checked = false;
-                });
-            },
+            async removeAll()
+            {
+                if (!confirm('Xóa bản ghi: ' + JSON.stringify(this.schoolIds))) {
+                    return;
+                }
+
+                const res = await $post('/xadmin/schools/removeAll', {ids: this.schoolIds});
+
+                if (res.code) {
+                    toastr.error(res.message);
+                } else {
+                    toastr.success(res.message);
+                    this.schoolIds = [];
+                    this.school = [];
+                }
+
+                $router.updateQuery({page: this.paginate.currentPage, _: Date.now()});
+
+            }
         }
     }
 </script>

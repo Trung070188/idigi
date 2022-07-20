@@ -608,14 +608,14 @@ class UsersController extends AdminBaseController
     {
         $query = User::query()
             ->with(['roles', 'user_devices'])
+            ->whereNotNull('last_login')
             ->orderBy('id', 'ASC');
         if ($req->keyword) {
             $query->where('username', 'LIKE', '%' . $req->keyword . '%');
         }
-
-
         $query->whereHas('roles', function ($q) use ($req) {
             $q->where('role_name', 'Teacher');
+
         });
 
         if ($req->username) {
@@ -699,7 +699,8 @@ class UsersController extends AdminBaseController
     public function removeAll(Request $req)
     {
         $ids = $req->ids;
-        $entry=User::whereIn('id', $ids)->delete();
+        UserRole::whereIn('user_id',$ids)->delete();
+        User::whereIn('id', $ids)->delete();
         return [
             'code' => 0,
             'message' => 'Đã xóa'

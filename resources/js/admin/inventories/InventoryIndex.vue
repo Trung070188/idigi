@@ -175,12 +175,14 @@
                                         v-model="filter.subject"
                                     >
                                         <option value="" disabled selected
-                                            >Choose Subject</option
+                                        >Choose Subject
+                                        </option
                                         >
                                         <option value="0">-</option>
                                         <option value="math">Maths</option>
                                         <option value="science "
-                                            >Science</option
+                                        >Science
+                                        </option
                                         >
                                     </select>
                                 </div>
@@ -192,7 +194,8 @@
                                         v-model="filter.grade"
                                     >
                                         <option value="" disabled selected
-                                            >Choose Grade</option
+                                        >Choose Grade
+                                        </option
                                         >
                                         <option value="">-</option>
                                         <option value="1">1</option>
@@ -214,19 +217,23 @@
                                         v-model="filter.type"
                                     >
                                         <option value="" disabled selected
-                                            >Choose Type</option
+                                        >Choose Type
+                                        </option
                                         >
                                         <option value="">-</option>
                                         <option value="vocabulary"
-                                            >Vocabulary</option
+                                        >Vocabulary
+                                        </option
                                         >
                                         <option value="summary">Summary</option>
                                         <option value="lecture">Lecture</option>
                                         <option value="activity1"
-                                            >Activity1</option
+                                        >Activity1
+                                        </option
                                         >
                                         <option value="activity2"
-                                            >Activity2</option
+                                        >Activity2
+                                        </option
                                         >
                                     </select>
                                 </div>
@@ -340,107 +347,103 @@
                             </div>
                         </div>
 
-                        <table
-                            class="table table-row-bordered align-middle gy-4 gs-9"
-                        >
+                        <table class="table table-row-bordered align-middle gy-4 gs-9">
                             <thead
-                                class="border-bottom border-gray-200 fs-6 text-gray-600 fw-bolder bg-light bg-opacity-75"
-                            >
-                                <tr>
-                                    <td width="25">
-                                        <div
-                                            class="form-check form-check-sm form-check-custom form-check-solid"
-                                        >
-                                            <input
-                                                class="form-check-input"
-                                                type="checkbox"
-                                                v-model="allSelected"
-                                                @change="selectAll()"
-                                            />
-                                        </div>
-                                    </td>
-                                    <th class="">ID</th>
-                                    <th>
-                                        Name<button
-                                            class="btn-sort"
-                                            @click="onSort('name')"
-                                        >
-                                            <i class="fa fa-sort"></i>
-                                        </button>
-                                    </th>
-                                    <th class="">Grade</th>
-                                    <th class="">Type</th>
-                                    <th class="">Active</th>
-                                    <th class="">Creation Date</th>
-                                    <th class="">Action</th>
-                                </tr>
+                                class="border-bottom border-gray-200 fs-6 text-gray-600 fw-bolder bg-light bg-opacity-75">
+                            <tr>
+                                <td width="25">
+                                    <div class="form-check form-check-sm form-check-custom form-check-solid">
+                                        <input
+                                            class="form-check-input"
+                                            type="checkbox"
+                                            v-model="allSelected"
+                                            @change="selectAll()"
+                                        />
+                                    </div>
+                                </td>
+                                <th class="">ID</th>
+                                <th>
+                                    Name
+                                    <button
+                                        class="btn-sort"
+                                        @click="onSort('name')"
+                                    >
+                                        <i class="fa fa-sort"></i>
+                                    </button>
+                                </th>
+                                <th class="">Grade</th>
+                                <th class="">Type</th>
+                                <th class="">Active</th>
+                                <th class="">Creation Date</th>
+                                <th class="">Action</th>
+                            </tr>
                             </thead>
                             <tbody>
-                                <tr v-for="entry in entries">
-                                    <td class="">
-                                        <div
-                                            class="form-check form-check-sm form-check-custom form-check-solid"
-                                        >
-                                            <input
-                                                class="form-check-input"
-                                                type="checkbox"
-                                                v-model="inventoryIds"
-                                                :value="entry.id"
-                                                @change="updateCheckAll"
-                                            />
-                                        </div>
-                                    </td>
-                                    <td class="" v-text="entry.id"></td>
-                                    <td v-text="entry.name"></td>
-                                    <td class="" v-text="entry.grade"></td>
-                                    <td class="" v-text="entry.type"></td>
-                                    <td
-                                        class=""
-                                        v-text="
+                            <tr v-for="entry in entries">
+                                <td class="">
+                                    <div
+                                        class="form-check form-check-sm form-check-custom form-check-solid"
+                                    >
+                                        <input
+                                            class="form-check-input"
+                                            type="checkbox"
+                                            v-model="inventoryIds"
+                                            :value="entry.id"
+                                            @change="updateCheckAll"
+                                        />
+                                    </div>
+                                </td>
+                                <td class="" v-text="entry.id"></td>
+                                <td v-text="entry.name"></td>
+                                <td class="" v-text="entry.grade"></td>
+                                <td class="" v-text="entry.type"></td>
+                                <td
+                                    class=""
+                                    v-text="
                                             entry.enabled == 0 ? 'No' : 'Yes'
                                         "
-                                    ></td>
-                                    <td
-                                        class=""
-                                        v-text="d(entry.created_at)"
-                                    ></td>
+                                ></td>
+                                <td
+                                    class=""
+                                    v-text="d(entry.created_at)"
+                                ></td>
 
-                                    <td class="">
-                                        <!--<a :href="'/xadmin/inventories/edit?id='+entry.id" style="margin-right: 10px"><i style="font-size:1.3rem" class="fa fa-edit" v-if="permissions['008']"></i></a>
-                                    <a v-if="permissions['010']" @click="remove(entry)" href="javascript:;" class="btn-trash deleted"><i
-                                        class="fa fa-trash mr-1 deleted"></i></a>-->
+                                <td class="">
+                                    <!--<a :href="'/xadmin/inventories/edit?id='+entry.id" style="margin-right: 10px"><i style="font-size:1.3rem" class="fa fa-edit" v-if="permissions['008']"></i></a>
+                                <a v-if="permissions['010']" @click="remove(entry)" href="javascript:;" class="btn-trash deleted"><i
+                                    class="fa fa-trash mr-1 deleted"></i></a>-->
 
-                                        <a
-                                            :href="
+                                    <a
+                                        :href="
                                                 '/xadmin/inventories/edit?id=' +
                                                     entry.id
                                             "
-                                            class="btn-action"
-                                            v-if="permissions['008']"
+                                        class="btn-action"
+                                        v-if="permissions['008']"
+                                    >
+                                        <button
+                                            type="button"
+                                            class="btn btn-sm btn-icon btn-light btn-active-light-primary"
                                         >
-                                            <button
-                                                type="button"
-                                                class="btn btn-sm btn-icon btn-light btn-active-light-primary"
-                                            >
-                                                <i class="fa fa-edit"></i>
-                                            </button>
-                                        </a>
-                                        <a
-                                            @click="remove(entry)"
-                                            href="javascript:;"
-                                            v-if="permissions['010']"
+                                            <i class="fa fa-edit"></i>
+                                        </button>
+                                    </a>
+                                    <a
+                                        @click="remove(entry)"
+                                        href="javascript:;"
+                                        v-if="permissions['010']"
+                                    >
+                                        <button
+                                            type="button"
+                                            class="btn btn-sm btn-icon btn-light btn-active-light-primary"
                                         >
-                                            <button
-                                                type="button"
-                                                class="btn btn-sm btn-icon btn-light btn-active-light-primary"
-                                            >
-                                                <i
-                                                    class="fa fa-trash mr-1 deleted"
-                                                ></i>
-                                            </button>
-                                        </a>
-                                    </td>
-                                </tr>
+                                            <i
+                                                class="fa fa-trash mr-1 deleted"
+                                            ></i>
+                                        </button>
+                                    </a>
+                                </td>
+                            </tr>
                             </tbody>
                         </table>
                         <div class="d-flex pl-9 pr-9 mb-8">
@@ -485,170 +488,169 @@
 </template>
 
 <script>
-import { $get, $post, getTimeRangeAll, clone } from "../../utils";
-import $router from "../../lib/SimpleRouter";
-import ActionBar from "../includes/ActionBar";
-import SwitchButton from "../../components/SwitchButton";
+    import {$get, $post, getTimeRangeAll, clone} from "../../utils";
+    import $router from "../../lib/SimpleRouter";
+    import ActionBar from "../includes/ActionBar";
+    import SwitchButton from "../../components/SwitchButton";
 
-let created = getTimeRangeAll();
-const $q = $router.getQuery();
+    let created = getTimeRangeAll();
+    const $q = $router.getQuery();
 
-export default {
-    name: "InventoriesIndex.vue",
-    components: { ActionBar, SwitchButton },
-    data() {
-        const permissions = clone(window.$permissions);
-        let isShowFilter = false;
-        let filter = {
-            keyword: $q.keyword || "",
-            created: $q.created || "",
-            subject: $q.subject || "",
-            type: $q.type || "",
-            grade: $q.grade || "",
-            enabled: $q.enabled || ""
-        };
-        for (var key in filter) {
-            if (filter[key] != "") {
-                isShowFilter = true;
-            }
-        }
-        return {
-            inventory: [],
-            inventoryIds: [],
-            allSelected: false,
-            permissions,
-            last_updated: [],
-            isShowFilter: isShowFilter,
-            breadcrumbs: [
-                {
-                    title: "Inventories"
+    export default {
+        name: "InventoriesIndex.vue",
+        components: {ActionBar, SwitchButton},
+        data() {
+            const permissions = clone(window.$permissions);
+            let isShowFilter = false;
+            let filter = {
+                keyword: $q.keyword || "",
+                created: $q.created || "",
+                subject: $q.subject || "",
+                type: $q.type || "",
+                grade: $q.grade || "",
+                enabled: $q.enabled || ""
+            };
+            for (var key in filter) {
+                if (filter[key] != "") {
+                    isShowFilter = true;
                 }
-            ],
-            entries: [],
-            filter: filter,
-            limit: $q.limit || 25,
-            from: 0,
-            to: 0,
-            paginate: {
-                currentPage: 1,
-                lastPage: 1,
-                totalRecord: 0
             }
-        };
-    },
-    mounted() {
-        $router.on("/", this.load).init();
-    },
-    methods: {
-        edit: function(id, event) {
-            if (!$(event.target).hasClass("deleted")) {
-                window.location.href = "/xadmin/inventories/edit?id=" + id;
-            }
-        },
-        onSort(key) {
-            let query = $router.getQuery();
-            if (query?.sortBy == "desc") {
-                $router.updateQuery({ order: key, page: 1, sortBy: "asc" });
-            } else {
-                $router.updateQuery({ order: key, page: 1, sortBy: "desc" });
-            }
-        },
-        async load() {
-            let query = $router.getQuery();
-            this.$loading(true);
-            const res = await $get("/xadmin/inventories/data", query);
-            this.$loading(false);
-            this.paginate = res.paginate;
-            this.entries = res.data;
-            this.last_updated = res.last_updated;
-            this.from = (this.paginate.currentPage - 1) * this.limit + 1;
-            this.to =
-                (this.paginate.currentPage - 1) * this.limit +
-                this.entries.length;
-        },
-        async remove(entry) {
-            if (!confirm("Xóa bản ghi: " + entry.id)) {
-                return false;
-            }
-
-            const res = await $post("/xadmin/inventories/remove", {
-                id: entry.id
-            });
-
-            if (res.code) {
-                toastr.error(res.message);
-            } else {
-                toastr.success(res.message);
-            }
-
-            $router.updateQuery({
-                page: this.paginate.currentPage,
-                _: Date.now()
-            });
-        },
-        filterClear() {
-            for (var key in this.filter) {
-                this.filter[key] = "";
-            }
-
-            $router.setQuery({});
-        },
-        doFilter(event) {
-            if (event) {
-                event.preventDefault();
-            }
-            $router.setQuery(this.filter);
-        },
-        changeLimit() {
-            let params = $router.getQuery();
-            params["page"] = 1;
-            params["limit"] = this.limit;
-            $router.setQuery(params);
-        },
-
-        async toggleStatus(entry) {
-            const res = await $post("/xadmin/inventories/toggleStatus", {
-                id: entry.id,
-                status: entry.status
-            });
-
-            if (res.code === 200) {
-                toastr.success(res.message);
-            } else {
-                toastr.error(res.message);
-            }
-        },
-        onPageChange(page) {
-            $router.updateQuery({ page: page });
-        },
-        selectAll() {
-            if (this.allSelected) {
-                const selected = this.entries.map(u => u.id);
-                this.inventoryIds = selected;
-                this.inventory = this.entries;
-            } else {
-                this.inventoryIds = [];
-                this.inventory = [];
-            }
-        },
-        updateCheckAll() {
-            this.inventory = [];
-            if (this.inventoryIds.length === this.entries.length) {
-                this.allSelected = true;
-            } else {
-                this.allSelected = false;
-            }
-            let self = this;
-            self.inventoryIds.forEach(function(e) {
-                self.entries.forEach(function(e1) {
-                    if (e1.id == e) {
-                        self.inventory.push(e1);
+            return {
+                inventory: [],
+                inventoryIds: [],
+                allSelected: false,
+                permissions,
+                last_updated: [],
+                isShowFilter: isShowFilter,
+                breadcrumbs: [
+                    {
+                        title: "Inventories"
                     }
-                });
-            });
+                ],
+                entries: [],
+                filter: filter,
+                limit: $q.limit || 25,
+                from: 0,
+                to: 0,
+                paginate: {
+                    currentPage: 1,
+                    lastPage: 1,
+                    totalRecord: 0
+                }
+            };
         },
-         async removeAll()
-            {
+        mounted() {
+            $router.on("/", this.load).init();
+        },
+        methods: {
+            edit: function (id, event) {
+                if (!$(event.target).hasClass("deleted")) {
+                    window.location.href = "/xadmin/inventories/edit?id=" + id;
+                }
+            },
+            onSort(key) {
+                let query = $router.getQuery();
+                if (query?.sortBy == "desc") {
+                    $router.updateQuery({order: key, page: 1, sortBy: "asc"});
+                } else {
+                    $router.updateQuery({order: key, page: 1, sortBy: "desc"});
+                }
+            },
+            async load() {
+                let query = $router.getQuery();
+                this.$loading(true);
+                const res = await $get("/xadmin/inventories/data", query);
+                this.$loading(false);
+                this.paginate = res.paginate;
+                this.entries = res.data;
+                this.last_updated = res.last_updated;
+                this.from = (this.paginate.currentPage - 1) * this.limit + 1;
+                this.to =
+                    (this.paginate.currentPage - 1) * this.limit +
+                    this.entries.length;
+            },
+            async remove(entry) {
+                if (!confirm("Xóa bản ghi: " + entry.id)) {
+                    return false;
+                }
+
+                const res = await $post("/xadmin/inventories/remove", {
+                    id: entry.id
+                });
+
+                if (res.code) {
+                    toastr.error(res.message);
+                } else {
+                    toastr.success(res.message);
+                }
+
+                $router.updateQuery({
+                    page: this.paginate.currentPage,
+                    _: Date.now()
+                });
+            },
+            filterClear() {
+                for (var key in this.filter) {
+                    this.filter[key] = "";
+                }
+
+                $router.setQuery({});
+            },
+            doFilter(event) {
+                if (event) {
+                    event.preventDefault();
+                }
+                $router.setQuery(this.filter);
+            },
+            changeLimit() {
+                let params = $router.getQuery();
+                params["page"] = 1;
+                params["limit"] = this.limit;
+                $router.setQuery(params);
+            },
+
+            async toggleStatus(entry) {
+                const res = await $post("/xadmin/inventories/toggleStatus", {
+                    id: entry.id,
+                    status: entry.status
+                });
+
+                if (res.code === 200) {
+                    toastr.success(res.message);
+                } else {
+                    toastr.error(res.message);
+                }
+            },
+            onPageChange(page) {
+                $router.updateQuery({page: page});
+            },
+            selectAll() {
+                if (this.allSelected) {
+                    const selected = this.entries.map(u => u.id);
+                    this.inventoryIds = selected;
+                    this.inventory = this.entries;
+                } else {
+                    this.inventoryIds = [];
+                    this.inventory = [];
+                }
+            },
+            updateCheckAll() {
+                this.inventory = [];
+                if (this.inventoryIds.length === this.entries.length) {
+                    this.allSelected = true;
+                } else {
+                    this.allSelected = false;
+                }
+                let self = this;
+                self.inventoryIds.forEach(function (e) {
+                    self.entries.forEach(function (e1) {
+                        if (e1.id == e) {
+                            self.inventory.push(e1);
+                        }
+                    });
+                });
+            },
+            async removeAll() {
                 if (!confirm('Xóa bản ghi: ' + JSON.stringify(this.inventoryIds))) {
                     return;
                 }
@@ -659,29 +661,31 @@ export default {
                     toastr.error(res.message);
                 } else {
                     toastr.success(res.message);
+                    this.inventoryIds = [];
+                    this.inventory = [];
                 }
 
                 $router.updateQuery({page: this.paginate.currentPage, _: Date.now()});
 
             }
-    }
-};
+        }
+    };
 </script>
 
 <style scoped>
-.btn-sort {
-    border: none;
-}
+    .btn-sort {
+        border: none;
+    }
 
-select:required:invalid {
-    color: #adadad;
-}
+    select:required:invalid {
+        color: #adadad;
+    }
 
-option[value=""][disabled] {
-    display: none;
-}
+    option[value=""][disabled] {
+        display: none;
+    }
 
-option {
-    color: black;
-}
+    option {
+        color: black;
+    }
 </style>

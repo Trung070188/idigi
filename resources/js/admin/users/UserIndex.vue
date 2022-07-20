@@ -12,8 +12,8 @@
                             <div
                                 class="d-flex align-items-center position-relative my-1"
                             >
-                        
-                                
+
+
                                         <div class="d-flex align-items-center position-relative my-1">
                                             <!--begin::Svg Icon | path: icons/duotune/general/gen021.svg-->
                                             <span class="svg-icon svg-icon-1 position-absolute ms-6">
@@ -30,9 +30,9 @@
                                                         <rect x="7.41422" y="6" width="16" height="2" rx="1" transform="rotate(45 7.41422 6)" fill="black" style="fill:red" />
                                             </svg>
                                         </span>
-                                        
 
-                                
+
+
                                 </div>
 
                             </div>
@@ -81,7 +81,7 @@
                                 Delete Selected
                             </button>
                         </div>
-                        
+
                                 <form class="col-lg-12" v-if="isShowFilter">
                                     <div class="row">
                                         <div class="form-group col-lg-3">
@@ -138,7 +138,7 @@
                                 </form>
                     </div>
 
-                       
+
                     <div class="modal fade" style="margin-right:50px;border:2px solid #333333  " id="deviceConfirm" tabindex="-1" role="dialog"
                          aria-labelledby="deviceConfirm"
                          aria-hidden="true">
@@ -464,6 +464,8 @@
                     toastr.error(res.message);
                 } else {
                     toastr.success(res.message);
+                    this.userIds = [];
+                    this.user = [];
                 }
 
                 $router.updateQuery({page: this.paginate.currentPage, _: Date.now()});

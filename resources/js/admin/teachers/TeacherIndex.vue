@@ -32,7 +32,7 @@
                                         </div>
                                     </div>
 
-                                  
+
                                 </div>
                                 <div class="card-toolbar">
                             <div
@@ -124,9 +124,9 @@
                                         <button type="button" class="btn btn-primary" @click="doFilter()">Search</button>
                                     </div>
                                 </form>
-                            
+
                     </div>
-                      
+
 
                     <div class="tab-content">
                         <div class="d-flex flex-stack pt-4 pl-9 pr-9">
@@ -173,7 +173,7 @@
                             </tr>
                             </thead>
                             <tbody v-for="entry in entries">
-                                
+
                             <tr v-for="teacher in entry.roles" v-if="teacher.role_name==='Teacher' && entry.last_login!==null">
                                  <td class="">
                                         <div
