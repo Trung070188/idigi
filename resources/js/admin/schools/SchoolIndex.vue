@@ -45,17 +45,17 @@
                                  v-if="schoolIds==''">
                                 <button type="button"
                                         @click="isShowFilter = !isShowFilter"
-                                        class="btn btn-primary" v-if="isShowFilter"> Close Adventure search
+                                        class="btn btn-primary" v-if="isShowFilter"> Close Advanced Search
                                     <i style="margin-left: 5px" class="fas fa-times"></i>
 
                                 </button>
                                 <button type="button"
                                         @click="isShowFilter = !isShowFilter"
-                                        class="btn btn-primary" v-if="!isShowFilter"> Adventure search
+                                        class="btn btn-primary" v-if="!isShowFilter"> Advanced Search
                                     <i class="fa fa-filter" v-if="!isShowFilter" aria-hidden="true"></i>
                                 </button>
                                 <a :href="'/xadmin/schools/create'">
-                                    <button class="btn btn-primary button-create" style="margin:0 0 0 15px"> Create new
+                                    <button class="btn btn-primary button-create" style="margin:0 0 0 15px"> Create New
                                     </button>
                                 </a>
                             </div>
