@@ -65,7 +65,7 @@ License: For each use you must have a valid license purchased only from above li
 	</head>
 	<!--end::Head-->
 	<!--begin::Body-->
-	<body id="kt_body" class="bg-dark">
+	<body id="kt_body" class="bg-body">
 		<!--begin::Main-->
 		<div class="d-flex flex-column flex-root">
 			<!--begin::Authentication - Sign-in -->
@@ -74,7 +74,8 @@ License: For each use you must have a valid license purchased only from above li
 				<div class="d-flex flex-center flex-column flex-column-fluid p-10 pb-lg-20">
 					<!--begin::Logo-->
 					<a href="/" class="mb-12">
-						<img alt="Logo" src="/images/Logo_iDIGI.png" class="h-40px" />
+						<!--<img alt="Logo" src="/images/Logo_iDIGI.png" class="h-40px" />-->
+                        <img src="{{asset('/images/imgpsh_fullsize_anim.png')}}" style="height: 60px;"/>
 					</a>
 					<!--end::Logo-->
 					<!--begin::Wrapper-->
