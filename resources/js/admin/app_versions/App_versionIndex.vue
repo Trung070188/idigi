@@ -2,100 +2,262 @@
     <div class="container-fluid">
         <ActionBar type="index"
                    :breadcrumbs="breadcrumbs" title = "Application Download Manager"/>
-        <div class="row">
+                     <div class="row">
             <div class="col-lg-12">
-                <div v-if="role=='Super Administrator'" class="card card-custom card-stretch gutter-b">
-                    <div class="card-header border-0 pt-5">
-                        <button class="btn btn-primary button-create " @click="showModalUpload()">Upload App</button>
+                <div class="card card-custom card-stretch gutter-b" v-if="role=='Super Administrator'">
+
+                    <div class="card-header border-0 pt-6">
+
+                            <div class="card-title">
+
+                               <div
+                                class="d-flex align-items-center position-relative my-1"
+                            >
+                                        <div class="d-flex align-items-center position-relative my-1">
+                                            <!--begin::Svg Icon | path: icons/duotune/general/gen021.svg-->
+                                            <span class="svg-icon svg-icon-1 position-absolute ms-6">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                                    <rect opacity="0.5" x="17.0365" y="15.1223" width="8.15546" height="2" rx="1" transform="rotate(45 17.0365 15.1223)" fill="black"></rect>
+                                                    <path d="M11 19C6.55556 19 3 15.4444 3 11C3 6.55556 6.55556 3 11 3C15.4444 3 19 6.55556 19 11C19 15.4444 15.4444 19 11 19ZM11 5C7.53333 5 5 7.53333 5 11C5 14.4667 7.53333 17 11 17C14.4667 17 17 14.4667 17 11C17 7.53333 14.4667 5 11 5Z" fill="black"></path>
+                                                </svg>
+                                            </span>
+                                            <!--end::Svg Icon-->
+                                            <input type="text" data-kt-filemanager-table-filter = "search" class="form-control form-control-solid w-250px ps-15"  placeholder="Search..." value="" />
+                                              <span  class="svg-icon svg-icon-2 svg-icon-lg-1 me-0" >
+                                            <svg type="button" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" style="margin: 3px -25px 0px;">
+                                            </svg>
+                                        </span>
+                                        </div>
+                                    </div>
+
+
+                                </div>
+                                <div class="card-toolbar">
+                            <div
+                                class="d-flex justify-content-end"
+                                data-kt-customer-table-toolbar="base">
+                                        <a >
+                                            <button class="btn btn-primary button-create" style="margin:0 0 0 15px" @click="showModalUpload()"> Upload Application</button>
+                                        </a>
+
+                                    </div>
+                                </div>
                     </div>
 
-                    <div id="accordion">
-                        <div class="card">
-                            <div class="card-header" id="headingOne" style="min-height: auto;">
-                                <h5 class="mb-0">
-                                    <button class="btn btn-link btn-border" data-toggle="collapse"
-                                            data-target="#collapseOne"
-                                            aria-expanded="true" aria-controls="collapseOne">
-                                        <span class="fw-bolder fs-5 mb-0">Application for window({{ totalVersionWindow }} version)</span>
-                                    </button>
-                                </h5>
-                            </div>
 
-                            <div id="collapseOne" class="collapse show" aria-labelledby="headingOne"
-                                 data-parent="#accordion">
-                                <div class="card-body">
-                                    <table class="table">
+                    <div class="tab-content">
+                        <div class="d-flex flex-stack pt-4 pl-9 pr-9">
 
-                                        <tbody>
-                                        <tr v-for="entry in entries" v-if="entry.type=='window'">
-                                            <td v-text="entry.name"></td>
-                                            <td>Release date: {{ d2(entry.release_date) }}</td>
-                                            <td>
-
-                                                <a href="javascript:;" style="margin-right: 10px;color:#a6a60a"
-                                                   v-if="entry.is_default==0"
-                                                   @click="showSetDefaultModal(entry.id)">Set as default</a>
-                                                <a href="javascript:;" style="margin-right: 10px; color:#34e034"
-                                                   v-if="entry.is_default==1"
-                                                   @click="showUnsetDefaultModal(entry.id)">Default</a>
-                                                <a :href="entry.url" style="margin-right: 10px" download><i
-                                                    class="fa fa-download"></i></a>
-                                                <a @click="remove(entry)" href="javascript:;" class="btn-trash deleted"><i
-                                                    class="fa fa-trash mr-1"></i></a>
-
-                                            </td>
-
-                                        </tr>
-
-                                        </tbody>
-                                    </table>
-
+                            <div class=" mb-15">
+                                <div class="d-flex align-items-center flex-wrap">
+                                    <div class="card-body pb-0">
+										<!--begin::Navs-->
+										<div class="d-flex overflow-auto h-55px">
+											<ul class="nav nav-stretch nav-line-tabs nav-line-tabs-2x border-transparent fs-5 fw-bold flex-nowrap">
+												<!--begin::Nav item-->
+												<li class="nav-item">
+                                                    
+												<a class="nav-link text-active-primary pb-4 active" data-bs-toggle="tab" href="view.html#kt_customer_view_overview_tab">WINDOWS</a>
+												</li>
+												<!--end::Nav item-->
+												<!--begin::Nav item-->
+												<li class="nav-item">
+												<a class="nav-link text-active-primary pb-4" data-bs-toggle="tab" href="view.html#kt_customer_view_overview_events_and_logs_tab">MAC OS</a>
+												</li>
+												<!--end::Nav item-->
+											</ul>
+										</div>
+										<!--begin::Navs-->
+									</div>
                                 </div>
                             </div>
                         </div>
-                        <div class="card">
-                            <div class="card-header" id="headingTwo" style="min-height: auto;">
-                                <h5 class="mb-0">
-                                    <button class="btn btn-link collapsed btn-border" data-toggle="collapse"
-                                            data-target="#collapseTwo" aria-expanded="false"
-                                            aria-controls="collapseTwo">
-                                        <span class="fw-bolder fs-5 mb-0">Application for MacOs({{ totalVersionIos }} version)</span>
-                                    </button>
-                                </h5>
+                            <div class="tab-pane fade" id="kt_customer_view_overview_events_and_logs_tab" role="tabpanel">
+                             <table  class="table table-row-bordered align-middle gy-4 gs-9">
+                            <thead class="border-bottom border-gray-200 fs-6 text-gray-600 fw-bolder bg-light bg-opacity-75">
+                            <tr>
+                                 <td width="25">
+                                        <div
+                                            class="form-check form-check-sm form-check-custom form-check-solid"
+                                        >
+                                            <input
+                                                class="form-check-input"
+                                                type="checkbox"
+                                               
+                                            />
+                                        </div>
+                                    </td>
+                                <th class="">Version</th>
+                                <th class="">Release notes</th>
+                                <th class="">Creation date</th>
+                                <th class="">Release date</th>
+                                <th class="">Status</th>
+                                <th class="">Actions</th>
+                               
+                                
+                            </tr>
+                            </thead>
+                            <tbody>
+                            
+                            <tr v-for="entry in entries" v-if="entry.type=='ios'">
+                                 <td class="">
+                                        <div
+                                            class="form-check form-check-sm form-check-custom form-check-solid"
+                                        >
+                                            <input
+                                                class="form-check-input"
+                                                type="checkbox"
+                                               
+                                            />
+                                        </div>
+                                    </td>
+                                <td v-text="entry.version"></td>
+                                <td v-text="entry.release_note" ></td>
+                                <td v-text="d2(entry.created_at)"></td>
+                                <td > {{ d2(entry.release_date) }}</td>
+                                <td style="color:#1aaf21;" class="" v-if="entry.is_default==1">Default</td>
+                                <td   v-if="entry.is_default==0"></td>
+                                 <td class="" >
+                                    <a href="list.html#" class="btn btn-light btn-active-light-primary btn-sm"
+                                       data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">Actions
+                                        <!--begin::Svg Icon | path: icons/duotune/arrows/arr072.svg-->
+                                        <span class="svg-icon svg-icon-5 m-0">
+															<svg xmlns="http://www.w3.org/2000/svg" width="24"
+                                                                 height="24" viewBox="0 0 24 24" fill="none">
+																<path
+                                                                    d="M11.4343 12.7344L7.25 8.55005C6.83579 8.13583 6.16421 8.13584 5.75 8.55005C5.33579 8.96426 5.33579 9.63583 5.75 10.05L11.2929 15.5929C11.6834 15.9835 12.3166 15.9835 12.7071 15.5929L18.25 10.05C18.6642 9.63584 18.6642 8.96426 18.25 8.55005C17.8358 8.13584 17.1642 8.13584 16.75 8.55005L12.5657 12.7344C12.2533 13.0468 11.7467 13.0468 11.4343 12.7344Z"
+                                                                    fill="black"/>
+															</svg>
+														</span>
+                                        <!--end::Svg Icon--></a>
+                                    <!--begin::Menu-->
+                                    <div
+                                        class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-bold fs-7 w-125px py-4"
+                                        data-kt-menu="true">
+                                        <!--begin::Menu item-->
+                                        <div class="menu-item px-3" >
+                                            <a :href="entry.url" class="menu-link px-3">Download</a>
+                                        </div>
+                                        <div class="menu-item px-3" >
+                                            <a v-if="entry.is_default==0" class="menu-link px-3">Set as Default</a>
+                                        </div>
+                                        <div class="menu-item px-3" >
+                                            <a @click="remove(entry)" data-kt-subscriptions-table-filter="delete_row"
+                                               class="menu-link text-danger px-3">Remove</a>
+                                        </div>
+                                        <!--end::Menu item-->
+                                    </div>
+                                    <!--end::Menu-->
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+
+                        </div>
+                            <div class="tab-pane fade show active" id="kt_customer_view_overview_tab" role="tabpanel">
+                             <table class="table table-row-bordered align-middle gy-4 gs-9">
+                            <thead class="border-bottom border-gray-200 fs-6 text-gray-600 fw-bolder bg-light bg-opacity-75">
+                            <tr>
+                                 <td width="25">
+                                        <div
+                                            class="form-check form-check-sm form-check-custom form-check-solid"
+                                        >
+                                            <input
+                                                class="form-check-input"
+                                                type="checkbox"
+                                               
+                                            />
+                                        </div>
+                                    </td>
+                                <th class="">Version</th>
+                                <th class="">Release notes</th>
+                                <th class="">Creation date</th>
+                                <th class="">Release date</th>
+                                <th class="">Status</th>
+                                <th class="">Actions</th>
+                               
+                                
+                            </tr>
+                            </thead>
+                            <tbody>
+
+                            <tr v-for="entry in entries" v-if="entry.type=='window'">
+                                 <td class="">
+                                        <div
+                                            class="form-check form-check-sm form-check-custom form-check-solid"
+                                        >
+                                            <input
+                                                class="form-check-input"
+                                                type="checkbox"
+                                               
+                                            />
+                                        </div>
+                                    </td>
+                                <td v-text="entry.version"></td>
+                                <td v-text="entry.release_note" ></td>
+                                <td v-text="d2(entry.created_at)"></td>
+                                <td > {{ d2(entry.release_date) }}</td>
+                                <td  style="color:#1aaf21;" v-if="entry.is_default==1">Default</td>
+                                <td   v-if="entry.is_default==0"></td>
+                                 <td class="" >
+                                    <a href="list.html#" class="btn btn-light btn-active-light-primary btn-sm"
+                                       data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">Actions
+                                        <!--begin::Svg Icon | path: icons/duotune/arrows/arr072.svg-->
+                                        <span class="svg-icon svg-icon-5 m-0">
+															<svg xmlns="http://www.w3.org/2000/svg" width="24"
+                                                                 height="24" viewBox="0 0 24 24" fill="none">
+																<path
+                                                                    d="M11.4343 12.7344L7.25 8.55005C6.83579 8.13583 6.16421 8.13584 5.75 8.55005C5.33579 8.96426 5.33579 9.63583 5.75 10.05L11.2929 15.5929C11.6834 15.9835 12.3166 15.9835 12.7071 15.5929L18.25 10.05C18.6642 9.63584 18.6642 8.96426 18.25 8.55005C17.8358 8.13584 17.1642 8.13584 16.75 8.55005L12.5657 12.7344C12.2533 13.0468 11.7467 13.0468 11.4343 12.7344Z"
+                                                                    fill="black"/>
+															</svg>
+														</span>
+                                        <!--end::Svg Icon--></a>
+                                    <!--begin::Menu-->
+                                    <div
+                                        class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-bold fs-7 w-125px py-4"
+                                        data-kt-menu="true">
+                                        <!--begin::Menu item-->
+                                        <div class="menu-item px-3" >
+                                            <a :href="entry.url" class="menu-link px-3">Download</a>
+                                        </div>
+                                        <div class="menu-item px-3" >
+                                            <a v-if="entry.is_default==0" @click="showSetDefaultModal(entry.id)" class="menu-link px-3">Set as Default</a>
+                                        </div>
+                                        <div class="menu-item px-3" >
+                                            <a @click="remove(entry)" data-kt-subscriptions-table-filter="delete_row"
+                                               class="menu-link text-danger px-3">Remove</a>
+                                        </div>
+                                        <!--end::Menu item-->
+                                    </div>
+                                    <!--end::Menu-->
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+
+                        </div>
+
+                       
+                        <div class="d-flex pl-9 pr-9 mb-8">
+                            <div class="col-sm-12 col-md-5 d-flex align-items-center justify-content-center justify-content-md-start">
+                                <!--<div class="mr-2">
+                                    <label>Records per page:</label>
+                                </div>-->
+                                <div>
+                                    <select class="form-select form-select-sm form-select-solid" >
+                                        <option value="25">25</option>
+                                        <option value="50">50</option>
+                                        <option value="100">100</option>
+
+                                    </select>
+                                </div>
                             </div>
-                            <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo"
-                                 data-parent="#accordion">
-                                <div class="card-body">
-                                    <table class="table">
-                                        <thead>
-
-                                        </thead>
-                                        <tbody>
-                                        <tr v-for="entry in entries" v-if="entry.type=='ios'">
-                                            <td v-text="entry.name"></td>
-                                            <td>Release date: {{ d2(entry.release_date) }}</td>
-                                            <td>
-
-                                                <a href="javascript:;" style="margin-right: 10px;color:#a6a60a"
-                                                   v-if="entry.is_default==0"
-                                                   @click="showSetDefaultModal(entry.id)">Set as default</a>
-                                                <a href="javascript:;" style="margin-right: 10px; color:#34e034"
-                                                   v-if="entry.is_default==1"
-                                                   @click="showUnsetDefaultModal(entry.id)">Default</a>
-                                                <a :href="entry.url" style="margin-right: 10px" download><i
-                                                    class="fa fa-download"></i></a>
-                                                <a @click="remove(entry)" href="javascript:;" class="btn-trash deleted"><i
-                                                    class="fa fa-trash mr-1"></i></a>
-
-                                            </td>
-
-                                        </tr>
-                                        </tbody>
-                                    </table>
+                            <!--<div style="float: right; margin: 10px">-->
+                            <div class="col-sm-12 col-md-7 d-flex align-items-center justify-content-center justify-content-md-end">
+                                <div class="dataTables_paginate paging_simple_numbers" id="kt_customers_table_paginate">
                                 </div>
                             </div>
                         </div>
-
                     </div>
                 </div>
                 <div class="card card-custom card-stretch gutter-b" v-if="role=='Teacher' || role=='Administrator'">
@@ -138,8 +300,6 @@
                     </div>
                 </div>
             </div>
-
-        </div>
         <div class="modal" id="uploadApp" tabindex="-1">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -204,7 +364,9 @@
                 </div>
             </div>
         </div>
-        <div class="modal fade" id="setDefault" tabindex="-1">
+         
+        </div>
+          <div class="modal fade" id="setDefault" tabindex="-1">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -222,28 +384,16 @@
                     </div>
                 </div>
             </div>
-
-        </div>
-        <div class="modal fade" id="unsetDefault" tabindex="-1">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h2 class="modal-title">Unset as Default</h2>
-                        <button type="button" class="close" data-bs-dismiss="modal">
-                            &times;
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        Are you sure want to uset this version as default
-                    </div>
-                    <div class="modal-footer" style="justify-content: center">
-                        <button type="button" class="btn btn-primary" @click="setDefaultVersion(0)">Yes</button>
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
-                    </div>
-                </div>
+          </div>
+           
             </div>
-        </div>
-    </div>
+
+
+        
+    
+       
+      
+   
 
 </template>
 
@@ -360,6 +510,9 @@
                 const res = await $get('/xadmin/app_versions/data', query);
                 this.paginate = res.paginate;
                 this.entries = res.data;
+                setTimeout(function () {
+                        KTMenu.createInstances();
+                    }, 0)
                 this.role = res.role;
                 this.totalVersionIos = this.entries.filter(e => e.type == 'ios').length;
                 this.totalVersionWindow = this.entries.filter(e => e.type == 'window').length;
@@ -387,32 +540,13 @@
 </script>
 
 <style scoped>
-    .table td {
-        border-top: none;
-    }
-
-    .mb-0 {
-        width: 100%;
-
-
-    }
-
-    .card-header {
-        background-color: rgba(0, 0, 0, .03) !important;
-    }
-
-    .btn-border {
-        text-align: left;
-        width: 100%;
+ .status{
+        color: #50cd89;
+        background-color: #e8fff3;
+        padding: 0.5em 0.85em;
+        font-size: .85rem;
+        font-weight: 600;
+        border-radius: 0.475rem;
 
     }
-
-    .table {
-        border: 1px solid black;
-        border-collapse: collapse;
-        border-radius: 10px;
-        border-style: hidden;
-        box-shadow: 0 0 0 1px #666;
-    }
-
 </style>

@@ -24,5 +24,6 @@ class AppVersion extends BaseModel
     'path',
     'is_default',
     'release_date',
+    
 ];
 }
