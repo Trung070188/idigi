@@ -178,9 +178,18 @@
                                 </select>
                                 <error-label :errors="errors.type"></error-label>
                             </div>
-
                             <div class="form-group">
-                                <label>Release date <span class="required"></span></label>
+                                <label>Release Note <span class="required"></span></label>
+                                <input type="text"  class="form-control">
+                                <error-label ></error-label>
+                            </div>
+                            <div class="form-group">
+                                <label>Version <span class="required"></span></label>
+                                <input type="text"  class="form-control">
+                                <error-label ></error-label>
+                            </div>
+                            <div class="form-group">
+                                <label>Release date <span class="required" ></span></label>
                                 <Datepicker v-model="model.release_date"/>
                                 <error-label for="f_title" :errors="errors.release_date"></error-label>
 

@@ -18,6 +18,8 @@ class AppVersion extends BaseModel
     protected $fillable = [
     'name',
     'type',
+    'release_note',
+    'version',
     'url',
     'path',
     'is_default',
