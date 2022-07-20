@@ -170,8 +170,7 @@
                                 <th class="">Sender</th>
                                 <th class="">Role</th>
                                 <th class="">Notification content</th>
-                                <th></th>
-                                <th></th>
+                                <th>Action</th>
 
                             </tr>
                             </thead>
