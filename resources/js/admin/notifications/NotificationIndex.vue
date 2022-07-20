@@ -262,22 +262,38 @@
 
                             </tbody>
                         </table>
-                        <div style="margin-top:10px; display: flex">
-                            <div class="col-4 form-group align-items-center  d-inline-flex mt-2">
-                                <div class="mr-2">
+                        <div class="d-flex pl-9 pr-9 mb-8">
+                            <div
+                                class="col-sm-12 col-md-5 d-flex align-items-center justify-content-center justify-content-md-start"
+                            >
+                                <!--<div class="mr-2">
                                     <label>Records per page:</label>
-                                </div>
+                                </div>-->
                                 <div>
-                                    <select class="form-select form-select-sm " v-model="limit" @change="changeLimit">
+                                    <select
+                                        class="form-select form-select-sm form-select-solid"
+                                        v-model="limit"
+                                        @change="changeLimit"
+                                    >
                                         <option value="25">25</option>
                                         <option value="50">50</option>
                                         <option value="100">100</option>
-
                                     </select>
                                 </div>
                             </div>
-                            <div style="float: right;margin: 10px">
-                                <Paginate :value="paginate" :pagechange="onPageChange"></Paginate>
+                            <!--<div style="float: right; margin: 10px">-->
+                            <div
+                                class="col-sm-12 col-md-7 d-flex align-items-center justify-content-center justify-content-md-end"
+                            >
+                                <div
+                                    class="dataTables_paginate paging_simple_numbers"
+                                    id="kt_customers_table_paginate"
+                                >
+                                    <Paginate
+                                        :value="paginate"
+                                        :pagechange="onPageChange"
+                                    ></Paginate>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -314,7 +330,8 @@
                 }
                 return {
                     notificationIds: [],
-                    notifcation: [],
+                    notification: [],
+                    allSelected:false,
                     permissions,
 
                     unreadNotifications: {},
