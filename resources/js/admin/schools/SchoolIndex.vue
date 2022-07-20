@@ -1,104 +1,104 @@
 <template>
-    <div class="container-fluid" >
+    <div class="container-fluid">
         <ActionBar type="index"
-                   :breadcrumbs="breadcrumbs" title = "School Manager - Schools"/>
+                   :breadcrumbs="breadcrumbs" title="School Manager - Schools"/>
         <div class="row">
             <div class="col-lg-12">
                 <div class="card card-custom card-stretch gutter-b">
 
                     <div class="card-header border-0 pt-6">
 
-                            <div class="card-title">
-                                    <div class="d-flex align-items-center position-relative my-1">
-                                            <!--begin::Svg Icon | path: icons/duotune/general/gen021.svg-->
-                                            <span class="svg-icon svg-icon-1 position-absolute ms-6">
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-                                                    <rect opacity="0.5" x="17.0365" y="15.1223" width="8.15546" height="2" rx="1" transform="rotate(45 17.0365 15.1223)" fill="black"></rect>
-                                                    <path d="M11 19C6.55556 19 3 15.4444 3 11C3 6.55556 6.55556 3 11 3C15.4444 3 19 6.55556 19 11C19 15.4444 15.4444 19 11 19ZM11 5C7.53333 5 5 7.53333 5 11C5 14.4667 7.53333 17 11 17C14.4667 17 17 14.4667 17 11C17 7.53333 14.4667 5 11 5Z" fill="black"></path>
+                        <div class="card-title">
+
+                            <div class="d-flex align-items-center position-relative my-1">
+                                <!--begin::Svg Icon | path: icons/duotune/general/gen021.svg-->
+                                <span class="svg-icon svg-icon-1 position-absolute ms-6">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                                     viewBox="0 0 24 24" fill="none">
+                                                    <rect opacity="0.5" x="17.0365" y="15.1223" width="8.15546"
+                                                          height="2" rx="1" transform="rotate(45 17.0365 15.1223)"
+                                                          fill="black"></rect>
+                                                    <path
+                                                        d="M11 19C6.55556 19 3 15.4444 3 11C3 6.55556 6.55556 3 11 3C15.4444 3 19 6.55556 19 11C19 15.4444 15.4444 19 11 19ZM11 5C7.53333 5 5 7.53333 5 11C5 14.4667 7.53333 17 11 17C14.4667 17 17 14.4667 17 11C17 7.53333 14.4667 5 11 5Z"
+                                                        fill="black"></path>
                                                 </svg>
                                             </span>
-                                            <!--end::Svg Icon-->
-                                            <input type="text" data-kt-filemanager-table-filter = "search" class="form-control form-control-solid w-250px ps-15" @keydown.enter="doFilter($event)" v-model="filter.keyword" placeholder="Search..." value="" />
-                                              <span v-if="filter.keyword!==''" class="svg-icon svg-icon-2 svg-icon-lg-1 me-0" @click="filterClear">
-                                            <svg type="button" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" style="margin: 3px -25px 0px;">
-                                            <rect opacity="0.5" x="6" y="17.3137" width="16" height="2" rx="1" transform="rotate(-45 6 17.3137)" fill="black" style="fill:red"/>
-                                                        <rect x="7.41422" y="6" width="16" height="2" rx="1" transform="rotate(45 7.41422 6)" fill="black" style="fill:red"/>
+                                <!--end::Svg Icon-->
+                                <input type="text" data-kt-filemanager-table-filter="search"
+                                       class="form-control form-control-solid w-250px ps-15"
+                                       @keydown.enter="doFilter($event)" v-model="filter.keyword"
+                                       placeholder="Search..." value=""/>
+                                <span v-if="filter.keyword!==''" class="svg-icon svg-icon-2 svg-icon-lg-1 me-0"
+                                      @click="filterClear">
+                                            <svg type="button" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                                 viewBox="0 0 24 24" fill="none" style="margin: 3px -25px 0px;">
+                                            <rect opacity="0.5" x="6" y="17.3137" width="16" height="2" rx="1"
+                                                  transform="rotate(-45 6 17.3137)" fill="black"/>
+                                                        <rect x="7.41422" y="6" width="16" height="2" rx="1"
+                                                              transform="rotate(45 7.41422 6)" fill="black"/>
                                             </svg>
                                         </span>
-                                    </div>
                             </div>
-                              <div class="card-toolbar">
-                                    <div
-                                    class="d-flex justify-content-end"
-                                    data-kt-customer-table-toolbar="base"
-                                    v-if="schoolIds == ''">
-                                        <button type="button"
-                                                @click="isShowFilter = !isShowFilter"
-                                                class="btn btn-primary" v-if="isShowFilter">  Close Advanced Search
-                                            <i style="margin-left: 5px" class="fas fa-times"></i>
-
-                                        </button>
-                                        <button type="button"
-                                                @click="isShowFilter = !isShowFilter"
-                                                class="btn btn-primary" v-if="!isShowFilter"> Advanced Search
-                                            <i class="fa fa-filter" v-if="!isShowFilter" aria-hidden="true"></i>
-                                        </button>
-                                        <a :href="'/xadmin/schools/create'" >
-                                            <button class="btn btn-primary button-create" style="margin:0 0 0 15px"> Create New</button>
-                                        </a>
-
-                                    </div>
-                                </div>
-                                
-                                  <div
-                                    class="d-flex justify-content-end align-items-center d-none"
-                                    data-kt-customer-table-toolbar="selected"
-                                    v-if="schoolIds != ''">
-                            <div class="fw-bolder me-5">
-                                <span
-                                    class="me-2"
-                                    data-kt-customer-table-select="selected_count"
-                                ></span
-                                >{{ schoolIds.length }} Selected
-                            </div>
-                            <button
-                                @click="removeAll"
-                                type="button"
-                                class="btn btn-danger"
-                                data-kt-customer-table-select="delete_selected"
-                            >
-                                Delete Selected
-                            </button>
                         </div>
-                         <form class="col-lg-12" v-if="isShowFilter">
-                                    <div class="row">
-                                        <div class="form-group col-lg-3">
-                                            <label>School name </label>
-                                            <input class="form-control" type="text" placeholder="Enter your school name" v-model="filter.school_name"/>
+                        <div class="card-toolbar">
+                            <div class="d-flex justify-content-end" data-kt-customer-table-toolbar="base"
+                                 v-if="schoolIds==''">
+                                <button type="button"
+                                        @click="isShowFilter = !isShowFilter"
+                                        class="btn btn-primary" v-if="isShowFilter"> Close Adventure search
+                                    <i style="margin-left: 5px" class="fas fa-times"></i>
 
-                                        </div>
-                                        <div class="form-group col-lg-3">
-                                            <label>Administrator name </label>
-                                            <input class="form-control" type="text" placeholder="Enter the administrator name" >
+                                </button>
+                                <button type="button"
+                                        @click="isShowFilter = !isShowFilter"
+                                        class="btn btn-primary" v-if="!isShowFilter"> Adventure search
+                                    <i class="fa fa-filter" v-if="!isShowFilter" aria-hidden="true"></i>
+                                </button>
+                                <a :href="'/xadmin/schools/create'">
+                                    <button class="btn btn-primary button-create" style="margin:0 0 0 15px"> Create new
+                                    </button>
+                                </a>
+                            </div>
+                            <div class="d-flex justify-content-end align-items-center d-none"
+                                 data-kt-customer-table-toolbar="selected" v-if=" schoolIds!=''">
+                                <div class="fw-bolder me-5">
+                                    <span class="me-2" data-kt-customer-table-select="selected_count"></span>{{
+                                    schoolIds.length }} Selected
+                                </div>
+                                <button type="button" class="btn btn-danger"
+                                        data-kt-customer-table-select="delete_selected">Delete Selected
+                                </button>
+                            </div>
 
-                                        </div>
-                                        <div class="form-group col-lg-3">
-                                            <label>Region/City </label>
-                                            <input class="form-control" type="text" placeholder="Enter the region/city" >
+                        </div>
+                        <form class="col-lg-12" v-if="isShowFilter">
+                            <div class="row">
+                                <div class="form-group col-lg-3">
+                                    <label>School name </label>
+                                    <input class="form-control" type="text" placeholder="Enter your school name"
+                                           v-model="filter.school_name"/>
 
-                                        </div>
+                                </div>
+                                <div class="form-group col-lg-3">
+                                    <label>Administrator name </label>
+                                    <input class="form-control" type="text"
+                                           placeholder="Enter the administrator name">
 
-                                    </div>
+                                </div>
+                                <div class="form-group col-lg-3">
+                                    <label>Region/City </label>
+                                    <input class="form-control" type="text" placeholder="Enter the region/city">
 
-                                    <div style="margin: auto 0">
-                                        <button type="button" class="btn btn-primary" @click="doFilter($event)">Search</button>
-                                    </div>
-                                </form>
+                                </div>
 
+                            </div>
+
+                            <div style="margin: auto 0">
+                                <button type="button" class="btn btn-primary" @click="doFilter($event)">Search
+                                </button>
+                            </div>
+                        </form>
                     </div>
-
-                       
-
                     <div class="tab-content">
 
                         <div class="d-flex flex-stack pt-4 pl-9 pr-9">
@@ -107,78 +107,72 @@
                                 <div class="d-flex align-items-center flex-wrap">
 
                                     <span class="svg-icon svg-icon-2x svg-icon-primary mx-1">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-                                            <path d="M12.6343 12.5657L8.45001 16.75C8.0358 17.1642 8.0358 17.8358 8.45001 18.25C8.86423 18.6642 9.5358 18.6642 9.95001 18.25L15.4929 12.7071C15.8834 12.3166 15.8834 11.6834 15.4929 11.2929L9.95001 5.75C9.5358 5.33579 8.86423 5.33579 8.45001 5.75C8.0358 6.16421 8.0358 6.83579 8.45001 7.25L12.6343 11.4343C12.9467 11.7467 12.9467 12.2533 12.6343 12.5657Z" fill="black" ></path>
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                             viewBox="0 0 24 24" fill="none">
+                                            <path
+                                                d="M12.6343 12.5657L8.45001 16.75C8.0358 17.1642 8.0358 17.8358 8.45001 18.25C8.86423 18.6642 9.5358 18.6642 9.95001 18.25L15.4929 12.7071C15.8834 12.3166 15.8834 11.6834 15.4929 11.2929L9.95001 5.75C9.5358 5.33579 8.86423 5.33579 8.45001 5.75C8.0358 6.16421 8.0358 6.83579 8.45001 7.25L12.6343 11.4343C12.9467 11.7467 12.9467 12.2533 12.6343 12.5657Z"
+                                                fill="black"></path>
                                         </svg>
                                     </span>
 
-                                    <div v-text="'Showing '+ from +' to '+ to +' of '+ paginate.totalRecord +' entries'" v-if="entries.length > 0"></div>
+                                    <div
+                                        v-text="'Showing '+ from +' to '+ to +' of '+ paginate.totalRecord +' entries'"
+                                        v-if="entries.length > 0"></div>
 
                                 </div>
                             </div>
                         </div>
 
-                        <table class="table table-row-bordered align-middle gy-4 gs-9">
-                            <thead class="border-bottom border-gray-200 fs-6 text-gray-600 fw-bolder bg-light bg-opacity-75">
+                        <table class=" table  table-head-custom table-head-bg table-vertical-center">
+                            <thead>
                             <tr>
                                 <td width="25">
-                                        <div
-                                            class="form-check form-check-sm form-check-custom form-check-solid"
-                                        >
-                                            <input
-                                                class="form-check-input"
-                                                type="checkbox"
-                                                v-model="allSelected"
-                                                @change="selectAll()"
-                                            />
-                                        </div>
-                                    </td>
-                                <th class="">ID</th>
-                                <th class="">Name</th>
-                                <th class="">Address</th>
-                                <th class="">Administrator name</th>
-                                <th class="">Teacher</th>
-                                <th class="">Devices Per User</th>
-                                <th class="">Province</th>
-                                <th class="">License </th>
+                                    <div class="form-check form-check-sm form-check-custom form-check-solid">
+                                        <input class="form-check-input" type="checkbox" v-model="allSelected"
+                                               @change="selectAll()">
+                                    </div>
+                                </td>
+                                <th class="text-center">ID</th>
+                                <th class="text-center">Name</th>
+                                <th class="text-center">Address</th>
+                                <th class="text-center">Administrator name</th>
+                                <th class="text-center">Teacher</th>
+                                <th class="text-center">Devices Per User</th>
+                                <th class="text-center">Province</th>
+                                <th class="text-center">License</th>
                                 <th></th>
                             </tr>
                             </thead>
                             <tbody>
                             <tr v-for="entry in entries">
-                                 <td class="">
-                                        <div
-                                            class="form-check form-check-sm form-check-custom form-check-solid"
-                                        >
-                                            <input
-                                                class="form-check-input"
-                                                type="checkbox"
-                                                v-model="schoolIds"
-                                                :value="entry.id"
-                                                @change="updateCheckAll"
-                                            />
-                                        </div>
-                                    </td>
-                                <td class="" v-text="entry.id"></td>
-                                <td class="" v-text="entry.school_name"></td>
-                                <td class="" v-text="entry.school_address"></td>
-                                <td></td>
-                                <td class="" v-text="entry.number_of_users"></td>
-                                <td class="" v-text="entry.devices_per_user"></td>
-                                <td ></td>
-                                <td class="" v-text="entry.license_state"></td>
-
                                 <td class="">
+                                    <div class="form-check form-check-sm form-check-custom form-check-solid">
+                                        <input class="form-check-input" type="checkbox" v-model="schoolIds"
+                                               :value="entry.id" @change="updateCheckAll">
+                                    </div>
+                                </td>
+                                <td class="text-center" v-text="entry.id"></td>
+                                <td class="text-center" v-text="entry.school_name"></td>
+                                <td class="text-center" v-text="entry.school_address"></td>
+                                <td></td>
+                                <td class="text-center" v-text="entry.number_of_users"></td>
+                                <td class="text-center" v-text="entry.devices_per_user"></td>
+                                <td></td>
+                                <td class="text-center" v-text="entry.license_state"></td>
+
+                                <td class="text-center">
                                     <!--<a :href="'/xadmin/schools/edit?id='+entry.id" style="margin-right: 10px"><i style="font-size:1.3rem" class="fa fa-edit"></i></a>
                                     <a @click="remove(entry)" href="javascript:;" class="btn-trash deleted"><i  class="fa fa-trash mr-1"></i></a>-->
 
                                     <a :href="'/xadmin/schools/edit?id='+entry.id">
-                                        <button type="button" class="btn btn-sm btn-icon btn-light btn-active-light-primary">
+                                        <button type="button"
+                                                class="btn btn-sm btn-icon btn-light btn-active-light-primary">
                                             <i class="fa fa-edit"></i>
                                         </button>
                                     </a>
                                     <a @click="remove(entry)" href="javascript:;">
-                                        <button type="button" class="btn btn-sm btn-icon btn-light btn-active-light-primary">
+                                        <button type="button"
+                                                class="btn btn-sm btn-icon btn-light btn-active-light-primary">
                                             <i class="fa fa-trash mr-1 deleted"></i>
                                         </button>
                                     </a>
@@ -210,9 +204,8 @@
 
                     </div>
                 </div>
-            </div>
-
         </div>
+    </div>
     </div>
 
 </template>
@@ -240,9 +233,9 @@
                 }
             }
             return {
-            school: [],
-            schoolIds: [],
-            allSelected: false,
+               schoolIds: [],
+                school: [],
+                allSelected: false,
                 breadcrumbs: [
                     {
                         title: 'Schools'
@@ -265,21 +258,21 @@
             $router.on('/', this.load).init();
         },
         methods: {
-            edit: function (id, event){
-                if (!$(event.target).hasClass('deleted')){
-                    window.location.href='/xadmin/schools/edit?id='+ id;
+            edit: function (id, event) {
+                if (!$(event.target).hasClass('deleted')) {
+                    window.location.href = '/xadmin/schools/edit?id=' + id;
                 }
 
             },
             async load() {
                 let query = $router.getQuery();
                 this.$loading(true);
-                const res  = await $get('/xadmin/schools/data', query);
+                const res = await $get('/xadmin/schools/data', query);
                 this.$loading(false);
                 this.paginate = res.paginate;
                 this.entries = res.data;
-                this.from = (this.paginate.currentPage-1)*(this.limit) + 1;
-                this.to = (this.paginate.currentPage-1)*(this.limit) + this.entries.length;
+                this.from = (this.paginate.currentPage - 1) * (this.limit) + 1;
+                this.to = (this.paginate.currentPage - 1) * (this.limit) + this.entries.length;
             },
             async remove(entry) {
                 if (!confirm('Xóa bản ghi: ' + entry.id)) {
@@ -311,7 +304,7 @@
             },
             changeLimit() {
                 let params = $router.getQuery();
-                params['page']=1;
+                params['page'] = 1;
                 params['limit'] = this.limit;
                 $router.setQuery(params)
             },
@@ -331,52 +324,41 @@
             },
             onPageChange(page) {
                 $router.updateQuery({page: page})
-            }
-        },
-         selectAll() {
-             console.log('trung');
-            if (this.allSelected) {
-                const selected = this.entries.map(u => u.id);
-                this.schoolIds = selected;
-                this.school = this.entries;
-            } else {
-                this.schoolIds = [];
-                this.school = [];
-            }
-        },
-        updateCheckAll() {
-            this.school = [];
-            if (this.schoolIds.length === this.entries.length) {
-                this.allSelected = true;
-            } else {
-                this.allSelected = false;
-            }
-            let self = this;
-            self.schoolIds.forEach(function(e) {
-                self.entries.forEach(function(e1) {
-                    if (e1.id == e) {
-                        self.school.push(e1);
-                    }
-                });
-            });
-        },
-         async removeAll()
-            {
-                if (!confirm('Xóa bản ghi: ' + JSON.stringify(this.schoolIds))) {
-                    return;
-                }
-
-                const res = await $post('/xadmin/schools/removeAll', {ids: this.schoolIds});
-
-                if (res.code) {
-                    toastr.error(res.message);
+            },
+            selectAll() {
+                if (this.allSelected) {
+                    const selected = this.entries.map((u) => u.id);
+                    this.schoolIds = selected;
+                    this.school = this.entries
                 } else {
-                    toastr.success(res.message);
+                    this.schoolIds = [];
+                    this.school = [];
                 }
 
-                $router.updateQuery({page: this.paginate.currentPage, _: Date.now()});
-
-            }
+            },
+            updateCheckAll() {
+                this.school = [];
+                if (this.schoolIds.length === this.entries.length) {
+                    this.allSelected = true;
+                } else {
+                    this.allSelected = false;
+                }
+                let self = this;
+                self.schoolIds.forEach(function (e) {
+                    self.entries.forEach(function (e1) {
+                        if (e1.id == e) {
+                            self.school.push(e1);
+                        }
+                    })
+                })
+            },
+            async removeAll() {
+                this.schoolIds = [];
+                $('input:checkbox').each(function () {
+                    this.checked = false;
+                });
+            },
+        }
     }
 </script>
 
