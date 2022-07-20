@@ -207,9 +207,9 @@ body {
     vertical-align: middle;
 }
 
-.menu.menu-sub {
-    width: 200px !important;
-}
+/*.menu.menu-sub {*/
+/*    width: 200px !important;*/
+/*}*/
 
 .menu.menu-sub>.menu-item>.menu-link {
     display: flex;

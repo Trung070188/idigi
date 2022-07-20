@@ -259,15 +259,15 @@
                                     type="text"
                                     data-kt-filemanager-table-filter="search"
                                     class="form-control form-control-solid w-250px ps-15"
-                                   
-                                   
+
+
                                     placeholder="Search..."
                                     value=""
                                 />
                                 <span
-                                   
+
                                     class="svg-icon svg-icon-2 svg-icon-lg-1 me-0"
-                                   
+
                                 >
                                     <!-- <svg
                                         type="button"
@@ -301,7 +301,7 @@
                                         />
                                     </svg> -->
                                 </span>
-                               
+
 
                             </div>
                         </div>
@@ -309,16 +309,16 @@
                             <div
                                 class="d-flex justify-content-end"
                                 data-kt-customer-table-toolbar="base"
-                               
-                            >  
+
+                            >
                                 <button v-if="entries.length<3 " type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#kt_modal_add_customer" @click="modalDevice()">Add More Device</button>
                                 <button  v-if="entries.length>=3" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#kt_modal_add_customer" @click="closeModal()">Add More Device</button>
 
                                     </div>
 
                                 </div>
-                                
-                               
+
+
                     </div>
                       <div class="tab-content">
                         <div class="d-flex flex-stack pt-4 pl-9 pr-9">
@@ -373,7 +373,7 @@
                                         </div>
                                         <!--end::Menu item-->
                                         <!--begin::Menu item-->
-                                        
+
                                         <!--end::Menu item-->
                                         <!--begin::Menu item-->
                                         <div class="menu-item px-3"  v-for="role in entry.role">
@@ -396,17 +396,17 @@
                         </table>
 
                     </div>
-                   
 
 
-                   
+
+
                 </div>
             </div>
 
         </div>
     </div>
 
-   
+
 
 
 </template>
@@ -679,6 +679,9 @@
         border-radius: 0.475rem;
         color:#ffc700;
 
+    }
+    .menu.menu-sub{
+        width: 200px !important;
     }
 
 
