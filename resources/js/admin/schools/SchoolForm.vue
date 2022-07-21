@@ -5,25 +5,26 @@
         <div class="row">
             <div class="col-lg-12">
                 <div class="card card-custom card-stretch gutter-b">
-                     <div class="card-header border-0 pt-5">
-                        <div class="title">
-                            <label v-if="title=='Create new school'">Create new school</label>
-                            <label v-if="title=='Edit school'">School details</label>
-                        </div>
-                        <div>
-                            <a :href="'/xadmin/schools/teacher_list?id='+entry.id">
-                                <button style="margin: 0px 8px 25px;"  v-if="title=='Edit school'" class="btn btn-primary button-create " >
-                                    Teacher list <i class="fa fa-users"></i>
-                                </button>
-                            </a>
+                     <div class="card-header border-0 pt-6">
+                         <div class="card-title"></div>
+                         <div class="card-toolbar">
+                             <div
+                                 class="d-flex justify-content-end"
+                                 data-kt-customer-table-toolbar="base">
+                                 <a :href="'/xadmin/schools/teacher_list?id='+entry.id">
+                                     <button style="margin: 0px 8px 25px;"  v-if="title=='Edit school'" class="btn btn-primary button-create " >
+                                         Teacher list <i class="fa fa-users"></i>
+                                     </button>
+                                 </a>
 
-                            <button v-if="title=='Edit school'" class="btn btn-primary button-create " @click="remove(entry)">
-                                Delete User <i class="fas fa-trash"></i>
-                            </button>
-                        </div>
+                                 <button v-if="title=='Edit school'" class="btn btn-danger button-create " @click="remove(entry)">
+                                     Delete User <i class="fas fa-trash"></i>
+                                 </button>
+                             </div>
+                         </div>
+
                     </div>
 
-                    <hr>
                     <div class="card-body d-flex flex-column" >
                         <div class="row">
                             <div class="col-lg-12">

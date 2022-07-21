@@ -56,31 +56,23 @@ class SchoolsController extends AdminBaseController
         $id = $req->id;
         $entry = School::find($id);
         $query = User::query()->where('school_id','=',$entry->id);
-
-
         $query->whereHas('roles', function ($q) use ($req) {
             $q->where('role_name', 'Teacher');
-
         });
         $limit = 25;
-
         if($req->limit){
             $limit = $req->limit;
         }
-//        $teachers=$entry->users;
         $teachers=$query->paginate($limit);
-
-
 
      foreach ($teachers as $teacher)
      {
-        $device_teacher=($teacher->user_devices);
+        @$device_teacher=($teacher->user_devices);
      }
         $jsonData = [
             'data' => $teachers->items(),
             'entry'=>$entry,
-//            'teachers' => $teachers,
-            'device_teacher'=>$device_teacher,
+            @'device_teacher'=>@$device_teacher,
             'paginate' => [
                 'currentPage' => $teachers->currentPage(),
                 'lastPage' => $teachers->lastPage(),

@@ -142,7 +142,7 @@
                                         </svg>
                                     </span>
 
-                                    <div v-text="'Showing '+ from +' to '+ to +' of '+ paginate.totalRecord +' entries'" v-if="teachers.length > 0"></div>
+                                    <div v-text="'Showing '+ from +' to '+ to +' of '+ abc.totalRecord +' entries'" v-if="teachers.length > 0"></div>
 
                                     <span class="svg-icon svg-icon-2x svg-icon-primary mx-1">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
@@ -297,10 +297,10 @@
                     },
                     {
                         title: 'School details',
-
+                        url: '/xadmin/schools/edit?id'
                     },
                     {
-                        title: 'Teacher List'
+                        title: 'Teacher List',
                     },
                 ],
 

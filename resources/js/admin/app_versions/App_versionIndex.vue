@@ -9,36 +9,6 @@
                     <div class="card-header border-0 pt-6">
 
                         <div class="card-title">
-
-                            <div
-                                class="d-flex align-items-center position-relative my-1"
-                            >
-                                <div class="d-flex align-items-center position-relative my-1">
-                                    <!--begin::Svg Icon | path: icons/duotune/general/gen021.svg-->
-                                    <span class="svg-icon svg-icon-1 position-absolute ms-6">
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                                     viewBox="0 0 24 24" fill="none">
-                                                    <rect opacity="0.5" x="17.0365" y="15.1223" width="8.15546"
-                                                          height="2" rx="1" transform="rotate(45 17.0365 15.1223)"
-                                                          fill="black"></rect>
-                                                    <path
-                                                        d="M11 19C6.55556 19 3 15.4444 3 11C3 6.55556 6.55556 3 11 3C15.4444 3 19 6.55556 19 11C19 15.4444 15.4444 19 11 19ZM11 5C7.53333 5 5 7.53333 5 11C5 14.4667 7.53333 17 11 17C14.4667 17 17 14.4667 17 11C17 7.53333 14.4667 5 11 5Z"
-                                                        fill="black"></path>
-                                                </svg>
-                                            </span>
-                                    <!--end::Svg Icon-->
-                                    <input type="text" data-kt-filemanager-table-filter="search"
-                                           class="form-control form-control-solid w-250px ps-15" placeholder="Search..."
-                                           value=""/>
-                                    <span class="svg-icon svg-icon-2 svg-icon-lg-1 me-0">
-                                            <svg type="button" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                                 viewBox="0 0 24 24" fill="none" style="margin: 3px -25px 0px;">
-                                            </svg>
-                                        </span>
-                                </div>
-                            </div>
-
-
                         </div>
                         <div class="card-toolbar">
                             <div
@@ -51,34 +21,14 @@
                                 </a>
 
                             </div>
-                            <div class="d-flex justify-content-end align-items-center d-none"
-                                 data-kt-customer-table-toolbar="selected" v-if=" appIds!='' && windowIds==''">
-                                <div class="fw-bolder me-5">
-                                    <span class="me-2" data-kt-customer-table-select="selected_count"></span>{{
-                                    appIds.length }} Selected
-                                </div>
-                                <button type="button" class="btn btn-danger"
-                                        data-kt-customer-table-select="delete_selected" @click="removeAll">Delete Selected
-                                </button>
-                            </div>
-                            <div class="d-flex justify-content-end align-items-center d-none"
-                                 data-kt-customer-table-toolbar="selected" v-if=" windowIds!='' && appIds==''">
-                                <div class="fw-bolder me-5">
-                                    <span class="me-2" data-kt-customer-table-select="selected_count"></span>{{
-                                    windowIds.length }} Selected
-                                </div>
-                                <button type="button" class="btn btn-danger"
-                                        data-kt-customer-table-select="delete_selected" @click="windowRemoveAll">Delete Selected
-                                </button>
-                            </div>
                         </div>
                     </div>
 
 
-                    <div class="tab-content">
+                    <div class="tab-content" style="margin:-85px 0px 0px">
                         <div class="d-flex flex-stack pt-4 pl-9 pr-9">
 
-                            <div class=" mb-15">
+                            <div class=" ">
                                 <div class="d-flex align-items-center flex-wrap">
                                     <div class="card-body pb-0">
                                         <!--begin::Navs-->
@@ -111,15 +61,9 @@
                                 <thead
                                     class="border-bottom border-gray-200 fs-6 text-gray-600 fw-bolder bg-light bg-opacity-75">
                                 <tr>
-                                    <td width="25">
-                                        <div class="form-check form-check-sm form-check-custom form-check-solid">
-                                            <input class="form-check-input" type="checkbox" v-model="allSelected"
-                                                   @change="selectAll()">
-                                        </div>
-                                    </td>
+                                    <td>Name</td>
                                     <th class="">Version</th>
                                     <th class="">Release notes</th>
-                                    <th class="">Creation date</th>
                                     <th class="">Release date</th>
                                     <th class="">Status</th>
                                     <th class="">Actions</th>
@@ -130,15 +74,9 @@
                                 <tbody>
 
                                 <tr v-for="entry in macos" v-if="entry.type=='ios'">
-                                    <td class="">
-                                        <div class="form-check form-check-sm form-check-custom form-check-solid">
-                                            <input class="form-check-input" type="checkbox" v-model="appIds"
-                                                   :value="entry.id" @change="updateCheckAll">
-                                        </div>
-                                    </td>
+                                    <td v-text="entry.name"></td>
                                     <td v-text="entry.version"></td>
                                     <td v-text="entry.release_note"></td>
-                                    <td v-text="d2(entry.created_at)"></td>
                                     <td> {{ d2(entry.release_date) }}</td>
                                     <td style="color:#1aaf21;" class="" v-if="entry.is_default==1">Default</td>
                                     <td v-if="entry.is_default==0"></td>
@@ -185,33 +123,20 @@
                                 <thead
                                     class="border-bottom border-gray-200 fs-6 text-gray-600 fw-bolder bg-light bg-opacity-75">
                                 <tr>
-                                    <td width="25">
-                                        <div class="form-check form-check-sm form-check-custom form-check-solid">
-                                            <input class="form-check-input" type="checkbox" v-model="windowAllSelected"
-                                                   @change="WindowSelectAll()">
-                                        </div>
-                                    </td>
+                                    <td>Name</td>
                                     <th class="">Version</th>
                                     <th class="">Release notes</th>
-                                    <th class="">Creation date</th>
                                     <th class="">Release date</th>
                                     <th class="">Status</th>
                                     <th class="">Actions</th>
-
 
                                 </tr>
                                 </thead>
                                 <tbody>
                                 <tr v-for="entry in window" v-if="entry.type=='window'">
-                                    <td class="">
-                                        <div class="form-check form-check-sm form-check-custom form-check-solid">
-                                            <input class="form-check-input" type="checkbox" v-model="windowIds"
-                                                   :value="entry.id" @change="updateCheckAll">
-                                        </div>
-                                    </td>
+                                    <td v-text="entry.name"></td>
                                     <td v-text="entry.version"></td>
                                     <td v-text="entry.release_note"></td>
-                                    <td v-text="d2(entry.created_at)"></td>
                                     <td> {{ d2(entry.release_date) }}</td>
                                     <td style="color:#1aaf21;" v-if="entry.is_default==1">Default</td>
                                     <td v-if="entry.is_default==0"></td>
