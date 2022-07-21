@@ -217,10 +217,14 @@ class AppVersionsController extends AdminBaseController
 
 
         $entries = $query->paginate(100);
+        $window=AppVersion::where('type','=','window')->get();
+        $macos=AppVersion::where('type','=','ios')->get();
 
         return [
             'code' => 0,
             'data' => $entries->items(),
+            'window'=>$window,
+            'macos'=>$macos,
             'role'=>$role,
             'paginate' => [
                 'currentPage' => $entries->currentPage(),
@@ -255,6 +259,24 @@ class AppVersionsController extends AdminBaseController
             'code' => 0,
             'message' => 'Đã cập nhật',
             'id' => $entry->id
+        ];
+    }
+    public function removeAll(Request $req)
+    {
+        $ids = $req->ids;
+        AppVersion::whereIn('id', $ids)->where('type','=','ios')->delete();
+        return [
+            'code' => 0,
+            'message' => 'Đã xóa'
+        ];
+    }
+    public function windowRemoveAll(Request $req)
+    {
+        $ids = $req->ids;
+        AppVersion::whereIn('id', $ids)->where('type','=','window')->delete();
+        return [
+            'code' => 0,
+            'message' => 'Đã xóa'
         ];
     }
 

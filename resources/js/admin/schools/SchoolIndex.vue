@@ -132,14 +132,14 @@
                                                @change="selectAll()">
                                     </div>
                                 </td>
-                                <th class="text-center">ID</th>
-                                <th class="text-center">Name</th>
-                                <th class="text-center">Address</th>
-                                <th class="text-center">Administrator name</th>
-                                <th class="text-center">Teacher</th>
-                                <th class="text-center">Devices Per User</th>
-                                <th class="text-center">Province</th>
-                                <th class="text-center">License</th>
+                                <th class="">ID</th>
+                                <th class="">Name</th>
+                                <th class="">Address</th>
+                                <th class="">Administrator name</th>
+                                <th class="">Teacher</th>
+                                <th class="">Devices Per User</th>
+                                <th class="">Province</th>
+                                <th class="">License</th>
                                 <th></th>
                             </tr>
                             </thead>
@@ -151,16 +151,16 @@
                                                :value="entry.id" @change="updateCheckAll">
                                     </div>
                                 </td>
-                                <td class="text-center" v-text="entry.id"></td>
-                                <td class="text-center" v-text="entry.school_name"></td>
-                                <td class="text-center" v-text="entry.school_address"></td>
+                                <td class="" v-text="entry.id"></td>
+                                <td class="" v-text="entry.school_name"></td>
+                                <td class="" v-text="entry.school_address"></td>
                                 <td></td>
-                                <td class="text-center" v-text="entry.number_of_users"></td>
-                                <td class="text-center" v-text="entry.devices_per_user"></td>
+                                <td class="" v-text="entry.number_of_users"></td>
+                                <td class="" v-text="entry.devices_per_user"></td>
                                 <td></td>
-                                <td class="text-center" v-text="entry.license_state"></td>
+                                <td class="" v-text="entry.license_state"></td>
 
-                                <td class="text-center">
+                                <td class="">
                                     <!--<a :href="'/xadmin/schools/edit?id='+entry.id" style="margin-right: 10px"><i style="font-size:1.3rem" class="fa fa-edit"></i></a>
                                     <a @click="remove(entry)" href="javascript:;" class="btn-trash deleted"><i  class="fa fa-trash mr-1"></i></a>-->
 
