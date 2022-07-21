@@ -1,45 +1,45 @@
 <template>
     <div class="container-fluid" >
         <ActionBar type="index"
-        :breadcrumbs="breadcrumbs" title = "User Manager - Roles"/>
+                   :breadcrumbs="breadcrumbs" title = "User Manager - Roles"/>
         <div class="row">
             <div class="col-lg-12">
                 <div class="card card-custom card-stretch gutter-b">
-                     <div class="card-header border-0 pt-5">
+                    <div class="card-header border-0 pt-5">
                         <div class="title">
                             <label>Role</label>
                         </div>
-                    <button class="btn btn-primary button-create " @click="showModalRole()"> Create new</button>
+                        <button class="btn btn-primary button-create " @click="showModalRole()"> Create new</button>
                     </div>
                     <hr>
                     <div class="card-header border-0 pt-5">
                         <table class="table bg-white table-bordered">
-                        <tbody>
-                        <tr>
-                            <td></td>
-                            <td  v-for="role in roles" >
-                                <div   class="text-center" style="cursor: pointer">
-                                    <span  @click="showModalRole(role)" >{{role.role_name}} </span><span><i v-if="role.allow_deleted == 1" @click="remove(role)" class="fa fa-trash" style="margin-left:10px"></i></span>
-                                </div>
-                            </td>
-                        </tr>
-                        </tbody>
-                        <tr v-for="groupPermission in groupPermissions">
-                            <th scope="col">
-                                <span v-text="groupPermission.name"></span>
-                                <span  v-for="permission in groupPermission.permissions" class="d-block"  style="margin-left: 18px; font-size:12px">{{permission.name}}</span>
-                            </th>
+                            <tbody>
+                            <tr>
+                                <td></td>
+                                <td  v-for="role in roles" >
+                                    <div   class="text-center" style="cursor: pointer">
+                                        <span  @click="showModalRole(role)" >{{role.role_name}} </span><span><i v-if="role.allow_deleted == 1" @click="remove(role)" class="fa fa-trash" style="margin-left:10px"></i></span>
+                                    </div>
+                                </td>
+                            </tr>
+                            </tbody>
+                            <tr v-for="groupPermission in groupPermissions">
+                                <th scope="col">
+                                    <span v-text="groupPermission.name"></span>
+                                    <span  v-for="permission in groupPermission.permissions" class="d-block"  style="margin-left: 18px; font-size:12px">{{permission.name}}</span>
+                                </th>
 
-                            <td v-for="role in roles">
+                                <td v-for="role in roles">
 
-                                <div   class="text-center check" v-for="permission in role.permissions" v-if="permission.group_permission==groupPermission.id">
-                                    <input @change="changeRolePermission(role.id,permission.id,permission.value)"  class="form-check-input" v-model="permission.value"   type="checkbox"  value="" >
-                                    <br>
-                                </div>
-                            </td>
-                        </tr>
+                                    <div   class="text-center check" v-for="permission in role.permissions" v-if="permission.group_permission==groupPermission.id">
+                                        <input @change="changeRolePermission(role.id,permission.id,permission.value)"  class="form-check-input" v-model="permission.value"   type="checkbox"  value="" >
+                                        <br>
+                                    </div>
+                                </td>
+                            </tr>
 
-                    </table>
+                        </table>
                     </div>
 
 
@@ -88,7 +88,7 @@
     </div>
 </template>
 <script>
-    import {$get, $post, clone, getTimeRangeAll} from "../../utils";
+    import {$get, $post, getTimeRangeAll} from "../../utils";
     import $router from '../../lib/SimpleRouter';
     import ActionBar from "../includes/ActionBar";
     let created = getTimeRangeAll();
@@ -99,7 +99,6 @@
         components: {ActionBar},
         data() {
             return {
-                permissions,
                 breadcrumbs: [
                     {
                         title: 'Users & Roles'
