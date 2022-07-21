@@ -311,7 +311,7 @@
                                 data-kt-customer-table-toolbar="base"
 
                             >
-                                <button v-if="entries.length<3 " type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#kt_modal_add_customer" @click="modalDevice()">Add More Device</button>
+                                <button  v-if="entries.length<3 && permissions['019'] " type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#kt_modal_add_customer" @click="modalDevice()">Add More Device</button>
                                 <button  v-if="entries.length>=3" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#kt_modal_add_customer" @click="closeModal()">Add More Device</button>
 
                                     </div>
@@ -412,7 +412,7 @@
 </template>
 
 <script>
-    import {$get, $post, getTimeRangeAll} from "../../utils";
+    import {$get, $post, clone, getTimeRangeAll} from "../../utils";
     import $router from '../../lib/SimpleRouter';
     import ActionBar from "../includes/ActionBar";
     let created = getTimeRangeAll();
@@ -422,8 +422,9 @@
         name: "User_deviceIndex.vue",
         components: {ActionBar},
         data() {
+            const permissions = clone(window.$permissions)
             return {
-
+                permissions,
               device:'',
                 curDevice:{},
                 isHidden:false,

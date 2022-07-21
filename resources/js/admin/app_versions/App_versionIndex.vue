@@ -414,7 +414,7 @@
 </template>
 
 <script>
-    import {$get, $post, forEach, getTimeRangeAll} from "../../utils";
+    import {$get, $post, clone, forEach, getTimeRangeAll} from "../../utils";
     import $router from '../../lib/SimpleRouter';
     import ActionBar from "../includes/ActionBar";
 
@@ -426,7 +426,9 @@
         name: "App_versionsIndex.vue",
         components: {ActionBar},
         data() {
+            const permissions = clone(window.$permissions);
             return {
+                permissions,
                 window:[],
                 macos:[],
                 windowIds:[],

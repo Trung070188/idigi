@@ -21,6 +21,7 @@ import Request_roleForm from "./admin/request_role/Request_roleForm";
 import NotificationIndex from "./admin/notifications/NotificationIndex";
 import App_versionIndex from "./admin/app_versions/App_versionIndex";
 import UserEdit from "./admin/users/UserEdit";
+import TeacherList from "./admin/schools/TeacherList";
 
 export default {
     DashboardIndex,
@@ -46,4 +47,5 @@ export default {
     TeacherIndex,
     NotificationIndex,
     App_versionIndex,
+    TeacherList,
 }

@@ -148,6 +148,7 @@
                                 >{{ inventoryIds.length }} Selected
                             </div>
                             <button
+                                v-if="permissions['010']"
                                 @click="removeAll"
                                 type="button"
                                 class="btn btn-danger"

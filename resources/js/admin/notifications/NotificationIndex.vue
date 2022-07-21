@@ -77,6 +77,7 @@
                                 >{{ notificationIds.length }} Selected
                             </div>
                             <button
+                                v-if="permissions['025']"
                                 @click="removeAll"
                                 type="button"
                                 class="btn btn-danger"
@@ -315,7 +316,6 @@
             components: {ActionBar},
             data() {
                 const permissions = clone(window.$permissions)
-
                 let isShowFilter = false;
                 let filter = {
                     keyword: $q.keyword || '',

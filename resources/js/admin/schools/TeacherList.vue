@@ -1,62 +1,62 @@
 <template>
     <div class="container-fluid">
         <ActionBar type="index"
-                   :breadcrumbs="breadcrumbs" title = "Teacher Manager - Teachers"/>
+                   :breadcrumbs="breadcrumbs" title ="Teacher List" />
         <div class="row">
             <div class="col-lg-12">
                 <div class="card card-custom card-stretch gutter-b">
 
                     <div class="card-header border-0 pt-6">
 
-                            <div class="card-title">
+                        <div class="card-title">
 
-                               <div
+                            <div
                                 class="d-flex align-items-center position-relative my-1"
                             >
-                                        <div class="d-flex align-items-center position-relative my-1">
-                                            <!--begin::Svg Icon | path: icons/duotune/general/gen021.svg-->
-                                            <span class="svg-icon svg-icon-1 position-absolute ms-6">
+                                <div class="d-flex align-items-center position-relative my-1">
+                                    <!--begin::Svg Icon | path: icons/duotune/general/gen021.svg-->
+                                    <span class="svg-icon svg-icon-1 position-absolute ms-6">
                                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
                                                     <rect opacity="0.5" x="17.0365" y="15.1223" width="8.15546" height="2" rx="1" transform="rotate(45 17.0365 15.1223)" fill="black"></rect>
                                                     <path d="M11 19C6.55556 19 3 15.4444 3 11C3 6.55556 6.55556 3 11 3C15.4444 3 19 6.55556 19 11C19 15.4444 15.4444 19 11 19ZM11 5C7.53333 5 5 7.53333 5 11C5 14.4667 7.53333 17 11 17C14.4667 17 17 14.4667 17 11C17 7.53333 14.4667 5 11 5Z" fill="black"></path>
                                                 </svg>
                                             </span>
-                                            <!--end::Svg Icon-->
-                                            <input type="text" data-kt-filemanager-table-filter = "search" class="form-control form-control-solid w-250px ps-15" @keydown.enter="doFilter($event)" v-model="filter.keyword" placeholder="Search..." value="" />
-                                              <span v-if="filter.keyword!==''" class="svg-icon svg-icon-2 svg-icon-lg-1 me-0" @click="filterClear">
+                                    <!--end::Svg Icon-->
+                                    <input type="text" data-kt-filemanager-table-filter = "search" class="form-control form-control-solid w-250px ps-15" @keydown.enter="doFilter($event)" v-model="filter.keyword" placeholder="Search..." value="" />
+                                    <span v-if="filter.keyword!==''" class="svg-icon svg-icon-2 svg-icon-lg-1 me-0" @click="filterClear">
                                             <svg type="button" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" style="margin: 3px -25px 0px;">
                                             <rect opacity="0.5" x="6" y="17.3137" width="16" height="2" rx="1" transform="rotate(-45 6 17.3137)" fill="black" style="fill:red" />
                                                         <rect x="7.41422" y="6" width="16" height="2" rx="1" transform="rotate(45 7.41422 6)" fill="black" style="fill:red" />
                                             </svg>
                                         </span>
-                                        </div>
-                                    </div>
-
-
                                 </div>
-                                <div class="card-toolbar">
+                            </div>
+
+
+                        </div>
+                        <div class="card-toolbar">
                             <div
                                 class="d-flex justify-content-end"
                                 data-kt-customer-table-toolbar="base"
                                 v-if="teacherIds == ''"
                             >
-                                        <button type="button" style="margin-left: 10px"
-                                                @click="isShowFilter = !isShowFilter"
-                                                class="btn btn-primary" v-if="isShowFilter"> Close Advanced Search
-                                            <i style="margin-left: 5px" class="fas fa-times"></i>
-                                        </button>
-                                        <button type="button" style="margin-left: 10px"
-                                                @click="isShowFilter = !isShowFilter"
-                                                class="btn btn-primary" v-if="!isShowFilter"> Advanced Search
-                                            <i class="fa fa-filter" v-if="!isShowFilter" aria-hidden="true"></i>
-                                        </button>
-                                        <a v-if="permissions['013']" :href="'/xadmin/users/create_teacher'">
-                                            <button class="btn btn-primary button-create" style="margin:0 0 0 15px"> Create New</button>
-                                        </a>
+                                <button type="button" style="margin-left: 10px"
+                                        @click="isShowFilter = !isShowFilter"
+                                        class="btn btn-primary" v-if="isShowFilter"> Close Advanced Search
+                                    <i style="margin-left: 5px" class="fas fa-times"></i>
+                                </button>
+                                <button type="button" style="margin-left: 10px"
+                                        @click="isShowFilter = !isShowFilter"
+                                        class="btn btn-primary" v-if="!isShowFilter"> Advanced Search
+                                    <i class="fa fa-filter" v-if="!isShowFilter" aria-hidden="true"></i>
+                                </button>
+                                <a v-if="permissions['013']" :href="'/xadmin/users/create_teacher'">
+                                    <button class="btn btn-primary button-create" style="margin:0 0 0 15px"> Create New</button>
+                                </a>
 
-                                    </div>
-                                </div>
-                                  <div
+                            </div>
+                        </div>
+                        <div
                             class="d-flex justify-content-end align-items-center d-none"
                             data-kt-customer-table-toolbar="selected"
                             v-if="teacherIds != ''"
@@ -66,7 +66,8 @@
                                     class="me-2"
                                     data-kt-customer-table-select="selected_count"
                                 ></span
-                                >{{ teacherIds.length }} Selected
+                                >
+                                {{ teachers.length }} Selected
                             </div>
                             <button
                                 v-if="permissions['015']"
@@ -79,52 +80,52 @@
                             </button>
                         </div>
 
-                                <form class="col-lg-12" v-if="isShowFilter">
-                                    <div class="row">
-                                        <div class="form-group col-lg-3">
-                                            <label>Teacher name </label>
-                                            <input @keydown.enter="doFilter('username', filter.full_name, $event)"
-                                                   class="form-control" placeholder="Enter the teacher’s name"
-                                                   v-model="filter.username"/>
+                        <form class="col-lg-12" v-if="isShowFilter">
+                            <div class="row">
+                                <div class="form-group col-lg-3">
+                                    <label>Teacher name </label>
+                                    <input @keydown.enter="doFilter('username', filter.full_name, $event)"
+                                           class="form-control" placeholder="Enter the teacher’s name"
+                                           v-model="filter.username"/>
 
-                                        </div>
-                                        <div class="form-group col-lg-3">
-                                            <label>Teacher email </label>
-                                            <input @keydown.enter="doFilter('email', filter.email, $event)"
-                                                   class="form-control" placeholder="Enter the teacher’s email"
-                                                   v-model="filter.email">
-                                        </div>
-                                        <div class="form-group col-lg-3">
-                                            <label>Teacher phone number </label>
-                                            <input @keydown.enter="doFilter('phone', filter.email, $event)"
-                                                   class="form-control" placeholder="Enter the teacher’s phone number"
-                                                   v-model="filter.phone">
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="form-group col-lg-3">
-                                            <label>Creation time </label>
-                                            <Daterangepicker v-model="filter.created"
-                                                             placeholder="Creation date" readonly></Daterangepicker>
-                                            <span v-if="filter.created!==''" class="svg-icon svg-icon-2 svg-icon-lg-1 me-0" @click="filterClear">
+                                </div>
+                                <div class="form-group col-lg-3">
+                                    <label>Teacher email </label>
+                                    <input @keydown.enter="doFilter('email', filter.email, $event)"
+                                           class="form-control" placeholder="Enter the teacher’s email"
+                                           v-model="filter.email">
+                                </div>
+                                <div class="form-group col-lg-3">
+                                    <label>Teacher phone number </label>
+                                    <input @keydown.enter="doFilter('phone', filter.email, $event)"
+                                           class="form-control" placeholder="Enter the teacher’s phone number"
+                                           v-model="filter.phone">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group col-lg-3">
+                                    <label>Creation time </label>
+                                    <Daterangepicker v-model="filter.created"
+                                                     placeholder="Creation date" readonly></Daterangepicker>
+                                    <span v-if="filter.created!==''" class="svg-icon svg-icon-2 svg-icon-lg-1 me-0" @click="filterClear">
                                             <svg type="button" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" style="float: right;margin: -32px 3px 0px;">
                                             <rect opacity="0.5" x="6" y="17.3137" width="16" height="2" rx="1" transform="rotate(-45 6 17.3137)" fill="black" style="fill:red"/>
                                                         <rect x="7.41422" y="6" width="16" height="2" rx="1" transform="rotate(45 7.41422 6)" fill="black" style="fill:red" />
                                             </svg>
                                             </span>
-                                        </div>
-                                        <div class="form-group col-lg-3">
-                                            <label>Active</label>
-                                            <div>
-                                                <switch-button v-model="filter.state"></switch-button>
-                                            </div>
+                                </div>
+                                <div class="form-group col-lg-3">
+                                    <label>Active</label>
+                                    <div>
+                                        <switch-button v-model="filter.state"></switch-button>
+                                    </div>
 
-                                        </div>
-                                    </div>
-                                    <div style="margin: auto 0">
-                                        <button type="button" class="btn btn-primary" @click="doFilter()">Search</button>
-                                    </div>
-                                </form>
+                                </div>
+                            </div>
+                            <div style="margin: auto 0">
+                                <button type="button" class="btn btn-primary" @click="doFilter()">Search</button>
+                            </div>
+                        </form>
 
                     </div>
 
@@ -141,8 +142,14 @@
                                         </svg>
                                     </span>
 
-                                    <div v-text="'Showing '+ from +' to '+ to +' of '+ paginate.totalRecord +' entries'" v-if="entries.length > 0"></div>
+                                    <div v-text="'Showing '+ from +' to '+ to +' of '+ paginate.totalRecord +' entries'" v-if="teachers.length > 0"></div>
 
+                                    <span class="svg-icon svg-icon-2x svg-icon-primary mx-1">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                            <path d="M12.6343 12.5657L8.45001 16.75C8.0358 17.1642 8.0358 17.8358 8.45001 18.25C8.86423 18.6642 9.5358 18.6642 9.95001 18.25L15.4929 12.7071C15.8834 12.3166 15.8834 11.6834 15.4929 11.2929L9.95001 5.75C9.5358 5.33579 8.86423 5.33579 8.45001 5.75C8.0358 6.16421 8.0358 6.83579 8.45001 7.25L12.6343 11.4343C12.9467 11.7467 12.9467 12.2533 12.6343 12.5657Z" fill="black"></path>
+                                        </svg>
+                                    </span>
+                                    <div>Trường {{entry.school_name}}</div>
                                 </div>
                             </div>
                         </div>
@@ -150,18 +157,18 @@
                         <table class="table table-row-bordered align-middle gy-4 gs-9">
                             <thead class="border-bottom border-gray-200 fs-6 text-gray-600 fw-bolder bg-light bg-opacity-75">
                             <tr>
-                                 <td width="25">
-                                        <div
-                                            class="form-check form-check-sm form-check-custom form-check-solid"
-                                        >
-                                            <input
-                                                class="form-check-input"
-                                                type="checkbox"
-                                                v-model="allSelected"
-                                                @change="selectAll()"
-                                            />
-                                        </div>
-                                    </td>
+                                <td width="25">
+                                    <div
+                                        class="form-check form-check-sm form-check-custom form-check-solid"
+                                    >
+                                        <input
+                                            class="form-check-input"
+                                            type="checkbox"
+                                            v-model="allSelected"
+                                            @change="selectAll()"
+                                        />
+                                    </div>
+                                </td>
                                 <th class="">ID</th>
                                 <th class="">Teacher name</th>
                                 <th class="">Teacher email</th>
@@ -173,28 +180,28 @@
                                 <th></th>
                             </tr>
                             </thead>
-                            <tbody v-for="entry in entries">
+                            <tbody >
 
-                            <tr v-for="teacher in entry.roles" v-if="teacher.role_name==='Teacher' && entry.last_login!==null">
-                                 <td class="">
-                                        <div
-                                            class="form-check form-check-sm form-check-custom form-check-solid"
-                                        >
-                                            <input
-                                                class="form-check-input"
-                                                type="checkbox"
-                                                v-model="teacherIds"
-                                                :value="entry.id"
-                                                @change="updateCheckAll"
-                                            />
-                                        </div>
-                                    </td>
+                            <tr v-for="entry in teachers">
+                                <td class="">
+                                    <div
+                                        class="form-check form-check-sm form-check-custom form-check-solid"
+                                    >
+                                        <input
+                                            class="form-check-input"
+                                            type="checkbox"
+                                            v-model="teacherIds"
+                                            :value="entry.id"
+                                            @change="updateCheckAll"
+                                        />
+                                    </div>
+                                </td>
                                 <td class="" v-text="entry.id"></td>
                                 <td class="" v-text="entry.username"></td>
                                 <td class="" v-text="entry.email"></td>
                                 <td class="" v-text="entry.class"></td>
                                 <td class="" v-text="entry.phone"></td>
-                                <td class="">{{entry.user_devices.length}} / 3</td>
+                                <td class="">{{device_teacher.length}} / 3</td>
                                 <td class="" v-text=" d(entry.created_at)"></td>
                                 <td class="" v-text="entry.state===0 ? 'No' : 'Yes'"></td>
                                 <td class="">
@@ -259,7 +266,7 @@
     const $q = $router.getQuery();
 
     export default {
-        name: "TeacherIndex.vue",
+        name: "TeacherList.vue",
         components: {ActionBar, SwitchButton},
         data() {
             const permissions = clone(window.$permissions)
@@ -285,16 +292,29 @@
                 isShowFilter: isShowFilter,
                 breadcrumbs: [
                     {
-                        title: 'Teachers'
+                        title: 'Schools',
+                        url: '/xadmin/schools/index',
+                    },
+                    {
+                        title: 'School details',
+
+                    },
+                    {
+                        title: 'Teacher List'
                     },
                 ],
-                roles: $json.roles || [],
-                entries: [],
-                filter: filter,
 
+                roles: $json.roles || [],
+                teachers: $json.data || [],
+                device_teacher:$json.device_teacher || [],
+                entry:$json.entry || [],
                 limit: 25,
                 from: 0,
                 to: 0,
+                abc:$json.paginate || [
+                ],
+                filter: filter,
+
                 paginate: {
                     currentPage: 1,
                     lastPage: 1,
@@ -306,22 +326,21 @@
             $router.on('/', this.load).init();
         },
         methods: {
+            async load() {
+                this.$loading(true);
+                const res = this.teachers;
+                console.log(res);
+                this.$loading(false);
+                const paginate  = this.abc;
+                this.from = (paginate.currentPage - 1) * (this.limit) + 1;
+                this.to = (paginate.currentPage - 1) * (this.limit) + this.teachers.length;
+            },
 
             // edit: function (id, event){
             //     if (!$(event.target).hasClass('deleted')) {
             //         window.location.href = '/xadmin/users/edit?id=' + id;
             //     }
             // },
-            async load() {
-                let query = $router.getQuery();
-                this.$loading(true);
-                const res = await $get('/xadmin/users/data_teacher', query);
-                this.$loading(false);
-                this.entries = res.data;
-                console.log(this.entries);
-                this.from = (this.paginate.currentPage - 1) * (this.limit) + 1;
-                this.to = (this.paginate.currentPage - 1) * (this.limit) + this.entries.length;
-            },
             async remove(entry) {
                 if (!confirm('Xóa bản ghi: ' + entry.id)) {
                     return false;
@@ -372,32 +391,32 @@
                 $router.updateQuery({page: page})
             },
             selectAll() {
-            if (this.allSelected) {
-                const selected = this.entries.map(u => u.id);
-                this.teacherIds = selected;
-                this.teacher = this.entries;
-            } else {
-                this.teacherIds = [];
+                if (this.allSelected) {
+                    const selected = this.teachers.map(u => u.id);
+                    this.teacherIds = selected;
+                    this.teacher = this.teachers;
+                } else {
+                    this.teacherIds = [];
+                    this.teacher = [];
+                }
+            },
+            updateCheckAll() {
                 this.teacher = [];
-            }
-        },
-        updateCheckAll() {
-            this.teacher = [];
-            if (this.teacherIds.length === this.entries.length) {
-                this.allSelected = true;
-            } else {
-                this.allSelected = false;
-            }
-            let self = this;
-            self.teacherIds.forEach(function(e) {
-                self.entries.forEach(function(e1) {
-                    if (e1.id == e) {
-                        self.teacher.push(e1);
-                    }
+                if (this.teacherIds.length === this.teachers.length) {
+                    this.allSelected = true;
+                } else {
+                    this.allSelected = false;
+                }
+                let self = this;
+                self.teacherIds.forEach(function(e) {
+                    self.teachers.forEach(function(e1) {
+                        if (e1.id == e) {
+                            self.teacher.push(e1);
+                        }
+                    });
                 });
-            });
-        },
-         async removeAll()
+            },
+            async removeAll()
             {
                 if (!confirm('Xóa bản ghi: ' + JSON.stringify(this.teacherIds))) {
                     return;

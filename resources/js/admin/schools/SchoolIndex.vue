@@ -55,7 +55,7 @@
                                     <i class="fa fa-filter" v-if="!isShowFilter" aria-hidden="true"></i>
                                 </button>
                                 <a :href="'/xadmin/schools/create'">
-                                    <button class="btn btn-primary button-create" style="margin:0 0 0 15px"> Create New
+                                    <button v-if="permissions['016']" class="btn btn-primary button-create" style="margin:0 0 0 15px"> Create New
                                     </button>
                                 </a>
                             </div>
@@ -65,7 +65,7 @@
                                     <span class="me-2" data-kt-customer-table-select="selected_count"></span>{{
                                     schoolIds.length }} Selected
                                 </div>
-                                <button type="button" class="btn btn-danger"
+                                <button v-if="permissions['018']"  type="button" class="btn btn-danger"
                                         data-kt-customer-table-select="delete_selected" @click="removeAll">Delete Selected
                                 </button>
                             </div>
@@ -164,13 +164,13 @@
                                     <!--<a :href="'/xadmin/schools/edit?id='+entry.id" style="margin-right: 10px"><i style="font-size:1.3rem" class="fa fa-edit"></i></a>
                                     <a @click="remove(entry)" href="javascript:;" class="btn-trash deleted"><i  class="fa fa-trash mr-1"></i></a>-->
 
-                                    <a :href="'/xadmin/schools/edit?id='+entry.id">
+                                    <a v-if="permissions['017']" :href="'/xadmin/schools/edit?id='+entry.id">
                                         <button type="button"
                                                 class="btn btn-sm btn-icon btn-light btn-active-light-primary">
                                             <i class="fa fa-edit"></i>
                                         </button>
                                     </a>
-                                    <a @click="remove(entry)" href="javascript:;">
+                                    <a v-if="permissions['018']" @click="remove(entry)" href="javascript:;">
                                         <button type="button"
                                                 class="btn btn-sm btn-icon btn-light btn-active-light-primary">
                                             <i class="fa fa-trash mr-1 deleted"></i>
@@ -211,7 +211,7 @@
 </template>
 
 <script>
-    import {$get, $post, getTimeRangeAll} from "../../utils";
+    import {$get, $post, clone, getTimeRangeAll} from "../../utils";
     import $router from '../../lib/SimpleRouter';
     import ActionBar from "../includes/ActionBar";
 
@@ -222,6 +222,7 @@
         name: "SchoolsIndex.vue",
         components: {ActionBar},
         data() {
+            const permissions = clone(window.$permissions)
             let isShowFilter = false;
             let filter = {
                 keyword: $q.keyword || '',
@@ -233,6 +234,7 @@
                 }
             }
             return {
+                permissions,
                schoolIds: [],
                 school: [],
                 allSelected: false,

@@ -41,7 +41,7 @@
 
                     </table>
                     </div>
-                    
+
 
 
                 </div>
@@ -88,7 +88,7 @@
     </div>
 </template>
 <script>
-    import {$get, $post, getTimeRangeAll} from "../../utils";
+    import {$get, $post, clone, getTimeRangeAll} from "../../utils";
     import $router from '../../lib/SimpleRouter';
     import ActionBar from "../includes/ActionBar";
     let created = getTimeRangeAll();
@@ -99,6 +99,7 @@
         components: {ActionBar},
         data() {
             return {
+                permissions,
                 breadcrumbs: [
                     {
                         title: 'Users & Roles'

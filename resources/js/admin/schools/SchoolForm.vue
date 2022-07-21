@@ -1,9 +1,7 @@
 <template>
     <div class="container-fluid">
-        <ActionBar type="form" @save="save()"
-                   :code="entry.id"
-                   backUrl="/xadmin/schools/index"
-                   :breadcrumbs = "breadcrumbs"/>
+        <ActionBar type="index"
+                   :breadcrumbs="breadcrumbs" title ="School details" />
         <div class="row">
             <div class="col-lg-12">
                 <div class="card card-custom card-stretch gutter-b">
@@ -13,9 +11,12 @@
                             <label v-if="title=='Edit school'">School details</label>
                         </div>
                         <div>
-                            <button style="margin: 0px 8px 25px;"  v-if="title=='Edit school'" class="btn btn-primary button-create " @click="remove(entry)">
-                                Teacher list <i class="fa fa-users"></i>
-                            </button>
+                            <a :href="'/xadmin/schools/teacher_list?id='+entry.id">
+                                <button style="margin: 0px 8px 25px;"  v-if="title=='Edit school'" class="btn btn-primary button-create " >
+                                    Teacher list <i class="fa fa-users"></i>
+                                </button>
+                            </a>
+
                             <button v-if="title=='Edit school'" class="btn btn-primary button-create " @click="remove(entry)">
                                 Delete User <i class="fas fa-trash"></i>
                             </button>
