@@ -2,7 +2,6 @@
     <div class="container-fluid">
         <ActionBar type="index"
                    :breadcrumbs="breadcrumbs" title="Application Download Manager"/>
-        <div class="card">
             <div class="card card-custom card-stretch gutter-b" >
                 <div class="card-header card-header-stretch border-bottom border-gray-200" v-if="role=='Super Administrator'">
 
@@ -319,7 +318,7 @@
 
             </div>
 
-        </div>
+
 
         <div class="modal fade" id="setDefault" tabindex="-1">
             <div class="modal-dialog">
