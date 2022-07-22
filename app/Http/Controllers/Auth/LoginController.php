@@ -3,10 +3,15 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\AuthenticationLog;
 use App\Models\User;
 use App\Support\CallApi;
+use Carbon\Carbon;
+use Faker\Extension\Helper;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\UnauthorizedException;
 
 
@@ -99,7 +104,10 @@ class LoginController extends Controller
         }
 
         if ($this->attemptLogin($request)) {
+
+
             return $this->sendLoginResponse($request);
+
         }
 
         // If the login attempt was unsuccessful we will increment the number of attempts
@@ -108,6 +116,28 @@ class LoginController extends Controller
         $this->incrementLoginAttempts($request);
 
         return $this->sendFailedLoginResponse($request);
+    }
+
+    protected function sendLoginResponse(Request $request)
+    {
+        $request->session()->regenerate();
+        $user=(Auth::user());
+        $authenticationLog= new AuthenticationLog();
+        $authenticationLog->user_id=$user->id;
+        $authenticationLog->user_agent=$request->userAgent();
+        $authenticationLog->ip_address=$request->getClientIp();
+        $authenticationLog->login_at=Carbon::now();
+        $authenticationLog->save();
+        $this->clearLoginAttempts($request);
+
+        if ($response = $this->authenticated($request, $this->guard()->user())) {
+
+            return $response;
+        }
+
+        return $request->wantsJson()
+            ? new JsonResponse([], 204)
+            : redirect()->intended($this->redirectPath());
     }
 
     public function loginSSO(Request $request)

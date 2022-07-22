@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class AuthenticationLog extends Model
 {
     use HasFactory;
+    public $timestamps = false;
     protected $table = 'authentication_log';
     protected $fillable = [
         'user_id',

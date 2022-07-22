@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Models\AuthenticationLog;
 use App\Models\User;
 use App\Http\Controllers\Controller;
 use App\Models\UserDevice;
@@ -99,7 +100,13 @@ class GoogleSignController
                 ];
 
                 $jwt = JWT::encode($payload, env('SECRET_KEY'), 'HS256');
-
+                $authenticationLog=new AuthenticationLog();
+                $authenticationLog->user_id=$user->id;
+                $authenticationLog->device_uid=$deviceID;
+                $authenticationLog->user_agent=$req->userAgent();
+                $authenticationLog->ip_address=$req->getClientIp();
+                $authenticationLog->login_at= Carbon::now();
+                $authenticationLog->save();
                 return [
                     'code' => 0,
                     'access_token' => $jwt,
