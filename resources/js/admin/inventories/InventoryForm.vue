@@ -1,19 +1,13 @@
 <template>
     <div class="container-fluid">
-        <ActionBar type="form" @save="save()"
-                   :code="entry.id"
-                   backUrl="/xadmin/inventories/index"
-                   :breadcrumbs = "breadcrumbs"/>
+        <ActionBar
+            type="index"
+            :breadcrumbs="breadcrumbs"
+            title="Create New Inventory"
+        />
         <div class="row">
             <div class="col-lg-12">
                 <div class="card card-custom card-stretch gutter-b">
-                    <div class="card-header border-0 pt-5">
-                        <div class="title">
-                            <label >{{title}}</label>
-                        </div>
-                    </div>
-                    <hr>
-
                     <div class="card-body d-flex flex-column" >
 
                         <div class="row">

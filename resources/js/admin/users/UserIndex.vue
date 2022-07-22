@@ -317,11 +317,11 @@
                 role: $q.role || '',
 
             };
-            for (var key in filter) {
-                if (filter[key] != '') {
-                    // isShowFilter = true;
-                }
-            }
+            // for (var key in filter) {
+            //     if (filter[key] != '') {
+            //         // isShowFilter = true;
+            //     }
+            // }
             return {
             user: [],
             userIds: [],

@@ -59,6 +59,9 @@ class SchoolsController extends AdminBaseController
         $query->whereHas('roles', function ($q) use ($req) {
             $q->where('role_name', 'Teacher');
         });
+        if ($req->keyword) {
+            $query->where('username', 'LIKE', '%' . $req->keyword. '%');
+        }
         $limit = 25;
         if($req->limit){
             $limit = $req->limit;
@@ -232,7 +235,7 @@ class SchoolsController extends AdminBaseController
      */
     public function data(Request $req)
     {
-        $query = School::query()->orderBy('id', 'desc');
+        $query = School::query()->orderBy('id', 'ASC');
 
         if ($req->keyword) {
             $query->where('school_name', 'LIKE', '%' . $req->keyword. '%');

@@ -5,7 +5,7 @@
         <div class="row">
             <div class="col-lg-12">
                 <div class="card card-custom card-stretch gutter-b">
-                     <div class="card-header border-0 pt-6">
+                     <div class="card-header border-0 pt-6" style="margin:0px 0px -35px">
                          <div class="card-title"></div>
                          <div class="card-toolbar">
                              <div
@@ -16,7 +16,6 @@
                                          Teacher list <i class="fa fa-users"></i>
                                      </button>
                                  </a>
-
                                  <button v-if="title=='Edit school'" class="btn btn-danger button-create " @click="remove(entry)">
                                      Delete User <i class="fas fa-trash"></i>
                                  </button>
@@ -135,10 +134,10 @@
                         url: '/xadmin/schools/index',
                     },
                     {
-                        title: $json.entry ? 'Edit school' : 'Create new school',
+                        title: $json.entry ? 'School details' : 'Create New school',
                     },
                 ],
-                title: $json.entry ? 'Edit school' : 'Create new school',
+                title: $json.entry ? 'Edit school' : 'Create New school',
 
                 entry: $json.entry || {},
                 isLoading: false,

@@ -1,23 +1,19 @@
 <template>
     <div class="container-fluid">
-        <ActionBar type="form" @save="save()"
-                   :code="entry.id"
-                   back-url="/xadmin/users/index"
-                   :breadcrumbs="breadcrumbs"/>
+        <ActionBar type="index"
+                   :breadcrumbs="breadcrumbs"  title = "User Manager - Users"/>
         <div class="row">
             <div class="col-lg-12">
                 <div class="card card-custom card-stretch gutter-b">
-                     <div class="card-header border-0 pt-5">
-                        <div class="title">
-                            <label>{{entry.full_name}} - {{title_role}}</label>
-
-                        </div>
-                           <button class="btn btn-primary button-create " @click="remove(entry)">
-                        Delete User <i class="fas fa-trash"></i>
-                    </button>
+                     <div class="card-header border-0 pt-6" style="margin:0px 0px -35px">
+                         <div class="card-title"></div>
+                         <div class="card-toolbar">
+                             <button class="btn btn-danger button-create " @click="remove(entry)">
+                                 Delete User <i class="fas fa-trash"></i>
+                             </button>
+                         </div>
                     </div>
-                    <hr>
-
+                   <!-- <div class="card-body d-flex flex-column"> -->
                     <div class="card-body d-flex flex-column">
                         <div class="row">
                             <div class=" col-sm-12">

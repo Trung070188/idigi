@@ -1,9 +1,8 @@
 <template>
     <div class="container-fluid">
-        <ActionBar type="form" @save="save()"
-                   :code="entry.id"
-                   back-url="/xadmin/users/index"
-                   :breadcrumbs="breadcrumbs"/>
+        <ActionBar type="index"
+                   :breadcrumbs="breadcrumbs" title = "Teacher Details"/>
+
         <div class="modal fade" style="margin-right:50px " id="deviceConfirm" tabindex="-1" role="dialog"
              aria-labelledby="deviceConfirm"
              aria-hidden="true">
@@ -30,15 +29,10 @@
             <div class="col-lg-12">
                 <div class="card card-custom card-stretch gutter-b">
                      <div class="card-header border-0 pt-5">
-                        <div class="title">
-                            <label>Teacher details</label>
-                        </div>
-                        <button class="btn btn-primary button-create " @click="remove(entry)">
+                        <button class="btn btn-danger button-create " @click="remove(entry)">
                         Delete User <i class="fas fa-trash"></i>
                     </button>
                     </div>
-                    <hr>
-
                     <div class="card-body d-flex flex-column">
                         <div class=" card-header border-0 pt-5 row" style="margin-top:-30px;margin-left: -35px;">
                             <div class=" col-sm-12">
@@ -171,7 +165,7 @@
                         url: '/xadmin/users/teacher',
                     },
                     {
-                        title: $json.entry ? 'Teacher details' : 'Create new User',
+                        title: $json.entry ? 'Teacher Details' : 'Create New Teacher',
                     },
                 ],
                 entry: $json.entry || {

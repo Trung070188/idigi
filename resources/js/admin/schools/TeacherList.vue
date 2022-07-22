@@ -273,11 +273,11 @@
             let isShowFilter = false;
             let filter = {
                 keyword: $q.keyword || '',
-                created: $q.created || '',
-                full_name: $q.full_name || '',
-                email: $q.email || '',
-                state: $q.state || '',
-                role: $q.role || '',
+                // created: $q.created || '',
+                // full_name: $q.full_name || '',
+                // email: $q.email || '',
+                // state: $q.state || '',
+                // role: $q.role || '',
             };
             for (var key in filter) {
                 if (filter[key] != '') {
@@ -297,7 +297,7 @@
                     },
                     {
                         title: 'School details',
-                        url: '/xadmin/schools/edit?id'
+                        url: '/xadmin/schools/edit?id='+$json.entry.id
                     },
                     {
                         title: 'Teacher List',
@@ -314,7 +314,6 @@
                 abc:$json.paginate || [
                 ],
                 filter: filter,
-
                 paginate: {
                     currentPage: 1,
                     lastPage: 1,
