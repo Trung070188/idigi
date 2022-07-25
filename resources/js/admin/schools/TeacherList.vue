@@ -67,7 +67,8 @@
                                     data-kt-customer-table-select="selected_count"
                                 ></span
                                 >
-                                {{ teachers.length }} Selected
+                                {{ teacherIds.length }} Selected
+                                {{teachers}}
                             </div>
                             <button
                                 v-if="permissions['015']"
@@ -84,7 +85,7 @@
                             <div class="row">
                                 <div class="form-group col-lg-3">
                                     <label>Teacher name </label>
-                                    <input @keydown.enter="doFilter('username', filter.full_name, $event)"
+                                    <input @keydown.enter="doFilter('username', filter.username, $event)"
                                            class="form-control" placeholder="Enter the teacher’s name"
                                            v-model="filter.username"/>
 
@@ -97,7 +98,7 @@
                                 </div>
                                 <div class="form-group col-lg-3">
                                     <label>Teacher phone number </label>
-                                    <input @keydown.enter="doFilter('phone', filter.email, $event)"
+                                    <input @keydown.enter="doFilter('phone', filter.phone, $event)"
                                            class="form-control" placeholder="Enter the teacher’s phone number"
                                            v-model="filter.phone">
                                 </div>
@@ -201,7 +202,7 @@
                                 <td class="" v-text="entry.email"></td>
                                 <td class="" v-text="entry.class"></td>
                                 <td class="" v-text="entry.phone"></td>
-                                <td class="">{{device_teacher.length}} / 3</td>
+                                <td class="">{{entry.user_devices.length}} / 3</td>
                                 <td class="" v-text=" d(entry.created_at)"></td>
                                 <td class="" v-text="entry.state===0 ? 'No' : 'Yes'"></td>
                                 <td class="">
@@ -265,6 +266,9 @@
     let created = getTimeRangeAll();
     const $q = $router.getQuery();
 
+    console.log($q);
+
+
     export default {
         name: "TeacherList.vue",
         components: {ActionBar, SwitchButton},
@@ -273,11 +277,10 @@
             let isShowFilter = false;
             let filter = {
                 keyword: $q.keyword || '',
-                // created: $q.created || '',
-                // full_name: $q.full_name || '',
-                // email: $q.email || '',
-                // state: $q.state || '',
-                // role: $q.role || '',
+                created: $q.created || '',
+                full_name: $q.full_name || '',
+                email: $q.email || '',
+                state: $q.state || '',
             };
             for (var key in filter) {
                 if (filter[key] != '') {
@@ -303,10 +306,7 @@
                         title: 'Teacher List',
                     },
                 ],
-
-                roles: $json.roles || [],
                 teachers: $json.data || [],
-                device_teacher:$json.device_teacher || [],
                 entry:$json.entry || [],
                 limit: 25,
                 from: 0,
@@ -326,20 +326,11 @@
         },
         methods: {
             async load() {
-                this.$loading(true);
-                const res = this.teachers;
-                console.log(res);
-                this.$loading(false);
+
                 const paginate  = this.abc;
                 this.from = (paginate.currentPage - 1) * (this.limit) + 1;
                 this.to = (paginate.currentPage - 1) * (this.limit) + this.teachers.length;
             },
-
-            // edit: function (id, event){
-            //     if (!$(event.target).hasClass('deleted')) {
-            //         window.location.href = '/xadmin/users/edit?id=' + id;
-            //     }
-            // },
             async remove(entry) {
                 if (!confirm('Xóa bản ghi: ' + entry.id)) {
                     return false;

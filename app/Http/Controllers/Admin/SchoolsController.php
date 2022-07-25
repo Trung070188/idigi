@@ -49,33 +49,42 @@ class SchoolsController extends AdminBaseController
         $title = 'Create schools';
         return component($component, compact('title'));
     }
+
     public function teacher_list(Request $req)
     {
         $title = 'TeacherList';
         $component = 'TeacherList';
         $id = $req->id;
         $entry = School::find($id);
-        $query = User::query()->where('school_id','=',$entry->id);
+        $query = User::query()->with(['user_devices'])->where('school_id','=',$entry->id)->whereNotNull('last_login');
         $query->whereHas('roles', function ($q) use ($req) {
             $q->where('role_name', 'Teacher');
         });
         if ($req->keyword) {
             $query->where('username', 'LIKE', '%' . $req->keyword. '%');
         }
+        if ($req->username) {
+            $query->where('username', 'LIKE', '%' . $req->username);
+        }
+        if ($req->full_name) {
+            $query->where('full_name', 'LIKE' . $req->full_name);
+        }
+        if ($req->email) {
+            $query->where('email', 'LIKE', '%' . $req->email);
+        }
+        if ($req->state=='') {
+            $query->where('state', 'LIKE', $req->state);
+        }
+        $query->createdIn($req->created);
         $limit = 25;
         if($req->limit){
             $limit = $req->limit;
         }
         $teachers=$query->paginate($limit);
 
-     foreach ($teachers as $teacher)
-     {
-        @$device_teacher=($teacher->user_devices);
-     }
         $jsonData = [
             'data' => $teachers->items(),
             'entry'=>$entry,
-            @'device_teacher'=>@$device_teacher,
             'paginate' => [
                 'currentPage' => $teachers->currentPage(),
                 'lastPage' => $teachers->lastPage(),
