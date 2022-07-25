@@ -49,20 +49,23 @@ class SchoolsController extends AdminBaseController
         $title = 'Create schools';
         return component($component, compact('title'));
     }
-
-    public function teacher_list(Request $req)
+    public function data_teacher(Request $req)
     {
-        $title = 'TeacherList';
-        $component = 'TeacherList';
         $id = $req->id;
         $entry = School::find($id);
-        $query = User::query()->with(['user_devices'])->where('school_id','=',$entry->id)->whereNotNull('last_login');
+        $query = User::query()
+            ->with(['roles', 'user_devices'])
+            ->where('school_id','=',$entry->id)
+            ->whereNotNull('last_login')
+            ->orderBy('id', 'ASC');
+        if ($req->keyword) {
+            $query->where('username', 'LIKE', '%' . $req->keyword . '%');
+        }
         $query->whereHas('roles', function ($q) use ($req) {
             $q->where('role_name', 'Teacher');
+
         });
-        if ($req->keyword) {
-            $query->where('username', 'LIKE', '%' . $req->keyword. '%');
-        }
+
         if ($req->username) {
             $query->where('username', 'LIKE', '%' . $req->username);
         }
@@ -72,26 +75,36 @@ class SchoolsController extends AdminBaseController
         if ($req->email) {
             $query->where('email', 'LIKE', '%' . $req->email);
         }
-        if ($req->state=='') {
-            $query->where('state', 'LIKE', $req->state);
+        if ($req->state) {
+            $query->where('state', 'LIKE', '%' . $req->state);
         }
         $query->createdIn($req->created);
         $limit = 25;
-        if($req->limit){
+        if ($req->limit) {
             $limit = $req->limit;
         }
-        $teachers=$query->paginate($limit);
+        $entries = $query->paginate($limit);
+        $users = $entries->items();
 
-        $jsonData = [
-            'data' => $teachers->items(),
-            'entry'=>$entry,
+        return [
+            'code' => 0,
+            'data' => $users,
             'paginate' => [
-                'currentPage' => $teachers->currentPage(),
-                'lastPage' => $teachers->lastPage(),
-                'totalRecord' => $teachers->count()
-
+                'currentPage' => $entries->currentPage(),
+                'lastPage' => $entries->lastPage(),
+                'totalRecord' => $entries->count(),
             ]
         ];
+    }
+    public function teacher_list(Request $req)
+    {
+        $title = 'TeacherList';
+        $component = 'TeacherList';
+        $id = $req->id;
+        $entry = School::find($id);
+        $jsonData = [
+            'entry'=>$entry,
+            ];
         if (!$entry) {
             throw new NotFoundHttpException();
         }

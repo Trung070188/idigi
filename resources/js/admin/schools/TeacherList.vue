@@ -143,7 +143,7 @@
                                         </svg>
                                     </span>
 
-                                    <div v-text="'Showing '+ from +' to '+ to +' of '+ abc.totalRecord +' entries'" v-if="teachers.length > 0"></div>
+                                    <div v-text="'Showing '+ from +' to '+ to +' of '+ paginate.totalRecord +' entries'" v-if="entries.length > 0"></div>
 
                                     <span class="svg-icon svg-icon-2x svg-icon-primary mx-1">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
@@ -183,7 +183,7 @@
                             </thead>
                             <tbody >
 
-                            <tr v-for="entry in teachers">
+                            <tr v-for="entry in entries">
                                 <td class="">
                                     <div
                                         class="form-check form-check-sm form-check-custom form-check-solid"
@@ -288,6 +288,7 @@
                 }
             }
             return {
+                entries:[],
                 allSelected:false,
                 teacherIds:[],
                 teacher:[],
@@ -306,13 +307,10 @@
                         title: 'Teacher List',
                     },
                 ],
-                teachers: $json.data || [],
-                entry:$json.entry || [],
+                 entry:$json.entry || [],
                 limit: 25,
                 from: 0,
                 to: 0,
-                abc:$json.paginate || [
-                ],
                 filter: filter,
                 paginate: {
                     currentPage: 1,
@@ -327,9 +325,14 @@
         methods: {
             async load() {
 
-                const paginate  = this.abc;
-                this.from = (paginate.currentPage - 1) * (this.limit) + 1;
-                this.to = (paginate.currentPage - 1) * (this.limit) + this.teachers.length;
+                let query = $router.getQuery();
+                this.$loading(true);
+                const res = await $get('/xadmin/schools/data_teacher?id='+this.entry.id, query);
+                this.$loading(false);
+                this.entries = res.data;
+                this.paginate = res.paginate;
+                this.from = (this.paginate.currentPage - 1) * (this.limit) + 1;
+                this.to = (this.paginate.currentPage - 1) * (this.limit) + this.entries.length;
             },
             async remove(entry) {
                 if (!confirm('Xóa bản ghi: ' + entry.id)) {
@@ -384,7 +387,7 @@
                 if (this.allSelected) {
                     const selected = this.teachers.map(u => u.id);
                     this.teacherIds = selected;
-                    this.teacher = this.teachers;
+                    this.teacher = this.entries;
                 } else {
                     this.teacherIds = [];
                     this.teacher = [];
@@ -392,14 +395,14 @@
             },
             updateCheckAll() {
                 this.teacher = [];
-                if (this.teacherIds.length === this.teachers.length) {
+                if (this.teacherIds.length === this.entries.length) {
                     this.allSelected = true;
                 } else {
                     this.allSelected = false;
                 }
                 let self = this;
                 self.teacherIds.forEach(function(e) {
-                    self.teachers.forEach(function(e1) {
+                    self.entries.forEach(function(e1) {
                         if (e1.id == e) {
                             self.teacher.push(e1);
                         }

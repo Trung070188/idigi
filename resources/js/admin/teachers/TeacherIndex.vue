@@ -318,7 +318,7 @@
                 const res = await $get('/xadmin/users/data_teacher', query);
                 this.$loading(false);
                 this.entries = res.data;
-                console.log(this.entries);
+                this.paginate = res.paginate;
                 this.from = (this.paginate.currentPage - 1) * (this.limit) + 1;
                 this.to = (this.paginate.currentPage - 1) * (this.limit) + this.entries.length;
             },
