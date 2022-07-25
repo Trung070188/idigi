@@ -149,7 +149,9 @@ class AppVersionsController extends AdminBaseController
             'path' =>$newFilePath,
             'url' => $newUrl,
             'type' => $req->type,
-            'release_date' => $req->release_date
+            'release_date' => $req->release_date,
+            'version'=>$req->version,
+            'release_note'=>$req->release_note,
         ];
 
         $entry = new AppVersion();
@@ -212,19 +214,12 @@ class AppVersionsController extends AdminBaseController
         if ($req->keyword) {
             //$query->where('title', 'LIKE', '%' . $req->keyword. '%');
         }
-
         $query->createdIn($req->created);
-
-
         $entries = $query->paginate(100);
-        $window=AppVersion::where('type','=','window')->get();
-        $macos=AppVersion::where('type','=','ios')->get();
 
         return [
             'code' => 0,
             'data' => $entries->items(),
-            'window'=>$window,
-            'macos'=>$macos,
             'role'=>$role,
             'paginate' => [
                 'currentPage' => $entries->currentPage(),

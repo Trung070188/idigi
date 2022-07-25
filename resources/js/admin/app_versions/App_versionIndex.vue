@@ -3,7 +3,7 @@
         <ActionBar type="index"
                    :breadcrumbs="breadcrumbs" title="Application Download Manager"/>
             <div class="card card-custom card-stretch gutter-b" >
-                <div class="card-header card-header-stretch border-bottom border-gray-200" v-if="role=='Super Administrator'">
+                <div class="card-header card-header-stretch border-bottom border-gray-200" v-if="role=='Super Administrator' ||  role=='Administrator'">
 
                     <div class="card-title " style="margin: 36px 0px 0px;">
                         <ul class="nav nav-stretch nav-line-tabs border-transparent" role="tablist">
@@ -40,27 +40,6 @@
 
 
                 <div class="tab-content" >
-                    <!--begin::Navs-->
-                    <!--                                        <div class="d-flex overflow-auto h-55px">-->
-                    <!--                                            <ul class="nav nav-stretch nav-line-tabs nav-line-tabs-2x border-transparent fs-5 fw-bold flex-nowrap">-->
-                    <!--                                                &lt;!&ndash;begin::Nav item&ndash;&gt;-->
-                    <!--                                                <li class="nav-item">-->
-
-                    <!--                                                    <a class="nav-link text-active-primary pb-4 active"-->
-                    <!--                                                       data-bs-toggle="tab"-->
-                    <!--                                                       href="view.html#kt_customer_view_overview_tab">WINDOWS</a>-->
-                    <!--                                                </li>-->
-                    <!--                                                &lt;!&ndash;end::Nav item&ndash;&gt;-->
-                    <!--                                                &lt;!&ndash;begin::Nav item&ndash;&gt;-->
-                    <!--                                                <li class="nav-item">-->
-                    <!--                                                    <a class="nav-link text-active-primary pb-4" data-bs-toggle="tab"-->
-                    <!--                                                       href="view.html#kt_customer_view_overview_events_and_logs_tab">MAC-->
-                    <!--                                                        OS</a>-->
-                    <!--                                                </li>-->
-                    <!--                                                &lt;!&ndash;end::Nav item&ndash;&gt;-->
-                    <!--                                            </ul>-->
-                    <!--                                        </div>-->
-                    <!--begin::Navs-->
                     <div id="kt_billing_months" class="card-body p-0 tab-pane fade show active" role="tabpanel" aria-labelledby="kt_billing_months">
                         <table class="table table-row-bordered align-middle gy-4 gs-9">
                             <thead
@@ -78,7 +57,7 @@
                             </thead>
                             <tbody>
 
-                            <tr v-for="entry in macos" v-if="entry.type=='ios'">
+                            <tr v-for="entry in entries" v-if="entry.type=='window'">
                                 <td v-text="entry.name"></td>
                                 <td v-text="entry.version"></td>
                                 <td v-text="entry.release_note"></td>
@@ -107,7 +86,7 @@
                                             <a :href="entry.url" class="menu-link px-3">Download</a>
                                         </div>
                                         <div class="menu-item px-3">
-                                            <a v-if="entry.is_default==0" class="menu-link px-3">Set as Default</a>
+                                            <a v-if="entry.is_default==0" class="menu-link px-3" @click="showSetDefaultModal(entry.id)">Set as Default</a>
                                         </div>
                                         <div class="menu-item px-3">
                                             <a @click="remove(entry)"
@@ -138,7 +117,7 @@
                             </tr>
                             </thead>
                             <tbody>
-                            <tr v-for="entry in window" v-if="entry.type=='window'">
+                            <tr v-for="entry in entries" v-if="entry.type=='ios'">
                                 <td v-text="entry.name"></td>
                                 <td v-text="entry.version"></td>
                                 <td v-text="entry.release_note"></td>
@@ -209,7 +188,7 @@
                         </div>
                     </div>
 
-                    <div class="card card-custom card-stretch gutter-b" v-if="role=='Teacher' || role=='Administrator'">
+                    <div class="card card-custom card-stretch gutter-b" v-if="role=='Teacher'">
                         <div class="card-body d-flex flex-column" style="height: 563px">
                             <div class="" style="margin-top: 65px; margin-bottom: 50px">
                                 <h2 style="text-align: center;font-size: 30px">Tải iDIGI PC cho máy tính</h2>
@@ -290,13 +269,8 @@
                                         <error-label :errors="errors.type"></error-label>
                                     </div>
                                     <div class="form-group">
-                                        <label>Release Note <span class="required"></span></label>
-                                        <input type="text" class="form-control">
-                                        <error-label></error-label>
-                                    </div>
-                                    <div class="form-group">
                                         <label>Version <span class="required"></span></label>
-                                        <input type="text" class="form-control">
+                                        <input type="text" class="form-control" v-model="model.version">
                                         <error-label></error-label>
                                     </div>
                                     <div class="form-group">
@@ -304,6 +278,11 @@
                                         <Datepicker v-model="model.release_date"/>
                                         <error-label for="f_title" :errors="errors.release_date"></error-label>
 
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Release Note <span class="required"></span></label>
+                                        <textarea type="text" class="form-control" v-model="model.release_note"/>
+                                        <error-label></error-label>
                                     </div>
                                 </form>
 
@@ -468,8 +447,6 @@
                 const res = await $get('/xadmin/app_versions/data', query);
                 this.paginate = res.paginate;
                 this.entries = res.data;
-                this.window=res.window;
-                this.macos=res.macos;
                 setTimeout(function () {
                     KTMenu.createInstances();
                 }, 0)
