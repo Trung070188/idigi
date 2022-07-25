@@ -627,7 +627,7 @@ class UsersController extends AdminBaseController
         if ($req->email) {
             $query->where('email', 'LIKE', '%' . $req->email);
         }
-        if ($req->state) {
+        if ($req->state!='')  {
             $query->where('state', 'LIKE', '%' . $req->state);
         }
         $query->createdIn($req->created);
