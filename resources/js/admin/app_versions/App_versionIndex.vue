@@ -60,7 +60,7 @@
                             <tr v-for="entry in entries" v-if="entry.type=='window'">
                                 <td v-text="entry.name"></td>
                                 <td v-text="entry.version"></td>
-                                <td v-text="entry.release_note"></td>
+                                <td  class="css_test" v-text="entry.release_note" @click="showReleaseNote(entry.release_note)"></td>
                                 <td> {{ d2(entry.release_date) }}</td>
                                 <td style="color:#1aaf21;" class="" v-if="entry.is_default==1">Default</td>
                                 <td v-if="entry.is_default==0"></td>
@@ -120,7 +120,7 @@
                             <tr v-for="entry in entries" v-if="entry.type=='ios'">
                                 <td v-text="entry.name"></td>
                                 <td v-text="entry.version"></td>
-                                <td v-text="entry.release_note"></td>
+                                <td class="css_test"  v-text="entry.release_note" @click="showReleaseNote(entry.release_note)"></td>
                                 <td> {{ d2(entry.release_date) }}</td>
                                 <td style="color:#1aaf21;" v-if="entry.is_default==1">Default</td>
                                 <td v-if="entry.is_default==0"></td>
@@ -296,7 +296,19 @@
                 </div>
 
             </div>
-
+             <div class="modal fade" style="margin-right:50px;border:2px solid #333333  " id="deviceConfirmLimit" tabindex="-1" role="dialog"
+             aria-labelledby="deviceConfirmLimit"
+             aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered popup-main-1" role="document"
+                 style="max-width: 500px;">
+                <div class="modal-content box-shadow-main paymment-status" style="left:140px;text-align: center; padding: 27px 0px 10px;">
+                    <div class="close-popup" data-dismiss="modal"></div>
+                    <div class="content">
+                        <p  style="word-break: break-word;margin-right: 20px;margin-left: 20px;}">{{release_note}}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
 
 
         <div class="modal fade" id="setDefault" tabindex="-1">
@@ -339,6 +351,7 @@
         data() {
             const permissions = clone(window.$permissions);
             return {
+                release_note:'',
                 permissions,
                 window:[],
                 macos:[],
@@ -368,6 +381,12 @@
             $router.on('/', this.load).init();
         },
         methods: {
+            showReleaseNote(release_note)
+            {
+                const that=this;
+                that.release_note=release_note;
+                 $('#deviceConfirmLimit').modal('show');
+            },
 
             showSetDefaultModal: function (id) {
                 this.curVersion = id;
@@ -561,4 +580,10 @@
         border-radius: 0.475rem;
 
     }
+   .css_test{
+    max-width: 0px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+   }
 </style>
