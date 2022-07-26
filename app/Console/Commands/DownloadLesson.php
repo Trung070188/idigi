@@ -46,6 +46,7 @@ class DownloadLesson extends Command
     public function handle()
     {
 
+        $this->downloadLesson();
     }
 
     public function downloadLesson()
@@ -121,11 +122,12 @@ class DownloadLesson extends Command
         }
 
         $zipAll->close();
+        echo url($pathZipAll);
 
-        return [
+        /*return [
             'code' => 0,
             'url' => url($pathZipAll)
-        ];
+        ];*/
 
     }
 
