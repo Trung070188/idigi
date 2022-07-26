@@ -15,7 +15,6 @@ import SchoolIndex from "./admin/schools/SchoolIndex";
 import SchoolForm from "./admin/schools/SchoolForm";
 import ProfileForm from "./admin/users/ProfileForm";
 import User_deviceIndex from "./admin/user_devices/User_deviceIndex";
-import Approval_device from "./admin/user_devices/Approval_device";
 import Request_roleIndex from "./admin/request_role/Request_roleIndex";
 import Request_roleForm from "./admin/request_role/Request_roleForm";
 import NotificationIndex from "./admin/notifications/NotificationIndex";
@@ -39,7 +38,6 @@ export default {
     SchoolForm,
     ProfileForm,
     User_deviceIndex,
-    Approval_device,
     Request_roleIndex,
     Request_roleForm,
     TeacherCreated,

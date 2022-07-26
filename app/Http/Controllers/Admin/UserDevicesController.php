@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Models\Notification;
+use App\Models\School;
 use App\Models\User;
 use App\Notifications\InvoicePaid;
 use Firebase\JWT\JWT;
@@ -39,12 +40,13 @@ class UserDevicesController extends AdminBaseController
     public function index() {
         $title = 'UserDevices';
         $component = 'User_deviceIndex';
-        return component($component, compact('title'));
-    }
-    public function approval() {
-        $title = 'ApprovalDevices';
-        $component = 'Approval_device';
-        return component($component, compact('title'));
+        $user=Auth::user();
+        $school=$user->schools;
+        $devicesPerUser=$school->devices_per_user;
+        $jsonData = [
+            'devicesPerUser' => $devicesPerUser
+        ];
+        return view('admin.layouts.vue', compact('title', 'component', 'jsonData'));
     }
     /**
      * Create new entry
@@ -237,7 +239,7 @@ class UserDevicesController extends AdminBaseController
         {
 
         }
-      
+
         $entry->save();
         return [
             'code' => 0,
@@ -272,26 +274,6 @@ class UserDevicesController extends AdminBaseController
             'message' => 'Đã gửi yêu cầu'
         ];
     }
-    public function toggleStatus_approval(Request $req)
-    {
-        $id = $req->get('id');
-        $entry = UserDevice::find($id);
-
-        if (!$id) {
-            return [
-                'code' => 404,
-                'message' => 'Not Found'
-            ];
-        }
-
-        $entry->status = $req->status ? 2 : 1;
-        $entry->save();
-
-        return [
-            'code' => 200,
-            'message' => 'Đã gửi yêu cầu'
-        ];
-    }
 
     /**
      * Ajax data for index page
@@ -307,6 +289,10 @@ class UserDevicesController extends AdminBaseController
                if($device->user_id==$user->id)
                {
                    $role=$device->users->roles;
+                  foreach ($role as $roless)
+                  {
+                      $roleName=$roless->role_name;
+                  }
                    $data[]=[
                        'id'=>$device->id,
                        'device_uid'=>$device->device_uid,
@@ -317,7 +303,7 @@ class UserDevicesController extends AdminBaseController
                        'reason'=>$device->reason,
                        'created_at'=>$device->created_at,
                        'updated_at'=>$device->updated_at,
-                       'role'=>$role,
+                       'roleName'=>$roleName,
                    ];
                }
            }
@@ -325,40 +311,6 @@ class UserDevicesController extends AdminBaseController
             'code' => 0,
             'data'=>$data,
 
-        ];
-    }
-    public function data_approval(Request $req) {
-        $query = UserDevice::query()
-            ->orderBy('id', 'desc');
-
-        $query->createdIn($req->created);
-        $entries = $query->paginate();
-        $users=User::with(['user_devices'])->orderBy('username','ASC')->get();
-        $data=[];
-        foreach ($entries as $entry)
-        {
-            $data[]=[
-                'id'=>$entry->id,
-                'device_uid'=>$entry->device_uid,
-                'device_name'=>$entry->device_name,
-                'status'=>$entry->status,
-                'user_id'=>$entry->user_id,
-                'users'=>$users
-
-            ];
-
-        }
-
-
-        return [
-            'code' => 0,
-            'data' =>[
-                'entries'=> $data,
-            ],
-            'paginate' => [
-                'currentPage' => $entries->currentPage(),
-                'lastPage' => $entries->lastPage(),
-            ]
         ];
     }
 

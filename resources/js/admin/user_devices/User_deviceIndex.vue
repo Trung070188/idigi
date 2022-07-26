@@ -33,7 +33,7 @@
                 <div class="modal-content box-shadow-main paymment-status" style="margin-right:20px; left:140px">
                     <div class="close-popup" data-dismiss="modal"></div>
                     <h3 style="margin:20px auto;font-weight: 500;" class="popup-title success">Add more device</h3>
-                    <div class="content" style="margin: 0 20px 20px">
+                    <div class="content" style="margin: -30px 20px 20px">
                         <p>Bước 1 :Sử dụng máy tính mà bạn muốn thêm thiết bị mở ứng dụng IDIGI trên Desktop</p>
                         <p>Bước 2:Nhấn vào nút "Get device information" và copy đoạn mã thông tin thiết bị </p>
                         <p>Bước 3:Dán đoạn mã vào ô phía dưới</p>
@@ -111,114 +111,11 @@
                     <div class="close-popup" data-dismiss="modal"></div>
                     <h3 class="popup-title success" style="margin-left:25px">Can not add more devices</h3>
                     <div class="content">
-                        <p>Bạn chỉ được truy cập vào tối đa 3 thiết bị, hãy xóa bớt thiết bị cũ nếu muốn truy cập vào thiết bị mới.</p>
+                        <p>Bạn chỉ được truy cập vào tối đa {{devicesPerUser}} thiết bị, hãy xóa bớt thiết bị cũ nếu muốn truy cập vào thiết bị mới.</p>
                     </div>
                 </div>
             </div>
         </div>
-
-        <!--<div class="row">
-            <div class="col-lg-12">
-                <div class="card card-custom card-stretch gutter-b">
-                    <div class="card-body d-flex flex-column">
-                        <table class=" table  table-head-custom table-head-bg table-vertical-center">
-                            <thead>
-                            <tr>
-                                <th class="" width = "50">ID</th>
-                                <th>Device</th>
-                                <th width = "150"></th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                                <tr v-for="entry in entries">
-                                    <td class="" v-text="entry.id"></td>
-                                    <td v-text="entry.device_name"></td>
-                                    <td class="text-right">
-                                        <a href="#" @click="saveEditName(entry)">
-                                            <button type="button" class="btn btn-sm btn-icon btn-light btn-active-light-primary">
-                                                <i class="fa fa-edit"></i>
-                                            </button>
-                                        </a>
-                                        <a @click="remove(entry)" href="javascript:;">
-                                            <button type="button" class="btn btn-sm btn-icon btn-light btn-active-light-primary">
-                                                <i class="fa fa-trash mr-1 deleted"></i>
-                                            </button>
-                                        </a>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </div>-->
-
-        <!-- <div class="row">
-            <div class="col-lg-12">
-                <div class="card card-custom card-stretch gutter-b">
-                    <div class="card-body d-flex flex-column" style="height: 563px" >
-                        <div class="card-header border-0 pt-5" style="margin: -24px -30px 12px;">
-                            <div class="title">
-                                <label>User Device</label>
-                            </div>
-                            <div class="row" >
-                                <button v-if="entries.length<3 " type="button" class="col-lg-2 btn btn-primary modal-devices " @click="modalDevice()">
-                                    Add more device
-                                </button>
-                                <button  v-if="entries.length>=3" type="button" class="col-lg-2 btn btn-primary modal-devices " @click="closeModal()">
-                                    Add more device
-                                </button>
-                            </div>
-                        </div>
-                        <hr>
-                        <div>Number of devices: {{entries.length}}/3</div>
-                        <div class="">
-                            <div style="margin-top: 75px"  class="row" v-for="entry in entries" >
-                                <div class="col-lg-12 body "  >
-                                    <form  class="form-inline"  >
-                                        <div  class="form-group mx-sm-3 mb-2">
-                                            <label>{{entry.device_name}}
-                                                <i  type="button" class="bi bi-pencil-square" style="margin:0px 15px 0px;color:#333333" @click="saveEditName(entry)"></i>
-                                            </label>
-
-                                        </div>
-                                    </form>
-
-                                    <div  class="form-group mx-sm-3 mb-2" style="position: absolute;right:24px;margin-top: -33px;" v-if="entry.status==1">
-
-                                        <button type="button"
-                                                class="btn btn-flex btn-dark  fw-bolder " v-for="role in entry.role"  v-if="role.id!==5"  @click="remove(entry)">Delete device
-                                        </button>
-                                        <span v-for="role in entry.role" v-if="role.id==5"
-                                              style="color: #f1c40f;margin-right: 5px" ><i class="fas fa-exclamation-circle" style="color: #f1c40f"></i> Delete request sent
-                                       </span>
-                                        <button  type="button"
-                                                 class="btn btn-primary " style="margin-right: 5px" @click="editModalDevice(entry.id,entry.device_name,entry.secret_key)" >
-                                            Get confirmation code
-                                        </button>
-
-                                    </div>
-                                    <div  class="form-group mx-sm-3 mb-2" style="position: absolute;right:30px;margin-top: -33px;" v-if="entry.status!==1">
-                                        <button  type="button"
-                                                 class="btn btn-primary" style="margin-right: 5px" @click="editModalDevice(entry.id,entry.device_name,entry.secret_key)" >
-                                            Get confirmation code
-                                        </button>
-
-                                        <button type="button"
-                                                class="btn btn-flex btn-danger  fw-bolder " v-for="role in entry.role"  v-if="role.id!==5"  @click="remove(entry)">Delete device
-                                        </button>
-                                        <button v-for="role in entry.role" v-if="role.id==5" type="button"
-                                                class="btn btn-flex btn-danger  fw-bolder " @click="Sent(entry)">Delete device
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div> -->
           <div class="row">
             <div class="col-lg-12">
                 <div class="card card-custom card-stretch gutter-b">
@@ -311,8 +208,8 @@
                                 data-kt-customer-table-toolbar="base"
 
                             >
-                                <button  v-if="entries.length<3 && permissions['019'] " type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#kt_modal_add_customer" @click="modalDevice()">Add More Device</button>
-                                <button  v-if="entries.length>=3" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#kt_modal_add_customer" @click="closeModal()">Add More Device</button>
+                                <button  v-if="entries.length<devicesPerUser && permissions['019'] " type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#kt_modal_add_customer" @click="modalDevice()">Add More Device</button>
+                                <button  v-if="entries.length>=devicesPerUser" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#kt_modal_add_customer" @click="closeModal()">Add More Device</button>
 
                                     </div>
 
@@ -326,8 +223,7 @@
                                 <div class="d-flex align-items-center flex-wrap">
 
 
-
-                                    <div  v-if="entries.length > 0">Number of devices: {{entries.length}}/3</div>
+                                    <div  v-if="entries.length > 0">Number of devices: {{entries.length}}/{{devicesPerUser}}</div>
 
 
 
@@ -376,13 +272,13 @@
 
                                         <!--end::Menu item-->
                                         <!--begin::Menu item-->
-                                        <div class="menu-item px-3"  v-for="role in entry.role">
-                                            <a class="menu-link text-danger px-3" v-if="role.id!==5" @click="remove(entry)" data-kt-subscriptions-table-filter="delete_row">Remove</a>
-                                            <a class="menu-link text-danger px-3" v-if="role.id==5 && entry.status==2 " @click="Sent(entry)" data-kt-subscriptions-table-filter="delete_row" >Remove</a>
+                                        <div class="menu-item px-3" >
+                                            <a class="menu-link text-danger px-3" v-if="entry.roleName!='Teacher'" @click="remove(entry)" data-kt-subscriptions-table-filter="delete_row">Remove</a>
+                                            <a class="menu-link text-danger px-3" v-if="entry.roleName=='Teacher' && entry.status==2 " @click="Sent(entry)" data-kt-subscriptions-table-filter="delete_row" >Remove</a>
 
                                         </div>
-                                        <div class="menu-item px-3"  v-for="role in entry.role">
-                                            <a v-if="role.id==5 && entry.status==1"  data-kt-subscriptions-table-filter="delete_row" class="menu-link text-danger px-3" >Remove</a>
+                                        <div class="menu-item px-3"  >
+                                            <a v-if="entry.roleName=='Teacher' && entry.status==1"  data-kt-subscriptions-table-filter="delete_row" class="menu-link text-danger px-3" >Remove</a>
                                         </div>
                                         <!--end::Menu item-->
                                     </div>
@@ -444,6 +340,7 @@
                 to: 0,
                 entry: $json.entry || {
                 },
+                devicesPerUser:$json.devicesPerUser || {},
                 isLoading: false,
                 errors:{},
             }
