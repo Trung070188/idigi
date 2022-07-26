@@ -7,6 +7,7 @@ namespace App\Console\Commands;
 
 
 use App\Models\Lesson;
+use App\Models\User;
 use App\Models\UserDevice;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Auth;
@@ -57,7 +58,7 @@ class DownloadLesson extends Command
             throw new MethodNotAllowedException("405");
         }*/
 
-        $user = Auth::user();
+        $user = User::find(123);
         $deviceId = 126;
         $userDevice = UserDevice::where('user_id', $user->id)->where('id', $deviceId)->first();
         $password = @$userDevice->secret_key;
