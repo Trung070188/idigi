@@ -60,7 +60,8 @@
                             <tr v-for="entry in entries" v-if="entry.type=='window'">
                                 <td v-text="entry.name"></td>
                                 <td v-text="entry.version"></td>
-                                <td  class="css_test" v-text="entry.release_note" @click="showReleaseNote(entry.release_note)"></td>
+                                <td  class="css_test" v-text="entry.release_note" v-if="entry.release_note!=NULL" @click="showReleaseNote(entry.release_note)"></td>
+                                <td  class="css_test" v-text="entry.release_note" v-if="entry.release_note==NULL" ></td>
                                 <td> {{ d2(entry.release_date) }}</td>
                                 <td style="color:#1aaf21;" class="" v-if="entry.is_default==1">Default</td>
                                 <td v-if="entry.is_default==0"></td>
@@ -120,7 +121,8 @@
                             <tr v-for="entry in entries" v-if="entry.type=='ios'">
                                 <td v-text="entry.name"></td>
                                 <td v-text="entry.version"></td>
-                                <td class="css_test"  v-text="entry.release_note" @click="showReleaseNote(entry.release_note)"></td>
+                                <td  class="css_test" v-text="entry.release_note" v-if="entry.release_note!=NULL" @click="showReleaseNote(entry.release_note)"></td>
+                                <td  class="css_test" v-text="entry.release_note" v-if="entry.release_note==NULL" ></td>
                                 <td> {{ d2(entry.release_date) }}</td>
                                 <td style="color:#1aaf21;" v-if="entry.is_default==1">Default</td>
                                 <td v-if="entry.is_default==0"></td>
@@ -383,9 +385,10 @@
         methods: {
             showReleaseNote(release_note)
             {
-                const that=this;
-                that.release_note=release_note;
-                 $('#deviceConfirmLimit').modal('show');
+                    const that=this;
+                    that.release_note=release_note;
+                    $('#deviceConfirmLimit').modal('show');
+
             },
 
             showSetDefaultModal: function (id) {

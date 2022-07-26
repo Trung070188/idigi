@@ -78,31 +78,27 @@
                         <table class=" table  table-head-custom table-head-bg table-vertical-center">
                             <thead>
                             <tr>
-                                <th>#</th>
                                 <th>Device name</th>
                                 <th>Device detail</th>
                                 <th>Registed date</th>
                                 <th></th>
-                                <th></th>
+
 
                             </tr>
                             </thead>
                             <tbody>
                             <tr v-for="device in user_device" v-if="device.user_id===entry.id && device.status===2  ">
-                                <td v-text="device.id"></td>
                                 <td v-text="device.device_name"></td>
-                                <td v-text="device.device_uid"></td>
+                                <td v-text="device.device_name"></td>
                                 <td v-text="d(device.created_at)"></td>
-                                <td></td>
                                 <td>
                                     <a @click="modalDevice(device.id)" href="javascript:;" class="btn-trash deleted"><i
                                         class="fa fa-trash mr-1 deleted"></i></a>
                                 </td>
                             </tr>
                             <tr v-for="device in user_device" v-if=" device.user_id===entry.id && device.status===1 ">
-                                <td v-text="device.id"></td>
                                 <td v-text="device.device_name"></td>
-                                <td v-text="device.device_uid" style="word-break: break-word;"></td>
+                                <td v-text="device.device_name" ></td>
                                 <td v-text="d(device.created_at)"></td>
                                 <td style="color: #f1c40f">Deleting request</td>
                                 <td>
