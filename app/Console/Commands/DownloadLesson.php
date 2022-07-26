@@ -19,7 +19,7 @@ class DownloadLesson extends Command
      *
      * @var string
      */
-    protected $signature = 'download lesson';
+    protected $signature = 'download-lesson';
 
     /**
      * The console command description.
