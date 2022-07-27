@@ -164,7 +164,7 @@ class UserDevicesController extends AdminBaseController
         }
 
     }
-    public function save_name(Request $req) {
+    public function saveName(Request $req) {
 
         if (!$req->isMethod('POST')) {
             return ['code' => 405, 'message' => 'Method not allow'];

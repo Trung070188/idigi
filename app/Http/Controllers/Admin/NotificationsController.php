@@ -91,21 +91,6 @@ class NotificationsController extends AdminBaseController
         return component($component, compact('title', 'entry'));
     }
 
-    public function abc(Request $req)
-    {
-        $entry = Notification::all();
-
-        /**
-         * @var  Notification $entry
-         */
-
-        $title = 'Edit';
-        $component = 'TopNotification';
-
-
-        return component($component, compact('title', 'entry'));
-    }
-
     /**
      * @uri  /xadmin/notifications/remove
      * @return  array

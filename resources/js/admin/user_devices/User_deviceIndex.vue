@@ -438,7 +438,7 @@
             },
             async save_name() {
                 this.isLoading = true;
-                const res = await $post('/xadmin/user_devices/save_name', {
+                const res = await $post('/xadmin/user_devices/saveName', {
                     entry: this.Edit_name,
                 }, false);
                 this.isLoading = false;
