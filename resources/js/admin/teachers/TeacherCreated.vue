@@ -45,7 +45,7 @@
                                 </div>
                             </div>
                         </div>
-                        <hr>
+                        <hr style="margin-top: 5px;">
                         <div>
                             <button type="reset" @click="save()" class="btn btn-primary mr-2">Create new teacher</button>
                             <button type="reset" @click="backIndex()" class="btn btn-secondary">Cancel</button>

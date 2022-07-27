@@ -184,7 +184,7 @@ class UsersController extends AdminBaseController
                 ];
                 return view('admin.layouts.vue', compact('title', 'component', 'jsonData'));
             }
-    public function name_sideBar(Request $req)
+    public function nameSideBar(Request $req)
     {
         $users=User::with(['roles'])->orderBy('username')->get();
         $data=[];
@@ -209,7 +209,7 @@ class UsersController extends AdminBaseController
 //
     }
 
-    public function edit_teacher(Request $req)
+    public function editTeacher(Request $req)
     {
         $id = $req->id;
         $entry = User::query()->with('schools','user_devices')
@@ -253,7 +253,7 @@ class UsersController extends AdminBaseController
         ];
     }
 
-    public function remove_device(Request $req)
+    public function removeDevice(Request $req)
     {
         $id = $req->id;
         $entry = UserDevice::find($id);
@@ -319,7 +319,7 @@ class UsersController extends AdminBaseController
         }
 
     }
-    public function save_profile(Request $req)
+    public function saveProfile(Request $req)
     {
         if (!$req->isMethod('POST')) {
             return ['code' => 405, 'message' => 'Method not allow'];
@@ -498,7 +498,6 @@ class UsersController extends AdminBaseController
             ];
         }
     }
-
     /**
      * @param Request $req
      */
@@ -604,7 +603,7 @@ class UsersController extends AdminBaseController
         ];
     }
 
-    public function data_teacher(Request $req)
+    public function dataTeacher(Request $req)
     {
         $query = User::query()
             ->with(['roles', 'user_devices'])

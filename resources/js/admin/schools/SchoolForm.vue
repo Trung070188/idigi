@@ -11,7 +11,7 @@
                              <div
                                  class="d-flex justify-content-end"
                                  data-kt-customer-table-toolbar="base">
-                                 <a :href="'/xadmin/schools/teacher_list?id='+entry.id">
+                                 <a :href="'/xadmin/schools/teacherList?id='+entry.id">
                                      <button style="margin: 0px 8px 25px;"  v-if="title=='Edit school'" class="btn btn-primary button-create " >
                                          Teacher list <i class="fa fa-users"></i>
                                      </button>

@@ -129,7 +129,7 @@ class UserDevicesController extends AdminBaseController
                     $data_device->content=$entry->device_name;
                     $data_device->channel='inapp';
                     $data_device->user_id=$entry->user_id;
-                    $data_device->url=url("xadmin/users/edit_teacher?id={$entry->user_id}");
+                    $data_device->url=url("xadmin/users/editTeacher?id={$entry->user_id}");
                     $data_device->title='Yêu cầu xóa thiết bị';
             $data_device->save();
             $entry->save();

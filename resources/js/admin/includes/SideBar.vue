@@ -11,7 +11,7 @@
             <!--begin::Logo-->
             <a href="/">
                 <img alt="Logo" src="/images/Logo_iDIGI.png" class="h-40px logo">
-            </a>    
+            </a>
             <!--end::Logo-->
             <!--begin::Aside toggler-->
             <div id="kt_aside_toggle" class="btn btn-icon w-auto px-0 btn-active-color-primary aside-toggle" data-kt-toggle="true" data-kt-toggle-state="active" data-kt-toggle-target="body" data-kt-toggle-name="aside-minimize">
@@ -25,7 +25,7 @@
                 <!--end::Svg Icon-->
             </div>
             <!--end::Aside toggler-->
-        </div>    
+        </div>
 
         <div class="aside-menu flex-column-fluid">
             <div class="hover-scroll-overlay-y my-5 my-lg-5" id="kt_aside_menu_wrapper" data-kt-scroll="true"
@@ -137,7 +137,7 @@
             },
             async load() {
                 let query = $router.getQuery();
-                const res = await $get('/xadmin/users/name_sideBar', query);
+                const res = await $get('/xadmin/users/nameSideBar', query);
                 this.entries = res.username;
                 this.role = res.role;
                 this.image = res.image;

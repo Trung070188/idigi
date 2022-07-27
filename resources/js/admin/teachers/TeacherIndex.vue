@@ -203,7 +203,7 @@
                                     <a v-if="permissions['015']" @click="remove(entry)" href="javascript:;" class="btn-trash deleted"><i
                                         class="fa fa-trash mr-1 deleted"></i></a>-->
 
-                                    <a v-if="permissions['014']" :href="'/xadmin/users/edit_teacher?id='+entry.id">
+                                    <a v-if="permissions['014']" :href="'/xadmin/users/editTeacher?id='+entry.id">
                                         <button type="button" class="btn btn-sm btn-icon btn-light btn-active-light-primary">
                                             <i class="fa fa-edit"></i>
                                         </button>
@@ -315,7 +315,7 @@
             async load() {
                 let query = $router.getQuery();
                 this.$loading(true);
-                const res = await $get('/xadmin/users/data_teacher', query);
+                const res = await $get('/xadmin/users/dataTeacher', query);
                 this.$loading(false);
                 this.entries = res.data;
                 this.paginate = res.paginate;

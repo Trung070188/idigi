@@ -49,7 +49,7 @@ class SchoolsController extends AdminBaseController
         $title = 'Create schools';
         return component($component, compact('title'));
     }
-    public function data_teacher(Request $req)
+    public function dataTeacher(Request $req)
     {
         $id = $req->id;
         $entry = School::find($id);
@@ -96,7 +96,7 @@ class SchoolsController extends AdminBaseController
             ]
         ];
     }
-    public function teacher_list(Request $req)
+    public function teacherList(Request $req)
     {
         $title = 'TeacherList';
         $component = 'TeacherList';

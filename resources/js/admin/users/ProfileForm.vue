@@ -97,7 +97,7 @@
                                 <div class="d-flex my-4">
                                     <a href="#" class="btn btn-sm btn-primary me-3" @click="chooseFile()">Change Avatar</a>
                                     <a href="#" class="btn btn-sm btn-primary me-3" @click="modalDevice()">Set Password</a>
-                                </div>                                
+                                </div>
 
                             </div>
                             <div class="d-flex flex-wrap flex-stack">
@@ -178,10 +178,10 @@
                         <div class="card-footer d-flex justify-content-end py-6 px-9">
                             <button type="button" class="btn btn-primary" @click="save_profile()" :disabled="!changed">Save Changes</button>
                         </div>
-                    
+
                     </form>
                 </div>
-            </div>            
+            </div>
 
             <!--<div class="row">
                 <div class="col-lg-12">
@@ -239,7 +239,7 @@
                                             </p>
                                             <div  class="data-row col-sm-6 " >
                                                 <label   >Role </label>
-                                                <input  class="form-control" disabled  v-model="role" />       
+                                                <input  class="form-control" disabled  v-model="role" />
                                           </div>
                                             <div class="data-row col-sm-6 " >
                                                 <button type="reset" @click="save_profile()" :disabled="!changed" class="btn btn-primary mr-2" style="margin:14px 0px 0px">Save</button>
@@ -315,7 +315,7 @@
             },
             async save_profile() {
                 this.isLoading = true;
-                const res = await $post('/xadmin/users/save_profile', {entry: this.entry,role:this.role}, false);
+                const res = await $post('/xadmin/users/saveProfile', {entry: this.entry,role:this.role}, false);
                 this.isLoading = false;
                 if (res.errors) {
                     this.errors = res.errors;
@@ -349,16 +349,16 @@
             },
             chooseFile() {
                 this.$refs.uploader.click();
-            },        
+            },
             fileMap(file) {
                 return {
                     id: file.id,
                     uri: file.url
                 };
-            },            
+            },
             async fileChanged() {
                 const files = this.$refs.uploader.files;
-                
+
                 if (files.length > 0) {
                     const res = await $upload('/xadmin/files/upload', files);
                     if (res.code !== 200) {
@@ -373,7 +373,7 @@
 
                 }
 
-            },                
+            },
         }
     }
 </script>

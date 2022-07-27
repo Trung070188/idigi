@@ -188,7 +188,7 @@
             },
             async remove_device(entry) {
 
-                const res = await $post('/xadmin/users/remove_device', {id: entry.id});
+                const res = await $post('/xadmin/users/removeDevice', {id: entry.id});
 
                 if (res.code) {
                     toastr.error(res.message);
@@ -215,7 +215,7 @@
                     this.errors = {};
                     toastr.success(res.message);
                     if (!this.entry.id) {
-                        location.replace('/xadmin/users/edit_teacher?id=' + res.id);
+                        location.replace('/xadmin/users/editTeacher?id=' + res.id);
                     }
                 }
             },
