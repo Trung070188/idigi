@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\Admin;
 
 
+use App\Models\DownloadAppLog;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -227,6 +229,25 @@ class AppVersionsController extends AdminBaseController
             ]
         ];
     }
+    public function downloadApp(Request $req)
+    {
+        $appVersion=AppVersion::where('is_default','=',1)->first();
+        $appId=$appVersion->id;
+        $user=Auth::user();
+        $downloadAppLog=new DownloadAppLog();
+        $downloadAppLog->user_id=$user->id;
+        $downloadAppLog->user_agent=$req->userAgent();
+        $downloadAppLog->ip_address=$req->getClientIp();
+        $downloadAppLog->app_id=$appId;
+        $downloadAppLog->download_at=Carbon::now();
+        $downloadAppLog->save();
+
+
+        return[
+            'code'=>0,
+            'url'=>$appVersion->url
+        ];
+        }
 
     public function setDefaultVersion(Request  $req){
         if (!$req->isMethod('POST')) {
@@ -256,24 +277,7 @@ class AppVersionsController extends AdminBaseController
             'id' => $entry->id
         ];
     }
-    public function removeAll(Request $req)
-    {
-        $ids = $req->ids;
-        AppVersion::whereIn('id', $ids)->where('type','=','ios')->delete();
-        return [
-            'code' => 0,
-            'message' => 'Đã xóa'
-        ];
-    }
-    public function windowRemoveAll(Request $req)
-    {
-        $ids = $req->ids;
-        AppVersion::whereIn('id', $ids)->where('type','=','window')->delete();
-        return [
-            'code' => 0,
-            'message' => 'Đã xóa'
-        ];
-    }
+
 
 
 }

@@ -47,7 +47,9 @@ Route::middleware(['auth' ])->namespace('Admin')->prefix('xadmin')->group(functi
 
 });
 
-
+Route::middleware(['auth'])->namespace('Teacher')->prefix('xadmin')->group(function (){
+    Route::get('/app_versions/downloadApp','AppVersionsController@downloadApp');
+});
 
 Route::group(['prefix' => 'xadmin'], function(){
     Route::get('login','Auth\LoginController@showLoginForm')->name('login');
