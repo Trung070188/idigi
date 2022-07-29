@@ -21,6 +21,8 @@ import NotificationIndex from "./admin/notifications/NotificationIndex";
 import App_versionIndex from "./admin/app_versions/App_versionIndex";
 import UserEdit from "./admin/users/UserEdit";
 import TeacherList from "./admin/schools/TeacherList";
+import KeyCollection from "./admin/user_devices/KeyCollection";
+import KeyCollectionForm from "./admin/user_devices/KeyCollectionForm";
 
 export default {
     DashboardIndex,
@@ -46,4 +48,6 @@ export default {
     NotificationIndex,
     App_versionIndex,
     TeacherList,
+    KeyCollection,
+    KeyCollectionForm
 }

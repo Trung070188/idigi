@@ -15,6 +15,7 @@ class UserDevice extends BaseModel
         'status',
         'secret_key',
         'reason',
+        'key_collection_id',
         'created_at',
         'updated_at'
     ];

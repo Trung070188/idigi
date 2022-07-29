@@ -48,6 +48,24 @@ class UserDevicesController extends AdminBaseController
         ];
         return view('admin.layouts.vue', compact('title', 'component', 'jsonData'));
     }
+
+    public function keyCollection(Request $req)
+    {
+        $title='keyCollection';
+        $component='KeyCollection';
+        $jsonData = [
+        ];
+        return view('admin.layouts.vue', compact('title', 'component', 'jsonData'));
+
+    }
+    public function createKeyCollection(Request $req)
+    {
+        $component='KeyCollectionForm';
+        $jsonData = [
+        ];
+        return view('admin.layouts.vue', compact('component', 'jsonData'));
+
+    }
     /**
      * Create new entry
      * @uri  /xadmin/user_devices/create
