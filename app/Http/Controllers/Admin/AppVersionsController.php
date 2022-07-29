@@ -234,11 +234,16 @@ class AppVersionsController extends AdminBaseController
         $appVersion=AppVersion::where('is_default','=',1)->first();
         $appId=$appVersion->id;
         $user=Auth::user();
+        foreach ($user->user_devices as $device)
+        {
+            $device_uid=$device->device_uid;
+        }
         $downloadAppLog=new DownloadAppLog();
         $downloadAppLog->user_id=$user->id;
         $downloadAppLog->user_agent=$req->userAgent();
         $downloadAppLog->ip_address=$req->getClientIp();
         $downloadAppLog->app_id=$appId;
+        $downloadAppLog->device_uid=$device_uid;
         $downloadAppLog->download_at=Carbon::now();
         $downloadAppLog->save();
 
