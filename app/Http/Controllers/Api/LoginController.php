@@ -81,6 +81,7 @@ class LoginController extends Controller
                     'device_uid' => $deviceID,
                     'device_name' => $deviceName,
                     'expired' => strtotime(Carbon::now()->addHours(10)),
+                    'create_time' =>  Carbon::now()->timestamp,
                     'secret_key' => $secret
                 ];
                 $jwt = JWT::encode($payload, env('SECRET_KEY'), 'HS256');

@@ -401,6 +401,7 @@ class UserDevicesController extends AdminBaseController
                 'device_uid' =>$device->device_uid,
                 'device_name' =>$device->device_name,
                 'secret_key' =>$device->secret_key,
+                'create_time' =>  Carbon::now()->timestamp,
                 'expired' => strtotime(Carbon::now()->addHours(10))
             ];
             $jwt = JWT::encode($payload, env('SECRET_KEY'), 'HS256');

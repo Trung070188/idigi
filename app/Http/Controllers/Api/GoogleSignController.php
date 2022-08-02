@@ -96,7 +96,8 @@ class GoogleSignController
                     'device_uid' => $deviceID,
                     'device_name' => $deviceName,
                     'expired' => strtotime(Carbon::now()->addHours(10)),
-                    'secret_key' => $secret
+                    'secret_key' => $secret,
+                    'create_time' =>  Carbon::now()->timestamp
                 ];
 
                 $jwt = JWT::encode($payload, env('SECRET_KEY'), 'HS256');
