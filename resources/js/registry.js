@@ -23,9 +23,9 @@ import UserEdit from "./admin/users/UserEdit";
 import TeacherList from "./admin/schools/TeacherList";
 import KeyCollection from "./admin/user_devices/KeyCollection";
 import KeyCollectionForm from "./admin/user_devices/KeyCollectionForm";
-import AllocationIndex from "./admin/allocations/AllocationIndex.vue";
-import AllocationForm from "./admin/allocations/AllocationForm.vue";
-
+import Allocation_contentIndex from "./admin/allocation_contents/Allocation_contentIndex.vue";
+import Allocation_contentForm from "./admin/allocation_contents/Allocation_contentForm.vue";
+import Allocation_contentEdit from "./admin/allocation_contents/Allocation_contentEdit.vue";
 export default {
     DashboardIndex,
     UserIndex,
@@ -52,6 +52,8 @@ export default {
     TeacherList,
     KeyCollection,
     KeyCollectionForm,
-    AllocationIndex,
-    AllocationForm
+    Allocation_contentIndex,
+    Allocation_contentForm,
+    Allocation_contentEdit
+
 }

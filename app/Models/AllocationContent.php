@@ -5,14 +5,14 @@ namespace App\Models;
  /**
  * @property int       $id
  * @property string    $title
- * @property int       $total_school
- * @property int       $total_course
- * @property int       $total_unit
+ * @property string    $total_school
+ * @property string    $total_course
+ * @property string    $total_unit
  * @property int       $status
  * @property \DateTime $created_at
  * @property \DateTime $updated_at
  */
-class Allocation extends BaseModel
+class AllocationContent extends BaseModel
 {
     protected $table = 'allocation_contents';
     protected $fillable = [
@@ -22,4 +22,20 @@ class Allocation extends BaseModel
     'total_unit',
     'status',
 ];
+public function schools()
+{
+    return $this->belongsToMany(School::class, 'allocation_content_schools');
+}
+public function courses()
+{
+    return $this->belongsToMany(Course::class,'allocation_content_courses');
+}
+public function units()
+{
+    return $this->belongsToMany(Unit::class,'allocation_content_units');
+}
+public function coursess()
+{
+    return $this->belongsToMany(Course::class,'allocation_content_units');
+}
 }

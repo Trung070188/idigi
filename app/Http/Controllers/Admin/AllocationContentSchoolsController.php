@@ -7,77 +7,77 @@ use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
-use App\Models\Allocation;
+use App\Models\AllocationContentSchool;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
 
-class AllocationsController extends AdminBaseController
+class AllocationContentSchoolsController extends AdminBaseController
 {
     public static $menus = [
         [
-            'name' => 'Allocation',
+            'name' => 'AllocationContentSchool',
             'icon' => 'fa fa-shopping-cart',
-            'url' => '/xadmin/allocations/index',
+            'url' => '/xadmin/allocation_content_schools/index',
         ]
     ];
 
     /**
     * Index page
-    * @uri  /xadmin/allocations/index
+    * @uri  /xadmin/allocation_content_schools/index
     * @throw  NotFoundHttpException
     * @return  View
     */
     public function index() {
-        $title = 'Allocation';
-        $component = 'AllocationIndex';
+        $title = 'AllocationContentSchool';
+        $component = 'Allocation_content_schoolIndex';
         return component($component, compact('title'));
     }
 
     /**
     * Create new entry
-    * @uri  /xadmin/allocations/create
+    * @uri  /xadmin/allocation_content_schools/create
     * @throw  NotFoundHttpException
     * @return  View
     */
     public function create (Request $req) {
-        $component = 'AllocationForm';
-        $title = 'Create allocations';
+        $component = 'Allocation_content_schoolForm';
+        $title = 'Create allocation_content_schools';
         return component($component, compact('title'));
     }
 
     /**
-    * @uri  /xadmin/allocations/edit?id=$id
+    * @uri  /xadmin/allocation_content_schools/edit?id=$id
     * @throw  NotFoundHttpException
     * @return  View
     */
     public function edit (Request $req) {
         $id = $req->id;
-        $entry = Allocation::find($id);
+        $entry = AllocationContentSchool::find($id);
 
         if (!$entry) {
             throw new NotFoundHttpException();
         }
 
         /**
-        * @var  Allocation $entry
+        * @var  AllocationContentSchool $entry
         */
 
         $title = 'Edit';
-        $component = 'AllocationForm';
+        $component = 'Allocation_content_schoolForm';
 
 
         return component($component, compact('title', 'entry'));
     }
 
     /**
-    * @uri  /xadmin/allocations/remove
+    * @uri  /xadmin/allocation_content_schools/remove
     * @return  array
     */
     public function remove(Request $req) {
         $id = $req->id;
-        $entry = Allocation::find($id);
+        $entry = AllocationContentSchool::find($id);
 
         if (!$entry) {
             throw new NotFoundHttpException();
@@ -92,7 +92,7 @@ class AllocationsController extends AdminBaseController
     }
 
     /**
-    * @uri  /xadmin/allocations/save
+    * @uri  /xadmin/allocation_content_schools/save
     * @return  array
     */
     public function save(Request $req) {
@@ -103,11 +103,8 @@ class AllocationsController extends AdminBaseController
         $data = $req->get('entry');
 
         $rules = [
-    'title' => 'max:191',
-    'total_school' => 'numeric',
-    'total_course' => 'numeric',
-    'total_unit' => 'numeric',
-    'status' => 'numeric',
+    'allocation_content_id' => 'numeric',
+    'school_id' => 'numeric',
 ];
 
         $v = Validator::make($data, $rules);
@@ -120,10 +117,10 @@ class AllocationsController extends AdminBaseController
         }
 
         /**
-        * @var  Allocation $entry
+        * @var  AllocationContentSchool $entry
         */
         if (isset($data['id'])) {
-            $entry = Allocation::find($data['id']);
+            $entry = AllocationContentSchool::find($data['id']);
             if (!$entry) {
                 return [
                     'code' => 3,
@@ -140,7 +137,7 @@ class AllocationsController extends AdminBaseController
                 'id' => $entry->id
             ];
         } else {
-            $entry = new Allocation();
+            $entry = new AllocationContentSchool();
             $entry->fill($data);
             $entry->save();
 
@@ -158,7 +155,7 @@ class AllocationsController extends AdminBaseController
     public function toggleStatus(Request $req)
     {
         $id = $req->get('id');
-        $entry = Allocation::find($id);
+        $entry = AllocationContentSchool::find($id);
 
         if (!$id) {
             return [
@@ -178,11 +175,11 @@ class AllocationsController extends AdminBaseController
 
     /**
     * Ajax data for index page
-    * @uri  /xadmin/allocations/data
+    * @uri  /xadmin/allocation_content_schools/data
     * @return  array
     */
     public function data(Request $req) {
-        $query = Allocation::query()->orderBy('id', 'desc');
+        $query = AllocationContentSchool::query()->orderBy('id', 'desc');
 
         if ($req->keyword) {
             //$query->where('title', 'LIKE', '%' . $req->keyword. '%');
@@ -205,14 +202,11 @@ class AllocationsController extends AdminBaseController
 
     public function export() {
                 $keys = [
-                            'title' => ['A', 'title'],
-                            'total_school' => ['B', 'total_school'],
-                            'total_course' => ['C', 'total_course'],
-                            'total_unit' => ['D', 'total_unit'],
-                            'status' => ['E', 'status'],
+                            'allocation_content_id' => ['A', 'allocation_content_id'],
+                            'school_id' => ['B', 'school_id'],
                             ];
 
-        $query = Allocation::query()->orderBy('id', 'desc');
+        $query = AllocationContentSchool::query()->orderBy('id', 'desc');
 
         $entries = $query->paginate();
         $spreadsheet = new Spreadsheet();

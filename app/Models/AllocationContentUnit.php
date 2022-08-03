@@ -11,9 +11,10 @@ namespace App\Models;
 class AllocationContentUnit extends BaseModel
 {
     protected $table = 'allocation_content_units';
+    public $timestamps = false;
     protected $fillable = [
     'allocation_content_id',
     'course_id',
-    'course_component_id',
+    'unit_id',
 ];
 }

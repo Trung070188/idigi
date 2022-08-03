@@ -57,7 +57,7 @@
                                 data-kt-customer-table-toolbar="base"
 
                             >
-                                <a :href="'/xadmin/allocations/create'">
+                                <a :href="'/xadmin/allocation_contents/create'">
                                     <button   type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#kt_modal_add_customer" >Create New Allocation</button>
 
                                 </a>
@@ -85,8 +85,8 @@
                             </tr>
                             </thead>
                             <tbody >
-                            <tr >
-                                <td></td>
+                            <tr v-for="entry in entries">
+                                <td v-text="entry.title"></td>
                                 <td></td>
                                 <td></td>
                                 <td></td>
@@ -94,10 +94,10 @@
                                     <a href="list.html#" class="btn btn-light btn-active-light-primary btn-sm" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">Actions
                                         <!--begin::Svg Icon | path: icons/duotune/arrows/arr072.svg-->
                                         <span class="svg-icon svg-icon-5 m-0">
-															<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-																<path d="M11.4343 12.7344L7.25 8.55005C6.83579 8.13583 6.16421 8.13584 5.75 8.55005C5.33579 8.96426 5.33579 9.63583 5.75 10.05L11.2929 15.5929C11.6834 15.9835 12.3166 15.9835 12.7071 15.5929L18.25 10.05C18.6642 9.63584 18.6642 8.96426 18.25 8.55005C17.8358 8.13584 17.1642 8.13584 16.75 8.55005L12.5657 12.7344C12.2533 13.0468 11.7467 13.0468 11.4343 12.7344Z" fill="black" />
-															</svg>
-														</span>
+                                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                                                <path d="M11.4343 12.7344L7.25 8.55005C6.83579 8.13583 6.16421 8.13584 5.75 8.55005C5.33579 8.96426 5.33579 9.63583 5.75 10.05L11.2929 15.5929C11.6834 15.9835 12.3166 15.9835 12.7071 15.5929L18.25 10.05C18.6642 9.63584 18.6642 8.96426 18.25 8.55005C17.8358 8.13584 17.1642 8.13584 16.75 8.55005L12.5657 12.7344C12.2533 13.0468 11.7467 13.0468 11.4343 12.7344Z" fill="black" />
+                                                            </svg>
+                                                        </span>
                                         <!--end::Svg Icon--></a>
                                     <!--begin::Menu-->
                                     <div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-bold fs-7 w-125px py-4" data-kt-menu="true">
@@ -106,7 +106,7 @@
                                             <a  class="menu-link px-3">Rename</a>
                                         </div>
                                         <div class="menu-item px-3">
-                                            <a class="menu-link px-3">Get confirmation code</a>
+                                            <a :href="'/xadmin/allocation_contents/edit?id='+entry.id" class="menu-link px-3">Edit</a>
                                         </div>
 
                                     </div>
@@ -135,7 +135,7 @@
     const $q = $router.getQuery();
 
     export default {
-        name: "AllocationsIndex.vue",
+        name: "Allocation_contentIndex.vue",
         components: {ActionBar},
         data() {
             return {
@@ -155,8 +155,21 @@
             }
         },
         mounted() {
+        $router.on('/', this.load).init();
+
         },
         methods: {
+             async load() {
+                let query = $router.getQuery();
+                const res  = await $get('/xadmin/allocation_contents/data', query);
+                this.paginate = res.paginate;
+                this.entries = res.data;
+                 setTimeout(function (){
+                    KTMenu.createInstances();
+                }, 0)
+                this.from = (this.paginate.currentPage-1)*(this.limit) + 1;
+                this.to = (this.paginate.currentPage-1)*(this.limit) + this.entries.length;
+            },
            
           
             async remove(entry) {
@@ -164,7 +177,7 @@
                     return;
                 }
 
-                const res = await $post('/xadmin/allocations/remove', {id: entry.id});
+                const res = await $post('/xadmin/allocation_contents/remove', {id: entry.id});
 
                 if (res.code) {
                     toastr.error(res.message);
@@ -196,3 +209,4 @@
 <style scoped>
 
 </style>
+

@@ -67,13 +67,28 @@
         'name' => 'request_roles',
     ],
     [
-        'path' => '/allocations/{action}',
-        'action' => 'AllocationsController',
-        'name' => 'allocations',
+        'path' => '/allocation_contents/{action}',
+        'action' => 'AllocationContentsController',
+        'name' => 'allocation_contents',
     ],
     [
-        'path' => '/courses/{action}',
-        'action' => 'CoursesController',
-        'name' => 'courses',
+        'path' => '/allocation_content_courses/{action}',
+        'action' => 'AllocationContentCoursesController',
+        'name' => 'allocation_content_courses',
+    ],
+    [
+        'path' => '/allocation_content_schools/{action}',
+        'action' => 'AllocationContentSchoolsController',
+        'name' => 'allocation_content_schools',
+    ],
+    [
+        'path' => '/allocation_content_units/{action}',
+        'action' => 'AllocationContentUnitsController',
+        'name' => 'allocation_content_units',
+    ],
+    [
+        'path' => '/units/{action}',
+        'action' => 'UnitsController',
+        'name' => 'units',
     ],
 ];

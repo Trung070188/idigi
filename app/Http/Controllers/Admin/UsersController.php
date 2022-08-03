@@ -150,6 +150,7 @@ class UsersController extends AdminBaseController
         $id = $req->id;
         $entry = User::query()->with(['roles','schools'])
             ->where('id', $id)->first();
+            dd($entry);
         if (!$entry) {
             throw new NotFoundHttpException();
         }
