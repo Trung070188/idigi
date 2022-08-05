@@ -98,24 +98,7 @@ class AllocationContentsController extends AdminBaseController
         }
         if($total_courses)
         {
-            // foreach($courses as $course)
-            // {
-               
-               
-            //     $course['total_unit']=[];
-            //     $total_unit=[];
-
-            //     if($total_units)
-            //     {
-            //   foreach($total_units as $quang)
-            //   {
-            //       $total_unit[]=$quang->id;
-            //   }
-            //     }
-                
-                
-                
-            // }
+            
             foreach($courses as $course)
                 {
 
@@ -124,13 +107,10 @@ class AllocationContentsController extends AdminBaseController
                     foreach($course_unit as $un)
                     {
 
-                       
                         if($un->course_id==$course->id)
                         {
-
                            $total_unit[]=$un->unit_id;
                         }
-                       
                     }
                     $course['total_unit']=$total_unit;
                    
@@ -333,7 +313,7 @@ class AllocationContentsController extends AdminBaseController
     * @return  array
     */
     public function data(Request $req) {
-        $query = AllocationContent::query()->orderBy('id', 'desc');
+        $query = AllocationContent::query()->with(['courses','units','schools'])->orderBy('id', 'desc');
 
         if ($req->keyword) {
             //$query->where('title', 'LIKE', '%' . $req->keyword. '%');
@@ -343,7 +323,21 @@ class AllocationContentsController extends AdminBaseController
 
 
         $entries = $query->paginate();
-
+        // $data=[];
+        // foreach($entries as $entry)
+        // {
+        //    $unit=$entry->units;
+        //    $courses=$entry->courses;
+        //    $data[]=[
+        //     'title'=>$entry->title,
+        //     'status'=>$entry->status,
+        //     'created_at'=>$entry->created_at,
+        //     'updated_at'=>$entry->updated_at,
+        //     'unit'=>$unit,
+        //     'courses'=>$courses,
+        //     'schools'=>$entry->schools,
+        //    ];
+        // }
         return [
             'code' => 0,
             'data' => $entries->items(),

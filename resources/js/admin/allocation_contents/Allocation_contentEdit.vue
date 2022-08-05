@@ -26,7 +26,6 @@
                                                                     <div class="form-group">
                                         <label>Total Course</label>
                                         <treeselect :options="courses" :multiple="true" v-model="total_course" />
-                                        {{total_course}}
                                         <error-label for="f_total_course" :errors="errors.total_course"></error-label>
                                     </div>
                                     
@@ -101,14 +100,14 @@
                 }
                 if (res.code) {
                     toastr.error(res.message);
-                // } else {
-                //     this.errors = {};
-                //     toastr.success(res.message);
-                //     location.replace('/xadmin/allocation_contents/index');
+                } else {
+                    this.errors = {};
+                    toastr.success(res.message);
+                    location.replace('/xadmin/allocation_contents/index');
 
-                //     if (!this.entry.id) {
-                //         location.replace('/xadmin/allocation_contents/index');
-                //     }
+                    if (!this.entry.id) {
+                        location.replace('/xadmin/allocation_contents/index');
+                    }
 
                 }
             }

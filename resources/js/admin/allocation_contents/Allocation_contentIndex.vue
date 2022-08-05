@@ -87,9 +87,9 @@
                             <tbody >
                             <tr v-for="entry in entries">
                                 <td v-text="entry.title"></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
+                                <td>{{entry.schools.length}}</td>
+                                <td>{{entry.courses.length}}</td>
+                                <td>{{entry.units.length}}</td>
                                 <td class="">
                                     <a href="list.html#" class="btn btn-light btn-active-light-primary btn-sm" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">Actions
                                         <!--begin::Svg Icon | path: icons/duotune/arrows/arr072.svg-->
@@ -164,6 +164,7 @@
                 const res  = await $get('/xadmin/allocation_contents/data', query);
                 this.paginate = res.paginate;
                 this.entries = res.data;
+                console.log(this.entries);
                  setTimeout(function (){
                     KTMenu.createInstances();
                 }, 0)

@@ -21,6 +21,8 @@ class AllocationContent extends BaseModel
     'total_course',
     'total_unit',
     'status',
+    'created_at',
+    'updated_at',
 ];
 public function schools()
 {
@@ -33,10 +35,6 @@ public function courses()
 public function units()
 {
     return $this->belongsToMany(Unit::class,'allocation_content_units');
-}
-public function coursess()
-{
-    return $this->belongsToMany(Course::class,'allocation_content_units');
 }
 public function course_unit()
 {
