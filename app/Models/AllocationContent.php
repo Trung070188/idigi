@@ -38,4 +38,8 @@ public function coursess()
 {
     return $this->belongsToMany(Course::class,'allocation_content_units');
 }
+public function course_unit()
+{
+    return $this->hasMany(AllocationContentUnit::class,'allocation_content_id');
+}
 }

@@ -19,4 +19,8 @@ class Course extends BaseModel
     'public_to',
     'status',
 ];
+ public function units()
+ {
+     return $this->belongsToMany(Unit::class,'allocation_content_units');
+ }
 }

@@ -26,6 +26,7 @@
                                                                     <div class="form-group">
                                         <label>Total Course</label>
                                         <treeselect :options="courses" :multiple="true" v-model="total_course" />
+                                        {{total_course}}
                                         <error-label for="f_total_course" :errors="errors.total_course"></error-label>
                                     </div>
                                     
@@ -38,15 +39,13 @@
                                 <th>Unit</th>
                             </tr>
                             </thead>
-                            <tbody v-for="entry in total_course" >
-                            <tr v-for="course in courses"  v-if="entry==course.id">
-                               
+                            <tbody v-for="number_course in total_course" >
+                            <tr v-for="course in courses"  v-if="number_course==course.id">
                                 <td  >
                                     {{course.label}}
                                 </td>
-                                <td>
-                                <treeselect :options="units" :multiple="true" />
-
+                                <td >   
+                                <treeselect :options="units" :multiple="true" v-model="course.total_unit"/>
                                     </td>           
                             </tr>
                             </tbody>
@@ -65,7 +64,6 @@
 </template>
 
 <script>
-import QSelect from '../../components/QSelect.vue';
     import {$post} from "../../utils";
     import ActionBar from "../includes/ActionBar";
     import Treeselect from '@riophae/vue-treeselect'
@@ -76,8 +74,10 @@ import QSelect from '../../components/QSelect.vue';
         components: {ActionBar, Treeselect},
         data() {
             return {
+                unit:[],
                 total_school:$json.totalSchoolArray ||{},
                 total_course:$json.totalCourseArray ||{},
+                total_cousers:$json.total_cousers ||{},
                 entry: $json.entry || {},
                 schools:$json.schools ||{},
                 courses:$json.courses ||{},
@@ -93,7 +93,7 @@ import QSelect from '../../components/QSelect.vue';
             },
             async save() {
                 this.isLoading = true;
-                const res = await $post('/xadmin/allocation_contents/save', {entry: this.entry,total_school:this.total_school,total_course:this.total_course}, false);
+                const res = await $post('/xadmin/allocation_contents/save', {entry: this.entry,total_school:this.total_school,total_course:this.total_course,total_unit:this.courses.total_unit,unit:this.courses}, false);
                 this.isLoading = false;
                 if (res.errors) {
                     this.errors = res.errors;
@@ -101,14 +101,14 @@ import QSelect from '../../components/QSelect.vue';
                 }
                 if (res.code) {
                     toastr.error(res.message);
-                } else {
-                    this.errors = {};
-                    toastr.success(res.message);
-                    location.replace('/xadmin/allocation_contents/index');
+                // } else {
+                //     this.errors = {};
+                //     toastr.success(res.message);
+                //     location.replace('/xadmin/allocation_contents/index');
 
-                    if (!this.entry.id) {
-                        location.replace('/xadmin/allocation_contents/index');
-                    }
+                //     if (!this.entry.id) {
+                //         location.replace('/xadmin/allocation_contents/index');
+                //     }
 
                 }
             }
