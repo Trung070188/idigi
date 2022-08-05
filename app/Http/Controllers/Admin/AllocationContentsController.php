@@ -83,14 +83,14 @@ class AllocationContentsController extends AdminBaseController
         {
             foreach($total_schools as $total_school)
             {
-                
+
                 $totalSchoolArray[]=$total_school->id;
             }
         }
         $totalCourseArray=[];
         if($total_courses)
         {
-            
+
             foreach($total_courses as $total_course)
             {
                 $totalCourseArray[]=$total_course->id;
@@ -98,7 +98,7 @@ class AllocationContentsController extends AdminBaseController
         }
         if($total_courses)
         {
-            
+
             foreach($courses as $course)
                 {
 
@@ -113,15 +113,15 @@ class AllocationContentsController extends AdminBaseController
                         }
                     }
                     $course['total_unit']=$total_unit;
-                   
+
 
                 }
-         
+
         }
-        
-        
+
+
         $schools=School::query()->orderBy('id','desc')->get();
-        
+
         if (!$entry) {
             throw new NotFoundHttpException();
         }
@@ -211,31 +211,39 @@ class AllocationContentsController extends AdminBaseController
             AllocationContentSchool::where('allocation_content_id',$entry->id)->delete();
             AllocationContentCourse::where('allocation_content_id',$entry->id)->delete();
             AllocationContentUnit::where('allocation_content_id',$entry->id)->delete();
-
-            foreach($dataContent['total_school'] as $schoolId)
+            if(@$dataContent['total_school'])
             {
-                AllocationContentSchool::create(['school_id'=>$schoolId,'allocation_content_id'=>$entry->id]);
-            }
-            foreach($dataContent['total_course'] as $courseId)
-            {
-
-
-                AllocationContentCourse::create(['course_id'=>$courseId,'allocation_content_id'=>$entry->id]);
-            }
-            
-            foreach($dataContent['unit'] as $course)
-            {
-                if(@$course['total_unit'])
+                foreach($dataContent['total_school'] as $schoolId)
                 {
-                    foreach($course['total_unit'] as $unitId)
-                    {
-                            AllocationContentUnit::create(['course_id'=>$course['id'],'allocation_content_id'=>$entry->id,'unit_id'=>$unitId]);
-                    }
-                   
+                    AllocationContentSchool::create(['school_id'=>$schoolId,'allocation_content_id'=>$entry->id]);
                 }
-              
-               
             }
+
+            if(@$dataContent['total_course'])
+            {
+                foreach($dataContent['total_course'] as $courseId)
+                {
+
+
+                    AllocationContentCourse::create(['course_id'=>$courseId,'allocation_content_id'=>$entry->id]);
+                }
+            }
+
+            if(@$dataContent['unit'])
+            {
+                foreach($dataContent['unit'] as $course)
+                {
+                    if(@$course['total_unit'])
+                    {
+                        foreach($course['total_unit'] as $unitId)
+                        {
+                            AllocationContentUnit::create(['course_id'=>$course['id'],'allocation_content_id'=>$entry->id,'unit_id'=>$unitId]);
+                        }
+
+                    }
+                }
+            }
+
 
             return [
                 'code' => 0,
@@ -245,20 +253,20 @@ class AllocationContentsController extends AdminBaseController
         } else {
             $entry = new AllocationContent();
             $courses=Course::query()->orderBy('id','desc')->get();
-            
+
             $entry->fill($data);
             $entry->save();
 
-           
+
             foreach($dataContent['total_school'] as $schoolId)
             {
                 AllocationContentSchool::create(['school_id'=>$schoolId,'allocation_content_id'=>$entry->id]);
             }
             foreach($dataContent['total_course'] as $courseId)
             {
-                
+
                 AllocationContentCourse::create(['course_id'=>$courseId,'allocation_content_id'=>$entry->id]);
-               
+
             }
             foreach($dataContent['unit'] as $unit)
             {
@@ -267,13 +275,13 @@ class AllocationContentsController extends AdminBaseController
                     {
                         foreach($unit['total_unit'] as $unitId)
                         {
-                          
+
                             AllocationContentUnit::create(['course_id'=>$unit['id'],'allocation_content_id'=>$entry->id,'unit_id'=>$unitId]);
                         }
                     }
-                      
+
                 }
-            
+
             }
             return [
                 'code' => 0,

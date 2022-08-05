@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Models\RequestRole;
 use App\Models\Role;
 use App\Models\School;
+use App\Models\UserCourseUnit;
 use App\Models\UserDevice;
 use App\Models\UserRole;
 use App\Rules\ValiFullname;
@@ -213,8 +214,49 @@ class UsersController extends AdminBaseController
     public function editTeacher(Request $req)
     {
         $id = $req->id;
-        $entry = User::query()->with('schools','user_devices')
+        $entry = User::query()->with('schools','user_devices','user_cousers')
             ->where('id', $id)->first();
+        $userCousers=($entry->user_cousers);
+      $school=$entry->schools;
+      $allocationContens=($school->allocation_contens);
+      foreach ($allocationContens as $allocationConten )
+      {
+          $courses=$allocationConten->courses;
+          $course_unit=$allocationConten->course_unit;
+          $units=$allocationConten->units;
+          $courseTeachers=[];
+          foreach($courses as $course)
+          {
+              foreach ($userCousers as $userCouser)
+              {
+                  if($userCouser->course_id==$course->id)
+                  {
+                      $courseTeachers[]=$course->id;
+                  }
+              }
+
+              $course['total_unit']=[];
+              $total_unit=[];
+              foreach($course_unit as $un)
+              {
+                  foreach ($units as $unt)
+                  {
+
+                      if($un->course_id==$course->id && $unt->id==$un->unit_id)
+                      {
+
+                          $total_unit[]=$unt;
+                      }
+
+                  }
+
+              }
+              $course['total_unit']=$total_unit;
+
+          }
+      }
+
+
         if (!$entry) {
             throw new NotFoundHttpException();
         }
@@ -231,6 +273,9 @@ class UsersController extends AdminBaseController
                     'entry' => $entry,
                     'user_device' => $user_device,
                     'schools'=>$schools,
+                    'courses'=>$courses,
+                    'courseTeachers'=>$courseTeachers
+
                 ];
                 return view('admin.layouts.vue', compact('title', 'component', 'jsonData'));
     }
@@ -458,7 +503,7 @@ class UsersController extends AdminBaseController
             UserRole::where('user_id', $entry->id)->delete();
 
 
-            if ($data_role['name_role']) {
+            if (@$data_role['name_role']) {
                 UserRole::updateOrCreate([
                     'user_id' => $entry->id,
                     'role_id' => $data_role['name_role']
@@ -468,6 +513,12 @@ class UsersController extends AdminBaseController
                         'role_id' => $data_role['name_role']
                     ]
                 );
+            }
+            UserCourseUnit::where('user_id',$entry->id)->delete();
+            if(@$data_role['courseTeachers'])
+            foreach ($data_role['courseTeachers'] as $courseTeacherId)
+            {
+                UserCourseUnit::create(['user_id'=>$entry->id,'course_id'=>$courseTeacherId]);
             }
             return [
                 'code' => 0,

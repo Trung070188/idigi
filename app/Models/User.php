@@ -136,5 +136,9 @@ class User extends Authenticatable
     {
         return $this->belongsTo(School::class,'school_id');
     }
+    public function user_cousers()
+    {
+        return $this->hasMany(UserCourseUnit::class,'user_id');
+    }
 
 }

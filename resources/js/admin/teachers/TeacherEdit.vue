@@ -68,27 +68,30 @@
                                 </div>
                                   <h4>Content Allocated</h4>
                                 <div class="row">
-                                  
+
                                     <div class="form-group col-sm-10">
                                         <label>Course</label>
-                                        <select class="form-group form-select">
+<!--                                        <select class="form-group form-select" v-model="courseTeacher">-->
+<!--                                        <option v-for="course in courses" :value="course.id">{{course.label}}</option>-->
+<!--                                        </select>-->
+<!--                                        {{courseTeacher}}-->
+                                        <treeselect :options="courses" :multiple="true" v-model="courseTeachers" />
 
-                                        </select>
-                                            <table class="table table-row-bordered align-middle gy-4 gs-9">
+                                        <table class="table table-row-bordered align-middle gy-4 gs-9">
                             <thead class="border-bottom border-gray-200 fs-6 text-gray-600 fw-bolder bg-light bg-opacity-75">
                             <tr>
                                 <th class="">Course Name</th>
                                 <th>Unit</th>
                             </tr>
                             </thead>
-                            <tbody  >
-                            <tr  >
+                            <tbody v-for="courseTeacher in courseTeachers" >
+                            <tr v-for="course in courses" v-if="courseTeacher==course.id" >
                                 <td  >
-                                 
+                                {{course.label}}
                                 </td>
                                 <td >
-                                <!-- <treeselect :options="units" :multiple="true" v-model="course.total_unit" :disabled="true"/> -->
-                                    </td>           
+                                 <treeselect :options="course.total_unit" :multiple="true" v-model="course.courseTea"/>
+                                    </td>
                             </tr>
                             </tbody>
                         </table>
@@ -172,14 +175,18 @@
     import ActionBar from "../includes/ActionBar";
     import SwitchButton from "../../components/SwitchButton";
     import $router from "../../lib/SimpleRouter";
+    import Treeselect from '@riophae/vue-treeselect'
+    import '@riophae/vue-treeselect/dist/vue-treeselect.css'
+
 
     export default {
         name: "TeacherEdit.vue",
-        components: {ActionBar, SwitchButton},
+        components: {ActionBar, SwitchButton,Treeselect},
         data() {
 
             return {
 
+                courseTeachers:$json.courseTeachers || {},
                 showConfirm: false,
                 showPass: false,
                 types: [],
@@ -198,6 +205,7 @@
                 },
                 user_device: $json.user_device || [],
                 schools:$json.schools || [],
+                courses:$json.courses || [],
                 isLoading: false,
                 errors: {}
             }
@@ -232,7 +240,7 @@
 
             async save() {
                 this.isLoading = true;
-                const res = await $post('/xadmin/users/save', {entry: this.entry, roles: this.roles}, false);
+                const res = await $post('/xadmin/users/save', {entry: this.entry, roles: this.roles,courseTeachers:this.courseTeachers,}, false);
                 this.isLoading = false;
                 if (res.errors) {
                     this.errors = res.errors;

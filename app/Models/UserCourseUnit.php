@@ -7,11 +7,14 @@ use Illuminate\Database\Eloquent\Model;
 
 class UserCourseUnit extends Model
 {
-    protected $table = 'user_courses';
+    protected $autoSchema = false;
+    protected $primaryKey = NULL;
     public $timestamps = false;
-    // public $incrementing = false;
+    public $incrementing = false;
+    protected $table = 'user_courses';
+
     protected $fillable = [
     'user_id',
-    'allocation_content_id',
+    'course_id',
     ];
 }
