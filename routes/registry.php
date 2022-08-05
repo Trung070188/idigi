@@ -72,21 +72,6 @@
         'name' => 'allocation_contents',
     ],
     [
-        'path' => '/allocation_content_courses/{action}',
-        'action' => 'AllocationContentCoursesController',
-        'name' => 'allocation_content_courses',
-    ],
-    [
-        'path' => '/allocation_content_schools/{action}',
-        'action' => 'AllocationContentSchoolsController',
-        'name' => 'allocation_content_schools',
-    ],
-    [
-        'path' => '/allocation_content_units/{action}',
-        'action' => 'AllocationContentUnitsController',
-        'name' => 'allocation_content_units',
-    ],
-    [
         'path' => '/units/{action}',
         'action' => 'UnitsController',
         'name' => 'units',
