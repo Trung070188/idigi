@@ -240,7 +240,7 @@
 
             async save() {
                 this.isLoading = true;
-                const res = await $post('/xadmin/users/save', {entry: this.entry, roles: this.roles,courseTeachers:this.courseTeachers,}, false);
+                const res = await $post('/xadmin/users/save', {entry: this.entry, roles: this.roles,courseTeachers:this.courseTeachers,unit:this.courses}, false);
                 this.isLoading = false;
                 if (res.errors) {
                     this.errors = res.errors;

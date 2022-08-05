@@ -8,6 +8,7 @@ use App\Models\School;
 use App\Models\UserCourseUnit;
 use App\Models\UserDevice;
 use App\Models\UserRole;
+use App\Models\UserUnit;
 use App\Rules\ValiFullname;
 use App\Rules\ValiUser;
 use Carbon\Carbon;
@@ -214,7 +215,7 @@ class UsersController extends AdminBaseController
     public function editTeacher(Request $req)
     {
         $id = $req->id;
-        $entry = User::query()->with('schools','user_devices','user_cousers')
+        $entry = User::query()->with('schools','user_devices','user_cousers','user_units')
             ->where('id', $id)->first();
         $userCousers=($entry->user_cousers);
       $school=$entry->schools;
@@ -224,9 +225,15 @@ class UsersController extends AdminBaseController
           $courses=$allocationConten->courses;
           $course_unit=$allocationConten->course_unit;
           $units=$allocationConten->units;
+          $userUnits=$allocationConten->user_units;
           $courseTeachers=[];
+
           foreach($courses as $course)
           {
+              foreach ($userUnits as $userUnit)
+              {
+
+              }
               foreach ($userCousers as $userCouser)
               {
                   if($userCouser->course_id==$course->id)
@@ -519,6 +526,18 @@ class UsersController extends AdminBaseController
             foreach ($data_role['courseTeachers'] as $courseTeacherId)
             {
                 UserCourseUnit::create(['user_id'=>$entry->id,'course_id'=>$courseTeacherId]);
+            }
+            UserUnit::where('user_id',$entry->id)->delete();
+            if(@$data_role['unit'])
+            {
+                foreach ($data_role['unit'] as $UnitId)
+                {
+
+                    foreach($UnitId['courseTea'] as $uni)
+                    {
+                        UserUnit::create(['user_id'=>$entry->id,'unit_id'=>$uni]);
+                    }
+                }
             }
             return [
                 'code' => 0,
