@@ -2,13 +2,15 @@
 
 namespace App\Http\Controllers\Admin;
 
-
+use App\Models\AllocationContent;
+use App\Models\AllocationContentSchool;
 use App\Models\User;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use App\Models\School;
+use App\Models\Unit;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
@@ -47,7 +49,11 @@ class SchoolsController extends AdminBaseController
     {
         $component = 'SchoolForm';
         $title = 'Create schools';
-        return component($component, compact('title'));
+        $allocationContens=AllocationContent::query()->orderBy('id','desc')->get();
+        $jsonData=[
+            'allocationContens'=>$allocationContens,
+        ];
+        return view('admin.layouts.vue', compact('title', 'component', 'jsonData'));
     }
     public function dataTeacher(Request $req)
     {
@@ -123,7 +129,39 @@ class SchoolsController extends AdminBaseController
     public function edit(Request $req)
     {
         $id = $req->id;
-        $entry = School::find($id);
+        $entry = School::with(['allocation_contens',])->where('id',$id)->first();
+        $allocationContens=AllocationContent::query()->with(['course_unit','courses'])->orderBy('id','desc')->get();
+        // $units=Unit::query()->orderBy('id','desc')->get();
+        // $courses=$allocationContens->courses;
+       
+        $allocationContenSchools=$entry->allocation_contens;
+       foreach($allocationContenSchools as $allocationContenSchool)
+       {
+           $courses=($allocationContenSchool->courses);
+           $course_unit=$allocationContenSchool->course_unit;
+           foreach($courses as $course)
+           {
+
+               $course['total_unit']=[];
+               $total_unit=[];
+               foreach($course_unit as $un)
+               {
+
+                   if($un->course_id==$course->id)
+                   {
+                      $total_unit[]=$un->unit_id;
+                   }
+               }
+               $course['total_unit']=$total_unit;
+              
+
+           }
+          $units=($allocationContenSchool->units);
+       }
+        foreach($allocationContenSchools as $allocationContenSchool)
+        {
+            $allocationContenSchoolName=$allocationContenSchool->title;
+        }
 
         if (!$entry) {
             throw new NotFoundHttpException();
@@ -134,10 +172,17 @@ class SchoolsController extends AdminBaseController
          */
 
         $title = 'Edit';
-        $component = 'SchoolForm';
+        $component = 'SchoolEdit';
+        $jsonData=[
+            'entry'=>$entry,
+            'allocationContens'=>$allocationContens,
+            'allocationContenSchoolName'=>$allocationContenSchoolName,
+            'courses'=>$courses,
+            'units'=>$units,
+        ];
 
 
-        return component($component, compact('title', 'entry'));
+        return view('admin.layouts.vue', compact('title', 'component', 'jsonData'));
     }
 
     /**
@@ -167,6 +212,7 @@ class SchoolsController extends AdminBaseController
      */
     public function save(Request $req)
     {
+        $dataContent=$req->all();
         if (!$req->isMethod('POST')) {
             return ['code' => 405, 'message' => 'Method not allow'];
         }
@@ -174,7 +220,7 @@ class SchoolsController extends AdminBaseController
         $data = $req->get('entry');
 
         $rules = [
-            'school_name' => 'required|max:45',
+            'label' => 'required|max:45',
             'school_address' => 'required|max:255',
             'school_email' => 'required|max:45|email',
             'school_phone' => 'required|max:45',
@@ -207,6 +253,12 @@ class SchoolsController extends AdminBaseController
 
             $entry->fill($data);
             $entry->save();
+            AllocationContentSchool::where('school_id',$entry->id)->delete();
+            if(@$dataContent['allocationContenSchool'])
+            {
+            AllocationContentSchool::create(['allocation_content_id'=>$dataContent['allocationContenSchool'],'school_id'=>$entry->id]);
+
+            }
 
             return [
                 'code' => 0,
@@ -217,6 +269,11 @@ class SchoolsController extends AdminBaseController
             $entry = new School();
             $entry->fill($data);
             $entry->save();
+            if(@$dataContent['allocationContenSchool'])
+            {
+                AllocationContentSchool::create(['allocation_content_id'=>$dataContent['allocationContenSchool'],'school_id'=>$entry->id]);
+            }
+
 
             return [
                 'code' => 0,

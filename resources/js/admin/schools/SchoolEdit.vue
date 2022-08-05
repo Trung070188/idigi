@@ -104,13 +104,14 @@
                                 </div>
                             </div>
                              <div class="row">
-                                    <div class="form-group col-lg-10">
+                                        <div class="form-group col-lg-10">
                                         <label>Content Allocated <span class="text-danger">*</span></label>
-                                       <select class="form-control form-select" v-model="allocationContenSchool">
+                                       <select class="form-control form-select" required v-model="allocationContenSchool" >
+                                        <option value=""  selected>{{allocationContenSchoolName}}</option>
                                            <option v-for="allocationConten in allocationContens" :value="allocationConten.id">{{allocationConten.title}}</option>
                                        </select>
                                     </div>
-                                       <table class="table table-row-bordered align-middle gy-4 gs-9">
+                            <table class="table table-row-bordered align-middle gy-4 gs-9">
                             <thead class="border-bottom border-gray-200 fs-6 text-gray-600 fw-bolder bg-light bg-opacity-75">
                             <tr>
                                 <th class="">Course Name</th>
@@ -118,17 +119,18 @@
                             </tr>
                             </thead>
                             <tbody  >
-                            <tr >
+                            <tr v-for="course in courses" >
                                 <td  >
-                                   
+                                  {{course.label}}
                                 </td>
-                                <td >   
-                                <!-- <treeselect :options="units" :multiple="true" v-model="course.total_unit"/> -->
+                                <td >
+                                <treeselect :options="units" :multiple="true" v-model="course.total_unit" :disabled="true"/>
                                     </td>           
                             </tr>
                             </tbody>
                         </table>
-                            </div>
+
+                </div>
                         </div>
                         <hr style="margin-top: 5px;">
                         <div >
@@ -148,18 +150,22 @@
 <script>
     import {$post} from "../../utils";
     import ActionBar from "../includes/ActionBar";
+    import QSelect from "../../components/QSelect";
     import Datepicker from "../../components/Datepicker";
     import $router from "../../lib/SimpleRouter";
     import Treeselect from '@riophae/vue-treeselect'
     import '@riophae/vue-treeselect/dist/vue-treeselect.css'
 
     export default {
-        name: "SchoolsForm.vue",
-        components: {ActionBar, Datepicker,Treeselect},
+        name: "SchoolEdit.vue",
+        components: {ActionBar, QSelect, Datepicker,Treeselect},
         data() {
             return {
+                courses:$json.courses ||{},
+                units:$json.units || {},
                 allocationContenSchool:[],
-                allocationContens:$json.allocationContens ||{},
+                allocationContenSchoolName:$json.allocationContenSchoolName || {},
+                allocationContens:$json.allocationContens || {},
                 breadcrumbs: [
                     {
                         title: 'Schools',
@@ -222,5 +228,13 @@
 </script>
 
 <style scoped>
+ option[value=""][disabled] {
+        display: none;
+    }
+
+    option {
+        color: black;
+    }
+
 
 </style>

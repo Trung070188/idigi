@@ -66,6 +66,35 @@
                                         <error-label for="f_category_id" :errors="errors.email"></error-label>
                                     </div>
                                 </div>
+                                  <h4>Content Allocated</h4>
+                                <div class="row">
+                                  
+                                    <div class="form-group col-sm-10">
+                                        <label>Course</label>
+                                        <select class="form-group form-select">
+
+                                        </select>
+                                            <table class="table table-row-bordered align-middle gy-4 gs-9">
+                            <thead class="border-bottom border-gray-200 fs-6 text-gray-600 fw-bolder bg-light bg-opacity-75">
+                            <tr>
+                                <th class="">Course Name</th>
+                                <th>Unit</th>
+                            </tr>
+                            </thead>
+                            <tbody  >
+                            <tr  >
+                                <td  >
+                                 
+                                </td>
+                                <td >
+                                <!-- <treeselect :options="units" :multiple="true" v-model="course.total_unit" :disabled="true"/> -->
+                                    </td>           
+                            </tr>
+                            </tbody>
+                        </table>
+
+                                    </div>
+                                </div>
                             </div>
                         </div>
                         <hr style="margin-top: 10px">

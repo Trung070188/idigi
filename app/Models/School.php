@@ -4,7 +4,7 @@ namespace App\Models;
 
  /**
  * @property int       $id
- * @property string    $school_name
+ * @property string    $label
  * @property string    $school_address
  * @property string    $school_email
  * @property string    $school_phone
@@ -18,7 +18,7 @@ class School extends BaseModel
 {
     protected $table = 'schools';
     protected $fillable = [
-    'school_name',
+    'label',
     'school_address',
     'school_email',
     'school_phone',
@@ -32,4 +32,10 @@ class School extends BaseModel
     {
         return $this->hasMany(User::class);
     }
+    public function allocation_contens()
+    {
+        return $this->belongsToMany(AllocationContent::class,'allocation_content_schools');
+    }
+
+
 }

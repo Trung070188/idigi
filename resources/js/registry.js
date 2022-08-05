@@ -13,6 +13,7 @@ import LessonIndex from "./admin/lessons/LessonIndex";
 import LessonForm from "./admin/lessons/LessonForm";
 import SchoolIndex from "./admin/schools/SchoolIndex";
 import SchoolForm from "./admin/schools/SchoolForm";
+import SchoolEdit from "./admin/schools/SchoolEdit.vue";
 import ProfileForm from "./admin/users/ProfileForm";
 import User_deviceIndex from "./admin/user_devices/User_deviceIndex";
 import Request_roleIndex from "./admin/request_role/Request_roleIndex";
@@ -40,6 +41,7 @@ export default {
     LessonForm,
     SchoolIndex,
     SchoolForm,
+    SchoolEdit,
     ProfileForm,
     User_deviceIndex,
     Request_roleIndex,
