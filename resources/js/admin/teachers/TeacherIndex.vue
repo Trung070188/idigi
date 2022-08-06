@@ -175,7 +175,7 @@
                             </thead>
                             <tbody v-for="entry in entries">
 
-                            <tr v-for="teacher in entry.roles" v-if="teacher.role_name==='Teacher' && entry.last_login!==null">
+                            <tr v-for="teacher in entry.roles" >
                                  <td class="">
                                         <div
                                             class="form-check form-check-sm form-check-custom form-check-solid"

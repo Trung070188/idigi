@@ -152,7 +152,7 @@ class SchoolsController extends AdminBaseController
                       $total_unit[]=$un->unit_id;
                    }
                }
-               $course['total_unit']=$total_unit;
+               @$course['total_unit']=$total_unit;
               
 
            }
@@ -160,7 +160,7 @@ class SchoolsController extends AdminBaseController
        }
         foreach($allocationContenSchools as $allocationContenSchool)
         {
-            $allocationContenSchoolName=$allocationContenSchool->title;
+            @$allocationContenSchoolName=$allocationContenSchool->title;
         }
 
         if (!$entry) {
@@ -175,10 +175,10 @@ class SchoolsController extends AdminBaseController
         $component = 'SchoolEdit';
         $jsonData=[
             'entry'=>$entry,
-            'allocationContens'=>$allocationContens,
-            'allocationContenSchoolName'=>$allocationContenSchoolName,
-            'courses'=>$courses,
-            'units'=>$units,
+            @'allocationContens'=>@$allocationContens,
+            @'allocationContenSchoolName'=>@$allocationContenSchoolName,
+            @'courses'=>@$courses,
+            @'units'=>@$units,
         ];
 
 

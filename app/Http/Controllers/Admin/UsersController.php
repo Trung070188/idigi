@@ -219,12 +219,14 @@ class UsersController extends AdminBaseController
         $userCousers=($entry->user_cousers);
       $school=$entry->schools;
       $allocationContens=($school->allocation_contens);
+      $userUnits=$entry->user_units;
+      
+      
       foreach ($allocationContens as $allocationConten )
       {
           $courses=$allocationConten->courses;
           $course_unit=$allocationConten->course_unit;
           $units=$allocationConten->units;
-          $userUnits=$allocationConten->user_units;
           $courseTeachers=[];
 
           foreach($courses as $course)
@@ -249,15 +251,40 @@ class UsersController extends AdminBaseController
                       {
 
                           $total_unit[]=$unt;
+                          
                       }
-
-                  }
+                      
+                     }
+                     if($userUnits)
+                     {
+                       
+                         foreach($userUnits as $userUnit)
+                         {
+                             
+                           if( $course->id==$userUnit->course_id && $un->unit_id==$userUnit->unit_id)
+                           {
+                               $courseTea[]=$userUnit->unit_id;
+                           
+                           }
+                       }
+                   }  
+                 
 
               }
-              $course['total_unit']=$total_unit;
+              @$course['total_unit']=$total_unit;
+             
+            @$course['courseTea']=$courseTea;
+
+
+
+              
+
 
           }
       }
+      
+
+      
 
 
         if (!$entry) {
@@ -274,10 +301,13 @@ class UsersController extends AdminBaseController
         $user = Auth::user();
                 $jsonData = [
                     'entry' => $entry,
-                    'user_device' => $user_device,
-                    'schools'=>$schools,
-                    'courses'=>$courses,
-                    'courseTeachers'=>$courseTeachers
+                    @'user_device' => @$user_device,
+                    @'schools'=>@$schools,
+                    @'courses'=>@$courses,
+                    @'courseTeachers'=>@$courseTeachers,
+                    @'course_unit'=>@$course_unit,
+                    @'userCouser'=>@$userCouser,
+                    @'userUnits'=>@$userUnits,
 
                 ];
                 return view('admin.layouts.vue', compact('title', 'component', 'jsonData'));
@@ -518,23 +548,28 @@ class UsersController extends AdminBaseController
                 );
             }
             UserCourseUnit::where('user_id',$entry->id)->delete();
+            UserUnit::where('user_id',$entry->id)->delete();
+
             if(@$data_role['courseTeachers'])
             foreach ($data_role['courseTeachers'] as $courseTeacherId)
             {
                 UserCourseUnit::create(['user_id'=>$entry->id,'course_id'=>$courseTeacherId]);
+
+              
             }
-            UserUnit::where('user_id',$entry->id)->delete();
             if(@$data_role['unit'])
             {
+
                 foreach ($data_role['unit'] as $UnitId)
                 {
 
                     foreach($UnitId['courseTea'] as $uni)
                     {
-                        UserUnit::create(['user_id'=>$entry->id,'unit_id'=>$uni]);
+                        UserUnit::create(['user_id'=>$entry->id,'unit_id'=>$uni,'course_id'=>$UnitId['id']]);
                     }
                 }
             }
+           
             return [
                 'code' => 0,
                 'message' => 'Đã cập nhật',
