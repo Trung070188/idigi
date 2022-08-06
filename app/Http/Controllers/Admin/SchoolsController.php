@@ -317,11 +317,11 @@ class SchoolsController extends AdminBaseController
         $query = School::query()->orderBy('id', 'ASC');
 
         if ($req->keyword) {
-            $query->where('school_name', 'LIKE', '%' . $req->keyword. '%');
+            $query->where('label', 'LIKE', '%' . $req->keyword. '%');
         }
 
-        if ($req->school_name) {
-            $query->where('school_name', 'LIKE', '%' . $req->school_name. '%');
+        if ($req->label) {
+            $query->where('label', 'LIKE', '%' . $req->label. '%');
         }
 
         $limit = 25;

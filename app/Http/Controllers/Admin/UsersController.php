@@ -152,7 +152,6 @@ class UsersController extends AdminBaseController
         $id = $req->id;
         $entry = User::query()->with(['roles','schools'])
             ->where('id', $id)->first();
-            dd($entry);
         if (!$entry) {
             throw new NotFoundHttpException();
         }
@@ -171,8 +170,8 @@ class UsersController extends AdminBaseController
                 $name_role = $role->id;
             }
         }
-        @$school=$entry->schools->school_name;
-        $schools=School::query()->orderBy('school_name','ASC')->get();
+        @$school=$entry->schools->label;
+        $schools=School::query()->orderBy('label','ASC')->get();
         $title = 'Edit';
         $component = 'UserEdit';
         $user = Auth::user();
@@ -230,10 +229,7 @@ class UsersController extends AdminBaseController
 
           foreach($courses as $course)
           {
-              foreach ($userUnits as $userUnit)
-              {
-
-              }
+             
               foreach ($userCousers as $userCouser)
               {
                   if($userCouser->course_id==$course->id)

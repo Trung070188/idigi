@@ -33,7 +33,7 @@
                                         <label>School Name <span class="text-danger">*</span></label>
                                         <input  v-model="entry.label"  class="form-control"
                                                placeholder="Nhập vào tên trường" >
-                                        <error-label for="f_school_name" :errors="errors.school_name"></error-label>
+                                        <error-label for="f_school_name" :errors="errors.label"></error-label>
 
                                     </div>
 

@@ -76,7 +76,7 @@
                                 <div class="form-group col-lg-3">
                                     <label>School name </label>
                                     <input class="form-control" type="text" placeholder="Enter your school name"
-                                           v-model="filter.school_name"/>
+                                           v-model="filter.label"/>
 
                                 </div>
                                 <div class="form-group col-lg-3">
@@ -152,7 +152,7 @@
                                     </div>
                                 </td>
                                 <td class="" v-text="entry.id"></td>
-                                <td class="" v-text="entry.school_name"></td>
+                                <td class="" v-text="entry.label"></td>
                                 <td class="" v-text="entry.school_address"></td>
                                 <td></td>
                                 <td class="" v-text="entry.number_of_users"></td>
@@ -226,7 +226,7 @@
             let isShowFilter = false;
             let filter = {
                 keyword: $q.keyword || '',
-                school_name: $q.school_name || ''
+                label: $q.label || ''
             };
             for (var key in filter) {
                 if (filter[key] != '') {
