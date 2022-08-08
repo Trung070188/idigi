@@ -28,7 +28,7 @@
                                         <treeselect :options="courses" :multiple="true" v-model="total_course" />
                                         <error-label for="f_total_course" :errors="errors.total_course"></error-label>
                                     </div>
-                                    
+
                             </div>
                         </div>
                            <table class="table table-row-bordered align-middle gy-4 gs-9">
@@ -43,9 +43,9 @@
                                 <td  >
                                     {{course.label}}
                                 </td>
-                                <td >   
+                                <td >
                                 <treeselect :options="units" :multiple="true" v-model="course.total_unit"/>
-                                    </td>           
+                                    </td>
                             </tr>
                             </tbody>
                         </table>
@@ -84,7 +84,7 @@
                 isLoading: false,
                 errors: {}
             }
-            
+
         },
         methods: {
             backIndex(){
@@ -100,16 +100,17 @@
                 }
                 if (res.code) {
                     toastr.error(res.message);
-                } else {
-                    this.errors = {};
-                    toastr.success(res.message);
-                    location.replace('/xadmin/allocation_contents/index');
-
-                    if (!this.entry.id) {
-                        location.replace('/xadmin/allocation_contents/index');
-                    }
-
                 }
+                // else {
+                //     this.errors = {};
+                //     toastr.success(res.message);
+                //     location.replace('/xadmin/allocation_contents/index');
+                //
+                //     if (!this.entry.id) {
+                //         location.replace('/xadmin/allocation_contents/index');
+                //     }
+                //
+                // }
             }
         }
     }

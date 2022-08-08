@@ -49,7 +49,7 @@
 
                     <div class="card-header border-0 pt-6">
 
-                    
+
                                 <div class="card-title">
                                         <div class="d-flex align-items-center position-relative my-1">
                                             <!--begin::Svg Icon | path: icons/duotune/general/gen021.svg-->
@@ -68,7 +68,7 @@
                                             </svg>
                                         </span>
                                     </div>
-                               
+
                                 </div>
                                  <div class="card-toolbar">
                                     <div class="d-flex justify-content-end" data-kt-customer-table-toolbar="base" v-if="lessonIds==''">
@@ -92,7 +92,7 @@
 											</div>
 
                                 </div>
-                               
+
 
                                 <form class="col-lg-12" v-if="isShowFilter">
                                     <div class="row">
@@ -152,7 +152,7 @@
                                     </div>
                                 </form>
                             </div>
-                       
+
 
                     <!--<div class="card-body d-flex flex-column">-->
                     <div class="tab-content">
@@ -400,6 +400,7 @@
                 this.$loading(false);
                 this.paginate = res.paginate;
                 this.entries = res.data;
+                console.log(this.entries);
                 this.from = (this.paginate.currentPage - 1) * (this.limit) + 1;
                 this.to = (this.paginate.currentPage - 1) * (this.limit) + this.entries.length;
             },

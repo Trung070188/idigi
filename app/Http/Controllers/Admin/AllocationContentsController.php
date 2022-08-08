@@ -218,6 +218,8 @@ class AllocationContentsController extends AdminBaseController
             }
 
             AllocationContentCourse::where('allocation_content_id',$entry->id)->delete();
+            AllocationContentUnit::where('allocation_content_id',$entry->id)->delete();
+
 
 
             if(@$dataContent['total_course'])
@@ -226,24 +228,28 @@ class AllocationContentsController extends AdminBaseController
                 {
                     AllocationContentCourse::create(['course_id'=>$courseId,'allocation_content_id'=>$entry->id]);
 
-                }
-                AllocationContentUnit::where('allocation_content_id',$entry->id)->delete();
-                if(@$dataContent['unit'])
-                {
-
-                    foreach($dataContent['unit'] as $course)
+                    if(@$dataContent['unit'])
                     {
+                        AllocationContentUnit::where('allocation_content_id',$entry->id)->delete();
 
-                        if(@$course['total_unit'])
+
+                        foreach($dataContent['unit'] as $course)
                         {
-                            foreach($course['total_unit'] as $unitId)
-                            {
-                                AllocationContentUnit::create(['course_id'=>$course['id'],'allocation_content_id'=>$entry->id,'unit_id'=>$unitId]);
-                            }
 
+
+                            if(@$course['total_unit'])
+                            {
+                                foreach($course['total_unit'] as $unitId)
+                                {
+                                    AllocationContentUnit::create(['course_id'=>$course['id'],'allocation_content_id'=>$entry->id,'unit_id'=>$unitId]);
+                                }
+
+                            }
                         }
                     }
+
                 }
+
 
 
             }

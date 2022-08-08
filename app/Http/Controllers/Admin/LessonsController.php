@@ -209,7 +209,7 @@ class LessonsController extends AdminBaseController
      */
     public function data(Request $req)
     {
-        $query = Lesson::query()->orderBy('id', 'desc');
+        $query = Lesson::query()->orderBy('id', 'ASC');
 
         if ($req->keyword) {
             $query->where('name', 'LIKE', '%' . $req->keyword . '%');
@@ -237,12 +237,75 @@ class LessonsController extends AdminBaseController
         if ($req->limit) {
             $limit = $req->limit;
         }
-
+        $data=[];
+        $user=Auth::user();
         $entries = $query->paginate($limit);
+        foreach ($entries as $entry)
+        {
+
+            foreach($user->roles as $role)
+            {
+                if($role->role_name=='Teacher')
+                {
+
+                    foreach ($user->user_units as $userUnit)
+                    {
+                        if($userUnit->unit_id==$entry->unit_id)
+                      {
+                          $data[]=[
+                              'id'=>$entry->id,
+                              'enabled'=>$entry->enabled,
+                              'grade'=>$entry->grade,
+                              'name'=>$entry->name,
+                              'rating'=>$entry->rating,
+                              'shared'=>$entry->shared,
+                              'structure'=>$entry->structure,
+                              'subject'=>$entry->subject,
+                              'unit'=>$entry->unit,
+                              'unit_name'=>$entry->unit_name,
+                              'number'=>$entry->number,
+                              'customized'=>$entry->customized,
+                              'old_id'=>$entry->old_id,
+                              'created_at'=>$entry->created_at,
+                              'updated_at'=>$entry->updated_at,
+                              'created_by'=>$entry->created_by,
+                              'updated_by'=>$entry->updated_by,
+
+                          ];
+                      }
+
+                    }
+
+                }
+                if($role->role_name!='Teacher'){
+                    $data[]=[
+                        'id'=>$entry->id,
+                        'enabled'=>$entry->enabled,
+                        'grade'=>$entry->grade,
+                        'name'=>$entry->name,
+                        'rating'=>$entry->rating,
+                        'shared'=>$entry->shared,
+                        'structure'=>$entry->structure,
+                        'subject'=>$entry->subject,
+                        'unit'=>$entry->unit,
+                        'unit_name'=>$entry->unit_name,
+                        'number'=>$entry->number,
+                        'customized'=>$entry->customized,
+                        'old_id'=>$entry->old_id,
+                        'created_at'=>$entry->created_at,
+                        'updated_at'=>$entry->updated_at,
+                        'created_by'=>$entry->created_by,
+                        'updated_by'=>$entry->updated_by,
+
+                    ];
+                }
+
+            }
+        }
 
         return [
             'code' => 0,
-            'data' => $entries->items(),
+            'data' => $data,
             'paginate' => [
                 'currentPage' => $entries->currentPage(),
                 'lastPage' => $entries->lastPage(),
