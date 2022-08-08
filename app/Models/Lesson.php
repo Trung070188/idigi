@@ -50,4 +50,8 @@ class Lesson extends BaseModel
     public function inventories(){
         return $this->belongsToMany(Inventory::class, 'lesson_inventory');
     }
+    public function user_units()
+    {
+        return $this->hasMany(UserUnit::class,'unit_id','unit_id');
+    }
 }

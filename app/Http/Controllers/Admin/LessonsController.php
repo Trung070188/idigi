@@ -209,7 +209,7 @@ class LessonsController extends AdminBaseController
      */
     public function data(Request $req)
     {
-        $query = Lesson::query()->orderBy('id', 'ASC');
+        $query = Lesson::query()->with(['user_units'])->orderBy('id', 'ASC');
 
         if ($req->keyword) {
             $query->where('name', 'LIKE', '%' . $req->keyword . '%');
@@ -242,13 +242,13 @@ class LessonsController extends AdminBaseController
         $entries = $query->paginate($limit);
         foreach ($entries as $entry)
         {
-
+           
             foreach($user->roles as $role)
             {
                 if($role->role_name=='Teacher')
                 {
 
-                    foreach ($user->user_units as $userUnit)
+                    foreach ($entry->user_units as $userUnit)
                     {
                         if($userUnit->unit_id==$entry->unit_id)
                       {
@@ -262,6 +262,7 @@ class LessonsController extends AdminBaseController
                               'structure'=>$entry->structure,
                               'subject'=>$entry->subject,
                               'unit'=>$entry->unit,
+                              'unit_id'=>$entry->unit_id,
                               'unit_name'=>$entry->unit_name,
                               'number'=>$entry->number,
                               'customized'=>$entry->customized,
@@ -288,6 +289,7 @@ class LessonsController extends AdminBaseController
                         'structure'=>$entry->structure,
                         'subject'=>$entry->subject,
                         'unit'=>$entry->unit,
+                        'unit_id'=>$entry->unit_id,
                         'unit_name'=>$entry->unit_name,
                         'number'=>$entry->number,
                         'customized'=>$entry->customized,
