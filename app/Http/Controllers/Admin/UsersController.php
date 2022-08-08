@@ -48,10 +48,10 @@ class UsersController extends AdminBaseController
         $title = 'Users';
         $component = 'UserIndex';
         $roles = Role::query()->orderBy('role_name')->get();
-                $jsonData = [
-                    'roles' => $roles
-                ];
-                return view('admin.layouts.vue', compact('title', 'component', 'jsonData'));
+        $jsonData = [
+            'roles' => $roles
+        ];
+        return view('admin.layouts.vue', compact('title', 'component', 'jsonData'));
     }
 
     public function teacher(Request $request)
@@ -59,10 +59,10 @@ class UsersController extends AdminBaseController
         $title = 'Teacher';
         $component = 'TeacherIndex';
         $roles = Role::query()->orderBy('role_name')->get();
-                $jsonData = [
-                    'roles' => $roles
-                ];
-                return view('admin.layouts.vue', compact('title', 'component', 'jsonData'));
+        $jsonData = [
+            'roles' => $roles
+        ];
+        return view('admin.layouts.vue', compact('title', 'component', 'jsonData'));
     }
 
     /**
@@ -75,13 +75,13 @@ class UsersController extends AdminBaseController
     {
         $component = 'UserForm';
         $title = 'Create users';
-        $schools=School::query()->orderBy('id')->get();
+        $schools = School::query()->orderBy('id')->get();
         $roles = Role::query()->orderBy('id', 'ASC')->get();
-                $jsonData = [
-                    'roles' => $roles,
-                    'schools'=>$schools,
-                ];
-                return view('admin.layouts.vue', compact('title', 'component', 'jsonData'));
+        $jsonData = [
+            'roles' => $roles,
+            'schools' => $schools,
+        ];
+        return view('admin.layouts.vue', compact('title', 'component', 'jsonData'));
     }
 
     public function create_teacher(Request $req)
@@ -89,10 +89,10 @@ class UsersController extends AdminBaseController
         $component = 'TeacherCreated';
         $title = 'Create Teacher';
         $roles = Role::query()->orderBy('role_name')->get();
-                $jsonData = [
-                    'roles' => $roles
-                ];
-                return view('admin.layouts.vue', compact('title', 'component', 'jsonData'));
+        $jsonData = [
+            'roles' => $roles
+        ];
+        return view('admin.layouts.vue', compact('title', 'component', 'jsonData'));
     }
 
     /**
@@ -150,7 +150,7 @@ class UsersController extends AdminBaseController
     {
 
         $id = $req->id;
-        $entry = User::query()->with(['roles','schools'])
+        $entry = User::query()->with(['roles', 'schools'])
             ->where('id', $id)->first();
         if (!$entry) {
             throw new NotFoundHttpException();
@@ -160,9 +160,8 @@ class UsersController extends AdminBaseController
          * @var  User $entry
          */
         $roles = Role::query()->orderBy('id', 'ASC')->get();
-        foreach ($entry->roles as $role)
-        {
-            @$title_role=$role->role_name;
+        foreach ($entry->roles as $role) {
+            @$title_role = $role->role_name;
         }
 
         if ($entry->roles) {
@@ -170,39 +169,37 @@ class UsersController extends AdminBaseController
                 $name_role = $role->id;
             }
         }
-        @$school=$entry->schools->label;
-        $schools=School::query()->orderBy('label','ASC')->get();
+        @$school = $entry->schools->label;
+        $schools = School::query()->orderBy('label', 'ASC')->get();
         $title = 'Edit';
         $component = 'UserEdit';
         $user = Auth::user();
-                $jsonData = [
-                    'schools'=>$schools,
-                    @'school'=>$school,
-                    'entry' => $entry,
-                    'roles' => $roles,
-                    @'name_role' => @$name_role,
-                    @'title_role'=>@$title_role
+        $jsonData = [
+            'schools' => $schools,
+            @'school' => $school,
+            'entry' => $entry,
+            'roles' => $roles,
+            @'name_role' => @$name_role,
+            @'title_role' => @$title_role
 
-                ];
-                return view('admin.layouts.vue', compact('title', 'component', 'jsonData'));
-            }
+        ];
+        return view('admin.layouts.vue', compact('title', 'component', 'jsonData'));
+    }
+
     public function nameSideBar(Request $req)
     {
-        $users=User::with(['roles'])->orderBy('username')->get();
-        $data=[];
-        foreach ($users as $user)
-        {
-            $userss=Auth::user();
-            if($user->id==$userss->id)
-            {
-                foreach($userss->roles as $roless)
-                {
-                    $role=$roless->role_name;
+        $users = User::with(['roles'])->orderBy('username')->get();
+        $data = [];
+        foreach ($users as $user) {
+            $userss = Auth::user();
+            if ($user->id == $userss->id) {
+                foreach ($userss->roles as $roless) {
+                    $role = $roless->role_name;
                 }
-                return[
-                    'username'=>$user->full_name,
-                    'role'=>$role,
-                    'image'=>$user->image,
+                return [
+                    'username' => $user->full_name,
+                    'role' => $role,
+                    'image' => $user->image,
 
                 ];
 
@@ -214,77 +211,50 @@ class UsersController extends AdminBaseController
     public function editTeacher(Request $req)
     {
         $id = $req->id;
-        $entry = User::query()->with('schools','user_devices','user_cousers','user_units','units','cousers')
+        $entry = User::query()->with('schools', 'user_devices', 'user_cousers', 'user_units', 'units', 'cousers')
             ->where('id', $id)->first();
-            
-        $userCousers=($entry->user_cousers);
-      $schools=$entry->schools;
-      $allocationContens=($schools->allocation_contens);
-      $userUnits=$entry->user_units;
-      if($allocationContens)
-      {
-        foreach ($allocationContens as $allocationConten )
-        {
-            $courses=$allocationConten->courses;
-            $course_unit=$allocationConten->course_unit;
-            $units=$allocationConten->units;
-            $courseTeachers=[];
-           
-        }
-        if($courses)
-        {
-            foreach($courses as $course)
-        {
-            $course['total_unit']=[];
-            $total_unit=[];
 
-           
-            foreach ($userCousers as $userCouser)
-            {
-                if($userCouser->course_id==$course->id)
-                {
-                    $courseTeachers[]=$course->id;        
-                }
-                
-                     
-                
-            }   
-            foreach($course->units as $courseUn)
-                {
-                    $total_unit[]=$courseUn;
-                    @$course['total_unit']=$total_unit;
+        $userCousers = ($entry->user_cousers);
+        $schools = $entry->schools;
+        $allocationContens = ($schools->allocation_contens);
+        $userUnits = $entry->user_units;
+        if ($allocationContens) {
+            foreach ($allocationContens as $allocationConten) {
+                $courses = $allocationConten->courses;
+                $course_unit = $allocationConten->course_unit;
+                $courseTeachers = [];
 
-                    
-                }   
-                foreach($course['total_unit'] as $un)
-                {
-                    foreach($userUnits as $userUnit)
-                    {
-                        if($userUnit->unit_id==$un->id && $userUnit->course_id==$course->id)
-                        {
-                            $abc[]=$userUnit;
-                           
+            }
+            if ($courses) {
+                foreach ($courses as $course) {
+                    $course['total_unit'] = [];
+                    $total_unit = [];
+                    $unitTeacher = [];
+                    foreach ($userCousers as $userCouser) {
+                        if ($userCouser->course_id == $course->id) {
+                            $courseTeachers[] = $course->id;
                         }
                     }
-
-                } 
-
-                 
-            
-            @$course['courseTea']=$abc;
-           
+                    foreach ($course->units as $courseUn) {
+                        foreach ($userUnits as $userUnit) {
+                            if ($userUnit->unit_id == $courseUn->id) {
+                                $unitTeacher[] = $courseUn->id;
+                            }
+                        }
+                    }
+                    foreach ($course->units as $courseUn) {
+                        $total_unit[] = $courseUn;
+                    }
+                    @$course['courseTea'] = $unitTeacher;
+                    @$course['total_unit'] = $total_unit;
+                }
+            }
         }
-        }
-        
-
-      }
-      
-     
         if (!$entry) {
             throw new NotFoundHttpException();
         }
-        $user_device=$entry->user_devices;
-        $schools=($entry->schools);
+        $user_device = $entry->user_devices;
+        $schools = ($entry->schools);
         /**
          * @var  User $entry
          */
@@ -292,19 +262,19 @@ class UsersController extends AdminBaseController
         $title = 'Edit';
         $component = 'TeacherEdit';
         $user = Auth::user();
-                $jsonData = [
-                    'entry' => $entry,
-                    @'user_device' => @$user_device,
-                    @'schools'=>@$schools,
-                    @'courses'=>@$courses,
-                    @'courseTeachers'=>@$courseTeachers,
-                    @'course_unit'=>@$course_unit,
-                    @'userCouser'=>@$userCouser,
-                    @'userUnits'=>@$userUnits,
+        $jsonData = [
+            'entry' => $entry,
+            @'user_device' => @$user_device,
+            @'schools' => @$schools,
+            @'courses' => @$courses,
+            @'courseTeachers' => @$courseTeachers,
+            @'course_unit' => @$course_unit,
+            @'userCouser' => @$userCouser,
+            @'userUnits' => @$userUnits,
 
-                ];
-                dd($jsonData);
-                return view('admin.layouts.vue', compact('title', 'component', 'jsonData'));
+        ];
+//                dd($jsonData);
+        return view('admin.layouts.vue', compact('title', 'component', 'jsonData'));
     }
 
     /**
@@ -351,7 +321,7 @@ class UsersController extends AdminBaseController
         }
         $data = $req->get('entry');
         $rules = [
-            'old_password' => ['required', function ($attribute,$value, $fail) {
+            'old_password' => ['required', function ($attribute, $value, $fail) {
                 if (!Hash::check($value, Auth::user()->password)) {
                     return $fail(__('The current password is incorrect.'));
                 }
@@ -392,6 +362,7 @@ class UsersController extends AdminBaseController
         }
 
     }
+
     public function saveProfile(Request $req)
     {
         if (!$req->isMethod('POST')) {
@@ -401,17 +372,17 @@ class UsersController extends AdminBaseController
         $data_role = $req->all();
         $roles = $req->roles;
         $rules = [
-            'username' => ['required','min:8', 'unique:users,username', function ($attribute,$value, $fail) {
+            'username' => ['required', 'min:8', 'unique:users,username', function ($attribute, $value, $fail) {
                 if (preg_match('/[\'\/~`\!@#\$%\^&\*\(\)_\-\+=\{\}\[\]\|;:"\<\>,\.\?\\\]/', $value)) {
                     return $fail(__(' The :attribute no special characters'));
                 }
             },],
-            'full_name' => ['required', function ($attribute,$value, $fail) {
+            'full_name' => ['required', function ($attribute, $value, $fail) {
                 if (preg_match('/[\'\/~`\!@#\$%\^&\*\(\)_\-\+=\{\}\[\]\|;:"\<\>,\.\?\\\]/', $value)) {
                     return $fail(__(' The :attribute no special characters'));
                 }
             },
-                function ($attribute,$value, $fail) {
+                function ($attribute, $value, $fail) {
                     if (preg_match('/[0-9]/', $value)) {
                         return $fail(__(' The :attribute not a number'));
                     }
@@ -441,7 +412,7 @@ class UsersController extends AdminBaseController
         }
         if (isset($data['id'])) {
             $entry = User::find($data['id']);
-            $request_roles=RequestRole::query()->orderBy('id')->get();
+            $request_roles = RequestRole::query()->orderBy('id')->get();
             if (!$entry) {
                 return [
                     'code' => 3,
@@ -473,28 +444,26 @@ class UsersController extends AdminBaseController
 
         $data_role = $req->all();
         $rules = [
-            'full_name' => ['required', function ($attribute,$value, $fail) {
+            'full_name' => ['required', function ($attribute, $value, $fail) {
                 if (preg_match('/[\'\/~`\!@#\$%\^&\*\(\)_\-\+=\{\}\[\]\|;:"\<\>,\.\?\\\]/', $value)) {
                     return $fail(__(' The :attribute no special characters'));
                 }
             },
-                 function ($attribute,$value, $fail) {
-                     if (preg_match('/[0-9]/', $value)) {
-                         return $fail(__(' The :attribute not a number'));
+                function ($attribute, $value, $fail) {
+                    if (preg_match('/[0-9]/', $value)) {
+                        return $fail(__(' The :attribute not a number'));
                     }
                 },
-                ],
+            ],
 //            'password' => '|max:191|confirmed',
         ];
         if (!isset($data['id'])) {
-            $rules['username'] = ['required','min:8', 'unique:users,username', function ($attribute,$value, $fail) {
+            $rules['username'] = ['required', 'min:8', 'unique:users,username', function ($attribute, $value, $fail) {
                 if (preg_match('/[\'\/~`\!@#\$%\^&\*\(\)_\-\+=\{\}\[\]\|;:"\<\>,\.\?\\\]/', $value)) {
                     return $fail(__(' The :attribute no special characters'));
                 }
             },];
-            $rules['email'] = 'required|max:191|email|unique:users,email';
-
-            ;
+            $rules['email'] = 'required|max:191|email|unique:users,email';;
 
 
 //            $rules['password'] = 'required|max:191|confirmed';
@@ -503,9 +472,9 @@ class UsersController extends AdminBaseController
             $user = User::find($data['id']);
             $rules['email'] = ['required', 'email', Rule::unique('users')->ignore($user->id),];
         }
-        $customMessages=[
+        $customMessages = [
         ];
-        $v = Validator::make($data, $rules,$customMessages);
+        $v = Validator::make($data, $rules, $customMessages);
 
         if ($v->fails()) {
             return [
@@ -540,37 +509,24 @@ class UsersController extends AdminBaseController
                     ]
                 );
             }
-            UserCourseUnit::where('user_id',$entry->id)->delete();
-            if(@$data_role['courseTeachers'])
-            {
+            UserCourseUnit::where('user_id', $entry->id)->delete();
+            if (@$data_role['courseTeachers']) {
+                foreach ($data_role['courseTeachers'] as $courseTeacherId) {
+                    UserCourseUnit::create(['user_id' => $entry->id, 'course_id' => $courseTeacherId]);
 
-                foreach ($data_role['courseTeachers'] as $courseTeacherId)
-                {
-                    UserCourseUnit::create(['user_id'=>$entry->id,'course_id'=>$courseTeacherId]);
-    
-                  
                 }
             }
-           
-            if(@$data_role['unit'])
-            {
-                UserUnit::where('user_id',$entry->id)->delete();
-
-
-                foreach ($data_role['unit'] as $UnitId)
-                {
-                    if(@$UnitId['courseTea'])
-                    {
-                        foreach($UnitId['courseTea'] as $uni)
-                        {
-                            UserUnit::create(['user_id'=>$entry->id,'unit_id'=>$uni,'course_id'=>$UnitId['id']]);
+            UserUnit::where('user_id', $entry->id)->delete();
+            if (@$data_role['unit']) {
+                foreach ($data_role['unit'] as $UnitId) {
+                    if (@$UnitId['courseTea']) {
+                        foreach ($UnitId['courseTea'] as $uni) {
+                            UserUnit::create(['user_id' => $entry->id, 'unit_id' => $uni, 'course_id' => $UnitId['id']]);
                         }
                     }
-
-                   
                 }
             }
-           
+
             return [
                 'code' => 0,
                 'message' => 'Đã cập nhật',
@@ -731,7 +687,7 @@ class UsersController extends AdminBaseController
         if ($req->email) {
             $query->where('email', 'LIKE', '%' . $req->email);
         }
-        if ($req->state!='')  {
+        if ($req->state != '') {
             $query->where('state', 'LIKE', '%' . $req->state);
         }
         $query->createdIn($req->created);
@@ -800,10 +756,11 @@ class UsersController extends AdminBaseController
         $writer->save('php://output');
         die;
     }
+
     public function removeAll(Request $req)
     {
         $ids = $req->ids;
-        UserRole::whereIn('user_id',$ids)->delete();
+        UserRole::whereIn('user_id', $ids)->delete();
         User::whereIn('id', $ids)->delete();
         return [
             'code' => 0,

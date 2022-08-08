@@ -216,33 +216,36 @@ class AllocationContentsController extends AdminBaseController
                     AllocationContentSchool::create(['school_id'=>$schoolId,'allocation_content_id'=>$entry->id]);
                 }
             }
-            
+
             AllocationContentCourse::where('allocation_content_id',$entry->id)->delete();
+
+
             if(@$dataContent['total_course'])
             {
                 foreach($dataContent['total_course'] as $courseId)
                 {
-                    
-
                     AllocationContentCourse::create(['course_id'=>$courseId,'allocation_content_id'=>$entry->id]);
-                }
-            }
-            AllocationContentUnit::where('allocation_content_id',$entry->id)->delete();
-            if(@$dataContent['unit'])
-            {
 
-                foreach($dataContent['unit'] as $course)
+                }
+                AllocationContentUnit::where('allocation_content_id',$entry->id)->delete();
+                if(@$dataContent['unit'])
                 {
 
-                    if(@$course['total_unit'])
+                    foreach($dataContent['unit'] as $course)
                     {
-                        foreach($course['total_unit'] as $unitId)
-                        {
-                            AllocationContentUnit::create(['course_id'=>$course['id'],'allocation_content_id'=>$entry->id,'unit_id'=>$unitId]);
-                        }
 
+                        if(@$course['total_unit'])
+                        {
+                            foreach($course['total_unit'] as $unitId)
+                            {
+                                AllocationContentUnit::create(['course_id'=>$course['id'],'allocation_content_id'=>$entry->id,'unit_id'=>$unitId]);
+                            }
+
+                        }
                     }
                 }
+
+
             }
 
 
@@ -325,28 +328,16 @@ class AllocationContentsController extends AdminBaseController
         $query = AllocationContent::query()->with(['courses','units','schools'])->orderBy('id', 'desc');
 
         if ($req->keyword) {
-            //$query->where('title', 'LIKE', '%' . $req->keyword. '%');
+            $query->where('title', 'LIKE', '%' . $req->keyword. '%');
         }
 
         $query->createdIn($req->created);
 
-
-        $entries = $query->paginate();
-        // $data=[];
-        // foreach($entries as $entry)
-        // {
-        //    $unit=$entry->units;
-        //    $courses=$entry->courses;
-        //    $data[]=[
-        //     'title'=>$entry->title,
-        //     'status'=>$entry->status,
-        //     'created_at'=>$entry->created_at,
-        //     'updated_at'=>$entry->updated_at,
-        //     'unit'=>$unit,
-        //     'courses'=>$courses,
-        //     'schools'=>$entry->schools,
-        //    ];
-        // }
+        $limit = 25;
+        if ($req->limit) {
+            $limit = $req->limit;
+        }
+        $entries = $query->paginate($limit);
         return [
             'code' => 0,
             'data' => $entries->items(),

@@ -1,7 +1,7 @@
 <template>
     <div class="container-fluid" >
         <ActionBar type="index"
-                   title="AllocationIndex"/>
+                   :breadcrumbs="breadcrumbs" title = "Content Allocation"/>
          <div class="row">
             <div class="col-lg-12">
                 <div class="card card-custom card-stretch gutter-b">
@@ -39,6 +39,7 @@
                                     </svg>
                                 </span>
                                 <input
+                                    @keydown.enter="doFilter($event)" v-model="filter.keyword"
                                     type="text"
                                     data-kt-filemanager-table-filter="search"
                                     class="form-control form-control-solid w-250px ps-15"
@@ -70,7 +71,15 @@
                         <div class="d-flex flex-stack pt-4 pl-9 pr-9">
                             <div class="badge badge-lg badge-light-primary mb-15">
                                 <div class="d-flex align-items-center flex-wrap">
-                                    <div> </div>
+
+                                    <span class="svg-icon svg-icon-2x svg-icon-primary mx-1">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                            <path d="M12.6343 12.5657L8.45001 16.75C8.0358 17.1642 8.0358 17.8358 8.45001 18.25C8.86423 18.6642 9.5358 18.6642 9.95001 18.25L15.4929 12.7071C15.8834 12.3166 15.8834 11.6834 15.4929 11.2929L9.95001 5.75C9.5358 5.33579 8.86423 5.33579 8.45001 5.75C8.0358 6.16421 8.0358 6.83579 8.45001 7.25L12.6343 11.4343C12.9467 11.7467 12.9467 12.2533 12.6343 12.5657Z" fill="black" ></path>
+                                        </svg>
+                                    </span>
+
+                                        <div v-text="'Showing '+ from +' to '+ to +' of '+ paginate.totalRecord +' entries'" v-if="entries.length > 0"></div>
+
                                 </div>
                             </div>
                         </div>
@@ -103,10 +112,10 @@
                                     <div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-bold fs-7 w-125px py-4" data-kt-menu="true">
                                         <!--begin::Menu item-->
                                         <div class="menu-item px-3">
-                                            <a  class="menu-link px-3">Rename</a>
+                                            <a :href="'/xadmin/allocation_contents/edit?id='+entry.id" class="menu-link px-3">Edit</a>
                                         </div>
                                         <div class="menu-item px-3">
-                                            <a :href="'/xadmin/allocation_contents/edit?id='+entry.id" class="menu-link px-3">Edit</a>
+                                            <a class="menu-link text-danger px-3"  @click="remove(entry)">Delete</a>
                                         </div>
 
                                     </div>
@@ -115,6 +124,27 @@
                             </tr>
                             </tbody>
                         </table>
+                        <div class="d-flex pl-9 pr-9 mb-8">
+                            <div class="col-sm-12 col-md-5 d-flex align-items-center justify-content-center justify-content-md-start">
+                                <!--<div class="mr-2">
+                                    <label>Records per page:</label>
+                                </div>-->
+                                <div>
+                                    <select class="form-select form-select-sm form-select-solid" v-model="limit" @change="changeLimit">
+                                        <option value="25">25</option>
+                                        <option value="50">50</option>
+                                        <option value="100">100</option>
+
+                                    </select>
+                                </div>
+                            </div>
+                            <!--<div style="float: right; margin: 10px">-->
+                            <div class="col-sm-12 col-md-7 d-flex align-items-center justify-content-center justify-content-md-end">
+                                <div class="dataTables_paginate paging_simple_numbers" id="kt_customers_table_paginate">
+                                    <Paginate :value="paginate" :pagechange="onPageChange"></Paginate>
+                                </div>
+                            </div>
+                        </div>
 
                     </div>
 
@@ -144,6 +174,11 @@
                     keyword: $q.keyword || '',
                     created: $q.created || created,
                 },
+                breadcrumbs: [
+                    {
+                        title: 'Content Allocation'
+                    },
+                ],
                 limit: 25,
                 from: 0,
                 to: 0,
@@ -161,18 +196,20 @@
         methods: {
              async load() {
                 let query = $router.getQuery();
-                const res  = await $get('/xadmin/allocation_contents/data', query);
-                this.paginate = res.paginate;
+                 this.$loading(true);
+                 const res  = await $get('/xadmin/allocation_contents/data', query);
+                 this.$loading(false);
+                 this.paginate = res.paginate;
                 this.entries = res.data;
-                console.log(this.entries);
+                 console.log(this.entries);
                  setTimeout(function (){
                     KTMenu.createInstances();
                 }, 0)
                 this.from = (this.paginate.currentPage-1)*(this.limit) + 1;
                 this.to = (this.paginate.currentPage-1)*(this.limit) + this.entries.length;
             },
-           
-          
+
+
             async remove(entry) {
                 if (!confirm('Xóa bản ghi: ' + entry.id)) {
                     return;
@@ -188,9 +225,10 @@
 
                 $router.updateQuery({page: this.paginate.currentPage, _: Date.now()});
             },
-            
+
             doFilter() {
-               
+                $router.setQuery(this.filter)
+
             },
             changeLimit() {
                 let params = $router.getQuery();
@@ -199,7 +237,7 @@
                 $router.setQuery(params)
             },
 
-           
+
             onPageChange(page) {
                 $router.updateQuery({page: page})
             }
