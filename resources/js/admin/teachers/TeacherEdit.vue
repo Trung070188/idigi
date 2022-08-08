@@ -69,15 +69,15 @@
                                   <h4>Content Allocated</h4>
                                 <div class="row">
 
-                                    <div class="form-group col-sm-10">
+                                    <div class="form-group col-sm-10"  @change="saveTeacherCourse()">
                                         <label>Course</label>
 <!--                                        <select class="form-group form-select" v-model="courseTeacher">-->
 <!--                                        <option v-for="course in courses" :value="course.id">{{course.label}}</option>-->
 <!--                                        </select>-->
 <!--                                        {{courseTeacher}}-->
-                                        <treeselect :options="courses" :multiple="true" v-model="courseTeachers" />
+                                        <treeselect :options="courses" :multiple="true" v-model="courseTeachers"   />
 
-                                        <table class="table table-row-bordered align-middle gy-4 gs-9">
+                                        <table class="table table-row-bordered align-middle gy-4 gs-9" style="margin:25px 0px 0px">
                             <thead class="border-bottom border-gray-200 fs-6 text-gray-600 fw-bolder bg-light bg-opacity-75">
                             <tr>
                                 <th class="">Course Name</th>
@@ -89,8 +89,8 @@
                                 <td  >
                                 {{course.label}}
                                 </td>
-                                <td >
-                                 <treeselect :options="course.total_unit" :multiple="true" v-model="course.courseTea"/>
+                                <td  >
+                                 <treeselect :options="course.total_unit" :multiple="true" v-model="course.courseTea" />
                                     </td>
                             </tr>
                             </tbody>
@@ -185,7 +185,7 @@
         data() {
 
             return {
-
+                nameRole:5,
                 courseTeachers:$json.courseTeachers || {},
                 showConfirm: false,
                 showPass: false,
@@ -240,7 +240,7 @@
 
             async save() {
                 this.isLoading = true;
-                const res = await $post('/xadmin/users/save', {entry: this.entry, roles: this.roles,courseTeachers:this.courseTeachers,unit:this.courses}, false);
+                const res = await $post('/xadmin/users/save', {entry: this.entry, roles: this.roles,courseTeachers:this.courseTeachers,unit:this.courses,name_role:this.nameRole}, false);
                 this.isLoading = false;
                 if (res.errors) {
                     this.errors = res.errors;

@@ -214,79 +214,72 @@ class UsersController extends AdminBaseController
     public function editTeacher(Request $req)
     {
         $id = $req->id;
-        $entry = User::query()->with('schools','user_devices','user_cousers','user_units')
+        $entry = User::query()->with('schools','user_devices','user_cousers','user_units','units','cousers')
             ->where('id', $id)->first();
+            
         $userCousers=($entry->user_cousers);
-      $school=$entry->schools;
-      $allocationContens=($school->allocation_contens);
+      $schools=$entry->schools;
+      $allocationContens=($schools->allocation_contens);
       $userUnits=$entry->user_units;
-      
-      
-      foreach ($allocationContens as $allocationConten )
+      if($allocationContens)
       {
-          $courses=$allocationConten->courses;
-          $course_unit=$allocationConten->course_unit;
-          $units=$allocationConten->units;
-          $courseTeachers=[];
+        foreach ($allocationContens as $allocationConten )
+        {
+            $courses=$allocationConten->courses;
+            $course_unit=$allocationConten->course_unit;
+            $units=$allocationConten->units;
+            $courseTeachers=[];
+           
+        }
+        if($courses)
+        {
+            foreach($courses as $course)
+        {
+            $course['total_unit']=[];
+            $total_unit=[];
 
-          foreach($courses as $course)
-          {
-             
-              foreach ($userCousers as $userCouser)
-              {
-                  if($userCouser->course_id==$course->id)
-                  {
-                      $courseTeachers[]=$course->id;
-                  }
-              }
+           
+            foreach ($userCousers as $userCouser)
+            {
+                if($userCouser->course_id==$course->id)
+                {
+                    $courseTeachers[]=$course->id;        
+                }
+                
+                     
+                
+            }   
+            foreach($course->units as $courseUn)
+                {
+                    $total_unit[]=$courseUn;
+                    @$course['total_unit']=$total_unit;
 
-              $course['total_unit']=[];
-              $total_unit=[];
-              foreach($course_unit as $un)
-              {
-                  foreach ($units as $unt)
-                  {
-
-                      if($un->course_id==$course->id && $unt->id==$un->unit_id)
-                      {
-
-                          $total_unit[]=$unt;
-                          
-                      }
-                      
-                     }
-                     if($userUnits)
-                     {
-                       
-                         foreach($userUnits as $userUnit)
-                         {
-                             
-                           if( $course->id==$userUnit->course_id && $un->unit_id==$userUnit->unit_id)
-                           {
-                               $courseTea[]=$userUnit->unit_id;
+                    
+                }   
+                foreach($course['total_unit'] as $un)
+                {
+                    foreach($userUnits as $userUnit)
+                    {
+                        if($userUnit->unit_id==$un->id && $userUnit->course_id==$course->id)
+                        {
+                            $abc[]=$userUnit;
                            
-                           }
-                       }
-                   }  
+                        }
+                    }
+
+                } 
+
                  
+            
+            @$course['courseTea']=$abc;
+           
+        }
+        }
+        
 
-              }
-              @$course['total_unit']=$total_unit;
-             
-            @$course['courseTea']=$courseTea;
-
-
-
-              
-
-
-          }
       }
       
-
-      
-
-
+     
         if (!$entry) {
             throw new NotFoundHttpException();
         }
@@ -310,6 +303,7 @@ class UsersController extends AdminBaseController
                     @'userUnits'=>@$userUnits,
 
                 ];
+                dd($jsonData);
                 return view('admin.layouts.vue', compact('title', 'component', 'jsonData'));
     }
 
@@ -533,9 +527,8 @@ class UsersController extends AdminBaseController
 //            }
             $entry->fill($data);
             $entry->save();
+
             UserRole::where('user_id', $entry->id)->delete();
-
-
             if (@$data_role['name_role']) {
                 UserRole::updateOrCreate([
                     'user_id' => $entry->id,
@@ -548,25 +541,33 @@ class UsersController extends AdminBaseController
                 );
             }
             UserCourseUnit::where('user_id',$entry->id)->delete();
-            UserUnit::where('user_id',$entry->id)->delete();
-
             if(@$data_role['courseTeachers'])
-            foreach ($data_role['courseTeachers'] as $courseTeacherId)
             {
-                UserCourseUnit::create(['user_id'=>$entry->id,'course_id'=>$courseTeacherId]);
 
-              
+                foreach ($data_role['courseTeachers'] as $courseTeacherId)
+                {
+                    UserCourseUnit::create(['user_id'=>$entry->id,'course_id'=>$courseTeacherId]);
+    
+                  
+                }
             }
+           
             if(@$data_role['unit'])
             {
+                UserUnit::where('user_id',$entry->id)->delete();
+
 
                 foreach ($data_role['unit'] as $UnitId)
                 {
-
-                    foreach($UnitId['courseTea'] as $uni)
+                    if(@$UnitId['courseTea'])
                     {
-                        UserUnit::create(['user_id'=>$entry->id,'unit_id'=>$uni,'course_id'=>$UnitId['id']]);
+                        foreach($UnitId['courseTea'] as $uni)
+                        {
+                            UserUnit::create(['user_id'=>$entry->id,'unit_id'=>$uni,'course_id'=>$UnitId['id']]);
+                        }
                     }
+
+                   
                 }
             }
            
@@ -600,6 +601,8 @@ class UsersController extends AdminBaseController
             ];
         }
     }
+
+
     /**
      * @param Request $req
      */

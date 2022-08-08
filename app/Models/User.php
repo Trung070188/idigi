@@ -144,5 +144,13 @@ class User extends Authenticatable
     {
         return $this->hasMany(UserUnit::class,'user_id');
     }
+    public function units()
+    {
+        return $this->belongsToMany(Unit::class,'user_units');
+    }
+    public function cousers()
+    {
+        return $this->belongsToMany(Course::class,'user_courses');
+    }
 
 }
