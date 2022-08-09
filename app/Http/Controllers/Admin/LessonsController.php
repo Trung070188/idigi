@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Admin;
 
 
+use App\Models\AllocationContent;
+use App\Models\AllocationContentSchool;
 use App\Models\UserDevice;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
@@ -209,7 +211,40 @@ class LessonsController extends AdminBaseController
      */
     public function data(Request $req)
     {
-        $query = Lesson::query()->with(['user_units'])->orderBy('id', 'ASC');
+        $user=Auth::user();
+        $unitIds = [];
+        $schoolId = $user->school_id;
+
+        foreach($user->roles as $role)
+        {
+            if($role->role_name=='Teacher'){
+                if($user->user_units){
+                    foreach ($user->user_units as $unit){
+                        $unitIds[] = $unit->id;
+                    }
+                }
+
+            }else{
+                $contents = AllocationContentSchool::where('school_id', $schoolId)
+                    ->with(['allocation_content', 'allocation_content.units'])
+                    ->get();
+
+                foreach ($contents as $content){
+                    if(@$content->allocation_content->units){
+                        foreach ($content->allocation_content->units as $unit){
+                            $unitIds[] = $unit->id;
+                        }
+
+                    }
+                }
+
+            }
+        }
+
+        $query = Lesson::query()->with(['user_units'])
+            ->whereIn('unit_id', $unitIds)
+            ->orderBy('id', 'ASC');
+
 
         if ($req->keyword) {
             $query->where('name', 'LIKE', '%' . $req->keyword . '%');
@@ -237,77 +272,13 @@ class LessonsController extends AdminBaseController
         if ($req->limit) {
             $limit = $req->limit;
         }
-        $data=[];
-        $user=Auth::user();
+
+
         $entries = $query->paginate($limit);
-        foreach ($entries as $entry)
-        {
-           
-            foreach($user->roles as $role)
-            {
-                if($role->role_name=='Teacher')
-                {
-
-                    foreach ($entry->user_units as $userUnit)
-                    {
-                        if($userUnit->unit_id==$entry->unit_id)
-                      {
-                          $data[]=[
-                              'id'=>$entry->id,
-                              'enabled'=>$entry->enabled,
-                              'grade'=>$entry->grade,
-                              'name'=>$entry->name,
-                              'rating'=>$entry->rating,
-                              'shared'=>$entry->shared,
-                              'structure'=>$entry->structure,
-                              'subject'=>$entry->subject,
-                              'unit'=>$entry->unit,
-                              'unit_id'=>$entry->unit_id,
-                              'unit_name'=>$entry->unit_name,
-                              'number'=>$entry->number,
-                              'customized'=>$entry->customized,
-                              'old_id'=>$entry->old_id,
-                              'created_at'=>$entry->created_at,
-                              'updated_at'=>$entry->updated_at,
-                              'created_by'=>$entry->created_by,
-                              'updated_by'=>$entry->updated_by,
-
-                          ];
-                      }
-
-                    }
-
-                }
-                if($role->role_name!='Teacher'){
-                    $data[]=[
-                        'id'=>$entry->id,
-                        'enabled'=>$entry->enabled,
-                        'grade'=>$entry->grade,
-                        'name'=>$entry->name,
-                        'rating'=>$entry->rating,
-                        'shared'=>$entry->shared,
-                        'structure'=>$entry->structure,
-                        'subject'=>$entry->subject,
-                        'unit'=>$entry->unit,
-                        'unit_id'=>$entry->unit_id,
-                        'unit_name'=>$entry->unit_name,
-                        'number'=>$entry->number,
-                        'customized'=>$entry->customized,
-                        'old_id'=>$entry->old_id,
-                        'created_at'=>$entry->created_at,
-                        'updated_at'=>$entry->updated_at,
-                        'created_by'=>$entry->created_by,
-                        'updated_by'=>$entry->updated_by,
-
-                    ];
-                }
-
-            }
-        }
 
         return [
             'code' => 0,
-            'data' => $data,
+            'data' => $entries->items(),
             'paginate' => [
                 'currentPage' => $entries->currentPage(),
                 'lastPage' => $entries->lastPage(),
