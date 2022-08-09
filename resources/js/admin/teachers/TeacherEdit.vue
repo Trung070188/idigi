@@ -184,6 +184,16 @@
         components: {ActionBar, SwitchButton,Treeselect},
         data() {
 
+
+            const course=$json.courses;
+            let courseTreeselect =!course ? null : course.map(rec => {
+                return {
+                    'id':rec.id,
+                    'label': rec.course_name,
+                    'total_unit':rec.total_unit,
+                    'courseTea':rec.courseTea,
+                }
+            })
             return {
                 nameRole:5,
                 courseTeachers:$json.courseTeachers || {},
@@ -205,7 +215,7 @@
                 },
                 user_device: $json.user_device || [],
                 schools:$json.schools || [],
-                courses:$json.courses || [],
+                courses:courseTreeselect,
                 isLoading: false,
                 errors: {}
             }

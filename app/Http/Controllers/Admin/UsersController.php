@@ -273,7 +273,6 @@ class UsersController extends AdminBaseController
             @'userUnits' => @$userUnits,
 
         ];
-//                dd($jsonData);
         return view('admin.layouts.vue', compact('title', 'component', 'jsonData'));
     }
 

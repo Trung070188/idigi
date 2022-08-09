@@ -72,7 +72,6 @@ class AllocationContentsController extends AdminBaseController
         $entry = AllocationContent::query()->with(['schools','courses','units','course_unit'])->where('id',$id)->first();
         $courses=Course::query()->with(['units'])->orderBy('id','ASC')->get();
         $units=Unit::query()->orderBy('id','desc')->get();
-
         $total_units=($entry->units);
         $total_schools=$entry->schools;
         $total_courses=$entry->courses;

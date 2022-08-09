@@ -72,15 +72,29 @@
         name: "Allocation_contentEdit.vue",
         components: {ActionBar, Treeselect},
         data() {
+            const units=$json.units;
+            const unitTreeselect = units.map(rec => {
+                return {
+                    'id':rec.id,
+                    'label': rec.unit_name,
+                }
+            })
+            const course=$json.courses;
+            const courseTreeselect = course.map(rec => {
+                return {
+                    'id':rec.id,
+                    'label': rec.course_name,
+                    'total_unit':rec.total_unit,
+                }
+            })
             return {
                 unit:[],
                 total_school:$json.totalSchoolArray ||{},
                 total_course:$json.totalCourseArray ||{},
-                total_cousers:$json.total_cousers ||{},
                 entry: $json.entry || {},
                 schools:$json.schools ||{},
-                courses:$json.courses ||{},
-                units:$json.units || {},
+                courses:courseTreeselect,
+                units:unitTreeselect,
                 isLoading: false,
                 errors: {}
             }

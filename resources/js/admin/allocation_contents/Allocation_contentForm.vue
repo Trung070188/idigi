@@ -17,12 +17,7 @@
                                                placeholder="title" >
                                         <error-label for="f_title" :errors="errors.title"></error-label>
                                     </div>
-                                    <div class="form-group">
-                                        <label>Total School</label>
-                                        <treeselect :options="schools" :multiple="true" v-model="total_school"/>
-                                        <error-label for="f_total_school" :errors="errors.total_school"></error-label>
 
-                                    </div>
                                                                     <div class="form-group">
                                         <label>Total Course</label>
                                         <treeselect :options="courses" :multiple="true" v-model="total_course"/>
@@ -45,7 +40,7 @@
                                 </td>
                                 <td >
                                 <treeselect :options="units" :multiple="true" v-model="course.total_unit"  />
-                                </td>        
+                                </td>
                             </tr>
 
                             </tbody>
@@ -75,14 +70,29 @@
         name: "Allocation_contentForm.vue",
         components: {ActionBar, Treeselect},
         data() {
+            const units=$json.units;
+            const unitTreeselect = units.map(rec => {
+                return {
+                    'id':rec.id,
+                    'label': rec.unit_name,
+                }
+            })
+            const course=$json.courses;
+            const courseTreeselect = course.map(rec => {
+                return {
+                    'id':rec.id,
+                    'label': rec.course_name,
+                    'total_unit':rec.total_unit,
+                }
+            })
                 return {
                 total_school:[],
                 total_course:[],
                 total_unit:[],
                 value: [],
-                courses:$json.courses|| {},
+                courses:courseTreeselect,
                 schools:$json.schools||{},
-                units:$json.units || {},
+                units:unitTreeselect,
                 entry: $json.entry || {},
                 isLoading: false,
                 errors: {}

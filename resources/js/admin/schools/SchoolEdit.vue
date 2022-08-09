@@ -125,7 +125,7 @@
                                 </td>
                                 <td >
                                 <treeselect :options="units" :multiple="true" v-model="course.total_unit" :disabled="true"/>
-                                    </td>           
+                                    </td>
                             </tr>
                             </tbody>
                         </table>
@@ -139,8 +139,8 @@
                         </div>
                     </div>
                 </div>
-              
-               
+
+
             </div>
         </div>
     </div>
@@ -160,9 +160,28 @@
         name: "SchoolEdit.vue",
         components: {ActionBar, QSelect, Datepicker,Treeselect},
         data() {
+            const units=$json.units;
+
+               let unitTreeselect = !units ? null : units.map(rec => {
+                   return {
+                       'id':rec.id,
+                       'label': rec.unit_name,
+                   }
+               })
+
+            const course=$json.courses;
+               let courseTreeselect =!course ? null : course.map(rec => {
+                   return {
+                       'id':rec.id,
+                       'label': rec.course_name,
+                       'total_unit':rec.total_unit,
+                   }
+
+               })
+
             return {
-                courses:$json.courses ||{},
-                units:$json.units || {},
+                courses:courseTreeselect,
+                units:unitTreeselect,
                 allocationContenSchool:[],
                 allocationContenSchoolName:$json.allocationContenSchoolName || {},
                 allocationContens:$json.allocationContens || {},
