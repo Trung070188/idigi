@@ -221,10 +221,11 @@ class AllocationContentsController extends AdminBaseController
             AllocationContentSchool::where('allocation_content_id',$entry->id)->delete();
             if(@$dataContent['total_school'])
             {
-
+                dd($dataContent['total_school']);
                 foreach($dataContent['total_school'] as $schoolId)
                 {
                     AllocationContentSchool::create(['school_id'=>$schoolId,'allocation_content_id'=>$entry->id]);
+                    
                 }
             }
 
