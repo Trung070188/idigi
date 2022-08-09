@@ -393,7 +393,15 @@ class UserDevicesController extends AdminBaseController
             ->where('id', $request->device_id)
             ->where('status', 2)
             ->first();
+        $school = School::where('id', $user->school_id)->first();
 
+        if($school){
+            $expired = $school->license_to;
+        }
+
+        if(!$expired){
+            $expired = Carbon::now()->addHours(-10);
+        }
 
         if($device){
             $payload = [
@@ -402,7 +410,7 @@ class UserDevicesController extends AdminBaseController
                 'device_name' =>$device->device_name,
                 'secret_key' =>$device->secret_key,
                 'create_time' =>  Carbon::now()->timestamp,
-                'expired' => strtotime(Carbon::now()->addHours(10))
+                'expired' => strtotime($expired)
             ];
             $jwt = JWT::encode($payload, env('SECRET_KEY'), 'HS256');
 
