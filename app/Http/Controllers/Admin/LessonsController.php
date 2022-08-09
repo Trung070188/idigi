@@ -225,7 +225,7 @@ class LessonsController extends AdminBaseController
             if($role->role_name=='Teacher'){
                 if($user->user_units){
                     foreach ($user->user_units as $unit){
-                        $unitIds[] = $unit->id;
+                        $unitIds[] = $unit->unit_id;
                     }
                 }
 
