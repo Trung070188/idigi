@@ -25,7 +25,7 @@
                                     </div>
                                                                     <div class="form-group">
                                         <label>Total Course</label>
-                                        <treeselect :options="courses" :multiple="true" v-model="total_course" />
+                                        <treeselect :options="courses" :multiple="true" @deselect="deleteCourse" v-model="total_course" @input=""/>
                                         <error-label for="f_total_course" :errors="errors.total_course"></error-label>
                                     </div>
 
@@ -44,7 +44,7 @@
                                     {{course.label}}
                                 </td>
                                 <td >
-                                <treeselect :options="course.unit" :multiple="true" v-model="course.total_unit"/>
+                                <treeselect :options="course.unit" :multiple="true"  v-model="course.total_unit" />
                                     </td>
                             </tr>
                             </tbody>
@@ -80,7 +80,12 @@
                 }
             })
             const course=$json.courses;
-            console.log(course);
+            course.forEach(function (e) {
+                e.unit.forEach(function (e1) {
+                    e1.label = e1.unit_name;
+                })
+
+            })
             const courseTreeselect = course.map(rec => {
                 return {
                     'id':rec.id,
@@ -89,6 +94,8 @@
                     'unit':rec.unit,
                 }
             })
+            console.log(courseTreeselect);
+
             return {
                 unit:[],
                 total_school:$json.totalSchoolArray ||{},
@@ -103,6 +110,10 @@
 
         },
         methods: {
+            deleteCourse: function (node, instanceId) {
+                node.total_unit = [];
+            },
+
             backIndex(){
                 window.location.href = '/xadmin/allocation_contents/index';
             },

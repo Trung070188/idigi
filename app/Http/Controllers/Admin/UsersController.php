@@ -520,7 +520,11 @@ class UsersController extends AdminBaseController
                 foreach ($data_role['unit'] as $UnitId) {
                     if (@$UnitId['courseTea']) {
                         foreach ($UnitId['courseTea'] as $uni) {
-                            UserUnit::create(['user_id' => $entry->id, 'unit_id' => $uni, 'course_id' => $UnitId['id']]);
+                            if(in_array($UnitId['id'], $data_role['courseTeachers'])){
+                                UserUnit::create(['user_id' => $entry->id, 'unit_id' => $uni, 'course_id' => $UnitId['id']]);
+
+
+                            }
                         }
                     }
                 }

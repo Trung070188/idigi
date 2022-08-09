@@ -75,7 +75,7 @@
 <!--                                        <option v-for="course in courses" :value="course.id">{{course.label}}</option>-->
 <!--                                        </select>-->
 <!--                                        {{courseTeacher}}-->
-                                        <treeselect :options="courses" :multiple="true" v-model="courseTeachers"   />
+                                        <treeselect :options="courses" :multiple="true" @deselect="deleteCourse" v-model="courseTeachers"   />
 
                                         <table class="table table-row-bordered align-middle gy-4 gs-9" style="margin:25px 0px 0px">
                             <thead class="border-bottom border-gray-200 fs-6 text-gray-600 fw-bolder bg-light bg-opacity-75">
@@ -186,6 +186,13 @@
 
 
             const course=$json.courses;
+            console.log(course);
+            course.forEach(function (e) {
+                e.total_unit.forEach(function (e1) {
+                    e1.label = e1.unit_name;
+                })
+
+            })
             let courseTreeselect =!course ? null : course.map(rec => {
                 return {
                     'id':rec.id,
@@ -221,6 +228,9 @@
             }
         },
         methods: {
+            deleteCourse: function (node, instanceId) {
+                node.courseTea = [];
+            },
             modalDevice(id) {
                 const that=this;
                 that.currId = id;
