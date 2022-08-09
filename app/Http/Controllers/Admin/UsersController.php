@@ -129,8 +129,7 @@ class UsersController extends AdminBaseController
         }
         $devicePerUser=($entry->schools->devices_per_user);
         $userDevice=($entry->user_devices);
-        $userDe=($userDevice->count()/$devicePerUser)*100;
-
+        $userDe=round(($userDevice->count()/$devicePerUser)*100);
         /**
          * @var  User $entry
          */
