@@ -51,8 +51,25 @@ class AllocationContentsController extends AdminBaseController
         $component = 'Allocation_contentForm';
         $title = 'Create allocation_contents';
         $schools=School::query()->orderBy('id','desc')->get();
-        $courses=Course::query()->orderBy('id','desc')->get();
+        $courses=Course::query()->with(['unit'])->orderBy('id','desc')->get();
         $units=Unit::query()->orderBy('id','desc')->get();
+
+        foreach ($courses as $course)
+        {
+            $course['units']=[];
+            $unit=[];
+
+            foreach ($course->unit as $courseUnit)
+            {
+                if($courseUnit->course_id==$course->id)
+                {
+                    $unit[]=$courseUnit;
+
+                }
+            }
+            $course['units']=$unit;
+
+        }
         $jsonData=[
             'schools'=>$schools,
             'courses'=>$courses,
@@ -70,13 +87,12 @@ class AllocationContentsController extends AdminBaseController
         $data=$req->all();
         $id = $req->id;
         $entry = AllocationContent::query()->with(['schools','courses','units','course_unit'])->where('id',$id)->first();
-        $courses=Course::query()->with(['units'])->orderBy('id','ASC')->get();
+        $courses=Course::query()->with(['units','unit'])->orderBy('id','ASC')->get();
         $units=Unit::query()->orderBy('id','desc')->get();
         $total_units=($entry->units);
         $total_schools=$entry->schools;
         $total_courses=$entry->courses;
         $course_unit=$entry->course_unit;
-        // $total_units=$entry->units;
         $totalSchoolArray=[];
         if($total_schools)
         {
@@ -100,6 +116,20 @@ class AllocationContentsController extends AdminBaseController
 
             foreach($courses as $course)
                 {
+
+
+                    $course['units']=[];
+                    $unit=[];
+                    foreach ($course->unit as $courseUnit)
+                    {
+                        if($courseUnit->course_id==$course->id)
+                        {
+                            $unit[]=$courseUnit;
+
+                        }
+                    }
+                    $course['units']=$unit;
+
 
                     $course['total_unit']=[];
                     $total_unit=[];

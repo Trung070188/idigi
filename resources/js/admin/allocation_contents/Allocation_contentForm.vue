@@ -39,7 +39,7 @@
                                     {{course.label}}
                                 </td>
                                 <td >
-                                <treeselect :options="units" :multiple="true" v-model="course.total_unit"  />
+                                <treeselect :options="course.units" :multiple="true" v-model="course.total_unit"  />
                                 </td>
                             </tr>
 
@@ -83,6 +83,7 @@
                     'id':rec.id,
                     'label': rec.course_name,
                     'total_unit':rec.total_unit,
+                    'units':rec.units,
                 }
             })
                 return {
@@ -104,7 +105,7 @@
             },
             async save() {
                 this.isLoading = true;
-                const res = await $post('/xadmin/allocation_contents/save', {entry: this.entry,total_school:this.total_school,total_course:this.total_course,unit:this.courses,total_unit:this.courses.total_unit}, false);
+                const res = await $post('/xadmin/allocation_contents/save', {entry: this.entry,total_school:this.total_school,total_course:this.total_course,unit:this.courses}, false);
                 this.isLoading = false;
                 if (res.errors) {
                     this.errors = res.errors;

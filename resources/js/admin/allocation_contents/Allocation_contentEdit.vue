@@ -44,7 +44,7 @@
                                     {{course.label}}
                                 </td>
                                 <td >
-                                <treeselect :options="units" :multiple="true" v-model="course.total_unit"/>
+                                <treeselect :options="course.unit" :multiple="true" v-model="course.total_unit"/>
                                     </td>
                             </tr>
                             </tbody>
@@ -80,11 +80,13 @@
                 }
             })
             const course=$json.courses;
+            console.log(course);
             const courseTreeselect = course.map(rec => {
                 return {
                     'id':rec.id,
                     'label': rec.course_name,
                     'total_unit':rec.total_unit,
+                    'unit':rec.unit,
                 }
             })
             return {
