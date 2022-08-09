@@ -140,6 +140,8 @@ class FilesController extends AdminBaseController
         $file->extension = $extension;
         $file->save();
 
+
+
         return [
             'code' => 200,
             'file' => $file,
