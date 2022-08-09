@@ -3,7 +3,14 @@
 namespace App\Http\Controllers\Admin;
 
 
+use App\Console\Commands\DownloadLesson;
+use App\Models\AllocationContent;
+use App\Models\AllocationContentSchool;
+use App\Models\DownloadAppLog;
+use App\Models\DownloadLessonFile;
+use App\Models\DownloadLessonLog;
 use App\Models\UserDevice;
+use Carbon\Carbon;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -209,7 +216,40 @@ class LessonsController extends AdminBaseController
      */
     public function data(Request $req)
     {
-        $query = Lesson::query()->orderBy('id', 'ASC');
+        $user=Auth::user();
+        $unitIds = [];
+        $schoolId = $user->school_id;
+
+        foreach($user->roles as $role)
+        {
+            if($role->role_name=='Teacher'){
+                if($user->user_units){
+                    foreach ($user->user_units as $unit){
+                        $unitIds[] = $unit->id;
+                    }
+                }
+
+            }else{
+                $contents = AllocationContentSchool::where('school_id', $schoolId)
+                    ->with(['allocation_content', 'allocation_content.units'])
+                    ->get();
+
+                foreach ($contents as $content){
+                    if(@$content->allocation_content->units){
+                        foreach ($content->allocation_content->units as $unit){
+                            $unitIds[] = $unit->id;
+                        }
+
+                    }
+                }
+
+            }
+        }
+
+        $query = Lesson::query()->with(['user_units'])
+            ->whereIn('unit_id', $unitIds)
+            ->orderBy('id', 'ASC');
+
 
         if ($req->keyword) {
             $query->where('name', 'LIKE', '%' . $req->keyword . '%');
@@ -237,140 +277,19 @@ class LessonsController extends AdminBaseController
         if ($req->limit) {
             $limit = $req->limit;
         }
-        $data=[];
-        $user=Auth::user();
+
+
         $entries = $query->paginate($limit);
-        foreach ($entries as $entry)
-        {
-
-            foreach($user->roles as $role)
-            {
-                if($role->role_name=='Teacher')
-                {
-
-                    foreach ($user->user_units as $userUnit)
-                    {
-                        if($userUnit->unit_id==$entry->unit_id)
-                      {
-                          $data[]=[
-                              'id'=>$entry->id,
-                              'enabled'=>$entry->enabled,
-                              'grade'=>$entry->grade,
-                              'name'=>$entry->name,
-                              'rating'=>$entry->rating,
-                              'shared'=>$entry->shared,
-                              'structure'=>$entry->structure,
-                              'subject'=>$entry->subject,
-                              'unit'=>$entry->unit,
-                              'unit_name'=>$entry->unit_name,
-                              'number'=>$entry->number,
-                              'customized'=>$entry->customized,
-                              'old_id'=>$entry->old_id,
-                              'created_at'=>$entry->created_at,
-                              'updated_at'=>$entry->updated_at,
-                              'created_by'=>$entry->created_by,
-                              'updated_by'=>$entry->updated_by,
-
-                          ];
-                      }
-
-                    }
-
-                }
-                if($role->role_name!='Teacher'){
-                    $data[]=[
-                        'id'=>$entry->id,
-                        'enabled'=>$entry->enabled,
-                        'grade'=>$entry->grade,
-                        'name'=>$entry->name,
-                        'rating'=>$entry->rating,
-                        'shared'=>$entry->shared,
-                        'structure'=>$entry->structure,
-                        'subject'=>$entry->subject,
-                        'unit'=>$entry->unit,
-                        'unit_name'=>$entry->unit_name,
-                        'number'=>$entry->number,
-                        'customized'=>$entry->customized,
-                        'old_id'=>$entry->old_id,
-                        'created_at'=>$entry->created_at,
-                        'updated_at'=>$entry->updated_at,
-                        'created_by'=>$entry->created_by,
-                        'updated_by'=>$entry->updated_by,
-
-                    ];
-                }
-
-            }
-        }
 
         return [
             'code' => 0,
-            'data' => $data,
+            'data' => $entries->items(),
             'paginate' => [
                 'currentPage' => $entries->currentPage(),
                 'lastPage' => $entries->lastPage(),
                 'totalRecord' => $query->count(),
             ]
         ];
-    }
-
-    public function export()
-    {
-        $keys = [
-            'created_by' => ['A', 'created_by'],
-            'created_date' => ['B', 'created_date'],
-            'enabled' => ['C', 'enabled'],
-            'grade' => ['D', 'grade'],
-            'last_modified_by' => ['E', 'last_modified_by'],
-            'last_modified_date' => ['F', 'last_modified_date'],
-            'name' => ['G', 'name'],
-            'rating' => ['H', 'rating'],
-            'shared' => ['I', 'shared'],
-            'structure' => ['J', 'structure'],
-            'subject' => ['K', 'subject'],
-            'unit' => ['L', 'unit'],
-            'number' => ['M', 'number'],
-            'customized' => ['N', 'customized'],
-        ];
-
-        $query = Lesson::query()->orderBy('id', 'desc');
-
-        $entries = $query->paginate();
-        $spreadsheet = new Spreadsheet();
-        $sheet = $spreadsheet->getActiveSheet();
-
-        foreach ($keys as $key => $v) {
-            if (is_string($v)) {
-                $sheet->setCellValue($v . "1", $key);
-            } elseif (is_array($v)) {
-                list($c, $n) = $v;
-                $sheet->setCellValue($c . "1", $n);
-            }
-        }
-
-
-        foreach ($entries as $index => $entry) {
-            $idx = $index + 2;
-            foreach ($keys as $key => $v) {
-                if (is_string($v)) {
-                    $sheet->setCellValue("$v$idx", data_get($entry->toArray(), $key));
-                } elseif (is_array($v)) {
-                    list($c, $n) = $v;
-                    $sheet->setCellValue("$c$idx", data_get($entry->toArray(), $key));
-                }
-            }
-        }
-        $writer = new Xlsx($spreadsheet);
-        // We'll be outputting an excel file
-        header('Content-type: application/vnd.ms-excel');
-        $filename = uniqid() . '-' . date('Y_m_d H_i') . ".xlsx";
-
-        // It will be called file.xls
-        header('Content-Disposition: attachment; filename="' . $filename . '"');
-
-        // Write file to the browser
-        $writer->save('php://output');
-        die;
     }
 
     public function downloadLesson(Request $request)
@@ -404,6 +323,14 @@ class LessonsController extends AdminBaseController
         $zipAll = new \ZipArchive();
         $zipAll->open($zipFileAll, \ZipArchive::CREATE | \ZipArchive::OVERWRITE);
 
+       $lessonLog = DownloadLessonLog::create([
+            'user_id' => $user->id,
+            'ip_address' => $request->getClientIp(),
+            'user_agent' => $request->userAgent(),
+            'device_uid' => @$request->device_uid,
+            'lesson_ids' => implode(',', $request->lessonIds),
+            'download_at' => Carbon::now(),
+        ]);
 
         foreach ($lessons as $key => $lesson) {
             $filename = uniqid(time().rand(10,100));
@@ -438,12 +365,27 @@ class LessonsController extends AdminBaseController
             $zip->setEncryptionName('lesson_detail.txt', \ZipArchive::EM_AES_256,$password);
             $zip->close();
 
+            DownloadLessonFile::create([
+                'download_lesson_log_id' => $lessonLog->id,
+                'path' => $zip_file,
+                'is_main' => 0,
+                'is_deleted_file' => 0
+            ]);
+
             $zipAll->addFile($zip_file, $name[0].'.zip');
             $zipAll->setEncryptionName('/'.$name[0].'.zip', \ZipArchive::EM_AES_256, $password);
 
         }
 
         $zipAll->close();
+
+        DownloadLessonFile::create([
+            'download_lesson_log_id' => $lessonLog->id,
+            'path' => $zipFileAll,
+            'is_main' => 1,
+            'is_deleted_file' => 0
+        ]);
+
 
         return [
             'code' => 0,

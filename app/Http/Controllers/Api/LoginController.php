@@ -4,11 +4,13 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\AuthenticationLog;
+use App\Models\School;
 use App\Models\User;
 use App\Models\UserDevice;
 use Firebase\JWT\JWT;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 
 
@@ -72,7 +74,17 @@ class LoginController extends Controller
                     }
 
                 }
+                Auth::login($user);
 
+                $school = School::where('id', $user->school_id)->first();
+
+                if($school){
+                    $expired = $school->license_to;
+                }
+
+                if(!$expired){
+                    $expired = Carbon::now()->addHours(-10);
+                }
 
                 $payload = [
                     'email' => $user->email,
@@ -80,7 +92,7 @@ class LoginController extends Controller
                     'user_id' => $user->id,
                     'device_uid' => $deviceID,
                     'device_name' => $deviceName,
-                    'expired' => strtotime(Carbon::now()->addHours(10)),
+                    'expired' => strtotime($expired),
                     'create_time' =>  Carbon::now()->timestamp,
                     'secret_key' => $secret
                 ];

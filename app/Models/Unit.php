@@ -11,7 +11,8 @@ namespace App\Models;
 class Unit extends BaseModel
 {
     protected $table = 'units';
-    protected $fillable= [
-    'unit_name',
-];
+    protected $fillable=[
+        'unit_name',
+        'course_id'
+    ];
 }

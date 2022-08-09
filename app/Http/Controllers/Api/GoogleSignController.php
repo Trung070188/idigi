@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Models\AuthenticationLog;
+use App\Models\School;
 use App\Models\User;
 use App\Http\Controllers\Controller;
 use App\Models\UserDevice;
@@ -89,13 +90,23 @@ class GoogleSignController
                 $user->save();
                 Auth::login($user);
 
+                $school = School::where('id', $user->school_id)->first();
+
+                if($school){
+                    $expired = $school->license_to;
+                }
+
+                if(!$expired){
+                    $expired = Carbon::now()->addHours(-10);
+                }
+
                 $payload = [
                     'email' => $user->email,
                     'username' => $user->username,
                     'user_id' => $user->id,
                     'device_uid' => $deviceID,
                     'device_name' => $deviceName,
-                    'expired' => strtotime(Carbon::now()->addHours(10)),
+                    'expired' => strtotime($expired),
                     'secret_key' => $secret,
                     'create_time' =>  Carbon::now()->timestamp
                 ];

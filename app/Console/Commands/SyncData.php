@@ -3,11 +3,13 @@
 namespace App\Console\Commands;
 
 use App\Helpers\PhpDoc;
+use App\Models\Course;
 use App\Models\File;
 use App\Models\Inventory;
 use App\Models\Lesson;
 use App\Models\LessonInventory;
 use App\Models\Product;
+use App\Models\Unit;
 use App\Models\User;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Auth;
@@ -83,6 +85,17 @@ class SyncData extends Command
                         "nameLesson" => @$oldStructure['nameLesson'],
                         "subLessons" =>@$oldStructure['sublesson']
                     ];
+                    $courseData = [
+                        'label' => $lesson->subject.'_'.$lesson->grade,
+                    ];
+                    $course = Course::updateOrCreate($courseData, $courseData);
+
+                    $unitData = [
+                        'course_id' => $course->id,
+                        'label' => @$oldStructure['UnitName']
+                    ];
+
+                    $unit = Unit::updateOrCreate($unitData, $unitData);
                     $newLesson = [
                         'enabled' => $lesson->enabled,
                         'grade' => $lesson->grade,
@@ -92,6 +105,8 @@ class SyncData extends Command
                         'structure' => json_encode($structure),
                         'subject' => $lesson->subject,
                         'unit' => $lesson->unit,
+                        'unit_id' => $unit->id,
+                        'course_id' => $course->id,
                         'unit_name' => @$oldStructure['UnitName'],
                         'number' => $lesson->number,
                         'customized' => $lesson->customized,
@@ -101,6 +116,7 @@ class SyncData extends Command
                         'created_by' => @$userCreate->id,
                         'updated_by' => @$userUpdate->id,
                     ];
+
 
                     Lesson::updateOrCreate([
                         'old_id' => $lesson->id
