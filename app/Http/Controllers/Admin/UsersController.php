@@ -118,6 +118,15 @@ class UsersController extends AdminBaseController
             ];
         } else {
             $entry->file_image_new = NULL;
+            if( $entry->file_image_new==NULL)
+            {
+                $entry->file_image_new=[
+                    'id' => Null,
+                    'uri' => Null,
+                    'is_image' => Null,
+
+                ];
+            }
         }
 
         $roles = Role::query()->orderBy('role_name')->get();
@@ -130,6 +139,10 @@ class UsersController extends AdminBaseController
         $devicePerUser=($entry->schools->devices_per_user);
         $userDevice=($entry->user_devices);
         $userDe=round(($userDevice->count()/$devicePerUser)*100);
+        if($userDe==0.0)
+        {
+            $userDe=0;
+        }
         /**
          * @var  User $entry
          */
