@@ -104,7 +104,7 @@ class UsersController extends AdminBaseController
     public function profile(Request $req)
     {
         $id = $req->id;
-        $entry = User::with('roles')
+        $entry = User::with(['roles','user_devices','schools'])
             ->where('id', $id)->first();
         if (!$entry) {
             throw new NotFoundHttpException();
@@ -127,7 +127,9 @@ class UsersController extends AdminBaseController
             $role = $role_id->role_name;
 
         }
-
+        $devicePerUser=($entry->schools->devices_per_user);
+        $userDevice=($entry->user_devices);
+        $userDe=round(($userDevice->count()/$devicePerUser)*100);
         /**
          * @var  User $entry
          */
@@ -136,6 +138,9 @@ class UsersController extends AdminBaseController
         $jsonData = [
             'entry' => $entry,
             'role' => $role,
+            'devicePerUser'=>$devicePerUser,
+            'userDevice'=>$userDevice,
+            'userDe'=>$userDe,
         ];
         return view('admin.layouts.vue', compact('title', 'component', 'jsonData'));
     }
@@ -273,7 +278,6 @@ class UsersController extends AdminBaseController
             @'userUnits' => @$userUnits,
 
         ];
-//                dd($jsonData);
         return view('admin.layouts.vue', compact('title', 'component', 'jsonData'));
     }
 
@@ -521,7 +525,11 @@ class UsersController extends AdminBaseController
                 foreach ($data_role['unit'] as $UnitId) {
                     if (@$UnitId['courseTea']) {
                         foreach ($UnitId['courseTea'] as $uni) {
-                            UserUnit::create(['user_id' => $entry->id, 'unit_id' => $uni, 'course_id' => $UnitId['id']]);
+                            if(in_array($UnitId['id'], $data_role['courseTeachers'])){
+                                UserUnit::create(['user_id' => $entry->id, 'unit_id' => $uni, 'course_id' => $UnitId['id']]);
+
+
+                            }
                         }
                     }
                 }

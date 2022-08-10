@@ -225,30 +225,35 @@ class LessonsController extends AdminBaseController
             if($role->role_name=='Teacher'){
                 if($user->user_units){
                     foreach ($user->user_units as $unit){
-                        $unitIds[] = $unit->id;
+                        $unitIds[] = $unit->unit_id;
                     }
                 }
+                $query = Lesson::query()->with(['user_units'])
+                ->whereIn('unit_id', $unitIds)
+                ->orderBy('id', 'ASC');
+    
+    
 
-            }else{
-                $contents = AllocationContentSchool::where('school_id', $schoolId)
-                    ->with(['allocation_content', 'allocation_content.units'])
-                    ->get();
+            }
+            else{
+                $query = Lesson::query()->with(['user_units'])
+                ->orderBy('id', 'ASC');
+    
+    
+                // $contents = AllocationContentSchool::where('school_id', $schoolId)
+                //     ->with(['allocation_content', 'allocation_content.units'])
+                //     ->get();
+                // foreach ($contents as $content){
+                //     if(@$content->allocation_content->units){
+                //         foreach ($content->allocation_content->units as $unit){
+                //             $unitIds[] = $unit->id;
+                //         }
 
-                foreach ($contents as $content){
-                    if(@$content->allocation_content->units){
-                        foreach ($content->allocation_content->units as $unit){
-                            $unitIds[] = $unit->id;
-                        }
-
-                    }
-                }
+                //     }
+                // }
 
             }
         }
-
-        $query = Lesson::query()->with(['user_units'])
-            ->whereIn('unit_id', $unitIds)
-            ->orderBy('id', 'ASC');
 
 
         if ($req->keyword) {

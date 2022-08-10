@@ -51,8 +51,25 @@ class AllocationContentsController extends AdminBaseController
         $component = 'Allocation_contentForm';
         $title = 'Create allocation_contents';
         $schools=School::query()->orderBy('id','desc')->get();
-        $courses=Course::query()->orderBy('id','desc')->get();
+        $courses=Course::query()->with(['unit'])->orderBy('id','desc')->get();
         $units=Unit::query()->orderBy('id','desc')->get();
+
+        foreach ($courses as $course)
+        {
+            $course['units']=[];
+            $unit=[];
+
+            foreach ($course->unit as $courseUnit)
+            {
+                if($courseUnit->course_id==$course->id)
+                {
+                    $unit[]=$courseUnit;
+
+                }
+            }
+            $course['units']=$unit;
+
+        }
         $jsonData=[
             'schools'=>$schools,
             'courses'=>$courses,
@@ -70,14 +87,12 @@ class AllocationContentsController extends AdminBaseController
         $data=$req->all();
         $id = $req->id;
         $entry = AllocationContent::query()->with(['schools','courses','units','course_unit'])->where('id',$id)->first();
-        $courses=Course::query()->with(['units'])->orderBy('id','ASC')->get();
+        $courses=Course::query()->with(['units','unit'])->orderBy('id','ASC')->get();
         $units=Unit::query()->orderBy('id','desc')->get();
-
         $total_units=($entry->units);
         $total_schools=$entry->schools;
         $total_courses=$entry->courses;
         $course_unit=$entry->course_unit;
-        // $total_units=$entry->units;
         $totalSchoolArray=[];
         if($total_schools)
         {
@@ -106,19 +121,14 @@ class AllocationContentsController extends AdminBaseController
                     $total_unit=[];
                     foreach($course_unit as $un)
                     {
-
                         if($un->course_id==$course->id)
                         {
                            $total_unit[]=$un->unit_id;
                         }
                     }
                     $course['total_unit']=$total_unit;
-
-
                 }
-
         }
-
 
         $schools=School::query()->orderBy('id','desc')->get();
 
@@ -211,49 +221,48 @@ class AllocationContentsController extends AdminBaseController
             AllocationContentSchool::where('allocation_content_id',$entry->id)->delete();
             if(@$dataContent['total_school'])
             {
+                dd($dataContent['total_school']);
                 foreach($dataContent['total_school'] as $schoolId)
                 {
                     AllocationContentSchool::create(['school_id'=>$schoolId,'allocation_content_id'=>$entry->id]);
+                    
                 }
             }
 
             AllocationContentCourse::where('allocation_content_id',$entry->id)->delete();
+
+
             AllocationContentUnit::where('allocation_content_id',$entry->id)->delete();
-
-
 
             if(@$dataContent['total_course'])
             {
+
                 foreach($dataContent['total_course'] as $courseId)
                 {
                     AllocationContentCourse::create(['course_id'=>$courseId,'allocation_content_id'=>$entry->id]);
-
-                    if(@$dataContent['unit'])
-                    {
-                        AllocationContentUnit::where('allocation_content_id',$entry->id)->delete();
-
-
-                        foreach($dataContent['unit'] as $course)
-                        {
-
-
-                            if(@$course['total_unit'])
-                            {
-                                foreach($course['total_unit'] as $unitId)
-                                {
-                                    AllocationContentUnit::create(['course_id'=>$course['id'],'allocation_content_id'=>$entry->id,'unit_id'=>$unitId]);
-                                }
-
-                            }
-                        }
-                    }
-
                 }
 
+                if(@$dataContent['unit'])
+                {
 
+                    foreach($dataContent['unit'] as $course)
+                    {
+
+                        if(@$course['total_unit'])
+                        {
+                            foreach($course['total_unit'] as $unitId)
+                            {
+                                if(in_array($course['id'], $dataContent['total_course'])){
+                                    AllocationContentUnit::create(['course_id'=>$course['id'],'allocation_content_id'=>$entry->id,'unit_id'=>$unitId]);
+                                }
+                            }
+
+                        }
+
+                    }
+                }
 
             }
-
 
             return [
                 'code' => 0,

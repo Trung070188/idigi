@@ -103,27 +103,27 @@
                             <div class="d-flex flex-wrap flex-stack">
                                 <div class="d-flex flex-column flex-grow-1 pe-8">
                                     <div class="d-flex flex-wrap">
-                                        <div class="border border-gray-300 border-dashed rounded min-w-125px py-3 px-4 me-6 mb-3">
-                                            <div class="d-flex align-items-center">
-                                                <span class="svg-icon svg-icon-3 svg-icon-success me-2">
-                                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-                                                        <rect opacity="0.5" x="13" y="6" width="13" height="2" rx="1" transform="rotate(90 13 6)" fill="black"></rect>
-                                                        <path d="M12.5657 8.56569L16.75 12.75C17.1642 13.1642 17.8358 13.1642 18.25 12.75C18.6642 12.3358 18.6642 11.6642 18.25 11.25L12.7071 5.70711C12.3166 5.31658 11.6834 5.31658 11.2929 5.70711L5.75 11.25C5.33579 11.6642 5.33579 12.3358 5.75 12.75C6.16421 13.1642 6.83579 13.1642 7.25 12.75L11.4343 8.56569C11.7467 8.25327 12.2533 8.25327 12.5657 8.56569Z" fill="black"></path>
-                                                    </svg>
-                                                </span>
-                                                <div class="fs-2 fw-bolder counted">100</div>
-                                            </div>
-                                            <div class="fw-bold fs-6 text-gray-400">Downloaded</div>
-                                        </div>
+<!--                                        <div class="border border-gray-300 border-dashed rounded min-w-125px py-3 px-4 me-6 mb-3">-->
+<!--                                            <div class="d-flex align-items-center">-->
+<!--                                                <span class="svg-icon svg-icon-3 svg-icon-success me-2">-->
+<!--                                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">-->
+<!--                                                        <rect opacity="0.5" x="13" y="6" width="13" height="2" rx="1" transform="rotate(90 13 6)" fill="black"></rect>-->
+<!--                                                        <path d="M12.5657 8.56569L16.75 12.75C17.1642 13.1642 17.8358 13.1642 18.25 12.75C18.6642 12.3358 18.6642 11.6642 18.25 11.25L12.7071 5.70711C12.3166 5.31658 11.6834 5.31658 11.2929 5.70711L5.75 11.25C5.33579 11.6642 5.33579 12.3358 5.75 12.75C6.16421 13.1642 6.83579 13.1642 7.25 12.75L11.4343 8.56569C11.7467 8.25327 12.2533 8.25327 12.5657 8.56569Z" fill="black"></path>-->
+<!--                                                    </svg>-->
+<!--                                                </span>-->
+<!--&lt;!&ndash;                                                <div class="fs-2 fw-bolder counted">100</div>&ndash;&gt;-->
+<!--                                            </div>-->
+<!--&lt;!&ndash;                                            <div class="fw-bold fs-6 text-gray-400">Downloaded</div>&ndash;&gt;-->
+<!--                                        </div>-->
                                     </div>
                                 </div>
                                 <div class="d-flex align-items-center w-200px w-sm-300px flex-column mt-3">
                                     <div class="d-flex justify-content-between w-100 mt-auto mb-2">
                                         <span class="fw-bold fs-6 text-gray-400">Device Registration</span>
-                                        <span class="fw-bolder fs-6">100%</span>
+                                        <span class="fw-bolder fs-6">{{userDe}}%</span>
                                     </div>
                                     <div class="h-5px mx-3 w-100 bg-light mb-3">
-                                        <div class="bg-success rounded h-5px" role="progressbar" style="width: 100%;" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
+                                        <div class="bg-success rounded h-5px" role="progressbar" :style="{'width': userDe +'%'}" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
                                     </div>
                                 </div>
                             </div>
@@ -145,7 +145,7 @@
                                 <label class="col-lg-2 col-form-label fw-bold fs-6">Fullname</label>
 
                                 <div class="col-lg-10 fv-row fv-plugins-icon-container">
-                                    <input type="text" name="full_name" class="form-control form-control-lg form-control-solid" placeholder="Enter the Fullname" v-model="entry.full_name" />
+                                    <input type="text" name="full_name" class="form-control form-control-lg " placeholder="Enter the Fullname" v-model="entry.full_name" />
                                     <div class="fv-plugins-message-container invalid-feedback" v-if="errors.full_name">{{errors.full_name}}</div>
                                 </div>
                             </div>
@@ -153,7 +153,7 @@
                                 <label class="col-lg-2 col-form-label fw-bold fs-6">Email</label>
 
                                 <div class="col-lg-10 fv-row fv-plugins-icon-container">
-                                    <input type="text" name="email" class="form-control form-control-lg form-control-solid" placeholder="Enter the email" v-model="entry.email" />
+                                    <input type="text" name="email" class="form-control form-control-lg " placeholder="Enter the email" v-model="entry.email" />
                                     <div class="fv-plugins-message-container invalid-feedback" v-if="errors.email">{{errors.email}}</div>
                                 </div>
                             </div>
@@ -161,7 +161,7 @@
                                 <label class="col-lg-2 col-form-label fw-bold fs-6">Username</label>
 
                                 <div class="col-lg-10 fv-row fv-plugins-icon-container">
-                                    <input type="text" name="username" class="form-control form-control-lg form-control-solid" placeholder="Enter the username" v-model="entry.username" disabled />
+                                    <input type="text" name="username" class="form-control form-control-lg " placeholder="Enter the username" v-model="entry.username" disabled />
                                     <div class="fv-plugins-message-container invalid-feedback" v-if="errors.username">{{errors.username}}</div>
                                 </div>
                             </div>
@@ -169,7 +169,7 @@
                                 <label class="col-lg-2 col-form-label fw-bold fs-6">Role</label>
 
                                 <div class="col-lg-10 fv-row fv-plugins-icon-container">
-                                    <input type="text" name="role" class="form-control form-control-lg form-control-solid" placeholder="Enter the role" v-model="role" disabled />
+                                    <input type="text" name="role" class="form-control form-control-lg " placeholder="Enter the role" v-model="role" disabled />
                                     <div class="fv-plugins-message-container invalid-feedback" v-if="errors.role">{{errors.role}}</div>
                                 </div>
                             </div>
@@ -287,6 +287,9 @@
                 ],
                 entry: $json.entry || {},
                 role:$json.role || [],
+                userDe:$json.userDe || [],
+                userDevice:$json.userDevice,
+                devicePerUser:$json.devicePerUser || {},
                 isLoading: false,
                 errors: {}
             }
@@ -365,13 +368,14 @@
                         toastr.error(res.message);
                     } else {
                         toastr.success(res.message);
-
                         this.entry.file_image_new = this.fileMap(res.file);
-
                         console.log(this.entry);
+
                     }
 
                 }
+                const abc = await $post('/xadmin/users/saveProfile', {entry: this.entry,role:this.role}, false);
+
 
             },
         }
