@@ -216,43 +216,45 @@ class LessonsController extends AdminBaseController
      */
     public function data(Request $req)
     {
-        $user=Auth::user();
+        $user = Auth::user();
         $unitIds = [];
         $schoolId = $user->school_id;
+        $isSuperAdmin = 0;
 
-        foreach($user->roles as $role)
-        {
-            if($role->role_name=='Teacher'){
-                if($user->user_units){
-                    foreach ($user->user_units as $unit){
+        foreach ($user->roles as $role) {
+            if ($role->role_name == 'Teacher') {
+                if ($user->user_units) {
+                    foreach ($user->user_units as $unit) {
                         $unitIds[] = $unit->unit_id;
                     }
                 }
-                $query = Lesson::query()->with(['user_units'])
-                ->whereIn('unit_id', $unitIds)
-                ->orderBy('id', 'ASC');
-    
-    
+
 
             }
-            else{
-                $query = Lesson::query()->with(['user_units'])
-                ->orderBy('id', 'ASC');
-    
-    
-                // $contents = AllocationContentSchool::where('school_id', $schoolId)
-                //     ->with(['allocation_content', 'allocation_content.units'])
-                //     ->get();
-                // foreach ($contents as $content){
-                //     if(@$content->allocation_content->units){
-                //         foreach ($content->allocation_content->units as $unit){
-                //             $unitIds[] = $unit->id;
-                //         }
+            if ($role->role_name == 'Administrator') {
+                $contents = AllocationContentSchool::where('school_id', $schoolId)
+                    ->with(['allocation_content', 'allocation_content.units'])
+                    ->get();
+                foreach ($contents as $content) {
+                    if (@$content->allocation_content->units) {
+                        foreach ($content->allocation_content->units as $unit) {
+                            $unitIds[] = $unit->id;
+                        }
 
-                //     }
-                // }
-
+                    }
+                }
             }
+
+            if ($role->role_name == 'Super Administrator') {
+                $isSuperAdmin = 1;
+            }
+        }
+
+        $query = Lesson::query()->with(['user_units'])
+            ->orderBy('id', 'ASC');
+
+        if($isSuperAdmin == 0){
+            $query = $query->whereIn('unit_id', $unitIds);
         }
 
 
@@ -260,7 +262,7 @@ class LessonsController extends AdminBaseController
             $query->where('name', 'LIKE', '%' . $req->keyword . '%');
         }
         if ($req->name) {
-            $query->where('name',  $req->name);
+            $query->where('name', $req->name);
         }
         if ($req->subject) {
             $query->where('subject', $req->subject);
@@ -271,7 +273,7 @@ class LessonsController extends AdminBaseController
             $query->where('grade', $req->grade);
         }
 
-        if ($req->enabled!='') {
+        if ($req->enabled != '') {
             $query->where('enabled', $req->enabled);
         }
 
@@ -307,7 +309,7 @@ class LessonsController extends AdminBaseController
 
         $user = Auth::user();
         $userDevice = UserDevice::where('user_id', $user->id)->where('id', $request->device)->first();
-        $password = env('SECRET_KEY').'_'.@$userDevice->secret_key;
+        $password = env('SECRET_KEY') . '_' . @$userDevice->secret_key;
 
         $y = date('Y');
         $m = date('m');
@@ -318,17 +320,17 @@ class LessonsController extends AdminBaseController
             mkdir(public_path($dir), 0755, true);
         }
 
-        $lessons = Lesson::whereIn('id',  $request->lessonIds)
+        $lessons = Lesson::whereIn('id', $request->lessonIds)
             ->with(['inventories'])->get();
 
 
-        $filenameAll = uniqid(time().rand(10, 100));
-        $pathZipAll = $dir . '/all_lessons_'.$filenameAll.'.zip';
+        $filenameAll = uniqid(time() . rand(10, 100));
+        $pathZipAll = $dir . '/all_lessons_' . $filenameAll . '.zip';
         $zipFileAll = public_path($pathZipAll);
         $zipAll = new \ZipArchive();
         $zipAll->open($zipFileAll, \ZipArchive::CREATE | \ZipArchive::OVERWRITE);
 
-       $lessonLog = DownloadLessonLog::create([
+        $lessonLog = DownloadLessonLog::create([
             'user_id' => $user->id,
             'ip_address' => $request->getClientIp(),
             'user_agent' => $request->userAgent(),
@@ -338,9 +340,9 @@ class LessonsController extends AdminBaseController
         ]);
 
         foreach ($lessons as $key => $lesson) {
-            $filename = uniqid(time().rand(10,100));
+            $filename = uniqid(time() . rand(10, 100));
             $name = explode(':', $lesson->name);
-            $zip_file = public_path($dir . '/'.$name[0].'.zip');
+            $zip_file = public_path($dir . '/' . $name[0] . '.zip');
             $zip = new \ZipArchive();
             $zip->open($zip_file, \ZipArchive::CREATE | \ZipArchive::OVERWRITE);
             $structure = json_decode($lesson->structure, true);
@@ -351,11 +353,11 @@ class LessonsController extends AdminBaseController
                     $icon = 'Icons/' . basename(public_path($inventory->image));
                     $link = basename(public_path($inventory->virtual_path));
 
-                    if(file_exists(public_path($inventory->image)) && is_file(public_path($inventory->image))){
+                    if (file_exists(public_path($inventory->image)) && is_file(public_path($inventory->image))) {
                         $zip->addFile(public_path($inventory->image), $icon);
                         $zip->setEncryptionName($icon, \ZipArchive::EM_AES_256, $password);
                     }
-                    if(file_exists(public_path($inventory->virtual_path)) && is_file(public_path($inventory->virtual_path))){
+                    if (file_exists(public_path($inventory->virtual_path)) && is_file(public_path($inventory->virtual_path))) {
                         $zip->addFile(public_path($inventory->virtual_path), $link);
                         $zip->setEncryptionName($link, \ZipArchive::EM_AES_256, $password);
                     }
@@ -364,10 +366,10 @@ class LessonsController extends AdminBaseController
                 }
             }
 
-            Storage::put($dir . '/lesson_detail'.$filename.'.txt', json_encode($structure));
+            Storage::put($dir . '/lesson_detail' . $filename . '.txt', json_encode($structure));
 
-            $zip->addFile(storage_path('app/' . $dir . '/lesson_detail'.$filename.'.txt'), 'lesson_detail.txt');
-            $zip->setEncryptionName('lesson_detail.txt', \ZipArchive::EM_AES_256,$password);
+            $zip->addFile(storage_path('app/' . $dir . '/lesson_detail' . $filename . '.txt'), 'lesson_detail.txt');
+            $zip->setEncryptionName('lesson_detail.txt', \ZipArchive::EM_AES_256, $password);
             $zip->close();
 
             DownloadLessonFile::create([
@@ -377,8 +379,8 @@ class LessonsController extends AdminBaseController
                 'is_deleted_file' => 0
             ]);
 
-            $zipAll->addFile($zip_file, $name[0].'.zip');
-            $zipAll->setEncryptionName('/'.$name[0].'.zip', \ZipArchive::EM_AES_256, $password);
+            $zipAll->addFile($zip_file, $name[0] . '.zip');
+            $zipAll->setEncryptionName('/' . $name[0] . '.zip', \ZipArchive::EM_AES_256, $password);
 
         }
 
