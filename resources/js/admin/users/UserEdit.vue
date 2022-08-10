@@ -64,8 +64,8 @@
                                 <div class="row" v-if="name_role==2 || name_role==5">
                                     <div class="form-group  col-sm-4">
                                         <label>School <span class="text-danger">*</span></label>
-                                        <select  class="form-control form-select" v-model="entry.school_id" type="" placeholder="Enter the school" >
-                                            <option v-for="school in schools" :value="school.id" >{{school.school_name}}</option>
+                                        <select  class="form-control form-select" v-model="entry.school_id" required placeholder="Enter the school" >
+                                            <option v-for="school in schools" :value="school.id" >{{school.label}}</option>
                                         </select>
                                     </div>
                                 </div>

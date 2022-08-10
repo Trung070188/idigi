@@ -68,7 +68,7 @@
                                     <div class="form-group  col-sm-4" >
                                         <label>School <span class="text-danger">*</span></label>
                                         <select  class="form-control form-select" type="" placeholder="Enter the school" v-model="entry.school_id">
-                                            <option v-for="school in schools" :value="school.id">{{school.school_name}}</option>
+                                            <option v-for="school in schools" :value="school.id">{{school.label}}</option>
 
                                         </select>
                                     </div>
