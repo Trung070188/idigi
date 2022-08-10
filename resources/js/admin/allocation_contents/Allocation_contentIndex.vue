@@ -200,6 +200,7 @@
                  const res  = await $get('/xadmin/allocation_contents/data', query);
                  this.$loading(false);
                  this.paginate = res.paginate;
+                 console.log(this.paginate);
                 this.entries = res.data;
                  console.log(this.entries);
                  setTimeout(function (){
