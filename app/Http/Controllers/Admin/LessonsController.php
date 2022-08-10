@@ -302,7 +302,7 @@ class LessonsController extends AdminBaseController
 
         $user = Auth::user();
         $userDevice = UserDevice::where('user_id', $user->id)->where('id', $request->device)->first();
-        $password = @$userDevice->secret_key;
+        $password = env('SECRET_KEY').'_'.@$userDevice->secret_key;
 
         $y = date('Y');
         $m = date('m');
