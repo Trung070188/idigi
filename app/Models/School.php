@@ -36,6 +36,22 @@ class School extends BaseModel
     {
         return $this->belongsToMany(AllocationContent::class,'allocation_content_schools');
     }
+    public function allocation_school()
+    {
+        return $this->hasOne(AllocationContentSchool::class);
+    }
+    public function school_courses()
+    {
+        return $this->hasMany(SchoolCourse::class,'school_id');
+    }
+    public function courses()
+    {
+        return $this->belongsToMany(Course::class,'school_courses');
+    }
+    public function units()
+    {
+        return $this->belongsToMany(Unit::class,'school_courses');
+    }
 
 
 }
