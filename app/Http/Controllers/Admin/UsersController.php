@@ -89,7 +89,10 @@ class UsersController extends AdminBaseController
         $component = 'TeacherCreated';
         $title = 'Create Teacher';
         $roles = Role::query()->orderBy('role_name')->get();
+        $user=Auth::user();
+        $school=($user->schools->label);
         $jsonData = [
+            'school'=>$school,
             'roles' => $roles
         ];
         return view('admin.layouts.vue', compact('title', 'component', 'jsonData'));
@@ -578,6 +581,68 @@ class UsersController extends AdminBaseController
             ];
         }
     }
+    public function saveTeacher(Request $req)
+    {
+        if (!$req->isMethod('POST')) {
+            return ['code' => 405, 'message' => 'Method not allow'];
+        }
+        $data = $req->get('entry');
+        $rules = [
+            'full_name' => ['required', function ($attribute, $value, $fail) {
+                if (preg_match('/[\'\/~`\!@#\$%\^&\*\(\)_\-\+=\{\}\[\]\|;:"\<\>,\.\?\\\]/', $value)) {
+                    return $fail(__(' The :attribute no special characters'));
+                }
+            },
+                function ($attribute, $value, $fail) {
+                    if (preg_match('/[0-9]/', $value)) {
+                        return $fail(__(' The :attribute not a number'));
+                    }
+                },
+            ],
+//            'password' => '|max:191|confirmed',
+        ];
+        if (!isset($data['id'])) {
+            $rules['username'] = ['required', 'min:8', 'unique:users,username', function ($attribute, $value, $fail) {
+                if (preg_match('/[\'\/~`\!@#\$%\^&\*\(\)_\-\+=\{\}\[\]\|;:"\<\>,\.\?\\\]/', $value)) {
+                    return $fail(__(' The :attribute no special characters'));
+                }
+            },];
+            $rules['email'] = 'required|max:191|email|unique:users,email';;
+
+
+//            $rules['password'] = 'required|max:191|confirmed';
+        }
+        if (isset($data['id'])) {
+            $user = User::find($data['id']);
+            $rules['email'] = ['required', 'email', Rule::unique('users')->ignore($user->id),];
+        }
+        $customMessages = [
+        ];
+        $v = Validator::make($data, $rules, $customMessages);
+
+        if ($v->fails()) {
+            return [
+                'code' => 2,
+                'errors' => $v->errors()
+            ];
+        }
+        $user=Auth::user();
+        $schoolId=$user->Schools->id;
+
+            $entry = new User();
+            $entry->school_id=$schoolId;
+            $data['password'] = Hash::make($data['password']);
+            $entry->fill($data);
+            $entry->save();
+          UserRole::create(['user_id'=>$entry->id,'role_id'=>5]);
+
+            return [
+                'code' => 0,
+                'message' => 'Đã thêm',
+                'id' => $entry->id,
+            ];
+        }
+
 
 
     /**
@@ -689,7 +754,6 @@ class UsersController extends AdminBaseController
     {
         $query = User::query()
             ->with(['roles', 'user_devices'])
-            ->whereNotNull('last_login')
             ->orderBy('id', 'ASC');
         if ($req->keyword) {
             $query->where('username', 'LIKE', '%' . $req->keyword . '%');
