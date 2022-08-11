@@ -80,7 +80,7 @@
                                 </div>
                                 <div class="row">
                                     <div class="form-group col-lg-4">
-                                        <label>License to <span class="text-danger">*</span></label>
+                                        <label>License to </label>
                                         <datepicker :timepicker="true" v-model="entry.license_to"></datepicker>
                                         <error-label  :errors="errors.license_to"></error-label>
                                     </div>
@@ -105,7 +105,7 @@
                             </div>
                              <div class="row">
                                     <div class="form-group col-lg-10">
-                                        <label>Content Allocated <span class="text-danger">*</span></label>
+                                        <label>Content Allocated </label>
                                        <select class="form-control form-select" v-model="allocationContenSchool">
                                            <option v-for="allocationConten in allocationContens" :value="allocationConten.id">{{allocationConten.title}}</option>
                                        </select>
@@ -120,11 +120,11 @@
                             <tbody  >
                             <tr >
                                 <td  >
-                                   
+
                                 </td>
-                                <td >   
+                                <td >
                                 <!-- <treeselect :options="units" :multiple="true" v-model="course.total_unit"/> -->
-                                    </td>           
+                                    </td>
                             </tr>
                             </tbody>
                         </table>
@@ -137,8 +137,8 @@
                         </div>
                     </div>
                 </div>
-              
-               
+
+
             </div>
         </div>
     </div>

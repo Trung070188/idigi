@@ -340,7 +340,9 @@ class SchoolsController extends AdminBaseController
      */
     public function data(Request $req)
     {
-        $query = School::query()->orderBy('id', 'ASC');
+        $query = School::query()->with(['users'])->orderBy('id', 'ASC');
+
+
 
         if ($req->keyword) {
             $query->where('label', 'LIKE', '%' . $req->keyword. '%');
@@ -355,12 +357,41 @@ class SchoolsController extends AdminBaseController
         if($req->limit){
             $limit = $req->limit;
         }
-
+        $data=[];
+        $teacher=[];
         $entries = $query->paginate($limit);
+        foreach ($entries as $entry)
+        {
+            foreach ($entry->users as $user)
+            {
+                foreach ($user->roles as $role)
+                {
+                   if($role->role_name=='Teacher' && $user->last_login!=null)
+                   {
+                       $teacher[]=$user;
+                   }
+                }
 
+            }
+            $data[]=[
+                'id'=>$entry->id,
+                'label'=>$entry->label,
+                'school_address'=>$entry->school_address,
+                'school_email'=>$entry->school_email,
+                'school_phone'=>$entry->school_phone,
+                'number_of_users'=>$entry->number_of_users,
+                'devices_per_user'=>$entry->devices_per_user,
+                'license_info'=>$entry->license_info,
+                'license_to'=>$entry->license_to,
+                'license_state'=>$entry->license_state,
+                'teacher'=>$teacher,
+
+            ];
+
+        }
         return [
             'code' => 0,
-            'data' => $entries->items(),
+            'data' =>$data,
             'paginate' => [
                 'currentPage' => $entries->currentPage(),
                 'lastPage' => $entries->lastPage(),

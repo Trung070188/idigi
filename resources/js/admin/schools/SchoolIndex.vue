@@ -155,7 +155,7 @@
                                 <td class="" v-text="entry.label"></td>
                                 <td class="" v-text="entry.school_address"></td>
                                 <td></td>
-                                <td class="" v-text="entry.number_of_users"></td>
+                                <td class="" v-text="entry.teacher.length"></td>
                                 <td class="" v-text="entry.devices_per_user"></td>
                                 <td></td>
                                 <td class="" v-text="entry.license_state"></td>
@@ -273,6 +273,9 @@
                 this.$loading(false);
                 this.paginate = res.paginate;
                 this.entries = res.data;
+                this.user=res.users;
+                console.log(this.user);
+                console.log(this.entries);
                 this.from = (this.paginate.currentPage - 1) * (this.limit) + 1;
                 this.to = (this.paginate.currentPage - 1) * (this.limit) + this.entries.length;
             },
