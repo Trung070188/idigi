@@ -358,15 +358,17 @@ class SchoolsController extends AdminBaseController
             $limit = $req->limit;
         }
         $data=[];
-        $teacher=[];
         $entries = $query->paginate($limit);
         foreach ($entries as $entry)
         {
+            $teacher=[];
+
             foreach ($entry->users as $user)
             {
                 foreach ($user->roles as $role)
                 {
-                   if($role->role_name=='Teacher' && $user->last_login!=null)
+
+                    if($role->role_name=='Teacher' && $user->last_login!=null)
                    {
                        $teacher[]=$user;
                    }
