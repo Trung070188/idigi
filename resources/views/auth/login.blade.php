@@ -82,7 +82,7 @@ License: For each use you must have a valid license purchased only from above li
 					<div class="w-lg-500px bg-body rounded shadow-sm p-10 p-lg-15 mx-auto">
 						<!--begin::Form-->
 						<form class="form w-100" id="loginForm" method="post" action="/xadmin/login">
-                            {{csrf_field()}}
+                            @csrf
 
 							<!--begin::Heading-->
 							<div class="text-center mb-10">
@@ -128,7 +128,7 @@ License: For each use you must have a valid license purchased only from above li
                             <div class="fv-row mb-10 fv-plugins-icon-container fv-plugins-bootstrap5-row-invalid">
 								<label class="form-check form-check-custom form-check-solid form-check-inline mb-5">
 									<input class="form-check-input" type="checkbox" name="remember" id="customCheck1" @if(old('remember')) checked @endif>
-									<span class="form-check-label fw-bold text-gray-700">Remember me
+                                    <span class="form-check-label fw-bold text-gray-700">Remember me</span>
 								</label>
                             </div>
 
