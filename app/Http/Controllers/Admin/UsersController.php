@@ -24,6 +24,8 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use Illuminate\Validation\Rule;
+use App\Jobs\SendMailPassword;
+
 
 
 class UsersController extends AdminBaseController
@@ -292,7 +294,6 @@ class UsersController extends AdminBaseController
             @'course_unit' => @$course_unit,
             @'userCouser' => @$userCouser,
             @'userUnits' => @$userUnits,
-
         ];
         return view('admin.layouts.vue', compact('title', 'component', 'jsonData'));
     }
@@ -483,14 +484,13 @@ class UsersController extends AdminBaseController
                     return $fail(__(' The :attribute no special characters'));
                 }
             },];
-            $rules['email'] = 'required|max:191|email|unique:users,email';;
 
 
 //            $rules['password'] = 'required|max:191|confirmed';
         }
         if (isset($data['id'])) {
             $user = User::find($data['id']);
-            $rules['email'] = ['required', 'email', Rule::unique('users')->ignore($user->id),];
+            $rules['email'] = ['email', Rule::unique('users')->ignore($user->id),];
         }
         $customMessages = [
         ];
@@ -544,7 +544,6 @@ class UsersController extends AdminBaseController
                             if(in_array($UnitId['id'], $data_role['courseTeachers'])){
                                 UserUnit::create(['user_id' => $entry->id, 'unit_id' => $uni, 'course_id' => $UnitId['id']]);
 
-
                             }
                         }
                     }
@@ -558,10 +557,16 @@ class UsersController extends AdminBaseController
             ];
         } else {
             $entry = new User();
+            $realPassword = $data['password'];
             $data['password'] = Hash::make($data['password']);
-
             $entry->fill($data);
             $entry->save();
+            $content=[
+                'full_name'=>$entry->full_name,
+                'password'=>$realPassword,
+                'username'=>$entry->username,
+            ];
+            dispatch(new SendMailPassword($entry->email,'Thông báo tài khoản mới trên iDIGI',$content));
 
             if ($data_role['name_role']) {
                 UserRole::updateOrCreate([
@@ -634,7 +639,7 @@ class UsersController extends AdminBaseController
             $data['password'] = Hash::make($data['password']);
             $entry->fill($data);
             $entry->save();
-          UserRole::create(['user_id'=>$entry->id,'role_id'=>5]);
+        UserRole::create(['user_id'=>$entry->id,'role_id'=>5]);
 
             return [
                 'code' => 0,

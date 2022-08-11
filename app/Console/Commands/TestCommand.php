@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Helpers\PhpDoc;
+use App\Jobs\SendMailPassword;
 use App\Models\GroupPermission;
 use App\Models\Inventory;
 use App\Models\Permission;
@@ -48,6 +49,13 @@ class TestCommand extends Command
     public function handle()
     {
 
+        $content = [
+            'full_name' =>'abvv',
+            'username'=>'quangtrung',
+            'password'=>'abc'
+        ];
+        dispatch(new SendMailPassword('trung.nguyen@blueocean.net.vn', 'Test thu',$content));
+        dd(1);
         dd(parse_url('http://localhost:8888/xadmin/request_roles/edit?id=45'));
         $userPermissions = [];
         $user = User::find(2);

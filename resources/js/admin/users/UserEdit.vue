@@ -89,8 +89,8 @@
                         <div>
                             <button type="reset" @click="save()" class="btn btn-primary mr-2">Save</button>
                             <button type="reset" @click="backIndex()" class="btn btn-secondary">Cancel</button>
-                            <!--                            <label style="margin-left: 20px">Thông tin đăng nhập và mật khẩu sẽ được gửi tới người dùng
-                                                            qua email.</label>-->
+                        <label style="margin-left: 20px">Thông tin đăng nhập và mật khẩu sẽ được gửi tới người dùng
+                            qua email.</label>
                         </div>
                     </div>
                 </div>
