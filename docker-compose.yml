@@ -1,0 +1,11 @@
+version: "3"
+services:
+  web:
+    build:
+      dockerfile: Dockerfile
+      context: .
+    ports:
+      - "10001:80"
+    volumes:
+      - .:/var/www
+    restart: always
