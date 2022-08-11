@@ -98,16 +98,10 @@ class User extends Authenticatable
 
         return asset('/assets/avatar/?name=' . urlencode($this->name));
     }
-//    public function user_role()
-//    {
-//        return $this->hasOne(UserRole::class,'user_id');
-//    }
-
     public function roles()
     {
         return $this->belongsToMany(Role::class, 'user_role', 'user_id', 'role_id');
     }
-
     public function user_roles()
     {
         return $this->hasMany(UserRole::class);

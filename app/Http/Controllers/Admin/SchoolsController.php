@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Models\AllocationContent;
 use App\Models\AllocationContentSchool;
+use App\Models\SchoolCourse;
 use App\Models\User;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
@@ -129,12 +130,28 @@ class SchoolsController extends AdminBaseController
     public function edit(Request $req)
     {
         $id = $req->id;
-        $entry = School::with(['allocation_contens',])->where('id',$id)->first();
+        $entry = School::with(['allocation_contens','school_courses','courses','units','allocation_school'])->where('id',$id)->first();
         $allocationContens=AllocationContent::query()->with(['course_unit','courses'])->orderBy('id','desc')->get();
-        // $units=Unit::query()->orderBy('id','desc')->get();
-        // $courses=$allocationContens->courses;
-       
+
+        //            $courses=$entry->courses;
+//
+//            foreach ($courses as $course)
+//            {
+//                $units=$course->units;
+//                $course['total_unit']=[];
+//                $total_unit=[];
+//                foreach ($entry->school_courses as $choolCourse)
+//                {
+//                    if($course->id==$choolCourse->course_id)
+//                    {
+//                        $total_unit[]=$choolCourse->unit_id;
+//
+//                    }
+//                    $course['total_unit']=$total_unit;
+//                }
+//            }
         $allocationContenSchools=$entry->allocation_contens;
+        $allocationContentId=@$entry->allocation_school->allocation_content_id;
        foreach($allocationContenSchools as $allocationContenSchool)
        {
            $courses=($allocationContenSchool->courses);
@@ -153,7 +170,7 @@ class SchoolsController extends AdminBaseController
                    }
                }
                @$course['total_unit']=$total_unit;
-              
+
 
            }
           $units=($allocationContenSchool->units);
@@ -173,15 +190,15 @@ class SchoolsController extends AdminBaseController
 
         $title = 'Edit';
         $component = 'SchoolEdit';
+        $entry->allocationContentId=$allocationContentId;
         $jsonData=[
             'entry'=>$entry,
             @'allocationContens'=>@$allocationContens,
             @'allocationContenSchoolName'=>@$allocationContenSchoolName,
+            @'allocationContentId'=>@$allocationContentId,
             @'courses'=>@$courses,
             @'units'=>@$units,
         ];
-
-
         return view('admin.layouts.vue', compact('title', 'component', 'jsonData'));
     }
 
@@ -259,6 +276,15 @@ class SchoolsController extends AdminBaseController
             AllocationContentSchool::create(['allocation_content_id'=>$dataContent['allocationContenSchool'],'school_id'=>$entry->id]);
 
             }
+            SchoolCourse::where('school_id',$entry->id)->delete();
+            foreach($entry->allocation_contens as $contents)
+            {
+                foreach ($contents->course_unit as $schoolCourse)
+                {
+                    SchoolCourse::create(['school_id'=>$entry->id,'course_id'=>$schoolCourse->course_id,'unit_id'=>$schoolCourse->unit_id]);
+                }
+            }
+
 
             return [
                 'code' => 0,
@@ -314,7 +340,9 @@ class SchoolsController extends AdminBaseController
      */
     public function data(Request $req)
     {
-        $query = School::query()->orderBy('id', 'ASC');
+        $query = School::query()->with(['users'])->orderBy('id', 'ASC');
+
+
 
         if ($req->keyword) {
             $query->where('label', 'LIKE', '%' . $req->keyword. '%');
@@ -329,12 +357,43 @@ class SchoolsController extends AdminBaseController
         if($req->limit){
             $limit = $req->limit;
         }
-
+        $data=[];
         $entries = $query->paginate($limit);
+        foreach ($entries as $entry)
+        {
+            $teacher=[];
 
+            foreach ($entry->users as $user)
+            {
+                foreach ($user->roles as $role)
+                {
+
+                    if($role->role_name=='Teacher' && $user->last_login!=null)
+                   {
+                       $teacher[]=$user;
+                   }
+                }
+
+            }
+            $data[]=[
+                'id'=>$entry->id,
+                'label'=>$entry->label,
+                'school_address'=>$entry->school_address,
+                'school_email'=>$entry->school_email,
+                'school_phone'=>$entry->school_phone,
+                'number_of_users'=>$entry->number_of_users,
+                'devices_per_user'=>$entry->devices_per_user,
+                'license_info'=>$entry->license_info,
+                'license_to'=>$entry->license_to,
+                'license_state'=>$entry->license_state,
+                'teacher'=>$teacher,
+
+            ];
+
+        }
         return [
             'code' => 0,
-            'data' => $entries->items(),
+            'data' =>$data,
             'paginate' => [
                 'currentPage' => $entries->currentPage(),
                 'lastPage' => $entries->lastPage(),

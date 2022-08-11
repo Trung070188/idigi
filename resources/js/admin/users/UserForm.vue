@@ -28,7 +28,7 @@
                                         <error-label for="f_category_id" :errors="errors.full_name"></error-label>
                                     </div>
                                     <div class="form-group  col-sm-4">
-                                        <label>Email <span class="text-danger">*</span></label>
+                                        <label>Email </label>
                                         <input class="form-control" placeholder="Enter the email" v-model="entry.email">
                                         <error-label for="f_category_id" :errors="errors.email"></error-label>
                                     </div>
@@ -68,7 +68,7 @@
                                     <div class="form-group  col-sm-4" >
                                         <label>School <span class="text-danger">*</span></label>
                                         <select  class="form-control form-select" type="" placeholder="Enter the school" v-model="entry.school_id">
-                                            <option v-for="school in schools" :value="school.id">{{school.school_name}}</option>
+                                            <option v-for="school in schools" :value="school.id">{{school.label}}</option>
 
                                         </select>
                                     </div>
@@ -93,8 +93,8 @@
                         <div>
                             <button type="reset" @click="save()" class="btn btn-primary mr-2">Save</button>
                             <button type="reset" @click="backIndex()" class="btn btn-secondary">Cancel</button>
-                                                        <label style="margin-left: 20px">Thông tin đăng nhập và mật khẩu sẽ được gửi tới người dùng
-                                                            qua email.</label>
+                        <label style="margin-left: 20px">Thông tin đăng nhập và mật khẩu sẽ được gửi tới người dùng
+                            qua email.</label>
                         </div>
                     </div>
                 </div>
@@ -172,14 +172,15 @@
                 }
                 if (res.code) {
                     toastr.error(res.message);
-                } else {
-                    this.errors = {};
-                    toastr.success(res.message);
-                    location.replace('/xadmin/users/index');
-                     if (!this.entry.id) {
-                         location.replace('/xadmin/users/index');
-                     }
                 }
+                // else {
+                //     this.errors = {};
+                //     toastr.success(res.message);
+                //     location.replace('/xadmin/users/index');
+                //      if (!this.entry.id) {
+                //          location.replace('/xadmin/users/index');
+                //      }
+                // }
             }
         }
     }

@@ -17,12 +17,12 @@
                                                placeholder="title" >
                                         <error-label for="f_title" :errors="errors.title"></error-label>
                                     </div>
-                                    <div class="form-group">
-                                        <label>Total School</label>
-                                        <treeselect :options="schools" :multiple="true" v-model="total_school" />
-                                        <error-label for="f_total_school" :errors="errors.total_school"></error-label>
+<!--                                    <div class="form-group">-->
+<!--                                        <label>Total School</label>-->
+<!--                                        <treeselect :options="schools" :multiple="true" v-model="total_school" />-->
+<!--                                        <error-label for="f_total_school" :errors="errors.total_school"></error-label>-->
 
-                                    </div>
+<!--                                    </div>-->
                                                                     <div class="form-group">
                                         <label>Total Course</label>
                                         <treeselect :options="courses" :multiple="true" @deselect="deleteCourse" v-model="total_course" @input=""/>
@@ -128,16 +128,16 @@
                 if (res.code) {
                     toastr.error(res.message);
                 }
-                // else {
-                //     this.errors = {};
-                //     toastr.success(res.message);
-                //     location.replace('/xadmin/allocation_contents/index');
-                //
-                //     if (!this.entry.id) {
-                //         location.replace('/xadmin/allocation_contents/index');
-                //     }
-                //
-                // }
+                else {
+                    this.errors = {};
+                    toastr.success(res.message);
+                    location.replace('/xadmin/allocation_contents/index');
+
+                    if (!this.entry.id) {
+                        location.replace('/xadmin/allocation_contents/index');
+                    }
+
+                }
             }
         }
     }

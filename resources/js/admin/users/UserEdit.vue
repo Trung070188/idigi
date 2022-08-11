@@ -64,8 +64,8 @@
                                 <div class="row" v-if="name_role==2 || name_role==5">
                                     <div class="form-group  col-sm-4">
                                         <label>School <span class="text-danger">*</span></label>
-                                        <select  class="form-control form-select" v-model="entry.school_id" type="" placeholder="Enter the school" >
-                                            <option v-for="school in schools" :value="school.id" >{{school.school_name}}</option>
+                                        <select  class="form-control form-select" v-model="entry.school_id" required placeholder="Enter the school" >
+                                            <option v-for="school in schools" :value="school.id" >{{school.label}}</option>
                                         </select>
                                     </div>
                                 </div>
@@ -89,8 +89,8 @@
                         <div>
                             <button type="reset" @click="save()" class="btn btn-primary mr-2">Save</button>
                             <button type="reset" @click="backIndex()" class="btn btn-secondary">Cancel</button>
-                            <!--                            <label style="margin-left: 20px">Thông tin đăng nhập và mật khẩu sẽ được gửi tới người dùng
-                                                            qua email.</label>-->
+                        <label style="margin-left: 20px">Thông tin đăng nhập và mật khẩu sẽ được gửi tới người dùng
+                            qua email.</label>
                         </div>
                     </div>
                 </div>

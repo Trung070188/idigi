@@ -11,21 +11,21 @@
                                 <input v-model="entry.id" type="hidden" name="id" value="">
                                 <div class="row">
                                     <div class="form-group  col-sm-4">
-                                        <label>Teacher name <span class="text-danger">*</span></label>
+                                        <label>Username <span class="text-danger">*</span></label>
                                         <input class="form-control" v-model="entry.username">
 
                                         <error-label for="f_category_id" :errors="errors.username"></error-label>
                                     </div>
                                     <div class="form-group  col-sm-4">
-                                        <label>Class <span class="text-danger">*</span></label>
-                                        <input class="form-control" v-model="entry.class">
+                                        <label>Full name <span class="text-danger">*</span></label>
+                                        <input class="form-control" v-model="entry.full_name">
 
-                                        <error-label for="f_category_id" :errors="errors.class"></error-label>
+                                        <error-label for="f_category_id" :errors="errors.full_name"></error-label>
                                     </div>
                                     <div class="form-group  col-sm-4">
-                                        <label>School <span class="text-danger">*</span></label>
-                                        <input class="form-control" >
-                                        <error-label for="f_category_id" ></error-label>
+                                        <label>Email <span class="text-danger">*</span></label>
+                                        <input class="form-control" v-model="entry.email" >
+                                        <error-label for="f_category_id" :errors="errors.email"></error-label>
                                     </div>
                                     <div class="form-group  col-sm-4">
                                         <label>Phone number <span class="text-danger">*</span></label>
@@ -33,9 +33,43 @@
                                         <error-label for="f_category_id" :errors="errors.phone"></error-label>
                                     </div>
                                     <div class="form-group  col-sm-4">
-                                        <label>Email <span class="text-danger">*</span></label>
-                                        <input class="form-control" v-model="entry.email">
-                                        <error-label for="f_category_id" :errors="errors.email"></error-label>
+                                        <label>School<span class="text-danger">*</span></label>
+                                        <input class="form-control" v-model="school" disabled>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div v-if="entry.id==null" class="form-group  col-sm-4">
+                                        <label>Password </label>
+                                        <input v-if="auto_gen==true" disabled :type="showPass ? 'text' : 'password'" class="form-control"
+                                               ref="password" v-model="entry.password">
+                                        <input v-if="auto_gen==false"  :type="showPass ? 'text' : 'password'" class="form-control"
+                                               ref="password" v-model="entry.password">
+                                        <i @click="showPass = !showPass" class="fa fa-eye"></i>
+                                        <error-label for="f_category_id" :errors="errors.password"></error-label>
+                                    </div>
+
+                                    <div v-if="entry.id==null" class="form-group  col-sm-4">
+                                        <label>Confirm your password</label>
+                                        <input v-if="auto_gen==true" disabled class="form-control" :type="showConfirm ? 'text' : 'password'"
+                                               v-model="entry.password_confirmation">
+                                        <input v-if="auto_gen==false"  class="form-control" :type="showConfirm ? 'text' : 'password'"
+                                               v-model="entry.password_confirmation">
+                                        <i @click="showConfirm = !showConfirm" class="fa fa-eye"></i>
+                                        <error-label for="f_category_id" :errors="errors.password_confirmation"></error-label>
+                                    </div>
+                                </div>
+
+                                <div class="form-group  col-sm-8">
+                                    <input  type="checkbox" v-model="auto_gen">
+                                    <label>Auto password</label>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group col-sm-8">
+                                        <label>Description</label>
+                                        <textarea v-model="entry.description" rows="5" class="form-control"
+                                                  placeholder="Your text here"></textarea>
+                                        <error-label for="f_grade" :errors="errors.description"></error-label>
+
                                     </div>
                                 </div>
                                 <div class="form-group">
@@ -71,7 +105,7 @@
         data() {
 
             return {
-
+                auto_gen:true,
                 showConfirm: false,
                 showPass: false,
                 types: [],
@@ -84,6 +118,7 @@
                         title: $json.entry ? 'Edit User' : 'Create New Teacher',
                     },
                 ],
+                school:$json.school,
                 entry: $json.entry || {
                     roles: []
                 },
@@ -103,7 +138,7 @@
             },
             async save() {
                 this.isLoading = true;
-                const res = await $post('/xadmin/users/save_teacher', {entry: this.entry, roles: this.roles}, false);
+                const res = await $post('/xadmin/users/saveTeacher', {entry: this.entry, roles: this.roles}, false);
                 this.isLoading = false;
                 if (res.errors) {
                     this.errors = res.errors;
@@ -126,9 +161,13 @@
 <style scoped>
     .fa-eye {
         position: absolute;
-        top: 40%;
+        top: 50%;
         right: 5%
 
+    }
+    .form-group label
+    {
+        margin-bottom: 2px;
     }
 
 </style>

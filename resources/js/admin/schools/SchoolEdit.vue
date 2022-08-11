@@ -17,7 +17,7 @@
                                      </button>
                                  </a>
                                  <button v-if="title=='Edit school'" class="btn btn-danger button-create " @click="remove(entry)">
-                                     Delete User <i class="fas fa-trash"></i>
+                                     Delete School <i class="fas fa-trash"></i>
                                  </button>
                              </div>
                          </div>
@@ -106,8 +106,9 @@
                              <div class="row">
                                         <div class="form-group col-lg-10">
                                         <label>Content Allocated <span class="text-danger">*</span></label>
-                                       <select class="form-control form-select" required v-model="allocationContenSchool" >
-                                        <option value=""  selected>{{allocationContenSchoolName}}</option>
+
+                                       <select class="form-control form-select" required v-model="allocationContenSchool">
+
                                            <option v-for="allocationConten in allocationContens" :value="allocationConten.id">{{allocationConten.title}}</option>
                                        </select>
                                     </div>
@@ -178,11 +179,12 @@
                    }
 
                })
+            console.log($json.entry);
 
             return {
                 courses:courseTreeselect,
                 units:unitTreeselect,
-                allocationContenSchool:[],
+                allocationContenSchool:$json.entry.allocationContentId,
                 allocationContenSchoolName:$json.allocationContenSchoolName || {},
                 allocationContens:$json.allocationContens || {},
                 breadcrumbs: [
