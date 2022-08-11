@@ -246,8 +246,10 @@ class UsersController extends AdminBaseController
                 $courses = $allocationConten->courses;
                 $course_unit = $allocationConten->course_unit;
                 $courseTeachers = [];
+                $units= $allocationConten->units;
 
             }
+
             if ($courses) {
                 foreach ($courses as $course) {
                     $course['total_unit'] = [];
@@ -265,11 +267,23 @@ class UsersController extends AdminBaseController
                             }
                         }
                     }
-                    foreach ($course->units as $courseUn) {
-                        $total_unit[] = $courseUn;
+                    $total_unit=[];
+
+                        foreach ($course_unit as $un)
+                        {
+                            foreach ($units as $u)
+                            {
+                            if($u->id==$un->unit_id && $un->course_id==$course->id)
+                            {
+                                $total_unit[]=$u;
+
+                            }
+                        }
                     }
-                    @$course['courseTea'] = $unitTeacher;
+
                     @$course['total_unit'] = $total_unit;
+
+                    @$course['courseTea'] = $unitTeacher;
                 }
             }
         }
