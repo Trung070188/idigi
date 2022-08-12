@@ -1,7 +1,6 @@
 <?php
 
 namespace App\Http\Controllers\Admin;
-
 use App\Models\Notification;
 use App\Models\School;
 use App\Models\User;
@@ -18,7 +17,6 @@ use Illuminate\Support\Str;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
-use function Sodium\randombytes_buf;
 
 
 class UserDevicesController extends AdminBaseController

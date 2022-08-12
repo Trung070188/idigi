@@ -27,6 +27,8 @@ import KeyCollectionForm from "./admin/user_devices/KeyCollectionForm";
 import Allocation_contentIndex from "./admin/allocation_contents/Allocation_contentIndex.vue";
 import Allocation_contentForm from "./admin/allocation_contents/Allocation_contentForm.vue";
 import Allocation_contentEdit from "./admin/allocation_contents/Allocation_contentEdit.vue";
+import LicenseIndex from "./admin/license/LicenseIndex";
+import LicenseForm from "./admin/license/LicenseForm";
 export default {
     DashboardIndex,
     UserIndex,
@@ -56,6 +58,9 @@ export default {
     KeyCollectionForm,
     Allocation_contentIndex,
     Allocation_contentForm,
-    Allocation_contentEdit
+    Allocation_contentEdit,
+    LicenseIndex,
+    LicenseForm
+
 
 }
