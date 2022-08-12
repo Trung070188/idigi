@@ -354,10 +354,10 @@
 
             openModal() {
                 this.isConfirm = 1;
-                // if (this.lessons.length > 3) {
-                //     alert('Bạn chỉ được chọn tối đa 3 lesson');
-                //     return false;
-                // }
+                if (this.lessons.length > 3) {
+                    alert('Bạn chỉ được chọn tối đa 3 lesson');
+                    return false;
+                }
                 $('#download-lesson').modal('show');
             },
             selectAll() {
