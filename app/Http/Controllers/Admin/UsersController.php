@@ -141,10 +141,10 @@ class UsersController extends AdminBaseController
             $role = $role_id->role_name;
 
         }
-        $devicePerUser=($entry->schools->devices_per_user);
-        $userDevice=($entry->user_devices);
-        $userDe=round(($userDevice->count()/$devicePerUser)*100);
-        if($userDe==0.0)
+        @$devicePerUser=($entry->schools->devices_per_user);
+        @$userDevice=($entry->user_devices);
+        @$userDe=round(($userDevice->count()/$devicePerUser)*100);
+        if(@$userDe==0.0)
         {
             $userDe=0;
         }
@@ -158,7 +158,7 @@ class UsersController extends AdminBaseController
             'role' => $role,
             'devicePerUser'=>$devicePerUser,
             'userDevice'=>$userDevice,
-            'userDe'=>$userDe,
+            @'userDe'=>$userDe,
         ];
         return view('admin.layouts.vue', compact('title', 'component', 'jsonData'));
     }
