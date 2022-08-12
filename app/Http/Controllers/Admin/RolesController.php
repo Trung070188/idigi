@@ -12,6 +12,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use App\Models\Role;
+use Illuminate\Validation\Rule;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
@@ -120,9 +121,18 @@ class RolesController extends AdminBaseController
         $data = $req->get('entry');
 
         $rules = [
-            'role_name' => 'required|max:45',
+            // 'role_name' => ['required', 'unique:roles,role_name'],
 //    'role_description' => 'max:255',
         ];
+        if (!isset($data['id'])) {
+            $rules['role_name'] = ['required', 'unique:roles,role_name'];
+
+        }
+        if (isset($data['id'])) {
+            $role = Role::find($data['id']);
+            $rules['role_name'] = ['required', Rule::unique('roles')->ignore($role->id),];
+
+        }
 
         $v = Validator::make($data, $rules);
 
@@ -230,7 +240,7 @@ class RolesController extends AdminBaseController
             $data[] = [
                 'role_name' => $role->role_name,
                 'id' => $role->id,
-                'description' => $role->description,
+                'role_description' => $role->role_description,
                 'allow_deleted' => $role->allow_deleted,
                 'permissions' => $rolePermissions
 

@@ -5,13 +5,9 @@
         <div class="row">
             <div class="col-lg-12">
                 <div class="card card-custom card-stretch gutter-b">
-                    <div class="card-header border-0 pt-5">
-                        <div class="title">
-                            <label>Role</label>
-                        </div>
-                        <button class="btn btn-primary button-create " @click="showModalRole()"> Create new</button>
+                    <div class="d-flex justify-content-end">
+                        <button style="margin:10px 27px 0px" class="btn btn-primary button-create " @click="showModalCreate()"> Create new</button>
                     </div>
-                    <hr>
                     <div class="card-header border-0 pt-5">
                         <table class="table bg-white table-bordered">
                             <tbody>
@@ -47,12 +43,11 @@
                 </div>
             </div>
         </div>
-
-        <div class="modal" tabindex="-1" role="dialog" id="modal-role">
+        <div class="modal" tabindex="-1" role="dialog" id="modal-role-create">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
-                    <div class="modal-header">
-                        <div style="text-align: center"><h2 class="modal-title">Add new role</h2></div>
+                    <div class="modal-header" >
+                        <div  style="text-align: center"><h2 class="modal-title">Add new role</h2></div>
 
                         <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
@@ -79,7 +74,44 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-primary" @click="save">Save changes</button>
+                        <button type="button" class="btn btn-primary" @click="save">Add new role</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal" tabindex="-1" role="dialog" id="modal-role">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header" >
+                        <div  style="text-align: center"><h2 class="modal-title">Edit role</h2></div>
+
+                        <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="col-lg-12">
+                            <input v-model="curRole.id" type="hidden" name="id" value="">
+                            <div class="form-group">
+                                <label>Role Name <span class="text-danger">*</span></label>
+                                <input id="f_role_name" v-model="curRole.role_name" name="name" class="form-control"
+                                       placeholder="role_name" >
+                                <error-label for="f_role_name" :errors="errors.role_name"></error-label>
+
+                            </div>
+                            <div class="form-group">
+                                <label>Role Description</label>
+                                <input id="f_role_description" v-model="curRole.role_description" name="name" class="form-control"
+                                       placeholder="role_description" >
+                                <error-label for="f_role_description" :errors="errors.role_description"></error-label>
+
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" @click="save">Save role</button>
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                     </div>
                 </div>
@@ -122,6 +154,11 @@
                 $('#modal-role').modal('show');
                 this.curRole = role;
             },
+            showModalCreate()
+            {
+                this.curRole=[];
+                  $('#modal-role-create').modal('show');
+            },
 
 
             async load() {
@@ -160,6 +197,7 @@
                 } else {
                     this.errors = {};
                     toastr.success(res.message);
+                    location.replace('/xadmin/roles/index');
 
 
                 }
