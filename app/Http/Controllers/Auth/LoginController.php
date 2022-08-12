@@ -120,7 +120,7 @@ class LoginController extends Controller
 
     protected function sendLoginResponse(Request $request)
     {
-        $request->session()->regenerate();
+        #$request->session()->regenerate();
         $user=(Auth::user());
         $authenticationLog= new AuthenticationLog();
         $authenticationLog->user_id=$user->id;
