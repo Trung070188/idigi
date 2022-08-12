@@ -39,6 +39,12 @@ class SchoolsController extends AdminBaseController
         $component = 'SchoolIndex';
         return component($component, compact('title'));
     }
+    public function license()
+    {
+        $title = 'School';
+        $component = 'LicenseIndex';
+        return component($component, compact('title'));
+    }
 
     /**
      * Create new entry
@@ -56,6 +62,25 @@ class SchoolsController extends AdminBaseController
         ];
         return view('admin.layouts.vue', compact('title', 'component', 'jsonData'));
     }
+    public function editLicense(Request $req)
+    {
+        $id = $req->id;
+        $entry = School::find($id);
+
+        if (!$entry) {
+            throw new NotFoundHttpException();
+        }
+
+        /**
+         * @var  Lesson $entry
+         */
+
+        $title = 'Edit';
+        $component = 'LicenseForm';
+
+        return component($component, compact('title', 'entry'));
+    }
+
     public function dataTeacher(Request $req)
     {
         $id = $req->id;

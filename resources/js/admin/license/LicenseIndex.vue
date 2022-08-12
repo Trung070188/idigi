@@ -133,14 +133,12 @@
                                     </div>
                                 </td>
                                 <th class="">ID</th>
-                                <th class="">Name</th>
-                                <th class="">Address</th>
+                                <th class="">School name</th>
+                                <th class="">School address</th>
                                 <th class="">Administrator name</th>
-                                <th class="">Teacher</th>
-                                <th class="">Devices Per User</th>
-                                <th class="">Province</th>
-                                <th class="">License</th>
+                                <th class="">Expire date</th>
                                 <th></th>
+
                             </tr>
                             </thead>
                             <tbody>
@@ -154,17 +152,13 @@
                                 <td class="" v-text="entry.id"></td>
                                 <td class="" v-text="entry.label"></td>
                                 <td class="" v-text="entry.school_address"></td>
-                                <td></td>
-                                <td class="" v-text="entry.teacher.length"></td>
-                                <td class="" v-text="entry.devices_per_user"></td>
-                                <td></td>
-                                <td class="" v-text="entry.license_state"></td>
-
+                                <td class="" ></td>
+                                <td class="" v-text="entry.license_to"></td>
                                 <td class="">
                                     <!--<a :href="'/xadmin/schools/edit?id='+entry.id" style="margin-right: 10px"><i style="font-size:1.3rem" class="fa fa-edit"></i></a>
                                     <a @click="remove(entry)" href="javascript:;" class="btn-trash deleted"><i  class="fa fa-trash mr-1"></i></a>-->
 
-                                    <a v-if="permissions['017']" :href="'/xadmin/schools/edit?id='+entry.id">
+                                    <a v-if="permissions['017']" :href="'/xadmin/schools/editLicense?id='+entry.id">
                                         <button type="button"
                                                 class="btn btn-sm btn-icon btn-light btn-active-light-primary">
                                             <i class="fa fa-edit"></i>
