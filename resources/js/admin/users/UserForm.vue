@@ -173,14 +173,14 @@
                 if (res.code) {
                     toastr.error(res.message);
                 }
-                // else {
-                //     this.errors = {};
-                //     toastr.success(res.message);
-                //     location.replace('/xadmin/users/index');
-                //      if (!this.entry.id) {
-                //          location.replace('/xadmin/users/index');
-                //      }
-                // }
+                else {
+                    this.errors = {};
+                    toastr.success(res.message);
+                    location.replace('/xadmin/users/index');
+                     if (!this.entry.id) {
+                         location.replace('/xadmin/users/index');
+                     }
+                }
             }
         }
     }
