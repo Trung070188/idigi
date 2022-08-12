@@ -78,6 +78,12 @@
                 }
             })
             const course=$json.courses;
+            course.forEach(function (e) {
+                e.units.forEach(function (e1) {
+                    e1.label = e1.unit_name;
+                })
+
+            })
             const courseTreeselect = course.map(rec => {
                 return {
                     'id':rec.id,
@@ -113,7 +119,8 @@
                 }
                 if (res.code) {
                     toastr.error(res.message);
-                } else {
+                }
+                else {
                     this.errors = {};
                     toastr.success(res.message);
                     location.replace('/xadmin/allocation_contents/index');
