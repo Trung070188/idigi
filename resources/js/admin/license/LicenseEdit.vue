@@ -1,7 +1,7 @@
 <template>
     <div class="container-fluid">
         <ActionBar type="index"
-                   :breadcrumbs="breadcrumbs" title ="School details" />
+                   :breadcrumbs="breadcrumbs" title ="License details" />
         <div class="row">
             <div class="col-lg-12">
                 <div class="card card-custom card-stretch gutter-b">
@@ -11,13 +11,8 @@
                             <div
                                 class="d-flex justify-content-end"
                                 data-kt-customer-table-toolbar="base">
-                                <a :href="'/xadmin/schools/teacherList?id='+entry.id">
-                                    <button style="margin: 0px 8px 25px;"  v-if="title=='Edit school'" class="btn btn-primary button-create " >
-                                        Teacher list <i class="fa fa-users"></i>
-                                    </button>
-                                </a>
                                 <button v-if="title=='Edit school'" class="btn btn-danger button-create " @click="remove(entry)">
-                                    Delete User <i class="fas fa-trash"></i>
+                                    Delete License <i class="fas fa-trash"></i>
                                 </button>
                             </div>
                         </div>
@@ -38,50 +33,19 @@
                                     </div>
 
                                     <div class="form-group col-lg-4">
-                                        <label>School Address <span class="text-danger">*</span></label>
-                                        <input  v-model="entry.school_address" class="form-control"
-                                                placeholder="Nhập vào địa chỉ của trường" >
-                                        <error-label  :errors="errors.school_address"></error-label>
-
+                                        <label>Administrator name<span class="text-danger">*</span></label>
+                                        <input   class="form-control"
+                                        >
+                                        <error-label  ></error-label>
                                     </div>
-                                    <div class="form-group col-lg-4">
-                                        <label>School Email <span class="text-danger">*</span></label>
-                                        <input  v-model="entry.school_email"  class="form-control"
-                                                placeholder="Nhập vào email của trường" >
-                                        <error-label  :errors="errors.school_email"></error-label>
-
-                                    </div>
+                                </div>
+                                <div class="row">
 
                                 </div>
                                 <div class="row">
                                     <div class="form-group col-lg-4">
-                                        <label>Phone number <span class="text-danger">*</span></label>
-                                        <input  v-model="entry.school_phone"  class="form-control"
-                                                placeholder="Nhập vào số điện thoại của trường" >
-                                        <error-label for="f_school_name" :errors="errors.school_phone"></error-label>
-
-                                    </div>
-
-                                    <div class="form-group col-lg-4">
-                                        <label>Setup device per user <span class="text-danger">*</span></label>
-                                        <input  v-model="entry.devices_per_user" class="form-control"
-                                                placeholder="Nhập số lượng cho phép thiết bị của mỗi giáo viên" >
-                                        <error-label  :errors="errors.devices_per_user"></error-label>
-
-                                    </div>
-                                    <div class="form-group col-lg-4">
-                                        <label>Setup no. of user <span class="text-danger">*</span></label>
-                                        <input  v-model="entry.number_of_users"  class="form-control"
-                                                placeholder="Nhập số lượng giáo viên" >
-                                        <error-label  :errors="errors.number_of_users"></error-label>
-
-                                    </div>
-
-                                </div>
-                                <div class="row">
-                                    <div class="form-group col-lg-4">
-                                        <label>License to </label>
-                                        <datepicker :timepicker="true" v-model="entry.license_to"></datepicker>
+                                        <label>License expire date </label>
+                                        <datepicker :timepicker="true" v-model="entry.license_to" disabled></datepicker>
                                         <error-label  :errors="errors.license_to"></error-label>
                                     </div>
                                 </div>
@@ -107,7 +71,9 @@
                                     <label for="state" class="pl-2">Activate license</label>
                                     <error-label for="f_grade" ></error-label>
                                 </div>
+
                             </div>
+
                         </div>
                         <hr style="margin-top: 5px;">
                         <div >
@@ -133,7 +99,7 @@
     import '@riophae/vue-treeselect/dist/vue-treeselect.css'
 
     export default {
-        name: "LicenseForm.vue",
+        name: "LicenseEdit.vue",
         components: {ActionBar, Datepicker,Treeselect},
         data() {
             return {

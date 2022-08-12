@@ -62,6 +62,14 @@ class SchoolsController extends AdminBaseController
         ];
         return view('admin.layouts.vue', compact('title', 'component', 'jsonData'));
     }
+    public function createLicense(Request $req)
+    {
+        $component = 'LicenseForm';
+        $title = 'Create schools';
+        $jsonData=[
+        ];
+        return view('admin.layouts.vue', compact('title', 'component', 'jsonData'));
+    }
     public function editLicense(Request $req)
     {
         $id = $req->id;
@@ -76,7 +84,7 @@ class SchoolsController extends AdminBaseController
          */
 
         $title = 'Edit';
-        $component = 'LicenseForm';
+        $component = 'LicenseEdit';
 
         return component($component, compact('title', 'entry'));
     }
@@ -266,8 +274,8 @@ class SchoolsController extends AdminBaseController
             'school_address' => 'required|max:255',
             'school_email' => 'required|max:45|email',
             'school_phone' => 'required|max:45',
-            'license_to' => 'required',
-            'license_info' => 'max:1000',
+//            'license_to' => 'required',
+//            'license_info' => 'max:1000',
             'number_of_users' => 'required|integer|min:1',
             'devices_per_user' => 'required|integer|min:1',
         ];

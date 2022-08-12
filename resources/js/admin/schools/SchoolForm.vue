@@ -78,13 +78,13 @@
                                     </div>
 
                                 </div>
-                                <div class="row">
-                                    <div class="form-group col-lg-4">
-                                        <label>License to </label>
-                                        <datepicker :timepicker="true" v-model="entry.license_to"></datepicker>
-                                        <error-label  :errors="errors.license_to"></error-label>
-                                    </div>
-                                </div>
+<!--                                <div class="row">-->
+<!--                                    <div class="form-group col-lg-4">-->
+<!--                                        <label>License to </label>-->
+<!--                                        <datepicker :timepicker="true" v-model="entry.license_to"></datepicker>-->
+<!--                                        <error-label  :errors="errors.license_to"></error-label>-->
+<!--                                    </div>-->
+<!--                                </div>-->
                                     <!--                                <div class="row">
                                     <div class="form-group col-lg-8">
                                         <label>Adminitrator name</label>

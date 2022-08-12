@@ -29,6 +29,7 @@ import Allocation_contentForm from "./admin/allocation_contents/Allocation_conte
 import Allocation_contentEdit from "./admin/allocation_contents/Allocation_contentEdit.vue";
 import LicenseIndex from "./admin/license/LicenseIndex";
 import LicenseForm from "./admin/license/LicenseForm";
+import LicenseEdit from "./admin/license/LicenseEdit";
 export default {
     DashboardIndex,
     UserIndex,
@@ -60,7 +61,8 @@ export default {
     Allocation_contentForm,
     Allocation_contentEdit,
     LicenseIndex,
-    LicenseForm
+    LicenseForm,
+    LicenseEdit
 
 
 }

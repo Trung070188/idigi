@@ -1,7 +1,7 @@
 <template>
     <div class="container-fluid">
         <ActionBar type="index"
-                   :breadcrumbs="breadcrumbs" title="School Manager - Schools"/>
+                   :breadcrumbs="breadcrumbs" title="License Manager - Licenses"/>
         <div class="row">
             <div class="col-lg-12">
                 <div class="card card-custom card-stretch gutter-b">
@@ -54,7 +54,7 @@
                                         class="btn btn-primary" v-if="!isShowFilter"> Advanced Search
                                     <i class="fa fa-filter" v-if="!isShowFilter" aria-hidden="true"></i>
                                 </button>
-                                <a :href="'/xadmin/schools/create'">
+                                <a :href="'/xadmin/schools/createLicense'">
                                     <button v-if="permissions['016']" class="btn btn-primary button-create" style="margin:0 0 0 15px"> Create New
                                     </button>
                                 </a>
