@@ -12,7 +12,7 @@
                                 class="d-flex justify-content-end"
                                 data-kt-customer-table-toolbar="base">
                                 <button v-if="title=='Edit school'" class="btn btn-danger button-create " @click="remove(entry)">
-                                    Delete User <i class="fas fa-trash"></i>
+                                    Delete License <i class="fas fa-trash"></i>
                                 </button>
                             </div>
                         </div>
