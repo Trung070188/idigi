@@ -107,7 +107,7 @@
                                         <div class="form-group col-lg-10">
                                         <label>Content Allocated <span class="text-danger">*</span></label>
 
-                                       <select class="form-control form-select" required v-model="allocationContenSchool">
+                                       <select class="form-control form-select" required v-model="allocationContenSchool" @change="save()">
 
                                            <option v-for="allocationConten in allocationContens" :value="allocationConten.id">{{allocationConten.title}}</option>
                                        </select>
