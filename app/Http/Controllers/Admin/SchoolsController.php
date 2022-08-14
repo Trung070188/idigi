@@ -66,7 +66,9 @@ class SchoolsController extends AdminBaseController
     {
         $component = 'LicenseForm';
         $title = 'Create schools';
+        $school=School::query()->orderBy('id','ASC')->get();
         $jsonData=[
+            'school'=>$school,
         ];
         return view('admin.layouts.vue', compact('title', 'component', 'jsonData'));
     }
@@ -82,11 +84,17 @@ class SchoolsController extends AdminBaseController
         /**
          * @var  Lesson $entry
          */
+        $school=School::query()->orderBy('id','ASC')->get();
+        $jsonData=[
+            'school'=>$school,
+            'entry'=>$entry,
+        ];
+
 
         $title = 'Edit';
         $component = 'LicenseEdit';
 
-        return component($component, compact('title', 'entry'));
+        return view('admin.layouts.vue', compact('title', 'component', 'jsonData'));
     }
 
     public function dataTeacher(Request $req)

@@ -11,7 +11,7 @@
                 <p>Một tài khoản đã được tạo cho bạn tại: idigi.ismart.edu.vn
                     Vui lòng truy cập vào đường link này để đăng nhập với thông tin:</p>
                 <p>Tên đăng nhập :{{$content['username']}}</p>
-                <p class="mb-0">Mật khẩu :{{$content['password']}}  (tùy thuộc vào password là loại auto gen hay là tự nhập)</p>
+                <p class="mb-0">Mật khẩu :{{$content['password']}}</p>
                 <p>Đây là email tự động, vui lòng không trả lời!</p>
                 <p>Thanks and best regards!</p>
             </div>

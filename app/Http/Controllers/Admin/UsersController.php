@@ -148,6 +148,7 @@ class UsersController extends AdminBaseController
         {
             $userDe=0;
         }
+       @$license=($entry->schools->license_to);
         /**
          * @var  User $entry
          */
@@ -159,6 +160,7 @@ class UsersController extends AdminBaseController
             'devicePerUser'=>$devicePerUser,
             'userDevice'=>$userDevice,
             @'userDe'=>$userDe,
+            @'license'=>@$license,
         ];
         return view('admin.layouts.vue', compact('title', 'component', 'jsonData'));
     }

@@ -234,7 +234,7 @@
                 allSelected: false,
                 breadcrumbs: [
                     {
-                        title: 'Schools'
+                        title: 'License'
                     },
                 ],
                 entries: [],

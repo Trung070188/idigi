@@ -7,15 +7,7 @@
                 <div class="card card-custom card-stretch gutter-b">
                     <div class="card-header border-0 pt-6" style="margin:0px 0px -35px">
                         <div class="card-title"></div>
-                        <div class="card-toolbar">
-                            <div
-                                class="d-flex justify-content-end"
-                                data-kt-customer-table-toolbar="base">
-                                <button v-if="title=='Edit school'" class="btn btn-danger button-create " @click="remove(entry)">
-                                    Delete License <i class="fas fa-trash"></i>
-                                </button>
-                            </div>
-                        </div>
+                      
 
                     </div>
 
@@ -26,22 +18,15 @@
                                 <div class="row">
                                     <div class="form-group col-lg-4">
                                         <label>School Name <span class="text-danger">*</span></label>
-                                        <input  v-model="entry.label"  class="form-control"
-                                                placeholder="Nhập vào tên trường" >
-                                        <error-label for="f_school_name" :errors="errors.label"></error-label>
+                                        <select  v-model="entry.label"  class="form-control form-select" >
+                                            <option v-for="school in schools" :value="school.label">{{school.label}}</option>
+                                        </select>
 
                                     </div>
 
-                                    <div class="form-group col-lg-4">
-                                        <label>Administrator name<span class="text-danger">*</span></label>
-                                        <input   class="form-control"
-                                        >
-                                        <error-label  ></error-label>
-                                    </div>
+                                 
                                 </div>
-                                <div class="row">
-
-                                </div>
+                              
                                 <div class="row">
                                     <div class="form-group col-lg-4">
                                         <label>License expire date </label>
@@ -49,15 +34,6 @@
                                         <error-label  :errors="errors.license_to"></error-label>
                                     </div>
                                 </div>
-                                <!--                                <div class="row">
-                                <div class="form-group col-lg-8">
-                                    <label>Adminitrator name</label>
-                                    <QSelect v-model="entry.user_id"
-                                             datasource="users"
-                                             :multiple="false"></QSelect>
-                                    <error-label for="f_user_id" :errors="errors.user_id"></error-label>
-                                </div>
-                            </div>-->
                                 <div class="row">
                                     <div class="form-group col-lg-8">
                                         <label>Licence description</label>
@@ -107,23 +83,24 @@
                 allocationContens:$json.allocationContens ||{},
                 breadcrumbs: [
                     {
-                        title: 'Schools',
-                        url: '/xadmin/schools/index',
+                        title: 'License',
+                        url: '/xadmin/schools/license',
                     },
                     {
-                        title: $json.entry ? 'School details' : 'Create New school',
+                        title: $json.entry ? 'License details' : 'Create New school',
                     },
                 ],
                 title: $json.entry ? 'Edit school' : 'Create New school',
 
                 entry: $json.entry || {},
+                schools:$json.school || {},
                 isLoading: false,
                 errors: {}
             }
         },
         methods: {
             backIndex(){
-                window.location.href = '/xadmin/schools/index';
+                window.location.href = '/xadmin/schools/license';
             },
             async save() {
                 this.$loading(true);
