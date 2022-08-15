@@ -33,6 +33,7 @@ class LoginController extends Controller
 
 
 
+
         if ($user) {
 
             if (\Hash::check($request->password, $user->password)) {
@@ -53,9 +54,14 @@ class LoginController extends Controller
                         }
                     }
                 }
+                $allDevice = 0;
+                $school = School::where('id', @$user->school_id)->first();
 
+                if($school){
+                    $allDevice = $school->devices_per_user;
+                }
 
-                if ($check == 0 && $totalDevice > 2) {
+                if ($check == 0 && $totalDevice >= $allDevice) {
                     return [
                         'code' => 3,
                         'message' => 'Bạn đã đăng ký quá nhiều thiết bị',

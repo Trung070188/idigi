@@ -42,6 +42,7 @@ class GoogleSignController
                     ];
                 }
 
+
                 $totalDevice = 0;
                 $check = 0;
                 $secret = '';
@@ -58,8 +59,14 @@ class GoogleSignController
                         }
                     }
                 }
+                $allDevice = 0;
+                $school = School::where('id', @$user->school_id)->first();
 
-                if ($check == 0 && $totalDevice > 2) {
+                if($school){
+                    $allDevice = $school->devices_per_user;
+                }
+
+                if ($check == 0 && $totalDevice >= $allDevice) {
                     return [
                         'code' => 3,
                         'message' => 'Bạn đã đăng ký quá nhiều thiết bị',
