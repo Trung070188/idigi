@@ -4,33 +4,30 @@
 
         <div class="container-fluid d-flex align-items-stretch justify-content-between">
 
-
             <div class="d-flex align-items-stretch" id="kt_header_nav">
                 <div class="header-menu align-items-stretch" data-kt-drawer="true" data-kt-drawer-name="header-menu" data-kt-drawer-activate="{default: true, lg: false}" data-kt-drawer-overlay="true" data-kt-drawer-width="{default:'200px', '300px': '250px'}" data-kt-drawer-direction="end" data-kt-drawer-toggle="#kt_header_menu_mobile_toggle" data-kt-swapper="true" data-kt-swapper-mode="prepend" data-kt-swapper-parent="{default: '#kt_body', lg: '#kt_header_nav'}">
-                    <div class="menu menu-lg-rounded menu-column menu-lg-row menu-state-bg menu-title-gray-700 menu-state-title-primary menu-state-icon-primary menu-state-bullet-primary menu-arrow-gray-400 fw-bold my-5 my-lg-0 align-items-stretch" id="#kt_header_menu" data-kt-menu="true">
-<!--                        <template v-for="menu in menus">-->
-<!--                            <div data-kt-menu-trigger="click" data-kt-menu-placement="bottom-start" class="menu-item menu-lg-down-accordion me-lg-1" v-if="menu.subs">-->
-<!--                                <span class="menu-link py-3">-->
-<!--                                    <span class="menu-title">{{ menu.name }}</span>-->
+                    <div class="menu menu-lg-rounded menu-column menu-lg-row menu-state-bg menu-title-gray-700 menu-state-title-primary menu-state-icon-primary menu-state-bullet-primary menu-arrow-gray-400 fw-bold my-5 my-lg-0 align-items-stretch" id="#kt_header_menu" data-kt-menu="true" >
+
+                        <template v-if="roleName=='School Admin' || 'Teacher'">
+                            <div data-kt-menu-trigger="click" data-kt-menu-placement="bottom-start" class="menu-item menu-lg-down-accordion me-lg-1" style="margin: 12px 0px 0px">
+                                <span class="menu-link py-3">
+
+                           <div class="badge badge-lg badge-light-primary mb-15">
+                               <div class="d-flex align-items-center flex-wrap">
+                                   <div v-text="'Trường '+ schoolName " ></div>
+
+
+
+                               </div>
+                           </div>
+<!--                                    -->
+<!--                                    <span class="menu-title">Trường {{schoolName}}</span>-->
 <!--                                    <span class="menu-arrow d-lg-none"></span>-->
-<!--                                </span>-->
-<!--                                <div class="menu-sub menu-sub-lg-down-accordion menu-sub-lg-dropdown menu-rounded-0 py-lg-4 w-lg-225px">-->
-<!--                                    <div v-for="sub in menu.subs" data-kt-menu-placement="right-start" class="menu-item menu-lg-down-accordion">-->
-<!--                                        <a :href="sub.url" class="menu-link">-->
-<!--                                            <span class="menu-bullet">-->
-<!--                                                <span class="bullet bullet-dot"></span>-->
-<!--                                            </span>-->
-<!--                                            <span class="menu-title">{{ sub.name }}</span>-->
-<!--                                        </a>-->
-<!--                                    </div>-->
-<!--                                </div>-->
-<!--                            </div>    -->
-<!--                            <div class="menu-item me-lg-1" v-else>-->
-<!--                                <a :class="menu.active?'menu-link active py-3':'menu-link py-3'" :href="menu.url">-->
-<!--                                    <span class="menu-title">{{ menu.name }}</span>-->
-<!--                                </a>-->
-<!--                            </div>                                                  -->
-<!--                        </template>-->
+                                </span>
+
+                            </div>
+
+                        </template>
                     </div>
                 </div>
             </div>
@@ -211,8 +208,22 @@
 
             return {
                 menus,
+                roleName:'',
+                schoolName:'',
             }
         },
+        mounted() {
+            this.nameNavBar();
+        },
+        methods:{
+            async nameNavBar() {
+
+                let query = $router.getQuery();
+                const res = await $get('/xadmin/schools/schoolNameNavBar', query);
+                this.roleName = res.roleName;
+                this.schoolName = res.schoolName;
+            },
+        }
     }
 </script>
 

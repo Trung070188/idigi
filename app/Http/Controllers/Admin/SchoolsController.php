@@ -8,6 +8,7 @@ use App\Models\SchoolCourse;
 use App\Models\User;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use App\Models\School;
@@ -95,6 +96,23 @@ class SchoolsController extends AdminBaseController
         $component = 'LicenseEdit';
 
         return view('admin.layouts.vue', compact('title', 'component', 'jsonData'));
+    }
+    public function schoolNameNavBar(Request $req)
+    {
+        $user=Auth::user();
+        @$schoolName=$user->schools->label;
+        foreach ($user->roles as $role)
+        {
+            @$roleName=$role->role_name;
+        }
+
+      return [
+          'code'=>0,
+          'schoolName'=>$schoolName,
+          'roleName'=>$roleName
+      ];
+
+
     }
 
     public function dataTeacher(Request $req)

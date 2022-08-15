@@ -109,7 +109,7 @@
                                               </span>
                                                 <div class="fw-bold text-gray-400" style="margin:0px 50px 0px">Expired date</div>
                                        </div>
-                                           <div class="  fs-2 fw-bolder counted">{{(license)}}</div>
+                                           <div class="  fs-2 fw-bolder counted" style="margin: 0px 15px 0px;">{{d(license)}}</div>
                                    </div>
                                     </div>
                                 </div>
