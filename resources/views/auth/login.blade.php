@@ -23,6 +23,7 @@ License: For each use you must have a valid license purchased only from above li
 		<!--begin::Global Stylesheets Bundle(used by all pages)-->
 		<link href="/themes/admin/assets/plugins/global/plugins.bundle.css" rel="stylesheet" type="text/css" />
 		<link href="/themes/admin/assets/css/style.bundle.css" rel="stylesheet" type="text/css" />
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js" ></script>
 		<!--end::Global Stylesheets Bundle-->
 
         <style>
