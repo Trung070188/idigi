@@ -32,7 +32,7 @@
                                         <error-label for="f_category_id" :errors="errors.full_name"></error-label>
                                     </div>
                                     <div class="form-group  col-sm-4">
-                                        <label>Email <span class="text-danger">*</span></label>
+                                        <label>Email</label>
                                         <input class="form-control" placeholder="Enter the email" v-model="entry.email">
                                         <error-label for="f_category_id" :errors="errors.email"></error-label>
                                     </div>
