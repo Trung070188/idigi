@@ -139,7 +139,7 @@
                                     'url' => $child->path,
                                 ];
                             }
-                        }else{
+                        } else {
 
                             $menu = [
                                 "name" => $groupPermission->name,
@@ -148,9 +148,10 @@
                             ];
                         }
 
-                        if($groupPermission->name != 'Teacher'){
+                        if ($groupPermission->name != 'Teacher') {
                             $menus[] = $menu;
                         }
+                    }
                 }else{
                     foreach ($groupPermissions as $groupPermission) {
                         $check = 0;
