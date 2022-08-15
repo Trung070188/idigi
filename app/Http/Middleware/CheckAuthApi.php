@@ -34,10 +34,10 @@ class CheckAuthApi
             $user = User::where('email', $decoded->email)->first();
             $school = School::where('id', @$user->school_id)->first();
             if(@$school->license_to < Carbon::now()){
-                return [
+                return response([
                     'code' => 1,
                     'msg' => 'Invalid username or password',
-                ];
+                ]);
             }
             $roles = $user->roles;
             $check = 0;
