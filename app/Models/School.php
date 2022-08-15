@@ -27,6 +27,7 @@ class School extends BaseModel
     'license_state',
     'number_of_users',
     'devices_per_user',
+    'school_description'
 ];
     public function users()
     {

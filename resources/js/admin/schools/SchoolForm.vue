@@ -96,9 +96,9 @@
                                 </div>-->
                                 <div class="row">
                                 <div class="form-group col-lg-8">
-                                    <label>Licence description</label>
-                                    <textarea  v-model="entry.license_info" rows="5" class="form-control" placeholder="Your text here..."></textarea>
-                                    <error-label for="f_grade" :errors="errors.license_info"></error-label>
+                                    <label>School description</label>
+                                    <textarea  v-model="entry.school_description" rows="5" class="form-control" placeholder="Your text here..."></textarea>
+                                    <error-label for="f_grade" :errors="errors.school_description"></error-label>
 
                                 </div>
                                 </div>
