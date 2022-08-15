@@ -17,8 +17,8 @@
                                 <input v-model="entry.id" type="hidden" name="id" value="">
                                 <div class="row">
                                     <div class="form-group col-lg-4">
-                                        <label>School Name <span class="text-danger">*</span></label>
-                                        <select  v-model="entry.label"  class="form-control form-select" >
+                                        <label>School Name</label>
+                                        <select  v-model="entry.label"  class="form-control form-select" disabled>
                                             <option v-for="school in schools" :value="school.label">{{school.label}}</option>
                                         </select>
                                     </div>
