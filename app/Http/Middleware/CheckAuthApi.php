@@ -31,7 +31,7 @@ class CheckAuthApi
 
             $decoded = JWT::decode($token, new Key(env('SECRET_KEY'), 'HS256'));
 
-            $user = User::where('email', $decoded->email)->first();
+            $user = User::where('username', $decoded->username)->first();
             $school = School::where('id', @$user->school_id)->first();
             if(@$school->license_to < Carbon::now()){
                 return response([
