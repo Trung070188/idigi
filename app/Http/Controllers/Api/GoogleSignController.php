@@ -61,6 +61,12 @@ class GoogleSignController
                 }
                 $allDevice = 0;
                 $school = School::where('id', @$user->school_id)->first();
+                if(@$school->license_to < Carbon::now()){
+                    return [
+                        'code' => 1,
+                        'msg' => 'Invalid username or password',
+                    ];
+                }
 
                 if($school){
                     $allDevice = $school->devices_per_user;
@@ -96,8 +102,6 @@ class GoogleSignController
 
                 $user->save();
                 Auth::login($user);
-
-                $school = School::where('id', $user->school_id)->first();
 
                 if($school){
                     $expired = $school->license_to;

@@ -3,12 +3,14 @@
 namespace App\Http\Middleware;
 
 use App\Models\Permission;
+use App\Models\School;
 use App\Models\User;
 use App\Providers\RouteServiceProvider;
 use Closure;
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 
 class CheckAuthApi
@@ -29,7 +31,14 @@ class CheckAuthApi
 
             $decoded = JWT::decode($token, new Key(env('SECRET_KEY'), 'HS256'));
 
-            $user = User::where('email', $decoded->email)->first();
+            $user = User::where('username', $decoded->username)->first();
+            $school = School::where('id', @$user->school_id)->first();
+            if(@$school->license_to < Carbon::now()){
+                return response([
+                    'code' => 1,
+                    'msg' => 'Invalid username or password',
+                ]);
+            }
             $roles = $user->roles;
             $check = 0;
 
