@@ -37,7 +37,18 @@ class AppVersionsController extends AdminBaseController
     {
         $title = 'AppVersion';
         $component = 'App_versionIndex';
-        return component($component, compact('title'));
+        $user=Auth::user();
+        if(@$user->roles)
+        {
+            foreach($user->roles as $role)
+            {
+                $roleName=$role->role_name;
+            }
+        }
+        $jsonData=[
+            'roleName'=>$roleName,
+        ];
+        return view('admin.layouts.vue', compact('title', 'component', 'jsonData'));
     }
 
     /**
@@ -199,20 +210,6 @@ class AppVersionsController extends AdminBaseController
     public function data(Request $req)
     {
         $query = AppVersion::query()->orderBy('id', 'desc');
-        $users=User::with(['roles'])->orderBy('username')->get();
-        foreach ($users as $user)
-        {
-            $userss=Auth::user();
-            if($user->id==$userss->id)
-            {
-                foreach($userss->roles as $roless)
-                {
-                    $role=$roless->role_name;
-                }
-
-            }
-        }
-
         if ($req->keyword) {
             //$query->where('title', 'LIKE', '%' . $req->keyword. '%');
         }
@@ -222,7 +219,6 @@ class AppVersionsController extends AdminBaseController
         return [
             'code' => 0,
             'data' => $entries->items(),
-            'role'=>$role,
             'paginate' => [
                 'currentPage' => $entries->currentPage(),
                 'lastPage' => $entries->lastPage(),

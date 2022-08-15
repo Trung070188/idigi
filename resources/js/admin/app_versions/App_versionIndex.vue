@@ -2,8 +2,9 @@
     <div class="container-fluid">
         <ActionBar type="index"
                    :breadcrumbs="breadcrumbs" title="Application Download Manager"/>
-            <div class="card card-custom card-stretch gutter-b" >
-                <div class="card-header card-header-stretch border-bottom border-gray-200" v-if="role=='Super Administrator' ||  role=='Administrator'">
+            <div class="card card-custom card-stretch gutter-b" v-if="roleName=='Super Administrator'">
+                {{roleName}}
+                <div class="card-header card-header-stretch border-bottom border-gray-200" >
 
                     <div class="card-title " style="margin: 36px 0px 0px;">
                         <ul class="nav nav-stretch nav-line-tabs border-transparent" role="tablist">
@@ -188,46 +189,6 @@
                         </div>
                     </div>
 
-                    <div class="card card-custom card-stretch gutter-b" v-if="role=='Teacher'">
-                        <div class="card-body d-flex flex-column" style="height: 563px">
-                            <div class="" style="margin-top: 65px; margin-bottom: 50px">
-                                <h2 style="text-align: center;font-size: 30px">Tải iDIGI PC cho máy tính</h2>
-                                <h5 style="text-align: center;font-size:20px">Ứng dụng đã có mặt trên Windows và MacOS.</h5>
-                                <br>
-                                <div style="text-align: center;font-size: 14px;">
-                                    <label>Cài đặt bài giảng số iDIGI thuận lợi và giảng dạy nhanh chóng.
-                                    </label>
-                                    <br>
-                                    <label>Sử dụng trực tuyến (online) và ngoại tuyến (offline) mà không gặp gián
-                                        đoạn.</label>
-                                    <br>
-                                    <label>Bảo mật bài giảng riêng cho thiết bị được đăng ký trước.</label>
-                                </div>
-                            </div>
-                            <div class="col-lg-12" style="text-align: center;padding: 0 114px;">
-                                <div v-for="entry in entries" v-if="entry.type=='window'&& entry.is_default==1" style="">
-
-                                    <a :href="entry.url">
-                                        <button class="btn btn-primary">Download for Windows
-                                            <i class="bi bi-windows"></i>
-                                        </button>
-                                    </a>
-                                    <br>
-                                    <label style="margin: 3px 34px 20px;">{{entry.name}}</label>
-                                </div>
-                                <div v-for="entry in entries" v-if="entry.type=='ios'&& entry.is_default==1" style="">
-
-                                    <a :href="entry.url">
-                                        <button class="btn btn-primary">Download for MacOS
-                                            <i style="margin:-3px 0px 0px" class="bi bi-apple"></i>
-                                        </button>
-                                    </a>
-                                    <br>
-                                    <label style="margin: 4px 34px 0px;">{{entry.name}}</label>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
                 </div>
                 <div class="modal" id="uploadApp" tabindex="-1">
                     <div class="modal-dialog">
@@ -296,6 +257,47 @@
                 </div>
 
             </div>
+
+                    <div class="card card-custom card-stretch gutter-b" v-if="roleName!='Super Administrator'">
+                        <div class="card-body d-flex flex-column" style="height: 563px">
+                            <div class="" style="margin-top: 65px; margin-bottom: 50px">
+                                <h2 style="text-align: center;font-size: 30px">Tải iDIGI PC cho máy tính</h2>
+                                <h5 style="text-align: center;font-size:20px">Ứng dụng đã có mặt trên Windows và MacOS.</h5>
+                                <br>
+                                <div style="text-align: center;font-size: 14px;">
+                                    <label>Cài đặt bài giảng số iDIGI thuận lợi và giảng dạy nhanh chóng.
+                                    </label>
+                                    <br>
+                                    <label>Sử dụng trực tuyến (online) và ngoại tuyến (offline) mà không gặp gián
+                                        đoạn.</label>
+                                    <br>
+                                    <label>Bảo mật bài giảng riêng cho thiết bị được đăng ký trước.</label>
+                                </div>
+                            </div>
+                            <div class="col-lg-12" style="text-align: center;padding: 0 114px;">
+                                <div v-for="entry in entries" v-if="entry.type=='window'&& entry.is_default==1" style="">
+
+                                    <a :href="entry.url">
+                                        <button class="btn btn-primary">Download for Windows
+                                            <i class="bi bi-windows"></i>
+                                        </button>
+                                    </a>
+                                    <br>
+                                    <label style="margin: 3px 34px 20px;">{{entry.name}}</label>
+                                </div>
+                                <div v-for="entry in entries" v-if="entry.type=='ios'&& entry.is_default==1" style="">
+
+                                    <a :href="entry.url">
+                                        <button class="btn btn-primary">Download for MacOS
+                                            <i style="margin:-3px 0px 0px" class="bi bi-apple"></i>
+                                        </button>
+                                    </a>
+                                    <br>
+                                    <label style="margin: 4px 34px 0px;">{{entry.name}}</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
              <div class="modal fade" style="margin-right:50px;border:2px solid #333333  " id="deviceConfirmLimit" tabindex="-1" role="dialog"
              aria-labelledby="deviceConfirmLimit"
              aria-hidden="true">
@@ -330,7 +332,6 @@
                 </div>
             </div>
         </div>
-
     </div>
 
 
@@ -341,7 +342,6 @@
     import $router from '../../lib/SimpleRouter';
     import ActionBar from "../includes/ActionBar";
 
-
     let created = getTimeRangeAll();
     const $q = $router.getQuery();
 
@@ -351,6 +351,7 @@
         data() {
             const permissions = clone(window.$permissions);
             return {
+                roleName:$json.roleName,
                 release_note:'',
                 permissions,
                 window:[],
@@ -469,7 +470,6 @@
                 setTimeout(function () {
                     KTMenu.createInstances();
                 }, 0)
-                this.role = res.role;
                 this.totalVersionIos = this.entries.filter(e => e.type == 'ios').length;
                 this.totalVersionWindow = this.entries.filter(e => e.type == 'window').length;
                 this.from = (this.paginate.currentPage - 1) * (this.limit) + 1;
