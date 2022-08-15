@@ -34,6 +34,7 @@ COPY ./conf/site.conf /etc/nginx/conf.d/site.conf
 COPY ./conf/entrypoint.sh /etc/entrypoint.sh
 COPY ./conf/schedule.sh /etc/schedule.sh
 COPY ./conf/queue.sh /etc/queue.sh
+COPY ./conf/php.ini /usr/local/etc/php/php.ini
 RUN chmod +x /etc/entrypoint.sh
 RUN chmod +x /etc/schedule.sh
 RUN chmod +x /etc/queue.sh
