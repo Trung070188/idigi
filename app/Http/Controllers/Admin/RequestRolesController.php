@@ -38,7 +38,7 @@ class RequestRolesController extends AdminBaseController
      */
     public function index()
     {
-        $schools=School::query()->orderBy('school_name')->get();
+        $schools=School::query()->orderBy('label')->get();
         $entries=RequestRole::query()->orderBy('id')->get();
         $user=Auth::user();
         $data=1;
