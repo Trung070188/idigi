@@ -501,7 +501,7 @@ class UsersController extends AdminBaseController
                     return $fail(__(' The :attribute no special characters'));
                 }
             },];
-
+            $rules['email'] = ['email','unique:users,email',];
 
 //            $rules['password'] = 'required|max:191|confirmed';
         }
