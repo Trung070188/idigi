@@ -9,3 +9,5 @@ services:
     volumes:
       - .:/var/www
     restart: always
+    environment:
+     UPLOAD_LIMIT: 200M
