@@ -104,7 +104,6 @@ class SchoolsController extends AdminBaseController
         $query = User::query()
             ->with(['roles', 'user_devices'])
             ->where('school_id','=',$entry->id)
-            ->whereNotNull('last_login')
             ->orderBy('id', 'ASC');
         if ($req->keyword) {
             $query->where('username', 'LIKE', '%' . $req->keyword . '%');
