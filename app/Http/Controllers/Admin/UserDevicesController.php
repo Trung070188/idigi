@@ -40,9 +40,9 @@ class UserDevicesController extends AdminBaseController
         $component = 'User_deviceIndex';
         $user=Auth::user();
         $school=$user->schools;
-        $devicesPerUser=$school->devices_per_user;
+        @$devicesPerUser=$school->devices_per_user;
         $jsonData = [
-            'devicesPerUser' => $devicesPerUser
+            @'devicesPerUser' => @$devicesPerUser
         ];
         return view('admin.layouts.vue', compact('title', 'component', 'jsonData'));
     }
