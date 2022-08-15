@@ -431,7 +431,12 @@ class UsersController extends AdminBaseController
 
         if (isset($data['id'])) {
             $user = User::find($data['id']);
-            @$rules['email'] = [ 'email', Rule::unique('users')->ignore($user->id),];
+            if($data['email'])
+            {
+                $rules['email'] = [ 'email', Rule::unique('users')->ignore($user->id),];
+
+            }
+           
             $rules['username'] = ['required', Rule::unique('users')->ignore($user->id),];
 
         }
@@ -500,14 +505,20 @@ class UsersController extends AdminBaseController
                     return $fail(__(' The :attribute no special characters'));
                 }
             },];
-            $rules['email'] = ['email','unique:users,email',];
+            // $rules['email'] = ['email','unique:users,email',];
 
 //            $rules['password'] = 'required|max:191|confirmed';
         }
         if (isset($data['id'])) {
             $user = User::find($data['id']);
-        }            $rules['email'] = ['email', Rule::unique('users')->ignore($user->id),];
+            if($data['email'])
+            {
+                $rules['email'] = ['email', Rule::unique('users')->ignore($user->id),];
 
+            }
+            
+
+        }          
         $customMessages = [
         ];
         $v = Validator::make($data, $rules, $customMessages);
@@ -640,15 +651,15 @@ class UsersController extends AdminBaseController
                     return $fail(__(' The :attribute no special characters'));
                 }
             },];
-            $rules['email'] = 'email|unique:users,email';;
+            $rules['email'] = 'email|unique:users,email';
 
 
 //            $rules['password'] = 'required|max:191|confirmed';
         }
-        if (isset($data['id'])) {
-            $user = User::find($data['id']);
-            $rules['email'] = ['required', 'email', Rule::unique('users')->ignore($user->id),];
-        }
+        // if (isset($data['id'])) {
+        //     $user = User::find($data['id']);
+        //     // $rules['email'] = ['required', 'email', Rule::unique('users')->ignore($user->id),];
+        // }
         $customMessages = [
         ];
         $v = Validator::make($data, $rules, $customMessages);

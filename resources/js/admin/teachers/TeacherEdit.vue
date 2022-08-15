@@ -45,26 +45,34 @@
                                         <error-label for="f_category_id" :errors="errors.username"></error-label>
                                     </div>
                                     <div class="form-group  col-sm-4">
-                                        <label>Class <span class="text-danger">*</span></label>
-                                        <input class="form-control" v-model="entry.class">
+                                        <label>Full name <span class="text-danger">*</span></label>
+                                        <input class="form-control" v-model="entry.full_name">
 
-                                        <error-label for="f_category_id" :errors="errors.class"></error-label>
+                                        <error-label for="f_category_id" :errors="errors.full_name"></error-label>
                                     </div>
                                     <div class="form-group  col-sm-4">
-                                        <label>School <span class="text-danger">*</span></label>
-                                        <input class="form-control" v-model="schools.label" disabled>
-                                        <error-label for="f_category_id" :errors="errors.label"></error-label>
+                                        <label>Email </label>
+                                        <input class="form-control" v-model="entry.email">
+
+                                        <error-label for="f_category_id" :errors="errors.email"></error-label>
                                     </div>
-                                    <div class="form-group  col-sm-4">
-                                        <label>Phone number <span class="text-danger">*</span></label>
+                                     <div class="form-group  col-sm-4">
+                                        <label>Phone number </label>
                                         <input class="form-control" v-model="entry.phone">
                                         <error-label for="f_category_id" :errors="errors.phone"></error-label>
                                     </div>
-                                    <div class="form-group  col-sm-4">
-                                        <label>Email <span class="text-danger">*</span></label>
-                                        <input class="form-control" v-model="entry.email" disabled>
-                                        <error-label for="f_category_id" :errors="errors.email"></error-label>
+                                     <div class="form-group  col-sm-4">
+                                        <label>Class</label>
+                                        <input class="form-control" v-model="entry.class">
+                                        <error-label for="f_category_id" :errors="errors.class"></error-label>
                                     </div>
+                                    <div class="form-group  col-sm-4">
+                                        <label>School</label>
+                                        <input class="form-control" v-model="schools.label" disabled>
+                                        <error-label for="f_category_id" :errors="errors.label"></error-label>
+                                    </div>
+                    
+                                  
                                 </div>
                                   <h4>Content Allocated</h4>
                                 <div class="row">
@@ -187,7 +195,7 @@
 
             const course=$json.courses;
             console.log(course);
-            course.forEach(function (e) {
+           !course ? null : course.forEach(function (e) {
                 e.total_unit.forEach(function (e1) {
                     e1.label = e1.unit_name;
                 })

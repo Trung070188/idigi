@@ -157,8 +157,10 @@
                 } else {
                     this.errors = {};
                     toastr.success(res.message);
+                    location.replace('/xadmin/users/teacher');
+
                     if (!this.entry.id) {
-                        location.replace('/xadmin/users/edit?id=' + res.id);
+                    location.replace('/xadmin/users/teacher');
                     }
                 }
             }
