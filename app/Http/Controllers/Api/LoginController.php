@@ -29,6 +29,8 @@ class LoginController extends Controller
         $user = User::where('username', $request->username)
             ->orWhere('email', $request->username)
             ->first();
+        //dd($request->all());
+
 
 
         if ($user) {
@@ -52,6 +54,7 @@ class LoginController extends Controller
                     }
                 }
 
+
                 if ($check == 0 && $totalDevice > 2) {
                     return [
                         'code' => 3,
@@ -61,7 +64,7 @@ class LoginController extends Controller
                     if ($check == 0) {
                         $secret = (Str::random(10));
                         $deviceName = $request->device_name;
-                        $deviceID = $request->device_uid;
+                        $deviceID = $request->device_unique;
 
                         UserDevice::create([
                             'device_uid' => $request->device_unique,
