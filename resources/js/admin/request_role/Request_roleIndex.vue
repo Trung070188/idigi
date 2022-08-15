@@ -32,7 +32,7 @@
 
                                             <label>School <span class="text-danger">*</span></label>
                                             <select  class="form-control form-select" v-model="school" type="" placeholder="Enter the school" >
-                                                <option v-for="school in schools" :value="school.id" >{{school.school_name}}</option>
+                                                <option v-for="school in schools" :value="school.id" >{{school.label}}</option>
                                             </select>
                                         </div>
                                     </div>
