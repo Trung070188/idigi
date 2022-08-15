@@ -51,7 +51,7 @@ class SyncData extends Command
     {
 
         //Đồng bộ file và inventory
-        \DB::connection('mysql2')->table('inventories')
+        /*\DB::connection('mysql2')->table('inventories')
             ->where('id', '>',209)
             ->chunkById(100, function ($inventories) {
                 foreach ($inventories as $inventory){
@@ -139,7 +139,7 @@ class SyncData extends Command
 
                     echo 'Sync inventory: '.$inventory->id.PHP_EOL;
                 }
-            });
+            });*/
         //Đồng bộ lesson
         \DB::connection('mysql2')->table('lessons')
             ->chunkById(100, function ($lessons) {
@@ -177,13 +177,13 @@ class SyncData extends Command
                         "subLessons" =>@$oldStructure['sublesson']
                     ];
                     $courseData = [
-                        'name' => $lesson->subject.'_'.$lesson->grade,
+                        'course_name' => $lesson->subject.'_'.$lesson->grade,
                     ];
                     $course = Course::updateOrCreate($courseData, $courseData);
 
                     $unitData = [
                         'course_id' => $course->id,
-                        'name' => @$oldStructure['UnitName']
+                        'unit_name' => @$oldStructure['UnitName']
                     ];
 
                     $unit = Unit::updateOrCreate($unitData, $unitData);
