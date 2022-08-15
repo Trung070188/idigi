@@ -493,7 +493,6 @@ class UsersController extends AdminBaseController
                     }
                 },
             ],
-//            'password' => '|max:191|confirmed',
         ];
         if (!isset($data['id'])) {
             $rules['username'] = ['required', 'min:8', 'unique:users,username', function ($attribute, $value, $fail) {
@@ -588,7 +587,7 @@ class UsersController extends AdminBaseController
             }
             $entry->fill($data);
             $entry->save();
-          if($entry->id)
+          if($entry->email)
           {
               $content=[
                   'full_name'=>$entry->full_name,

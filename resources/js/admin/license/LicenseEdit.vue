@@ -7,7 +7,7 @@
                 <div class="card card-custom card-stretch gutter-b">
                     <div class="card-header border-0 pt-6" style="margin:0px 0px -35px">
                         <div class="card-title"></div>
-                      
+
 
                     </div>
 
@@ -21,16 +21,12 @@
                                         <select  v-model="entry.label"  class="form-control form-select" >
                                             <option v-for="school in schools" :value="school.label">{{school.label}}</option>
                                         </select>
-
                                     </div>
-
-                                 
                                 </div>
-                              
                                 <div class="row">
                                     <div class="form-group col-lg-4">
                                         <label>License expire date </label>
-                                        <datepicker :timepicker="true" v-model="entry.license_to" disabled></datepicker>
+                                        <datepicker :timepicker="true" v-model="entry.license_to" ></datepicker>
                                         <error-label  :errors="errors.license_to"></error-label>
                                     </div>
                                 </div>

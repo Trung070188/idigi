@@ -277,14 +277,12 @@ class SchoolsController extends AdminBaseController
         $data = $req->get('entry');
 
         $rules = [
-            'label' => 'required|max:45',
-            'school_address' => 'required|max:255',
-            'school_email' => 'required|max:45|email',
-            'school_phone' => 'required|max:45',
-//            'license_to' => 'required',
-//            'license_info' => 'max:1000',
-            'number_of_users' => 'required|integer|min:1',
-            'devices_per_user' => 'required|integer|min:1',
+//            'label' => 'required|max:45',
+//            'school_address' => 'required|max:255',
+//            'school_email' => 'required|max:45|email',
+//            'school_phone' => 'required|max:45',
+//            'number_of_users' => 'required|integer|min:1',
+//            'devices_per_user' => 'required|integer|min:1',
         ];
 
         $v = Validator::make($data, $rules);
@@ -423,8 +421,8 @@ class SchoolsController extends AdminBaseController
                 'school_phone'=>$entry->school_phone,
                 'number_of_users'=>$entry->number_of_users,
                 'devices_per_user'=>$entry->devices_per_user,
-                'license_info'=>$entry->license_info,
-                'license_to'=>$entry->license_to,
+//                'license_info'=>$entry->license_info,
+//                'license_to'=>$entry->license_to,
                 'license_state'=>$entry->license_state,
                 'teacher'=>$teacher,
 
