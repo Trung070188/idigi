@@ -19,6 +19,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use App\Models\User;
+use Illuminate\Support\Str;
 use Ramsey\Collection\Collection;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
@@ -573,8 +574,18 @@ class UsersController extends AdminBaseController
             ];
         } else {
             $entry = new User();
-            $realPassword = $data['password'];
-            $data['password'] = Hash::make($data['password']);
+            if(@$data['password']==null)
+            {
+               $entry->password=Str::random(10);
+                $realPassword = $entry->password;
+               $entry->password=Hash::make($entry->password);
+
+            }
+            if(@$data['password']!=null)
+            {
+                $data['password'] = Hash::make($data['password']);
+                $realPassword = $data['password'];
+            }
             $entry->fill($data);
             $entry->save();
             $content=[
