@@ -3,7 +3,6 @@
         <ActionBar type="index"
                    :breadcrumbs="breadcrumbs" title="Application Download Manager"/>
             <div class="card card-custom card-stretch gutter-b" v-if="roleName=='Super Administrator'">
-                {{roleName}}
                 <div class="card-header card-header-stretch border-bottom border-gray-200" >
 
                     <div class="card-title " style="margin: 36px 0px 0px;">
