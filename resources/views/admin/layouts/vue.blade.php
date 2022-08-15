@@ -140,6 +140,7 @@
                                 ];
                             }
                         }else{
+
                             $menu = [
                                 "name" => $groupPermission->name,
                                 "icon" => $groupPermission->icon,
@@ -147,9 +148,9 @@
                             ];
                         }
 
-                        $menus[] = $menu;
-
-                    }
+                        if($groupPermission->name != 'Teacher'){
+                            $menus[] = $menu;
+                        }
                 }else{
                     foreach ($groupPermissions as $groupPermission) {
                         $check = 0;
