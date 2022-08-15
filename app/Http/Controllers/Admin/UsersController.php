@@ -588,13 +588,15 @@ class UsersController extends AdminBaseController
             }
             $entry->fill($data);
             $entry->save();
-            $content=[
-                'full_name'=>$entry->full_name,
-                'password'=>$realPassword,
-                'username'=>$entry->username,
-            ];
-            dispatch(new SendMailPassword($entry->email,'Thông báo tài khoản mới trên iDIGI',$content));
-
+          if($entry->id)
+          {
+              $content=[
+                  'full_name'=>$entry->full_name,
+                  'password'=>$realPassword,
+                  'username'=>$entry->username,
+              ];
+              dispatch(new SendMailPassword($entry->email,'Thông báo tài khoản mới trên iDIGI',$content));
+          }
             if ($data_role['name_role']) {
                 UserRole::updateOrCreate([
                     'user_id' => @$entry->id,
