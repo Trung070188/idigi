@@ -8,7 +8,7 @@ use App\Models\Lesson;
 use App\Models\User;
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
-use Illuminate\Support\Facades\Request;
+use Illuminate\Http\Request;
 
 class LessonController extends Controller
 {

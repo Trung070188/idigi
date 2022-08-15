@@ -54,6 +54,7 @@ class LoginController extends Controller
                     }
                 }
 
+
                 if ($check == 0 && $totalDevice > 2) {
                     return [
                         'code' => 3,
