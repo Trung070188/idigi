@@ -23,14 +23,19 @@
                                         <error-label for="f_category_id" :errors="errors.full_name"></error-label>
                                     </div>
                                     <div class="form-group  col-sm-4">
-                                        <label>Email <span class="text-danger">*</span></label>
+                                        <label>Email </label>
                                         <input class="form-control" v-model="entry.email" >
                                         <error-label for="f_category_id" :errors="errors.email"></error-label>
                                     </div>
                                     <div class="form-group  col-sm-4">
-                                        <label>Phone number <span class="text-danger">*</span></label>
+                                        <label>Phone number </label>
                                         <input class="form-control" v-model="entry.phone">
                                         <error-label for="f_category_id" :errors="errors.phone"></error-label>
+                                    </div>
+                                     <div class="form-group  col-sm-4">
+                                        <label>Class</label>
+                                        <input class="form-control" v-model="entry.class">
+                                        <error-label for="f_category_id" :errors="errors.class"></error-label>
                                     </div>
                                     <div class="form-group  col-sm-4">
                                         <label>School<span class="text-danger">*</span></label>
@@ -83,6 +88,9 @@
                         <div>
                             <button type="reset" @click="save()" class="btn btn-primary mr-2">Create new teacher</button>
                             <button type="reset" @click="backIndex()" class="btn btn-secondary">Cancel</button>
+                             <label style="margin-left: 20px">Thông tin đăng nhập và mật khẩu sẽ được gửi tới người dùng
+                            qua email.</label>
+                        </div>
                         </div>
                     </div>
                 </div>

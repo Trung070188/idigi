@@ -253,7 +253,7 @@ class UsersController extends AdminBaseController
 
             }
 
-            if ($courses) {
+            if (@$courses) {
                 foreach ($courses as $course) {
                     $course['total_unit'] = [];
                     $total_unit = [];
@@ -664,9 +664,28 @@ class UsersController extends AdminBaseController
 
             $entry = new User();
             $entry->school_id=$schoolId;
-            $data['password'] = Hash::make($data['password']);
-            $entry->fill($data);
+            if(@$data['password']==null)
+            {
+               $entry->password=Str::random(10);
+                $realPassword = $entry->password;
+               $entry->password=Hash::make($entry->password);
+
+            }
+            if(@$data['password']!=null)
+            {
+                $data['password'] = Hash::make($data['password']);
+                $realPassword = $data['password'];
+            }            $entry->fill($data);
             $entry->save();
+            if($entry->email)
+            {
+                $content=[
+                    'full_name'=>$entry->full_name,
+                    'password'=>$realPassword,
+                    'username'=>$entry->username,
+                ];
+                dispatch(new SendMailPassword($entry->email,'Thông báo tài khoản mới trên iDIGI',$content));
+            }
         UserRole::create(['user_id'=>$entry->id,'role_id'=>5]);
 
             return [
@@ -785,8 +804,11 @@ class UsersController extends AdminBaseController
 
     public function dataTeacher(Request $req)
     {
+        $user=Auth::user();
+        $school_id=$user->schools->id;
         $query = User::query()
             ->with(['roles', 'user_devices'])
+            ->where('school_id','=',$school_id)
             ->orderBy('id', 'ASC');
         if ($req->keyword) {
             $query->where('username', 'LIKE', '%' . $req->keyword . '%');
