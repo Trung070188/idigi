@@ -176,13 +176,13 @@ class SyncData extends Command
                         "subLessons" =>@$oldStructure['sublesson']
                     ];
                     $courseData = [
-                        'label' => $lesson->subject.'_'.$lesson->grade,
+                        'name' => $lesson->subject.'_'.$lesson->grade,
                     ];
                     $course = Course::updateOrCreate($courseData, $courseData);
 
                     $unitData = [
                         'course_id' => $course->id,
-                        'label' => @$oldStructure['UnitName']
+                        'name' => @$oldStructure['UnitName']
                     ];
 
                     $unit = Unit::updateOrCreate($unitData, $unitData);
