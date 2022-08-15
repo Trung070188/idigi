@@ -144,14 +144,14 @@ License: For each use you must have a valid license purchased only from above li
 								</button>
 								<!--end::Submit button-->
 								<!--begin::Separator-->
-								<div class="text-center text-muted text-uppercase fw-bolder mb-5">or</div>
-								<!--end::Separator-->
-								<!--begin::Google link-->
+<!--								<div class="text-center text-muted text-uppercase fw-bolder mb-5">or</div>
+								&lt;!&ndash;end::Separator&ndash;&gt;
+								&lt;!&ndash;begin::Google link&ndash;&gt;
 								<div id="gSignInWrapper">
                                     <button id="customBtn" type="button" class="btn btn-flex flex-center btn-light btn-lg w-100 mb-5">
                                         <img alt="Logo" src="/themes/admin/assets/media/svg/brand-logos/google-icon.svg" class="h-20px me-3" />Continue with Google
                                     </button>
-                                </div>
+                                </div>-->
 								<!--end::Google link-->
 							</div>
 							<!--end::Actions-->
