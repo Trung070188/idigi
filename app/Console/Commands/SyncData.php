@@ -52,6 +52,7 @@ class SyncData extends Command
 
         //Đồng bộ file và inventory
         \DB::connection('mysql2')->table('inventories')
+            ->where('id', '>',209)
             ->chunkById(100, function ($inventories) {
                 foreach ($inventories as $inventory){
                     $userCreate = User::where('username', $inventory->created_by)->first();
@@ -97,6 +98,7 @@ class SyncData extends Command
 
                         try {
                             $virtualPath = '/files/attachments'.$inventory->virtual_path;
+                            ini_set('memory_limit','2048M');
                             file_put_contents(public_path($virtualPath), file_get_contents(env('OLD_DOMAIN').$inventory->virtual_path));
                             $physicalPath = public_path($virtualPath);
                             $fileAssetId = $this->insertFile($virtualPath, 0);
@@ -135,7 +137,6 @@ class SyncData extends Command
                         'old_id' => $inventory->id
                     ], $newInventory);
 
-
                     echo 'Sync inventory: '.$inventory->id.PHP_EOL;
                 }
             });
@@ -157,7 +158,7 @@ class SyncData extends Command
                             }
 
                             $oldStructure['sublesson'][$key1]['link'] = $link;
-                            $oldStructure['sublesson'][$key1]['full_link'] = url($inventory->virtual_path);
+                            $oldStructure['sublesson'][$key1]['full_link'] = url(@$inventory->virtual_path);
                         }
                     }
 
