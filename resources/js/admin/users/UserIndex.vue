@@ -103,11 +103,7 @@
                                                     class="form-control form-select" v-model="filter.role">
                                                 <option value="" disabled selected>Choose role</option>
                                                 <option value="0">All</option>
-                                                <option value="Super Administrator">Super Administrator</option>
-                                                <option value="Administrator">Administrator</option>
-                                                <option value="Partner">Partner</option>
-                                                <option value="Teacher">Teacher</option>
-                                                <option value="Moderator">Moderator</option>
+                                                <option v-for="role in roles " :value="role.role_name">{{role.role_name}}</option>
                                             </select>
                                         </div>
                                     </div>
