@@ -52,8 +52,8 @@
                                     </div>
                                     <div class="form-group  col-sm-4">
                                         <label>School <span class="text-danger">*</span></label>
-                                        <input class="form-control" v-model="schools.school_name" disabled>
-                                        <error-label for="f_category_id" :errors="errors.school_name"></error-label>
+                                        <input class="form-control" v-model="schools.label" disabled>
+                                        <error-label for="f_category_id" :errors="errors.label"></error-label>
                                     </div>
                                     <div class="form-group  col-sm-4">
                                         <label>Phone number <span class="text-danger">*</span></label>
