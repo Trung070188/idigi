@@ -257,19 +257,18 @@ class UsersController extends AdminBaseController
                 foreach ($courses as $course) {
                     $course['total_unit'] = [];
                     $total_unit = [];
-                    $unitTeacher = [];
+                   
                     foreach ($userCousers as $userCouser) {
                         if ($userCouser->course_id == $course->id) {
                             $courseTeachers[] = $course->id;
                         }
                     }
-                    foreach ($course->units as $courseUn) {
+                    $unitTeacher = [];
                         foreach ($userUnits as $userUnit) {
-                            if ($userUnit->unit_id == $courseUn->id) {
-                                $unitTeacher[] = $courseUn->id;
+                            if ($userUnit->course_id == $course->id) {
+                                $unitTeacher[] = $userUnit->unit_id;
                             }
                         }
-                    }
                     $total_unit=[];
 
                         foreach ($course_unit as $un)
