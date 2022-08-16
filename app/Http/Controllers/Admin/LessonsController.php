@@ -335,7 +335,7 @@ class LessonsController extends AdminBaseController
             'user_id' => $user->id,
             'ip_address' => $request->getClientIp(),
             'user_agent' => $request->userAgent(),
-            'device_uid' => @$request->device_uid,
+            'device_uid' => @$request->device,
             'lesson_ids' => implode(',', $request->lessonIds),
             'download_at' => Carbon::now(),
         ]);
@@ -367,7 +367,7 @@ class LessonsController extends AdminBaseController
                         'user_id' => $user->id,
                         'ip_address' => $request->getClientIp(),
                         'user_agent' => $request->userAgent(),
-                        'device_uid' => @$request->device_uid,
+                        'device_uid' => @$request->device,
                         'lesson_id' => $lesson->id,
                         'download_at' => Carbon::now(),
                         'type' => 'cms',
