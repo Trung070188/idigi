@@ -73,7 +73,7 @@
                             <div class="d-flex justify-content-between align-items-start flex-wrap mb-2">
                                 <div class="d-flex flex-column">
                                     <div class="d-flex align-items-center mb-2">
-                                        <a href="#" class="text-gray-900 text-hover-primary fs-2 fw-bolder me-1">{{entry.username}}</a>
+                                        <a href="#" class="text-gray-900 text-hover-primary fs-2 fw-bolder me-1">{{entry.full_name}}</a>
                                     </div>
                                     <div class="d-flex flex-wrap fw-bold fs-6 mb-4 pe-2">
                                         <a href="#" class="d-flex align-items-center text-gray-400 text-hover-primary me-5 mb-2">
@@ -109,8 +109,9 @@
                                               </span>
                                                 <div class="fw-bold text-gray-400" style="margin:0px 50px 0px">Expired date</div>
                                        </div>
-                                           <div class="  fs-2 fw-bolder counted" style="margin: 0px 15px 0px;">{{d(license)}}</div>
-                                   </div>
+                                           <div class="  fs-2 fw-bolder counted" style="margin: 0px 15px 0px;" v-if="license!=null">{{license}}</div>
+
+                                       </div>
                                     </div>
                                 </div>
                                 <div class="d-flex align-items-center w-200px w-sm-300px flex-column mt-3">
@@ -284,7 +285,7 @@
                 entry: $json.entry || {},
                 role:$json.role || [],
                 userDe:$json.userDe ,
-                license:$json.license || {},
+                license:$json.license ,
                 isLoading: false,
                 errors: {}
             }

@@ -158,7 +158,15 @@ class UsersController extends AdminBaseController
             }
 
 
-        @$license=($entry->schools->license_to);
+            $user=Auth::user();
+            if($user->schools)
+            {
+                $license=($user->schools->license_to);
+
+            }
+            else{
+                $license=null;
+            }
 
 
         /**
