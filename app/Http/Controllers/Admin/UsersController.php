@@ -151,11 +151,10 @@ class UsersController extends AdminBaseController
             if($devicePerUser!=null && $userDevice!=null)
             {
                 @$userDe=round(($userDevice->count()/$devicePerUser)*100);
-                if(@$userDe==0.0)
-                {
-                    $userDe=0;
-                }
 
+            }
+            else{
+                    $userDe=0;
             }
 
 
@@ -170,7 +169,7 @@ class UsersController extends AdminBaseController
         $jsonData = [
             'entry' => $entry,
             'role' => $role,
-            @'userDe'=>@$userDe,
+            'userDe'=>$userDe,
             @'license'=>@$license,
         ];
         return view('admin.layouts.vue', compact('title', 'component', 'jsonData'));
