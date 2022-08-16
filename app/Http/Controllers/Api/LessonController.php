@@ -25,7 +25,7 @@ class LessonController extends Controller
 
         $decoded = JWT::decode($token, new Key(env('SECRET_KEY'), 'HS256'));
 
-        $user = User::where('email', $decoded->email)->first();
+        $user = User::where('username', $decoded->username)->first();
         $unitIds = [];
         $schoolId = $user->school_id;
         $isSuperAdmin = 0;
