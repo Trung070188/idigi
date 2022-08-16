@@ -24,7 +24,7 @@ RUN mv /usr/local/bin/composer.phar /usr/local/bin/composer
 #RUN groupadd -g 1000 www
 #RUN useradd -u 1000 -ms /bin/bash -g www www
 #USER www
-COPY . /var/www
+#COPY . /var/www
 #RUN chown -R www /usr/share/nginx/sites
 
 RUN apt-get install -y nginx
@@ -41,8 +41,8 @@ RUN chmod +x /etc/queue.sh
 
 #USER www
 WORKDIR /var/www
-RUN chmod -R 777 storage
-RUN composer install
+#RUN chmod -R 777 storage
+#RUN composer install
 #WORKDIR /usr/share/nginx/sites
 #RUN composer install
 RUN apt-get install -y nginx
