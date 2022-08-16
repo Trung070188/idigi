@@ -40,5 +40,8 @@ class Inventory extends BaseModel
     public function fileAsset(){
         return $this->belongsTo(File::class, 'file_asset_id');
     }
+    public function lessons(){
+        return $this->belongsToMany(Lesson::class, 'lesson_inventory');
+    }
 
 }

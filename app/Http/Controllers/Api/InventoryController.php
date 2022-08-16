@@ -29,8 +29,16 @@ class InventoryController extends Controller
 
         $decoded = JWT::decode($token, new Key(env('SECRET_KEY'), 'HS256'));
         $user = User::where('username', $decoded->username)->first();
-        $inventory = Inventory::where('id', $id)->first();
+        $inventory = Inventory::where('id', $id)->with(['lessons'])->first();
         $file = File::find($inventory->file_asset_id);
+        $lessonId = NULL;
+
+        if($inventory->lessons){
+            foreach ($inventory->lessons as $lesson){
+                $lessonId = $lesson->id;
+            }
+        }
+
         if($file){
 
             $inventoryLog = DownloadInventoryLog::create([
@@ -38,7 +46,7 @@ class InventoryController extends Controller
                 'ip_address' => $request->getClientIp(),
                 'user_agent' => $request->userAgent(),
                 'device_uid' => @$decoded->device_uid,
-                'lesson_id' => @$inventory->lesson_id,
+                'lesson_id' => $lessonId,
                 'download_at' => Carbon::now(),
                 'inventory_id' => $id
             ]);

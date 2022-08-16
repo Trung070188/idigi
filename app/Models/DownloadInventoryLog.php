@@ -17,7 +17,7 @@ class DownloadInventoryLog extends BaseModel
         'user_agent',
         'device_uid',
         'lesson_id',
-        'inventory',
+        'inventory_id',
         'download_at'
     ];
 }
