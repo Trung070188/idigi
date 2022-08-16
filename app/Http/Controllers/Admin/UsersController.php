@@ -135,21 +135,33 @@ class UsersController extends AdminBaseController
             }
         }
 
-        $roles = Role::query()->orderBy('role_name')->get();
 
         $role = '';
         foreach ($entry->roles as $role_id) {
             $role = $role_id->role_name;
 
         }
-        @$devicePerUser=($entry->schools->devices_per_user);
-        @$userDevice=($entry->user_devices);
-        @$userDe=round(($userDevice->count()/$devicePerUser)*100);
-        if(@$userDe==0.0)
-        {
-            $userDe=0;
-        }
-       @$license=($entry->schools->license_to);
+
+
+
+                    @$devicePerUser=($entry->schools->devices_per_user);
+
+
+            @$userDevice=($entry->user_devices);
+            if($devicePerUser!=null && $userDevice!=null)
+            {
+                @$userDe=round(($userDevice->count()/$devicePerUser)*100);
+                if(@$userDe==0.0)
+                {
+                    $userDe=0;
+                }
+
+            }
+
+
+        @$license=($entry->schools->license_to);
+
+
         /**
          * @var  User $entry
          */
@@ -158,9 +170,7 @@ class UsersController extends AdminBaseController
         $jsonData = [
             'entry' => $entry,
             'role' => $role,
-            'devicePerUser'=>$devicePerUser,
-            'userDevice'=>$userDevice,
-            @'userDe'=>$userDe,
+            @'userDe'=>@$userDe,
             @'license'=>@$license,
         ];
         return view('admin.layouts.vue', compact('title', 'component', 'jsonData'));
@@ -257,7 +267,7 @@ class UsersController extends AdminBaseController
                 foreach ($courses as $course) {
                     $course['total_unit'] = [];
                     $total_unit = [];
-                   
+
                     foreach ($userCousers as $userCouser) {
                         if ($userCouser->course_id == $course->id) {
                             $courseTeachers[] = $course->id;
@@ -435,7 +445,7 @@ class UsersController extends AdminBaseController
                 $rules['email'] = [ 'email', Rule::unique('users')->ignore($user->id),];
 
             }
-           
+
             $rules['username'] = ['required', Rule::unique('users')->ignore($user->id),];
 
         }
@@ -515,9 +525,9 @@ class UsersController extends AdminBaseController
                 $rules['email'] = ['email', Rule::unique('users')->ignore($user->id),];
 
             }
-            
 
-        }          
+
+        }
         $customMessages = [
         ];
         $v = Validator::make($data, $rules, $customMessages);

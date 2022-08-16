@@ -121,16 +121,16 @@ class RolesController extends AdminBaseController
         $data = $req->get('entry');
 
         $rules = [
-            // 'role_name' => ['required', 'unique:roles,role_name'],
+             'role_name' => 'unique:roles,role_name',
 //    'role_description' => 'max:255',
         ];
-        if (!isset($data['id'])) {
-            $rules['role_name'] = ['required', 'unique:roles,role_name'];
-
-        }
         if (isset($data['id'])) {
             $role = Role::find($data['id']);
-            $rules['role_name'] = ['required', Rule::unique('roles')->ignore($role->id),];
+            if($data['role_name'])
+            {
+                $rules['role_name'] = [ Rule::unique('roles')->ignore($role->id),];
+
+            }
 
         }
 

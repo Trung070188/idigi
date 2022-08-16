@@ -12,7 +12,8 @@ class Role extends BaseModel
     protected $table = 'roles';
     protected $fillable = [
         'role_name',
-        'role_description'
+        'role_description',
+        'allow_deleted'
     ];
 
 public function permissions(){

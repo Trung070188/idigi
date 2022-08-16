@@ -284,8 +284,6 @@
                 entry: $json.entry || {},
                 role:$json.role || [],
                 userDe:$json.userDe ,
-                userDevice:$json.userDevice,
-                devicePerUser:$json.devicePerUser || {},
                 license:$json.license || {},
                 isLoading: false,
                 errors: {}
