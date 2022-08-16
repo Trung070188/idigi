@@ -424,7 +424,7 @@ class SchoolsController extends AdminBaseController
                 foreach ($user->roles as $role)
                 {
 
-                    if($role->role_name=='Teacher' && $user->last_login!=null)
+                    if($role->role_name=='Teacher')
                    {
                        $teacher[]=$user;
                    }
