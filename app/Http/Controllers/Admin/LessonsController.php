@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Admin;
 
 
 use App\Console\Commands\DownloadLesson;
+use App\Jobs\UpdateDownloadInventory;
+use App\Jobs\UpdateDownloadLessonFile;
 use App\Models\AllocationContent;
 use App\Models\AllocationContentSchool;
 use App\Models\DownloadAppLog;
@@ -361,6 +363,17 @@ class LessonsController extends AdminBaseController
                         $zip->setEncryptionName($link, \ZipArchive::EM_AES_256, $password);
                     }
 
+                   $dataDownloadInventory =  [
+                        'user_id' => $user->id,
+                        'ip_address' => $request->getClientIp(),
+                        'user_agent' => $request->userAgent(),
+                        'device_uid' => @$request->device_uid,
+                        'lesson_id' => $lesson->id,
+                        'download_at' => Carbon::now(),
+                        'type' => 'cms',
+                        'inventory_id' => $inventory->id
+                    ];
+                    $this->dispatch(new UpdateDownloadInventory($dataDownloadInventory));
 
                 }
             }
@@ -371,12 +384,13 @@ class LessonsController extends AdminBaseController
             $zip->setEncryptionName('lesson_detail.txt', \ZipArchive::EM_AES_256, $password);
             $zip->close();
 
-            DownloadLessonFile::create([
-                'download_lesson_log_id' => $lessonLog->id,
+            $dataLessonFile = [
+            'download_lesson_log_id' => $lessonLog->id,
                 'path' => $zip_file,
                 'is_main' => 0,
                 'is_deleted_file' => 0
-            ]);
+            ];
+            $this->dispatch(new UpdateDownloadLessonFile($dataLessonFile));
 
             $zipAll->addFile($zip_file, $name[0] . '.zip');
             $zipAll->setEncryptionName('/' . $name[0] . '.zip', \ZipArchive::EM_AES_256, $password);
@@ -385,13 +399,13 @@ class LessonsController extends AdminBaseController
 
         $zipAll->close();
 
-        DownloadLessonFile::create([
+        $dataLessonFile =[
             'download_lesson_log_id' => $lessonLog->id,
             'path' => $zipFileAll,
             'is_main' => 1,
             'is_deleted_file' => 0
-        ]);
-
+        ];
+        $this->dispatch(new UpdateDownloadLessonFile($dataLessonFile));
 
         return [
             'code' => 0,

@@ -18,6 +18,7 @@ class DownloadInventoryLog extends BaseModel
         'device_uid',
         'lesson_id',
         'inventory_id',
-        'download_at'
+        'download_at',
+        'type'
     ];
 }
