@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Jobs\UpdateDownloadInventory;
 use App\Models\AllocationContentSchool;
 use App\Models\DownloadInventoryLog;
 use App\Models\File;
@@ -40,8 +41,7 @@ class InventoryController extends Controller
         }
 
         if($file){
-
-            $inventoryLog = DownloadInventoryLog::create([
+            $this->dispatch(new UpdateDownloadInventory([
                 'user_id' => $user->id,
                 'ip_address' => $request->getClientIp(),
                 'user_agent' => $request->userAgent(),
@@ -49,7 +49,7 @@ class InventoryController extends Controller
                 'lesson_id' => $lessonId,
                 'download_at' => Carbon::now(),
                 'inventory_id' => $id
-            ]);
+            ]));
 
             return redirect($file->url);
 
