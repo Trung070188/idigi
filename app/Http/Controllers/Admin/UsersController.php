@@ -700,8 +700,8 @@ class UsersController extends AdminBaseController
             }
             if(@$data['password']!=null)
             {
-                $data['password'] = Hash::make($data['password']);
                 $realPassword = $data['password'];
+                $data['password'] = Hash::make($data['password']);
             }            $entry->fill($data);
             $entry->save();
             if($entry->email)
