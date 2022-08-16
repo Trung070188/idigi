@@ -19,6 +19,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 });
 Route::group(['middleware' => ['auth_api'], 'namespace' => 'Api'], function () {
     Route::get('/get-all-lesson', 'LessonController@getAllLesson');
+    Route::get('/download/inventory/{id}', 'InventoryController@downloadInventory')->name('download_inventory');
 });
 
 Route::group([ 'namespace' => 'Api'], function () {
