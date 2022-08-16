@@ -40,7 +40,7 @@ class LessonController extends Controller
 
 
             }
-            if ($role->role_name == 'Administrator') {
+            if ($role->role_name == 'School Admin') {
                 $contents = AllocationContentSchool::where('school_id', $schoolId)
                     ->with(['allocation_content', 'allocation_content.units'])
                     ->get();
