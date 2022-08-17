@@ -67,7 +67,7 @@ class SchoolsController extends AdminBaseController
     {
         $component = 'LicenseForm';
         $title = 'Create schools';
-        $school=School::query()->orderBy('id','ASC')->get();
+        $school=School::query()->where('license_to')->orderBy('id','ASC')->get();
         $jsonData=[
             'school'=>$school,
         ];
@@ -364,6 +364,59 @@ class SchoolsController extends AdminBaseController
             ];
         }
     }
+    public function saveLicense(Request $req)
+    {
+        $dataContent=$req->all();
+        if (!$req->isMethod('POST')) {
+            return ['code' => 405, 'message' => 'Method not allow'];
+        }
+
+        $data = $req->get('entry');
+
+        $rules = [
+//            'label' => 'required|max:45',
+//            'school_address' => 'required|max:255',
+//            'school_email' => 'required|max:45|email',
+//            'school_phone' => 'required|max:45',
+//            'number_of_users' => 'required|integer|min:1',
+//            'devices_per_user' => 'required|integer|min:1',
+        ];
+
+        $v = Validator::make($data, $rules);
+
+        if ($v->fails()) {
+            return [
+                'code' => 2,
+                'errors' => $v->errors()
+            ];
+        }
+
+        /**
+         * @var  School $entry
+         */
+       {
+           if($data['id'])
+           School::updateOrCreate(
+               [
+                   'license_to'=>$data['license_to'],
+                   'license_state'=>1,
+               ],
+               [
+                   'license_to'=>$data['license_to'],
+                   'license_state'=>1,
+               ]
+           );
+
+
+
+
+            return [
+                'code' => 0,
+                'message' => 'Đã cập nhật',
+                'id' => $entry->id
+            ];
+        }
+    }
 
     /**
      * @param Request $req
@@ -441,6 +494,70 @@ class SchoolsController extends AdminBaseController
                 'devices_per_user'=>$entry->devices_per_user,
 //                'license_info'=>$entry->license_info,
 //                'license_to'=>$entry->license_to,
+                'license_state'=>$entry->license_state,
+                'teacher'=>$teacher,
+
+            ];
+
+        }
+        return [
+            'code' => 0,
+            'data' =>$data,
+            'paginate' => [
+                'currentPage' => $entries->currentPage(),
+                'lastPage' => $entries->lastPage(),
+                'totalRecord' => $entries->count()
+            ]
+        ];
+    }
+    public function dataLicense(Request $req)
+    {
+        $query = School::query()->with(['users'])
+            ->whereNotNull('license_to')
+            ->orderBy('id', 'ASC');
+
+
+        if ($req->keyword) {
+            $query->where('label', 'LIKE', '%' . $req->keyword. '%');
+        }
+
+        if ($req->label) {
+            $query->where('label', 'LIKE', '%' . $req->label. '%');
+        }
+
+        $limit = 25;
+
+        if($req->limit){
+            $limit = $req->limit;
+        }
+        $data=[];
+        $entries = $query->paginate($limit);
+        foreach ($entries as $entry)
+        {
+            $teacher=[];
+
+            foreach ($entry->users as $user)
+            {
+                foreach ($user->roles as $role)
+                {
+
+                    if($role->role_name=='Teacher')
+                    {
+                        $teacher[]=$user;
+                    }
+                }
+
+            }
+            $data[]=[
+                'id'=>$entry->id,
+                'label'=>$entry->label,
+                'school_address'=>$entry->school_address,
+                'school_email'=>$entry->school_email,
+                'school_phone'=>$entry->school_phone,
+                'number_of_users'=>$entry->number_of_users,
+                'devices_per_user'=>$entry->devices_per_user,
+//                'license_info'=>$entry->license_info,
+                'license_to'=>$entry->license_to,
                 'license_state'=>$entry->license_state,
                 'teacher'=>$teacher,
 

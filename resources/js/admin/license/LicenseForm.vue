@@ -104,7 +104,7 @@
             },
             async save() {
                 this.$loading(true);
-                const res = await $post('/xadmin/schools/save', {entry: this.entry,allocationContenSchool:this.allocationContenSchool}, false);
+                const res = await $post('/xadmin/schools/saveLicense', {entry: this.entry,allocationContenSchool:this.allocationContenSchool}, false);
                 this.$loading(false);
                 if (res.errors) {
                     this.errors = res.errors;

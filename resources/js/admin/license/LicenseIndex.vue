@@ -153,7 +153,7 @@
                                 <td class="" v-text="entry.label"></td>
                                 <td class="" v-text="entry.school_address"></td>
                                 <td class="" ></td>
-                                <td class="" v-text="entry.license_to"></td>
+                                <td class="" >{{d(entry.license_to)}}</td>
                                 <td class="">
                                     <!--<a :href="'/xadmin/schools/edit?id='+entry.id" style="margin-right: 10px"><i style="font-size:1.3rem" class="fa fa-edit"></i></a>
                                     <a @click="remove(entry)" href="javascript:;" class="btn-trash deleted"><i  class="fa fa-trash mr-1"></i></a>-->
@@ -263,7 +263,7 @@
             async load() {
                 let query = $router.getQuery();
                 this.$loading(true);
-                const res = await $get('/xadmin/schools/data', query);
+                const res = await $get('/xadmin/schools/dataLicense', query);
                 this.$loading(false);
                 this.paginate = res.paginate;
                 this.entries = res.data;

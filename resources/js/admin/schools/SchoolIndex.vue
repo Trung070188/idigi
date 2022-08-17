@@ -158,7 +158,8 @@
                                 <td class="" v-text="entry.teacher.length"></td>
                                 <td class="" v-text="entry.devices_per_user"></td>
                                 <td></td>
-                                <td class="" v-text="entry.license_state"></td>
+                                <td  class="" v-if="entry.license_state==1">Yes</td>
+                                <td   class="" v-if="entry.license_state==0">No</td>
 
                                 <td class="">
                                     <!--<a :href="'/xadmin/schools/edit?id='+entry.id" style="margin-right: 10px"><i style="font-size:1.3rem" class="fa fa-edit"></i></a>
