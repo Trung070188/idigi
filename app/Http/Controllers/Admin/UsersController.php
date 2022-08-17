@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Imports\TeacherImport;
+use App\Models\File;
 use App\Models\RequestRole;
 use App\Models\Role;
 use App\Models\School;
@@ -20,6 +22,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use App\Models\User;
 use Illuminate\Support\Str;
+use Maatwebsite\Excel\Facades\Excel;
 use Ramsey\Collection\Collection;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
@@ -875,6 +878,7 @@ class UsersController extends AdminBaseController
         ];
     }
 
+
     public function export()
     {
         $keys = [
@@ -932,6 +936,110 @@ class UsersController extends AdminBaseController
         return [
             'code' => 0,
             'message' => 'Đã xóa'
+        ];
+    }
+    public function saveImportTeacher(Request $req)
+    {
+        if (!$req->isMethod('POST')) {
+            return ['code' => 405, 'message' => 'Method not allow'];
+        }
+
+
+        $rules = [
+
+        ];
+
+        $v = Validator::make($req->all(), $rules);
+
+        if ($v->fails()) {
+            return [
+                'code' => 2,
+                'errors' => $v->errors()
+            ];
+        }
+
+        //Upload File
+        $file0 = $_FILES['file_0'];
+
+        $y = date('Y');
+        $m = date('m');
+
+        $allowed = [
+             'xls', 'xlsx'
+        ];
+
+
+
+        $info = pathinfo($file0['name']);
+        $extension = strtolower($info['extension']);
+
+        if (!in_array($extension, $allowed)) {
+            return [
+                'code' => 3,
+                'message' => 'Extension: '.$extension.' is now allowed'
+            ];
+        }
+
+        $dir = public_path("uploads/excel_import/{$y}/{$m}");
+        if (!is_dir($dir)) {
+            mkdir($dir, 0755, true);
+        }
+
+        $info = pathinfo($file0['name']);
+        $extension = strtolower($info['extension']);
+
+        $hash = sha1(uniqid());
+        $newFilePath = $dir.'/'.$hash.'.'.$extension;
+        $ok = move_uploaded_file($file0['tmp_name'], $newFilePath);
+        $newUrl = url("/uploads/excel_import/{$y}/{$m}/{$hash}.{$extension}");
+        $sheets = Excel::toCollection(new TeacherImport(), "{$y}/{$m}/{$hash}.{$extension}", 'excel-import');
+     $teacherLists[]= $sheets;
+
+        $user=Auth::user();
+        $school=$user->schools->id;
+   foreach ($teacherLists as $teacherList)
+   {
+
+       foreach($teacherList as $teacher)
+       {
+           foreach ($teacher as $key=> $tea)
+           {
+               {
+                   if($key>0)
+                   {
+                       $entry = new User();
+                       $entry->username=$tea[0];
+                       $entry->full_name=$tea[1];
+                       $entry->school_id=$school;
+                       $entry->password=Hash::make($tea[2]);
+                       $entry->phone=$tea[3];
+                       $entry->email=$tea[4];
+                       $entry->save();
+                       UserRole::create(['user_id'=>$entry->id,'role_id'=>5]);
+                   }
+
+               }
+           }
+       }
+   }
+
+        //luu bang file
+        $file = new File();
+        $file->type = $file0['type'];
+        $file->hash = sha1($newFilePath);
+        $file->url = $newUrl;
+        $file->is_image = 0;
+        $file->is_excel = 1;
+        $file->size = $file0['size'];
+        $file->name = $info['filename'];
+        $file->path = $newFilePath;
+        $file->extension = $extension;
+        $file->save();
+
+        return [
+            'code' => 0,
+            'message' => 'Đã thêm',
+            'id' => $entry->id
         ];
     }
 

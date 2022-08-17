@@ -40,16 +40,31 @@
                                 data-kt-customer-table-toolbar="base"
                                 v-if="teacherIds == ''"
                             >
-                                        <button type="button" style="margin-left: 10px"
+                                        <button type="button" style="margin:0px 15px 0px"
                                                 @click="isShowFilter = !isShowFilter"
                                                 class="btn btn-primary" v-if="isShowFilter"> Close Advanced Search
                                             <i style="margin-left: 5px" class="fas fa-times"></i>
                                         </button>
-                                        <button type="button" style="margin-left: 10px"
+                                        <button type="button" style="margin:0px 15px 0px"
                                                 @click="isShowFilter = !isShowFilter"
                                                 class="btn btn-primary" v-if="!isShowFilter"> Advanced Search
                                             <i class="fa fa-filter" v-if="!isShowFilter" aria-hidden="true"></i>
                                         </button>
+                                <div class="d-flex justify-content-end" data-kt-filemanager-table-toolbar="base">
+
+
+                                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#kt_modal_upload">
+                                        <span class="svg-icon svg-icon-2">
+													<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+														<path opacity="0.3" d="M10 4H21C21.6 4 22 4.4 22 5V7H10V4Z" fill="black" />
+														<path d="M10.4 3.60001L12 6H21C21.6 6 22 6.4 22 7V19C22 19.6 21.6 20 21 20H3C2.4 20 2 19.6 2 19V4C2 3.4 2.4 3 3 3H9.20001C9.70001 3 10.2 3.20001 10.4 3.60001ZM16 11.6L12.7 8.29999C12.3 7.89999 11.7 7.89999 11.3 8.29999L8 11.6H11V17C11 17.6 11.4 18 12 18C12.6 18 13 17.6 13 17V11.6H16Z" fill="black" />
+														<path opacity="0.3" d="M11 11.6V17C11 17.6 11.4 18 12 18C12.6 18 13 17.6 13 17V11.6H11Z" fill="black" />
+													</svg>
+												</span>
+                                     Upload Files</button>
+
+                                </div>
+
                                         <a v-if="permissions['013']" :href="'/xadmin/users/create_teacher'">
                                             <button class="btn btn-primary button-create" style="margin:0 0 0 15px"> Create New</button>
                                         </a>
@@ -244,12 +259,78 @@
             </div>
 
         </div>
+        <div class="modal fade" id="kt_modal_upload" tabindex="-1" aria-hidden="true">
+            <!--begin::Modal dialog-->
+            <div class="modal-dialog modal-dialog-centered mw-650px">
+                <!--begin::Modal content-->
+                <div class="modal-content">
+                    <!--begin::Form-->
+                    <form class="form" action="https://preview.keenthemes.com/metronic8/demo1/apps/file-manager/none" id="kt_modal_upload_form">
+                        <!--begin::Modal header-->
+                        <div class="modal-header">
+                            <!--begin::Modal title-->
+                            <h2 class="fw-bolder">Upload files</h2>
+                            <!--end::Modal title-->
+                            <!--begin::Close-->
+                            <div class="btn btn-icon btn-sm btn-active-icon-primary" data-bs-dismiss="modal">
+                                <!--begin::Svg Icon | path: icons/duotune/arrows/arr061.svg-->
+                                <span class="svg-icon svg-icon-1">
+															<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+																<rect opacity="0.5" x="6" y="17.3137" width="16" height="2" rx="1" transform="rotate(-45 6 17.3137)" fill="black" />
+																<rect x="7.41422" y="6" width="16" height="2" rx="1" transform="rotate(45 7.41422 6)" fill="black" />
+															</svg>
+														</span>
+                                <!--end::Svg Icon-->
+                            </div>
+                            <!--end::Close-->
+                        </div>
+                        <!--end::Modal header-->
+                        <!--begin::Modal body-->
+                        <div class="modal-body pt-10 pb-15 px-lg-17">
+                            <!--begin::Input group-->
+                            <div class="form-group">
+                                <!--begin::Dropzone-->
+                                <div class="dropzone dropzone-queue mb-2" id="kt_modal_upload_dropzone">
+                                    <!--begin::Controls-->
+                                    <div class="dropzone-panel mb-4">
+                                        <label>File <span class="required"></span></label>
+                                        <input type="file" ref="uploader" class="form-control-file">
+                                        <error-label ></error-label>
+                                    </div>
+                                    <!--end::Controls-->
+                                    <!--begin::Items-->
+                                    <div class="dropzone-items wm-200px">
+                                        <div class="dropzone-item p-5" style="display:none">
+                                            <!--begin::File-->
+                                            <div class="dropzone-file">
+                                                <div class="dropzone-filename text-dark" title="some_image_file_name.jpg">
+                                                    <span data-dz-name="">some_image_file_name.jpg</span>
+                                                    <strong>(
+                                                        <span data-dz-size="">340kb</span>)</strong>
+                                                </div>
+                                                <div class="dropzone-error mt-0" data-dz-errormessage=""></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer" style="justify-content: center">
+                                <button type="button" class="btn btn-primary" @click="saveImportTeacher">Save</button>
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                            </div>
+                        </div>
+                        <!--end::Modal body-->
+                    </form>
+                    <!--end::Form-->
+                </div>
+            </div>
+        </div>
     </div>
 
 </template>
 
 <script>
-    import {$get, $post, getTimeRangeAll,clone} from "../../utils";
+    import {$get, $post, getTimeRangeAll, clone, forEach} from "../../utils";
     import $router from '../../lib/SimpleRouter';
     import ActionBar from "../includes/ActionBar";
     import SwitchButton from "../../components/SwitchButton";
@@ -336,6 +417,43 @@
                 }
 
                 $router.updateQuery({page: this.paginate.currentPage, _: Date.now()});
+            },
+            async saveImportTeacher()
+            {
+                this.errors = {};
+                const files = this.$refs.uploader.files;
+                const formData = new FormData();
+                formData.append('_token', window.$csrf)
+                forEach(files, (v, k) => {
+                    formData.append(k, v);
+                });
+
+                for (let i = 0; i < files.length; i++) {
+                    formData.append('file_' + i, files[i]);
+                }
+
+                $('#overlay').show();
+                let res = await fetch('/xadmin/users/saveImportTeacher', {
+                    method: 'POST',
+                    body: formData
+                })
+                    .then((response) => response.json())
+                    .catch((error) => {
+                        console.error('Error:', error);
+                    });
+
+                $('#overlay').hide();
+                if (res.code) {
+                    this.errors = res.errors;
+                } else {
+                    $('#uploadApp').modal('hide');
+                    this.model = {
+                        type: ''
+                    }
+                    this.$refs.uploader.value = null;
+                    $router.on('/', this.load).init();
+                    toastr.success(res.message);
+                }
             },
 
             filterClear() {

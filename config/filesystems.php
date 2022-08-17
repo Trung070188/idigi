@@ -41,6 +41,11 @@ return [
             'url' => env('APP_URL').'/storage',
             'visibility' => 'public',
         ],
+        'excel-import' => [
+            'driver' => 'local',
+            'root' => public_path('uploads/excel_import')
+        ],
+
 
         's3' => [
             'driver' => 's3',
