@@ -26,3 +26,5 @@ yarn-error.log
 /public/assets/css/app.css
 /public/js/admin/uploadFile.js
 
+/public/uploads/excel_import/
+/public/uploads/excel_import
