@@ -278,7 +278,7 @@
                     return;
                 }
 
-                const res = await $post('/xadmin/schools/remove', {id: entry.id});
+                const res = await $post('/xadmin/schools/removeLicense', {id: entry.id});
 
                 if (res.code) {
                     toastr.error(res.message);

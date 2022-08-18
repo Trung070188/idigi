@@ -279,6 +279,36 @@ class SchoolsController extends AdminBaseController
             'message' => 'Đã xóa'
         ];
     }
+    public function removeLicense(Request $req)
+    {
+        $id = $req->id;
+        $entry = School::find($id);
+       School::where('license_to',$entry->license_to)->delete();
+
+        if (!$entry) {
+            throw new NotFoundHttpException();
+        }
+        School::updateOrCreate(
+            [
+                'id'=>$entry->id,
+            ],
+            [
+
+                'label'=>$entry->label,
+                'school_email'=>$entry->school_email,
+                'school_phone'=>$entry->school_phone,
+                'school_description'=>$entry->school_description,
+                'number_of_users'=>$entry->number_of_users,
+                'devices_per_user'=>$entry->devices_per_user,
+                'license_state'=>0
+
+            ]
+        );
+        return [
+            'code' => 0,
+            'message' => 'Đã xóa'
+        ];
+    }
 
     /**
      * @uri  /xadmin/schools/save
@@ -294,12 +324,12 @@ class SchoolsController extends AdminBaseController
         $data = $req->get('entry');
 
         $rules = [
-//            'label' => 'required|max:45',
-//            'school_address' => 'required|max:255',
-//            'school_email' => 'required|max:45|email',
-//            'school_phone' => 'required|max:45',
-//            'number_of_users' => 'required|integer|min:1',
-//            'devices_per_user' => 'required|integer|min:1',
+            'label' => 'required|max:45',
+            'school_address' => 'required|max:255',
+            'school_email' => 'email',
+            'school_phone' => 'max:45',
+            'number_of_users' => 'required|integer|min:1',
+            'devices_per_user' => 'required|integer|min:1',
         ];
 
         $v = Validator::make($data, $rules);
@@ -397,7 +427,7 @@ class SchoolsController extends AdminBaseController
                 'id'=>$data['id'],
             ],
             [
-                'license_to'=>$data['license_to'],
+                @'license_to'=>@$data['license_to'],
                 @'license_info'=>@$data['license_info'],
                 'license_state'=>1
             ]
