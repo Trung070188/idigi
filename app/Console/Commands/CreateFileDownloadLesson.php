@@ -38,6 +38,7 @@ class CreateFileDownloadLesson extends Command
      * @var string
      */
     protected $description = 'Tạo file download lesson cho it';
+    protected $lessonIds = [];
 
     /**
      * Create a new command instance.
@@ -56,17 +57,21 @@ class CreateFileDownloadLesson extends Command
      */
     public function handle()
     {
-        $lessons = Lesson::get();
-        $lessonIds = [];
-        foreach ($lessons as $lesson){
-            $lessonIds[] = $lesson->id;
-        }
+
+       Lesson::chunkById(100, function ($lessons) {
+           foreach ($lessons as $lesson){
+               $this->lessonIds[] = $lesson->id;
+           }
+        });
+
+
+
         $info = [
             'user_id' => 3,
             'ip_address' => 3,
             'user_agent' => 3,
             'device_uid' => 3,
-            'lesson_ids' => $lessonIds
+            'lesson_ids' =>  $this->lessonIds
         ];
 
         $url = $this->createFile($info);
