@@ -3,8 +3,6 @@
 namespace App\Http\Controllers\Admin;
 use App\Models\Notification;
 use App\Models\School;
-use App\Models\User;
-use App\Notifications\InvoicePaid;
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
 use Illuminate\Contracts\View\View;
