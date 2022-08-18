@@ -398,6 +398,7 @@ class SchoolsController extends AdminBaseController
             ],
             [
                 'license_to'=>$data['license_to'],
+                'license_info'=>$data['license_info'],
                 'license_state'=>1
             ]
         );
