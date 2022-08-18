@@ -40,6 +40,7 @@ class SchoolsController extends AdminBaseController
         $component = 'SchoolIndex';
         return component($component, compact('title'));
     }
+
     public function license()
     {
         $title = 'School';
@@ -57,22 +58,24 @@ class SchoolsController extends AdminBaseController
     {
         $component = 'SchoolForm';
         $title = 'Create schools';
-        $allocationContens=AllocationContent::query()->orderBy('id','desc')->get();
-        $jsonData=[
-            'allocationContens'=>$allocationContens,
+        $allocationContens = AllocationContent::query()->orderBy('id', 'desc')->get();
+        $jsonData = [
+            'allocationContens' => $allocationContens,
         ];
         return view('admin.layouts.vue', compact('title', 'component', 'jsonData'));
     }
+
     public function createLicense(Request $req)
     {
         $component = 'LicenseForm';
         $title = 'Create schools';
-        $school=School::query()->where('license_to')->orderBy('id','ASC')->get();
-        $jsonData=[
-            'school'=>$school,
+        $school = School::query()->where('license_to')->orderBy('id', 'ASC')->get();
+        $jsonData = [
+            'school' => $school,
         ];
         return view('admin.layouts.vue', compact('title', 'component', 'jsonData'));
     }
+
     public function editLicense(Request $req)
     {
         $id = $req->id;
@@ -85,10 +88,10 @@ class SchoolsController extends AdminBaseController
         /**
          * @var  Lesson $entry
          */
-        $school=School::query()->orderBy('id','ASC')->get();
-        $jsonData=[
-            'school'=>$school,
-            'entry'=>$entry,
+        $school = School::query()->orderBy('id', 'ASC')->get();
+        $jsonData = [
+            'school' => $school,
+            'entry' => $entry,
         ];
 
 
@@ -97,20 +100,20 @@ class SchoolsController extends AdminBaseController
 
         return view('admin.layouts.vue', compact('title', 'component', 'jsonData'));
     }
+
     public function schoolNameNavBar(Request $req)
     {
-        $user=Auth::user();
-        @$schoolName=$user->schools->label;
-        foreach ($user->roles as $role)
-        {
-            @$roleName=$role->role_name;
+        $user = Auth::user();
+        @$schoolName = $user->schools->label;
+        foreach ($user->roles as $role) {
+            @$roleName = $role->role_name;
         }
 
-      return [
-          'code'=>0,
-          'schoolName'=>$schoolName,
-          'roleName'=>$roleName
-      ];
+        return [
+            'code' => 0,
+            'schoolName' => $schoolName,
+            'roleName' => $roleName
+        ];
 
 
     }
@@ -121,7 +124,7 @@ class SchoolsController extends AdminBaseController
         $entry = School::find($id);
         $query = User::query()
             ->with(['roles', 'user_devices'])
-            ->where('school_id','=',$entry->id)
+            ->where('school_id', '=', $entry->id)
             ->orderBy('id', 'ASC');
         if ($req->keyword) {
             $query->where('username', 'LIKE', '%' . $req->keyword . '%');
@@ -140,7 +143,7 @@ class SchoolsController extends AdminBaseController
         if ($req->email) {
             $query->where('email', 'LIKE', '%' . $req->email);
         }
-        if ($req->state!='') {
+        if ($req->state != '') {
             $query->where('state', 'LIKE', '%' . $req->state);
         }
         $query->createdIn($req->created);
@@ -161,6 +164,7 @@ class SchoolsController extends AdminBaseController
             ]
         ];
     }
+
     public function teacherList(Request $req)
     {
         $title = 'TeacherList';
@@ -168,8 +172,8 @@ class SchoolsController extends AdminBaseController
         $id = $req->id;
         $entry = School::find($id);
         $jsonData = [
-            'entry'=>$entry,
-            ];
+            'entry' => $entry,
+        ];
         if (!$entry) {
             throw new NotFoundHttpException();
         }
@@ -188,8 +192,8 @@ class SchoolsController extends AdminBaseController
     public function edit(Request $req)
     {
         $id = $req->id;
-        $entry = School::with(['allocation_contens','school_courses','courses','units','allocation_school'])->where('id',$id)->first();
-        $allocationContens=AllocationContent::query()->with(['course_unit','courses'])->orderBy('id','desc')->get();
+        $entry = School::with(['allocation_contens', 'school_courses', 'courses', 'units', 'allocation_school'])->where('id', $id)->first();
+        $allocationContens = AllocationContent::query()->with(['course_unit', 'courses'])->orderBy('id', 'desc')->get();
 
         //            $courses=$entry->courses;
 //
@@ -208,34 +212,29 @@ class SchoolsController extends AdminBaseController
 //                    $course['total_unit']=$total_unit;
 //                }
 //            }
-        $allocationContenSchools=$entry->allocation_contens;
-        $allocationContentId=@$entry->allocation_school->allocation_content_id;
-       foreach($allocationContenSchools as $allocationContenSchool)
-       {
-           $courses=($allocationContenSchool->courses);
-           $course_unit=$allocationContenSchool->course_unit;
-           foreach($courses as $course)
-           {
+        $allocationContenSchools = $entry->allocation_contens;
+        $allocationContentId = @$entry->allocation_school->allocation_content_id;
+        foreach ($allocationContenSchools as $allocationContenSchool) {
+            $courses = ($allocationContenSchool->courses);
+            $course_unit = $allocationContenSchool->course_unit;
+            foreach ($courses as $course) {
 
-               $course['total_unit']=[];
-               $total_unit=[];
-               foreach($course_unit as $un)
-               {
+                $course['total_unit'] = [];
+                $total_unit = [];
+                foreach ($course_unit as $un) {
 
-                   if($un->course_id==$course->id)
-                   {
-                      $total_unit[]=$un->unit_id;
-                   }
-               }
-               @$course['total_unit']=$total_unit;
+                    if ($un->course_id == $course->id) {
+                        $total_unit[] = $un->unit_id;
+                    }
+                }
+                @$course['total_unit'] = $total_unit;
 
 
-           }
-          $units=($allocationContenSchool->units);
-       }
-        foreach($allocationContenSchools as $allocationContenSchool)
-        {
-            @$allocationContenSchoolName=$allocationContenSchool->title;
+            }
+            $units = ($allocationContenSchool->units);
+        }
+        foreach ($allocationContenSchools as $allocationContenSchool) {
+            @$allocationContenSchoolName = $allocationContenSchool->title;
         }
 
         if (!$entry) {
@@ -248,14 +247,14 @@ class SchoolsController extends AdminBaseController
 
         $title = 'Edit';
         $component = 'SchoolEdit';
-        $entry->allocationContentId=$allocationContentId;
-        $jsonData=[
-            'entry'=>$entry,
-            @'allocationContens'=>@$allocationContens,
-            @'allocationContenSchoolName'=>@$allocationContenSchoolName,
-            @'allocationContentId'=>@$allocationContentId,
-            @'courses'=>@$courses,
-            @'units'=>@$units,
+        $entry->allocationContentId = $allocationContentId;
+        $jsonData = [
+            'entry' => $entry,
+            @'allocationContens' => @$allocationContens,
+            @'allocationContenSchoolName' => @$allocationContenSchoolName,
+            @'allocationContentId' => @$allocationContentId,
+            @'courses' => @$courses,
+            @'units' => @$units,
         ];
         return view('admin.layouts.vue', compact('title', 'component', 'jsonData'));
     }
@@ -287,7 +286,7 @@ class SchoolsController extends AdminBaseController
      */
     public function save(Request $req)
     {
-        $dataContent=$req->all();
+        $dataContent = $req->all();
         if (!$req->isMethod('POST')) {
             return ['code' => 405, 'message' => 'Method not allow'];
         }
@@ -326,18 +325,15 @@ class SchoolsController extends AdminBaseController
 
             $entry->fill($data);
             $entry->save();
-            AllocationContentSchool::where('school_id',$entry->id)->delete();
-            if(@$dataContent['allocationContenSchool'])
-            {
-            AllocationContentSchool::create(['allocation_content_id'=>$dataContent['allocationContenSchool'],'school_id'=>$entry->id]);
+            AllocationContentSchool::where('school_id', $entry->id)->delete();
+            if (@$dataContent['allocationContenSchool']) {
+                AllocationContentSchool::create(['allocation_content_id' => $dataContent['allocationContenSchool'], 'school_id' => $entry->id]);
 
             }
-            SchoolCourse::where('school_id',$entry->id)->delete();
-            foreach($entry->allocation_contens as $contents)
-            {
-                foreach ($contents->course_unit as $schoolCourse)
-                {
-                    SchoolCourse::create(['school_id'=>$entry->id,'course_id'=>$schoolCourse->course_id,'unit_id'=>$schoolCourse->unit_id]);
+            SchoolCourse::where('school_id', $entry->id)->delete();
+            foreach ($entry->allocation_contens as $contents) {
+                foreach ($contents->course_unit as $schoolCourse) {
+                    SchoolCourse::create(['school_id' => $entry->id, 'course_id' => $schoolCourse->course_id, 'unit_id' => $schoolCourse->unit_id]);
                 }
             }
 
@@ -351,9 +347,8 @@ class SchoolsController extends AdminBaseController
             $entry = new School();
             $entry->fill($data);
             $entry->save();
-            if(@$dataContent['allocationContenSchool'])
-            {
-                AllocationContentSchool::create(['allocation_content_id'=>$dataContent['allocationContenSchool'],'school_id'=>$entry->id]);
+            if (@$dataContent['allocationContenSchool']) {
+                AllocationContentSchool::create(['allocation_content_id' => $dataContent['allocationContenSchool'], 'school_id' => $entry->id]);
             }
 
 
@@ -364,9 +359,11 @@ class SchoolsController extends AdminBaseController
             ];
         }
     }
+
     public function saveLicense(Request $req)
     {
-        $dataContent=$req->all();
+
+        $dataContent = $req->all();
         if (!$req->isMethod('POST')) {
             return ['code' => 405, 'message' => 'Method not allow'];
         }
@@ -394,29 +391,24 @@ class SchoolsController extends AdminBaseController
         /**
          * @var  School $entry
          */
-       {
-           if($data['id'])
-           School::updateOrCreate(
-               [
-                   'license_to'=>$data['license_to'],
-                   'license_state'=>1,
-               ],
-               [
-                   'license_to'=>$data['license_to'],
-                   'license_state'=>1,
-               ]
-           );
 
+        School::updateOrCreate(
+            [
+                'id'=>$data['id'],
+            ],
+            [
+                'license_to'=>$data['license_to'],
+                'license_state'=>1
+            ]
+        );
 
-
-
-            return [
-                'code' => 0,
-                'message' => 'Đã cập nhật',
-                'id' => $entry->id
-            ];
-        }
+        return [
+            'code' => 0,
+            'message' => 'Đã cập nhật',
+            'id' =>$data['id']
+        ];
     }
+
 
     /**
      * @param Request $req
@@ -452,57 +444,52 @@ class SchoolsController extends AdminBaseController
         $query = School::query()->with(['users'])->orderBy('id', 'ASC');
 
 
-
         if ($req->keyword) {
-            $query->where('label', 'LIKE', '%' . $req->keyword. '%');
+            $query->where('label', 'LIKE', '%' . $req->keyword . '%');
         }
 
         if ($req->label) {
-            $query->where('label', 'LIKE', '%' . $req->label. '%');
+            $query->where('label', 'LIKE', '%' . $req->label . '%');
         }
 
         $limit = 25;
 
-        if($req->limit){
+        if ($req->limit) {
             $limit = $req->limit;
         }
-        $data=[];
+        $data = [];
         $entries = $query->paginate($limit);
-        foreach ($entries as $entry)
-        {
-            $teacher=[];
+        foreach ($entries as $entry) {
+            $teacher = [];
 
-            foreach ($entry->users as $user)
-            {
-                foreach ($user->roles as $role)
-                {
+            foreach ($entry->users as $user) {
+                foreach ($user->roles as $role) {
 
-                    if($role->role_name=='Teacher')
-                   {
-                       $teacher[]=$user;
-                   }
+                    if ($role->role_name == 'Teacher') {
+                        $teacher[] = $user;
+                    }
                 }
 
             }
-            $data[]=[
-                'id'=>$entry->id,
-                'label'=>$entry->label,
-                'school_address'=>$entry->school_address,
-                'school_email'=>$entry->school_email,
-                'school_phone'=>$entry->school_phone,
-                'number_of_users'=>$entry->number_of_users,
-                'devices_per_user'=>$entry->devices_per_user,
+            $data[] = [
+                'id' => $entry->id,
+                'label' => $entry->label,
+                'school_address' => $entry->school_address,
+                'school_email' => $entry->school_email,
+                'school_phone' => $entry->school_phone,
+                'number_of_users' => $entry->number_of_users,
+                'devices_per_user' => $entry->devices_per_user,
 //                'license_info'=>$entry->license_info,
 //                'license_to'=>$entry->license_to,
-                'license_state'=>$entry->license_state,
-                'teacher'=>$teacher,
+                'license_state' => $entry->license_state,
+                'teacher' => $teacher,
 
             ];
 
         }
         return [
             'code' => 0,
-            'data' =>$data,
+            'data' => $data,
             'paginate' => [
                 'currentPage' => $entries->currentPage(),
                 'lastPage' => $entries->lastPage(),
@@ -510,6 +497,7 @@ class SchoolsController extends AdminBaseController
             ]
         ];
     }
+
     public function dataLicense(Request $req)
     {
         $query = School::query()->with(['users'])
@@ -518,55 +506,51 @@ class SchoolsController extends AdminBaseController
 
 
         if ($req->keyword) {
-            $query->where('label', 'LIKE', '%' . $req->keyword. '%');
+            $query->where('label', 'LIKE', '%' . $req->keyword . '%');
         }
 
         if ($req->label) {
-            $query->where('label', 'LIKE', '%' . $req->label. '%');
+            $query->where('label', 'LIKE', '%' . $req->label . '%');
         }
 
         $limit = 25;
 
-        if($req->limit){
+        if ($req->limit) {
             $limit = $req->limit;
         }
-        $data=[];
+        $data = [];
         $entries = $query->paginate($limit);
-        foreach ($entries as $entry)
-        {
-            $teacher=[];
+        foreach ($entries as $entry) {
+            $teacher = [];
 
-            foreach ($entry->users as $user)
-            {
-                foreach ($user->roles as $role)
-                {
+            foreach ($entry->users as $user) {
+                foreach ($user->roles as $role) {
 
-                    if($role->role_name=='Teacher')
-                    {
-                        $teacher[]=$user;
+                    if ($role->role_name == 'Teacher') {
+                        $teacher[] = $user;
                     }
                 }
 
             }
-            $data[]=[
-                'id'=>$entry->id,
-                'label'=>$entry->label,
-                'school_address'=>$entry->school_address,
-                'school_email'=>$entry->school_email,
-                'school_phone'=>$entry->school_phone,
-                'number_of_users'=>$entry->number_of_users,
-                'devices_per_user'=>$entry->devices_per_user,
+            $data[] = [
+                'id' => $entry->id,
+                'label' => $entry->label,
+                'school_address' => $entry->school_address,
+                'school_email' => $entry->school_email,
+                'school_phone' => $entry->school_phone,
+                'number_of_users' => $entry->number_of_users,
+                'devices_per_user' => $entry->devices_per_user,
 //                'license_info'=>$entry->license_info,
-                'license_to'=>$entry->license_to,
-                'license_state'=>$entry->license_state,
-                'teacher'=>$teacher,
+                'license_to' => $entry->license_to,
+                'license_state' => $entry->license_state,
+                'teacher' => $teacher,
 
             ];
 
         }
         return [
             'code' => 0,
-            'data' =>$data,
+            'data' => $data,
             'paginate' => [
                 'currentPage' => $entries->currentPage(),
                 'lastPage' => $entries->lastPage(),
@@ -628,6 +612,7 @@ class SchoolsController extends AdminBaseController
         $writer->save('php://output');
         die;
     }
+
     public function removeAll(Request $req)
     {
         $ids = $req->ids;

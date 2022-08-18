@@ -39,7 +39,7 @@
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <input id="state" type="checkbox" >
+                                    <input id="state" type="checkbox" v-model="entry.license_state" @change="">
                                     <label for="state" class="pl-2">Activate license</label>
                                     <error-label for="f_grade" ></error-label>
                                 </div>
@@ -135,6 +135,8 @@
 
                 $router.updateQuery({page: this.paginate.currentPage, _: Date.now()});
             },
+
+
         }
     }
 </script>
