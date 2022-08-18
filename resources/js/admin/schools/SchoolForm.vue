@@ -45,7 +45,7 @@
 
                                     </div>
                                     <div class="form-group col-lg-4">
-                                        <label>School Email <span class="text-danger">*</span></label>
+                                        <label>School Email </label>
                                         <input  v-model="entry.school_email"  class="form-control"
                                                 placeholder="Nhập vào email của trường" >
                                         <error-label  :errors="errors.school_email"></error-label>
@@ -55,7 +55,7 @@
                                 </div>
                                 <div class="row">
                                     <div class="form-group col-lg-4">
-                                        <label>Phone number <span class="text-danger">*</span></label>
+                                        <label>Phone number </label>
                                         <input  v-model="entry.school_phone"  class="form-control"
                                                 placeholder="Nhập vào số điện thoại của trường" >
                                         <error-label for="f_school_name" :errors="errors.school_phone"></error-label>
