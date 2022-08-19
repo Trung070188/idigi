@@ -17,7 +17,7 @@
                                 <input v-model="entry.id" type="hidden" name="id" value="">
                                 <div class="row">
                                     <div class="form-group col-lg-4">
-                                        <label>School Name</label>
+                                        <label>School Name <span class="text-danger">*</span> </label>
                                         <select  v-model="entry.label"  class="form-control form-select" disabled>
                                             <option v-for="school in schools" :value="school.label">{{school.label}}</option>
                                         </select>
@@ -25,7 +25,7 @@
                                 </div>
                                 <div class="row">
                                     <div class="form-group col-lg-4">
-                                        <label>License expire date </label>
+                                        <label>License expire date  <span class="text-danger">*</span></label>
                                         <datepicker :timepicker="true" v-model="entry.license_to" ></datepicker>
                                         <error-label  :errors="errors.license_to"></error-label>
                                     </div>
@@ -75,8 +75,6 @@
         components: {ActionBar, Datepicker,Treeselect},
         data() {
             return {
-                allocationContenSchool:[],
-                allocationContens:$json.allocationContens ||{},
                 breadcrumbs: [
                     {
                         title: 'License',
@@ -100,7 +98,7 @@
             },
             async save() {
                 this.$loading(true);
-                const res = await $post('/xadmin/schools/save', {entry: this.entry,allocationContenSchool:this.allocationContenSchool}, false);
+                const res = await $post('/xadmin/schools/saveEditLicense', {entry: this.entry}, false);
                 this.$loading(false);
                 if (res.errors) {
                     this.errors = res.errors;

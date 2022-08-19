@@ -389,6 +389,52 @@ class SchoolsController extends AdminBaseController
             ];
         }
     }
+    public function saveEditLicense(Request $req)
+    {
+        $dataContent = $req->all();
+        if (!$req->isMethod('POST')) {
+            return ['code' => 405, 'message' => 'Method not allow'];
+        }
+
+        $data = $req->get('entry');
+
+        $rules = [
+//            'label' => 'required|max:45',
+          'license_to'=>'required',
+        ];
+
+        $v = Validator::make($data, $rules);
+
+        if ($v->fails()) {
+            return [
+                'code' => 2,
+                'errors' => $v->errors()
+            ];
+        }
+
+        /**
+         * @var  School $entry
+         */
+        if (isset($data['id'])) {
+            $entry = School::find($data['id']);
+            if (!$entry) {
+                return [
+                    'code' => 3,
+                    'message' => 'Không tìm thấy',
+                ];
+            }
+
+            $entry->fill($data);
+            $entry->save();
+
+
+            return [
+                'code' => 0,
+                'message' => 'Đã cập nhật',
+                'id' => $entry->id
+            ];
+        }
+    }
 
     public function saveLicense(Request $req)
     {
@@ -407,6 +453,7 @@ class SchoolsController extends AdminBaseController
 //            'school_phone' => 'required|max:45',
 //            'number_of_users' => 'required|integer|min:1',
 //            'devices_per_user' => 'required|integer|min:1',
+            'license_to'=>'required'
         ];
 
         $v = Validator::make($data, $rules);
