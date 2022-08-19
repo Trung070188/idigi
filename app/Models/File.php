@@ -9,7 +9,6 @@ namespace App\Models;
  * @property string    $url
  * @property int       $size
  * @property int       $is_image
- * @property int       $shop_id
  * @property int       $width
  * @property int       $height
  * @property string    $type

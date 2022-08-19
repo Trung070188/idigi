@@ -136,7 +136,6 @@ class FilesController extends AdminBaseController
         $file->name = $info['filename'];
         $file->path = $newFilePath;
         $file->uploaded_by = $user->name;
-        $file->shop_id = $user->id;
         $file->extension = $extension;
         $file->save();
 
