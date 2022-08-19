@@ -6,6 +6,8 @@ use App\Models\AllocationContent;
 use App\Models\AllocationContentSchool;
 use App\Models\SchoolCourse;
 use App\Models\User;
+use App\Models\UserCourseUnit;
+use App\Models\UserUnit;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -326,11 +328,21 @@ class SchoolsController extends AdminBaseController
         $rules = [
             'label' => 'required|max:45',
             'school_address' => 'required|max:255',
-            'school_email' => 'email',
-            'school_phone' => 'max:45',
             'number_of_users' => 'required|integer|min:1',
             'devices_per_user' => 'required|integer|min:1',
         ];
+        if(@$data['school_email'])
+        {
+            $rules=[
+                'school_email' => 'email',
+            ];
+        }
+        if(@$data['school_phone'])
+        {
+            $rules=[
+                'school_phone' => 'min:11|numeric',
+            ];
+        }
 
         $v = Validator::make($data, $rules);
 
@@ -361,6 +373,9 @@ class SchoolsController extends AdminBaseController
 
             }
             SchoolCourse::where('school_id', $entry->id)->delete();
+            UserUnit::where('school_id',$entry->id)->delete();
+            UserCourseUnit::where('school_id',$entry->id)->delete();
+
             foreach ($entry->allocation_contens as $contents) {
                 foreach ($contents->course_unit as $schoolCourse) {
                     SchoolCourse::create(['school_id' => $entry->id, 'course_id' => $schoolCourse->course_id, 'unit_id' => $schoolCourse->unit_id]);

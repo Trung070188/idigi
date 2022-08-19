@@ -16,5 +16,6 @@ class UserCourseUnit extends Model
     protected $fillable = [
     'user_id',
     'course_id',
+    'school_id'
     ];
 }

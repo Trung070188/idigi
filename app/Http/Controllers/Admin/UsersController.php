@@ -562,6 +562,7 @@ class UsersController extends AdminBaseController
 //            }
             $entry->fill($data);
             $entry->save();
+            $schoolId=$entry->schools->id;
 
             UserRole::where('user_id', $entry->id)->delete();
             if (@$data_role['name_role']) {
@@ -578,7 +579,7 @@ class UsersController extends AdminBaseController
             UserCourseUnit::where('user_id', $entry->id)->delete();
             if (@$data_role['courseTeachers']) {
                 foreach ($data_role['courseTeachers'] as $courseTeacherId) {
-                    UserCourseUnit::create(['user_id' => $entry->id, 'course_id' => $courseTeacherId]);
+                    UserCourseUnit::create(['user_id' => $entry->id, 'course_id' => $courseTeacherId,'school_id'=>$schoolId]);
 
                 }
             }
@@ -588,7 +589,7 @@ class UsersController extends AdminBaseController
                     if (@$UnitId['courseTea']) {
                         foreach ($UnitId['courseTea'] as $uni) {
                             if(in_array($UnitId['id'], $data_role['courseTeachers'])){
-                                UserUnit::create(['user_id' => $entry->id, 'unit_id' => $uni, 'course_id' => $UnitId['id']]);
+                                UserUnit::create(['user_id' => $entry->id, 'unit_id' => $uni, 'course_id' => $UnitId['id'],'school_id'=>$schoolId]);
 
                             }
                         }
@@ -1004,6 +1005,19 @@ class UsersController extends AdminBaseController
        {
            foreach ($teacher as $key=> $tea)
            {
+               $tea=
+                   [
+                       '*.0'=>'required',
+                       '*.1'=>'required',
+                   ];
+               $v = Validator::make($tea);
+               if ($v->fails()) {
+                   return [
+                       'code' => 2,
+                       'errors' => $v->errors()
+                   ];
+               }
+
                {
                    if($key>0)
                    {
