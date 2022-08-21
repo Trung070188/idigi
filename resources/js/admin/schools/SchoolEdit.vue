@@ -107,9 +107,9 @@
                                         <div class="form-group col-lg-10">
                                         <label>Content Allocated <span class="text-danger">*</span></label>
 
-                                       <select class="form-control form-select" required v-model="allocationContenSchool" @change="save()">
+                                       <select class="form-control form-select" required v-model="allocationContentSchool" @change="changeAllocationContent()">
 
-                                           <option v-for="allocationConten in allocationContens" :value="allocationConten.id">{{allocationConten.title}}</option>
+                                           <option v-for="allocationContent in allocationContents" :value="allocationContent.id">{{allocationContent.title}}</option>
                                        </select>
                                     </div>
                             <table class="table table-row-bordered align-middle gy-4 gs-9">
@@ -125,7 +125,7 @@
                                   {{course.label}}
                                 </td>
                                 <td >
-                                <treeselect :options="units" :multiple="true" v-model="course.total_unit" :disabled="true"/>
+                                <treeselect :options="units" :multiple="true" v-model="course.total_unit" />
                                     </td>
                             </tr>
                             </tbody>
@@ -184,9 +184,9 @@
             return {
                 courses:courseTreeselect,
                 units:unitTreeselect,
-                allocationContenSchool:$json.entry.allocationContentId,
+                allocationContentSchool:$json.entry.allocationContentId,
                 allocationContenSchoolName:$json.allocationContenSchoolName || {},
-                allocationContens:$json.allocationContens || {},
+                allocationContents:$json.allocationContents || {},
                 breadcrumbs: [
                     {
                         title: 'Schools',
@@ -204,6 +204,18 @@
             }
         },
         methods: {
+             changeAllocationContent()
+            {
+                console.log(this.allocationContents);
+              let  curallocationContent =  this.allocationContents.filter(e => e.id == this.allocationContentSchool);
+              if(curallocationContent.length > 0){
+                  console.log(curallocationContent[0]);
+                  this.courses = curallocationContent[0].courses;
+              this.courses.forEach(function (e) {
+               e.label=e.course_name
+            })
+              }
+            },
             backIndex(){
                 window.location.href = '/xadmin/schools/index';
             },

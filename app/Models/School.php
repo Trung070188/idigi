@@ -33,7 +33,7 @@ class School extends BaseModel
     {
         return $this->hasMany(User::class);
     }
-    public function allocation_contens()
+    public function allocation_contents()
     {
         return $this->belongsToMany(AllocationContent::class,'allocation_content_schools');
     }

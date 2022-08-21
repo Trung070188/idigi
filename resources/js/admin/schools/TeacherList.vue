@@ -198,7 +198,7 @@
                                     </div>
                                 </td>
                                 <td class="" v-text="entry.id"></td>
-                                <td class="" v-text="entry.username"></td>
+                                <td class="" v-text="entry.full_name"></td>
                                 <td class="" v-text="entry.email"></td>
                                 <td class="" v-text="entry.class"></td>
                                 <td class="" v-text="entry.phone"></td>

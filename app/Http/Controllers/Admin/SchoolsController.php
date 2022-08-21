@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Models\AllocationContent;
 use App\Models\AllocationContentSchool;
+use App\Models\Course;
 use App\Models\SchoolCourse;
 use App\Models\User;
 use App\Models\UserCourseUnit;
@@ -194,8 +195,8 @@ class SchoolsController extends AdminBaseController
     public function edit(Request $req)
     {
         $id = $req->id;
-        $entry = School::with(['allocation_contens', 'school_courses', 'courses', 'units', 'allocation_school'])->where('id', $id)->first();
-        $allocationContens = AllocationContent::query()->with(['course_unit', 'courses'])->orderBy('id', 'desc')->get();
+        $entry = School::with(['allocation_contents', 'school_courses', 'courses', 'units', 'allocation_school'])->where('id', $id)->first();
+        $allocationContents = AllocationContent::query()->with(['course_unit', 'courses'])->orderBy('id', 'desc')->get();
 
         //            $courses=$entry->courses;
 //
@@ -214,12 +215,13 @@ class SchoolsController extends AdminBaseController
 //                    $course['total_unit']=$total_unit;
 //                }
 //            }
-        $allocationContenSchools = $entry->allocation_contens;
+        $allocationContentSchools = $entry->allocation_contents;
         $allocationContentId = @$entry->allocation_school->allocation_content_id;
-        foreach ($allocationContenSchools as $allocationContenSchool) {
-            $courses = ($allocationContenSchool->courses);
-            $course_unit = $allocationContenSchool->course_unit;
+        foreach ($allocationContentSchools as $allocationContentSchool) {
+            $courses = ($allocationContentSchool->courses);
+            $course_unit = $allocationContentSchool->course_unit;
             foreach ($courses as $course) {
+                $course['unit']=$course->unit;
 
                 $course['total_unit'] = [];
                 $total_unit = [];
@@ -231,12 +233,11 @@ class SchoolsController extends AdminBaseController
                 }
                 @$course['total_unit'] = $total_unit;
 
-
             }
-            $units = ($allocationContenSchool->units);
+            $units = ($allocationContentSchool->units);
         }
-        foreach ($allocationContenSchools as $allocationContenSchool) {
-            @$allocationContenSchoolName = $allocationContenSchool->title;
+        foreach ($allocationContentSchools as $allocationContentSchool) {
+            @$allocationContentSchoolName = $allocationContentSchool->title;
         }
 
         if (!$entry) {
@@ -252,8 +253,8 @@ class SchoolsController extends AdminBaseController
         $entry->allocationContentId = $allocationContentId;
         $jsonData = [
             'entry' => $entry,
-            @'allocationContens' => @$allocationContens,
-            @'allocationContenSchoolName' => @$allocationContenSchoolName,
+            @'allocationContents' => @$allocationContents,
+            @'allocationContentSchoolName' => @$allocationContentSchoolName,
             @'allocationContentId' => @$allocationContentId,
             @'courses' => @$courses,
             @'units' => @$units,

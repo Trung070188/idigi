@@ -21,10 +21,7 @@ class Course extends BaseModel
 ];
  public function units()
  {
-     return $this->belongsToMany(Unit::class,'allocation_content_units');
- }
- public function unit()
- {
-     return $this->hasMany(Unit::class,'course_id');
+    return $this->hasMany(Unit::class,'course_id');
+
  }
 }
