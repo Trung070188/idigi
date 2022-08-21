@@ -107,7 +107,7 @@
                                         <div class="form-group col-lg-10">
                                         <label>Content Allocated <span class="text-danger">*</span></label>
 
-                                       <select class="form-control form-select" required v-model="allocationContentSchool" @change="changeAllocationContent()">
+                                       <select class="form-control form-select" required v-model="allocationContentSchool" @change="changeAllocationContent() ">
 
                                            <option v-for="allocationContent in allocationContents" :value="allocationContent.id">{{allocationContent.title}}</option>
                                        </select>
@@ -125,7 +125,7 @@
                                   {{course.label}}
                                 </td>
                                 <td >
-                                <treeselect :options="units" :multiple="true" v-model="course.total_unit" />
+                                <treeselect :options="units" :multiple="true" v-model="course.total_unit" :disabled="true"/>
                                     </td>
                             </tr>
                             </tbody>
@@ -221,7 +221,7 @@
             },
             async save() {
                 this.$loading(true);
-                const res = await $post('/xadmin/schools/save', {entry: this.entry,allocationContenSchool:this.allocationContenSchool}, false);
+                const res = await $post('/xadmin/schools/save', {entry: this.entry,allocationContentSchool:this.allocationContentSchool}, false);
                 this.$loading(false);
                 if (res.errors) {
                     this.errors = res.errors;

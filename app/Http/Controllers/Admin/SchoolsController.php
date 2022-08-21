@@ -369,15 +369,16 @@ class SchoolsController extends AdminBaseController
             $entry->fill($data);
             $entry->save();
             AllocationContentSchool::where('school_id', $entry->id)->delete();
-            if (@$dataContent['allocationContenSchool']) {
-                AllocationContentSchool::create(['allocation_content_id' => $dataContent['allocationContenSchool'], 'school_id' => $entry->id]);
-
-            }
             SchoolCourse::where('school_id', $entry->id)->delete();
             UserUnit::where('school_id',$entry->id)->delete();
             UserCourseUnit::where('school_id',$entry->id)->delete();
+            if (@$dataContent['allocationContentSchool']) {
+                AllocationContentSchool::create(['allocation_content_id' => $dataContent['allocationContentSchool'], 'school_id' => $entry->id]);
 
-            foreach ($entry->allocation_contens as $contents) {
+            }
+           
+
+            foreach ($entry->allocation_contents as $contents) {
                 foreach ($contents->course_unit as $schoolCourse) {
                     SchoolCourse::create(['school_id' => $entry->id, 'course_id' => $schoolCourse->course_id, 'unit_id' => $schoolCourse->unit_id]);
                 }
