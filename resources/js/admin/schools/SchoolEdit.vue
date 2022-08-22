@@ -214,23 +214,17 @@
             changeAllocationContent() {
 
                 let curAllocationContents = this.allocationContents.filter(e => e.id == this.allocationContentSchool);
-                console.log(curAllocationContents);
-                console.log(curAllocationContents[0].units);
                 let abc = ! curAllocationContents[0].units ? null : curAllocationContents[0].units.map(rec => {
                     return {
                         'id': rec.id,
                         'label': rec.unit_name,
                     }
-
                 })
-
                 if(curAllocationContents.length > 0){
                     this.courses = curAllocationContents[0]['courses'];
                     this.units=abc;
                     this.courses.forEach(function (e) {
                         e.label = e.course_name;
-
-
                     })
                 }
 

@@ -61,9 +61,41 @@ class SchoolsController extends AdminBaseController
     {
         $component = 'SchoolForm';
         $title = 'Create schools';
-        $allocationContens = AllocationContent::query()->orderBy('id', 'desc')->get();
+        $allocationContens = AllocationContent::query()->with(['course_unit', 'courses','units'])->orderBy('id', 'desc')->get()->toArray();
+        //cap nhat content tu dong
+        $newAllocationContents = [];
+        foreach ($allocationContens as $allocationContent){
+            $units=$allocationContent['units'];
+        // khoi tao array Course
+            $arrayCourse = [];
+
+            if(@$allocationContent['courses']){
+
+                foreach ($allocationContent['courses'] as $course){
+                    $newCourse = $course;
+
+                    $newCourse['total_unit'] = [];
+                    if(@$allocationContent['course_unit']){
+                        foreach (@$allocationContent['course_unit'] as $courseUnit){
+                            if($course['id'] == $courseUnit['course_id']){
+                                $newCourse['total_unit'][] = $courseUnit['unit_id'];
+                            }
+                        }
+                    }
+
+                    $arrayCourse[] = $newCourse;
+                }
+            }
+            $allocationContent['courses'] = $arrayCourse;
+
+            $newAllocationContents[] = @$allocationContent;
+        }
         $jsonData = [
-            'allocationContens' => $allocationContens,
+            'newAllocationContents' => $newAllocationContents,
+            'arrayCourse'=> $arrayCourse,
+            'units'=>$units,
+
+
         ];
         return view('admin.layouts.vue', compact('title', 'component', 'jsonData'));
     }
@@ -268,7 +300,6 @@ class SchoolsController extends AdminBaseController
             @'courses' => @$courses,
             @'units' => @$units,
         ];
-       // dd($jsonData);
         return view('admin.layouts.vue', compact('title', 'component', 'jsonData'));
     }
 
