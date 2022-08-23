@@ -99,7 +99,7 @@ License: For each use you must have a valid license purchased only from above li
 								<label class="form-label fs-6 fw-bolder text-dark">Username or Email</label>
 								<!--end::Label-->
 								<!--begin::Input-->
-								<input class="form-control form-control-lg form-control-solid" type="text" name="login" autocomplete="off" placeholder="Username or Email" value="{{ old('login') }}" />
+								<input class="form-control form-control-lg form-control-solid" type="text" name="login" autocomplete="off" placeholder="Enter your username or email" value="{{ old('login') }}" />
 								<!--end::Input-->
                                 @error('login')
                                 <div class="fv-plugins-message-container invalid-feedback"><div data-field="email" data-validator="notEmpty">{{ $message }}</div></div>
@@ -119,7 +119,7 @@ License: For each use you must have a valid license purchased only from above li
 								</div>
 								<!--end::Wrapper-->
 								<!--begin::Input-->
-								<input class="form-control form-control-lg form-control-solid" type="password" name="password" placeholder="Password" autocomplete="off" />
+								<input class="form-control form-control-lg form-control-solid" type="password" name="password" placeholder="Enter your password" autocomplete="off" />
 								<!--end::Input-->
                                 @error('password')
                                 <div class="fv-plugins-message-container invalid-feedback"><div data-field="email" data-validator="notEmpty">{{ $message }}</div></div>
@@ -131,6 +131,10 @@ License: For each use you must have a valid license purchased only from above li
 									<input class="form-check-input" type="checkbox" name="remember" id="customCheck1" @if(old('remember')) checked @endif>
                                     <span class="form-check-label fw-bold text-gray-700">Remember me</span>
 								</label>
+                                <label class="form-check form-check-custom form-check-solid form-check-inline mb-5">
+                                    <input class="form-check-input" type="checkbox" name="remember" id="customCheck2">
+                                    <span class="form-check-label fw-bold text-gray-700">You're on ISMART teacher</span>
+                                </label>
                             </div>
 
 							<!--end::Input group-->
