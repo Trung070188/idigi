@@ -118,7 +118,7 @@
                                         </option>
                                     </select>
                                 </div>
-                                <table class="table table-row-bordered align-middle gy-4 gs-9">
+                                <table class="table table-row-bordered align-middle gy-4 gs-9" v-if="courses!=null">
                                     <thead
                                         class="border-bottom border-gray-200 fs-6 text-gray-600 fw-bolder bg-light bg-opacity-75">
                                     <tr>
@@ -137,6 +137,26 @@
                                     </tr>
                                     </tbody>
                                 </table>
+                                <table class="table table-row-bordered align-middle gy-4 gs-9" v-if="courses==null">
+                                    <thead
+                                        class="border-bottom border-gray-200 fs-6 text-gray-600 fw-bolder bg-light bg-opacity-75">
+                                    <tr>
+                                        <th class="">Course Name</th>
+                                        <th>Unit</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr v-for="course in courses2">
+                                        <td>
+                                            {{course.label}}
+                                        </td>
+                                        <td>
+                                            <treeselect :options="course.units" :multiple="true" v-model="course.total_unit" :disabled="true" />
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+
 
                             </div>
                         </div>
@@ -186,7 +206,22 @@
                 }
 
             })
-            console.log($json.entry);
+            const courses2 = $json.courses2;
+            courses2.forEach(function (e) {
+                e.unit.forEach(function (e1) {
+                    e1.label = e1.unit_name;
+                })
+
+            })
+            let courseTreeselect2 = !courses2 ? null : courses2.map(rec => {
+                return {
+                    'id': rec.id,
+                    'label': rec.course_name,
+                    'total_unit': rec.total_unit,
+                    'units':rec.unit,
+                }
+
+            })
 
             return {
                 courses: courseTreeselect,
@@ -194,6 +229,7 @@
                 allocationContentSchool: $json.entry.allocationContentId,
                 allocationContenSchoolName: $json.allocationContenSchoolName || {},
                 allocationContents: $json.allocationContents || {},
+                courses2: courseTreeselect2,
                 breadcrumbs: [
                     {
                         title: 'Schools',
