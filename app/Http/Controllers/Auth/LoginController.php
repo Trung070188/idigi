@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\AuthenticationLog;
+use App\Models\School;
 use App\Models\User;
 use App\Support\CallApi;
 use Carbon\Carbon;
@@ -13,6 +14,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\UnauthorizedException;
+use Illuminate\Validation\ValidationException;
 
 
 class LoginController extends Controller
@@ -87,6 +89,29 @@ class LoginController extends Controller
      */
     public function login(Request $request)
     {
+
+        $usernameType = $this->findUsername();
+
+        $user = User::where($usernameType, $request['login'])->first();
+
+        if($user){
+            if($user->roles){
+                foreach ($user->roles as $role){
+                    if($role->role_name == "Teacher" || $role->role_name == "School Admin"){
+                        $school = School::where('id', $user->school_id)->first();
+
+                        if($school->license_to < Carbon::now()){
+                            throw ValidationException::withMessages([
+                                $this->username() => ["Your license has expired"],
+                            ]);
+
+                        }
+                    }
+                }
+            }
+
+        }
+
         if (config('app.env') === 'production') {
             throw new UnauthorizedException("Password sign in is not available");
         }

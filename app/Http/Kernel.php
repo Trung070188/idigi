@@ -5,6 +5,7 @@ namespace App\Http;
 use App\Http\Middleware\CheckAuthApi;
 use App\Http\Middleware\CheckIfRole;
 use App\Http\Middleware\CheckInventories;
+use App\Http\Middleware\CheckLicense;
 use App\Http\Middleware\CheckPermission;
 use App\Http\Middleware\CheckUser;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
@@ -71,7 +72,7 @@ class Kernel extends HttpKernel
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
         'CheckIfRole' => CheckIfRole::class,
         'CheckPermission' => CheckPermission::class,
-        'CheckInventories'=>CheckInventories::class,
+        'CheckLicense'=>CheckLicense::class,
         'client' => CheckClientCredentials::class,
         'auth_api' => CheckAuthApi::class,
 

@@ -30,6 +30,7 @@ import Allocation_contentEdit from "./admin/allocation_contents/Allocation_conte
 import LicenseIndex from "./admin/license/LicenseIndex";
 import LicenseForm from "./admin/license/LicenseForm";
 import LicenseEdit from "./admin/license/LicenseEdit";
+import LicenseExpired from "./admin/schools/LicenseExpired";
 export default {
     DashboardIndex,
     UserIndex,
@@ -62,7 +63,7 @@ export default {
     Allocation_contentEdit,
     LicenseIndex,
     LicenseForm,
-    LicenseEdit
-
+    LicenseEdit,
+    LicenseExpired
 
 }
