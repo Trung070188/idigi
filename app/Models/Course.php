@@ -19,12 +19,12 @@ class Course extends BaseModel
     'public_to',
     'status',
 ];
- public function units()
- {
-     return $this->belongsToMany(Unit::class,'allocation_content_units');
- }
- public function unit()
- {
-     return $this->hasMany(Unit::class,'course_id');
- }
+    public function units()
+    {
+        return $this->belongsToMany(Unit::class,'allocation_content_units');
+    }
+    public function unit()
+    {
+        return $this->hasMany(Unit::class,'course_id');
+    }
 }

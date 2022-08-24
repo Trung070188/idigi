@@ -17,9 +17,6 @@ class AllocationContent extends BaseModel
     protected $table = 'allocation_contents';
     protected $fillable = [
     'title',
-    'total_school',
-    'total_course',
-    'total_unit',
     'status',
     'created_at',
     'updated_at',

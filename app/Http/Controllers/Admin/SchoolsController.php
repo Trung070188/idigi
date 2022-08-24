@@ -4,7 +4,9 @@ namespace App\Http\Controllers\Admin;
 
 use App\Models\AllocationContent;
 use App\Models\AllocationContentSchool;
+use App\Models\Course;
 use App\Models\SchoolCourse;
+use App\Models\SchoolCourseUnit;
 use App\Models\User;
 use App\Models\UserCourseUnit;
 use App\Models\UserUnit;
@@ -60,9 +62,41 @@ class SchoolsController extends AdminBaseController
     {
         $component = 'SchoolForm';
         $title = 'Create schools';
-        $allocationContens = AllocationContent::query()->orderBy('id', 'desc')->get();
+        $allocationContens = AllocationContent::query()->with(['course_unit', 'courses','units'])->orderBy('id', 'desc')->get()->toArray();
+        //cap nhat content tu dong
+        $newAllocationContents = [];
+        foreach ($allocationContens as $allocationContent){
+            $units=$allocationContent['units'];
+        // khoi tao array Course
+            $arrayCourse = [];
+
+            if(@$allocationContent['courses']){
+
+                foreach ($allocationContent['courses'] as $course){
+                    $newCourse = $course;
+
+                    $newCourse['total_unit'] = [];
+                    if(@$allocationContent['course_unit']){
+                        foreach (@$allocationContent['course_unit'] as $courseUnit){
+                            if($course['id'] == $courseUnit['course_id']){
+                                $newCourse['total_unit'][] = $courseUnit['unit_id'];
+                            }
+                        }
+                    }
+
+                    $arrayCourse[] = $newCourse;
+                }
+            }
+            $allocationContent['courses'] = $arrayCourse;
+
+            $newAllocationContents[] = @$allocationContent;
+        }
         $jsonData = [
-            'allocationContens' => $allocationContens,
+            'newAllocationContents' => $newAllocationContents,
+            'arrayCourse'=> $arrayCourse,
+            'units'=>$units,
+
+
         ];
         return view('admin.layouts.vue', compact('title', 'component', 'jsonData'));
     }
@@ -194,50 +228,95 @@ class SchoolsController extends AdminBaseController
     public function edit(Request $req)
     {
         $id = $req->id;
-        $entry = School::with(['allocation_contens', 'school_courses', 'courses', 'units', 'allocation_school'])->where('id', $id)->first();
-        $allocationContens = AllocationContent::query()->with(['course_unit', 'courses'])->orderBy('id', 'desc')->get();
+        $entry = School::with(['allocation_contents', 'school_courses', 'school_course_units', 'allocation_school'])->where('id', $id)->first();
+        $allocationContents = AllocationContent::query()->with(['course_unit', 'courses','units'])->orderBy('id', 'desc')->get()->toArray();
+        //load content tu dong
+        $newAllocationContents = [];
+        foreach ($allocationContents as $allocationContent){
 
-        //            $courses=$entry->courses;
-//
-//            foreach ($courses as $course)
-//            {
-//                $units=$course->units;
-//                $course['total_unit']=[];
-//                $total_unit=[];
-//                foreach ($entry->school_courses as $choolCourse)
-//                {
-//                    if($course->id==$choolCourse->course_id)
-//                    {
-//                        $total_unit[]=$choolCourse->unit_id;
-//
-//                    }
-//                    $course['total_unit']=$total_unit;
-//                }
-//            }
-        $allocationContenSchools = $entry->allocation_contens;
+            $arrayCourse = [];
+
+            if(@$allocationContent['courses']){
+
+                foreach ($allocationContent['courses'] as $course){
+                    $newCourse = $course;
+
+                    $newCourse['total_unit'] = [];
+                    if(@$allocationContent['course_unit']){
+                        foreach (@$allocationContent['course_unit'] as $courseUnit){
+                            if($course['id'] == $courseUnit['course_id']){
+                                $newCourse['total_unit'][] = $courseUnit['unit_id'];
+                            }
+                        }
+                    }
+
+                    $arrayCourse[] = $newCourse;
+                }
+            }
+            $allocationContent['courses'] = $arrayCourse;
+
+            $newAllocationContents[] = @$allocationContent;
+        }
+        $allocationContentSchools = $entry->allocation_contents;
         $allocationContentId = @$entry->allocation_school->allocation_content_id;
-        foreach ($allocationContenSchools as $allocationContenSchool) {
-            $courses = ($allocationContenSchool->courses);
-            $course_unit = $allocationContenSchool->course_unit;
-            foreach ($courses as $course) {
+        $courses=null;
+        if($entry->allocation_contents)
+        {
+            foreach ($allocationContentSchools as $allocationContentSchool) {
 
-                $course['total_unit'] = [];
-                $total_unit = [];
-                foreach ($course_unit as $un) {
+                $courses = ($allocationContentSchool->courses);
+                $course_unit = $allocationContentSchool->course_unit;
+                if($allocationContentSchool->courses)
+                {
+                    foreach ($courses as $course) {
+                        $course['unit']=$course->unit;
 
-                    if ($un->course_id == $course->id) {
-                        $total_unit[] = $un->unit_id;
+                        $course['total_unit'] = [];
+                        $total_unit = [];
+                        foreach ($course_unit as $un) {
+
+                            if ($un->course_id == $course->id) {
+                                $total_unit[] = $un->unit_id;
+                            }
+                        }
+                        @$course['total_unit'] = $total_unit;
+
                     }
                 }
-                @$course['total_unit'] = $total_unit;
 
+
+
+                $units = ($allocationContentSchool->units);
+            }
+        }
+
+        foreach ($allocationContentSchools as $allocationContentSchool) {
+            @$allocationContentSchoolName = $allocationContentSchool->title;
+        }
+
+        if(@$entry->school_courses)
+        {
+            $courses2=$entry->school_courses;
+            $course_unit2 = $entry->school_course_units;
+            foreach ( $courses2 as $course2)
+            {
+                $course2['unit']=$course2->unit;
+
+                $course2['total_unit'] = [];
+                $total_unit2 = [];
+                foreach ($course_unit2 as $un) {
+
+                    if ($un->course_id == $course2->id) {
+                        $total_unit2[] = $un->unit_id;
+                    }
+                }
+                @$course2['total_unit'] = $total_unit2;
 
             }
-            $units = ($allocationContenSchool->units);
+
+
         }
-        foreach ($allocationContenSchools as $allocationContenSchool) {
-            @$allocationContenSchoolName = $allocationContenSchool->title;
-        }
+
 
         if (!$entry) {
             throw new NotFoundHttpException();
@@ -252,11 +331,12 @@ class SchoolsController extends AdminBaseController
         $entry->allocationContentId = $allocationContentId;
         $jsonData = [
             'entry' => $entry,
-            @'allocationContens' => @$allocationContens,
-            @'allocationContenSchoolName' => @$allocationContenSchoolName,
-            @'allocationContentId' => @$allocationContentId,
-            @'courses' => @$courses,
+            @'allocationContents' => @$newAllocationContents,
+            @'allocationContentSchoolName' =>@ $allocationContentSchoolName,
+            'allocationContentId' => $allocationContentId,
+            'courses' =>$courses,
             @'units' => @$units,
+            @'courses2'=>@$courses2
         ];
         return view('admin.layouts.vue', compact('title', 'component', 'jsonData'));
     }
@@ -368,19 +448,27 @@ class SchoolsController extends AdminBaseController
             $entry->fill($data);
             $entry->save();
             AllocationContentSchool::where('school_id', $entry->id)->delete();
-            if (@$dataContent['allocationContenSchool']) {
-                AllocationContentSchool::create(['allocation_content_id' => $dataContent['allocationContenSchool'], 'school_id' => $entry->id]);
-
-            }
-            SchoolCourse::where('school_id', $entry->id)->delete();
+            SchoolCourseUnit::where('school_id', $entry->id)->delete();
             UserUnit::where('school_id',$entry->id)->delete();
             UserCourseUnit::where('school_id',$entry->id)->delete();
+            if (@$dataContent['allocationContentSchool']) {
+                AllocationContentSchool::create(['allocation_content_id' => $dataContent['allocationContentSchool'], 'school_id' => $entry->id]);
 
-            foreach ($entry->allocation_contens as $contents) {
+            }
+
+            SchoolCourseUnit::where('school_id',$entry->id)->delete();
+            foreach ($entry->allocation_contents as $contents) {
                 foreach ($contents->course_unit as $schoolCourse) {
-                    SchoolCourse::create(['school_id' => $entry->id, 'course_id' => $schoolCourse->course_id, 'unit_id' => $schoolCourse->unit_id]);
+                    SchoolCourseUnit::create(['school_id' => $entry->id, 'course_id' => $schoolCourse->course_id, 'unit_id' => $schoolCourse->unit_id]);
                 }
             }
+            SchoolCourse::where('school_id',$entry->id)->delete();
+            foreach ($entry->allocation_contents as $contents) {
+                foreach ($contents->courses as $schoolCourse) {
+                    SchoolCourse::create(['school_id' => $entry->id, 'course_id' => $schoolCourse->id]);
+                }
+            }
+
 
 
             return [

@@ -71,18 +71,14 @@
                                         <input class="form-control" v-model="schools.label" disabled>
                                         <error-label for="f_category_id" :errors="errors.label"></error-label>
                                     </div>
-                    
-                                  
+
+
                                 </div>
                                   <h4>Content Allocated</h4>
                                 <div class="row">
 
                                     <div class="form-group col-sm-10"  @change="saveTeacherCourse()">
                                         <label>Course</label>
-<!--                                        <select class="form-group form-select" v-model="courseTeacher">-->
-<!--                                        <option v-for="course in courses" :value="course.id">{{course.label}}</option>-->
-<!--                                        </select>-->
-<!--                                        {{courseTeacher}}-->
                                         <treeselect :options="courses" :multiple="true" @deselect="deleteCourse" v-model="courseTeachers"   />
 
                                         <table class="table table-row-bordered align-middle gy-4 gs-9" style="margin:25px 0px 0px">
@@ -193,8 +189,7 @@
         data() {
 
 
-            const course=$json.courses;
-            console.log(course);
+            const course=$json.schoolCousers;
            !course ? null : course.forEach(function (e) {
                 e.total_unit.forEach(function (e1) {
                     e1.label = e1.unit_name;

@@ -106,7 +106,7 @@
                              <div class="row">
                                     <div class="form-group col-lg-10">
                                         <label>Content Allocated </label>
-                                       <select class="form-control form-select" v-model="allocationContenSchool">
+                                       <select class="form-control form-select" v-model="allocationContenSchool" required @change="changeAllocationContent()">
                                            <option v-for="allocationConten in allocationContens" :value="allocationConten.id">{{allocationConten.title}}</option>
                                        </select>
                                     </div>
@@ -117,13 +117,13 @@
                                 <th>Unit</th>
                             </tr>
                             </thead>
-                            <tbody  >
-                            <tr >
+                            <tbody v-if="allocationContenSchool!=null" >
+                            <tr v-for="course in courses" >
                                 <td  >
-
+                                    {{course.label}}
                                 </td>
                                 <td >
-                                <!-- <treeselect :options="units" :multiple="true" v-model="course.total_unit"/> -->
+                                 <treeselect :options="units" :multiple="true" v-model="course.total_unit" :disabled="true"/>
                                     </td>
                             </tr>
                             </tbody>
@@ -157,9 +157,28 @@
         name: "SchoolsForm.vue",
         components: {ActionBar, Datepicker,Treeselect},
         data() {
+            const units=$json.units;
+            const unitTreeselect = units.map(rec => {
+                return {
+                    'id':rec.id,
+                    'label': rec.unit_name,
+                }
+            })
+
+            const course = $json.arrayCourse;
+            let courseTreeselect = !course ? null : course.map(rec => {
+                return {
+                    'id': rec.id,
+                    'label': rec.course_name,
+                    'total_unit': rec.total_unit,
+                }
+
+            })
             return {
-                allocationContenSchool:[],
-                allocationContens:$json.allocationContens ||{},
+                courses: courseTreeselect,
+                units:unitTreeselect,
+                allocationContenSchool:null,
+                allocationContens:$json.newAllocationContents,
                 breadcrumbs: [
                     {
                         title: 'Schools',
@@ -177,6 +196,29 @@
             }
         },
         methods: {
+            changeAllocationContent() {
+
+                let curAllocationContents = this.allocationContens.filter(e => e.id == this.allocationContenSchool);
+                if(curAllocationContents.length > 0){
+                    let abc = ! curAllocationContents[0].units ? null : curAllocationContents[0].units.map(rec => {
+                        return {
+                            'id': rec.id,
+                            'label': rec.unit_name,
+                        }
+                    })
+                    this.courses = curAllocationContents[0]['courses'];
+                    this.units=abc;
+                    this.courses.forEach(function (e) {
+                        e.label = e.course_name;
+                    })
+                }
+                else {
+                    this.courses=[];
+                    this.units=[];
+                }
+
+
+            },
             backIndex(){
                 window.location.href = '/xadmin/schools/index';
             },

@@ -33,7 +33,7 @@ class School extends BaseModel
     {
         return $this->hasMany(User::class);
     }
-    public function allocation_contens()
+    public function allocation_contents()
     {
         return $this->belongsToMany(AllocationContent::class,'allocation_content_schools');
     }
@@ -41,17 +41,18 @@ class School extends BaseModel
     {
         return $this->hasOne(AllocationContentSchool::class);
     }
-    public function school_courses()
+
+    public function school_course_units()
     {
-        return $this->hasMany(SchoolCourse::class,'school_id');
-    }
-    public function courses()
-    {
-        return $this->belongsToMany(Course::class,'school_courses');
+        return $this->hasMany(SchoolCourseUnit::class,'school_id');
     }
     public function units()
     {
-        return $this->belongsToMany(Unit::class,'school_courses');
+        return $this->belongsToMany(Unit::class,'school_course_units');
+    }
+    public function school_courses()
+    {
+        return $this->belongsToMany(Course::class,'school_courses');
     }
 
 

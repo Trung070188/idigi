@@ -262,21 +262,16 @@ class UsersController extends AdminBaseController
 
         $userCousers = ($entry->user_cousers);
         $schools = $entry->schools;
-        $allocationContens = ($schools->allocation_contens);
+        $schoolCousers= ($schools->school_courses);
+        $schoolUnits=$schools->school_course_units;
+        $course_unit=$schools->units;
         $userUnits = $entry->user_units;
-        if ($allocationContens) {
-            foreach ($allocationContens as $allocationConten) {
-                $courses = $allocationConten->courses;
-                $course_unit = $allocationConten->course_unit;
-                $courseTeachers = [];
-                $units= $allocationConten->units;
 
-            }
 
-            if (@$courses) {
-                foreach ($courses as $course) {
+            if (@$schoolCousers) {
+                $courseTeachers=[];
+                foreach ( $schoolCousers as $course) {
                     $course['total_unit'] = [];
-                    $total_unit = [];
 
                     foreach ($userCousers as $userCouser) {
                         if ($userCouser->course_id == $course->id) {
@@ -293,14 +288,13 @@ class UsersController extends AdminBaseController
 
                         foreach ($course_unit as $un)
                         {
-                            foreach ($units as $u)
+                            foreach ($schoolUnits as $unit)
                             {
-                            if($u->id==$un->unit_id && $un->course_id==$course->id)
-                            {
-                                $total_unit[]=$u;
-
+                                if($un->id==$unit->unit_id && $course->id==$unit->course_id)
+                                {
+                                    $total_unit[]=$un;
+                                }
                             }
-                        }
                     }
 
                     @$course['total_unit'] = $total_unit;
@@ -308,7 +302,7 @@ class UsersController extends AdminBaseController
                     @$course['courseTea'] = $unitTeacher;
                 }
             }
-        }
+
         if (!$entry) {
             throw new NotFoundHttpException();
         }
@@ -325,9 +319,9 @@ class UsersController extends AdminBaseController
             'entry' => $entry,
             @'user_device' => @$user_device,
             @'schools' => @$schools,
-            @'courses' => @$courses,
+            @'schoolCousers' => @$schoolCousers,
             @'courseTeachers' => @$courseTeachers,
-            @'course_unit' => @$course_unit,
+ //           @'course_unit' => @$course_unit,
             @'userCouser' => @$userCouser,
             @'userUnits' => @$userUnits,
         ];
