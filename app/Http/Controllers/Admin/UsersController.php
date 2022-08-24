@@ -1022,6 +1022,8 @@ class UsersController extends AdminBaseController
                        $entry->password=Hash::make($tea[2]);
                        $entry->phone=$tea[3];
                        $entry->email=$tea[4];
+                       $entry->class=$tea[5];
+                       $entry->state=$tea[6];
                        $entry->save();
                        UserRole::create(['user_id'=>$entry->id,'role_id'=>5]);
                    }
