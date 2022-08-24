@@ -102,7 +102,7 @@ class LoginController extends Controller
 
                         if($school->license_to < Carbon::now()){
                             throw ValidationException::withMessages([
-                                $this->username() => ["Your license expried"],
+                                $this->username() => ["Your license has expried"],
                             ]);
 
                         }
