@@ -803,4 +803,15 @@ class SchoolsController extends AdminBaseController
             'message' => 'Đã xóa'
         ];
     }
+
+    public function licenseExpired()
+    {
+        $component = 'LicenseExpired';
+        $title = 'License Expired';
+
+        $jsonData = [
+
+        ];
+        return view('admin.layouts.vue', compact('title', 'component', 'jsonData'));
+    }
 }

@@ -107,6 +107,9 @@ License: For each use you must have a valid license purchased only from above li
                                 @error('username')
                                 <div class="fv-plugins-message-container invalid-feedback"><div data-field="email" data-validator="notEmpty">{{ $message }}</div></div>
                                 @enderror
+                                @error('email')
+                                <div class="fv-plugins-message-container invalid-feedback"><div data-field="email" data-validator="notEmpty">{{ $message }}</div></div>
+                                @enderror
 							</div>
 							<!--end::Input group-->
 							<!--begin::Input group-->
