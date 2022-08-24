@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Models\AppVersion;
 use App\Models\User;
 use Firebase\JWT\JWT;
 use Illuminate\Http\Request;
@@ -62,5 +63,26 @@ class CheckDeviceController extends Controller
             'msg' => 'Username khong  tồn tại',
         ];
 
+    }
+
+    public function checkVersion(Request  $request){
+        $curApp = AppVersion::where('type', $request->os)
+            ->where('is_default', 1)->first();
+        if(!$curApp){
+            return [
+                'code' => 1,
+                'msg' => "Không tồn tại version",
+                'results' => []
+            ];
+        }
+
+        return [
+            'code' => 0,
+            'msg' => "Success",
+            'results' => [
+                'latest _vesion' => $curApp->version,
+                'link_vesion' => $curApp->url,
+            ]
+        ];
     }
 }

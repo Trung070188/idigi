@@ -29,10 +29,6 @@ class LoginController extends Controller
         $user = User::where('username', $request->username)
             ->orWhere('email', $request->username)
             ->first();
-        //dd($request->all());
-
-
-
 
         if ($user) {
 
@@ -59,8 +55,8 @@ class LoginController extends Controller
 
                 if(@$school->license_to < Carbon::now()){
                     return [
-                        'code' => 1,
-                        'msg' => 'Invalid username or password',
+                        'code' => 4,
+                        'msg' => 'License expired',
                     ];
                 }
 
