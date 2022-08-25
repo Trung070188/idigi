@@ -474,7 +474,9 @@ class SchoolsController extends AdminBaseController
             return [
                 'code' => 0,
                 'message' => 'Đã cập nhật',
-                'id' => $entry->id
+                'id' => $entry->id,
+                'schoolName'=>$entry->label,
+                'status'=>'edited',
             ];
         } else {
             $entry = new School();
@@ -488,7 +490,9 @@ class SchoolsController extends AdminBaseController
             return [
                 'code' => 0,
                 'message' => 'Đã thêm',
-                'id' => $entry->id
+                'id' => $entry->id,
+                'schoolName'=>$entry->label,
+                'status'=>'created new'
             ];
         }
     }

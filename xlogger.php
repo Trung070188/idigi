@@ -190,10 +190,10 @@ class XLogger {
 
             $username = null;
             if ($user) {
-                if (!empty($user->email)) {
-                    $username = 'user:'.  $user->email;
+                if (!empty($user->username)) {
+                    $username =   $user->username;
                 } else {
-                    $username = 'user:' . $user->id;
+                    $username =  $user->id;
                 }
             }
 
