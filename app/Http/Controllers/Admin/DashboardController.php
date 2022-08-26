@@ -62,8 +62,11 @@ class DashboardController extends AdminBaseController
     {
 
         $xloggers = Xlogger::query()->where('request_uri', '=', '/xadmin/schools/save')
+            ->orWhere('request_uri','=','/xadmin/schools/remove')
             ->orWhere('request_uri','=','/xadmin/users/save')
+            ->orWhere('request_uri','=','/xadmin/users/remove')
             ->orWhere('request_uri','/xadmin/roles/save')
+            ->orWhere('request_uri','=','/xadmin/roles/remove')
             ->orWhere('request_uri','/xadmin/allocation_contents/save')
             ->orWhere('request_uri','/xadmin/schools/saveLicense')
             ->orderBy('id', 'ASC')->get();
@@ -86,22 +89,29 @@ class DashboardController extends AdminBaseController
         $xlogger = [];
         foreach ($xloggers as $entry) {
 
+                if($entry['request_uri']=='/xadmin/schools/save'
+                    || $entry['request_uri']=='/xadmin/roles/save'
+                    || $entry['request_uri']=='/xadmin/schools/remove'
+                    ||  $entry['request_uri']=='/xadmin/roles/remove'
 
-                $dataSchool = json_decode($entry['response'], TRUE);
-                $school_name = @$dataSchool['schoolName'];
-                $entry['createSchoolName'] = $school_name;
-                $entry['status'] = @$dataSchool['status'];
-                if($dataSchool['code']==0)
+                )
+
+                {
+                    $dataXlogger = json_decode($entry['response'], TRUE);
+                    $actionName = @$dataXlogger['actionName'];
+                    $entry['actionName'] = $actionName;
+                    $entry['status'] = @$dataXlogger['status'];
+                }
+
+                if($dataXlogger['code']==0)
                 {
                     $xlogger[]=[
                         'username'=>$entry['username'],
-                        'createSchoolName'=>@$entry['createSchoolName'],
+                        'actionName'=>@$entry['actionName'],
                         'status'=>@$entry['status']
                     ];
 
                 }
-
-
 
         }
 

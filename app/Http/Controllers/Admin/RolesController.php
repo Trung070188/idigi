@@ -104,7 +104,9 @@ class RolesController extends AdminBaseController
 
         return [
             'code' => 0,
-            'message' => 'Đã xóa'
+            'message' => 'Đã xóa',
+            'actionName'=>$entry->role_name,
+            'status'=>'deleted role'
         ];
     }
 
@@ -162,7 +164,9 @@ class RolesController extends AdminBaseController
             return [
                 'code' => 0,
                 'message' => 'Đã cập nhật',
-                'id' => $entry->id
+                'id' => $entry->id,
+                'status'=>'edited role',
+                'actionName'=>$entry->role_name,
             ];
         } else {
             $entry = new Role();
@@ -172,7 +176,9 @@ class RolesController extends AdminBaseController
             return [
                 'code' => 0,
                 'message' => 'Đã thêm',
-                'id' => $entry->id
+                'id' => $entry->id,
+                'status'=>'created new role',
+                'actionName'=>$entry->role_name,
             ];
         }
     }

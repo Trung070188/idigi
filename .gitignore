@@ -28,3 +28,5 @@ yarn-error.log
 
 /public/uploads/excel_import/
 /public/uploads/excel_import
+/public/exports/
+/public/uploads/exports

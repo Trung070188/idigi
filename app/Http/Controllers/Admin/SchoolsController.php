@@ -358,7 +358,9 @@ class SchoolsController extends AdminBaseController
 
         return [
             'code' => 0,
-            'message' => 'Đã xóa'
+            'message' => 'Đã xóa',
+            'actionName'=>$entry->label,
+            'status'=>'deleted school'
         ];
     }
     public function removeLicense(Request $req)
@@ -475,8 +477,8 @@ class SchoolsController extends AdminBaseController
                 'code' => 0,
                 'message' => 'Đã cập nhật',
                 'id' => $entry->id,
-                'schoolName'=>$entry->label,
-                'status'=>'edited',
+                'actionName'=>$entry->label,
+                'status'=>'edited school',
             ];
         } else {
             $entry = new School();
@@ -491,8 +493,8 @@ class SchoolsController extends AdminBaseController
                 'code' => 0,
                 'message' => 'Đã thêm',
                 'id' => $entry->id,
-                'schoolName'=>$entry->label,
-                'status'=>'created new'
+                'actionName'=>$entry->label,
+                'status'=>'created new school'
             ];
         }
     }

@@ -37,10 +37,10 @@
                         <p>Bước 1 :Sử dụng máy tính mà bạn muốn thêm thiết bị mở ứng dụng IDIGI trên Desktop</p>
                         <p>Bước 2:Nhấn vào nút "Get device information" và copy đoạn mã thông tin thiết bị </p>
                         <p>Bước 3:Dán đoạn mã vào ô phía dưới</p>
-                        <input type="text" class="form-control " placeholder="Device name" aria-label="" style="margin-bottom: 10px" aria-describedby="basic-addon1" v-model="entry.device_name" >
+                        <input type="text" class="form-control " placeholder="Enter the device name" aria-label="" style="margin-bottom: 10px" aria-describedby="basic-addon1" v-model="entry.device_name" >
                         <error-label for="f_category_id" :errors="errors.device_name"></error-label>
 
-                        <input type="text" class="form-control col-2" placeholder="Enter the device information code" aria-label="" aria-describedby="basic-addon1" v-model="entry.device_uid" >
+                        <input type="text" class="form-control col-2" placeholder="Enter the register code" aria-label="" aria-describedby="basic-addon1" v-model="entry.device_uid" >
                         <error-label for="f_category_id" :errors="errors.device_uid"></error-label>
                     </div>
                     <div class="form-group d-flex justify-content-between">

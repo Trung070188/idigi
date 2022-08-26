@@ -101,6 +101,7 @@
                     </div>
                     <div class="tab-content">
 
+
                         <div class="d-flex flex-stack pt-4 pl-9 pr-9">
 
                             <div class="badge badge-lg badge-light-primary mb-15">
@@ -171,13 +172,33 @@
                                             <i class="fa fa-edit"></i>
                                         </button>
                                     </a>
-                                    <a v-if="permissions['018']" @click="remove(entry)" href="javascript:;">
+                                    <a  v-if="permissions['018'] && entry.teacher.length==0" @click="remove(entry)" href="javascript:;">
+                                        <button type="button"
+                                                class="btn btn-sm btn-icon btn-light btn-active-light-primary">
+                                            <i class="fa fa-trash mr-1 deleted"></i>
+                                        </button>
+                                    </a>
+                                    <a  v-if="permissions['018'] && entry.teacher.length>0" @click="modalDeleteSchool()" href="javascript:;">
                                         <button type="button"
                                                 class="btn btn-sm btn-icon btn-light btn-active-light-primary">
                                             <i class="fa fa-trash mr-1 deleted"></i>
                                         </button>
                                     </a>
                                 </td>
+                                <div class="modal fade" style="margin-right:50px;border:2px solid #333333  " id="deviceConfirm" tabindex="-1" role="dialog"
+                                     aria-labelledby="deviceConfirm"
+                                     aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog-centered popup-main-1" role="document"
+                                         style="max-width: 500px;">
+                                        <div class="modal-content box-shadow-main paymment-status" style="left:140px;text-align: center; padding: 27px 0px 10px;">
+                                            <div class="close-popup" data-dismiss="modal"></div>
+                                            <h3 class="popup-title success" >Cannot delete this school</h3>
+                                            <div class="content">
+                                                <p>You can only delete this school if the list of teachers is empty.</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </tr>
                             </tbody>
                         </table>
@@ -261,6 +282,9 @@
             $router.on('/', this.load).init();
         },
         methods: {
+            modalDeleteSchool() {
+                $('#deviceConfirm').modal('show');
+            },
             edit: function (id, event) {
                 if (!$(event.target).hasClass('deleted')) {
                     window.location.href = '/xadmin/schools/edit?id=' + id;

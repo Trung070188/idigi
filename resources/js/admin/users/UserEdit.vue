@@ -57,8 +57,8 @@
 
                                     <label>Role</label>
                                     <div  class="form-group col-sm-2" v-for="role in roles">
-                                        <input  type="radio"  v-model="name_role" :value="role.id">
-                                        <label>{{role.role_name}}</label>
+                                        <input  type="radio" :id="role.id" v-model="name_role" :value="role.id">
+                                        <label :for="role.id">{{role.role_name}}</label>
                                     </div>
                                 </div>
                                 <div class="row" v-if="name_role==2 || name_role==5">
@@ -67,6 +67,8 @@
                                         <select  class="form-control form-select" v-model="entry.school_id" required placeholder="Enter the school" >
                                             <option v-for="school in schools" :value="school.id" >{{school.label}}</option>
                                         </select>
+                                        <error-label for="f_grade" :errors="errors.school_id"></error-label>
+
                                     </div>
                                 </div>
                                 <div class="row">

@@ -76,7 +76,7 @@
                             <div class="d-flex align-items-center mb-8" v-for="entry in entries">
 
                                 <div class="flex-grow-1" >
-                                    <div  class="text-gray-800 text-hover-primary fw-bolder fs-6">{{entry.username}} {{entry.status}} school {{entry.createSchoolName}} </div>
+                                    <div  class="text-gray-800 text-hover-primary fw-bolder fs-6">{{entry.username}} {{entry.status}}  {{entry.actionName}} </div>
                                 </div>
 
                             </div>

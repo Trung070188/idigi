@@ -532,7 +532,12 @@ class UsersController extends AdminBaseController
 
 
         }
+        if($data_role['name_role']==2 || $data_role['name_role']==5)
+        {
+            $rules['school_id'] = ['required'];
+        }
         $customMessages = [
+            'school_id.required'=>'The school field is required.'
         ];
         $v = Validator::make($data, $rules, $customMessages);
 
@@ -989,7 +994,7 @@ class UsersController extends AdminBaseController
         $newUrl = url("/uploads/excel_import/{$y}/{$m}/{$hash}.{$extension}");
         $sheets = Excel::toCollection(new TeacherImport(), "{$y}/{$m}/{$hash}.{$extension}", 'excel-import');
      $teacherLists[]= $sheets;
-
+        $validations = [];
         $user=Auth::user();
         $school=$user->schools->id;
    foreach ($teacherLists as $teacherList)
@@ -999,39 +1004,57 @@ class UsersController extends AdminBaseController
        {
            foreach ($teacher as $key=> $tea)
            {
-               $tea=
-                   [
-                       '*.0'=>'required',
-                       '*.1'=>'required',
-                   ];
-               $v = Validator::make($tea);
-               if ($v->fails()) {
-                   return [
-                       'code' => 2,
-                       'errors' => $v->errors()
-                   ];
-               }
 
                {
-                   if($key>0)
-                   {
-                       $entry = new User();
-                       $entry->username=$tea[0];
-                       $entry->full_name=$tea[1];
-                       $entry->school_id=$school;
-                       $entry->password=Hash::make($tea[2]);
-                       $entry->phone=$tea[3];
-                       $entry->email=$tea[4];
-                       $entry->class=$tea[5];
-                       $entry->state=$tea[6];
-                       $entry->save();
-                       UserRole::create(['user_id'=>$entry->id,'role_id'=>5]);
-                   }
+                   $item=[];
+                   $item['username']=$tea[0];
+                   $item['full_name']=$tea[1];
+                   $item['password']=$tea[2];
+                   $item['phone']=$tea[3];
+                   $item['email']=$tea[4];
+                   $item['class']=$tea[5];
+                   $validations[]=$item;
+
+
+               }
+
+
+
+               {
+//                   dd(2);
+//                   if($key>0)
+//                   {
+//                       $entry = new User();
+//                       $entry->username=$tea[0];
+//                       $entry->full_name=$tea[1];
+//                       $entry->school_id=$school;
+//                       $entry->password=Hash::make($tea[2]);
+//                       $entry->phone=$tea[3];
+//                       $entry->email=$tea[4];
+//                       $entry->class=$tea[5];
+//                       $entry->state=$tea[6];
+//                       $entry->save();
+//                       UserRole::create(['user_id'=>$entry->id,'role_id'=>5]);
+//                   }
 
                }
            }
+           $validator=Validator::make($validations,[
+               '*.username' => ['required'],
+               '*.full_name'=>'required',
+               '*.password'=>'required',
+               '*.phone'=>'required',
+               '*.email'=>'required',
+               '*.class'=>'required',
+           ]);
+
+
+
        }
    }
+
+
+
 
         //luu bang file
         $file = new File();
