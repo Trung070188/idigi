@@ -91,8 +91,11 @@ class DashboardController extends AdminBaseController
 
                 if($entry['request_uri']=='/xadmin/schools/save'
                     || $entry['request_uri']=='/xadmin/roles/save'
+                    || $entry['request_uri']=='/xadmin/schools/toggleStatus'
                     || $entry['request_uri']=='/xadmin/schools/remove'
                     ||  $entry['request_uri']=='/xadmin/roles/remove'
+                    || $entry['request_uri']='/xadmin/allocation_contents/save'
+                    ||$entry['request_uri']='/xadmin/allocation_contents/remove'
 
                 )
 

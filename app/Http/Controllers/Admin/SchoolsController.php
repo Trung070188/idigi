@@ -605,22 +605,45 @@ class SchoolsController extends AdminBaseController
         $id = $req->get('id');
         $entry = School::find($id);
 
+
         if (!$id) {
             return [
                 'code' => 404,
                 'message' => 'Not Found'
             ];
         }
+        if($entry->license_state == 0)
+        {
+            $entry->license_state = 1;
+            $entry->save();
+            return [
+                'code' => 200,
+                'message' => 'Đã Lưu',
+                'actionName'=>$entry->label,
+                'status'=>'activated license'
 
-        $entry->status = $req->status ? 1 : 0;
-        $entry->save();
+            ];
+        }
+        if($entry->license_state == 1)
+        {
+            $entry->license_state = 0;
+            $entry->save();
+            return [
+                'code' => 200,
+                'message' => 'Đã Lưu',
+                'actionName'=>$entry->label,
+                'status'=>'deactivated license '
 
-        return [
-            'code' => 200,
-            'message' => 'Đã lưu'
-        ];
+            ];
+        }
+//        $entry->license_state = $req->license_state ? 1 : 0;
+//        $entry->save();
+
+//        return [
+//            'code' => 200,
+//            'message' => 'Đã lưu'
+//        ];
     }
-
     /**
      * Ajax data for index page
      * @uri  /xadmin/schools/data

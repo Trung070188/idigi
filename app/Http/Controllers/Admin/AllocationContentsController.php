@@ -171,7 +171,9 @@ class AllocationContentsController extends AdminBaseController
 
         return [
             'code' => 0,
-            'message' => 'Đã xóa'
+            'message' => 'Đã xóa',
+            'actionName'=>$entry->title,
+            'status'=>'deleted content allocation'
         ];
     }
 
@@ -281,7 +283,10 @@ class AllocationContentsController extends AdminBaseController
             return [
                 'code' => 0,
                 'message' => 'Đã cập nhật',
-                'id' => $entry->id
+                'id' => $entry->id,
+                'actionName'=>$entry->title,
+                'status'=>'edited content allocation'
+
             ];
         } else {
             $entry = new AllocationContent();
@@ -319,7 +324,9 @@ class AllocationContentsController extends AdminBaseController
             return [
                 'code' => 0,
                 'message' => 'Đã thêm',
-                'id' => $entry->id
+                'id' => $entry->id,
+                'actionName'=>$entry->title,
+                'status'=>'created new content allocation'
             ];
         }
     }
