@@ -71,6 +71,7 @@
                                             <option v-for="school in schools" :value="school.id">{{school.label}}</option>
 
                                         </select>
+                                        <error-label for="f_grade" :errors="errors.school_id"></error-label>
                                     </div>
                                 </div>
                                 <div class="row">

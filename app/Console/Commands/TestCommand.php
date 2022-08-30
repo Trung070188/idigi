@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Helpers\PhpDoc;
+use App\Imports\TeacherImport;
 use App\Jobs\SendMailPassword;
 use App\Models\GroupPermission;
 use App\Models\Inventory;
@@ -14,6 +15,7 @@ use App\Support\CallApi;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use Maatwebsite\Excel\Facades\Excel;
 
 class TestCommand extends Command
 {
@@ -48,6 +50,11 @@ class TestCommand extends Command
      */
     public function handle()
     {
+        Excel::store(new TeacherImport([]), 'teacher.xlsx', 'excel-export');
+        dd(1);
+
+
+
 
         $content = [
             'full_name' =>'abvv',

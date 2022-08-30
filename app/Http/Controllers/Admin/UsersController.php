@@ -532,7 +532,12 @@ class UsersController extends AdminBaseController
 
 
         }
+        if($data_role['name_role']==2 || $data_role['name_role']==5)
+        {
+            $rules['school_id'] = ['required'];
+        }
         $customMessages = [
+            'school_id.required'=>'The school field is required.'
         ];
         $v = Validator::make($data, $rules, $customMessages);
 
@@ -960,9 +965,8 @@ class UsersController extends AdminBaseController
         $m = date('m');
 
         $allowed = [
-             'xls', 'xlsx'
+            'xls', 'xlsx'
         ];
-
 
 
         $info = pathinfo($file0['name']);
@@ -971,7 +975,7 @@ class UsersController extends AdminBaseController
         if (!in_array($extension, $allowed)) {
             return [
                 'code' => 3,
-                'message' => 'Extension: '.$extension.' is now allowed'
+                'message' => 'Extension: ' . $extension . ' is now allowed'
             ];
         }
 
@@ -984,73 +988,95 @@ class UsersController extends AdminBaseController
         $extension = strtolower($info['extension']);
 
         $hash = sha1(uniqid());
-        $newFilePath = $dir.'/'.$hash.'.'.$extension;
+        $newFilePath = $dir . '/' . $hash . '.' . $extension;
         $ok = move_uploaded_file($file0['tmp_name'], $newFilePath);
         $newUrl = url("/uploads/excel_import/{$y}/{$m}/{$hash}.{$extension}");
         $sheets = Excel::toCollection(new TeacherImport(), "{$y}/{$m}/{$hash}.{$extension}", 'excel-import');
-     $teacherLists[]= $sheets;
+        $teacherLists[] = $sheets;
+        $validations = [];
+        $error = [];
+        $user = Auth::user();
+        $school = $user->schools->id;
+        foreach ($teacherLists as $teacherList) {
 
-        $user=Auth::user();
-        $school=$user->schools->id;
-   foreach ($teacherLists as $teacherList)
-   {
+            foreach ($teacherList as $teacher) {
+                foreach ($teacher as $key => $tea) {
 
-       foreach($teacherList as $teacher)
-       {
-           foreach ($teacher as $key=> $tea)
-           {
-               $tea=
-                   [
-                       '*.0'=>'required',
-                       '*.1'=>'required',
-                   ];
-               $v = Validator::make($tea);
-               if ($v->fails()) {
-                   return [
-                       'code' => 2,
-                       'errors' => $v->errors()
-                   ];
-               }
+                    {
+                        $item = [];
+                        $item['username'] = $tea[0];
+                        $item['full_name'] = $tea[1];
+                        $item['password'] = $tea[2];
+                        $item['phone'] = $tea[3];
+                        $item['email'] = $tea[4];
+                        $item['class'] = $tea[5];
+                        $validations[] = $item;
+                    }
+                }
+                $validator = Validator::make($validations, [
+                    '*.username' => ['required', Rule::unique('users', 'username')],
+                    '*.full_name' => ['required', function ($attribute, $value, $fail) {
+                        if (preg_match('/[\'\/~`\!@#\$%\^&\*\(\)_\-\+=\{\}\[\]\|;:"\<\>,\.\?\\\]/', $value)) {
+                            return $fail(__(' The :attribute no special characters'));
+                        }
+                    },
+                        function ($attribute, $value, $fail) {
+                            if (preg_match('/[0-9]/', $value)) {
+                                return $fail(__(' The :attribute not a number'));
+                            }
+                        },
+                    ],
+                    '*.password' => 'required',
+                    '*.phone' => 'required|min:11|numeric',
+                    '*.email' => ['required', Rule::unique('users', 'email')],
+                    '*.class' => 'required',
+                ]);
 
-               {
-                   if($key>0)
-                   {
-                       $entry = new User();
-                       $entry->username=$tea[0];
-                       $entry->full_name=$tea[1];
-                       $entry->school_id=$school;
-                       $entry->password=Hash::make($tea[2]);
-                       $entry->phone=$tea[3];
-                       $entry->email=$tea[4];
-                       $entry->class=$tea[5];
-                       $entry->state=$tea[6];
-                       $entry->save();
-                       UserRole::create(['user_id'=>$entry->id,'role_id'=>5]);
-                   }
+                if ($validator->fails()) {
+                    return [
+                        'code' => 2,
+                        'errors' => $validator->errors()
+                    ];
+                }
+                {
+                    foreach ($teacher as $key => $tea) {
+                        if ($key > 0) {
+                            $entry = new User();
+                            $entry->username = $tea[0];
+                            $entry->full_name = $tea[1];
+                            $entry->school_id = $school;
+                            $entry->password = Hash::make($tea[2]);
+                            $entry->phone = $tea[3];
+                            $entry->email = $tea[4];
+                            $entry->class = $tea[5];
+                            $entry->state = $tea[6];
+                            $entry->save();
+                            UserRole::create(['user_id' => $entry->id, 'role_id' => 5]);
+                        }
+                    }
+                }
+            }
 
-               }
-           }
-       }
-   }
 
-        //luu bang file
-        $file = new File();
-        $file->type = $file0['type'];
-        $file->hash = sha1($newFilePath);
-        $file->url = $newUrl;
-        $file->is_image = 0;
-        $file->is_excel = 1;
-        $file->size = $file0['size'];
-        $file->name = $info['filename'];
-        $file->path = $newFilePath;
-        $file->extension = $extension;
-        $file->save();
+            //luu bang file
+            $file = new File();
+            $file->type = $file0['type'];
+            $file->hash = sha1($newFilePath);
+            $file->url = $newUrl;
+            $file->is_image = 0;
+            $file->is_excel = 1;
+            $file->size = $file0['size'];
+            $file->name = $info['filename'];
+            $file->path = $newFilePath;
+            $file->extension = $extension;
+            $file->save();
 
-        return [
-            'code' => 0,
-            'message' => 'Đã thêm',
-            'id' => $entry->id
-        ];
+            return [
+                'code' => 0,
+                'message' => 'Đã thêm',
+//            'id' => $entry->id
+            ];
+        }
     }
 
 }

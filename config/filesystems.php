@@ -46,6 +46,10 @@ return [
             'root' => public_path('uploads/excel_import')
         ],
 
+        'excel-export' => [
+            'driver' => 'local',
+            'root' => public_path('exports')
+        ],
 
         's3' => [
             'driver' => 's3',

@@ -1,312 +1,228 @@
 <template>
 
-    <div class="container-fluid">
-        <ActionBar title="Thống kê chung"/>
-        <!--end::Row-->
-        <!--begin::Row-->
-        <div class="row">
-            <div class="col-lg-12">
-                <!--begin::Mixed Widget 14-->
-                <div class="card card-custom card-stretch gutter-b">
-                    <!--begin::Header-->
-                    <div class="card-header border-0 pt-5">
-                        <h3 class="card-title font-weight-bolder">Action Needed</h3>
-                        <div class="card-toolbar">
+    <div class="post d-flex flex-column-fluid" id="kt_post">
+        <!--begin::Container-->
+        <div id="kt_content_container" class="container-xxl">
+            <!--begin::Row-->
+            <div class="row gy-5 g-xl-8">
+                <!--begin::Col-->
+                <div class="col-xl-3">
+                    <div class="col bg-light-warning px-6 py-8 rounded-2 me-7 mb-7">
+                        <a href="index.html#" class="text-warning fw-bold fs-6">Lessons uploaded</a>
+                        <div class="text-warning fw-bold fs-6">{{lessons}}</div>
 
-                            <div class="dropdown dropdown-inline">
-                                <a href="#" class="btn btn-clean btn-sm btn-icon" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    <i class="ki ki-bold-more-hor"></i>
-                                </a>
-                                <div class="dropdown-menu dropdown-menu-md dropdown-menu-right">
-                                    <!--begin::Navigation-->
-                                    <ul class="navi navi-hover py-5">
-                                        <li class="navi-item">
-                                            <a href="#" class="navi-link">
-																		<span class="navi-icon">
-																			<i class="flaticon2-drop"></i>
-																		</span>
-                                                <span class="navi-text">New Group</span>
-                                            </a>
-                                        </li>
-                                        <li class="navi-item">
-                                            <a href="#" class="navi-link">
-																		<span class="navi-icon">
-																			<i class="flaticon2-list-3"></i>
-																		</span>
-                                                <span class="navi-text">Contacts</span>
-                                            </a>
-                                        </li>
-                                        <li class="navi-item">
-                                            <a href="#" class="navi-link">
-																		<span class="navi-icon">
-																			<i class="flaticon2-rocket-1"></i>
-																		</span>
-                                                <span class="navi-text">Groups</span>
-                                                <span class="navi-link-badge">
-																			<span class="label label-light-primary label-inline font-weight-bold">new</span>
-																		</span>
-                                            </a>
-                                        </li>
-                                        <li class="navi-item">
-                                            <a href="#" class="navi-link">
-																		<span class="navi-icon">
-																			<i class="flaticon2-bell-2"></i>
-																		</span>
-                                                <span class="navi-text">Calls</span>
-                                            </a>
-                                        </li>
-                                        <li class="navi-item">
-                                            <a href="#" class="navi-link">
-																		<span class="navi-icon">
-																			<i class="flaticon2-gear"></i>
-																		</span>
-                                                <span class="navi-text">Settings</span>
-                                            </a>
-                                        </li>
-                                        <li class="navi-separator my-3"></li>
-                                        <li class="navi-item">
-                                            <a href="#" class="navi-link">
-																		<span class="navi-icon">
-																			<i class="flaticon2-magnifier-tool"></i>
-																		</span>
-                                                <span class="navi-text">Help</span>
-                                            </a>
-                                        </li>
-                                        <li class="navi-item">
-                                            <a href="#" class="navi-link">
-																		<span class="navi-icon">
-																			<i class="flaticon2-bell-2"></i>
-																		</span>
-                                                <span class="navi-text">Privacy</span>
-                                                <span class="navi-link-badge">
-																			<span class="label label-light-danger label-rounded font-weight-bold">5</span>
-																		</span>
-                                            </a>
-                                        </li>
-                                    </ul>
-                                    <!--end::Navigation-->
-                                </div>
-                            </div>
-                        </div>
                     </div>
-                    <!--end::Header-->
-                    <!--begin::Body-->
-                    <div class="card-body d-flex flex-column">
-                        <div class="flex-grow-1">
-                            <div class="dropdown show">
-                                <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    Dropdown link
-                                </a>
+                </div>
+                <!--end::Col-->
+                <!--begin::Col-->
+                <div class="col-xl-3">
+                    <div class="col bg-light-primary px-6 py-8 rounded-2 me-7 mb-7">
+                        <a href="index.html#" class="text-primary fw-bold fs-6">Users</a>
+                        <div  class="text-primary fw-bold fs-6">{{users}}</div>
+                    </div>
+                </div>
+                <!--end::Col-->
+                <!--begin::Col-->
+                <div class="col-xl-3">
+                    <div class="col bg-light-danger px-6 py-8 rounded-2 me-7 mb-7">
 
-                                <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                                    <a class="dropdown-item" href="#">Action</a>
-                                    <a class="dropdown-item" href="#">Another action</a>
-                                    <a class="dropdown-item" href="#">Something else here</a>
+                        <a href="index.html#" class="text-danger fw-bold fs-6">Devices</a>
+                        <div class="text-danger fw-bold fs-6">{{devices}}</div>
+                    </div>
+                </div>
+                <div class="col-xl-3">
+                    <div class="col bg-light-success px-6 py-8 rounded-2">
+                        <a href="index.html#" class="text-success fw-bold fs-6 mt-2">Schools</a>
+                        <div  class="text-success fw-bold fs-6 mt-2">{{schools}}</div>
+                    </div>
+                </div>
+                <!--end::Col-->
+            </div>
+            <!--end::Row-->
+            <!--begin::Row-->
+            <div class="row gy-5 g-xl-8">
+                <div class="col-xl-8">
+                    <!--begin::Tables Widget 9-->
+                    <div class="card card-xl-stretch-50 mb-5 mb-xl-8">
+                        <!--begin::Body-->
+                        <div class="card-body p-0 d-flex justify-content-between flex-column overflow-hidden">
+                            <!--begin::Hidden-->
+                            <div class="d-flex flex-stack flex-wrap flex-grow-1 px-9 pt-9 pb-3">
+                                <div class="me-2">
+
                                 </div>
+
+                            </div>
+                            <!--end::Hidden-->
+                            <!--begin::Chart-->
+                            <div class="mixed-widget-10-chart" data-kt-color="primary" style="height: 175px"></div>
+                            <!--end::Chart-->
+                        </div>
+                    </div>
+                    <!--end::Tables Widget 9-->
+                </div>
+                <div class="col-xl-4">
+                    <!--begin::List Widget 3-->
+                    <div class="card card-xl-stretch mb-xl-8">
+                        <!--begin::Header-->
+                        <div class="card-header border-0">
+                            <h3 class="card-title fw-bolder text-dark">Activities</h3>
+
+                        </div>
+                        <!--end::Header-->
+                        <!--begin::Body-->
+                        <div class="card-body pt-2" >
+                            <!--begin::Item-->
+                            <div class="d-flex align-items-center mb-8" v-for="entry in entries">
+
+                                <div class="flex-grow-1" >
+                                    <div  class="text-gray-800 text-hover-primary fw-bolder fs-6">{{entry.username}} {{entry.status}}  {{entry.actionName}} </div>
+                                </div>
+
+                            </div>
+
+                        </div>
+                        <!--end::Body-->
+                    </div>
+                    <!--end:List Widget 3-->
+                </div>
+
+            </div>
+
+            <div class="row g-5 g-xl-8">
+                <div class="col-xl-8">
+                    <!--begin::Tables Widget 5-->
+                    <div class="card card-xxl-stretch mb-5 mb-xl-8">
+                        <!--begin::Header-->
+                        <div class="card-header border-0 pt-5">
+                            <h3 class="card-title align-items-start flex-column">
+                                <span class="card-label fw-bolder fs-3 mb-1">Licenses</span>
+                            </h3>
+
+                        </div>
+
+                        <div class="card-body py-3">
+                            <div class="tab-content">
+                                <!--begin::Tap pane-->
+                                    <!--begin::Table container-->
+                                    <div class="table-responsive">
+                                        <!--begin::Table-->
+                                        <table class="table table-row-gray-200  gs-0 gy-4">
+                                            <!--begin::Table head-->
+                                            <thead>
+                                            <tr class="border-0">
+                                                <th class="p-0 w-50px"></th>
+                                                <th class="p-0 min-w-150px"></th>
+                                                <th class="p-0 min-w-140px"></th>
+                                                <th class="p-0 min-w-110px"></th>
+                                                <th class="p-0 min-w-50px"></th>
+                                            </tr>
+                                            </thead>
+                                            <!--end::Table head-->
+                                            <!--begin::Table body-->
+                                            <tbody >
+                                            <tr v-for="license in licenseRemain">
+                                                <td>
+                                                    <div class="symbol symbol-45px me-2">
+																				<span class="symbol-label">
+                                                                                    <i class="bi bi-bank"></i>
+																				</span>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <a href="index.html#" class="text-dark fw-bolder text-hover-primary mb-1 fs-6">{{license.label}}</a>
+                                                    <span class="text-muted fw-bold d-block">{{license.dayEnd}} days remaining</span>
+                                                </td>
+                                                <td></td>
+
+                                                <td >
+
+                                                </td>
+                                                <td class="text-end">
+                                                    <a :href="license.url">
+                                                        <button class="btn btn-primary">Renew license</button>
+                                                    </a>
+
+                                                </td>
+                                            </tr>
+
+                                            </tbody>
+
+                                        </table>
+                                    </div>
+
+
                             </div>
                         </div>
-                        <div class="pt-5">
-                            <p class="text-center font-weight-normal font-size-lg pb-7">Notes: Current sprint requires stakeholders
-                                <br />to approve newly amended policies</p>
-                            <a href="#" class="btn btn-success btn-shadow-hover font-weight-bolder w-100 py-3">Generate Report</a>
-                        </div>
+                        <!--end::Body-->
                     </div>
-                    <!--end::Body-->
+                    <!--end::Tables Widget 5-->
                 </div>
-                <!--end::Mixed Widget 14-->
-            </div>
-            <div class="col-lg-12">
-                <!--begin::Advance Table Widget 4-->
-                <div class="card card-custom card-stretch gutter-b">
-                    <!--begin::Header-->
-                    <div class="card-header border-0 py-5">
-                        <h3 class="card-title align-items-start flex-column">
-                            <span class="card-label font-weight-bolder text-dark">Agents Stats</span>
-                            <span class="text-muted mt-3 font-weight-bold font-size-sm">More than 400+ new members</span>
-                        </h3>
-                        <div class="card-toolbar">
-                            <a href="#" class="btn btn-info font-weight-bolder font-size-sm mr-3">New Report</a>
-                            <a href="#" class="btn btn-danger font-weight-bolder font-size-sm">Create</a>
-                        </div>
-                    </div>
-                    <!--end::Header-->
-                    <!--begin::Body-->
-                    <div class="card-body pt-0 pb-3">
-                        <div class="tab-content">
-                            <!--begin::Table-->
-                            <div class="table-responsive">
-                                <table class="table table-head-custom table-head-bg table-borderless table-vertical-center">
-                                    <thead>
-                                    <tr class="text-left text-uppercase">
-                                        <th style="min-width: 250px" class="pl-7">
-                                            <span class="text-dark-75">products</span>
-                                        </th>
-                                        <th style="min-width: 100px">earnings</th>
-                                        <th style="min-width: 100px">comission</th>
-                                        <th style="min-width: 100px">company</th>
-                                        <th style="min-width: 130px">rating</th>
-                                        <th style="min-width: 80px"></th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    <tr>
-                                        <td class="pl-0 py-8">
-                                            <div class="d-flex align-items-center">
-                                                <div class="symbol symbol-50 symbol-light mr-4">
-																				<span class="symbol-label">
-																					<img src="/assets/media/svg/avatars/001-boy.svg" class="h-75 align-self-end" alt="" />
-																				</span>
-                                                </div>
-                                                <div>
-                                                    <a href="#" class="text-dark-75 font-weight-bolder text-hover-primary mb-1 font-size-lg">Brad Simmons</a>
-                                                    <span class="text-muted font-weight-bold d-block">HTML, JS, ReactJS</span>
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <span class="text-dark-75 font-weight-bolder d-block font-size-lg">$8,000,000</span>
-                                            <span class="text-muted font-weight-bold">In Proccess</span>
-                                        </td>
-                                        <td>
-                                            <span class="text-dark-75 font-weight-bolder d-block font-size-lg">$520</span>
-                                            <span class="text-muted font-weight-bold">Paid</span>
-                                        </td>
-                                        <td>
-                                            <span class="text-dark-75 font-weight-bolder d-block font-size-lg">Intertico</span>
-                                            <span class="text-muted font-weight-bold">Web, UI/UX Design</span>
-                                        </td>
-                                        <td>
-                                            <img src="/assets/media/logos/stars.png" alt="image" style="width: 5.5rem" />
-                                            <span class="text-muted font-weight-bold d-block font-size-sm">Best Rated</span>
-                                        </td>
-                                        <td class="pr-0 text-right">
-                                            <a href="#" class="btn btn-light-success font-weight-bolder font-size-sm">View Offer</a>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="pl-0 py-0">
-                                            <div class="d-flex align-items-center">
-                                                <div class="symbol symbol-50 symbol-light mr-4">
-																				<span class="symbol-label">
-																					<img src="/assets/media/svg/avatars/018-girl-9.svg" class="h-75 align-self-end" alt="" />
-																				</span>
-                                                </div>
-                                                <div>
-                                                    <a href="#" class="text-dark-75 font-weight-bolder text-hover-primary mb-1 font-size-lg">Jessie Clarcson</a>
-                                                    <span class="text-muted font-weight-bold d-block">C#, ASP.NET, MS SQL</span>
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <span class="text-dark-75 font-weight-bolder d-block font-size-lg">$23,000,000</span>
-                                            <span class="text-muted font-weight-bold">Pending</span>
-                                        </td>
-                                        <td>
-                                            <span class="text-dark-75 font-weight-bolder d-block font-size-lg">$1,600</span>
-                                            <span class="text-muted font-weight-bold">Rejected</span>
-                                        </td>
-                                        <td>
-                                            <span class="text-dark-75 font-weight-bolder d-block font-size-lg">Agoda</span>
-                                            <span class="text-muted font-weight-bold">Houses &amp; Hotels</span>
-                                        </td>
-                                        <td>
-                                            <img src="/assets/media/logos/stars.png" alt="image" style="width: 5.5rem" />
-                                            <span class="text-muted font-weight-bold d-block font-size-sm">Above Avarage</span>
-                                        </td>
-                                        <td class="pr-0 text-right">
-                                            <a href="#" class="btn btn-light-success font-weight-bolder font-size-sm">View Offer</a>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="pl-0 py-8">
-                                            <div class="d-flex align-items-center">
-                                                <div class="symbol symbol-50 symbol-light mr-4">
-																				<span class="symbol-label">
-																					<img src="/assets/media/svg/avatars/047-girl-25.svg" class="h-75 align-self-end" alt="" />
-																				</span>
-                                                </div>
-                                                <div>
-                                                    <a href="#" class="text-dark-75 font-weight-bolder text-hover-primary mb-1 font-size-lg">Lebron Wayde</a>
-                                                    <span class="text-muted font-weight-bold d-block">PHP, Laravel, VueJS</span>
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <span class="text-dark-75 font-weight-bolder d-block font-size-lg">$34,000,000</span>
-                                            <span class="text-muted font-weight-bold">Paid</span>
-                                        </td>
-                                        <td>
-                                            <span class="text-dark-75 font-weight-bolder d-block font-size-lg">$6,700</span>
-                                            <span class="text-muted font-weight-bold">Paid</span>
-                                        </td>
-                                        <td>
-                                            <span class="text-dark-75 font-weight-bolder d-block font-size-lg">RoadGee</span>
-                                            <span class="text-muted font-weight-bold">Paid</span>
-                                        </td>
-                                        <td>
-                                            <img src="/assets/media/logos/stars.png" alt="image" style="width: 5.5rem" />
-                                            <span class="text-muted font-weight-bold d-block font-size-sm">Best Rated</span>
-                                        </td>
-                                        <td class="pr-0 text-right">
-                                            <a href="#" class="btn btn-light-success font-weight-bolder font-size-sm">View Offer</a>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="pl-0 py-0">
-                                            <div class="d-flex align-items-center">
-                                                <div class="symbol symbol-50 symbol-light mr-4">
-																				<span class="symbol-label">
-																					<img src="/assets/media/svg/avatars/014-girl-7.svg" class="h-75 align-self-end" alt="" />
-																				</span>
-                                                </div>
-                                                <div>
-                                                    <a href="#" class="text-dark font-weight-bolder text-hover-primary mb-1 font-size-lg">Natali Trump</a>
-                                                    <span class="text-muted font-weight-bold d-block">Python, PostgreSQL, ReactJS</span>
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td class="text-left pr-0">
-                                            <span class="text-dark-75 font-weight-bolder d-block font-size-lg">$2,600,000</span>
-                                            <span class="text-muted font-weight-bold">Paid</span>
-                                        </td>
-                                        <td>
-                                            <span class="text-dark-75 font-weight-bolder d-block font-size-lg">$14,000</span>
-                                            <span class="text-muted font-weight-bold">Pending</span>
-                                        </td>
-                                        <td>
-                                            <span class="text-dark-75 font-weight-bolder d-block font-size-lg">The Hill</span>
-                                            <span class="text-muted font-weight-bold">Insurance</span>
-                                        </td>
-                                        <td>
-                                            <img src="/assets/media/logos/stars.png" style="width: 5.5rem" alt="" />
-                                            <span class="text-muted font-weight-bold d-block font-size-sm">Avarage</span>
-                                        </td>
-                                        <td class="pr-0 text-right">
-                                            <a href="#" class="btn btn-light-success font-weight-bolder font-size-sm" style="width: 7rem">View Offer</a>
-                                        </td>
-                                    </tr>
-                                    </tbody>
-                                </table>
+                <div class="col-xl-4">
+                    <!--begin::Mixed Widget 5-->
+                    <div class="card card-xxl-stretch mb-xl-8">
+                        <!--begin::Beader-->
+                        <div class="card-header border-0 py-5">
+                            <h3 class="card-title align-items-start flex-column">
+                                <span class="card-label fw-bolder fs-3 mb-1">New schools</span>
+                            </h3>
+                            <div class="card-toolbar">
+
+                                <div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-800 menu-state-bg-light-primary fw-bold w-200px py-3" data-kt-menu="true">
+
+                                </div>
+
                             </div>
-                            <!--end::Table-->
                         </div>
+
+
+                        <!--end::Body-->
                     </div>
-                    <!--end::Body-->
+                    <!--end::Mixed Widget 5-->
                 </div>
-                <!--end::Advance Table Widget 4-->
+
             </div>
+
+
         </div>
-        <!--end::Row-->
-        <!--end::Dashboard-->
     </div>
+
 
 </template>
 
 <script>
     import ActionBar from "../includes/ActionBar";
+    import $router from "../../lib/SimpleRouter";
+    import {$get} from "../../utils";
     export default {
         name: "DashboardIndex",
-        components: {ActionBar}
+        components: {ActionBar},
+        data()
+        {
+            return {
+                entries:[],
+                users:$json.users,
+                schools:$json.schools,
+                devices:$json.devices,
+                lessons:$json.lessons,
+                licenseRemain:$json.licenseRemain,
+            }
+        },
+        mounted() {
+            $router.on('/', this.load).init();
+        },
+        methods:
+        {
+            async load() {
+            let query = $router.getQuery();
+            const res = await $get('/xadmin/dashboard/data', query);
+            this.entries = res.data;
+            console.log(this.entries);
+
+
+
+        },
+        },
     }
 </script>
 
