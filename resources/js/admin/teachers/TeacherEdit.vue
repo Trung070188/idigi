@@ -28,8 +28,9 @@
         <div class="row">
             <div class="col-lg-12">
                 <div class="card card-custom card-stretch gutter-b">
-                     <div class="card-header border-0 pt-5">
-                        <button class="btn btn-danger button-create " @click="remove(entry)">
+                     <div  class="d-flex justify-content-end"
+                    data-kt-customer-table-toolbar="base">
+                        <button class="btn btn-danger button-create " @click="remove(entry)" style="margin: 15px 25px 0px ">
                         Delete User <i class="fas fa-trash"></i>
                     </button>
                     </div>
@@ -45,7 +46,7 @@
                                         <error-label for="f_category_id" :errors="errors.username"></error-label>
                                     </div>
                                     <div class="form-group  col-sm-4">
-                                        <label>Full name <span class="text-danger">*</span></label>
+                                        <label>Teacher name <span class="text-danger">*</span></label>
                                         <input class="form-control" v-model="entry.full_name">
 
                                         <error-label for="f_category_id" :errors="errors.full_name"></error-label>
