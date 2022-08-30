@@ -80,8 +80,8 @@ class CheckDeviceController extends Controller
             'code' => 0,
             'msg' => "Success",
             'results' => [
-                'latest _vesion' => $curApp->version,
-                'link_vesion' => $curApp->url,
+                'latest_version' => $curApp->version,
+                'link_version' => $curApp->url,
             ]
         ];
     }
