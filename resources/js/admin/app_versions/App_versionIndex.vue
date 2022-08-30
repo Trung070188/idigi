@@ -1,7 +1,7 @@
 <template>
     <div class="container-fluid">
         <ActionBar type="index"
-                   :breadcrumbs="breadcrumbs" title="Application Download Manager"/>
+                   :breadcrumbs="breadcrumbs" title="Application Settings"/>
             <div class="card card-custom card-stretch gutter-b" v-if="roleName=='Super Administrator'">
                 <div class="card-header card-header-stretch border-bottom border-gray-200" >
 
@@ -107,7 +107,7 @@
                             <thead
                                 class="border-bottom border-gray-200 fs-6 text-gray-600 fw-bolder bg-light bg-opacity-75">
                             <tr>
-                                <td>Name</td>
+                                <td>Application</td>
                                 <th class="">Version</th>
                                 <th class="">Release notes</th>
                                 <th class="">Release date</th>

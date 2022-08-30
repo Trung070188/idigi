@@ -1,7 +1,7 @@
 <template>
     <div class="container-fluid">
         <ActionBar type="index"
-                   :breadcrumbs="breadcrumbs" title ="License add" />
+                   :breadcrumbs="breadcrumbs" title ="New License" />
         <div class="row">
             <div class="col-lg-12">
                 <div class="card card-custom card-stretch gutter-b">
@@ -40,7 +40,7 @@
                             </div>-->
                                 <div class="row">
                                     <div class="form-group col-lg-8">
-                                        <label>Licence description</label>
+                                        <label>License description</label>
                                         <textarea  v-model="entry.license_info" rows="5" class="form-control" placeholder="Your text here..."></textarea>
                                         <error-label for="f_grade" :errors="errors.license_info"></error-label>
 

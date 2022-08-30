@@ -24,7 +24,7 @@
 
 <!--                                    </div>-->
                                                                     <div class="form-group">
-                                        <label>Total Course</label>
+                                        <label>Course</label>
                                         <treeselect :options="courses" :multiple="true" @deselect="deleteCourse" v-model="total_course" @input=""/>
                                         <error-label for="f_total_course" :errors="errors.total_course"></error-label>
                                     </div>

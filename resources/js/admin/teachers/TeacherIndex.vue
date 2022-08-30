@@ -1,7 +1,7 @@
 <template>
     <div class="container-fluid">
         <ActionBar type="index"
-                   :breadcrumbs="breadcrumbs" title = "Teacher Manager - Teachers"/>
+                   :breadcrumbs="breadcrumbs" title = "Teacher Management"/>
         <div class="row">
             <div class="col-lg-12">
                 <div class="card card-custom card-stretch gutter-b">
@@ -156,7 +156,7 @@
                                         </svg>
                                     </span>
 
-                                    <div v-text="'Showing '+ from +' to '+ to +' of '+ paginate.totalRecord +' entries'" v-if="entries.length > 0"></div>
+                                    <div v-text="from +'-'+ to +' of '+ paginate.totalRecord " v-if="entries.length > 0"></div>
 
                                 </div>
                             </div>
@@ -177,12 +177,12 @@
                                             />
                                         </div>
                                     </td>
-                                <th class="">ID</th>
-                                <th class="">Teacher name</th>
-                                <th class="">Teacher email</th>
+                                <th class="">No.</th>
+                                <th class="">Teacher's name</th>
+                                <th class="">Email</th>
                                 <th class="">Class</th>
-                                <th class="">Teacher phone number</th>
-                                <th class="">Registed devices</th>
+                                <th class="">Phone number</th>
+                                <th class="">Registered devices</th>
                                 <th class="">Creation Date</th>
                                 <th class="">Status</th>
                                 <th></th>

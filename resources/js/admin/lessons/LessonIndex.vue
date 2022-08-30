@@ -2,7 +2,7 @@
     <div class="container-fluid">
 
         <ActionBar type="index"
-                   :breadcrumbs="breadcrumbs" title = "Lesson Manager - Lessons"/>
+                   :breadcrumbs="breadcrumbs" title = "Lesson Management"/>
                       <div class="modal" id="download-lesson" tabindex="-1">
             <div id="overlay">
                 <div class="la-3x text">
@@ -168,7 +168,7 @@
                                         </svg>
                                     </span>
 
-                                    <div v-text="'Showing '+ from +' to '+ to +' of '+ paginate.totalRecord +' entries'" v-if="entries.length > 0"></div>
+                                    <div v-text=" from +'-'+ to +' of '+ paginate.totalRecord" v-if="entries.length > 0"></div>
 
                                     <template v-if="lessonIds.length > 0">
                                         <!-- <span class="svg-icon svg-icon-2x svg-icon-primary mx-1">
@@ -196,8 +196,8 @@
                                         <input class="form-check-input" type="checkbox" v-model="allSelected" @change="selectAll()">
                                     </div>
                                 </td>
-                                <th class="">ID</th>
-                                <th>Name of lesson</th>
+                                <th class="">No.</th>
+                                <th>Lesson</th>
                                 <th class="">Grade</th>
                                 <th class="">Subject</th>
                                 <th class="">Active</th>

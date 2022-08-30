@@ -1,7 +1,7 @@
 <template>
     <div class="container-fluid">
         <ActionBar type="index"
-                   :breadcrumbs="breadcrumbs" title="License Manager - Licenses"/>
+                   :breadcrumbs="breadcrumbs" title="License Management"/>
         <div class="row">
             <div class="col-lg-12">
                 <div class="card card-custom card-stretch gutter-b">
@@ -116,7 +116,7 @@
                                     </span>
 
                                     <div
-                                        v-text="'Showing '+ from +' to '+ to +' of '+ paginate.totalRecord +' entries'"
+                                        v-text=" from +'-'+ to +' of '+ paginate.totalRecord "
                                         v-if="entries.length > 0"></div>
 
                                 </div>

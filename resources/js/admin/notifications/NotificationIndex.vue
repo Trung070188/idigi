@@ -1,7 +1,7 @@
 <template>
     <div class="container-fluid">
         <ActionBar type="index"
-                   :breadcrumbs="breadcrumbs" title="Notification Manager - Notifications"/>
+                   :breadcrumbs="breadcrumbs" title="Notification Management"/>
         <div class="row">
             <div class="col-lg-12">
                 <div class="card card-custom card-stretch gutter-b">
@@ -137,13 +137,13 @@
 
                                     <div
                                         v-text="
-                                            'Showing ' +
+
                                                 from +
-                                                ' to ' +
+                                                '-' +
                                                 to +
                                                 ' of ' +
-                                                paginate.totalRecord +
-                                                ' entries'
+                                                paginate.totalRecord
+
                                         "
                                         v-if="entries.length > 0"
                                     ></div>
@@ -168,9 +168,9 @@
                                     </div>
                                 </td>
                                 <th>Time</th>
-                                <th class="">Sender</th>
+                                <th class="">Account</th>
                                 <th class="">Role</th>
-                                <th class="">Notification content</th>
+                                <th class="">Content</th>
                                 <th>Action</th>
 
                             </tr>
