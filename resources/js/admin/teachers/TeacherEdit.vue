@@ -40,13 +40,13 @@
                                 <input v-model="entry.id" type="hidden" name="id" value="">
                                 <div class="row">
                                     <div class="form-group  col-sm-4">
-                                        <label>Teacher name <span class="text-danger">*</span></label>
-                                        <input class="form-control" v-model="entry.username">
+                                        <label>Username</label>
+                                        <input class="form-control" v-model="entry.username" disabled>
 
                                         <error-label for="f_category_id" :errors="errors.username"></error-label>
                                     </div>
                                     <div class="form-group  col-sm-4">
-                                        <label>Teacher name <span class="text-danger">*</span></label>
+                                        <label>Teacher name </label>
                                         <input class="form-control" v-model="entry.full_name">
 
                                         <error-label for="f_category_id" :errors="errors.full_name"></error-label>
@@ -79,14 +79,15 @@
                                 <div class="row">
 
                                     <div class="form-group col-sm-10"  @change="saveTeacherCourse()">
-                                        <label>Course</label>
+                                        <label>Course  <span class="text-danger">*</span></label>
                                         <treeselect :options="courses" :multiple="true" @deselect="deleteCourse" v-model="courseTeachers"   />
+                                        <error-label for="f_grade" :errors="errors.courseTeachers"></error-label>
 
                                         <table class="table table-row-bordered align-middle gy-4 gs-9" style="margin:25px 0px 0px">
                             <thead class="border-bottom border-gray-200 fs-6 text-gray-600 fw-bolder bg-light bg-opacity-75">
                             <tr>
                                 <th class="">Course Name</th>
-                                <th>Unit</th>
+                                <th>Unit<span class="text-danger">*</span></th>
                             </tr>
                             </thead>
                             <tbody v-for="courseTeacher in courseTeachers" >
@@ -96,6 +97,7 @@
                                 </td>
                                 <td  >
                                  <treeselect :options="course.total_unit" :multiple="true" v-model="course.courseTea" />
+                                    <error-label for="f_category_id" :errors="errors.courseTea"></error-label>
                                     </td>
                             </tr>
                             </tbody>
@@ -142,6 +144,7 @@
                                     <a @click="modalDevice(device.id)" href="javascript:;" class="btn-trash deleted"><i
                                         class="fa fa-trash mr-1 deleted"></i></a>
                                 </td>
+
                             </tr>
                             </tbody>
                         </table>

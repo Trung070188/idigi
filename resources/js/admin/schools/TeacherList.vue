@@ -301,7 +301,7 @@
                         url: '/xadmin/schools/edit?id='+$json.entry.id
                     },
                     {
-                        title: 'Teacher List',
+                        title: 'Teacher list',
                     },
 
                 ],

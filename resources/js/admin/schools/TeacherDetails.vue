@@ -226,7 +226,7 @@
                         url: '/xadmin/schools/edit?id='+$json.schoolId
                     },
                     {
-                        title: 'Teacher List',
+                        title: 'Teacher list',
                         url: '/xadmin/schools/teacherList?id='+$json.schoolId
 
                     },

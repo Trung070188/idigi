@@ -86,9 +86,12 @@
                                         </button>
                                     </div>
                                      <div class="d-flex justify-content-end align-items-center d-none" data-kt-customer-table-toolbar="selected" v-if="permissions['011'] && lessonIds!=''">
-												<div class="fw-bolder me-5">
+                                         <span v-if="lessons.length>3" style="color:#f1416c;margin: 0px 10px 0px ">Chỉ được chọn tối đa 3 lesson để tải xuống</span>
+												<div class="fw-bolder me-5" v-if="lessons.length<=3">
 												<span class="me-2" data-kt-customer-table-select="selected_count"></span>{{ lessonIds.length }} Selected</div>
-												<button @click="openModal()" type="button" class="btn btn-danger" data-kt-customer-table-select="delete_selected">Download Selected</button>
+
+												<button @click="openModal()" :disabled="lessons.length>3" type="button" class="btn btn-danger" data-kt-customer-table-select="delete_selected">Download Selected</button>
+
 											</div>
 
                                 </div>
