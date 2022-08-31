@@ -262,7 +262,10 @@
                 allSelected: false,
                 breadcrumbs: [
                     {
-                        title: 'Schools'
+                        title: 'School & teacher'
+                    },
+                    {
+                        title: 'Manage school'
                     },
                 ],
                 entries: [],

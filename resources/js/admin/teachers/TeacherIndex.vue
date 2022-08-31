@@ -312,6 +312,11 @@
                                             </div>
                                         </div>
                                     </div>
+
+                                   <div v-if="code==2" >
+                                       <div style="color: #f1416c">File error : <a :href="validateFile">exports</a> </div>
+
+                                   </div>
                                 </div>
                             </div>
                             <div class="modal-footer" style="justify-content: center">
@@ -359,6 +364,8 @@
                 }
             }
             return {
+                code:0,
+                validateFile:'',
                 allSelected:false,
                 teacherIds:[],
                 teacher:[],
@@ -437,12 +444,19 @@
                     method: 'POST',
                     body: formData
                 })
+
                     .then((response) => response.json())
                     .catch((error) => {
                         console.error('Error:', error);
                     });
+                if(res.code==2)
+                {
+                    this.code=res.code;
+                    this.validateFile=res.file;
 
-                $('#overlay').hide();
+                }
+
+
                 if (res.code) {
                     this.errors = res.errors;
                 } else {
@@ -528,6 +542,8 @@
                 } else {
                     toastr.success(res.message);
                 }
+                this.teacherIds = [];
+                this.teacher = [];
 
                 $router.updateQuery({page: this.paginate.currentPage, _: Date.now()});
 

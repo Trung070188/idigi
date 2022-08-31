@@ -12,10 +12,6 @@ use App\Models\UserCourseUnit;
 use App\Models\UserDevice;
 use App\Models\UserRole;
 use App\Models\UserUnit;
-use App\Rules\ValiFullname;
-use App\Rules\ValiUser;
-use Carbon\Carbon;
-use http\Env\Response;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -24,7 +20,6 @@ use Illuminate\Support\Facades\Validator;
 use App\Models\User;
 use Illuminate\Support\Str;
 use Maatwebsite\Excel\Facades\Excel;
-use Ramsey\Collection\Collection;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
@@ -316,6 +311,77 @@ class UsersController extends AdminBaseController
             //           @'course_unit' => @$course_unit,
             @'userCouser' => @$userCouser,
             @'userUnits' => @$userUnits,
+        ];
+        return view('admin.layouts.vue', compact('title', 'component', 'jsonData'));
+    }
+    public function teacherDetails(Request $req)
+    {
+        $id = $req->id;
+        $entry = User::query()->with('schools', 'user_devices', 'user_cousers', 'user_units', 'units', 'cousers')
+            ->where('id', $id)->first();
+
+        $userCousers = ($entry->user_cousers);
+        $schools = @$entry->schools;
+        $schoolId=@$entry->schools->id;
+        $schoolCousers = ($schools->school_courses);
+        $schoolUnits = $schools->school_course_units;
+        $course_unit = $schools->units;
+        $userUnits = $entry->user_units;
+
+
+        if (@$schoolCousers) {
+            $courseTeachers = [];
+            foreach ($schoolCousers as $course) {
+                $course['total_unit'] = [];
+
+                foreach ($userCousers as $userCouser) {
+                    if ($userCouser->course_id == $course->id) {
+                        $courseTeachers[] = $course->id;
+                    }
+                }
+                $unitTeacher = [];
+                foreach ($userUnits as $userUnit) {
+                    if ($userUnit->course_id == $course->id) {
+                        $unitTeacher[] = $userUnit->unit_id;
+                    }
+                }
+                $total_unit = [];
+
+                foreach ($course_unit as $un) {
+                    foreach ($schoolUnits as $unit) {
+                        if ($un->id == $unit->unit_id && $course->id == $unit->course_id) {
+                            $total_unit[] = $un;
+                        }
+                    }
+                }
+
+                @$course['total_unit'] = $total_unit;
+
+                @$course['courseTea'] = $unitTeacher;
+            }
+        }
+
+        if (!$entry) {
+            throw new NotFoundHttpException();
+        }
+        $user_device = $entry->user_devices;
+        $schools = ($entry->schools);
+        /**
+         * @var  User $entry
+         */
+
+        $title = 'Edit';
+        $component = 'TeacherDetails';
+        $user = Auth::user();
+        $jsonData = [
+            'entry' => $entry,
+            @'user_device' => @$user_device,
+            @'schools' => @$schools,
+            @'courseTeachers' => @$courseTeachers,
+            //           @'course_unit' => @$course_unit,
+            @'userCouser' => @$userCouser,
+            @'userUnits' => @$userUnits,
+            'schoolId'=>@$schoolId
         ];
         return view('admin.layouts.vue', compact('title', 'component', 'jsonData'));
     }
@@ -987,7 +1053,7 @@ class UsersController extends AdminBaseController
 
             foreach ($teacherList as $teacher) {
                 foreach ($teacher as $key => $tea) {
-
+                    if($key>0)
                     {
                         $item = [];
                         $item['username'] = $tea[0];
@@ -1031,10 +1097,29 @@ class UsersController extends AdminBaseController
                 foreach ($validations as $validation) {
                     if (@$validation['error']) {
                         $fileError[] = $validation;
-
                     }
                 }
-                Excel::store(new TeacherErrorExport(), "{$y}/{$m}/{$hash}.{$extension}", 'excel-export');
+
+                Excel::store(new TeacherErrorExport($validations), "{$y}/{$m}/{$hash}.{$extension}", 'excel-export');
+
+                $file = new File();
+                $file->type = $file0['type'];
+                $file->hash = sha1($newFilePath);
+                $file->url = $newUrl;
+                $file->is_image = 0;
+                $file->is_excel = 1;
+                $file->size = $file0['size'];
+                $file->name = $info['filename'];
+                $file->path = $newFilePath;
+                $file->extension = $extension;
+                $file->save();
+
+                return [
+                    'code'=>2,
+                    'message' => 'Đã có lỗi',
+                    'file' => url("exports/{$y}/{$m}/{$hash}.{$extension}"),
+
+                ];
 
             } else {
 
@@ -1058,18 +1143,6 @@ class UsersController extends AdminBaseController
             }
 
 
-            //luu bang file
-            $file = new File();
-            $file->type = $file0['type'];
-            $file->hash = sha1($newFilePath);
-            $file->url = $newUrl;
-            $file->is_image = 0;
-            $file->is_excel = 1;
-            $file->size = $file0['size'];
-            $file->name = $info['filename'];
-            $file->path = $newFilePath;
-            $file->extension = $extension;
-            $file->save();
 
             return [
                 'code' => 0,
@@ -1080,5 +1153,7 @@ class UsersController extends AdminBaseController
         }
 
     }
+
+
 
 }

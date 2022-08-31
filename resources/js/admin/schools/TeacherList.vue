@@ -1,7 +1,7 @@
 <template>
     <div class="container-fluid">
         <ActionBar type="index"
-                   :breadcrumbs="breadcrumbs" title ="Teacher List" />
+                   :breadcrumbs="breadcrumbs" :title="'Teacher List' + '-' + 'Trường'+ ' ' + entry.label" />
         <div class="row">
             <div class="col-lg-12">
                 <div class="card card-custom card-stretch gutter-b">
@@ -50,9 +50,9 @@
                                         class="btn btn-primary" v-if="!isShowFilter"> Advanced Search
                                     <i class="fa fa-filter" v-if="!isShowFilter" aria-hidden="true"></i>
                                 </button>
-                                <a v-if="permissions['013']" :href="'/xadmin/users/create_teacher'">
-                                    <button class="btn btn-primary button-create" style="margin:0 0 0 15px"> Create New</button>
-                                </a>
+<!--                                <a v-if="permissions['013']" :href="'/xadmin/users/create_teacher'">-->
+<!--                                    <button class="btn btn-primary button-create" style="margin:0 0 0 15px"> Create New</button>-->
+<!--                                </a>-->
 
                             </div>
                         </div>
@@ -143,14 +143,8 @@
                                         </svg>
                                     </span>
 
-                                    <div v-text="'Showing '+ from +' to '+ to +' of '+ paginate.totalRecord +' entries'" v-if="entries.length > 0"></div>
+                                    <div v-text=" from +' to '+ to +' of '+ paginate.totalRecord " v-if="entries.length > 0"></div>
 
-                                    <span class="svg-icon svg-icon-2x svg-icon-primary mx-1">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-                                            <path d="M12.6343 12.5657L8.45001 16.75C8.0358 17.1642 8.0358 17.8358 8.45001 18.25C8.86423 18.6642 9.5358 18.6642 9.95001 18.25L15.4929 12.7071C15.8834 12.3166 15.8834 11.6834 15.4929 11.2929L9.95001 5.75C9.5358 5.33579 8.86423 5.33579 8.45001 5.75C8.0358 6.16421 8.0358 6.83579 8.45001 7.25L12.6343 11.4343C12.9467 11.7467 12.9467 12.2533 12.6343 12.5657Z" fill="black"></path>
-                                        </svg>
-                                    </span>
-                                    <div>Trường {{entry.label}}</div>
                                 </div>
                             </div>
                         </div>
@@ -211,7 +205,7 @@
                                     <a v-if="permissions['015']" @click="remove(entry)" href="javascript:;" class="btn-trash deleted"><i
                                         class="fa fa-trash mr-1 deleted"></i></a>-->
 
-                                    <a v-if="permissions['014']" :href="'/xadmin/users/editTeacher?id='+entry.id">
+                                    <a v-if="permissions['014']" :href="'/xadmin/users/teacherDetails?id='+entry.id">
                                         <button type="button" class="btn btn-sm btn-icon btn-light btn-active-light-primary">
                                             <i class="fa fa-edit"></i>
                                         </button>
@@ -296,7 +290,10 @@
                 isShowFilter: isShowFilter,
                 breadcrumbs: [
                     {
-                        title: 'Schools',
+                      title:'School & teacher',
+                    },
+                    {
+                        title: ' Manage school',
                         url: '/xadmin/schools/index',
                     },
                     {
@@ -306,6 +303,7 @@
                     {
                         title: 'Teacher List',
                     },
+
                 ],
                  entry:$json.entry || [],
                 limit: 25,
