@@ -378,6 +378,7 @@ class UsersController extends AdminBaseController
             @'user_device' => @$user_device,
             @'schools' => @$schools,
             @'courseTeachers' => @$courseTeachers,
+            @'schoolCousers' => @$schoolCousers,
             //           @'course_unit' => @$course_unit,
             @'userCouser' => @$userCouser,
             @'userUnits' => @$userUnits,
