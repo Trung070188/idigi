@@ -45,8 +45,6 @@ WORKDIR /var/www
 #RUN composer install
 #WORKDIR /usr/share/nginx/sites
 #RUN composer install
-RUN apt-get install -y nginx
-RUN apt-get install -y git
 EXPOSE 80
 
 ENTRYPOINT ["/etc/entrypoint.sh"]
