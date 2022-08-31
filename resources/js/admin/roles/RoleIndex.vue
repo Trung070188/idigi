@@ -9,7 +9,7 @@
                         <div class="title">
                             <label>Role</label>
                         </div>
-                        <button class="btn btn-primary button-create " @click="showModalRole()"> Create new</button>
+                        <button class="btn btn-primary button-create " @click="showModalRole()"> Create</button>
                     </div>
                     <hr>
                     <div class="card-header border-0 pt-5">

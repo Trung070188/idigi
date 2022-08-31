@@ -232,7 +232,11 @@
                 courses2: courseTreeselect2,
                 breadcrumbs: [
                     {
-                        title: 'Schools',
+                        title: 'School & teacher',
+
+                    },
+                    {
+                        title: 'Manage school',
                         url: '/xadmin/schools/index',
                     },
                     {

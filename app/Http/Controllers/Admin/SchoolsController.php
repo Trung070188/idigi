@@ -257,7 +257,7 @@ class SchoolsController extends AdminBaseController
 
             $newAllocationContents[] = @$allocationContent;
         }
-        $allocationContentSchools = $entry->allocation_contents;
+        $allocationContentSchools = @$entry->allocation_contents;
         $allocationContentId = @$entry->allocation_school->allocation_content_id;
         $courses=null;
         if($entry->allocation_contents)

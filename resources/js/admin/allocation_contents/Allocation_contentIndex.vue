@@ -1,7 +1,7 @@
 <template>
     <div class="container-fluid" >
         <ActionBar type="index"
-                   :breadcrumbs="breadcrumbs" title = "Content Allocation"/>
+                   :breadcrumbs="breadcrumbs" title = "Resource Allocation"/>
          <div class="row">
             <div class="col-lg-12">
                 <div class="card card-custom card-stretch gutter-b">
@@ -59,7 +59,7 @@
 
                             >
                                 <a :href="'/xadmin/allocation_contents/create'">
-                                    <button   type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#kt_modal_add_customer" >Create New Allocation</button>
+                                    <button   type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#kt_modal_add_customer" >Create</button>
 
                                 </a>
 
@@ -78,7 +78,7 @@
                                         </svg>
                                     </span>
 
-                                        <div v-text="'Showing '+ from +' to '+ to +' of '+ paginate.totalRecord +' entries'" v-if="entries.length > 0"></div>
+                                        <div v-text="from +'-'+ to +' of '+ paginate.totalRecord" v-if="entries.length > 0"></div>
 
                                 </div>
                             </div>

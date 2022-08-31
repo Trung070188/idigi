@@ -3,7 +3,7 @@
         <ActionBar type="form" @save="save()"
                    :code="entry.id"
                    backUrl="/xadmin/allocation_contents/index"
-                   title="AllocationForm"/>
+                   title="Allocation Form"/>
         <div class="row">
             <div class="col-lg-12">
                 <div class="card card-custom card-stretch gutter-b">
@@ -19,7 +19,7 @@
                                     </div>
 
                                                                     <div class="form-group">
-                                        <label>Total Course</label>
+                                        <label>Course</label>
                                         <treeselect :options="courses" :multiple="true" v-model="total_course"/>
                                         <error-label for="f_total_course" :errors="errors.total_course"></error-label>
 

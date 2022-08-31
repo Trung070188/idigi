@@ -73,7 +73,7 @@
                                 </div>
                                 <div class="row">
                                     <div class="form-group col-sm-8">
-                                        <label>Description</label>
+                                        <label>Duties</label>
                                         <textarea v-model="entry.description" rows="5" class="form-control"
                                                   placeholder="Your text here"></textarea>
                                         <error-label for="f_grade" :errors="errors.description"></error-label>
@@ -91,8 +91,8 @@
                         <div>
                             <button type="reset" @click="save()" class="btn btn-primary mr-2">Save</button>
                             <button type="reset" @click="backIndex()" class="btn btn-secondary">Cancel</button>
-                        <label style="margin-left: 20px">Thông tin đăng nhập và mật khẩu sẽ được gửi tới người dùng
-                            qua email.</label>
+                        <label style="margin-left: 20px">Username and password will be sent to the user's email.
+                          </label>
                         </div>
                     </div>
                 </div>

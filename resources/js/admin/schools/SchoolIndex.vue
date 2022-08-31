@@ -1,7 +1,7 @@
 <template>
     <div class="container-fluid">
         <ActionBar type="index"
-                   :breadcrumbs="breadcrumbs" title="School Manager - Schools"/>
+                   :breadcrumbs="breadcrumbs" title="School Management"/>
         <div class="row">
             <div class="col-lg-12">
                 <div class="card card-custom card-stretch gutter-b">
@@ -117,7 +117,7 @@
                                     </span>
 
                                     <div
-                                        v-text="'Showing '+ from +' to '+ to +' of '+ paginate.totalRecord +' entries'"
+                                        v-text=" from +'-'+ to +' of '+ paginate.totalRecord"
                                         v-if="entries.length > 0"></div>
 
                                 </div>
@@ -133,7 +133,7 @@
                                                @change="selectAll()">
                                     </div>
                                 </td>
-                                <th class="">ID</th>
+                                <th class="">No.</th>
                                 <th class="">Name</th>
                                 <th class="">Address</th>
                                 <th class="">Administrator name</th>
@@ -262,7 +262,10 @@
                 allSelected: false,
                 breadcrumbs: [
                     {
-                        title: 'Schools'
+                        title: 'School & teacher'
+                    },
+                    {
+                        title: 'Manage school'
                     },
                 ],
                 entries: [],

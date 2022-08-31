@@ -2,7 +2,7 @@
     <div class="container-fluid">
 
         <ActionBar type="index"
-                   :breadcrumbs="breadcrumbs" title = "Lesson Manager - Lessons"/>
+                   :breadcrumbs="breadcrumbs" title = "Lesson Management"/>
                       <div class="modal" id="download-lesson" tabindex="-1">
             <div id="overlay">
                 <div class="la-3x text">
@@ -86,9 +86,12 @@
                                         </button>
                                     </div>
                                      <div class="d-flex justify-content-end align-items-center d-none" data-kt-customer-table-toolbar="selected" v-if="permissions['011'] && lessonIds!=''">
-												<div class="fw-bolder me-5">
+                                         <span v-if="lessons.length>3" style="color:#f1416c;margin: 0px 10px 0px ">Chỉ được chọn tối đa 3 lesson để tải xuống</span>
+												<div class="fw-bolder me-5" v-if="lessons.length<=3">
 												<span class="me-2" data-kt-customer-table-select="selected_count"></span>{{ lessonIds.length }} Selected</div>
-												<button @click="openModal()" type="button" class="btn btn-danger" data-kt-customer-table-select="delete_selected">Download Selected</button>
+
+												<button @click="openModal()" :disabled="lessons.length>3" type="button" class="btn btn-danger" data-kt-customer-table-select="delete_selected">Download Selected</button>
+
 											</div>
 
                                 </div>
@@ -168,7 +171,7 @@
                                         </svg>
                                     </span>
 
-                                    <div v-text="'Showing '+ from +' to '+ to +' of '+ paginate.totalRecord +' entries'" v-if="entries.length > 0"></div>
+                                    <div v-text=" from +'-'+ to +' of '+ paginate.totalRecord" v-if="entries.length > 0"></div>
 
                                     <template v-if="lessonIds.length > 0">
                                         <!-- <span class="svg-icon svg-icon-2x svg-icon-primary mx-1">
@@ -196,8 +199,8 @@
                                         <input class="form-check-input" type="checkbox" v-model="allSelected" @change="selectAll()">
                                     </div>
                                 </td>
-                                <th class="">ID</th>
-                                <th>Name of lesson</th>
+                                <th class="">No.</th>
+                                <th>Lesson</th>
                                 <th class="">Grade</th>
                                 <th class="">Subject</th>
                                 <th class="">Active</th>

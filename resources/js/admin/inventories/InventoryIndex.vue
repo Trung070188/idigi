@@ -3,7 +3,7 @@
         <ActionBar
             type="index"
             :breadcrumbs="breadcrumbs"
-            title="Inventory Manager - Inventories"
+            title="Resource Management"
         />
         <div class="row">
             <div class="col-lg-12">
@@ -130,7 +130,7 @@
                                         class="btn btn-primary button-create"
                                         style="margin:0 0 0 15px"
                                     >
-                                        Create New
+                                        Create
                                     </button>
                                 </a>
                             </div>
@@ -334,13 +334,11 @@
 
                                     <div
                                         v-text="
-                                            'Showing ' +
                                                 from +
-                                                ' to ' +
+                                                '-' +
                                                 to +
                                                 ' of ' +
-                                                paginate.totalRecord +
-                                                ' entries'
+                                                paginate.totalRecord
                                         "
                                         v-if="entries.length > 0"
                                     ></div>
@@ -362,7 +360,7 @@
                                         />
                                     </div>
                                 </td>
-                                <th class="">ID</th>
+                                <th class="">No.</th>
                                 <th>
                                     Name
                                     <button

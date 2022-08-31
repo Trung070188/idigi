@@ -190,7 +190,7 @@ class AllocationContentsController extends AdminBaseController
         $dataContent=$req->all();
 
         $rules = [
-    // 'title' => 'max:191',
+     'title' => 'require',
     // 'total_school' => 'max:1000',
     // 'total_course' => 'max:1000',
     // 'total_unit' => 'max:1000',
@@ -204,6 +204,10 @@ class AllocationContentsController extends AdminBaseController
                 'code' => 2,
                 'errors' => $v->errors()
             ];
+        }
+        if($dataContent['total_school'])
+        {
+          
         }
 
         /**

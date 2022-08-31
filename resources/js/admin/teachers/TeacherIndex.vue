@@ -1,7 +1,7 @@
 <template>
     <div class="container-fluid">
         <ActionBar type="index"
-                   :breadcrumbs="breadcrumbs" title = "Teacher Manager - Teachers"/>
+                   :breadcrumbs="breadcrumbs" title = "Teacher Management"/>
         <div class="row">
             <div class="col-lg-12">
                 <div class="card card-custom card-stretch gutter-b">
@@ -156,7 +156,7 @@
                                         </svg>
                                     </span>
 
-                                    <div v-text="'Showing '+ from +' to '+ to +' of '+ paginate.totalRecord +' entries'" v-if="entries.length > 0"></div>
+                                    <div v-text="from +'-'+ to +' of '+ paginate.totalRecord " v-if="entries.length > 0"></div>
 
                                 </div>
                             </div>
@@ -177,12 +177,12 @@
                                             />
                                         </div>
                                     </td>
-                                <th class="">ID</th>
-                                <th class="">Teacher name</th>
-                                <th class="">Teacher email</th>
+                                <th class="">No.</th>
+                                <th class="">Teacher's name</th>
+                                <th class="">Email</th>
                                 <th class="">Class</th>
-                                <th class="">Teacher phone number</th>
-                                <th class="">Registed devices</th>
+                                <th class="">Phone number</th>
+                                <th class="">Registered devices</th>
                                 <th class="">Creation Date</th>
                                 <th class="">Status</th>
                                 <th></th>
@@ -312,6 +312,11 @@
                                             </div>
                                         </div>
                                     </div>
+
+                                   <div v-if="code==2" >
+                                       <div style="color: #f1416c">File error : <a :href="validateFile">exports</a> </div>
+
+                                   </div>
                                 </div>
                             </div>
                             <div class="modal-footer" style="justify-content: center">
@@ -359,6 +364,8 @@
                 }
             }
             return {
+                code:0,
+                validateFile:'',
                 allSelected:false,
                 teacherIds:[],
                 teacher:[],
@@ -437,12 +444,19 @@
                     method: 'POST',
                     body: formData
                 })
+
                     .then((response) => response.json())
                     .catch((error) => {
                         console.error('Error:', error);
                     });
+                if(res.code==2)
+                {
+                    this.code=res.code;
+                    this.validateFile=res.file;
 
-                $('#overlay').hide();
+                }
+
+
                 if (res.code) {
                     this.errors = res.errors;
                 } else {
@@ -528,6 +542,8 @@
                 } else {
                     toastr.success(res.message);
                 }
+                this.teacherIds = [];
+                this.teacher = [];
 
                 $router.updateQuery({page: this.paginate.currentPage, _: Date.now()});
 

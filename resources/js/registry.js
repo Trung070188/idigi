@@ -31,6 +31,7 @@ import LicenseIndex from "./admin/license/LicenseIndex";
 import LicenseForm from "./admin/license/LicenseForm";
 import LicenseEdit from "./admin/license/LicenseEdit";
 import LicenseExpired from "./admin/schools/LicenseExpired";
+import TeacherDetails from "./admin/schools/TeacherDetails";
 export default {
     DashboardIndex,
     UserIndex,
@@ -64,6 +65,7 @@ export default {
     LicenseIndex,
     LicenseForm,
     LicenseEdit,
-    LicenseExpired
+    LicenseExpired,
+    TeacherDetails
 
 }

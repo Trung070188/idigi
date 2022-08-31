@@ -18,7 +18,7 @@
                     </div>
                     <div class="form-group d-flex justify-content-between" style="margin: auto;margin-bottom: 20px">
                         <button class="btn btn-primary ito-btn-add" data-dismiss="modal" style="margin-right: 5px" data-bs-dismiss="modal">
-                           Cancel
+                            Cancel
                         </button>
                         <button v-for="device in user_device" v-if="device.id==currId" class="btn btn-danger ito-btn-small" data-dismiss="modal" @click="remove_device(device)" >Yes</button>
                     </div>
@@ -28,11 +28,11 @@
         <div class="row">
             <div class="col-lg-12">
                 <div class="card card-custom card-stretch gutter-b">
-                     <div  class="d-flex justify-content-end"
-                    data-kt-customer-table-toolbar="base">
+                    <div  class="d-flex justify-content-end"
+                          data-kt-customer-table-toolbar="base">
                         <button class="btn btn-danger button-create " @click="remove(entry)" style="margin: 15px 25px 0px ">
-                        Delete User <i class="fas fa-trash"></i>
-                    </button>
+                            Delete User <i class="fas fa-trash"></i>
+                        </button>
                     </div>
                     <div class="card-body d-flex flex-column">
                         <div class=" card-header border-0 pt-5 row" style="margin-top:-30px;margin-left: -35px;">
@@ -40,13 +40,13 @@
                                 <input v-model="entry.id" type="hidden" name="id" value="">
                                 <div class="row">
                                     <div class="form-group  col-sm-4">
-                                        <label>Username</label>
-                                        <input class="form-control" v-model="entry.username" disabled>
+                                        <label>Teacher name <span class="text-danger">*</span></label>
+                                        <input class="form-control" v-model="entry.username">
 
                                         <error-label for="f_category_id" :errors="errors.username"></error-label>
                                     </div>
                                     <div class="form-group  col-sm-4">
-                                        <label>Teacher name </label>
+                                        <label>Teacher name <span class="text-danger">*</span></label>
                                         <input class="form-control" v-model="entry.full_name">
 
                                         <error-label for="f_category_id" :errors="errors.full_name"></error-label>
@@ -57,12 +57,12 @@
 
                                         <error-label for="f_category_id" :errors="errors.email"></error-label>
                                     </div>
-                                     <div class="form-group  col-sm-4">
+                                    <div class="form-group  col-sm-4">
                                         <label>Phone number </label>
                                         <input class="form-control" v-model="entry.phone">
                                         <error-label for="f_category_id" :errors="errors.phone"></error-label>
                                     </div>
-                                     <div class="form-group  col-sm-4">
+                                    <div class="form-group  col-sm-4">
                                         <label>Class</label>
                                         <input class="form-control" v-model="entry.class">
                                         <error-label for="f_category_id" :errors="errors.class"></error-label>
@@ -75,33 +75,31 @@
 
 
                                 </div>
-                                  <h4>Content Allocated</h4>
+                                <h4>Content Allocated</h4>
                                 <div class="row">
 
                                     <div class="form-group col-sm-10"  @change="saveTeacherCourse()">
-                                        <label>Course  <span class="text-danger">*</span></label>
+                                        <label>Course</label>
                                         <treeselect :options="courses" :multiple="true" @deselect="deleteCourse" v-model="courseTeachers"   />
-                                        <error-label for="f_grade" :errors="errors.courseTeachers"></error-label>
 
                                         <table class="table table-row-bordered align-middle gy-4 gs-9" style="margin:25px 0px 0px">
-                            <thead class="border-bottom border-gray-200 fs-6 text-gray-600 fw-bolder bg-light bg-opacity-75">
-                            <tr>
-                                <th class="">Course Name</th>
-                                <th>Unit<span class="text-danger">*</span></th>
-                            </tr>
-                            </thead>
-                            <tbody v-for="courseTeacher in courseTeachers" >
-                            <tr v-for="course in courses" v-if="courseTeacher==course.id" >
-                                <td  >
-                                {{course.label}}
-                                </td>
-                                <td  >
-                                 <treeselect :options="course.total_unit" :multiple="true" v-model="course.courseTea" />
-                                    <error-label for="f_category_id" :errors="errors.courseTea"></error-label>
-                                    </td>
-                            </tr>
-                            </tbody>
-                        </table>
+                                            <thead class="border-bottom border-gray-200 fs-6 text-gray-600 fw-bolder bg-light bg-opacity-75">
+                                            <tr>
+                                                <th class="">Course Name</th>
+                                                <th>Unit</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody v-for="courseTeacher in courseTeachers" >
+                                            <tr v-for="course in courses" v-if="courseTeacher==course.id" >
+                                                <td  >
+                                                    {{course.label}}
+                                                </td>
+                                                <td  >
+                                                    <treeselect :options="course.total_unit" :multiple="true" v-model="course.courseTea" />
+                                                </td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
 
                                     </div>
                                 </div>
@@ -144,7 +142,6 @@
                                     <a @click="modalDevice(device.id)" href="javascript:;" class="btn-trash deleted"><i
                                         class="fa fa-trash mr-1 deleted"></i></a>
                                 </td>
-
                             </tr>
                             </tbody>
                         </table>
@@ -188,13 +185,13 @@
 
 
     export default {
-        name: "TeacherEdit.vue",
+        name: "TeacherDetails.vue",
         components: {ActionBar, SwitchButton,Treeselect},
         data() {
 
 
             const course=$json.schoolCousers;
-           !course ? null : course.forEach(function (e) {
+            !course ? null : course.forEach(function (e) {
                 e.total_unit.forEach(function (e1) {
                     e1.label = e1.unit_name;
                 })
@@ -211,17 +208,30 @@
             return {
                 nameRole:5,
                 courseTeachers:$json.courseTeachers || {},
+                schoolId:$json.schoolId,
                 showConfirm: false,
                 showPass: false,
                 types: [],
                 currId:'',
                 breadcrumbs: [
                     {
-                        title: 'Techers',
-                        url: '/xadmin/users/teacher',
+                        title:'School & teacher',
                     },
                     {
-                        title: $json.entry ? 'Teacher Details' : 'Create New Teacher',
+                        title: ' Manage school',
+                        url: '/xadmin/schools/index',
+                    },
+                    {
+                        title: 'School details',
+                        url: '/xadmin/schools/edit?id='+$json.schoolId
+                    },
+                    {
+                        title: 'Teacher list',
+                        url: '/xadmin/schools/teacherList?id='+$json.schoolId
+
+                    },
+                    {
+                        title: 'Teacher details',
                     },
                 ],
                 entry: $json.entry || {
@@ -283,7 +293,7 @@
                     }
                 }
             },
-             async remove(entry) {
+            async remove(entry) {
                 if (!confirm('Xóa bản ghi: ' + entry.id)) {
                     return false;
                 }
@@ -295,7 +305,7 @@
                 } else {
                     toastr.success(res.message);
                 }
-                  location.replace('/xadmin/users/teacher');
+                location.replace('/xadmin/users/teacher');
                 $router.updateQuery({page: this.paginate.currentPage, _: Date.now()});
             },
         }
