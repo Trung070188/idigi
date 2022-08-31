@@ -190,14 +190,21 @@ class AllocationContentsController extends AdminBaseController
         $dataContent=$req->all();
 
         $rules = [
-     'title' => 'require',
+     'title' => 'required',
     // 'total_school' => 'max:1000',
     // 'total_course' => 'max:1000',
     // 'total_unit' => 'max:1000',
     // 'status' => 'numeric',
 ];
+        if($dataContent['total_course']==[])
+        {
+            $rules['total_course'] = ['required'];
+        }
+        $customMessages = [
+            'total_course.required' => 'The course field is required.',
+        ];
 
-        $v = Validator::make($data, $rules);
+        $v = Validator::make($data, $rules,$customMessages);
 
         if ($v->fails()) {
             return [
@@ -205,10 +212,7 @@ class AllocationContentsController extends AdminBaseController
                 'errors' => $v->errors()
             ];
         }
-        if($dataContent['total_school'])
-        {
-          
-        }
+
 
         /**
         * @var  AllocationContent $entry

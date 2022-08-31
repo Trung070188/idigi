@@ -1,9 +1,7 @@
 <template>
     <div class="container-fluid">
-        <ActionBar type="form" @save="save()"
-                   :code="entry.id"
-                   backUrl="/xadmin/allocation_contents/index"
-                   title="AllocationForm"/>
+        <ActionBar type="index"
+                   :breadcrumbs="breadcrumbs" title = "Allocation details"/>
         <div class="row">
             <div class="col-lg-12">
                 <div class="card card-custom card-stretch gutter-b">
@@ -12,7 +10,7 @@
                             <div class="col-lg-12">
                                 <input v-model="entry.id" type="hidden" name="id" value="">
                                     <div class="form-group">
-                                        <label>Title</label>
+                                        <label>Title <span class="text-danger">*</span></label>
                                         <input id="f_title" v-model="entry.title" name="name" class="form-control"
                                                placeholder="title" >
                                         <error-label for="f_title" :errors="errors.title"></error-label>
@@ -24,7 +22,7 @@
 
 <!--                                    </div>-->
                                                                     <div class="form-group">
-                                        <label>Course</label>
+                                        <label>Course <span class="text-danger">*</span></label>
                                         <treeselect :options="courses" :multiple="true" @deselect="deleteCourse" v-model="total_course" @input=""/>
                                         <error-label for="f_total_course" :errors="errors.total_course"></error-label>
                                     </div>
@@ -35,7 +33,7 @@
                             <thead class="border-bottom border-gray-200 fs-6 text-gray-600 fw-bolder bg-light bg-opacity-75">
                             <tr>
                                 <th class="">Course Name</th>
-                                <th>Unit</th>
+                                <th>Unit <span class="text-danger">*</span></th>
                             </tr>
                             </thead>
                             <tbody v-for="number_course in total_course" >
@@ -97,6 +95,19 @@
             console.log(courseTreeselect);
 
             return {
+                breadcrumbs: [
+                    {
+                        title: 'School & teacher'
+                    },
+                    {
+                        title: 'Content allocation',
+                        url:'/xadmin/allocation_contents/index'
+
+                    },
+                    {
+                        title: 'Allocation details'
+                    },
+                ],
                 unit:[],
                 total_school:$json.totalSchoolArray ||{},
                 total_course:$json.totalCourseArray ||{},

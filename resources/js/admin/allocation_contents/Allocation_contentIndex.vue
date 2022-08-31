@@ -176,6 +176,9 @@
                 },
                 breadcrumbs: [
                     {
+                        title: 'School & teacher'
+                    },
+                    {
                         title: 'Content Allocation'
                     },
                 ],

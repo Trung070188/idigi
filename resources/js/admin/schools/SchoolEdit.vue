@@ -106,18 +106,27 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="col-lg-12">
                             <div class="row">
-                                <div class="form-group col-lg-10">
-                                    <label>Content Allocated <span class="text-danger">*</span></label>
+                                    <div class="form-group col-lg-10">
+                                        <label>Content Allocated <span class="text-danger">*</span></label>
 
-                                    <select class="form-control form-select" required v-model="allocationContentSchool"
-                                            @change="changeAllocationContent() ">
+                                        <select class="form-control form-select " required v-model="allocationContentSchool"
+                                                @change="changeAllocationContent() ">
 
-                                        <option v-for="allocationContent in allocationContents"
-                                                :value="allocationContent.id">{{allocationContent.title}}
-                                        </option>
-                                    </select>
+                                            <option v-for="allocationContent in allocationContents"
+                                                    :value="allocationContent.id">{{allocationContent.title}}
+                                            </option>
+                                        </select>
+
+                                    </div>
+                                    <div class="col-lg-2">
+                                        <a :href="'/xadmin/allocation_contents/edit?id='+allocationContentSchool">
+                                            <button style="margin: 20px 0px 0px" class="btn btn-primary">Edit allocation</button>
+                                        </a>
+                                    </div>
                                 </div>
+
                                 <table class="table table-row-bordered align-middle gy-4 gs-9" v-if="courses!=null">
                                     <thead
                                         class="border-bottom border-gray-200 fs-6 text-gray-600 fw-bolder bg-light bg-opacity-75">

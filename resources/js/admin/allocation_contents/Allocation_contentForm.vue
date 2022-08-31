@@ -1,25 +1,23 @@
 <template>
     <div class="container-fluid">
-        <ActionBar type="form" @save="save()"
-                   :code="entry.id"
-                   backUrl="/xadmin/allocation_contents/index"
-                   title="Allocation Form"/>
+        <ActionBar type="index"
+                   :breadcrumbs="breadcrumbs" title = "Create new allocation"/>
         <div class="row">
             <div class="col-lg-12">
                 <div class="card card-custom card-stretch gutter-b">
                     <div class="card-body d-flex flex-column" >
                         <div class="row">
                             <div class="col-lg-12">
-                                <input v-model="entry.id" type="hidden" name="id" value="">
+
                                     <div class="form-group">
-                                        <label>Title</label>
+                                        <label>Title <span class="text-danger">*</span></label>
                                         <input id="f_title" v-model="entry.title" name="name" class="form-control"
                                                placeholder="title" >
                                         <error-label for="f_title" :errors="errors.title"></error-label>
                                     </div>
 
                                                                     <div class="form-group">
-                                        <label>Course</label>
+                                        <label>Course <span class="text-danger">*</span></label>
                                         <treeselect :options="courses" :multiple="true" v-model="total_course"/>
                                         <error-label for="f_total_course" :errors="errors.total_course"></error-label>
 
@@ -93,6 +91,19 @@
                 }
             })
                 return {
+                    breadcrumbs: [
+                        {
+                            title: 'School & teacher'
+                        },
+                        {
+                            title: 'Content allocation',
+                            url:'/xadmin/allocation_contents/index'
+
+                        },
+                        {
+                            title: 'Created new allocation'
+                        },
+                    ],
                 total_school:[],
                 total_course:[],
                 total_unit:[],
