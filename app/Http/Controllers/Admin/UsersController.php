@@ -259,7 +259,6 @@ class UsersController extends AdminBaseController
 
 
         if (@$schoolCousers) {
-            $courseTeachers = [];
             foreach ($schoolCousers as $course) {
                 $course['total_unit'] = [];
 
@@ -592,21 +591,28 @@ class UsersController extends AdminBaseController
         if ($data_role['name_role'] == 2 || $data_role['name_role'] == 5) {
             $rules['school_id'] = ['required'];
         }
-        if ($data_role['courseTeachers']==[]) {
+        if (@$data_role['courseTeachers']==[]) {
             $rules['courseTeachers'] = ['required'];
         }
-//        foreach ($data_role['unit'] as $unit)
-//        {
-//            if($unit['courseTea']==[])
-//            {
-//                $rules['courseTea'] = ['required'];
-//            }
-//        }
+        foreach(@$data_role['courseTeachers'] as $courseTeacher)
+        {
+            foreach ($data_role['unit'] as $unit)
+            {
+                if($unit['id']==$courseTeacher)
+                {
+                    if($unit['courseTea']==[])
+                    {
+                        $rules['courseTea'] = ['required'];
 
+                    }
+                }
+            }
+     
+        }
         $customMessages = [
             'school_id.required' => 'The school field is required.',
             'courseTeachers.required'=>'The course field is required.',
-//            'courseTea.required'=>'The unit field is required.'
+           'courseTea.required'=>'The unit field is required.'
         ];
         $v = Validator::make($data, $rules, $customMessages);
 
