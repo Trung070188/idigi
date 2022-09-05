@@ -591,7 +591,6 @@ class UsersController extends AdminBaseController
         if ($data_role['name_role'] == 2 || $data_role['name_role'] == 5) {
             $rules['school_id'] = ['required'];
         }
-<<<<<<< HEAD
 //        if (@$data_role['courseTeachers']==[]) {
 //            $rules['courseTeachers'] = ['required'];
 //        }
@@ -602,30 +601,32 @@ class UsersController extends AdminBaseController
 //                $rules['courseTea'] = ['required'];
 //            }
 //        }
-=======
-        if (@$data_role['courseTeachers']==[]) {
-            $rules['courseTeachers'] = ['required'];
-        }
-        foreach(@$data_role['courseTeachers'] as $courseTeacher)
-        {
-            foreach ($data_role['unit'] as $unit)
-            {
-                if($unit['id']==$courseTeacher)
-                {
-                    if($unit['courseTea']==[])
-                    {
-                        $rules['courseTea'] = ['required'];
->>>>>>> 9cd3501c5c132704c5ec16936af4d9de8532e78c
+//        if (@$data_role['courseTeachers']==[]) {
+//            $rules['courseTeachers'] = ['required'];
+//        }
+//        if(@$data_role['courseTeachers'])
+//        {
+//            foreach($data_role['courseTeachers'] as $courseTeacher)
+//            {
+//                foreach ($data_role['unit'] as $unit)
+//                {
+//                    if($unit['id']==$courseTeacher)
+//                    {
+//                        if($unit['courseTea']==[])
+//                        {
+//                            $rules['courseTea'] = ['required'];
+//
+//                        }
+//                    }
+//                }
+//
+//            }
+//        }
 
-                    }
-                }
-            }
-     
-        }
         $customMessages = [
             'school_id.required' => 'The school field is required.',
-            'courseTeachers.required'=>'The course field is required.',
-           'courseTea.required'=>'The unit field is required.'
+//            'courseTeachers.required'=>'The course field is required.',
+//           'courseTea.required'=>'The unit field is required.'
         ];
         $v = Validator::make($data, $rules, $customMessages);
 
