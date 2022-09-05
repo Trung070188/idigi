@@ -38,6 +38,7 @@
                                 </td>
                                 <td >
                                 <treeselect :options="course.units" :multiple="true" v-model="course.total_unit"  />
+                                    <error-label for="f_total_course" :errors="errors.total_unit"></error-label>
                                 </td>
                             </tr>
 
@@ -101,7 +102,7 @@
 
                         },
                         {
-                            title: 'Created new allocation'
+                            title: 'Create new allocation'
                         },
                     ],
                 total_school:[],

@@ -200,8 +200,19 @@ class AllocationContentsController extends AdminBaseController
         {
             $rules['total_course'] = ['required'];
         }
+        if($dataContent['unit'])
+        {
+            foreach ($dataContent['unit'] as $unit)
+            {
+                if(@$unit['total_unit'])
+                {
+                    $rules['total_unit'] = ['required'];
+                }
+            }
+        }
         $customMessages = [
             'total_course.required' => 'The course field is required.',
+            'total_unit.required'=>'The unit field is required.'
         ];
 
         $v = Validator::make($data, $rules,$customMessages);

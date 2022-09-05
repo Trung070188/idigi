@@ -76,4 +76,9 @@
         'action' => 'UnitsController',
         'name' => 'units',
     ],
+    [
+        'path' => '/plans/{action}',
+        'action' => 'PlansController',
+        'name' => 'plans',
+    ],
 ];

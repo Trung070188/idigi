@@ -8,7 +8,7 @@
                      <div class="card-header border-0 pt-6" style="margin:0px 0px -35px">
                          <div class="card-title"></div>
                          <div class="card-toolbar">
-                             <button class="btn btn-danger button-create " @click="remove(entry)">
+                             <button v-if="permissions['003']" class="btn btn-danger button-create " @click="remove(entry)">
                                  Delete User <i class="fas fa-trash"></i>
                              </button>
                          </div>
@@ -21,13 +21,13 @@
                                 <div class="row">
                                     <div  class="form-group  col-sm-4">
                                         <label>Username <span class="text-danger">*</span></label>
-                                        <input class="form-control" placeholder="Enter the username" v-model="entry.username" disabled>
+                                        <input class="form-control nospace" placeholder="Enter the username" v-model="entry.username" disabled>
 
                                         <error-label for="f_category_id" :errors="errors.username"></error-label>
                                     </div>
                                     <div class="form-group  col-sm-4">
                                         <label>Full name <span class="text-danger">*</span></label>
-                                        <input class="form-control nospace" placeholder="Enter the full name" v-model="entry.full_name">
+                                        <input class="form-control " placeholder="Enter the full name" v-model="entry.full_name">
 
                                         <error-label for="f_category_id" :errors="errors.full_name"></error-label>
                                     </div>
@@ -105,7 +105,7 @@
 </template>
 
 <script>
-    import {$post} from "../../utils";
+    import {$post, clone} from "../../utils";
 
     import ActionBar from "../includes/ActionBar";
     import SwitchButton from "../../components/SwitchButton";
@@ -114,8 +114,10 @@
         name: "UsersForm.vue",
         components: {ActionBar, SwitchButton},
         data() {
+            const permissions = clone(window.$permissions)
 
             return {
+                permissions,
                 showConfirm: false,
                 showPass: false,
                 types: [],

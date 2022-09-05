@@ -592,9 +592,9 @@ class UsersController extends AdminBaseController
         if ($data_role['name_role'] == 2 || $data_role['name_role'] == 5) {
             $rules['school_id'] = ['required'];
         }
-        if ($data_role['courseTeachers']==[]) {
-            $rules['courseTeachers'] = ['required'];
-        }
+//        if (@$data_role['courseTeachers']==[]) {
+//            $rules['courseTeachers'] = ['required'];
+//        }
 //        foreach ($data_role['unit'] as $unit)
 //        {
 //            if($unit['courseTea']==[])
@@ -630,7 +630,7 @@ class UsersController extends AdminBaseController
 //            }
             $entry->fill($data);
             $entry->save();
-            $schoolId = $entry->schools->id;
+            $schoolId = @$entry->schools->id;
 
             UserRole::where('user_id', $entry->id)->delete();
             if (@$data_role['name_role']) {

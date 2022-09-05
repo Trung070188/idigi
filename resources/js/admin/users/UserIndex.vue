@@ -63,7 +63,8 @@
                            <div
                             class="d-flex justify-content-end align-items-center d-none"
                             data-kt-customer-table-toolbar="selected"
-                            v-if="userIds != ''"
+                            v-if="userIds != '' && permissions['003']"
+
                         >
                             <div class="fw-bolder me-5">
                                 <span
@@ -73,6 +74,7 @@
                                 >{{ userIds.length }} Selected
                             </div>
                             <button
+
                                 @click="removeAll"
                                 type="button"
                                 class="btn btn-danger"
