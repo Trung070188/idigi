@@ -30,11 +30,11 @@ class AllocationContentsController extends AdminBaseController
     ];
 
     /**
-    * Index page
-    * @uri  /xadmin/allocation_contents/index
-    * @throw  NotFoundHttpException
-    * @return  View
-    */
+     * Index page
+     * @uri  /xadmin/allocation_contents/index
+     * @throw  NotFoundHttpException
+     * @return  View
+     */
     public function index() {
         $title = 'AllocationContent';
         $component = 'Allocation_contentIndex';
@@ -42,11 +42,11 @@ class AllocationContentsController extends AdminBaseController
     }
 
     /**
-    * Create new entry
-    * @uri  /xadmin/allocation_contents/create
-    * @throw  NotFoundHttpException
-    * @return  View
-    */
+     * Create new entry
+     * @uri  /xadmin/allocation_contents/create
+     * @throw  NotFoundHttpException
+     * @return  View
+     */
     public function create (Request $req) {
         $component = 'Allocation_contentForm';
         $title = 'Create allocation_contents';
@@ -79,10 +79,10 @@ class AllocationContentsController extends AdminBaseController
     }
 
     /**
-    * @uri  /xadmin/allocation_contents/edit?id=$id
-    * @throw  NotFoundHttpException
-    * @return  View
-    */
+     * @uri  /xadmin/allocation_contents/edit?id=$id
+     * @throw  NotFoundHttpException
+     * @return  View
+     */
     public function edit (Request $req) {
         $data=$req->all();
         $id = $req->id;
@@ -115,19 +115,19 @@ class AllocationContentsController extends AdminBaseController
         {
 
             foreach($courses as $course)
-                {
+            {
 
-                    $course['total_unit']=[];
-                    $total_unit=[];
-                    foreach($course_unit as $un)
+                $course['total_unit']=[];
+                $total_unit=[];
+                foreach($course_unit as $un)
+                {
+                    if($un->course_id==$course->id)
                     {
-                        if($un->course_id==$course->id)
-                        {
-                           $total_unit[]=$un->unit_id;
-                        }
+                        $total_unit[]=$un->unit_id;
                     }
-                    $course['total_unit']=$total_unit;
                 }
+                $course['total_unit']=$total_unit;
+            }
         }
 
         $schools=School::query()->orderBy('id','desc')->get();
@@ -136,8 +136,8 @@ class AllocationContentsController extends AdminBaseController
             throw new NotFoundHttpException();
         }
         /**
-        * @var  AllocationContent $entry
-        */
+         * @var  AllocationContent $entry
+         */
         $jsonData=[
             'totalSchoolArray'=>$totalSchoolArray,
             'totalCourseArray'=>$totalCourseArray,
@@ -156,9 +156,9 @@ class AllocationContentsController extends AdminBaseController
     }
 
     /**
-    * @uri  /xadmin/allocation_contents/remove
-    * @return  array
-    */
+     * @uri  /xadmin/allocation_contents/remove
+     * @return  array
+     */
     public function remove(Request $req) {
         $id = $req->id;
         $entry = AllocationContent::find($id);
@@ -178,9 +178,9 @@ class AllocationContentsController extends AdminBaseController
     }
 
     /**
-    * @uri  /xadmin/allocation_contents/save
-    * @return  array
-    */
+     * @uri  /xadmin/allocation_contents/save
+     * @return  array
+     */
     public function save(Request $req) {
         if (!$req->isMethod('POST')) {
             return ['code' => 405, 'message' => 'Method not allow'];
@@ -190,25 +190,39 @@ class AllocationContentsController extends AdminBaseController
         $dataContent=$req->all();
 
         $rules = [
-     'title' => 'required',
-    // 'total_school' => 'max:1000',
-    // 'total_course' => 'max:1000',
-    // 'total_unit' => 'max:1000',
-    // 'status' => 'numeric',
-];
+            'title' => 'required',
+            // 'total_school' => 'max:1000',
+            // 'total_course' => 'max:1000',
+            // 'total_unit' => 'max:1000',
+            // 'status' => 'numeric',
+        ];
         if($dataContent['total_course']==[])
         {
+
             $rules['total_course'] = ['required'];
         }
-        if($dataContent['unit'])
+        if($dataContent['total_course'])
         {
-            foreach ($dataContent['unit'] as $unit)
+            foreach($dataContent['total_course'] as $total_course)
             {
-                if(@$unit['total_unit'])
+
+                foreach($dataContent['unit'] as $unit)
                 {
-                    $rules['total_unit'] = ['required'];
+                    if($unit['id']==$total_course)
+                    {
+                        if(!@$unit['total_unit']  )
+                        {
+                            $rules['total_unit'] = ['required'];
+                        }
+                        if(@$unit['total_unit']==[])
+                        {
+                            $rules['total_unit'] = ['required'];
+                        }
+                    }
+
                 }
             }
+
         }
         $customMessages = [
             'total_course.required' => 'The course field is required.',
@@ -226,8 +240,8 @@ class AllocationContentsController extends AdminBaseController
 
 
         /**
-        * @var  AllocationContent $entry
-        */
+         * @var  AllocationContent $entry
+         */
         if (isset($data['id'])) {
             $entry = AllocationContent::find($data['id']);
             if (!$entry) {
@@ -351,8 +365,8 @@ class AllocationContentsController extends AdminBaseController
     }
 
     /**
-    * @param  Request $req
-    */
+     * @param  Request $req
+     */
     public function toggleStatus(Request $req)
     {
         $id = $req->get('id');
@@ -375,10 +389,10 @@ class AllocationContentsController extends AdminBaseController
     }
 
     /**
-    * Ajax data for index page
-    * @uri  /xadmin/allocation_contents/data
-    * @return  array
-    */
+     * Ajax data for index page
+     * @uri  /xadmin/allocation_contents/data
+     * @return  array
+     */
     public function data(Request $req) {
         $query = AllocationContent::query()->with(['courses','units','schools'])->orderBy('id', 'desc');
 
@@ -406,13 +420,13 @@ class AllocationContentsController extends AdminBaseController
     }
 
     public function export() {
-                $keys = [
-                            'title' => ['A', 'title'],
-                            'total_school' => ['B', 'total_school'],
-                            'total_course' => ['C', 'total_course'],
-                            'total_unit' => ['D', 'total_unit'],
-                            'status' => ['E', 'status'],
-                            ];
+        $keys = [
+            'title' => ['A', 'title'],
+            'total_school' => ['B', 'total_school'],
+            'total_course' => ['C', 'total_course'],
+            'total_unit' => ['D', 'total_unit'],
+            'status' => ['E', 'status'],
+        ];
 
         $query = AllocationContent::query()->orderBy('id', 'desc');
 
@@ -425,7 +439,7 @@ class AllocationContentsController extends AdminBaseController
                 $sheet->setCellValue($v . "1", $key);
             } elseif (is_array($v)) {
                 list($c, $n) = $v;
-                 $sheet->setCellValue($c . "1", $n);
+                $sheet->setCellValue($c . "1", $n);
             }
         }
 

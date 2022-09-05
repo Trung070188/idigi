@@ -97,8 +97,9 @@
                                 </td>
                                 <td  >
                                  <treeselect :options="course.total_unit" :multiple="true" v-model="course.courseTea" />
-                                    <error-label for="f_category_id" :errors="errors.courseTea"></error-label>
+                                <error-label    :errors="errors.courseTea"></error-label>
                                     </td>
+
                             </tr>
                             </tbody>
                         </table>
@@ -214,6 +215,7 @@
                 showConfirm: false,
                 showPass: false,
                 types: [],
+                courseTea:[],
                 currId:'',
                 breadcrumbs: [
                     {

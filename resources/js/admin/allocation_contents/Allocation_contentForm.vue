@@ -38,9 +38,12 @@
                                 </td>
                                 <td >
                                 <treeselect :options="course.units" :multiple="true" v-model="course.total_unit"  />
-                                    <error-label for="f_total_course" :errors="errors.total_unit"></error-label>
+                                <error-label  for="f_total_course" :errors="errors.total_unit"></error-label>
+
+                                <!-- <error-label v-if="!course.total_unit " for="f_total_course" :errors="errors.total_unit"></error-label> -->
                                 </td>
                             </tr>
+
 
                             </tbody>
                         </table>
@@ -123,7 +126,7 @@
             },
             async save() {
                 this.isLoading = true;
-                const res = await $post('/xadmin/allocation_contents/save', {entry: this.entry,total_school:this.total_school,total_course:this.total_course,unit:this.courses}, false);
+                const res = await $post('/xadmin/allocation_contents/save', {entry: this.entry,total_school:this.total_school,total_course:this.total_course,unit:this.courses,total_unit:this.total_unit}, false);
                 this.isLoading = false;
                 if (res.errors) {
                     this.errors = res.errors;
