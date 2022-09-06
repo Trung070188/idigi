@@ -8,6 +8,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use App\Models\Plan;
+use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
@@ -44,7 +46,22 @@ class PlansController extends AdminBaseController
     public function create (Request $req) {
         $component = 'PlanForm';
         $title = 'Create plans';
-        return component($component, compact('title'));
+        $users=User::query()->with(['roles'])->orderBy('id','ASC')->get();
+        $roleIt=[];
+        foreach($users as $user)
+        {
+            foreach($user->roles as $role)
+            {
+                if($role->role_name=='IT')
+                {
+                    $roleIt[]=$user;
+                }
+            }
+        }
+        $jsonData = [
+            'roleIt' => $roleIt,
+        ];
+        return view('admin.layouts.vue', compact('title', 'component', 'jsonData'));
     }
 
     /**
@@ -55,6 +72,18 @@ class PlansController extends AdminBaseController
     public function edit (Request $req) {
         $id = $req->id;
         $entry = Plan::find($id);
+        $users=User::query()->with(['roles'])->orderBy('id','ASC')->get();
+        $roleIt=[];
+        foreach($users as $user)
+        {
+            foreach($user->roles as $role)
+            {
+                if($role->role_name=='IT')
+                {
+                    $roleIt[]=$user;
+                }
+            }
+        }
 
         if (!$entry) {
             throw new NotFoundHttpException();
@@ -67,8 +96,14 @@ class PlansController extends AdminBaseController
         $title = 'Edit';
         $component = 'PlanForm';
 
+        $idRoleIt=$entry->user_id;
+        $jsonData = [
+            'idRoleIt' => $idRoleIt,
+            'entry'=>$entry,
+            'roleIt'=>$roleIt
 
-        return component($component, compact('title', 'entry'));
+        ];
+        return view('admin.layouts.vue', compact('title', 'component', 'jsonData'));
     }
 
     /**
@@ -96,6 +131,7 @@ class PlansController extends AdminBaseController
     * @return  array
     */
     public function save(Request $req) {
+        $dataRole=$req->all();
         if (!$req->isMethod('POST')) {
             return ['code' => 405, 'message' => 'Method not allow'];
         }
@@ -138,7 +174,12 @@ class PlansController extends AdminBaseController
                 'id' => $entry->id
             ];
         } else {
+            $auth=Auth::user();
+            
             $entry = new Plan();
+            $entry->user_id=$dataRole['idRoleIt'];
+            $entry->created_by=$auth->id;
+
             $entry->fill($data);
             $entry->save();
 
@@ -190,10 +231,35 @@ class PlansController extends AdminBaseController
 
 
         $entries = $query->paginate();
+        $data=[];
+        $users=User::query()->orderBy('id','desc')->get();
+        
+        foreach($entries as $entry)
+        {
+            foreach($users as $user)
+            {
+                if($user->id==$entry->created_by)
+                {
+                    $fullName=$user->full_name;
+                }
+                if($entry->user_id==$user->id)
+                {
+                    $fullNameIt=$user->full_name;
+                }
+            }
+            $data[]=[
+                'id'=>$entry->id,
+                'name'=>$entry->name,
+                'created_by'=>$fullName,
+                'assign_to'=>$fullNameIt,
+                'created_at'=>$entry->created_at,
+                'due_at'=>$entry->due_at,                
+            ];
+        }
 
         return [
             'code' => 0,
-            'data' => $entries->items(),
+            'data' => $data,
             'paginate' => [
                 'currentPage' => $entries->currentPage(),
                 'lastPage' => $entries->lastPage(),

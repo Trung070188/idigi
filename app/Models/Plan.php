@@ -20,5 +20,7 @@ class Plan extends BaseModel
     'Deployed',
     'created_by',
     'due_at',
+    'plan_description',
+    'user_id',
 ];
 }

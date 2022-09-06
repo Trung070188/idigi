@@ -713,7 +713,7 @@
     import ActionBar from "../includes/ActionBar";
 
     export default {
-        name: "PlansForm.vue",
+        name: "PlanEdit.vue",
         components: {ActionBar},
         data() {
             return {

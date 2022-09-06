@@ -144,6 +144,7 @@
                                 <th class="">Status</th>
                                 <th>Deployed</th>
                                 <th></th>
+                          
                             </tr>
                             </thead>
                             <tbody>
@@ -154,18 +155,16 @@
                                             >
                                     </div>
                                 </td>
-                                <td class="" ></td>
-                                <td class="" ></td>
-                                <td class=""></td>
+                                <td class="" >{{entry.id}}</td>
+                                <td class="" >{{entry.name}}</td>
+                                <td class="">{{entry.created_by}}</td>
+                                <td class="" >{{entry.assign_to}}</td>
+                                <td class="" >{{d(entry.created_at)}}</td>
                                 <td></td>
-                                <td class="" ></td>
-                                <td class="" ></td>
-                                <td></td>
-                                <td  class="" ></td>
+                                <td  class="" >{{d(entry.due_at)}}</td>
                                 <td   class=""></td>
                                 <th class=""></th>
-                                <th class=""></th>
-
+                           
                                 <td class="">
                                     <!--<a :href="'/xadmin/schools/edit?id='+entry.id" style="margin-right: 10px"><i style="font-size:1.3rem" class="fa fa-edit"></i></a>
                                     <a @click="remove(entry)" href="javascript:;" class="btn-trash deleted"><i  class="fa fa-trash mr-1"></i></a>-->
