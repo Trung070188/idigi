@@ -68,7 +68,7 @@
                                             <!--begin::Card toolbar-->
                                             <div class="card-toolbar">
                                               <button class="btn btn-primary">View devices</button>
-                                                <button class="btn btn-primary" style="margin: 0px 15px 0px">Add a device</button>
+                                                <button class="btn btn-primary" style="margin: 0px 15px 0px" @click="modalDevice()">Add a device</button>
                                                 <button class="btn btn-primary">Import devices</button>
                                             </div>
                                             <!--end::Card toolbar-->
@@ -110,8 +110,37 @@
 
 
             </div>
+              <div class="modal fade" style="margin-right:50px " id="deviceConfirm" tabindex="-1" role="dialog"
+             aria-labelledby="deviceConfirm"
+             aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered popup-main-1" role="document"
+                 style="max-width: 500px;">
+                <div class="modal-content box-shadow-main paymment-status" style="margin-right:20px; left:140px">
+                    <div class="close-popup" data-dismiss="modal"></div>
+                    <h3 style="margin:20px auto;font-weight: 500;" class="popup-title success">Add more device</h3>
+                    <div class="content" style="margin: -30px 20px 20px">
+                        <p>Bước 1 :Sử dụng máy tính mà bạn muốn thêm thiết bị mở ứng dụng IDIGI trên Desktop</p>
+                        <p>Bước 2:Nhấn vào nút "Get device information" và copy đoạn mã thông tin thiết bị </p>
+                        <p>Bước 3:Dán đoạn mã vào ô phía dưới</p>
+                        <input type="text" class="form-control " placeholder="Enter the device name" aria-label="" style="margin-bottom: 10px" aria-describedby="basic-addon1" >
+                        <error-label for="f_category_id" :errors="errors.device_name"></error-label>
+
+                        <input type="text" class="form-control " placeholder="Enter the register code" aria-label="" aria-describedby="basic-addon1"  >
+                        <error-label for="f_category_id" :errors="errors.device_uid"></error-label>
+                    </div>
+                    <div class="form-group d-flex justify-content-between">
+                        <!--                        <button  class="btn btn-danger ito-btn-small" data-dismiss="modal" @click="save()">Add now</button>-->
+                        <button class="btn btn-primary ito-btn-add" data-dismiss="modal" @click="save_send()" style="margin:0 auto">
+                            Add now
+                        </button>
+                    </div>
+                </div>
+            </div>
         </div>
-    </div>
+        
+        </div>
+        
+        
 
 </template>
 
@@ -139,6 +168,9 @@
             }
         },
         methods: {
+             modalDevice() {
+                $('#deviceConfirm').modal('show');
+            },
             backIndex(){
                 window.location.href = '/xadmin/plans/index';
             },
