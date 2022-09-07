@@ -243,7 +243,7 @@
                             <tbody >
                             <tr v-for="entry in entries">
                                     <td class="" v-text="entry.device_name" ></td>
-                                    <td v-text="d(entry.created_at)"></td>
+                                    <td v-text="d(entry.created_at)" d></td>
                                     <td class="" >
                                         <span class="status" v-if="entry.status==2">Active</span>
                                         <span   class="status-request" v-if="entry.status==1 ">Delete request sent</span>
