@@ -3,6 +3,9 @@
 namespace App\Http\Controllers\Admin;
 
 
+use App\Models\UserDevice;
+use Firebase\JWT\JWT;
+use Firebase\JWT\Key;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -10,6 +13,9 @@ use Illuminate\Support\Facades\Validator;
 use App\Models\Plan;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
+use Illuminate\Validation\Rule;
+use phpseclib3\Crypt\Random;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
@@ -94,7 +100,7 @@ class PlansController extends AdminBaseController
         */
 
         $title = 'Edit';
-        $component = 'PlanForm';
+        $component = 'PlanEdit';
 
         $idRoleIt=$entry->user_id;
         $jsonData = [
@@ -175,7 +181,7 @@ class PlansController extends AdminBaseController
             ];
         } else {
             $auth=Auth::user();
-            
+
             $entry = new Plan();
             $entry->user_id=$dataRole['idRoleIt'];
             $entry->created_by=$auth->id;
@@ -189,6 +195,82 @@ class PlansController extends AdminBaseController
                 'id' => $entry->id
             ];
         }
+    }
+    public function saveDevice(Request $req) {
+        $dataRole=$req->all();
+        if (!$req->isMethod('POST')) {
+            return ['code' => 405, 'message' => 'Method not allow'];
+        }
+
+        $data = $req->get('entry');
+
+        $rules = [
+            'name' => 'max:255',
+            'created_by' => 'numeric',
+            'due_at' => 'date_format:Y-m-d H:i:s',
+        ];
+
+        $v = Validator::make($data, $rules);
+
+        if ($v->fails()) {
+            return [
+                'code' => 2,
+                'errors' => $v->errors()
+            ];
+        }
+
+        /**
+         * @var  Plan $entry
+         */
+        if (isset($data['id'])) {
+            $entry = Plan::find($data['id']);
+            if (!$entry) {
+                return [
+                    'code' => 3,
+                    'message' => 'Không tìm thấy',
+                ];
+            }
+                $device = new UserDevice();
+                $device->device_name=$dataRole['deviceName'];
+            try {
+                $decoded = JWT::decode($dataRole['deviceUid'], new Key(env('SECRET_KEY'), 'HS256'));
+                $device->device_uid=$decoded->device_uid;
+            }catch (\Exception $e)
+            {
+
+            }
+                $device->user_id=$dataRole['idRoleIt'];
+                $device->plan_id=$entry->id;
+                $device->status=2;
+                $device->secret_key=(Str::random(10));
+                $device->save();
+
+            $entry->fill($data);
+            $entry->save();
+
+            return [
+                'code' => 0,
+                'message' => 'Đã cập nhật',
+                'id' => $entry->id
+            ];
+        } else {
+            $auth=Auth::user();
+
+            $entry = new Plan();
+            $entry->user_id=$dataRole['idRoleIt'];
+            $entry->created_by=$auth->id;
+
+            $entry->fill($data);
+            $entry->save();
+
+            return [
+                'code' => 0,
+                'message' => 'Đã thêm',
+                'id' => $entry->id
+            ];
+        }
+
+
     }
 
     /**
@@ -233,7 +315,7 @@ class PlansController extends AdminBaseController
         $entries = $query->paginate();
         $data=[];
         $users=User::query()->orderBy('id','desc')->get();
-        
+
         foreach($entries as $entry)
         {
             foreach($users as $user)
@@ -253,7 +335,7 @@ class PlansController extends AdminBaseController
                 'created_by'=>$fullName,
                 'assign_to'=>$fullNameIt,
                 'created_at'=>$entry->created_at,
-                'due_at'=>$entry->due_at,                
+                'due_at'=>$entry->due_at,
             ];
         }
 

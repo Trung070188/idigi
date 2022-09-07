@@ -131,6 +131,9 @@
                 breadcrumbs: [
                     {
                         title: 'Users & roles',
+                    },
+                    {
+                        title: 'Manage users',
                         url: '/xadmin/users/index',
                     },
                     {

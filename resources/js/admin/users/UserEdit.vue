@@ -125,7 +125,11 @@
                 types: [],
                 breadcrumbs: [
                     {
-                        title: 'Users',
+                        title: 'Users & roles',
+                        url: '/xadmin/users/index',
+                    },
+                    {
+                        title: 'Manage users',
                         url: '/xadmin/users/index',
                     },
                     {

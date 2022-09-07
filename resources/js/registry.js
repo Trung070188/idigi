@@ -34,6 +34,7 @@ import LicenseExpired from "./admin/schools/LicenseExpired";
 import TeacherDetails from "./admin/schools/TeacherDetails";
 import PlanIndex from "./admin/plans/PlanIndex";
 import PlanForm from "./admin/plans/PlanForm";
+import PlanEdit from "./admin/plans/PlanEdit";
 export default {
     DashboardIndex,
     UserIndex,
@@ -70,7 +71,8 @@ export default {
     LicenseExpired,
     TeacherDetails,
     PlanIndex,
-    PlanForm
+    PlanForm,
+    PlanEdit
 
 
 }

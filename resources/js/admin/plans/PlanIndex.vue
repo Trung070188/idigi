@@ -144,7 +144,7 @@
                                 <th class="">Status</th>
                                 <th>Deployed</th>
                                 <th></th>
-                          
+
                             </tr>
                             </thead>
                             <tbody>
@@ -164,12 +164,12 @@
                                 <td  class="" >{{d(entry.due_at)}}</td>
                                 <td   class=""></td>
                                 <th class=""></th>
-                           
+
                                 <td class="">
                                     <!--<a :href="'/xadmin/schools/edit?id='+entry.id" style="margin-right: 10px"><i style="font-size:1.3rem" class="fa fa-edit"></i></a>
                                     <a @click="remove(entry)" href="javascript:;" class="btn-trash deleted"><i  class="fa fa-trash mr-1"></i></a>-->
 
-                                    <a>
+                                    <a :href="'/xadmin/plans/edit?id='+entry.id">
                                         <button type="button"
                                                 class="btn btn-sm btn-icon btn-light btn-active-light-primary">
                                             <i class="fa fa-edit"></i>
