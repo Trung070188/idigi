@@ -29,26 +29,26 @@
                                     </div>
                                     <div class="form-group  col-sm-4">
                                         <label>Email </label>
-                                        <input class="form-control" placeholder="Enter the email" v-model="entry.email">
+                                        <input class="form-control" placeholder="Enter the email address" v-model="entry.email">
                                         <error-label for="f_category_id" :errors="errors.email"></error-label>
                                     </div>
                                     <div v-if="entry.id==null" class="form-group  col-sm-4">
                                         <label>Password </label>
-                                        <input v-if="auto_gen==true" disabled :type="showPass ? 'text' : 'password'" class="form-control"
+                                        <input v-if="auto_gen==true" disabled :type="showPass ? 'text' : 'password'" class="form-control"  placeholder="Enter the password"
                                                ref="password" v-model="entry.password">
-                                        <input v-if="auto_gen==false"  :type="showPass ? 'text' : 'password'" class="form-control"
+                                        <input v-if="auto_gen==false"  :type="showPass ? 'text' : 'password'" class="form-control"  placeholder="Enter the password"
                                                ref="password" v-model="entry.password">
-                                        <i @click="showPass = !showPass" class="fa fa-eye"></i>
+<!--                                        <i @click="showPass = !showPass" class="fa fa-eye"></i>-->
                                         <error-label for="f_category_id" :errors="errors.password"></error-label>
                                     </div>
 
                                     <div v-if="entry.id==null" class="form-group  col-sm-4">
-                                        <label>Confirm your password</label>
-                                        <input v-if="auto_gen==true" disabled class="form-control" :type="showConfirm ? 'text' : 'password'"
+                                        <label>Confirm password</label>
+                                        <input v-if="auto_gen==true" disabled class="form-control" :type="showConfirm ? 'text' : 'password'"  placeholder="Re-enter to confirm the password"
                                                v-model="entry.password_confirmation">
-                                        <input v-if="auto_gen==false"  class="form-control" :type="showConfirm ? 'text' : 'password'"
+                                        <input v-if="auto_gen==false"  class="form-control" :type="showConfirm ? 'text' : 'password'"  placeholder="Re-enter to confirm the password"
                                                v-model="entry.password_confirmation">
-                                        <i @click="showConfirm = !showConfirm" class="fa fa-eye"></i>
+<!--                                        <i @click="showConfirm = !showConfirm" class="fa fa-eye"></i>-->
                                         <error-label for="f_category_id" :errors="errors.password_confirmation"></error-label>
                                     </div>
                                     <div class="form-group  col-sm-8">
@@ -67,7 +67,8 @@
                                 <div class="row" v-if="name_role==2||name_role==5">
                                     <div class="form-group  col-sm-4" >
                                         <label>School <span class="text-danger">*</span></label>
-                                        <select  class="form-control form-select" type="" placeholder="Enter the school" v-model="entry.school_id">
+                                        <select required  class="form-control form-select"  v-model="entry.school_id" >
+                                            <option  :value="null" disabled selected >Choose role</option>
                                             <option v-for="school in schools" :value="school.id">{{school.label}}</option>
 
                                         </select>
@@ -78,7 +79,7 @@
                                     <div class="form-group col-sm-8">
                                         <label>Duties</label>
                                         <textarea v-model="entry.description" rows="5" class="form-control"
-                                                  placeholder="Your text here"></textarea>
+                                                  placeholder="Type the description here (200 characters)"></textarea>
                                         <error-label for="f_grade" :errors="errors.description"></error-label>
 
                                     </div>
@@ -92,7 +93,7 @@
                         </div>
                         <hr style="margin: 0px 0px 16px;">
                         <div>
-                            <button type="reset" @click="save()" class="btn btn-primary mr-2">Create new user</button>
+                            <button type="reset" @click="save()" :disabled="!changed" class="btn btn-primary mr-2">Create new user</button>
                             <button type="reset" @click="backIndex()" class="btn btn-secondary">Cancel</button>
                         <label style="margin-left: 20px">Username and password will be sent to the user's email.
                            </label>
@@ -112,6 +113,7 @@
 
     import ActionBar from "../includes/ActionBar";
     import SwitchButton from "../../components/SwitchButton";
+    import _ from "lodash";
 
     export default {
         name: "UsersForm.vue",
@@ -119,6 +121,7 @@
         data() {
 
             return {
+                changed: false,
                 user_school:'',
                 name_role:'',
                 auto_gen:true,
@@ -138,9 +141,19 @@
                     role: []
                 },
                 roles: $json.roles || [],
-                schools:$json.schools||[],
+                schools:$json.schools|| [],
                 isLoading: false,
                 errors: {}
+            }
+        },
+        watch: {
+            entry: {
+                handler(value){
+                    if(value) {
+                        this.changed = !_.isEqual(value, this.actual);
+                    }
+                },
+                deep: true,
             }
         },
         mounted() {
@@ -164,7 +177,7 @@
                 console.log(this.role);
 
                 this.isLoading = true;
-                const res = await $post('/xadmin/users/save', {entry: this.entry, name_role: this.name_role,user_school:this.user_school}, false);
+                const res = await $post('/xadmin/users/save', {entry: this.entry, name_role: this.name_role,user_school:this.user_school,auto_gen: this.auto_gen}, false);
 
                 this.isLoading = false;
                 if (res.errors) {
@@ -197,6 +210,17 @@
     .form-group label
     {
         margin-bottom: 2px;
+    }
+    select:required:invalid {
+        color: #adadad;
+    }
+
+    option[value=""][disabled] {
+        display: none;
+    }
+
+    option {
+        color: black;
     }
 
 </style>
