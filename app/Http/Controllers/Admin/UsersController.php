@@ -588,17 +588,21 @@ class UsersController extends AdminBaseController
 
 
         }
+        if(!isset($data['id']))
+        {
+            if($data_role['auto_gen']==false)
+            {
+                $rules['password']=['required'];
+            }
+            if(@$data['password'])
+            {
+                $rules['password_confirmation']=['required'];
+            }
+        }
         if ($data_role['name_role'] == 2 || $data_role['name_role'] == 5) {
             $rules['school_id'] = ['required'];
         }
-        if($data_role['auto_gen']==false)
-        {
-            $rules['password']=['required'];
-        }
-        if(@$data['password'])
-        {
-            $rules['password_confirmation']=['required'];
-        }
+
 //        if (@$data_role['courseTeachers']==[]) {
 //            $rules['courseTeachers'] = ['required'];
 //        }
