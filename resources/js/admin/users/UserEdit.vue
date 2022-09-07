@@ -8,7 +8,7 @@
                      <div class="card-header border-0 pt-6" style="margin:0px 0px -35px">
                          <div class="card-title"></div>
                          <div class="card-toolbar">
-                             <button v-if="permissions['003']" class="btn btn-danger button-create " @click="remove(entry)">
+                             <button v-if="permissions['003'] && auth.id!=entry.id" class="btn btn-danger button-create " @click="remove(entry)">
                                  Delete User <i class="fas fa-trash"></i>
                              </button>
                          </div>
@@ -33,7 +33,7 @@
                                     </div>
                                     <div class="form-group  col-sm-4">
                                         <label>Email</label>
-                                        <input class="form-control" placeholder="Enter the email" v-model="entry.email">
+                                        <input class="form-control" placeholder="Enter the email address" v-model="entry.email">
                                         <error-label for="f_category_id" :errors="errors.email"></error-label>
                                     </div>
                                     <div v-if="entry.id==null" class="form-group  col-sm-4">
@@ -64,7 +64,7 @@
                                 <div class="row" v-if="name_role==2 || name_role==5">
                                     <div class="form-group  col-sm-4">
                                         <label>School <span class="text-danger">*</span></label>
-                                        <select  class="form-control form-select" v-model="entry.school_id" required placeholder="Enter the school" >
+                                        <select  class="form-control form-select" v-model="entry.school_id" required>
                                             <option v-for="school in schools" :value="school.id" >{{school.label}}</option>
                                         </select>
                                         <error-label for="f_grade" :errors="errors.school_id"></error-label>
@@ -73,9 +73,9 @@
                                 </div>
                                 <div class="row">
                                     <div class="form-group col-sm-8">
-                                        <label>Duties</label>
+                                        <label>User description</label>
                                         <textarea v-model="entry.description" rows="5" class="form-control"
-                                                  placeholder="Your text here"></textarea>
+                                                  placeholder="Type the description here (200 characters)"></textarea>
                                         <error-label for="f_grade" :errors="errors.description"></error-label>
 
                                     </div>
@@ -89,7 +89,7 @@
                         </div>
                         <hr style="margin: 0px 0px 16px;">
                         <div>
-                            <button type="reset" @click="save()" class="btn btn-primary mr-2">Save</button>
+                            <button type="reset" @click="save()" :disabled="!changed" class="btn btn-primary mr-2">Save</button>
                             <button type="reset" @click="backIndex()" class="btn btn-secondary">Cancel</button>
                         <label style="margin-left: 20px">Username and password will be sent to the user's email.
                           </label>
@@ -109,6 +109,7 @@
 
     import ActionBar from "../includes/ActionBar";
     import SwitchButton from "../../components/SwitchButton";
+    import _ from "lodash";
 
     export default {
         name: "UsersForm.vue",
@@ -117,6 +118,7 @@
             const permissions = clone(window.$permissions)
 
             return {
+                changed: false,
                 permissions,
                 showConfirm: false,
                 showPass: false,
@@ -142,6 +144,16 @@
                 title_role: $json.title_role || [],
                 isLoading: false,
                 errors: {}
+            }
+        },
+        watch: {
+            entry: {
+                handler(value){
+                    if(value) {
+                        this.changed = !_.isEqual(value, this.actual);
+                    }
+                },
+                deep: true,
             }
         },
         mounted() {

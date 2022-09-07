@@ -77,7 +77,7 @@
                                 </div>
                                 <div class="row">
                                     <div class="form-group col-sm-8">
-                                        <label>Duties</label>
+                                        <label>User description</label>
                                         <textarea v-model="entry.description" rows="5" class="form-control"
                                                   placeholder="Type the description here (200 characters)"></textarea>
                                         <error-label for="f_grade" :errors="errors.description"></error-label>
