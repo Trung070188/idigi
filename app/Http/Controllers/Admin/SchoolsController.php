@@ -228,8 +228,31 @@ class SchoolsController extends AdminBaseController
     public function edit(Request $req)
     {
         $id = $req->id;
-        $entry = School::with(['allocation_contents', 'school_courses', 'school_course_units', 'allocation_school'])->where('id', $id)->first();
+        $entry = School::with(['allocation_contents', 'school_courses', 'school_course_units', 'allocation_school','users'])->where('id', $id)->first();
         $allocationContents = AllocationContent::query()->with(['course_unit', 'courses','units'])->orderBy('id', 'desc')->get()->toArray();
+        $lengthTeacher=0;
+        if(@$entry->users)
+        {
+            $teacher=[];
+            foreach ($entry->users as $user)
+            {
+                if(@$user->roles)
+                {
+                    foreach ($user->roles as $role)
+                    {
+                        if($role->role_name=='Teacher')
+                        {
+                            $teacher[]=$user;
+
+                        }
+                    }
+                }
+        }
+
+            $lengthTeacher=count($teacher);
+        }
+
+
         //load content tu dong
         $newAllocationContents = [];
         foreach ($allocationContents as $allocationContent){
@@ -330,6 +353,7 @@ class SchoolsController extends AdminBaseController
         $component = 'SchoolEdit';
         $entry->allocationContentId = $allocationContentId;
         $jsonData = [
+            'teacher'=>$lengthTeacher,
             'entry' => $entry,
             @'allocationContents' => @$newAllocationContents,
             @'allocationContentSchoolName' =>@ $allocationContentSchoolName,
