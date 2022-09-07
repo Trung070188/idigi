@@ -235,6 +235,7 @@
                 } else {
                     this.errors = {};
                     toastr.success(res.message);
+                    location.replace('/xadmin/schools/index');
 
                     if (!this.entry.id) {
                         location.replace('/xadmin/schools/edit?id=' + res.id);
