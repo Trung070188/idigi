@@ -272,6 +272,7 @@
                 let query = $router.getQuery();
                 const res  = await $get('/xadmin/plans/data', query);
                 this.paginate = res.paginate;
+                console.log(this.paginate);
                 this.entries = res.data;
                 this.from = (this.paginate.currentPage-1)*(this.limit) + 1;
                 this.to = (this.paginate.currentPage-1)*(this.limit) + this.entries.length;

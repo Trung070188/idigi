@@ -3,6 +3,138 @@
         <ActionBar type="index"
                    :breadcrumbs="breadcrumbs" title ="Create new plan" />
         <div class="row">
+            <div class="modal fade" id="kt_modal_invite_friends" tabindex="-1" aria-hidden="true">
+                <!--begin::Modal dialog-->
+                <div class="modal-dialog ">
+                    <!--begin::Modal content-->
+                    <div class="modal-content" style="width: max-content;margin: 0px -150px 0px">
+                        <!--begin::Modal header-->
+                        <div class="modal-header pb-0 border-0 justify-content-end">
+                            <!--begin::Close-->
+                            <div class="btn btn-sm btn-icon btn-active-color-primary" data-bs-dismiss="modal">
+                                <!--begin::Svg Icon | path: icons/duotune/arrows/arr061.svg-->
+                                <span class="svg-icon svg-icon-1">
+														<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+															<rect opacity="0.5" x="6" y="17.3137" width="16" height="2" rx="1" transform="rotate(-45 6 17.3137)" fill="black" />
+															<rect x="7.41422" y="6" width="16" height="2" rx="1" transform="rotate(45 7.41422 6)" fill="black" />
+														</svg>
+													</span>
+                                <!--end::Svg Icon-->
+                            </div>
+                            <!--end::Close-->
+                        </div>
+                        <!--begin::Modal header-->
+                        <!--begin::Modal body-->
+                        <div class="modal-body scroll-y mx-5 mx-xl-18 pt-0 pb-15" >
+                            <!--begin::Heading-->
+                            <div class="text-center mb-13">
+                                <!--begin::Title-->
+                                <h1 class="mb-3">Device list</h1>
+
+
+                            </div>
+
+                            <div class="mb-10">
+
+                                <div class="mh-300px scroll-y me-n7 pe-7">
+                                    <table class="table table-row-bordered align-middle gy-4 gs-9">
+                                        <thead class="border-bottom border-gray-200 fs-6 text-gray-600 fw-bolder bg-light bg-opacity-75">
+                                        <tr>
+                                            <td width="25">
+                                                <div
+                                                    class="form-check form-check-sm form-check-custom form-check-solid"
+                                                >
+                                                    <input
+                                                        class="form-check-input"
+                                                        type="checkbox"
+
+
+                                                    />
+                                                </div>
+                                            </td>
+                                            <th class="">No.</th>
+                                            <th class="">Device name</th>
+                                            <th class="">Type</th>
+                                            <th class="">Register code</th>
+                                            <th class="">Status</th>
+
+                                            <th></th>
+                                        </tr>
+                                        </thead>
+                                        <tbody >
+
+                                        <tr  >
+                                            <td class="">
+                                                <div
+                                                    class="form-check form-check-sm form-check-custom form-check-solid"
+                                                >
+                                                    <input
+                                                        class="form-check-input"
+                                                        type="checkbox"
+
+                                                    />
+                                                </div>
+                                            </td>
+                                            <td class="" ></td>
+                                            <td class="" ></td>
+                                            <td class="" ></td>
+                                            <td class="" ></td>
+                                            <td class="" ></td>
+
+                                            <td class="">
+                                                <!--<a v-if="permissions['014']" :href="'/xadmin/users/edit_teacher?id='+entry.id"><i style="font-size:1.3rem"
+                                                                                                        class="fa fa-edit"></i></a>
+                                                <a v-if="permissions['015']" @click="remove(entry)" href="javascript:;" class="btn-trash deleted"><i
+                                                    class="fa fa-trash mr-1 deleted"></i></a>-->
+
+                                                <a  >
+                                                    <button type="button" class="btn btn-sm btn-icon btn-light btn-active-light-primary">
+                                                        <i class="fa fa-edit"></i>
+                                                    </button>
+                                                </a>
+                                                <a  href="javascript:;">
+                                                    <button type="button" class="btn btn-sm btn-icon btn-light btn-active-light-primary">
+                                                        <i class="fa fa-trash mr-1 deleted"></i>
+                                                    </button>
+                                                </a>
+
+                                            </td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                    <div class="d-flex pl-9 pr-9 mb-8">
+                                        <div class="col-sm-12 col-md-5 d-flex align-items-center justify-content-center justify-content-md-start">
+                                            <!--<div class="mr-2">
+                                                <label>Records per page:</label>
+                                            </div>-->
+                                            <div>
+                                                <select class="form-select form-select-sm form-select-solid" v-model="limit" @change="changeLimit">
+                                                    <option value="25">25</option>
+                                                    <option value="50">50</option>
+                                                    <option value="100">100</option>
+
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <!--<div style="float: right; margin: 10px">-->
+                                        <div class="col-sm-12 col-md-7 d-flex align-items-center justify-content-center justify-content-md-end">
+                                            <div class="dataTables_paginate paging_simple_numbers" id="kt_customers_table_paginate">
+                                                <Paginate ></Paginate>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+
             <div class="col-lg-12">
                 <div class="card card-custom card-stretch gutter-b">
                     <div class="card-header border-0 pt-6" style="margin:0px 0px -35px">
@@ -42,7 +174,6 @@
                                         <label>Plan description  <span class="text-danger">*</span> </label>
                                         <input   class="form-control"
                                                  placeholder="Enter the description" v-model="entry.plan_description">
-                                        <error-label for="f_school_name" :errors="errors.school_phone"></error-label>
 
                                     </div>
 
@@ -67,7 +198,7 @@
                                             <!--end::Card title-->
                                             <!--begin::Card toolbar-->
                                             <div class="card-toolbar">
-                                                <button class="btn btn-primary">View devices</button>
+                                                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#kt_modal_invite_friends">View devices</button>
                                                 <button class="btn btn-primary" style="margin: 0px 15px 0px" @click="modalDevice()">Add a device</button>
                                                 <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#kt_modal_create_app" id="kt_toolbar_primary_button">Import devices</button>
                                             </div>
@@ -123,10 +254,10 @@
                         <p>Bước 2:Nhấn vào nút "Get device information" và copy đoạn mã thông tin thiết bị </p>
                         <p>Bước 3:Dán đoạn mã vào ô phía dưới</p>
                         <input type="text" class="form-control " placeholder="Enter the device name" aria-label="" style="margin-bottom: 10px" aria-describedby="basic-addon1" v-model="deviceName" >
-                        <error-label for="f_category_id" :errors="errors.device_name"></error-label>
+<!--                        <error-label for="f_category_id" :errors="errors.device_name"></error-label>-->
 
                         <input type="text" class="form-control " placeholder="Enter the register code" aria-label="" aria-describedby="basic-addon1" v-model="deviceUid" >
-                        <error-label for="f_category_id" :errors="errors.device_uid"></error-label>
+<!--                        <error-label for="f_category_id" :errors="errors.device_uid"></error-label>-->
                     </div>
                     <div class="form-group d-flex justify-content-between">
                         <!--                        <button  class="btn btn-danger ito-btn-small" data-dismiss="modal" @click="save()">Add now</button>-->
@@ -260,392 +391,74 @@
                                                 <!--begin::Label-->
                                                 <div class="dropzone-panel mb-4">
                                                     <label>File <span class="required"></span></label>
-                                                    <input type="file" ref="uploader" class="form-control-file">
+                                                    <input type="file" ref="uploader" class="form-control-file" @change="saveValidateImportDevice">
                                                     <error-label ></error-label>
                                                 </div>
-                                                <input type="text" class="form-control form-control-lg form-control-solid" name="name" placeholder="" value="" />
-                                                <!--end::Input-->
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <!--end::Step 1-->
-                                    <!--begin::Step 2-->
-                                    <div data-kt-stepper-element="content">
-                                        <div class="w-100">
-                                            <!--begin::Input group-->
-                                            <div class="fv-row">
-                                                <!--begin::Label-->
-                                                <label class="d-flex align-items-center fs-5 fw-bold mb-4">
-                                                    <span class="required">Select Framework</span>
-                                                    <i class="fas fa-exclamation-circle ms-2 fs-7" data-bs-toggle="tooltip" title="Specify your apps framework"></i>
-                                                </label>
-                                                <!--end::Label-->
-                                                <!--begin:Option-->
-                                                <label class="d-flex flex-stack cursor-pointer mb-5">
-                                                    <!--begin:Label-->
-                                                    <span class="d-flex align-items-center me-2">
-														<!--begin:Icon-->
-														<span class="symbol symbol-50px me-6">
-															<span class="symbol-label bg-light-warning">
-																<i class="fab fa-html5 text-warning fs-2x"></i>
-															</span>
-														</span>
-                                                        <!--end:Icon-->
-                                                        <!--begin:Info-->
-														<span class="d-flex flex-column">
-															<span class="fw-bolder fs-6">HTML5</span>
-															<span class="fs-7 text-muted">Base Web Projec</span>
-														</span>
-                                                        <!--end:Info-->
-													</span>
-                                                    <!--end:Label-->
-                                                    <!--begin:Input-->
-                                                    <span class="form-check form-check-custom form-check-solid">
-														<input class="form-check-input" type="radio" checked="checked" name="framework" value="1" />
-													</span>
-                                                    <!--end:Input-->
-                                                </label>
-                                                <!--end::Option-->
-                                                <!--begin:Option-->
-                                                <label class="d-flex flex-stack cursor-pointer mb-5">
-                                                    <!--begin:Label-->
-                                                    <span class="d-flex align-items-center me-2">
-														<!--begin:Icon-->
-														<span class="symbol symbol-50px me-6">
-															<span class="symbol-label bg-light-success">
-																<i class="fab fa-react text-success fs-2x"></i>
-															</span>
-														</span>
-                                                        <!--end:Icon-->
-                                                        <!--begin:Info-->
-														<span class="d-flex flex-column">
-															<span class="fw-bolder fs-6">ReactJS</span>
-															<span class="fs-7 text-muted">Robust and flexible app framework</span>
-														</span>
-                                                        <!--end:Info-->
-													</span>
-                                                    <!--end:Label-->
-                                                    <!--begin:Input-->
-                                                    <span class="form-check form-check-custom form-check-solid">
-														<input class="form-check-input" type="radio" name="framework" value="2" />
-													</span>
-                                                    <!--end:Input-->
-                                                </label>
-                                                <!--end::Option-->
-                                                <!--begin:Option-->
-                                                <label class="d-flex flex-stack cursor-pointer mb-5">
-                                                    <!--begin:Label-->
-                                                    <span class="d-flex align-items-center me-2">
-														<!--begin:Icon-->
-														<span class="symbol symbol-50px me-6">
-															<span class="symbol-label bg-light-danger">
-																<i class="fab fa-angular text-danger fs-2x"></i>
-															</span>
-														</span>
-                                                        <!--end:Icon-->
-                                                        <!--begin:Info-->
-														<span class="d-flex flex-column">
-															<span class="fw-bolder fs-6">Angular</span>
-															<span class="fs-7 text-muted">Powerful data mangement</span>
-														</span>
-                                                        <!--end:Info-->
-													</span>
-                                                    <!--end:Label-->
-                                                    <!--begin:Input-->
-                                                    <span class="form-check form-check-custom form-check-solid">
-														<input class="form-check-input" type="radio" name="framework" value="3" />
-													</span>
-                                                    <!--end:Input-->
-                                                </label>
-                                                <!--end::Option-->
-                                                <!--begin:Option-->
-                                                <label class="d-flex flex-stack cursor-pointer">
-                                                    <!--begin:Label-->
-                                                    <span class="d-flex align-items-center me-2">
-														<!--begin:Icon-->
-														<span class="symbol symbol-50px me-6">
-															<span class="symbol-label bg-light-primary">
-																<i class="fab fa-vuejs text-primary fs-2x"></i>
-															</span>
-														</span>
-                                                        <!--end:Icon-->
-                                                        <!--begin:Info-->
-														<span class="d-flex flex-column">
-															<span class="fw-bolder fs-6">Vue</span>
-															<span class="fs-7 text-muted">Lightweight and responsive framework</span>
-														</span>
-                                                        <!--end:Info-->
-													</span>
-                                                    <!--end:Label-->
-                                                    <!--begin:Input-->
-                                                    <span class="form-check form-check-custom form-check-solid">
-														<input class="form-check-input" type="radio" name="framework" value="4" />
-													</span>
-                                                    <!--end:Input-->
-                                                </label>
-                                                <!--end::Option-->
-                                            </div>
-                                            <!--end::Input group-->
-                                        </div>
-                                    </div>
-                                    <!--end::Step 2-->
-                                    <!--begin::Step 3-->
-                                    <div data-kt-stepper-element="content">
-                                        <div class="w-100">
-                                            <!--begin::Input group-->
-                                            <div class="fv-row mb-10">
-                                                <!--begin::Label-->
-                                                <label class="required fs-5 fw-bold mb-2">Database Name</label>
-                                                <!--end::Label-->
-                                                <!--begin::Input-->
-                                                <input type="text" class="form-control form-control-lg form-control-solid" name="dbname" placeholder="" value="master_db" />
-                                                <!--end::Input-->
-                                            </div>
-                                            <!--end::Input group-->
-                                            <!--begin::Input group-->
-                                            <div class="fv-row">
-                                                <!--begin::Label-->
-                                                <label class="d-flex align-items-center fs-5 fw-bold mb-4">
-                                                    <span class="required">Select Database Engine</span>
-                                                    <i class="fas fa-exclamation-circle ms-2 fs-7" data-bs-toggle="tooltip" title="Select your app database engine"></i>
-                                                </label>
-                                                <!--end::Label-->
-                                                <!--begin:Option-->
-                                                <label class="d-flex flex-stack cursor-pointer mb-5">
-                                                    <!--begin::Label-->
-                                                    <span class="d-flex align-items-center me-2">
-														<!--begin::Icon-->
-														<span class="symbol symbol-50px me-6">
-															<span class="symbol-label bg-light-success">
-																<i class="fas fa-database text-success fs-2x"></i>
-															</span>
-														</span>
-                                                        <!--end::Icon-->
-                                                        <!--begin::Info-->
-														<span class="d-flex flex-column">
-															<span class="fw-bolder fs-6">MySQL</span>
-															<span class="fs-7 text-muted">Basic MySQL database</span>
-														</span>
-                                                        <!--end::Info-->
-													</span>
-                                                    <!--end::Label-->
-                                                    <!--begin::Input-->
-                                                    <span class="form-check form-check-custom form-check-solid">
-														<input class="form-check-input" type="radio" name="dbengine" checked="checked" value="1" />
-													</span>
-                                                    <!--end::Input-->
-                                                </label>
-                                                <!--end::Option-->
-                                                <!--begin:Option-->
-                                                <label class="d-flex flex-stack cursor-pointer mb-5">
-                                                    <!--begin::Label-->
-                                                    <span class="d-flex align-items-center me-2">
-														<!--begin::Icon-->
-														<span class="symbol symbol-50px me-6">
-															<span class="symbol-label bg-light-danger">
-																<i class="fab fa-google text-danger fs-2x"></i>
-															</span>
-														</span>
-                                                        <!--end::Icon-->
-                                                        <!--begin::Info-->
-														<span class="d-flex flex-column">
-															<span class="fw-bolder fs-6">Firebase</span>
-															<span class="fs-7 text-muted">Google based app data management</span>
-														</span>
-                                                        <!--end::Info-->
-													</span>
-                                                    <!--end::Label-->
-                                                    <!--begin::Input-->
-                                                    <span class="form-check form-check-custom form-check-solid">
-														<input class="form-check-input" type="radio" name="dbengine" value="2" />
-													</span>
-                                                    <!--end::Input-->
-                                                </label>
-                                                <!--end::Option-->
-                                                <!--begin:Option-->
-                                                <label class="d-flex flex-stack cursor-pointer">
-                                                    <!--begin::Label-->
-                                                    <span class="d-flex align-items-center me-2">
-														<!--begin::Icon-->
-														<span class="symbol symbol-50px me-6">
-															<span class="symbol-label bg-light-warning">
-																<i class="fab fa-amazon text-warning fs-2x"></i>
-															</span>
-														</span>
-                                                        <!--end::Icon-->
-                                                        <!--begin::Info-->
-														<span class="d-flex flex-column">
-															<span class="fw-bolder fs-6">DynamoDB</span>
-															<span class="fs-7 text-muted">Amazon Fast NoSQL Database</span>
-														</span>
-                                                        <!--end::Info-->
-													</span>
-                                                    <!--end::Label-->
-                                                    <!--begin::Input-->
-                                                    <span class="form-check form-check-custom form-check-solid">
-														<input class="form-check-input" type="radio" name="dbengine" value="3" />
-													</span>
-                                                    <!--end::Input-->
-                                                </label>
-                                                <!--end::Option-->
-                                            </div>
-                                            <!--end::Input group-->
-                                        </div>
-                                    </div>
-                                    <!--end::Step 3-->
-                                    <!--begin::Step 4-->
-                                    <div data-kt-stepper-element="content">
-                                        <div class="w-100">
-                                            <!--begin::Input group-->
-                                            <div class="d-flex flex-column mb-7 fv-row">
-                                                <!--begin::Label-->
-                                                <label class="d-flex align-items-center fs-6 fw-bold form-label mb-2">
-                                                    <span class="required">Name On Card</span>
-                                                    <i class="fas fa-exclamation-circle ms-2 fs-7" data-bs-toggle="tooltip" title="Specify a card holder's name"></i>
-                                                </label>
-                                                <!--end::Label-->
-                                                <input type="text" class="form-control form-control-solid" placeholder="" name="card_name" value="Max Doe" />
-                                            </div>
-                                            <!--end::Input group-->
-                                            <!--begin::Input group-->
-                                            <div class="d-flex flex-column mb-7 fv-row">
-                                                <!--begin::Label-->
-                                                <label class="required fs-6 fw-bold form-label mb-2">Card Number</label>
-                                                <!--end::Label-->
-                                                <!--begin::Input wrapper-->
-                                                <div class="position-relative">
-                                                    <!--begin::Input-->
-                                                    <input type="text" class="form-control form-control-solid" placeholder="Enter card number" name="card_number" value="4111 1111 1111 1111" />
-                                                    <!--end::Input-->
-                                                    <!--begin::Card logos-->
-                                                    <div class="position-absolute translate-middle-y top-50 end-0 me-5">
-                                                        <img src="assets/media/svg/card-logos/visa.svg" alt="" class="h-25px" />
-                                                        <img src="assets/media/svg/card-logos/mastercard.svg" alt="" class="h-25px" />
-                                                        <img src="assets/media/svg/card-logos/american-express.svg" alt="" class="h-25px" />
-                                                    </div>
-                                                    <!--end::Card logos-->
-                                                </div>
-                                                <!--end::Input wrapper-->
-                                            </div>
-                                            <!--end::Input group-->
-                                            <!--begin::Input group-->
-                                            <div class="row mb-10">
-                                                <!--begin::Col-->
-                                                <div class="col-md-8 fv-row">
-                                                    <!--begin::Label-->
-                                                    <label class="required fs-6 fw-bold form-label mb-2">Expiration Date</label>
-                                                    <!--end::Label-->
-                                                    <!--begin::Row-->
-                                                    <div class="row fv-row">
-                                                        <!--begin::Col-->
-                                                        <div class="col-6">
-                                                            <select name="card_expiry_month" class="form-select form-select-solid" data-control="select2" data-hide-search="true" data-placeholder="Month">
-                                                                <option></option>
-                                                                <option value="1">1</option>
-                                                                <option value="2">2</option>
-                                                                <option value="3">3</option>
-                                                                <option value="4">4</option>
-                                                                <option value="5">5</option>
-                                                                <option value="6">6</option>
-                                                                <option value="7">7</option>
-                                                                <option value="8">8</option>
-                                                                <option value="9">9</option>
-                                                                <option value="10">10</option>
-                                                                <option value="11">11</option>
-                                                                <option value="12">12</option>
-                                                            </select>
+
+<!--                                                <input type="text" class="form-control form-control-lg form-control-solid" name="name" placeholder="" value="" style="font-size: 22px" />-->
+                                                <div class="d-flex flex-stack py-5 border-bottom border-gray-300 border-bottom-dashed">
+                                                    <!--begin::Details-->
+                                                    <div class="d-flex align-items-center">
+                                                        <!--begin::Avatar-->
+
+                                                        <!--end::Avatar-->
+                                                        <!--begin::Details-->
+                                                        <div class="ms-6">
+
+                                                            <div class="fw-bold text-muted">{{fileImport.length}} new record(s)</div>
+                                                            <!--end::Email-->
                                                         </div>
-                                                        <!--end::Col-->
-                                                        <!--begin::Col-->
-                                                        <div class="col-6">
-                                                            <select name="card_expiry_year" class="form-select form-select-solid" data-control="select2" data-hide-search="true" data-placeholder="Year">
-                                                                <option></option>
-                                                                <option value="2021">2021</option>
-                                                                <option value="2022">2022</option>
-                                                                <option value="2023">2023</option>
-                                                                <option value="2024">2024</option>
-                                                                <option value="2025">2025</option>
-                                                                <option value="2026">2026</option>
-                                                                <option value="2027">2027</option>
-                                                                <option value="2028">2028</option>
-                                                                <option value="2029">2029</option>
-                                                                <option value="2030">2030</option>
-                                                                <option value="2031">2031</option>
-                                                            </select>
-                                                        </div>
-                                                        <!--end::Col-->
+                                                        <!--end::Details-->
                                                     </div>
-                                                    <!--end::Row-->
-                                                </div>
-                                                <!--end::Col-->
-                                                <!--begin::Col-->
-                                                <div class="col-md-4 fv-row">
-                                                    <!--begin::Label-->
-                                                    <label class="d-flex align-items-center fs-6 fw-bold form-label mb-2">
-                                                        <span class="required">CVV</span>
-                                                        <i class="fas fa-exclamation-circle ms-2 fs-7" data-bs-toggle="tooltip" title="Enter a card CVV code"></i>
-                                                    </label>
-                                                    <!--end::Label-->
-                                                    <!--begin::Input wrapper-->
-                                                    <div class="position-relative">
-                                                        <!--begin::Input-->
-                                                        <input type="text" class="form-control form-control-solid" minlength="3" maxlength="4" placeholder="CVV" name="card_cvv" />
-                                                        <!--end::Input-->
-                                                        <!--begin::CVV icon-->
-                                                        <div class="position-absolute translate-middle-y top-50 end-0 me-3">
-                                                            <!--begin::Svg Icon | path: icons/duotune/finance/fin002.svg-->
-                                                            <span class="svg-icon svg-icon-2hx">
-																<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-																	<path d="M22 7H2V11H22V7Z" fill="black" />
-																	<path opacity="0.3" d="M21 19H3C2.4 19 2 18.6 2 18V6C2 5.4 2.4 5 3 5H21C21.6 5 22 5.4 22 6V18C22 18.6 21.6 19 21 19ZM14 14C14 13.4 13.6 13 13 13H5C4.4 13 4 13.4 4 14C4 14.6 4.4 15 5 15H13C13.6 15 14 14.6 14 14ZM16 15.5C16 16.3 16.7 17 17.5 17H18.5C19.3 17 20 16.3 20 15.5C20 14.7 19.3 14 18.5 14H17.5C16.7 14 16 14.7 16 15.5Z" fill="black" />
-																</svg>
-															</span>
-                                                            <!--end::Svg Icon-->
+                                                    <!--end::Details-->
+                                                    <!--begin::Stats-->
+                                                    <div class="d-flex">
+                                                        <!--begin::Sales-->
+                                                        <div class="text-end">
+                                                          	<span class="form-check form-check-custom form-check-solid">
+																					<input class="form-check-input" type="radio" name="category" :value="fileImport" v-model="fileImport"/>
+                                                                <label style="margin: 0px 10px 0px">Import</label>
+                                                                <input class="form-check-input" type="radio" name="category" value="1" v-model="doNotImport"/>
+                                                                <label style="margin: 0px 10px 0px">Do not import</label>
+																				</span>
+
                                                         </div>
-                                                        <!--end::CVV icon-->
+                                                        <!--end::Sales-->
+                                                    <!--end::Stats-->
+                                                </div>
+                                            </div>
+
+                                            </div>
+
+                                            <div class="d-flex flex-stack py-5 border-bottom border-gray-300 border-bottom-dashed">
+                                                <!--begin::Details-->
+                                                <div class="d-flex align-items-center">
+                                                    <!--begin::Avatar-->
+
+                                                    <!--end::Avatar-->
+                                                    <!--begin::Details-->
+                                                    <div class="ms-6">
+
+                                                        <div class="fw-bold text-muted">{{deviceError.length}} error record(s)</div>
+                                                        <!--end::Email-->
                                                     </div>
-                                                    <!--end::Input wrapper-->
+                                                    <!--end::Details-->
                                                 </div>
-                                                <!--end::Col-->
-                                            </div>
-                                            <!--end::Input group-->
-                                            <!--begin::Input group-->
-                                            <div class="d-flex flex-stack">
-                                                <!--begin::Label-->
-                                                <div class="me-5">
-                                                    <label class="fs-6 fw-bold form-label">Save Card for further billing?</label>
-                                                    <div class="fs-7 fw-bold text-muted">If you need more info, please check budget planning</div>
+                                                <!--end::Details-->
+                                                <!--begin::Stats-->
+                                                <div class="d-flex">
+                                                    <!--begin::Sales-->
+                                                    <div class="text-end">
+                                                        <div class="fs-7 text-muted"><a :href="validateFile" type="button" class="btn btn-primary">Export</a></div>
+                                                    </div>
+                                                    <!--end::Sales-->
                                                 </div>
-                                                <!--end::Label-->
-                                                <!--begin::Switch-->
-                                                <label class="form-check form-switch form-check-custom form-check-solid">
-                                                    <input class="form-check-input" type="checkbox" value="1" checked="checked" />
-                                                    <span class="form-check-label fw-bold text-muted">Save Card</span>
-                                                </label>
-                                                <!--end::Switch-->
+                                                <!--end::Stats-->
                                             </div>
-                                            <!--end::Input group-->
-                                        </div>
-                                    </div>
-                                    <!--end::Step 4-->
-                                    <!--begin::Step 5-->
-                                    <div data-kt-stepper-element="content">
-                                        <div class="w-100 text-center">
-                                            <!--begin::Heading-->
-                                            <h1 class="fw-bolder text-dark mb-3">Release!</h1>
-                                            <!--end::Heading-->
-                                            <!--begin::Description-->
-                                            <div class="text-muted fw-bold fs-3">Submit your app to kickstart your project.</div>
-                                            <!--end::Description-->
-                                            <!--begin::Illustration-->
-                                            <div class="text-center px-4 py-15">
-                                                <img src="assets/media/illustrations/sketchy-1/9.png" alt="" class="mw-100 mh-300px" />
                                             </div>
-                                            <!--end::Illustration-->
-                                        </div>
+
                                     </div>
-                                    <!--end::Step 5-->
-                                    <!--begin::Actions-->
+
                                     <div class="d-flex flex-stack pt-10">
                                         <!--begin::Wrapper-->
                                         <div class="me-2">
@@ -675,7 +488,7 @@
                                                 <span class="indicator-progress">Please wait...
 												<span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
                                             </button>
-                                            <button type="button" class="btn btn-lg btn-primary" data-kt-stepper-action="next">Continue
+                                            <button type="button" class="btn btn-lg btn-primary" data-kt-stepper-action="next" @click="saveImport">Continue
                                                 <!--begin::Svg Icon | path: icons/duotune/arrows/arr064.svg-->
                                                 <span class="svg-icon svg-icon-3 ms-1 me-0">
 												<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
@@ -700,7 +513,10 @@
                 <!--end::Modal content-->
             </div>
             <!--end::Modal dialog-->
+
+
         </div>
+
 
     </div>
 
@@ -709,14 +525,20 @@
 </template>
 
 <script>
-    import {$post} from "../../utils";
+    import {$post, forEach} from "../../utils";
     import ActionBar from "../includes/ActionBar";
+    import $router from "../../lib/SimpleRouter";
 
     export default {
         name: "PlanEdit.vue",
         components: {ActionBar},
         data() {
             return {
+                doNotImport:'',
+                deviceError:[],
+                code:0,
+                validateFile:'',
+                fileImport:[],
                 deviceName:'',
                 deviceUid:'',
                 idRoleIt:$json.idRoleIt,
@@ -761,6 +583,100 @@
                     }
 
                 }
+            },
+            async saveValidateImportDevice()
+            {
+                this.errors = {};
+
+                if(this.$refs.uploader.files)
+                {
+                    const files = this.$refs.uploader.files;
+                    const formData = new FormData();
+                    formData.append('_token', window.$csrf)
+                    forEach(files, (v, k) => {
+                        formData.append(k, v);
+                    });
+
+                    for (let i = 0; i < files.length; i++) {
+                        formData.append('file_' + i, files[i]);
+                    }
+
+                    $('#overlay').show();
+                    let res = await fetch('/xadmin/plans/validateImportDevice', {
+                        method: 'POST',
+                        body: formData
+                    })
+
+                        .then((response) => response.json())
+                        .catch((error) => {
+                            console.error('Error:', error);
+                        });
+                    if(res.code==2)
+                    {
+                        this.deviceError=res.deviceError;
+                        this.code=res.code;
+                        this.validateFile=res.fileError;
+                        console.log(this.validateFile);
+                        this.fileImport=res.fileImport;
+
+                    }
+                    if(res.code==1)
+                    {
+                        this.code=res.code;
+                        this.fileImport=res.fileImport;
+
+                    }
+
+
+                    if (res.code) {
+                        this.errors = res.errors;
+                    } else {
+                        $('#uploadApp').modal('hide');
+                        this.model = {
+                            type: ''
+                        }
+                        this.$refs.uploader.value = null;
+                        $router.on('/', this.load).init();
+                        toastr.success(res.message);
+                    }
+                }
+                else {
+                    console.log('trung');
+                }
+
+            },
+            async saveImport() {
+
+                if(this.doNotImport=='')
+                {
+                    {
+                        this.$loading(true);
+                        const res = await $post('/xadmin/plans/import', {
+                            fileImport:this.fileImport,
+                            entry: this.entry,
+                            doNotImport:this.doNotImport
+                        }, false);
+                        this.$loading(false);
+                        if (res.code) {
+                            toastr.error(res.message);
+                        } else {
+                            this.errors = {};
+                            toastr.success(res.message);
+                            location.replace('/xadmin/plans/index');
+
+
+                        }
+
+                    }
+                }
+                if(this.doNotImport==1)
+                {
+                    location.replace('/xadmin/plans/index');
+
+                }
+
+
+
             },
             async saveDevice() {
                 this.isLoading = true;

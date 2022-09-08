@@ -3,18 +3,24 @@
 namespace App\Http\Controllers\Admin;
 
 
+use App\Exports\DeviceErrorExport;
+use App\Imports\DeviceImport;
+use App\Models\File;
 use App\Models\UserDevice;
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Validator;
 use App\Models\Plan;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
+use Maatwebsite\Excel\Facades\Excel;
 use phpseclib3\Crypt\Random;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
@@ -272,6 +278,219 @@ class PlansController extends AdminBaseController
 
 
     }
+    public function validateImportDevice(Request $req)
+    {
+        {
+            if (!$req->isMethod('POST')) {
+                return ['code' => 405, 'message' => 'Method not allow'];
+            }
+
+
+            $rules = [
+
+            ];
+
+            $v = Validator::make($req->all(), $rules);
+
+            if ($v->fails()) {
+                return [
+                    'code' => 2,
+                    'errors' => $v->errors()
+                ];
+            }
+
+            //Upload File
+            $file0 = $_FILES['file_0'];
+
+            $y = date('Y');
+            $m = date('m');
+
+            $allowed = [
+                'xls', 'xlsx'
+            ];
+
+
+            $info = pathinfo($file0['name']);
+            $extension = strtolower($info['extension']);
+
+            if (!in_array($extension, $allowed)) {
+                return [
+                    'code' => 3,
+                    'message' => 'Extension: ' . $extension . ' is now allowed'
+                ];
+            }
+
+            $dir = public_path("uploads/excel_import/{$y}/{$m}");
+            if (!is_dir($dir)) {
+                mkdir($dir, 0755, true);
+            }
+
+            $info = pathinfo($file0['name']);
+            $extension = strtolower($info['extension']);
+
+            $hash = sha1(uniqid());
+            $newFilePath = $dir . '/' . $hash . '.' . $extension;
+            $ok = move_uploaded_file($file0['tmp_name'], $newFilePath);
+            $newUrl = url("/uploads/excel_import/{$y}/{$m}/{$hash}.{$extension}");
+            $sheets = Excel::toCollection(new DeviceImport(), "{$y}/{$m}/{$hash}.{$extension}", 'excel-import');
+            $deviceLists[] = $sheets;
+            $validations = [];
+            $error = [];
+            $code = 0;
+            foreach ($deviceLists as $deviceList) {
+
+                foreach ($deviceList as $device) {
+                    foreach ($device as $key => $dev) {
+                        if($key>0)
+                        {
+                            $item = [];
+                            $item['device_name'] = $dev[0];
+                            $item['type'] = $dev[1];
+                            $item['device_uid'] = $dev[2];
+                            try {
+                                $decoded = JWT::decode( $item['device_uid'], new Key(env('SECRET_KEY'), 'HS256'));
+                               $item['device_uid']=$decoded->device_uid;
+                            }catch (\Exception $e)
+                            {
+
+                            }
+                            $item['status'] = $dev[3];
+                            $validator = Validator::make($item, [
+                                'device_name' => ['required',Rule::unique('user_devices','device_name')],
+                                'device_uid' => ['required',Rule::unique('user_devices','device_uid')],
+                                'type' => 'required',
+                                'status' => 'required',
+                            ]);
+
+                            if ($validator->fails()) {
+                                $item['error'] = $validator->errors()->messages();
+                                $code = 2;//Có lỗi
+                            }
+                            $validations[] = $item;
+
+                        }
+                    }
+                }
+                $fileError = [];
+                $fileImport=[];
+                if ($code == 2) {
+                    //export
+                    foreach ($validations as $validation) {
+                        if (@$validation['error']) {
+                                    $fileError[] =[
+                                        'device_name'=>$validation['device_name'],
+                                        'type'=>$validation['type'],
+                                        'device_uid'=>'',
+                                        'status'=>$validation['status'],
+                                        'error'=>$validation['error'],
+                                    ];
+                                }
+                        else
+                        {
+                            $fileImport[]=$validation;
+                        }
+                    }
+                    Excel::store(new DeviceErrorExport($fileError), "{$y}/{$m}/{$hash}.{$extension}", 'excel-export');
+
+                    $file = new File();
+                    $file->type = $file0['type'];
+                    $file->hash = sha1($newFilePath);
+                    $file->url = $newUrl;
+                    $file->is_image = 0;
+                    $file->is_excel = 1;
+                    $file->size = $file0['size'];
+                    $file->name = $info['filename'];
+                    $file->path = $newFilePath;
+                    $file->extension = $extension;
+                    $file->save();
+                    return [
+                        'code'=>2,
+                        'deviceError'=>$fileError,
+                        'fileImport'=>$fileImport,
+                        'fileError' => url("exports/{$y}/{$m}/{$hash}.{$extension}"),
+
+                    ];
+
+                }
+                else{
+                    return [
+                        'code'=>1,
+                        'fileImport'=>$validations,
+                    ];
+
+                }
+
+            }
+
+        }
+    }
+    public function import(Request $req)
+    {
+        $dataImport=$req->all();
+        $data = $req->get('entry');
+
+        if (!$req->isMethod('POST')) {
+            return ['code' => 405, 'message' => 'Method not allow'];
+        }
+
+
+        $rules = [
+        ];
+
+        $v = Validator::make($data, $rules);
+
+        if ($v->fails()) {
+            return [
+                'code' => 2,
+                'errors' => $v->errors()
+            ];
+        }
+
+        /**
+         * @var  Plan $entry
+         */
+
+        if (isset($data['id'])) {
+            $entry = Plan::find($data['id']);
+            if (!$entry) {
+                return [
+                    'code' => 3,
+                    'message' => 'Không tìm thấy',
+                ];
+            }
+            $user=Auth::user();
+            if(@$dataImport['fileImport'] )
+            {
+                foreach ($dataImport['fileImport'] as $import)
+                {
+                    $device=new UserDevice();
+                    $device->device_name=$import['device_name'];
+                    $device->type=$import['type'];
+                    $device->device_uid=$import['device_uid'];
+                    $device->status=$import['status'];
+                    $device->secret_key=Str::random(10);
+                    $device->plan_id=$entry->id;
+                    $device->user_id=$user->id;
+                    $device->save();
+
+
+                }
+                return [
+                    'code' => 0,
+                    'message' => 'Đã cập nhật',
+                ];
+            }
+
+
+        }
+
+
+
+
+
+
+
+    }
 
     /**
     * @param  Request $req
@@ -345,6 +564,7 @@ class PlansController extends AdminBaseController
             'paginate' => [
                 'currentPage' => $entries->currentPage(),
                 'lastPage' => $entries->lastPage(),
+                'totalRecord' => $entries->count(),
             ]
         ];
     }
