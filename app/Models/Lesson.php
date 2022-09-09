@@ -55,4 +55,9 @@ class Lesson extends BaseModel
     {
         return $this->hasMany(UserUnit::class,'unit_id','unit_id');
     }
+    public function lessonPlan()
+    {
+        return $this->hasMany(PlanLesson::class,'lesson_id');
+
+    }
 }

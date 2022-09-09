@@ -5,7 +5,10 @@ namespace App\Http\Controllers\Admin;
 
 use App\Exports\DeviceErrorExport;
 use App\Imports\DeviceImport;
+use App\Models\AllocationContentSchool;
 use App\Models\File;
+use App\Models\Lesson;
+use App\Models\PlanLesson;
 use App\Models\UserDevice;
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
@@ -83,7 +86,7 @@ class PlansController extends AdminBaseController
     */
     public function edit (Request $req) {
         $id = $req->id;
-        $entry = Plan::find($id);
+        $entry = Plan::with(['lessons','planLesson'])->find($id);
         $users=User::query()->with(['roles'])->orderBy('id','ASC')->get();
         $roleIt=[];
         foreach($users as $user)
@@ -109,6 +112,14 @@ class PlansController extends AdminBaseController
         $component = 'PlanEdit';
 
         $idRoleIt=$entry->user_id;
+        $lessonIds=[];
+        foreach ($entry->lessons as $lesson)
+        {
+
+            $lessonIds[]=$lesson->id;
+        }
+
+
 
         $devices=UserDevice::query()->with(['users'])->where('plan_id','=',$entry->id)->orderBy('created_at','ASC')->get();
 
@@ -140,6 +151,7 @@ class PlansController extends AdminBaseController
 
         }
         $jsonData = [
+            'lessonIds'=>$lessonIds,
             'idRoleIt' => $idRoleIt,
             'entry'=>$entry,
             'roleIt'=>$roleIt,
@@ -268,7 +280,11 @@ class PlansController extends AdminBaseController
                 ];
             }
                 $device = new UserDevice();
+            if(@$dataRole['deviceName'])
+            {
                 $device->device_name=$dataRole['deviceName'];
+
+            }
             try {
                 $decoded = JWT::decode($dataRole['deviceUid'], new Key(env('SECRET_KEY'), 'HS256'));
                 $device->device_uid=$decoded->device_uid;
@@ -511,15 +527,60 @@ class PlansController extends AdminBaseController
                     'message' => 'Đã cập nhật',
                 ];
             }
-
-
         }
 
+    }
+    public function planLesson(Request $req)
+    {
+        $dataLesson=$req->all();
+        if (!$req->isMethod('POST')) {
+            return ['code' => 405, 'message' => 'Method not allow'];
+        }
 
+        $data = $req->get('entry');
 
+        $rules = [
+            'name' => 'max:255',
+            'created_by' => 'numeric',
+            'due_at' => 'date_format:Y-m-d H:i:s',
+        ];
 
+        $v = Validator::make($data, $rules);
 
+        if ($v->fails()) {
+            return [
+                'code' => 2,
+                'errors' => $v->errors()
+            ];
+        }
 
+        /**
+         * @var  Plan $entry
+         */
+        if (isset($data['id'])) {
+            $entry = Plan::find($data['id']);
+            if (!$entry) {
+                return [
+                    'code' => 3,
+                    'message' => 'Không tìm thấy',
+                ];
+            }
+
+            if(@$dataLesson['lessonIds'])
+            {
+               PlanLesson::where('plan_id',$entry->id)->delete();
+                foreach ($dataLesson['lessonIds'] as $lesson)
+                {
+
+                    PlanLesson::create(['plan_id'=>$entry->id,'lesson_id'=>$lesson]);
+
+                }
+            }
+            return [
+                'code' => 0,
+                'message' => 'Đã cập nhật',
+            ];
+        }
 
     }
 
@@ -596,6 +657,91 @@ class PlansController extends AdminBaseController
                 'currentPage' => $entries->currentPage(),
                 'lastPage' => $entries->lastPage(),
                 'totalRecord' => $entries->count(),
+            ]
+        ];
+    }
+    public function dataLesson(Request $req)
+    {
+        $user = Auth::user();
+        $unitIds = [];
+        $schoolId = $user->school_id;
+        $isSuperAdmin = 0;
+        $isLesson = 0;
+
+
+        foreach ($user->roles as $role) {
+            if ($role->role_name == 'Teacher') {
+                if ($user->user_units) {
+                    foreach ($user->user_units as $unit) {
+                        $unitIds[] = $unit->unit_id;
+                    }
+                }
+
+            }
+            if ($role->role_name == 'School Admin') {
+                $contents = AllocationContentSchool::where('school_id', $schoolId)
+                    ->with(['allocation_content', 'allocation_content.units'])
+                    ->get();
+                foreach ($contents as $content) {
+                    if (@$content->allocation_content->units) {
+                        foreach ($content->allocation_content->units as $unit) {
+                            $unitIds[] = $unit->id;
+                        }
+
+                    }
+                }
+            }
+
+            if ($role->role_name == 'Super Administrator') {
+                $isSuperAdmin = 1;
+            }
+
+        }
+
+        $query = Lesson::query()->orderBy('id', 'ASC');
+
+
+//        $query->whereHas('planLesson', function ($q) use ($req) {
+//            $q->where('lesson_id','=',);
+//
+//        });
+
+        if ($req->keyword) {
+            $query->where('name', 'LIKE', '%' . $req->keyword . '%');
+        }
+        if ($req->name) {
+            $query->where('name', $req->name);
+        }
+        if ($req->subject) {
+            $query->where('subject', $req->subject);
+
+        }
+
+        if ($req->grade) {
+            $query->where('grade', $req->grade);
+        }
+
+        if ($req->enabled != '') {
+            $query->where('enabled', $req->enabled);
+        }
+
+        $query->createdIn($req->created);
+
+        $limit = 25;
+
+        if ($req->limit) {
+            $limit = $req->limit;
+        }
+
+        $entries = $query->paginate($limit);
+
+        return [
+            'code' => 0,
+            'data' => $entries->items(),
+            'paginate' => [
+                'currentPage' => $entries->currentPage(),
+                'lastPage' => $entries->lastPage(),
+                'totalRecord' => $query->count(),
             ]
         ];
     }

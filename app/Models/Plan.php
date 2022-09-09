@@ -23,4 +23,12 @@ class Plan extends BaseModel
     'plan_description',
     'user_id',
 ];
+    public function lessons()
+    {
+        return $this->belongsToMany(Lesson::class, 'plan_lessons');
+    }
+    public function planLesson()
+    {
+        return $this->hasMany(PlanLesson::class,'plan_id');
+    }
 }

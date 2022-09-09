@@ -107,7 +107,7 @@
                                         </div>
                                         <div class="form-group col-lg-2">
                                             <label>Subject </label>
-                                            <select required class="form-control form-select" v-model="filter.subject">
+                                            <select required class="form-control form-select" v-model="filter.subject" @keydown.enter="doFilter('subject', filter.subject, $event)">
                                                 <option value="" disabled selected>Choose Subject</option>
                                                 <option value="0">All</option>
                                                 <option value="Math">Math</option>
@@ -117,7 +117,7 @@
                                         </div>
                                         <div class="form-group col-lg-2">
                                             <label>Grade </label>
-                                            <select required class="form-control form-select" v-model="filter.grade">
+                                            <select required class="form-control form-select" v-model="filter.grade" @keydown.enter="doFilter('grade', filter.grade, $event)">
                                                 <option value="" disabled selected>Choose Grade</option>
                                                 <option value="0">All</option>
                                                 <option value="1">1</option>

@@ -132,6 +132,271 @@
                 </div>
 
             </div>
+            <div class="modal fade" id="kt_modal_invite" tabindex="-1" aria-hidden="true">
+                <!--begin::Modal dialog-->
+                <div class="modal-dialog " style="width: 1000px">
+                    <!--begin::Modal content-->
+                    <div class="modal-content" style="width: max-content;margin: 0px -150px 0px">
+                        <!--begin::Modal header-->
+                        <div class="modal-header pb-0 border-0 justify-content-end">
+                            <!--begin::Close-->
+                            <div class="btn btn-sm btn-icon btn-active-color-primary" data-bs-dismiss="modal">
+                                <!--begin::Svg Icon | path: icons/duotune/arrows/arr061.svg-->
+                                <span class="svg-icon svg-icon-1">
+														<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+															<rect opacity="0.5" x="6" y="17.3137" width="16" height="2" rx="1" transform="rotate(-45 6 17.3137)" fill="black" />
+															<rect x="7.41422" y="6" width="16" height="2" rx="1" transform="rotate(45 7.41422 6)" fill="black" />
+														</svg>
+													</span>
+                                <!--end::Svg Icon-->
+                            </div>
+                            <!--end::Close-->
+                        </div>
+                        <!--begin::Modal header-->
+                        <!--begin::Modal body-->
+                        <div class="modal-body scroll-y mx-5 mx-xl-18 pt-0 pb-15" >
+                            <!--begin::Heading-->
+                            <div class="text-center mb-13">
+                                <!--begin::Title-->
+                                <h1 class="mb-3">Lesson package</h1>
+                            </div>
+                            <div class="d-flex">
+
+                                        <div  class="h-15px me-3">
+                                            <label>Name </label>
+                                            <input  v-model="filter.name" @keydown.enter="doFilter('name', filter.name, $event)"
+                                                class="form-control" placeholder="Enter the lesson name"
+                                            />
+                                        </div>
+                                        <div  class="h-15px me-3">
+                                            <label>Subject </label>
+                                            <select required class="form-control form-select" v-model="filter.subject" @keydown.enter="doFilter('subject', filter.subject, $event)">
+                                                <option value="" disabled selected>Choose Subject</option>
+                                                <option value="0">All</option>
+                                                <option value="Math">Math</option>
+                                                <option value="Science ">Science</option>
+                                            </select>
+
+                                        </div>
+                                        <div  class="h-15px me-3">
+                                            <label>Grade </label>
+                                            <select required class="form-control form-select" v-model="filter.grade"  @keydown.enter="doFilter('grade', filter.grade, $event)">
+                                                <option value="" disabled selected>Choose Grade</option>
+                                                <option value="0">All</option>
+                                                <option value="1">1</option>
+                                                <option value="2">2</option>
+                                                <option value="3">3</option>
+                                                <option value="4">4</option>
+                                                <option value="5">5</option>
+                                                <option value="6">6</option>
+                                                <option value="7">7</option>
+                                                <option value="8">8</option>
+                                                <option value="9">9</option>
+                                            </select>
+                                        </div>
+
+                            </div>
+
+                            <div class="d-flex" style="margin: 64px 0px 0px">
+
+                                <div class="mh-300px scroll-y me-n7 pe-7">
+                                    <table class="table table-row-bordered align-middle gy-4 gs-9">
+                                        <thead class="border-bottom border-gray-200 fs-6 text-gray-600 fw-bolder bg-light bg-opacity-75">
+                                        <tr>
+                                            <td width = "25">
+                                                <div class="form-check form-check-sm form-check-custom form-check-solid">
+                                                    <input class="form-check-input" type="checkbox" v-model="allSelected" @change="selectAll()">
+                                                </div>
+                                            </td>
+                                            <th class="">Name of lesson</th>
+                                            <th class="">Grade</th>
+                                            <th class="">Subject</th>
+
+
+                                            <th></th>
+                                        </tr>
+                                        </thead>
+                                        <tbody >
+
+                                        <tr  v-for="lesson in entries">
+                                            <td class="">
+                                                <div class="form-check form-check-sm form-check-custom form-check-solid">
+                                                    <input class="form-check-input" type="checkbox" v-model="lessonIds" :value="lesson.id" @change="updateCheckAll">
+                                                </div>
+                                            </td>
+                                            <td class="" v-text="lesson.name"></td>
+                                            <td class="" v-text="lesson.grade" ></td>
+                                            <td class="" v-text="lesson.subject"></td>
+
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                    <div class="d-flex pl-9 pr-9 mb-8">
+                                        <div class="col-sm-12 col-md-5 d-flex align-items-center justify-content-center justify-content-md-start">
+                                            <!--<div class="mr-2">
+                                                <label>Records per page:</label>
+                                            </div>-->
+                                            <div>
+                                                <select class="form-select form-select-sm form-select-solid" v-model="limit" @change="changeLimit" >
+                                                    <option value="25">25</option>
+                                                    <option value="50">50</option>
+                                                    <option value="100">100</option>
+
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <!--<div style="float: right; margin: 10px">-->
+                                        <div class="col-sm-12 col-md-7 d-flex align-items-center justify-content-center justify-content-md-end">
+                                            <div class="dataTables_paginate paging_simple_numbers" id="kt_customers_table_paginate1">
+                                                <Paginate :value="paginate" :pagechange="onPageChange"></Paginate>
+
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                            </div>
+                            <div class="d-flex justify-content-end">
+                                <button class="btn btn-primary" style="margin: 20px 0px 0px" @click="addLesson">Confirm</button>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+            <div class="modal fade" id="kt_modal" tabindex="-1" aria-hidden="true">
+                <!--begin::Modal dialog-->
+                <div class="modal-dialog " style="width: 1000px">
+                    <!--begin::Modal content-->
+                    <div class="modal-content" style="width: max-content;margin: 0px -150px 0px">
+                        <!--begin::Modal header-->
+                        <div class="modal-header pb-0 border-0 justify-content-end">
+                            <!--begin::Close-->
+                            <div class="btn btn-sm btn-icon btn-active-color-primary" data-bs-dismiss="modal">
+                                <!--begin::Svg Icon | path: icons/duotune/arrows/arr061.svg-->
+                                <span class="svg-icon svg-icon-1">
+														<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+															<rect opacity="0.5" x="6" y="17.3137" width="16" height="2" rx="1" transform="rotate(-45 6 17.3137)" fill="black" />
+															<rect x="7.41422" y="6" width="16" height="2" rx="1" transform="rotate(45 7.41422 6)" fill="black" />
+														</svg>
+													</span>
+                                <!--end::Svg Icon-->
+                            </div>
+                            <!--end::Close-->
+                        </div>
+                        <!--begin::Modal header-->
+                        <!--begin::Modal body-->
+                        <div class="modal-body scroll-y mx-5 mx-xl-18 pt-0 pb-15" >
+                            <!--begin::Heading-->
+                            <div class="text-center mb-13">
+                                <!--begin::Title-->
+                                <h1 class="mb-3">Lesson package</h1>
+                            </div>
+                            <div class="d-flex">
+
+                                <div  class="h-15px me-3">
+                                    <label>Name </label>
+                                    <input  v-model="filter.name" @keydown.enter="doFilter('name', filter.name, $event)"
+                                            class="form-control" placeholder="Enter the lesson name"
+                                    />
+                                </div>
+                                <div  class="h-15px me-3">
+                                    <label>Subject </label>
+                                    <select required class="form-control form-select" v-model="filter.subject" @keydown.enter="doFilter('subject', filter.subject, $event)">
+                                        <option value="" disabled selected>Choose Subject</option>
+                                        <option value="0">All</option>
+                                        <option value="Math">Math</option>
+                                        <option value="Science ">Science</option>
+                                    </select>
+
+                                </div>
+                                <div  class="h-15px me-3">
+                                    <label>Grade </label>
+                                    <select required class="form-control form-select" v-model="filter.grade"  @keydown.enter="doFilter('grade', filter.grade, $event)">
+                                        <option value="" disabled selected>Choose Grade</option>
+                                        <option value="0">All</option>
+                                        <option value="1">1</option>
+                                        <option value="2">2</option>
+                                        <option value="3">3</option>
+                                        <option value="4">4</option>
+                                        <option value="5">5</option>
+                                        <option value="6">6</option>
+                                        <option value="7">7</option>
+                                        <option value="8">8</option>
+                                        <option value="9">9</option>
+                                    </select>
+                                </div>
+
+                            </div>
+
+                            <div class="d-flex" style="margin: 64px 0px 0px">
+
+                                <div class="mh-300px scroll-y me-n7 pe-7">
+                                    <table class="table table-row-bordered align-middle gy-4 gs-9">
+                                        <thead class="border-bottom border-gray-200 fs-6 text-gray-600 fw-bolder bg-light bg-opacity-75">
+                                        <tr>
+
+                                            <th class="">Name of lesson</th>
+                                            <th class="">Grade</th>
+                                            <th class="">Subject</th>
+
+
+                                            <th></th>
+                                        </tr>
+                                        </thead>
+                                        <tbody v-for="lessonId in lessonIds">
+
+                                        <tr  v-for="lesson in entries"  v-if="lesson.id==lessonId">
+
+                                            <td class="" v-text="lesson.name"></td>
+                                            <td class="" v-text="lesson.grade" ></td>
+                                            <td class="" v-text="lesson.subject"></td>
+
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                    <div class="d-flex pl-9 pr-9 mb-8">
+                                        <div class="col-sm-12 col-md-5 d-flex align-items-center justify-content-center justify-content-md-start">
+                                            <!--<div class="mr-2">
+                                                <label>Records per page:</label>
+                                            </div>-->
+                                            <div>
+                                                <select class="form-select form-select-sm form-select-solid" v-model="limit" @change="changeLimit" >
+                                                    <option value="25">25</option>
+                                                    <option value="50">50</option>
+                                                    <option value="100">100</option>
+
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <!--<div style="float: right; margin: 10px">-->
+                                        <div class="col-sm-12 col-md-7 d-flex align-items-center justify-content-center justify-content-md-end">
+                                            <div class="dataTables_paginate paging_simple_numbers" id="kt_customers_table_paginate2">
+                                                <Paginate :value="paginate" :pagechange="onPageChange"></Paginate>
+
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                            </div>
+                            <div class="d-flex justify-content-end">
+                                <button class="btn btn-primary" style="margin: 20px 0px 0px" @click="addLesson">Confirm</button>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
 
             <div class="col-lg-12">
                 <div class="card card-custom card-stretch gutter-b">
@@ -190,7 +455,7 @@
                                         <label>Devices <span class="text-danger">*</span></label>
                                         <div class="card-header  border border-dashed border-gray-300">
                                             <!--begin::Card title-->
-                                            <div class="card-title">
+                                            <div class="card-title" style="font-size: 15px">
                                                 <div  class="fw-bold text-muted" >{{data.length}} device(s) added</div>
                                             </div>
                                             <!--end::Card title-->
@@ -219,8 +484,8 @@
                                         <!--begin::Card toolbar-->
                                         <div class="card-toolbar">
                                             <button class="btn btn-primary">Download package</button>
-                                            <button class="btn btn-primary" style="margin: 0px 15px 0px">View lessons</button>
-                                            <button class="btn btn-primary">Add lesson</button>
+                                            <button class="btn btn-primary" style="margin: 0px 15px 0px" data-bs-toggle="modal" data-bs-target="#kt_modal" >View lessons</button>
+                                            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#kt_modal_invite" >Add lesson</button>
                                         </div>
                                         <!--end::Card toolbar-->
                                     </div>
@@ -523,15 +788,28 @@
 </template>
 
 <script>
-    import {$get, $post, forEach} from "../../utils";
+    import {$get, $post, forEach, getTimeRangeAll} from "../../utils";
     import ActionBar from "../includes/ActionBar";
     import $router from "../../lib/SimpleRouter";
+    let created = getTimeRangeAll();
+    const $q = $router.getQuery();
 
     export default {
         name: "PlanEdit.vue",
         components: {ActionBar},
         data() {
+            let filter = {
+                keyword: $q.keyword || '',
+                name:$q.name||'',
+                subject: $q.subject || '',
+                grade: $q.grade || '',
+            };
+
             return {
+                lessonIds: $json.lessonIds || [],
+                allSelected: false,
+                filter: filter,
+                entries:[],
                 doNotImport:'',
                 deviceError:[],
                 code:0,
@@ -553,8 +831,19 @@
                 entry: $json.entry || {},
                 data:$json.data || [],
                 isLoading: false,
-                errors: {}
+                errors: {},
+                limit: $q.limit || 25,
+                from: 0,
+                to: 0,
+                paginate: {
+                    currentPage: 1,
+                    lastPage: 1,
+                    totalRecord: 0
+                },
             }
+        },
+        mounted() {
+            $router.on('/', this.load).init();
         },
 
         methods: {
@@ -676,6 +965,39 @@
 
 
             },
+            changeLimit() {
+                let params = $router.getQuery();
+                params['page'] = 1;
+                params['limit'] = this.limit;
+                $router.setQuery(params)
+            },
+            selectAll() {
+                if (this.allSelected) {
+                    const selected = this.entries.map((u) => u.id);
+                    this.lessonIds = selected;
+                    this.lessons = this.entries
+                } else {
+                    this.lessonIds = [];
+                    this.lessons = [];
+                }
+
+            },
+            updateCheckAll() {
+                this.lessons = [];
+                if (this.lessonIds.length === this.entries.length) {
+                    this.allSelected = true;
+                } else {
+                    this.allSelected = false;
+                }
+                let self = this;
+                self.lessonIds.forEach(function (e) {
+                    self.entries.forEach(function (e1) {
+                        if (e1.id == e) {
+                            self.lessons.push(e1);
+                        }
+                    })
+                })
+            },
             async saveDevice() {
                 this.isLoading = true;
                 const res = await $post('/xadmin/plans/saveDevice', {idRoleIt:this.idRoleIt,deviceName:this.deviceName,deviceUid:this.deviceUid,entry:this.entry}, false);
@@ -696,6 +1018,46 @@
 
                 }
             },
+            async addLesson()
+            {
+                this.isLoading = true;
+                const res = await $post('/xadmin/plans/planLesson', {lessonIds:this.lessonIds,entry:this.entry}, false);
+                this.isLoading = false;
+                if (res.errors) {
+                    this.errors = res.errors;
+                    return;
+                }
+                if (res.code) {
+                    toastr.error(res.message);
+                } else {
+                    this.errors = {};
+                    toastr.success(res.message);
+
+                    if (!this.entry.id) {
+                        // location.replace('/xadmin/plans/edit?id=' + res.id);
+                    }
+
+                }
+
+            },
+            doFilter() {
+
+                $router.setQuery(this.filter)
+            },
+            async load() {
+                let query = $router.getQuery();
+                this.$loading(true);
+                const res = await $get('/xadmin/plans/dataLesson', query);
+                this.$loading(false);
+                this.paginate = res.paginate;
+                this.entries = res.data;
+                console.log(this.entries);
+                this.from = (this.paginate.currentPage - 1) * (this.limit) + 1;
+                this.to = (this.paginate.currentPage - 1) * (this.limit) + this.entries.length;
+            },
+            onPageChange(page) {
+                $router.updateQuery({page: page})
+            }
 
         }
     }
