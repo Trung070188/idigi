@@ -948,6 +948,7 @@ class UsersController extends AdminBaseController
     {
         $user = Auth::user();
         $school_id = $user->schools->id;
+       $devicePerUser=$user->schools->devices_per_user;
         $query = User::query()
             ->with(['roles', 'user_devices'])
             ->where('school_id', '=', $school_id)
@@ -979,9 +980,11 @@ class UsersController extends AdminBaseController
         }
         $entries = $query->paginate($limit);
         $users = $entries->items();
+
         return [
             'code' => 0,
             'data' => $users,
+            'devicePerUser'=>$devicePerUser,
             'paginate' => [
                 'currentPage' => $entries->currentPage(),
                 'lastPage' => $entries->lastPage(),

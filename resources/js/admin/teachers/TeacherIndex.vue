@@ -209,7 +209,7 @@
                                 <td class="" v-text="entry.email"></td>
                                 <td class="" v-text="entry.class"></td>
                                 <td class="" v-text="entry.phone"></td>
-                                <td class="">{{entry.user_devices.length}} / 3</td>
+                                <td class="">{{entry.user_devices.length}} /{{devicePerUser}}</td>
                                 <td class="" v-text=" d(entry.created_at)"></td>
                                 <td class="" v-text="entry.state===0 ? 'No' : 'Yes'"></td>
                                 <td class="">
@@ -364,6 +364,7 @@
                 }
             }
             return {
+                devicePerUser:'',
                 code:0,
                 validateFile:'',
                 allSelected:false,
@@ -406,6 +407,7 @@
                 const res = await $get('/xadmin/users/dataTeacher', query);
                 this.$loading(false);
                 this.entries = res.data;
+                this.devicePerUser=res.devicePerUser;
                 this.paginate = res.paginate;
                 this.from = (this.paginate.currentPage - 1) * (this.limit) + 1;
                 this.to = (this.paginate.currentPage - 1) * (this.limit) + this.entries.length;
