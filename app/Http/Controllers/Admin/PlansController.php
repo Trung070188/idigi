@@ -109,11 +109,41 @@ class PlansController extends AdminBaseController
         $component = 'PlanEdit';
 
         $idRoleIt=$entry->user_id;
+
+        $devices=UserDevice::query()->with(['users'])->where('plan_id','=',$entry->id)->orderBy('created_at','ASC')->get();
+
+       $data=[];
+        foreach ($devices as $device)
+        {
+            $user=Auth::user();
+
+                $role=$device->users->roles;
+                foreach ($role as $roless)
+                {
+                    $roleName=$roless->role_name;
+                }
+                $data[]=[
+                    'id'=>$device->id,
+                    'device_uid'=>$device->device_uid,
+                    'device_name'=>$device->device_name,
+                    'user_id'=>$device->user_id,
+                    'plan_id'=>$device->plan_id,
+                    'type'=>$device->type,
+                    'status'=>$device->status,
+                    'secret_key'=>$device->secret_key,
+                    'reason'=>$device->reason,
+                    'created_at'=>$device->created_at,
+                    'updated_at'=>$device->updated_at,
+                    'roleName'=>$roleName,
+                ];
+
+
+        }
         $jsonData = [
             'idRoleIt' => $idRoleIt,
             'entry'=>$entry,
-            'roleIt'=>$roleIt
-
+            'roleIt'=>$roleIt,
+            'data'=>$data,
         ];
         return view('admin.layouts.vue', compact('title', 'component', 'jsonData'));
     }
@@ -202,6 +232,7 @@ class PlansController extends AdminBaseController
             ];
         }
     }
+
     public function saveDevice(Request $req) {
         $dataRole=$req->all();
         if (!$req->isMethod('POST')) {

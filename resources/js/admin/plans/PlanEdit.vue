@@ -63,7 +63,7 @@
                                         </thead>
                                         <tbody >
 
-                                        <tr  >
+                                        <tr v-for="device in data" >
                                             <td class="">
                                                 <div
                                                     class="form-check form-check-sm form-check-custom form-check-solid"
@@ -75,12 +75,11 @@
                                                     />
                                                 </div>
                                             </td>
+                                            <td class="" v-text="device.id"></td>
+                                            <td class="" v-text="device.device_name"></td>
+                                            <td class="" >{{device.type}}</td>
+                                            <td class="" v-text="device.device_uid"></td>
                                             <td class="" ></td>
-                                            <td class="" ></td>
-                                            <td class="" ></td>
-                                            <td class="" ></td>
-                                            <td class="" ></td>
-
                                             <td class="">
                                                 <!--<a v-if="permissions['014']" :href="'/xadmin/users/edit_teacher?id='+entry.id"><i style="font-size:1.3rem"
                                                                                                         class="fa fa-edit"></i></a>
@@ -108,7 +107,7 @@
                                                 <label>Records per page:</label>
                                             </div>-->
                                             <div>
-                                                <select class="form-select form-select-sm form-select-solid" v-model="limit" @change="changeLimit">
+                                                <select class="form-select form-select-sm form-select-solid"  >
                                                     <option value="25">25</option>
                                                     <option value="50">50</option>
                                                     <option value="100">100</option>
@@ -119,7 +118,6 @@
                                         <!--<div style="float: right; margin: 10px">-->
                                         <div class="col-sm-12 col-md-7 d-flex align-items-center justify-content-center justify-content-md-end">
                                             <div class="dataTables_paginate paging_simple_numbers" id="kt_customers_table_paginate">
-                                                <Paginate ></Paginate>
                                             </div>
                                         </div>
                                     </div>
@@ -193,7 +191,7 @@
                                         <div class="card-header  border border-dashed border-gray-300">
                                             <!--begin::Card title-->
                                             <div class="card-title">
-                                                <h2 class="fw-bolder"></h2>
+                                                <div  class="fw-bold text-muted" >{{data.length}} device(s) added</div>
                                             </div>
                                             <!--end::Card title-->
                                             <!--begin::Card toolbar-->
@@ -525,7 +523,7 @@
 </template>
 
 <script>
-    import {$post, forEach} from "../../utils";
+    import {$get, $post, forEach} from "../../utils";
     import ActionBar from "../includes/ActionBar";
     import $router from "../../lib/SimpleRouter";
 
@@ -553,10 +551,12 @@
                     },
                 ],
                 entry: $json.entry || {},
+                data:$json.data || [],
                 isLoading: false,
                 errors: {}
             }
         },
+
         methods: {
             modalDevice() {
                 $('#deviceConfirm').modal('show');
@@ -640,9 +640,7 @@
                         toastr.success(res.message);
                     }
                 }
-                else {
-                    console.log('trung');
-                }
+
 
             },
             async saveImport() {
@@ -697,7 +695,8 @@
                     }
 
                 }
-            }
+            },
+
         }
     }
 </script>
