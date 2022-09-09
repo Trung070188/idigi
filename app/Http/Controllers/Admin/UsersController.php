@@ -250,14 +250,30 @@ class UsersController extends AdminBaseController
         $entry = User::query()->with('schools', 'user_devices', 'user_cousers', 'user_units', 'units', 'cousers')
             ->where('id', $id)->first();
 
-        $userCousers = ($entry->user_cousers);
-        $schools = $entry->schools;
-        $schoolCousers = ($schools->school_courses);
-        $schoolUnits = $schools->school_course_units;
-        $course_unit = $schools->units;
-        $userUnits = $entry->user_units;
-
-
+        if(@$entry->user_cousers)
+        {
+            $userCousers = ($entry->user_cousers);
+        }
+        if(@$entry->schools)
+        {
+            $schools = $entry->schools;
+        }
+        if(@$schools->school_courses)
+        {
+            $schoolCousers = ($schools->school_courses);
+        }
+        if(@$schools->school_course_units)
+        {
+            $schoolUnits = $schools->school_course_units;
+        }
+        if(@$schools->units)
+        {
+            $course_unit = $schools->units;
+        }
+        if(@$entry->user_units)
+        {
+            $userUnits = $entry->user_units;
+        }
         if (@$schoolCousers) {
             foreach ($schoolCousers as $course) {
                 $course['total_unit'] = [];
