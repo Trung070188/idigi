@@ -28,7 +28,7 @@ class CheckLicense
                 if($role->role_name == "Teacher" || $role->role_name == "School Admin"){
                     $school = School::where('id', $user->school_id)->first();
 
-                    if($school->license_to < Carbon::now() ){
+                    if(@$school->license_to < Carbon::now() ){
                         return redirect('/xadmin/school_license/license_expired');
                     }
                 }
