@@ -61,7 +61,7 @@
 														<path opacity="0.3" d="M11 11.6V17C11 17.6 11.4 18 12 18C12.6 18 13 17.6 13 17V11.6H11Z" fill="black" />
 													</svg>
 												</span>
-                                     Upload Files</button>
+                                  Import teacher </button>
 
                                 </div>
 
