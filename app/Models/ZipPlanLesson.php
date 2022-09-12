@@ -10,6 +10,7 @@ class ZipPlanLesson extends Model
     public $timestamps = true;
     protected $table = 'zip_plan_lessons';
     protected  $fillable = [
+        'user_id',
         'plan_id',
         'lesson_ids',
         'url',
