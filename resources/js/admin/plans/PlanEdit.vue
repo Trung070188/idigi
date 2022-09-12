@@ -477,8 +477,8 @@
                                     <label>Lesson package <span class="text-danger">*</span></label>
                                     <div class="card-header  border border-dashed border-gray-300">
                                         <!--begin::Card title-->
-                                        <div class="card-title">
-                                            <h2 class="fw-bolder"></h2>
+                                        <div class="card-title" style="font-size: 15px">
+                                            <div  class="fw-bold text-muted" >{{lessonIds.length}} lesson(s) added</div>
                                         </div>
                                         <!--end::Card title-->
                                         <!--begin::Card toolbar-->
@@ -490,6 +490,21 @@
                                         <!--end::Card toolbar-->
                                     </div>
                                 </div>
+                                <div class="d-flex align-items-center">
+                                    <!--begin::Checkbox-->
+                                    <label class="form-check form-check-custom form-check-solid me-10">
+                                        <input class="form-check-input h-20px w-20px" type="checkbox" name="communication[]" value="email" checked="checked" />
+                                        <span class="form-check-label fw-bold">For Windows</span>
+                                    </label>
+                                    <!--end::Checkbox-->
+                                    <!--begin::Checkbox-->
+                                    <label class="form-check form-check-custom form-check-solid">
+                                        <input class="form-check-input h-20px w-20px" type="checkbox" name="communication[]" value="phone" />
+                                        <span class="form-check-label fw-bold">For MacOS</span>
+                                    </label>
+                                    <!--end::Checkbox-->
+                                </div>
+
                             </div>
                         </div>
 
