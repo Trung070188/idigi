@@ -10,6 +10,7 @@ use App\Models\File;
 use App\Models\Lesson;
 use App\Models\PlanLesson;
 use App\Models\UserDevice;
+use App\Models\ZipPlanLesson;
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
 use Illuminate\Contracts\View\View;
@@ -575,6 +576,11 @@ class PlansController extends AdminBaseController
                     PlanLesson::create(['plan_id'=>$entry->id,'lesson_id'=>$lesson]);
 
                 }
+                $stringLesson=implode(",",$dataLesson['lessonIds']);
+                ZipPlanLesson::where('plan_id',$entry->id)->delete();
+                ZipPlanLesson::create(['plan_id'=>$entry->id,'lesson_ids'=>$stringLesson]);
+
+
             }
             return [
                 'code' => 0,
