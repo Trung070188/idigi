@@ -390,7 +390,6 @@
 
                 $router.updateQuery({page: this.paginate.currentPage, _: Date.now()});
             },
-
             filterClear() {
 
                 for (var key in this.filter) {

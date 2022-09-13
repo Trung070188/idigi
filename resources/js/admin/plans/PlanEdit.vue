@@ -355,6 +355,14 @@
                                             <td class="" v-text="lesson.name"></td>
                                             <td class="" v-text="lesson.grade" ></td>
                                             <td class="" v-text="lesson.subject"></td>
+                                            <td>
+                                                <a   @click="deleteLesson(lessonId)" href="javascript:;">
+                                        <button type="button" class="btn btn-sm btn-icon btn-light btn-active-light-primary">
+                                            <i class="fa fa-trash mr-1 deleted"></i>
+                                        </button>
+                                    </a>
+
+                                            </td>
 
                                         </tr>
                                         </tbody>
@@ -862,6 +870,22 @@
         },
 
         methods: {
+
+            async deleteLesson(lesson) 
+            {
+                let new_arr = this.lessonIds.filter(item => item !== lesson);
+                this.lessonIds=new_arr
+                let trung=this.lessonIds
+                const res = await $post('/xadmin/plans/deleteLesson', {trung,entry:this.entry});
+                if (res.code) {
+                    toastr.error(res.message);
+                } else {
+                        toastr.success(res.message);
+
+                }
+
+                // $router.updateQuery({page: this.paginate.currentPage, _: Date.now()});
+            },
             modalDevice() {
                 $('#deviceConfirm').modal('show');
             },

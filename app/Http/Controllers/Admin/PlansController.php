@@ -796,4 +796,19 @@ class PlansController extends AdminBaseController
         $writer->save('php://output');
         die;
     }
+    public function deleteLesson(Request $req)
+    {
+        $data=$req->all();
+        PlanLesson::where(['plan_id'=>$data['entry']['id']])->delete();
+        foreach($data['trung'] as $lesson)
+        {
+            PlanLesson::create(['plan_id'=>$data['entry']['id'],'lesson_id'=>$lesson]);        
+
+        }
+        return [
+            'code' => 0,
+            'message' => 'Đã xóa'
+        ];
+        
+    }
 }
