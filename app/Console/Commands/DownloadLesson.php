@@ -54,9 +54,6 @@ class DownloadLesson extends Command
     {
         ob_get_clean();
 
-        /*if ($request->isMethod('POST')) {
-            throw new MethodNotAllowedException("405");
-        }*/
 
         $user = User::find(123);
         $deviceId = 126;
@@ -125,10 +122,6 @@ class DownloadLesson extends Command
         $zipAll->close();
         echo url($pathZipAll);
 
-        /*return [
-            'code' => 0,
-            'url' => url($pathZipAll)
-        ];*/
 
     }
 
