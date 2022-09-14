@@ -59,7 +59,7 @@ class CreateFileDownloadLesson extends Command
     public function handle()
     {
 
-        $planLessons = ZipPlanLesson::where('status', NULL)->get();
+        $planLessons = ZipPlanLesson::where('status', NULL)->with('plan')->get();
 
 
         foreach ($planLessons as $planLesson){
@@ -73,6 +73,7 @@ class CreateFileDownloadLesson extends Command
                 'device_uid' => NULL,
                 'lesson_ids' =>  $lessonIds,
                 'plan_id' =>  $planLesson->id,
+                'secret_key' =>  @$planLesson->plan->secret_key
             ];
 
             $url = $this->createFile($info);
@@ -88,35 +89,6 @@ class CreateFileDownloadLesson extends Command
 
         }
 
-     /*   dd(1);
-        $downloadLessons = DownloadLessonIt::where('is_created', 0)
-            ->get();
-
-        foreach ($downloadLessons as $downloadLesson) {
-            $downloadLesson->is_created = 1;
-            $downloadLesson->save();
-
-            $info = [
-                'user_id' => $downloadLesson->user_id,
-                'ip_address' => $downloadLesson->ip_address,
-                'user_agent' => $downloadLesson->user_agent,
-                'device_uid' => $downloadLesson->device_uid,
-                'lesson_ids' => explode(',', $downloadLesson->lesson_ids)
-            ];
-
-            $url = $this->createFile($info);
-            $notify = new Notification();
-            $notify->status = 'new';
-            $notify->content = "File download";
-            $notify->channel = 'inapp';
-            $notify->user_id = $downloadLesson->user_id;
-            $notify->url = $url;
-            $notify->title = 'File download đã hoàn thành';
-            $notify->save();
-
-            $downloadLesson->url = $url;
-            $downloadLesson->save();
-        }*/
     }
 
     public function createFile($info)
@@ -124,7 +96,7 @@ class CreateFileDownloadLesson extends Command
         ob_get_clean();
 
 
-        $password = env('SECRET_KEY') . '_' . "123456";
+        $password = env('SECRET_KEY') . '_' .  $info['secret_key'];
 
         $y = date('Y');
         $m = date('m');

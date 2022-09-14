@@ -20,4 +20,9 @@ class ZipPlanLesson extends Model
         'created_at',
         'updated_at',
     ];
+
+    public function plan()
+    {
+        return $this->belongsToMany(Plan::class);
+    }
 }
