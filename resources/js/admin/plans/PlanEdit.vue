@@ -456,7 +456,7 @@
                                 </div>
                             </div>
 
-                            <div class="row" id="clone">
+                            <div class="row" >
                                 <div class="form-group col-lg-8">
                                     <label>Lesson package <span class="text-danger">*</span></label>
                                     <div class="card-header  border border-dashed border-gray-300">
@@ -488,7 +488,7 @@
                                         <!--end::Checkbox-->
                                     </div>
                                     <div >
-                                        <button type="button" class="btn btn-sm btn-flex btn-light-primary " data-bs-toggle="modal" data-bs-target="#kt_modal_add_payment" style="float: right; margin: -86px -68px 0px;" id="newPackage"  >
+                                        <button type="button" class="btn btn-sm btn-flex btn-light-primary " data-bs-toggle="modal" data-bs-target="#kt_modal_add_payment" style="float: right; margin: -86px -68px 0px;"  >
                                             <!--begin::Svg Icon | path: icons/duotune/general/gen035.svg-->
                                             <span class="svg-icon svg-icon-3">
 																<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
@@ -821,12 +821,12 @@
         name: "PlanEdit.vue",
         components: {ActionBar},
         data() {
-            $(document).ready(function() {
-               $("#newPackage").click(function ()
-               {
-                   $("#clone").append("<li></li>")
-               });
-            });
+            // $(document).ready(function() {
+            //    $("#newPackage").click(function ()
+            //    {
+            //        $("#clone").append("<li></li>")
+            //    });
+            // });
             let filter = {
                 keyword: $q.keyword || '',
                 name:$q.name||'',
@@ -877,8 +877,6 @@
         },
 
         methods: {
-
-
             async deleteLesson(lesson)
             {
                 let new_arr = this.lessonIds.filter(item => item !== lesson);
@@ -950,7 +948,6 @@
                         this.deviceError=res.deviceError;
                         this.code=res.code;
                         this.validateFile=res.fileError;
-                        console.log(this.validateFile);
                         this.fileImport=res.fileImport;
 
                     }
@@ -1096,7 +1093,6 @@
                 this.$loading(false);
                 this.paginate = res.paginate;
                 this.entries = res.data;
-                console.log(this.entries);
                 this.from = (this.paginate.currentPage - 1) * (this.limit) + 1;
                 this.to = (this.paginate.currentPage - 1) * (this.limit) + this.entries.length;
             },
