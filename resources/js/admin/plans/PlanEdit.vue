@@ -456,7 +456,7 @@
                                 </div>
                             </div>
 
-                            <div class="row">
+                            <div class="row" id="clone">
                                 <div class="form-group col-lg-8">
                                     <label>Lesson package <span class="text-danger">*</span></label>
                                     <div class="card-header  border border-dashed border-gray-300">
@@ -473,31 +473,48 @@
                                         </div>
                                         <!--end::Card toolbar-->
                                     </div>
-                                    <button type="button" class="btn btn-sm btn-flex btn-light-primary" style="float: right;margin: -50px -60px 0px" @click="newPackage"><span class="svg-icon svg-icon-3">
+                                    <div class="d-flex align-items-center"  style="margin-top: 20px" >
+                                        <!--begin::Checkbox-->
+                                        <label class="form-check form-check-custom form-check-solid me-10">
+                                            <input class="form-check-input h-20px w-20px" type="checkbox" name="communication[]" value="email"  />
+                                            <span class="form-check-label fw-bold">For Windows</span>
+                                        </label>
+                                        <!--end::Checkbox-->
+                                        <!--begin::Checkbox-->
+                                        <label class="form-check form-check-custom form-check-solid">
+                                            <input class="form-check-input h-20px w-20px" type="checkbox" name="communication[]" value="phone" />
+                                            <span class="form-check-label fw-bold">For MacOS</span>
+                                        </label>
+                                        <!--end::Checkbox-->
+                                    </div>
+                                    <div >
+                                        <button type="button" class="btn btn-sm btn-flex btn-light-primary " data-bs-toggle="modal" data-bs-target="#kt_modal_add_payment" style="float: right; margin: -86px -68px 0px;" id="newPackage"  >
+                                            <!--begin::Svg Icon | path: icons/duotune/general/gen035.svg-->
+                                            <span class="svg-icon svg-icon-3">
 																<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
 																	<rect opacity="0.3" x="2" y="2" width="20" height="20" rx="5" fill="black" />
 																	<rect x="10.8891" y="17.8033" width="12" height="2" rx="1" transform="rotate(-90 10.8891 17.8033)" fill="black" />
 																	<rect x="6.01041" y="10.9247" width="12" height="2" rx="1" fill="black" />
 																</svg>
-															</span></button>
+															</span>
+                                        </button>
+                                    </div>
                                 </div>
-                                <div class="d-flex align-items-center">
-                                    <!--begin::Checkbox-->
-                                    <label class="form-check form-check-custom form-check-solid me-10">
-                                        <input class="form-check-input h-20px w-20px" type="checkbox" name="communication[]" value="email"  />
-                                        <span class="form-check-label fw-bold">For Windows</span>
-                                    </label>
-                                    <!--end::Checkbox-->
-                                    <!--begin::Checkbox-->
-                                    <label class="form-check form-check-custom form-check-solid">
-                                        <input class="form-check-input h-20px w-20px" type="checkbox" name="communication[]" value="phone" />
-                                        <span class="form-check-label fw-bold">For MacOS</span>
-                                    </label>
-                                    <!--end::Checkbox-->
-                                </div>
-
                             </div>
+
+<!--                            <button type="button" class="btn btn-sm btn-flex btn-light-primary col-lg-2 " style="float: right;margin: -50px -60px 0px" @click="newPackage"><span class="svg-icon svg-icon-3">-->
+<!--																<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">-->
+<!--																	<rect opacity="0.3" x="2" y="2" width="20" height="20" rx="5" fill="black" />-->
+<!--																	<rect x="10.8891" y="17.8033" width="12" height="2" rx="1" transform="rotate(-90 10.8891 17.8033)" fill="black" />-->
+<!--																	<rect x="6.01041" y="10.9247" width="12" height="2" rx="1" fill="black" />-->
+<!--																</svg>-->
+<!--															</span></button>-->
+
+
                         </div>
+
+
+
 
                     </div>
                     <hr style="margin-top: 5px;">
@@ -804,6 +821,12 @@
         name: "PlanEdit.vue",
         components: {ActionBar},
         data() {
+            $(document).ready(function() {
+               $("#newPackage").click(function ()
+               {
+                   $("#clone").append("<li></li>")
+               });
+            });
             let filter = {
                 keyword: $q.keyword || '',
                 name:$q.name||'',
@@ -812,6 +835,7 @@
             };
 
             return {
+                packageLesson:[],
                 lessonIds: $json.lessonIds || [],
                 allSelected: false,
                 filter: filter,
@@ -854,20 +878,19 @@
 
         methods: {
 
+
             async deleteLesson(lesson)
             {
                 let new_arr = this.lessonIds.filter(item => item !== lesson);
                 this.lessonIds=new_arr
-                let trung=this.lessonIds
-                const res = await $post('/xadmin/plans/deleteLesson', {trung,entry:this.entry});
+                let lessons=this.lessonIds
+                const res = await $post('/xadmin/plans/deleteLesson', {lessons,entry:this.entry});
                 if (res.code) {
                     toastr.error(res.message);
                 } else {
                         toastr.success(res.message);
 
                 }
-
-                // $router.updateQuery({page: this.paginate.currentPage, _: Date.now()});
             },
             modalDevice() {
                 $('#deviceConfirm').modal('show');

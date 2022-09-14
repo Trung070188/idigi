@@ -8,6 +8,7 @@ use App\Imports\DeviceImport;
 use App\Models\AllocationContentSchool;
 use App\Models\File;
 use App\Models\Lesson;
+use App\Models\PackageLesson;
 use App\Models\PlanLesson;
 use App\Models\UserDevice;
 use App\Models\ZipPlanLesson;
@@ -222,6 +223,7 @@ class PlansController extends AdminBaseController
 
             $entry->fill($data);
             $entry->save();
+//            PackageLesson::create(['plan_id'=>$entry->id,'total_lesson']);
 
             return [
                 'code' => 0,
@@ -800,7 +802,7 @@ class PlansController extends AdminBaseController
     {
         $data=$req->all();
         PlanLesson::where(['plan_id'=>$data['entry']['id']])->delete();
-        foreach($data['trung'] as $lesson)
+        foreach($data['lessons'] as $lesson)
         {
             PlanLesson::create(['plan_id'=>$data['entry']['id'],'lesson_id'=>$lesson]);
 
