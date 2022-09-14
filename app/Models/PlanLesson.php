@@ -15,5 +15,6 @@ class PlanLesson extends Model
     protected $fillable=[
         'plan_id',
         'lesson_id',
+        'package_id',
     ];
 }

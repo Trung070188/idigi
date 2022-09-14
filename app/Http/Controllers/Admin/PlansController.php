@@ -234,7 +234,7 @@ class PlansController extends AdminBaseController
             $entry = new Plan();
             $entry->user_id=$dataRole['idRoleIt'];
             $entry->created_by=$auth->id;
-
+            $entry->secret_key=Str::random(10);
             $entry->fill($data);
             $entry->save();
 
@@ -802,13 +802,13 @@ class PlansController extends AdminBaseController
         PlanLesson::where(['plan_id'=>$data['entry']['id']])->delete();
         foreach($data['trung'] as $lesson)
         {
-            PlanLesson::create(['plan_id'=>$data['entry']['id'],'lesson_id'=>$lesson]);        
+            PlanLesson::create(['plan_id'=>$data['entry']['id'],'lesson_id'=>$lesson]);
 
         }
         return [
             'code' => 0,
             'message' => 'Đã xóa'
         ];
-        
+
     }
 }

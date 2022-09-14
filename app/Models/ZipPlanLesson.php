@@ -12,6 +12,7 @@ class ZipPlanLesson extends Model
     protected  $fillable = [
         'user_id',
         'plan_id',
+        'package_id',
         'lesson_ids',
         'url',
         'status',

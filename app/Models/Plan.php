@@ -17,11 +17,12 @@ class Plan extends BaseModel
     protected $fillable = [
     'name',
     'status',
-    'Deployed',
+    'deployed',
     'created_by',
     'due_at',
     'plan_description',
     'user_id',
+    'secret_key'
 ];
     public function lessons()
     {
