@@ -17,6 +17,7 @@ use App\Models\Product;
 use App\Models\Unit;
 use App\Models\User;
 use App\Models\UserDevice;
+use App\Models\ZipPlanLesson;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Auth;
@@ -58,33 +59,36 @@ class CreateFileDownloadLesson extends Command
     public function handle()
     {
 
-       Lesson::chunkById(100, function ($lessons) {
-           foreach ($lessons as $lesson){
-               $this->lessonIds[] = $lesson->id;
-           }
-        });
+        $planLessons = ZipPlanLesson::where('status', NULL)->get();
 
 
+        foreach ($planLessons as $planLesson){
+            $lessonIds = explode(',', $planLesson->lesson_ids);
+            $planLesson->status= 'inprogress';
+            $planLesson->save();
+            $info = [
+                'user_id' => $planLesson->user_id,
+                'ip_address' => NULL,
+                'user_agent' => NULL,
+                'device_uid' => NULL,
+                'lesson_ids' =>  $lessonIds,
+                'plan_id' =>  $planLesson->id,
+            ];
 
-        $info = [
-            'user_id' => 3,
-            'ip_address' => 3,
-            'user_agent' => 3,
-            'device_uid' => 3,
-            'lesson_ids' =>  $this->lessonIds
-        ];
+            $url = $this->createFile($info);
+            $notify = new Notification();
+            $notify->status = 'new';
+            $notify->content = "File download";
+            $notify->channel = 'inapp';
+            $notify->user_id = 3;
+            $notify->url = $url;
+            $notify->title = 'File download đã hoàn thành';
+            $notify->save();
 
-        $url = $this->createFile($info);
-        $notify = new Notification();
-        $notify->status = 'new';
-        $notify->content = "File download";
-        $notify->channel = 'inapp';
-        $notify->user_id = 3;
-        $notify->url = $url;
-        $notify->title = 'File download đã hoàn thành';
-        $notify->save();
 
-        dd(1);
+        }
+
+     /*   dd(1);
         $downloadLessons = DownloadLessonIt::where('is_created', 0)
             ->get();
 
@@ -112,7 +116,7 @@ class CreateFileDownloadLesson extends Command
 
             $downloadLesson->url = $url;
             $downloadLesson->save();
-        }
+        }*/
     }
 
     public function createFile($info)
@@ -217,6 +221,11 @@ class CreateFileDownloadLesson extends Command
             'is_deleted_file' => 0
         ];
         UpdateDownloadLessonFile::dispatch($dataLessonFile);
+
+        ZipPlanLesson::where('id',$info['plan_id'])->update([
+            'url' => url($pathZipAll),
+            'status' => 'done',
+        ]);
 
 
         return url($pathZipAll);
