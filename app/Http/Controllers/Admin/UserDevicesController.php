@@ -38,9 +38,20 @@ class UserDevicesController extends AdminBaseController
         $title = 'UserDevices';
         $component = 'User_deviceIndex';
         $user=Auth::user();
-        $school=$user->schools;
-        @$devicesPerUser=$school->devices_per_user;
+        if(@$user->roles)
+        {
+            foreach ($user->roles as $role)
+            {
+                $roleName=$role->role_name;
+                if($role->role_name=='School Admin'|| $role->role_name=='Teacher')
+                {
+                    $school=$user->schools;
+                    @$devicesPerUser=$school->devices_per_user;
+                }
+            }
+        }
         $jsonData = [
+            @'roleName'=>@$roleName,
             @'devicesPerUser' => @$devicesPerUser
         ];
         return view('admin.layouts.vue', compact('title', 'component', 'jsonData'));
@@ -296,7 +307,7 @@ class UserDevicesController extends AdminBaseController
      * @return  array
      */
     public function data(Request $req) {
-       $devices=UserDevice::query()->with(['users'])->orderBy('created_at','ASC')->get();
+       $devices=UserDevice::query()->with(['users'])->where('plan_id','=',NULL)->orderBy('created_at','ASC')->get();
        $data=[];
        foreach ($devices as $device)
        {

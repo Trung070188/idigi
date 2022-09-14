@@ -208,10 +208,12 @@
                                 data-kt-customer-table-toolbar="base"
 
                             >
-                                <button  v-if="entries.length<devicesPerUser && permissions['019'] " type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#kt_modal_add_customer" @click="modalDevice()">Add More Device</button>
-                                <button  v-if="entries.length>=devicesPerUser" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#kt_modal_add_customer" @click="closeModal()">Add More Device</button>
+                                <button  v-if="entries.length<devicesPerUser && permissions['019'] && roleName=='School Admin' ||entries.length<devicesPerUser && permissions['019'] && roleName=='Teacher'  " type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#kt_modal_add_customer" @click="modalDevice()">Add More Device</button>
+                                <button  v-if="entries.length>=devicesPerUser && roleName=='School Admin' || entries.length>=devicesPerUser && roleName=='Teacher' " type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#kt_modal_add_customer" @click="closeModal()">Add More Device</button>
+                                <button  v-if="roleName!='School Admin' && roleName!='Teacher'  " type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#kt_modal_add_customer" @click="modalDevice()">Add More Device</button>
 
-                                    </div>
+
+                            </div>
 
                                 </div>
 
@@ -220,7 +222,7 @@
                       <div class="tab-content">
                         <div class="d-flex flex-stack pt-4 pl-9 pr-9">
                             <div class="badge badge-lg badge-light-primary mb-15">
-                                <div class="d-flex align-items-center flex-wrap">
+                                <div class="d-flex align-items-center flex-wrap" v-if="roleName=='School Admin' || roleName=='Teacher'  ">
 
 
                                     <div  v-if="entries.length > 0">Number of devices: {{entries.length}}/{{devicesPerUser}}</div>
@@ -321,7 +323,8 @@
             const permissions = clone(window.$permissions)
             return {
                 permissions,
-              device:'',
+                roleName:$json.roleName,
+                device:'',
                 curDevice:{},
                 isHidden:false,
                 token:'',
