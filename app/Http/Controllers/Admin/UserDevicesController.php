@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 use App\Models\Notification;
+use App\Models\Plan;
 use App\Models\School;
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
@@ -389,6 +390,7 @@ class UserDevicesController extends AdminBaseController
             ->where('id', $request->device_id)
             ->where('status', 2)
             ->first();
+        $plans=Plan::where('user_id','=',$user->id)->get();
         $school = School::where('id', $user->school_id)->first();
 
         if($school){
@@ -398,9 +400,18 @@ class UserDevicesController extends AdminBaseController
         if(!$expired){
             $expired = Carbon::now()->addHours(-10);
         }
-
+        $apiPlan=[];
+        foreach ($plans as $plan)
+        {
+            $apiPlan[]=[
+              'id'=>$plan->id,
+              'name'=>$plan->name,
+              'secret_key'=>$plan->secret_key,
+            ];
+        }
         if($device){
             $payload = [
+                'plan' => $apiPlan,
                 'user_id' => $user->id,
                 'device_uid' =>$device->device_uid,
                 'device_name' =>$device->device_name,
