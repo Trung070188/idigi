@@ -26,6 +26,7 @@ class Kernel extends ConsoleKernel
     {
         // $schedule->command('inspire')->hourly();
          $schedule->command('delete-file-download-daily')->dailyAt("00:00");
+         $schedule->command('create-file-download-lesson-it')->everyMinute();
     }
 
     /**
