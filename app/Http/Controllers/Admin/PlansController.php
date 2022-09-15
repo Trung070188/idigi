@@ -12,6 +12,7 @@ use App\Models\PackageLesson;
 use App\Models\PlanLesson;
 use App\Models\UserDevice;
 use App\Models\ZipPlanLesson;
+use Facade\Ignition\Support\Packagist\Package;
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
 use Illuminate\Contracts\View\View;
@@ -152,12 +153,23 @@ class PlansController extends AdminBaseController
 
 
         }
+        $fileZipLessons=ZipPlanLesson::query()->with(['package_lessons'])->where('plan_id','=',$entry->id)->get();
+
+        foreach ($fileZipLessons as $fileZipLesson)
+        {
+                $url[]=[
+                    'url'=>$fileZipLesson->url,
+                    'packagePlanId'=>$fileZipLesson->package_lessons->package_plan_id,
+                    'planId'=>$fileZipLesson->package_lessons->plan_id
+                ];
+        }
         $jsonData = [
             'lessonIds'=>$lessonIds,
             'idRoleIt' => $idRoleIt,
             'entry'=>$entry,
             'roleIt'=>$roleIt,
             'data'=>$data,
+            'url'=>$url
         ];
         return view('admin.layouts.vue', compact('title', 'component', 'jsonData'));
     }
@@ -652,6 +664,7 @@ class PlansController extends AdminBaseController
                 'created_at'=>$entry->created_at,
                 'due_at'=>$entry->due_at,
             ];
+
         }
 
         return [

@@ -7,10 +7,11 @@ use Illuminate\Database\Eloquent\Model;
 
 class PackageLesson extends Model
 {
-    protected $table = 'pack_lessons';
+    protected $table = 'package_lessons';
     protected $fillable = [
         'total_lesson',
         'plan_id',
+        'package_plan_id',
         'created_at',
         'updated_at',
     ];
