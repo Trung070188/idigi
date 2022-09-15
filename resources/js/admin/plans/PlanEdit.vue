@@ -488,7 +488,7 @@
 <!--                                        &lt;!&ndash;end::Checkbox&ndash;&gt;-->
 <!--                                    </div>-->
                                     <div >
-                                        <button type="button" class="btn btn-sm btn-flex btn-light-primary " data-bs-toggle="modal" data-bs-target="#kt_modal_add_payment" style="float: right; margin: -50px -68px 0px;" id="newPackage" >
+                                        <button type="button" class="btn btn-sm btn-flex btn-light-primary " data-bs-toggle="modal" data-bs-target="#kt_modal_add_payment" style="float: right; margin: -50px -68px 0px;" id="newPackage" @click="addPackageLesson" >
                                             <!--begin::Svg Icon | path: icons/duotune/general/gen035.svg-->
                                             <span class="svg-icon svg-icon-3">
 																<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
@@ -502,15 +502,8 @@
                                 </div>
                             </div>
 
-<!--                            <button type="button" class="btn btn-sm btn-flex btn-light-primary col-lg-2 " style="float: right;margin: -50px -60px 0px" @click="newPackage"><span class="svg-icon svg-icon-3">-->
-<!--																<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">-->
-<!--																	<rect opacity="0.3" x="2" y="2" width="20" height="20" rx="5" fill="black" />-->
-<!--																	<rect x="10.8891" y="17.8033" width="12" height="2" rx="1" transform="rotate(-90 10.8891 17.8033)" fill="black" />-->
-<!--																	<rect x="6.01041" y="10.9247" width="12" height="2" rx="1" fill="black" />-->
-<!--																</svg>-->
-<!--															</span></button>-->
-
-
+                            <div class="counter"></div>
+                            <div class="steplist"></div>
                         </div>
 
 
@@ -830,6 +823,36 @@
         },
 
         methods: {
+            addPackageLesson()
+            {
+                var $counter = $("#clone");
+                var value = $counter.val();
+               $counter.val(++value);
+               console.log(value);
+
+                const $steplist = $(".steplist"),
+                    totalchild = $steplist.children().length,
+                    $newData = $(
+
+                        '<div class="form-group col-lg-8">' +
+                        '<label >Lesson package  <span class="text-danger">*</span></label>' +
+                        '<div class="card-header  border border-dashed border-gray-300">' +
+                        ' <div class="card-title" style="font-size: 15px">' +
+                        '<div  class="fw-bold text-muted" >lesson(s) added</div>' +
+                        '</div>' +
+                        '<div class="card-toolbar">' +
+                        '<button class="btn btn-primary">Download package</button>' +
+                        '<button class="btn btn-primary" style="margin: 0px 15px 0px" data-bs-toggle="modal" data-bs-target="#kt_modal" >View lessons</button>' +
+                        '<button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#kt_modal_invite" >Add lesson</button>' +
+                        ' </div>' +
+                        '</div>'
+                    )
+                // $newData.attr("id", "step" + value)
+                // $newData.addClass("step" + value);
+                // $newData.find("label").val(value);
+                $steplist.append($newData);
+
+            },
             async deleteLesson(lesson)
             {
                 let new_arr = this.lessonIds.filter(item => item !== lesson);

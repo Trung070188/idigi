@@ -159,8 +159,8 @@ class PlansController extends AdminBaseController
         {
                 $url[]=[
                     'url'=>$fileZipLesson->url,
-                    'packagePlanId'=>$fileZipLesson->package_lessons->package_plan_id,
-                    'planId'=>$fileZipLesson->package_lessons->plan_id
+                    'packagePlanId'=>@$fileZipLesson->package_lessons->package_plan_id,
+                    'planId'=>@$fileZipLesson->package_lessons->plan_id
                 ];
         }
         $jsonData = [
