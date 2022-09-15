@@ -60,6 +60,7 @@ class CreateFileDownloadLesson extends Command
     {
 
         $planLessons = ZipPlanLesson::where('status', NULL)->with('plan')->get();
+        $infos = [];
 
 
         foreach ($planLessons as $planLesson){
@@ -76,6 +77,10 @@ class CreateFileDownloadLesson extends Command
                 'secret_key' =>  @$planLesson->plan->secret_key
             ];
 
+            $infos[] = $info;
+        }
+
+        foreach ($infos as $info){
             $url = $this->createFile($info);
             $notify = new Notification();
             $notify->status = 'new';
@@ -85,8 +90,6 @@ class CreateFileDownloadLesson extends Command
             $notify->url = $url;
             $notify->title = 'File download đã hoàn thành';
             $notify->save();
-
-
         }
 
     }
