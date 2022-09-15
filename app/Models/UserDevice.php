@@ -13,6 +13,8 @@ class UserDevice extends BaseModel
         'device_name',
         'user_id',
         'status',
+        'plan_id',
+        'school_id',
         'type',
         'secret_key',
         'reason',

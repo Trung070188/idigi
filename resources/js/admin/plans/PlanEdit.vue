@@ -33,6 +33,10 @@
 
 
                             </div>
+                            <a :href="exportDevicePlan">
+                                <button class="btn btn-primary" style="margin: 0px 0px 12px" >Export</button>
+                            </a>
+
 
                             <div class="mb-10">
 
@@ -86,16 +90,16 @@
                                                 <a v-if="permissions['015']" @click="remove(entry)" href="javascript:;" class="btn-trash deleted"><i
                                                     class="fa fa-trash mr-1 deleted"></i></a>-->
 
-                                                <a  >
-                                                    <button type="button" class="btn btn-sm btn-icon btn-light btn-active-light-primary">
-                                                        <i class="fa fa-edit"></i>
-                                                    </button>
-                                                </a>
-                                                <a  href="javascript:;">
-                                                    <button type="button" class="btn btn-sm btn-icon btn-light btn-active-light-primary">
-                                                        <i class="fa fa-trash mr-1 deleted"></i>
-                                                    </button>
-                                                </a>
+<!--                                                <a  >-->
+<!--                                                    <button type="button" class="btn btn-sm btn-icon btn-light btn-active-light-primary">-->
+<!--                                                        <i class="fa fa-edit"></i>-->
+<!--                                                    </button>-->
+<!--                                                </a>-->
+<!--                                                <a  href="javascript:;">-->
+<!--                                                    <button type="button" class="btn btn-sm btn-icon btn-light btn-active-light-primary">-->
+<!--                                                        <i class="fa fa-trash mr-1 deleted"></i>-->
+<!--                                                    </button>-->
+<!--                                                </a>-->
 
                                             </td>
                                         </tr>
@@ -553,6 +557,9 @@
                 <div class="modal-content">
                     <!--begin::Modal header-->
                     <div class="modal-header">
+                        <select class="form-group form-check" v-model="schoolId">
+                            <option v-for="school in schools" :value="school.id">{{school.label}}</option>
+                        </select>
                         <!--begin::Modal title-->
                         <h2>Import devices</h2>
                         <!--end::Modal title-->
@@ -823,6 +830,9 @@
             };
 
             return {
+                schoolId:'',
+                schools:$json.schools || [],
+                exportDevicePlan:'',
                 packageLesson:[],
                 lessonIds: $json.lessonIds || [],
                 allSelected: false,
@@ -983,6 +993,7 @@
                     }
                     if(res.code==1)
                     {
+                        this.code=res.exportDevicePlan,
                         this.code=res.code;
                         this.fileImport=res.fileImport;
                     }
@@ -1008,8 +1019,9 @@
                         const res = await $post('/xadmin/plans/import', {
                             fileImport:this.fileImport,
                             entry: this.entry,
+                            schoolId:this.schoolId,
                             idRoleIt:this.idRoleIt,
-                            doNotImport:this.doNotImport
+                            doNotImport:this.doNotImport,
                         }, false);
                         this.$loading(false);
                         if (res.code) {
@@ -1026,6 +1038,7 @@
                     location.replace('/xadmin/plans/index');
                 }
             },
+
             changeLimit() {
                 let params = $router.getQuery();
                 params['page'] = 1;
