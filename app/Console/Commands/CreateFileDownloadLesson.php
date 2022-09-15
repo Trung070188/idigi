@@ -86,7 +86,7 @@ class CreateFileDownloadLesson extends Command
             $notify->status = 'new';
             $notify->content = "File download";
             $notify->channel = 'inapp';
-            $notify->user_id = 3;
+            $notify->user_id = $info['user_id'];
             $notify->url = $url;
             $notify->title = 'File download đã hoàn thành';
             $notify->save();
