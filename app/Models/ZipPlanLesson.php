@@ -23,7 +23,7 @@ class ZipPlanLesson extends Model
 
     public function plan()
     {
-        return $this->belongsToMany(Plan::class);
+        return $this->belongsTo(Plan::class);
     }
     public function package_lessons()
     {
