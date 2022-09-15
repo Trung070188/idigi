@@ -983,6 +983,7 @@
                         const res = await $post('/xadmin/plans/import', {
                             fileImport:this.fileImport,
                             entry: this.entry,
+                            idRoleIt:this.idRoleIt,
                             doNotImport:this.doNotImport
                         }, false);
                         this.$loading(false);

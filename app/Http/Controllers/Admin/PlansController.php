@@ -520,7 +520,7 @@ class PlansController extends AdminBaseController
                     $device->status=$import['status'];
                     $device->secret_key=Str::random(10);
                     $device->plan_id=$entry->id;
-                    $device->user_id=$user->id;
+                    $device->user_id=$dataImport['idRoleIt'];
                     $device->save();
 
 
