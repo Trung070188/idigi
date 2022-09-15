@@ -457,6 +457,19 @@
                             </div>
 
                             <div class="row" >
+<!--                                <div >-->
+<!--                                    <button type="button" class="btn btn-sm btn-flex btn-light-primary " data-bs-toggle="modal" data-bs-target="#kt_modal_add_payment" style=" margin: 7px 0px 10px;" id="newPackage" @click="addPackageLesson" >-->
+<!--                                        &lt;!&ndash;begin::Svg Icon | path: icons/duotune/general/gen035.svg&ndash;&gt;-->
+<!--                                        <span class="svg-icon svg-icon-3">-->
+<!--																<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">-->
+<!--																	<rect opacity="0.3" x="2" y="2" width="20" height="20" rx="5" fill="black" />-->
+<!--																	<rect x="10.8891" y="17.8033" width="12" height="2" rx="1" transform="rotate(-90 10.8891 17.8033)" fill="black" />-->
+<!--																	<rect x="6.01041" y="10.9247" width="12" height="2" rx="1" fill="black" />-->
+<!--																</svg>-->
+<!--															</span>-->
+<!--                                        Add license package-->
+<!--                                    </button>-->
+<!--                                </div>-->
                                 <div class="form-group col-lg-8" id="clone">
                                     <label>Lesson package <span class="text-danger">*</span></label>
                                     <div class="card-header  border border-dashed border-gray-300">
@@ -467,7 +480,7 @@
                                         <!--end::Card title-->
                                         <!--begin::Card toolbar-->
                                         <div class="card-toolbar">
-                                            <button class="btn btn-primary">Download package</button>
+                                            <button class="btn btn-primary" @click="downloadLesson">Download package</button>
                                             <button class="btn btn-primary" style="margin: 0px 15px 0px" data-bs-toggle="modal" data-bs-target="#kt_modal" >View lessons</button>
                                             <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#kt_modal_invite" >Add lesson</button>
                                         </div>
@@ -487,23 +500,9 @@
 <!--                                        </label>-->
 <!--                                        &lt;!&ndash;end::Checkbox&ndash;&gt;-->
 <!--                                    </div>-->
-                                    <div >
-                                        <button type="button" class="btn btn-sm btn-flex btn-light-primary " data-bs-toggle="modal" data-bs-target="#kt_modal_add_payment" style="float: right; margin: -50px -68px 0px;" id="newPackage" @click="addPackageLesson" >
-                                            <!--begin::Svg Icon | path: icons/duotune/general/gen035.svg-->
-                                            <span class="svg-icon svg-icon-3">
-																<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-																	<rect opacity="0.3" x="2" y="2" width="20" height="20" rx="5" fill="black" />
-																	<rect x="10.8891" y="17.8033" width="12" height="2" rx="1" transform="rotate(-90 10.8891 17.8033)" fill="black" />
-																	<rect x="6.01041" y="10.9247" width="12" height="2" rx="1" fill="black" />
-																</svg>
-															</span>
-                                        </button>
-                                    </div>
+
                                 </div>
                             </div>
-
-                            <div class="counter"></div>
-                            <div class="steplist"></div>
                         </div>
 
 
@@ -650,9 +649,15 @@
                                         </div>
                                         <!--end::Label-->
                                     </div>
+                                    <!--end::Step 4-->
+                                    <!--begin::Step 5-->
+
+                                    <!--end::Step 5-->
                                 </div>
                                 <!--end::Nav-->
                             </div>
+                            <!--begin::Aside-->
+                            <!--begin::Content-->
                             <div class="flex-row-fluid py-lg-5 px-lg-15">
                                 <!--begin::Form-->
                                 <form class="form" novalidate="novalidate" id="kt_modal_create_app_form">
@@ -668,15 +673,25 @@
                                                     <error-label ></error-label>
                                                 </div>
 
-<!--                                                <input type="text" class="form-control form-control-lg form-control-solid" name="name" placeholder="" value="" style="font-size: 22px" />-->
+                                                <!--                                                <input type="text" class="form-control form-control-lg form-control-solid" name="name" placeholder="" value="" style="font-size: 22px" />-->
                                                 <div class="d-flex flex-stack py-5 border-bottom border-gray-300 border-bottom-dashed">
                                                     <!--begin::Details-->
                                                     <div class="d-flex align-items-center">
+                                                        <!--begin::Avatar-->
+
+                                                        <!--end::Avatar-->
+                                                        <!--begin::Details-->
                                                         <div class="ms-6">
 
                                                             <div class="fw-bold text-muted">{{fileImport.length}} new record(s)</div>
+                                                            <!--end::Email-->
                                                         </div>
+                                                        <!--end::Details-->
+                                                    </div>
+                                                    <!--end::Details-->
+                                                    <!--begin::Stats-->
                                                     <div class="d-flex">
+                                                        <!--begin::Sales-->
                                                         <div class="text-end">
                                                           	<span class="form-check form-check-custom form-check-solid">
 																					<input class="form-check-input" type="radio" name="category" :value="fileImport" v-model="fileImport"/>
@@ -686,43 +701,61 @@
 																				</span>
 
                                                         </div>
+                                                        <!--end::Sales-->
+                                                        <!--end::Stats-->
+                                                    </div>
                                                 </div>
-                                            </div>
 
                                             </div>
 
                                             <div class="d-flex flex-stack py-5 border-bottom border-gray-300 border-bottom-dashed">
+                                                <!--begin::Details-->
                                                 <div class="d-flex align-items-center">
+                                                    <!--begin::Avatar-->
+
+                                                    <!--end::Avatar-->
+                                                    <!--begin::Details-->
                                                     <div class="ms-6">
 
                                                         <div class="fw-bold text-muted">{{deviceError.length}} error record(s)</div>
+                                                        <!--end::Email-->
                                                     </div>
+                                                    <!--end::Details-->
                                                 </div>
+                                                <!--end::Details-->
+                                                <!--begin::Stats-->
                                                 <div class="d-flex">
+                                                    <!--begin::Sales-->
                                                     <div class="text-end">
                                                         <div class="fs-7 text-muted"><a :href="validateFile" type="button" class="btn btn-primary">Export</a></div>
                                                     </div>
+                                                    <!--end::Sales-->
                                                 </div>
+                                                <!--end::Stats-->
                                             </div>
-                                            </div>
+                                        </div>
 
                                     </div>
 
                                     <div class="d-flex flex-stack pt-10">
+                                        <!--begin::Wrapper-->
                                         <div class="me-2">
                                             <button type="button" class="btn btn-lg btn-light-primary me-3" data-kt-stepper-action="previous">
+                                                <!--begin::Svg Icon | path: icons/duotune/arrows/arr063.svg-->
                                                 <span class="svg-icon svg-icon-3 me-1">
 												<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
 													<rect opacity="0.5" x="6" y="11" width="13" height="2" rx="1" fill="black" />
 													<path d="M8.56569 11.4343L12.75 7.25C13.1642 6.83579 13.1642 6.16421 12.75 5.75C12.3358 5.33579 11.6642 5.33579 11.25 5.75L5.70711 11.2929C5.31658 11.6834 5.31658 12.3166 5.70711 12.7071L11.25 18.25C11.6642 18.6642 12.3358 18.6642 12.75 18.25C13.1642 17.8358 13.1642 17.1642 12.75 16.75L8.56569 12.5657C8.25327 12.2533 8.25327 11.7467 8.56569 11.4343Z" fill="black" />
 												</svg>
 											</span>
-                                                Back</button>
+                                                <!--end::Svg Icon-->Back</button>
                                         </div>
-
+                                        <!--end::Wrapper-->
+                                        <!--begin::Wrapper-->
                                         <div>
                                             <button type="button" class="btn btn-lg btn-primary" data-kt-stepper-action="submit">
 												<span class="indicator-label">Submit
+                                                    <!--begin::Svg Icon | path: icons/duotune/arrows/arr064.svg-->
 												<span class="svg-icon svg-icon-3 ms-2 me-0">
 													<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
 														<rect opacity="0.5" x="18" y="13" width="13" height="2" rx="1" transform="rotate(-180 18 13)" fill="black" />
@@ -741,18 +774,28 @@
 													<path d="M15.4343 12.5657L11.25 16.75C10.8358 17.1642 10.8358 17.8358 11.25 18.25C11.6642 18.6642 12.3358 18.6642 12.75 18.25L18.2929 12.7071C18.6834 12.3166 18.6834 11.6834 18.2929 11.2929L12.75 5.75C12.3358 5.33579 11.6642 5.33579 11.25 5.75C10.8358 6.16421 10.8358 6.83579 11.25 7.25L15.4343 11.4343C15.7467 11.7467 15.7467 12.2533 15.4343 12.5657Z" fill="black" />
 												</svg>
 											</span>
-                                                </button>
+                                                <!--end::Svg Icon--></button>
                                         </div>
+                                        <!--end::Wrapper-->
                                     </div>
-                                    </div>
+                                    <!--end::Actions-->
                                 </form>
+                                <!--end::Form-->
                             </div>
+                            <!--end::Content-->
                         </div>
+                        <!--end::Stepper-->
                     </div>
+                    <!--end::Modal body-->
                 </div>
+                <!--end::Modal content-->
             </div>
+            <!--end::Modal dialog-->
+
+
         </div>
     </div>
+
 </template>
 
 <script>
@@ -820,39 +863,53 @@
         },
         mounted() {
             $router.on('/', this.load).init();
+            let self = this;
+            $.get('/xadmin/user_devices/getDeviceByUser', function (res) {
+                self.devices = res;
+            });
         },
 
         methods: {
-            addPackageLesson()
-            {
-                var $counter = $("#clone");
-                var value = $counter.val();
-               $counter.val(++value);
-               console.log(value);
+            async downloadLesson() {
 
-                const $steplist = $(".steplist"),
-                    totalchild = $steplist.children().length,
-                    $newData = $(
 
-                        '<div class="form-group col-lg-8">' +
-                        '<label >Lesson package  <span class="text-danger">*</span></label>' +
-                        '<div class="card-header  border border-dashed border-gray-300">' +
-                        ' <div class="card-title" style="font-size: 15px">' +
-                        '<div  class="fw-bold text-muted" >lesson(s) added</div>' +
-                        '</div>' +
-                        '<div class="card-toolbar">' +
-                        '<button class="btn btn-primary">Download package</button>' +
-                        '<button class="btn btn-primary" style="margin: 0px 15px 0px" data-bs-toggle="modal" data-bs-target="#kt_modal" >View lessons</button>' +
-                        '<button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#kt_modal_invite" >Add lesson</button>' +
-                        ' </div>' +
-                        '</div>'
-                    )
-                // $newData.attr("id", "step" + value)
-                // $newData.addClass("step" + value);
-                // $newData.find("label").val(value);
-                $steplist.append($newData);
+                const res = await $post('/xadmin/plans/downloadLesson', {
+
+                    lessonIds: this.lessonIds,
+                    device: this.device
+                });
+                window.location.href = res.url;
 
             },
+            // addPackageLesson()
+            // {
+            //     var $counter = $("#clone");
+            //     var value = $counter.val();
+            //    $counter.val(++value);
+            //    console.log(value);
+            //
+            //     const $steplist = $(".steplist"),
+            //         totalchild = $steplist.children().length,
+            //         $newData = $(
+            //             '<div class="form-group col-lg-8" >' +
+            //             '<label  v-model="lessonIds">Lesson package  <span class="text-danger">*</span></label>' +
+            //             '<div class="card-header  border border-dashed border-gray-300">' +
+            //             ' <div class="card-title" style="font-size: 15px">' +
+            //             '<div  class="fw-bold text-muted" >lesson(s) added</div>' +
+            //             '</div>' +
+            //             '<div class="card-toolbar">' +
+            //             '<button class="btn btn-primary">Download package</button>' +
+            //             '<button class="btn btn-primary" style="margin: 0px 15px 0px" data-bs-toggle="modal" data-bs-target="#kt_modal" >View lessons</button>' +
+            //             '<button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#kt_modal_invite" >Add lesson</button>' +
+            //             ' </div>' +
+            //             '</div>'
+            //         )
+            //     // $newData.attr("id", "step" + value)
+            //     // $newData.addClass("step" + value);
+            //     // $newData.find("label").val(value);
+            //     $steplist.append($newData);
+            //
+            // },
             async deleteLesson(lesson)
             {
                 let new_arr = this.lessonIds.filter(item => item !== lesson);
