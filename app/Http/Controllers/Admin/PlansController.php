@@ -617,6 +617,10 @@ class PlansController extends AdminBaseController
                     'export_devices' => url("exports/{$y}/{$m}/{$hash}.xlsx")
                 ]
             );
+            return [
+              'code'=>0,
+              'message'=>'Đã cập nhật '
+            ];
 
         }
     }

@@ -30,13 +30,11 @@
                             <div class="text-center mb-13">
                                 <!--begin::Title-->
                                 <h1 class="mb-3">Device list</h1>
-
-
                             </div>
-                            <a :href="entry.export_devices" type="button" class="btn btn-primary">
-                                Export
-                            </a>
 
+                                <a :href="entry.export_devices" type="button" class="btn btn-primary" style="margin: -20px 0px 15px">
+                                    Export
+                                </a>
 
                             <div class="mb-10">
 
@@ -105,6 +103,7 @@
                                         </tr>
                                         </tbody>
                                     </table>
+
                                     <div class="d-flex pl-9 pr-9 mb-8">
                                         <div class="col-sm-12 col-md-5 d-flex align-items-center justify-content-center justify-content-md-start">
                                             <!--<div class="mr-2">
@@ -125,6 +124,7 @@
                                             </div>
                                         </div>
                                     </div>
+
 
                                 </div>
 
@@ -437,6 +437,13 @@
                                     </div>
 
 
+                                </div>
+                                <div class="row">
+                                    <div class="form-group col-lg-8">
+                                        <label>School<span class="text-danger">*</span> </label>
+                                        <treeselect :options="schools" :multiple="true" />
+
+                                    </div>
                                 </div>
                                 <div class="row">
                                     <div class="form-group col-lg-8">
@@ -809,12 +816,15 @@
     import {$get, $post, forEach, getTimeRangeAll} from "../../utils";
     import ActionBar from "../includes/ActionBar";
     import $router from "../../lib/SimpleRouter";
+    import '@riophae/vue-treeselect/dist/vue-treeselect.css'
+    import Treeselect from "@riophae/vue-treeselect";
+
     let created = getTimeRangeAll();
     const $q = $router.getQuery();
 
     export default {
         name: "PlanEdit.vue",
-        components: {ActionBar},
+        components: {ActionBar,Treeselect},
         data() {
             // $(document).ready(function() {
             //    $("#newPackage").click(function ()
@@ -1022,15 +1032,14 @@
                             doNotImport:this.doNotImport,
                         }, false);
                         this.$loading(false);
-                        console.log(res.code)
                         if (res.code) {
                             console.log('1')
                             toastr.error(res.message);
                         } else {
                             this.errors = {};
                             this.exportDevicePlan=res.url;
-                            // toastr.success(res.message);
-                            // location.replace('/xadmin/plans/index');
+                            toastr.success(res.message);
+                            location.replace('/xadmin/plans/index');
                         }
                     }
                 }
