@@ -33,8 +33,8 @@
 
 
                             </div>
-                            <a :href="exportDevicePlan">
-                                <button class="btn btn-primary" style="margin: 0px 0px 12px" >Export</button>
+                            <a :href="entry.export_devices" type="button" class="btn btn-primary">
+                                Export
                             </a>
 
 
@@ -993,7 +993,6 @@
                     }
                     if(res.code==1)
                     {
-                        this.code=res.exportDevicePlan,
                         this.code=res.code;
                         this.fileImport=res.fileImport;
                     }
@@ -1011,7 +1010,6 @@
                 }
             },
             async saveImport() {
-
                 if(this.doNotImport=='')
                 {
                     {
@@ -1024,12 +1022,15 @@
                             doNotImport:this.doNotImport,
                         }, false);
                         this.$loading(false);
+                        console.log(res.code)
                         if (res.code) {
+                            console.log('1')
                             toastr.error(res.message);
                         } else {
                             this.errors = {};
-                            toastr.success(res.message);
-                            location.replace('/xadmin/plans/index');
+                            this.exportDevicePlan=res.url;
+                            // toastr.success(res.message);
+                            // location.replace('/xadmin/plans/index');
                         }
                     }
                 }

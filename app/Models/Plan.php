@@ -22,7 +22,8 @@ class Plan extends BaseModel
     'due_at',
     'plan_description',
     'user_id',
-    'secret_key'
+    'secret_key',
+     'export_devices'
 ];
     public function lessons()
     {

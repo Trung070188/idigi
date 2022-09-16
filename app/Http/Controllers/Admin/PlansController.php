@@ -177,7 +177,7 @@ class PlansController extends AdminBaseController
             'entry'=>$entry,
             'roleIt'=>$roleIt,
             'data'=>$data,
-            'url'=>$url,
+            @'url'=>@$url,
             'schools'=>$schools,
         ];
         return view('admin.layouts.vue', compact('title', 'component', 'jsonData'));
@@ -349,118 +349,7 @@ class PlansController extends AdminBaseController
 
 
     }
-//    public function exportDevice(Request $req)
-//    {
-//        {
-//            if (!$req->isMethod('POST')) {
-//                return ['code' => 405, 'message' => 'Method not allow'];
-//            }
-//
-//
-//            $rules = [
-//
-//            ];
-//
-//            $v = Validator::make($req->all(), $rules);
-//
-//            if ($v->fails()) {
-//                return [
-//                    'code' => 2,
-//                    'errors' => $v->errors()
-//                ];
-//            }
-//
-//            //Upload File
-//            $file0 = $_FILES['file_0'];
-//
-//            $y = date('Y');
-//            $m = date('m');
-//
-//            $allowed = [
-//                'xls', 'xlsx'
-//            ];
-//
-//
-//            $info = pathinfo($file0['name']);
-//            $extension = strtolower($info['extension']);
-//
-//            if (!in_array($extension, $allowed)) {
-//                return [
-//                    'code' => 3,
-//                    'message' => 'Extension: ' . $extension . ' is now allowed'
-//                ];
-//            }
-//
-//            $dir = public_path("uploads/excel_import/{$y}/{$m}");
-//            if (!is_dir($dir)) {
-//                mkdir($dir, 0755, true);
-//            }
-//
-//            $info = pathinfo($file0['name']);
-//            $extension = strtolower($info['extension']);
-//
-//            $hash = sha1(uniqid());
-//            $newFilePath = $dir . '/' . $hash . '.' . $extension;
-//            $ok = move_uploaded_file($file0['tmp_name'], $newFilePath);
-//            $newUrl = url("/uploads/excel_import/{$y}/{$m}/{$hash}.{$extension}");
-//            $sheets = Excel::toCollection(new DeviceImport(), "{$y}/{$m}/{$hash}.{$extension}", 'excel-import');
-//            $deviceLists[] = $sheets;
-//            $validations = [];
-//            $error = [];
-//            $code = 0;
-//            $devicePlan=
-//            foreach ($deviceLists as $deviceList) {
-//                if ($code == 2) {
-//                    //export
-//                    foreach ($validations as $validation) {
-//                        if (@$validation['error']) {
-//                            $fileError[] =[
-//                                'device_name'=>$validation['device_name'],
-//                                'type'=>$validation['type'],
-//                                'device_uid'=>'',
-//                                'status'=>$validation['status'],
-//                                'error'=>$validation['error'],
-//                            ];
-//                        }
-//                        else
-//                        {
-//                            $fileImport[]=$validation;
-//                        }
-//                    }
-//                    Excel::store(new DevicePlanExport($fileError), "{$y}/{$m}/{$hash}.{$extension}", 'excel-export');
-//
-//                    $file = new File();
-//                    $file->type = $file0['type'];
-//                    $file->hash = sha1($newFilePath);
-//                    $file->url = $newUrl;
-//                    $file->is_image = 0;
-//                    $file->is_excel = 1;
-//                    $file->size = $file0['size'];
-//                    $file->name = $info['filename'];
-//                    $file->path = $newFilePath;
-//                    $file->extension = $extension;
-//                    $file->save();
-//                    return [
-//                        'code'=>2,
-//                        'deviceError'=>$fileError,
-//                        'fileImport'=>$fileImport,
-//                        'fileError' => url("exports/{$y}/{$m}/{$hash}.{$extension}"),
-//
-//                    ];
-//
-//                }
-//                else{
-//                    return [
-//                        'code'=>1,
-//                        'fileImport'=>$validations,
-//                    ];
-//
-//                }
-//
-//            }
-//
-//        }
-//    }
+
     public function validateImportDevice(Request $req)
     {
         {
@@ -484,7 +373,6 @@ class PlansController extends AdminBaseController
 
             //Upload File
             $file0 = $_FILES['file_0'];
-
             $y = date('Y');
             $m = date('m');
 
@@ -572,7 +460,6 @@ class PlansController extends AdminBaseController
                         {
 
                             $fileImport[]=$validation;
-//                            Excel::store(new DevicePlanExport($fileImport), "{$y}/{$m}/{$hash}.{$extension}", 'excel-export');
                         }
                     }
                     Excel::store(new DeviceErrorExport($fileError), "{$y}/{$m}/{$hash}.{$extension}", 'excel-export');
@@ -598,8 +485,6 @@ class PlansController extends AdminBaseController
 
                 }
                 else{
-
-//                        Excel::store(new DevicePlanExport($validations), "{$y}/{$m}/{$hash}.{$extension}", 'excel-export');
                         return [
                             'code'=>1,
                             'fileImport'=>$validations,
@@ -614,7 +499,7 @@ class PlansController extends AdminBaseController
     }
     public function import(Request $req)
     {
-        $dataImport=$req->all();
+        $dataImport = $req->all();
         $data = $req->get('entry');
 
         if (!$req->isMethod('POST')) {
@@ -624,8 +509,16 @@ class PlansController extends AdminBaseController
 
         $rules = [
         ];
+        if($dataImport['schoolId'])
+        {
+            $rules['schoolId']=['required'];
+        }
+        $customMessages = [
+            'schoolId.required' => 'The school field is required.',
+        ];
 
-        $v = Validator::make($data, $rules);
+
+        $v = Validator::make($data, $rules,$customMessages);
 
         if ($v->fails()) {
             return [
@@ -646,82 +539,90 @@ class PlansController extends AdminBaseController
                     'message' => 'Không tìm thấy',
                 ];
             }
-            $user=Auth::user();
-            $devicePlan=[];
-            if(@$dataImport['fileImport'] )
-            {
-                foreach ($dataImport['fileImport'] as $import)
-                {
-                    $device=new UserDevice();
-                    $device->device_name=$import['device_name'];
-                    $device->type=$import['type'];
-                    $device->device_uid=$import['device_uid'];
-                    $device->status=2;
-                    $device->secret_key=Str::random(10);
-                    $device->plan_id=$entry->id;
-                    $device->school_id=$dataImport['schoolId'];
-                    $device->user_id=$dataImport['idRoleIt'];
+            $user = Auth::user();
+            $devicePlan = [];
+            if (@$dataImport['fileImport']) {
+                foreach ($dataImport['fileImport'] as $import) {
+                    $device = new UserDevice();
+                    $device->device_name = $import['device_name'];
+                    $device->type = $import['type'];
+                    $device->device_uid = $import['device_uid'];
+                    $device->status = 2;
+                    $device->secret_key = Str::random(10);
+                    $device->plan_id = $entry->id;
+                    $device->school_id = $dataImport['schoolId'];
+                    $device->user_id = $dataImport['idRoleIt'];
                     $device->save();
+                    $dataPlanExport = [];
+                    $devices = UserDevice::where('user_id', $dataImport['idRoleIt'])->Where
+                    ('plan_id', '=', $entry->id)
+                        ->where('status', 2)
+                        ->get();
+                    $school = School::where('id', $dataImport['schoolId'])->first();
 
+                    if ($school) {
+                        $expired = $school->license_to;
+                    }
 
-                        $devices = UserDevice::where('user_id',$dataImport['idRoleIt'] )
-                            ->where('id', $device->id)
-                            ->where('status', 2)
-                            ->first();
-                        $plans=Plan::where('user_id','=',$dataImport['idRoleIt'])->get();
-                        $school = School::where('id', $dataImport['schoolId'])->first();
-
-                        if($school){
-                            $expired = $school->license_to;
-                        }
-
-                        if(!$expired){
-                            $expired = Carbon::now()->addHours(-10);
-                        }
-                        $apiPlan=[];
-                        foreach ($plans as $plan)
-                        {
-                            $apiPlan[]=[
-                                'id'=>$plan->id,
-                                'name'=>$plan->name,
-                                'secret_key'=>$plan->secret_key,
-                            ];
-                        }
-                        if($devices){
-                            $payload = [
-                                'plan' => $apiPlan,
-                                'user_id' => $user->id,
-                                'device_uid' =>$device->device_uid,
-                                'device_name' =>$device->device_name,
-                                'secret_key' =>$device->secret_key,
-                                'create_time' =>  Carbon::now()->timestamp,
-                                'expired' => strtotime($expired)
-                            ];
-                            $jwt = JWT::encode($payload, env('SECRET_KEY'), 'HS256');
-
-                        }
-
-
-                        $devicePlan[]=[
-                          'device_name'=>$device->device_name,
-                          'device_uid'=>$device->device_uid,
-                          'school_name'=>$school->label,
-                          'code'=>$jwt
+                    if (!$expired) {
+                        $expired = Carbon::now()->addHours(-10);
+                    }
+                    $apiPlan = [];
+                    {
+                        $apiPlan[] = [
+                            'id' => $entry->id,
+                            'name' => $entry->name,
+                            'secret_key' => $entry->secret_key,
                         ];
-                    Excel::store(new DevicePlanExport($devicePlan), "test.xlsx", 'excel-export');
+                    }
+                    $payload = [];
+                    foreach ($devices as $device) {
+                        $payload [] = [
+                            'plan' => $apiPlan,
+                            'user_id' => $user->id,
+                            'device_uid' => $device->device_uid,
+                            'device_name' => $device->device_name,
+                            'secret_key' => $device->secret_key,
+                            'create_time' => Carbon::now()->timestamp,
+                            'expired' => strtotime($expired)
+                        ];
+
+                    }
+                    $school = School::where('id', $dataImport['schoolId'])->first();
+
+                    foreach ($payload as $pay) {
+
+                        $jwt = JWT::encode($pay, env('SECRET_KEY'), 'HS256');
+                        $dataPlanExport[] = [
+                            'device_name' => $pay['device_name'],
+                            'device_uid' => $pay['device_uid'],
+                            'school_name' => $school->label,
+                            'code' => $jwt
+                        ];
+                    }
+
 
                 }
-                return [
-                    'token'=>$jwt,
-                    'code' => 0,
-                    'message' => 'Đã cập nhật',
-                ];
-
+                $y = date('Y');
+                $m = date('m');
+                $hash = sha1(uniqid());
 
             }
-        }
+            Excel::store(new DevicePlanExport($dataPlanExport), "{$y}/{$m}/{$hash}.xlsx", 'excel-export');
+            Plan::updateOrCreate(
+                [
+                    'id' => $entry->id,
+                ],
+                [
+                    'export_devices' => url("exports/{$y}/{$m}/{$hash}.xlsx")
+                ]
+            );
 
+        }
     }
+
+
+
     public function planLesson(Request $req)
     {
         $dataLesson=$req->all();
@@ -1003,186 +904,4 @@ class PlansController extends AdminBaseController
         ];
 
     }
-//    public function notification()
-//    {
-//        $planLessons = ZipPlanLesson::where('status', NULL)->with('plan')->get();
-//        $infos = [];
-//
-//
-//        foreach ($planLessons as $planLesson){
-//            $lessonIds = explode(',', $planLesson->lesson_ids);
-//            $planLesson->status= 'inprogress';
-//            $planLesson->save();
-//            $info = [
-//                'user_id' => $planLesson->user_id,
-//                'ip_address' => NULL,
-//                'user_agent' => NULL,
-//                'device_uid' => NULL,
-//                'lesson_ids' =>  $lessonIds,
-//                'plan_id' =>  $planLesson->id,
-//                'secret_key' =>  @$planLesson->plan->secret_key
-//            ];
-//
-//            $infos[] = $info;
-//        }
-//
-//        foreach ($infos as $info){
-//            $url = $this->downloadLesson($info);
-//            $notify = new Notification();
-//            $notify->status = 'new';
-//            $notify->content = "File download";
-//            $notify->channel = 'inapp';
-//            $notify->user_id = $info['user_id'];
-//            $notify->url = $url;
-//            $notify->title = 'File download đã hoàn thành';
-//            $notify->save();
-//        }
-//    }
-//    public function downloadLesson($info)
-//    {
-//        ob_get_clean();
-//
-//        $password = env('SECRET_KEY') . '_' .  $info['secret_key'];
-//
-//        $y = date('Y');
-//        $m = date('m');
-//        $d = date('d');
-//        $dir = "files/downloads/{$y}/{$m}/{$d}/{$info['user_id']}";
-//
-//        if (!is_dir(public_path($dir))) {
-//            mkdir(public_path($dir), 0755, true);
-//        }
-//
-//        $lessons = Lesson::whereIn('id', $info['lesson_ids'])
-//            ->with(['inventories'])->get();
-//
-//
-//        $filenameAll = uniqid(time() . rand(10, 100));
-//        $pathZipAll = $dir . '/all_lessons_' . $filenameAll . '.zip';
-//        $zipFileAll = public_path($pathZipAll);
-//        $zipAll = new \ZipArchive();
-//        $zipAll->open($zipFileAll, \ZipArchive::CREATE | \ZipArchive::OVERWRITE);
-//
-//        $lessonLog = DownloadLessonLog::create([
-//            'user_id' => $info['user_id'],
-//            'ip_address' => $info['ip_address'],
-//            'user_agent' => $info['user_agent'],
-//            'device_uid' => $info['device_uid'],
-//            'lesson_ids' => implode(',', $info['lesson_ids']),
-//            'download_at' => Carbon::now(),
-//        ]);
-//
-//        foreach ($lessons as $key => $lesson) {
-//            $filename = uniqid(time() . rand(10, 100));
-//            $name = explode(':', $lesson->name);
-//            $zip_file = public_path($dir . '/' . $name[0] . '.zip');
-//            $zip = new \ZipArchive();
-//            $zip->open($zip_file, \ZipArchive::CREATE | \ZipArchive::OVERWRITE);
-//            $structure = json_decode($lesson->structure, true);
-//
-//
-//            if ($lesson->inventories) {
-//                foreach ($lesson->inventories as $inventory) {
-//                    $icon = 'Icons/' . basename(public_path($inventory->image));
-//                    $link = basename(public_path($inventory->virtual_path));
-//
-//                    if (file_exists(public_path($inventory->image)) && is_file(public_path($inventory->image))) {
-//                        $zip->addFile(public_path($inventory->image), $icon);
-//                        $zip->setEncryptionName($icon, \ZipArchive::EM_AES_256, $password);
-//                    }
-//                    if (file_exists(public_path($inventory->virtual_path)) && is_file(public_path($inventory->virtual_path))) {
-//                        $zip->addFile(public_path($inventory->virtual_path), $link);
-//                        $zip->setEncryptionName($link, \ZipArchive::EM_AES_256, $password);
-//                    }
-//
-//                    $dataDownloadInventory = [
-//                        'user_id' => $info['user_id'],
-//                        'ip_address' => $info['ip_address'],
-//                        'user_agent' => $info['user_agent'],
-//                        'device_uid' => $info['device_uid'],
-//                        'lesson_id' => $lesson->id,
-//                        'download_at' => Carbon::now(),
-//                        'type' => 'cms',
-//                        'inventory_id' => $inventory->id
-//                    ];
-//                    UpdateDownloadInventory::dispatch($dataDownloadInventory);
-//
-//                }
-//            }
-//
-//            Storage::put($dir . '/lesson_detail' . $filename . '.txt', json_encode($structure));
-//
-//            $zip->addFile(storage_path('app/' . $dir . '/lesson_detail' . $filename . '.txt'), 'lesson_detail.txt');
-//            $zip->setEncryptionName('lesson_detail.txt', \ZipArchive::EM_AES_256, $password);
-//            $zip->close();
-//
-//            $dataLessonFile = [
-//                'download_lesson_log_id' => $lessonLog->id,
-//                'path' => $zip_file,
-//                'is_main' => 0,
-//                'is_deleted_file' => 0
-//            ];
-//
-//            UpdateDownloadLessonFile::dispatch($dataLessonFile);
-//
-//            $zipAll->addFile($zip_file, $name[0] . '.zip');
-//            $zipAll->setEncryptionName('/' . $name[0] . '.zip', \ZipArchive::EM_AES_256, $password);
-//
-//        }
-//
-//        $zipAll->close();
-//
-//        $dataLessonFile = [
-//            'download_lesson_log_id' => $lessonLog->id,
-//            'path' => $zipFileAll,
-//            'is_main' => 1,
-//            'is_deleted_file' => 0
-//        ];
-//        UpdateDownloadLessonFile::dispatch($dataLessonFile);
-//
-//        ZipPlanLesson::where('id',$info['plan_id'])->update([
-//            'url' => url($pathZipAll),
-//            'status' => 'done',
-//        ]);
-//
-//
-//        return url($pathZipAll);
-//    }
-//public function exportDevicePlan(Request $req)
-//{
-//    $data=$req->all();
-//
-//    $devicePlan=UserDevice::where('plan_id','=',$data['entry']['id'])->get();
-//    $file0 = $_FILES['file_0'];
-//
-//    $y = date('Y');
-//    $m = date('m');
-//
-//    $allowed = [
-//        'xls', 'xlsx'
-//    ];
-//    $info = pathinfo($file0['name']);
-//    $extension = strtolower($info['extension']);
-//
-//    if (!in_array($extension, $allowed)) {
-//        return [
-//            'code' => 3,
-//            'message' => 'Extension: ' . $extension . ' is now allowed'
-//        ];
-//    }
-//
-//    $dir = public_path("uploads/excel_import/{$y}/{$m}");
-//    if (!is_dir($dir)) {
-//        mkdir($dir, 0755, true);
-//    }
-//
-//    $info = pathinfo($file0['name']);
-//    $extension = strtolower($info['extension']);
-//
-//    $hash = sha1(uniqid());
-//    $newFilePath = $dir . '/' . $hash . '.' . $extension;
-//    $ok = move_uploaded_file($file0['tmp_name'], $newFilePath);
-//    $newUrl = url("/uploads/excel_import/{$y}/{$m}/{$hash}.{$extension}");
-//    Excel::store(new DevicePlanExport($devicePlan), "{$y}/{$m}/{$hash}.{$extension}", 'excel-export');
-//}
 }
