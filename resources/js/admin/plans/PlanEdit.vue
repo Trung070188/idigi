@@ -445,13 +445,14 @@
                                     </div>
 
                                 </div>
-                                <div class="row">
-                                    <div class="form-group col-lg-8">
-                                        <label>Devices <span class="text-danger">*</span></label>
+                                <div class="row" v-for="deviceSchool in nameSchool">
+
+                                    <div class="form-group col-lg-8" >
+                                        <label>Device của trường  {{deviceSchool.school_name}} </label>
                                         <div class="card-header  border border-dashed border-gray-300">
                                             <!--begin::Card title-->
                                             <div class="card-title" style="font-size: 15px">
-                                                <div  class="fw-bold text-muted" >{{data.length}} device(s) added</div>
+                                                <div  class="fw-bold text-muted" >{{deviceSchool.lengthDevicePlan}} device(s) added</div>
                                             </div>
                                             <!--end::Card title-->
                                             <!--begin::Card toolbar-->
@@ -840,6 +841,7 @@
             };
 
             return {
+                nameSchool:$json.nameSchool || [],
                 schoolPlan:$json.schoolPlan || [],
                 schoolId:'',
                 schools:$json.schools || [],

@@ -54,6 +54,10 @@ class School extends BaseModel
     {
         return $this->belongsToMany(Course::class,'school_courses');
     }
+    public function user_devices()
+    {
+        return $this->hasMany(UserDevice::class,'school_id');
+    }
 
 
 }

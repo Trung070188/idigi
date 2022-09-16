@@ -134,32 +134,6 @@ class PlansController extends AdminBaseController
         $devices=UserDevice::query()->with(['users'])->where('plan_id','=',$entry->id)->orderBy('created_at','ASC')->get();
 
        $data=[];
-        foreach ($devices as $device)
-        {
-            $user=Auth::user();
-
-                $role=$device->users->roles;
-                foreach ($role as $roless)
-                {
-                    $roleName=$roless->role_name;
-                }
-                $data[]=[
-                    'id'=>$device->id,
-                    'device_uid'=>$device->device_uid,
-                    'device_name'=>$device->device_name,
-                    'user_id'=>$device->user_id,
-                    'plan_id'=>$device->plan_id,
-                    'type'=>$device->type,
-                    'status'=>$device->status,
-                    'secret_key'=>$device->secret_key,
-                    'reason'=>$device->reason,
-                    'created_at'=>$device->created_at,
-                    'updated_at'=>$device->updated_at,
-                    'roleName'=>$roleName,
-                ];
-
-
-        }
         $fileZipLessons=ZipPlanLesson::query()->with(['package_lessons'])->where('plan_id','=',$entry->id)->get();
 
         foreach ($fileZipLessons as $fileZipLesson)
@@ -170,14 +144,52 @@ class PlansController extends AdminBaseController
                     'planId'=>@$fileZipLesson->package_lessons->plan_id
                 ];
         }
-        $schools=School::query()->orderBy('id','desc')->get();
+        $schools=School::query()->with(['user_devices'])->orderBy('id','desc')->get();
         $schoolPlan=[];
+        $nameSchool=[];
         if(@$entry->schools)
         {
+
             foreach ($entry->schools as $school)
             {
+                $lengthDevicePlan=$school->user_devices->count();
+                foreach ($devices as $device)
+                {
+                    if($device->school_id==$school->id)
+                    {
+                        $user=Auth::user();
+
+                        $role=$device->users->roles;
+                        foreach ($role as $roless)
+                        {
+                            $roleName=$roless->role_name;
+                        }
+                        $data[]=[
+                            'id'=>$device->id,
+                            'device_uid'=>$device->device_uid,
+                            'device_name'=>$device->device_name,
+                            'user_id'=>$device->user_id,
+                            'plan_id'=>$device->plan_id,
+                            'type'=>$device->type,
+                            'status'=>$device->status,
+                            'secret_key'=>$device->secret_key,
+                            'reason'=>$device->reason,
+                            'created_at'=>$device->created_at,
+                            'updated_at'=>$device->updated_at,
+                            'roleName'=>$roleName,
+                        ];
+
+                    }
+                }
                 $schoolPlan[]=$school->id;
+                $nameSchool[]=[
+                    'school_name'=>$school->label,
+                    'lengthDevicePlan'=>$lengthDevicePlan,
+
+                ];
+
             }
+
         }
 
 
@@ -190,7 +202,8 @@ class PlansController extends AdminBaseController
             'data'=>$data,
             @'url'=>@$url,
             'schools'=>$schools,
-            @'schoolPlan'=>@$schoolPlan
+            @'schoolPlan'=>@$schoolPlan,
+            @'nameSchool'=>@$nameSchool,
         ];
         return view('admin.layouts.vue', compact('title', 'component', 'jsonData'));
     }
