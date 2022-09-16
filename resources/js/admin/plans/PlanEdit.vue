@@ -441,9 +441,9 @@
                                 <div class="row">
                                     <div class="form-group col-lg-8">
                                         <label>School<span class="text-danger">*</span> </label>
-                                        <treeselect :options="schools" :multiple="true" />
-
+                                        <treeselect :options="schools" :multiple="true" v-model="schoolPlan" />
                                     </div>
+
                                 </div>
                                 <div class="row">
                                     <div class="form-group col-lg-8">
@@ -840,6 +840,7 @@
             };
 
             return {
+                schoolPlan:$json.schoolPlan || [],
                 schoolId:'',
                 schools:$json.schools || [],
                 exportDevicePlan:'',
@@ -951,7 +952,7 @@
             },
             async save() {
                 this.isLoading = true;
-                const res = await $post('/xadmin/plans/save', {entry: this.entry,idRoleIt:this.idRoleIt}, false);
+                const res = await $post('/xadmin/plans/save', {entry: this.entry,idRoleIt:this.idRoleIt,schoolPlan:this.schoolPlan}, false);
                 this.isLoading = false;
                 if (res.errors) {
                     this.errors = res.errors;

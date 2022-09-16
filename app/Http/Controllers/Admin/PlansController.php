@@ -16,6 +16,7 @@ use App\Models\Notification;
 use App\Models\PackageLesson;
 use App\Models\PlanLesson;
 use App\Models\School;
+use App\Models\SchoolPlan;
 use App\Models\UserDevice;
 use App\Models\ZipPlanLesson;
 use Carbon\Carbon;
@@ -97,7 +98,7 @@ class PlansController extends AdminBaseController
     */
     public function edit (Request $req) {
         $id = $req->id;
-        $entry = Plan::with(['lessons','planLesson'])->find($id);
+        $entry = Plan::with(['lessons','planLesson','schools'])->find($id);
         $users=User::query()->with(['roles'])->orderBy('id','ASC')->get();
         $roleIt=[];
         foreach($users as $user)
@@ -170,6 +171,16 @@ class PlansController extends AdminBaseController
                 ];
         }
         $schools=School::query()->orderBy('id','desc')->get();
+        $schoolPlan=[];
+        if(@$entry->schools)
+        {
+            foreach ($entry->schools as $school)
+            {
+                $schoolPlan[]=$school->id;
+            }
+        }
+
+
 
         $jsonData = [
             'lessonIds'=>$lessonIds,
@@ -179,6 +190,7 @@ class PlansController extends AdminBaseController
             'data'=>$data,
             @'url'=>@$url,
             'schools'=>$schools,
+            @'schoolPlan'=>@$schoolPlan
         ];
         return view('admin.layouts.vue', compact('title', 'component', 'jsonData'));
     }
@@ -244,7 +256,14 @@ class PlansController extends AdminBaseController
 
             $entry->fill($data);
             $entry->save();
-//            PackageLesson::create(['plan_id'=>$entry->id,'total_lesson']);
+            if(@$dataRole['schoolPlan'])
+            {
+                SchoolPlan::where('plan_id',$entry->id)->delete();
+                foreach ($dataRole['schoolPlan'] as $school)
+                {
+                    SchoolPlan::create(['school_id'=>$school,'plan_id'=>$entry->id]);
+                }
+            }
 
             return [
                 'code' => 0,

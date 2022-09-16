@@ -33,4 +33,8 @@ class Plan extends BaseModel
     {
         return $this->hasMany(PlanLesson::class,'plan_id');
     }
+    public function schools()
+    {
+        return $this->belongsToMany(School::class,'school_plans');
+    }
 }
