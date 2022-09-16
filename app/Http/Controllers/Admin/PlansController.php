@@ -509,16 +509,16 @@ class PlansController extends AdminBaseController
 
         $rules = [
         ];
-        if($dataImport['schoolId'])
-        {
-            $rules['schoolId']=['required'];
-        }
-        $customMessages = [
-            'schoolId.required' => 'The school field is required.',
-        ];
+//        if (isset($data['id']))
+//        {
+//            $rules['schoolId']=['required'];
+//        }
+//        $customMessages = [
+//            'schoolId.required' => 'The school field is required.',
+//        ];
 
 
-        $v = Validator::make($data, $rules,$customMessages);
+        $v = Validator::make($data, $rules);
 
         if ($v->fails()) {
             return [
