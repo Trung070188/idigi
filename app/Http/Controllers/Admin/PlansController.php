@@ -150,9 +150,10 @@ class PlansController extends AdminBaseController
         $lengthDevicePlan=0;
         if(@$entry->schools)
         {
-
+          
             foreach ($entry->schools as $school)
             {
+                
                 
                 foreach ($devices as $device)
                 {
@@ -173,6 +174,7 @@ class PlansController extends AdminBaseController
                             'plan_id'=>$device->plan_id,
                             'type'=>$device->type,
                             'status'=>$device->status,
+                            'school_id'=>$device->school_id,
                             'secret_key'=>$device->secret_key,
                             'reason'=>$device->reason,
                             'created_at'=>$device->created_at,
@@ -190,6 +192,7 @@ class PlansController extends AdminBaseController
                 }
                 $schoolPlan[]=$school->id;
                 $nameSchool[]=[
+                    'id'=>$school->id,
                     'school_name'=>$school->label,
                     'lengthDevicePlan'=>$lengthDevicePlan,
 
@@ -206,10 +209,10 @@ class PlansController extends AdminBaseController
             'entry'=>$entry,
             'roleIt'=>$roleIt,
             'data'=>$data,
-            @'url'=>@$url,
+            'url'=>@$url,
             'schools'=>$schools,
-            @'schoolPlan'=>@$schoolPlan,
-            @'nameSchool'=>@$nameSchool,
+            'schoolPlan'=>@$schoolPlan,
+            'nameSchool'=>@$nameSchool,
         ];
         return view('admin.layouts.vue', compact('title', 'component', 'jsonData'));
     }
@@ -357,20 +360,12 @@ class PlansController extends AdminBaseController
                 $device->user_id=$dataRole['idRoleIt'];
                 $device->plan_id=$entry->id;
                 $device->status=2;
+                $device->school_id=$dataRole['schoolId'];
                 $device->secret_key=(Str::random(10));
                 $device->save();
 
             $entry->fill($data);
             $entry->save();
-            SchoolPlan::updateOrCreate(
-                [
-                    'plan_id'=>$entry->id,
-                ],
-                [
-                    'device_id'=>$device->id,
-                ]
-                );
-
             return [
                 'code' => 0,
                 'message' => 'Đã cập nhật',
@@ -635,7 +630,7 @@ class PlansController extends AdminBaseController
 
                     }
                     $school = School::where('id', $dataImport['schoolId'])->first();
-
+                    
                     foreach ($payload as $pay) {
 
                         $jwt = JWT::encode($pay, env('SECRET_KEY'), 'HS256');
@@ -671,9 +666,6 @@ class PlansController extends AdminBaseController
 
         }
     }
-
-
-
     public function planLesson(Request $req)
     {
         $dataLesson=$req->all();

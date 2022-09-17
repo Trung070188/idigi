@@ -65,7 +65,8 @@
                                         </thead>
                                         <tbody >
 
-                                        <tr v-for="device in data" >
+                                        <tr v-for="device in data" v-if="device.school_id==idListDevice && device.plan_id==entry.id">
+                                            
                                             <td class="">
                                                 <div
                                                     class="form-check form-check-sm form-check-custom form-check-solid"
@@ -103,29 +104,6 @@
                                         </tr>
                                         </tbody>
                                     </table>
-
-                                    <div class="d-flex pl-9 pr-9 mb-8">
-                                        <div class="col-sm-12 col-md-5 d-flex align-items-center justify-content-center justify-content-md-start">
-                                            <!--<div class="mr-2">
-                                                <label>Records per page:</label>
-                                            </div>-->
-                                            <div>
-                                                <select class="form-select form-select-sm form-select-solid"  >
-                                                    <option value="25">25</option>
-                                                    <option value="50">50</option>
-                                                    <option value="100">100</option>
-
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <!--<div style="float: right; margin: 10px">-->
-                                        <div class="col-sm-12 col-md-7 d-flex align-items-center justify-content-center justify-content-md-end">
-                                            <div class="dataTables_paginate paging_simple_numbers" id="kt_customers_table_paginate">
-                                            </div>
-                                        </div>
-                                    </div>
-
-
                                 </div>
 
                             </div>
@@ -456,9 +434,9 @@
                                             <!--end::Card title-->
                                             <!--begin::Card toolbar-->
                                             <div class="card-toolbar">
-                                                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#kt_modal_invite_friends">View devices</button>
-                                                <button class="btn btn-primary" style="margin: 0px 15px 0px" @click="modalDevice()">Add a device</button>
-                                                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#kt_modal_create_app" id="kt_toolbar_primary_button">Import devices</button>
+                                                <button class="btn btn-primary" @click="viewDeviceSchoolPlan(deviceSchool.id)">View devices</button>
+                                                <button class="btn btn-primary" style="margin: 0px 15px 0px" @click="modalDevice(deviceSchool.id)">Add a device</button>
+                                                <button class="btn btn-primary"  @click="importDevice(deviceSchool.id)">Import devices</button>
                                             </div>
                                             <!--end::Card toolbar-->
                                         </div>
@@ -564,10 +542,6 @@
                 <div class="modal-content">
                     <!--begin::Modal header-->
                     <div class="modal-header">
-                        <select class="form-group form-check" v-model="schoolId">
-                            <option v-for="school in schools" :value="school.id">{{school.label}}</option>
-                        </select>
-                        <!--begin::Modal title-->
                         <h2>Import devices</h2>
                         <!--end::Modal title-->
                         <!--begin::Close-->
@@ -826,6 +800,8 @@
         name: "PlanEdit.vue",
         components: {ActionBar,Treeselect},
         data() {
+            
+            
             // $(document).ready(function() {
             //    $("#newPackage").click(function ()
             //    {
@@ -840,13 +816,16 @@
             };
 
             return {
+                idListDevice:[],
                 nameSchool:$json.nameSchool || [],
                 schoolPlan:$json.schoolPlan || [],
+                trung:$json.trung || [],
                 schoolId:'',
                 schools:$json.schools || [],
                 exportDevicePlan:'',
                 packageLesson:[],
                 lessonIds: $json.lessonIds || [],
+                data:$json.data || [],
                 allSelected: false,
                 filter: filter,
                 entries:[],
@@ -892,6 +871,35 @@
         },
 
         methods: {
+             importDevice:function(addevicePlan=''){
+                $('#kt_modal_create_app').modal('show');
+                this.schoolId=addevicePlan;
+            },
+             addDevice:function(addDevice=''){
+                $('#deviceConfirm').modal('show');
+                this.schoolId=addDevice;
+            },
+             viewDeviceSchoolPlan:function(viewDevice=''){
+                $('#kt_modal_invite_friends').modal('show');
+                this.idListDevice=viewDevice;
+               
+            //     this.trung.forEach(function (e) {
+            //         let quang=[];
+            //     e.forEach(function (e1) {
+                     
+            //         if(e1.school_id==viewDevice)
+            //         {
+                        
+            //             quang=e1;
+            //         }
+                  
+                    
+            //     })
+
+            // })
+            //   console.log(quang)
+                
+            },
             async downloadLesson() {
 
 
@@ -953,7 +961,7 @@
             },
             async save() {
                 this.isLoading = true;
-                const res = await $post('/xadmin/plans/save', {entry: this.entry,idRoleIt:this.idRoleIt,schoolPlan:this.schoolPlan}, false);
+                const res = await $post('/xadmin/plans/save', {entry: this.entry,idRoleIt:this.idRoleIt,schoolPlan:this.schoolPlan, schoolId:this.schoolId,idListDevice:this.idListDevice}, false);
                 this.isLoading = false;
                 if (res.errors) {
                     this.errors = res.errors;
@@ -1029,7 +1037,7 @@
                         const res = await $post('/xadmin/plans/import', {
                             fileImport:this.fileImport,
                             entry: this.entry,
-                            schoolId:this.schoolId,
+                            idListDevice:this.idListDevice,
                             idRoleIt:this.idRoleIt,
                             doNotImport:this.doNotImport,
                         }, false);
@@ -1086,7 +1094,7 @@
             },
             async saveDevice() {
                 this.isLoading = true;
-                const res = await $post('/xadmin/plans/saveDevice', {idRoleIt:this.idRoleIt,deviceName:this.deviceName,deviceUid:this.deviceUid,entry:this.entry}, false);
+                const res = await $post('/xadmin/plans/saveDevice', {idRoleIt:this.idRoleIt,deviceName:this.deviceName,deviceUid:this.deviceUid,entry:this.entry,schoolId:this.schoolId}, false);
                 this.isLoading = false;
                 if (res.errors) {
                     this.errors = res.errors;
