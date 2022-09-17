@@ -147,12 +147,13 @@ class PlansController extends AdminBaseController
         $schools=School::query()->with(['user_devices'])->orderBy('id','desc')->get();
         $schoolPlan=[];
         $nameSchool=[];
+        $lengthDevicePlan=0;
         if(@$entry->schools)
         {
 
             foreach ($entry->schools as $school)
             {
-                $lengthDevicePlan=$school->user_devices->count();
+                
                 foreach ($devices as $device)
                 {
                     if($device->school_id==$school->id)
@@ -180,6 +181,12 @@ class PlansController extends AdminBaseController
                         ];
 
                     }
+                   
+                        if($device->plan_id==$entry->id)
+                        {
+                            $lengthDevicePlan=$school->user_devices->count();
+    
+                        }
                 }
                 $schoolPlan[]=$school->id;
                 $nameSchool[]=[
@@ -187,7 +194,6 @@ class PlansController extends AdminBaseController
                     'lengthDevicePlan'=>$lengthDevicePlan,
 
                 ];
-
             }
 
         }
@@ -356,6 +362,14 @@ class PlansController extends AdminBaseController
 
             $entry->fill($data);
             $entry->save();
+            SchoolPlan::updateOrCreate(
+                [
+                    'plan_id'=>$entry->id,
+                ],
+                [
+                    'device_id'=>$device->id,
+                ]
+                );
 
             return [
                 'code' => 0,
@@ -649,6 +663,7 @@ class PlansController extends AdminBaseController
                     'export_devices' => url("exports/{$y}/{$m}/{$hash}.xlsx")
                 ]
             );
+           
             return [
               'code'=>0,
               'message'=>'Đã cập nhật '

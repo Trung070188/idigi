@@ -446,7 +446,6 @@
 
                                 </div>
                                 <div class="row" v-for="deviceSchool in nameSchool">
-
                                     <div class="form-group col-lg-8" >
                                         <label>Device của trường  {{deviceSchool.school_name}} </label>
                                         <div class="card-header  border border-dashed border-gray-300">
