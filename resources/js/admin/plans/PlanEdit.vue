@@ -32,9 +32,9 @@
                                 <h1 class="mb-3">Device list</h1>
                             </div>
 
-                                <a :href="entry.export_devices" type="button" class="btn btn-primary" style="margin: -20px 0px 15px">
+                                <button @click="exportDevice"  type="button" class="btn btn-primary" style="margin: -20px 0px 15px">
                                     Export
-                                </a>
+                                </button>
 
                             <div class="mb-10">
 
@@ -429,7 +429,7 @@
                                         <div class="card-header  border border-dashed border-gray-300">
                                             <!--begin::Card title-->
                                             <div class="card-title" style="font-size: 15px">
-                                                <div  class="fw-bold text-muted" >{{deviceSchool.lengthDevicePlan}} device(s) added</div>
+                                                <div  class="fw-bold text-muted" >{{deviceSchool.lengthDevicePlan.length}} device(s) added</div>
                                             </div>
                                             <!--end::Card title-->
                                             <!--begin::Card toolbar-->
@@ -1037,7 +1037,7 @@
                         const res = await $post('/xadmin/plans/import', {
                             fileImport:this.fileImport,
                             entry: this.entry,
-                            idListDevice:this.idListDevice,
+                            schoolId:this.schoolId,
                             idRoleIt:this.idRoleIt,
                             doNotImport:this.doNotImport,
                         }, false);
@@ -1057,6 +1057,17 @@
                 {
                     location.replace('/xadmin/plans/index');
                 }
+            },
+            async exportDevice()
+            {
+                 const res = await $post('/xadmin/plans/exportDevice', {
+                    csrf: window.$csrf,
+                    dataDevice: this.data,
+                    entry: this.entry,
+                    idListDevice:this.idListDevice,
+                    schoolId:this.idListDevice,
+                });
+                 window.location.href = res.url;
             },
 
             changeLimit() {

@@ -144,17 +144,20 @@ class PlansController extends AdminBaseController
                     'planId'=>@$fileZipLesson->package_lessons->plan_id
                 ];
         }
-        $schools=School::query()->with(['user_devices'])->orderBy('id','desc')->get();
+        $schools=School::query()->orderBy('id','desc')->get();
         $schoolPlan=[];
         $nameSchool=[];
+
         $lengthDevicePlan=0;
         if(@$entry->schools)
         {
+           
           
             foreach ($entry->schools as $school)
             {
                 
-                
+                $lengthDevice=[];
+
                 foreach ($devices as $device)
                 {
                     if($device->school_id==$school->id)
@@ -183,26 +186,21 @@ class PlansController extends AdminBaseController
                         ];
 
                     }
-                   
-                        if($device->plan_id==$entry->id)
-                        {
-                            $lengthDevicePlan=$school->user_devices->count();
-    
-                        }
+                if($school->id==$device->school_id)
+                {
+                    $lengthDevice[]=$device;
+                }       
                 }
                 $schoolPlan[]=$school->id;
                 $nameSchool[]=[
                     'id'=>$school->id,
                     'school_name'=>$school->label,
-                    'lengthDevicePlan'=>$lengthDevicePlan,
+                    'lengthDevicePlan'=>$lengthDevice,
 
                 ];
             }
 
         }
-
-
-
         $jsonData = [
             'lessonIds'=>$lessonIds,
             'idRoleIt' => $idRoleIt,
@@ -550,13 +548,6 @@ class PlansController extends AdminBaseController
 
         $rules = [
         ];
-//        if (isset($data['id']))
-//        {
-//            $rules['schoolId']=['required'];
-//        }
-//        $customMessages = [
-//            'schoolId.required' => 'The school field is required.',
-//        ];
 
 
         $v = Validator::make($data, $rules);
@@ -665,6 +656,111 @@ class PlansController extends AdminBaseController
             ];
 
         }
+    }
+
+    public function exportDevice(Request $req)
+    {
+        $dataImport = $req->all();
+        $data = $req->get('entry');
+
+        if (!$req->isMethod('POST')) {
+            return ['code' => 405, 'message' => 'Method not allow'];
+        }
+
+
+        $rules = [
+        ];
+        $v = Validator::make($data, $rules);
+
+        if ($v->fails()) {
+            return [
+                'code' => 2,
+                'errors' => $v->errors()
+            ];
+        }
+
+        /**
+         * @var  Plan $entry
+         */
+
+        if (isset($data['id'])) {
+            $entry = Plan::find($data['id']);
+            if (!$entry) {
+                return [
+                    'code' => 3,
+                    'message' => 'Không tìm thấy',
+                ];
+            }
+            $user = Auth::user();
+            $exportDevice=[];
+            $payload = [];
+           
+            if (@$dataImport['dataDevice']) {
+                foreach ($dataImport['dataDevice'] as $import) {
+                    
+                    if($import['school_id']==$dataImport['idListDevice'] && $import['plan_id']==$entry->id)
+                    {
+                        $exportDevice[]=$import;
+                    }
+                   
+                    $school = School::where('id', $dataImport['schoolId'])->first();
+
+                    if ($school) {
+                        $expired = $school->license_to;
+                    }
+
+                    if (!$expired) {
+                        $expired = Carbon::now()->addHours(-10);
+                    }
+                    $apiPlan = [];
+                    {
+                        $apiPlan[] = [
+                            'id' => $entry->id,
+                            'name' => $entry->name,
+                            'secret_key' => $entry->secret_key,
+                        ];
+                    }
+                    if($import['school_id']==$dataImport['idListDevice'] && $import['plan_id']==$entry->id)
+                    {
+                        $payload [] = [
+                            'plan' => $apiPlan,
+                            'user_id' => $user->id,
+                            'device_uid' => $import['device_uid'],
+                            'device_name' => $import['device_name'],
+                            'secret_key' => $import['secret_key'],
+                            'create_time' => Carbon::now()->timestamp,
+                            'expired' => strtotime($expired)
+                        ];
+                    }
+                    $school = School::where('id', $dataImport['schoolId'])->first();
+                    $dataPlanExport=[];
+                    
+                    foreach ($payload as $pay) {
+
+                        $jwt = JWT::encode($pay, env('SECRET_KEY'), 'HS256');
+                        $dataPlanExport[] = [
+                            'device_name' => $pay['device_name'],
+                            'device_uid' => $pay['device_uid'],
+                            'school_name' => $school->label,
+                            'code' => $jwt
+                        ];
+                    }
+
+
+                }
+                $y = date('Y');
+                $m = date('m');
+                $hash = sha1(uniqid());
+
+            }
+            Excel::store(new DevicePlanExport($dataPlanExport), "{$y}/{$m}/{$hash}.xlsx", 'excel-export');
+            return [
+              'code'=>0,
+              'url'=>url("exports/{$y}/{$m}/{$hash}.xlsx"),
+            ];
+
+        }
+
     }
     public function planLesson(Request $req)
     {
