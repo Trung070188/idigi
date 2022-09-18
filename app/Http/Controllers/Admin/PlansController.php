@@ -125,11 +125,16 @@ class PlansController extends AdminBaseController
 
         $idRoleIt=$entry->user_id;
         $lessonIds=[];
-        foreach ($entry->lessons as $lesson)
-        {
+        $packagePlan=[];
+       
+            foreach($entry->planLesson as $package)
+            {
+                        $lessonIds[]=$package->lesson_id;
+                        $packagePlan[]=$package;
 
-            $lessonIds[]=$lesson->id;
-        }
+
+            }
+
 
         $devices=UserDevice::query()->with(['users'])->where('plan_id','=',$entry->id)->orderBy('created_at','ASC')->get();
 
@@ -199,6 +204,7 @@ class PlansController extends AdminBaseController
             }
 
         }
+        $packageLessonPlan=PackageLesson::Where('plan_id','=',$entry->id)->get();
         $jsonData = [
             'lessonIds'=>$lessonIds,
             'idRoleIt' => $idRoleIt,
@@ -209,6 +215,8 @@ class PlansController extends AdminBaseController
             'schools'=>$schools,
             'schoolPlan'=>@$schoolPlan,
             'nameSchool'=>@$nameSchool,
+            'packagePlan'=>@$packagePlan,
+            'packageLessonPlan'=>@$packageLessonPlan
         ];
         return view('admin.layouts.vue', compact('title', 'component', 'jsonData'));
     }
@@ -782,7 +790,7 @@ class PlansController extends AdminBaseController
                PlanLesson::where('plan_id',$entry->id)->delete();
                 foreach ($dataLesson['lessonIds'] as $lesson)
                 {
-                    PlanLesson::create(['plan_id'=>$entry->id,'lesson_id'=>$lesson]);
+                    PlanLesson::create(['plan_id'=>$entry->id,'lesson_id'=>$lesson,'package_id'=>$dataLesson['package']]);
                 }
                 $stringLesson=implode(",",$dataLesson['lessonIds']);
                 $user=Auth::user();
@@ -1190,6 +1198,47 @@ class PlansController extends AdminBaseController
     //     }
           
     // } 
+
+    public function addPackageLesson(Request $req)
+    {
+        $dataLesson=$req->all();
+        if (!$req->isMethod('POST')) {
+            return ['code' => 405, 'message' => 'Method not allow'];
+        }
+
+        $data = $req->get('entry');
+
+        $rules = [
+        ];
+
+        $v = Validator::make($data, $rules);
+
+        if ($v->fails()) {
+            return [
+                'code' => 2,
+                'errors' => $v->errors()
+            ];
+        }
+
+        /**
+         * @var  Plan $entry
+         */
+        if (isset($data['id'])) {
+            $entry = Plan::find($data['id']);
+            if (!$entry) {
+                return [
+                    'code' => 3,
+                    'message' => 'Không tìm thấy',
+                ];
+            }
+           PackageLesson::create(['plan_id'=>$entry->id]);
+            return [
+                'code' => 0,
+                'message' => 'Đã cập nhật',
+            ];
+        }
+
+    }
 
     }
 

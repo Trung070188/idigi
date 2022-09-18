@@ -200,10 +200,10 @@
                                         </thead>
                                         <tbody >
 
-                                        <tr  v-for="lesson in entries">
+                                        <tr  v-for="lesson in entries" >
                                             <td class="">
                                                 <div class="form-check form-check-sm form-check-custom form-check-solid">
-                                                    <input class="form-check-input" type="checkbox" v-model="lessonIds" :value="lesson.id" @change="updateCheckAll">
+                                                    <input   class="form-check-input" type="checkbox" v-model="lessonIds" :value="lesson.id" @change="updateCheckAll(package)">
                                                 </div>
                                             </td>
                                             <td class="" v-text="lesson.name"></td>
@@ -446,21 +446,20 @@
                             </div>
 
                             <div class="row" >
-<!--                                <div >-->
-<!--                                    <button type="button" class="btn btn-sm btn-flex btn-light-primary " data-bs-toggle="modal" data-bs-target="#kt_modal_add_payment" style=" margin: 7px 0px 10px;" id="newPackage" @click="addPackageLesson" >-->
-<!--                                        &lt;!&ndash;begin::Svg Icon | path: icons/duotune/general/gen035.svg&ndash;&gt;-->
-<!--                                        <span class="svg-icon svg-icon-3">-->
-<!--																<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">-->
-<!--																	<rect opacity="0.3" x="2" y="2" width="20" height="20" rx="5" fill="black" />-->
-<!--																	<rect x="10.8891" y="17.8033" width="12" height="2" rx="1" transform="rotate(-90 10.8891 17.8033)" fill="black" />-->
-<!--																	<rect x="6.01041" y="10.9247" width="12" height="2" rx="1" fill="black" />-->
-<!--																</svg>-->
-<!--															</span>-->
-<!--                                        Add license package-->
-<!--                                    </button>-->
-<!--                                </div>-->
-                                <div class="form-group col-lg-8" id="clone">
-                                    <label>Lesson package <span class="text-danger">*</span></label>
+                               <div >
+                                   <button type="button" class="btn btn-sm btn-flex btn-light-primary " data-bs-toggle="modal" data-bs-target="#kt_modal_add_payment" style=" margin: 7px 0px 10px;" id="newPackage" @click="addPackageLesson" >
+                                       <span class="svg-icon svg-icon-3">
+																<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+																	<rect opacity="0.3" x="2" y="2" width="20" height="20" rx="5" fill="black" />
+																	<rect x="10.8891" y="17.8033" width="12" height="2" rx="1" transform="rotate(-90 10.8891 17.8033)" fill="black" />
+																	<rect x="6.01041" y="10.9247" width="12" height="2" rx="1" fill="black" />
+																</svg>
+															</span>
+                                        Add lesson package
+                                   </button>
+                                </div>
+                                <div class="form-group col-lg-8" id="clone" v-for="packageLesson in packageLessonPlan">
+                                    <label>Lesson package {{packageLesson.id}}<span class="text-danger">*</span></label>
                                     <div class="card-header  border border-dashed border-gray-300">
                                         <!--begin::Card title-->
                                         <div class="card-title" style="font-size: 15px">
@@ -474,7 +473,7 @@
                                             <a v-if="url.status=='done'" :href="url.url" style="button" class="btn btn-primary">Dowload Package</a>
 
                                             <button class="btn btn-primary" style="margin: 0px 15px 0px" data-bs-toggle="modal" data-bs-target="#kt_modal" >View lessons</button>
-                                            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#kt_modal_invite" >Add lesson</button>
+                                            <button class="btn btn-primary" @click="addLessonPackage(packageLesson.id)" >Add lesson</button>
                                         </div>
                                         <!--end::Card toolbar-->
                                     </div>
@@ -819,6 +818,8 @@
             };
 
             return {
+                packagePlan:$json.packagePlan,
+                package:'',
                 idListDevice:[],
                 nameSchool:$json.nameSchool || [],
                 schoolPlan:$json.schoolPlan || [],
@@ -826,7 +827,6 @@
                 schoolId:'',
                 schools:$json.schools || [],
                 exportDevicePlan:'',
-                packageLesson:[],
                 lessonIds: $json.lessonIds || [],
                 data:$json.data || [],
                 allSelected: false,
@@ -853,6 +853,7 @@
                 ],
                 entry: $json.entry || {},
                 data:$json.data || [],
+                packageLessonPlan:$json.packageLessonPlan || [],
                 isLoading: false,
                 errors: {},
                 limit: $q.limit || 25,
@@ -884,24 +885,12 @@
             },
              viewDeviceSchoolPlan:function(viewDevice=''){
                 $('#kt_modal_invite_friends').modal('show');
-                this.idListDevice=viewDevice;
-               
-            //     this.trung.forEach(function (e) {
-            //         let quang=[];
-            //     e.forEach(function (e1) {
-                     
-            //         if(e1.school_id==viewDevice)
-            //         {
-                        
-            //             quang=e1;
-            //         }
-                  
-                    
-            //     })
-
-            // })
-            //   console.log(quang)
-                
+                this.idListDevice=viewDevice;                
+            },
+            addLessonPackage:function(addLesson='')
+            {
+                $('#kt_modal_invite').modal('show');
+                this.package=addLesson;
             },
             // async downloadLesson() {
 
@@ -913,35 +902,6 @@
             //     });
             //     window.location.href = res.url;
 
-            // },
-            // addPackageLesson()
-            // {
-            //     var $counter = $("#clone");
-            //     var value = $counter.val();
-            //    $counter.val(++value);
-            //    console.log(value);
-            //
-            //     const $steplist = $(".steplist"),
-            //         totalchild = $steplist.children().length,
-            //         $newData = $(
-            //             '<div class="form-group col-lg-8" >' +
-            //             '<label  v-model="lessonIds">Lesson package  <span class="text-danger">*</span></label>' +
-            //             '<div class="card-header  border border-dashed border-gray-300">' +
-            //             ' <div class="card-title" style="font-size: 15px">' +
-            //             '<div  class="fw-bold text-muted" >lesson(s) added</div>' +
-            //             '</div>' +
-            //             '<div class="card-toolbar">' +
-            //             '<button class="btn btn-primary">Download package</button>' +
-            //             '<button class="btn btn-primary" style="margin: 0px 15px 0px" data-bs-toggle="modal" data-bs-target="#kt_modal" >View lessons</button>' +
-            //             '<button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#kt_modal_invite" >Add lesson</button>' +
-            //             ' </div>' +
-            //             '</div>'
-            //         )
-            //     // $newData.attr("id", "step" + value)
-            //     // $newData.addClass("step" + value);
-            //     // $newData.find("label").val(value);
-            //     $steplist.append($newData);
-            //
             // },
             async deleteLesson(lesson)
             {
@@ -1089,12 +1049,23 @@
             },
             updateCheckAll() {
                 this.lessons = [];
-                if (this.lessonIds.length === this.entries.length) {
-                    this.allSelected = true;
-                } else {
-                    this.allSelected = false;
-                }
                 let self = this;
+
+                
+                self.packagePlan.forEach(function(e2){
+                   if(e2.package_id==self.package)
+                   {
+                    if (self.lessonIds.length === self.entries.length) {
+                        self.allSelected = true;
+                    } 
+                    else {
+                        self.allSelected = false;
+                    }
+                   }
+                   
+                })
+               
+               
                 self.lessonIds.forEach(function (e) {
                     self.entries.forEach(function (e1) {
                         if (e1.id == e) {
@@ -1126,7 +1097,7 @@
             async addLesson()
             {
                 this.isLoading = true;
-                const res = await $post('/xadmin/plans/planLesson', {lessonIds:this.lessonIds,entry:this.entry}, false);
+                const res = await $post('/xadmin/plans/planLesson', {lessonIds:this.lessonIds,entry:this.entry,package:this.package}, false);
                 this.isLoading = false;
                 if (res.errors) {
                     this.errors = res.errors;
@@ -1161,6 +1132,27 @@
             },
             onPageChange(page) {
                 $router.updateQuery({page: page})
+            },
+           async addPackageLesson()
+            {
+                this.isLoading = true;
+                const res = await $post('/xadmin/plans/addPackageLesson', {entry:this.entry}, false);
+                this.isLoading = false;
+                if (res.errors) {
+                    this.errors = res.errors;
+                    return;
+                }
+                if (res.code) {
+                    toastr.error(res.message);
+                } else {
+                    this.errors = {};
+                    toastr.success(res.message);
+
+                    if (!this.entry.id) {
+                        // location.replace('/xadmin/plans/edit?id=' + res.id);
+                    }
+
+                }
             }
 
         }
