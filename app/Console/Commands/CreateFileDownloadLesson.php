@@ -59,7 +59,7 @@ class CreateFileDownloadLesson extends Command
     public function handle()
     {
 
-        $planLessons = ZipPlanLesson::where('status', NULL)->with('plan')->get();
+        $planLessons = ZipPlanLesson::where('status', 'waitting')->with('plan')->get();
         $infos = [];
 
 
