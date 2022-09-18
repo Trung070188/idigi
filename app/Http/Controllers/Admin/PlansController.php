@@ -134,16 +134,14 @@ class PlansController extends AdminBaseController
         $devices=UserDevice::query()->with(['users'])->where('plan_id','=',$entry->id)->orderBy('created_at','ASC')->get();
 
        $data=[];
-        $fileZipLessons=ZipPlanLesson::query()->with(['package_lessons'])->where('plan_id','=',$entry->id)->get();
-
-        foreach ($fileZipLessons as $fileZipLesson)
-        {
-                $url[]=[
-                    'url'=>$fileZipLesson->url,
-                    'packagePlanId'=>@$fileZipLesson->package_lessons->package_plan_id,
-                    'planId'=>@$fileZipLesson->package_lessons->plan_id
+        $fileZipLessons=ZipPlanLesson::where('plan_id','=',$entry->id)->first();
+                @$url=[
+                    'url'=>$fileZipLessons->url,
+                    'status'=>$fileZipLessons->status,
+                    // 'packagePlanId'=>@$fileZipLesson->package_lessons->package_plan_id,
+                    'planId'=>@$fileZipLessons->plan_id
                 ];
-        }
+        
         $schools=School::query()->orderBy('id','desc')->get();
         $schoolPlan=[];
         $nameSchool=[];
@@ -214,6 +212,7 @@ class PlansController extends AdminBaseController
         ];
         return view('admin.layouts.vue', compact('title', 'component', 'jsonData'));
     }
+    
 
     /**
     * @uri  /xadmin/plans/remove
@@ -1058,7 +1057,7 @@ class PlansController extends AdminBaseController
                 ];
             }
                
-            $planLessons = ZipPlanLesson::where('status', NULL)->with('plan')->get();
+            $planLessons = ZipPlanLesson::where('status','waitting')->with('plan')->get();
         $infos = [];
 
 
