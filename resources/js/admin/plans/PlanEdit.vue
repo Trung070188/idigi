@@ -435,7 +435,7 @@
                                             <!--begin::Card toolbar-->
                                             <div class="card-toolbar">
                                                 <button class="btn btn-primary" @click="viewDeviceSchoolPlan(deviceSchool.id)">View devices</button>
-                                                <button class="btn btn-primary" style="margin: 0px 15px 0px" @click="modalDevice(deviceSchool.id)">Add a device</button>
+                                                <button class="btn btn-primary" style="margin: 0px 15px 0px" @click="addDevice(deviceSchool.id)">Add a device</button>
                                                 <button class="btn btn-primary"  @click="importDevice(deviceSchool.id)">Import devices</button>
                                             </div>
                                             <!--end::Card toolbar-->
@@ -904,7 +904,7 @@
 
 
                 const res = await $post('/xadmin/plans/downloadLesson', {
-
+                    entry:this.entry,
                     lessonIds: this.lessonIds,
                     device: this.device
                 });
@@ -952,9 +952,6 @@
                         toastr.success(res.message);
 
                 }
-            },
-            modalDevice() {
-                $('#deviceConfirm').modal('show');
             },
             backIndex(){
                 window.location.href = '/xadmin/plans/index';
