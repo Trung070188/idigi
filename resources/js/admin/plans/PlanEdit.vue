@@ -469,7 +469,7 @@
                                         <!--end::Card title-->
                                         <!--begin::Card toolbar-->
                                         <div class="card-toolbar">
-                                            <button class="btn btn-primary" @click="downloadLesson" v-if="url.status=='waitting'">Download package</button>
+                                            <button class="btn btn-primary"  v-if="url.status=='waitting'">Download package</button>
                                             <span   v-if="url.status=='inprogress'">inprogress</span>
                                             <a v-if="url.status=='done'" :href="url.url" style="button" class="btn btn-primary">Dowload Package</a>
 
