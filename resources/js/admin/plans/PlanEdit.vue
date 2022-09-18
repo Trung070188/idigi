@@ -903,17 +903,17 @@
             //   console.log(quang)
                 
             },
-            async downloadLesson() {
+            // async downloadLesson() {
 
 
-                const res = await $post('/xadmin/plans/downloadLesson', {
-                    entry:this.entry,
-                    lessonIds: this.lessonIds,
-                    device: this.device
-                });
-                window.location.href = res.url;
+            //     const res = await $post('/xadmin/plans/downloadLesson', {
+            //         entry:this.entry,
+            //         lessonIds: this.lessonIds,
+            //         device: this.device
+            //     });
+            //     window.location.href = res.url;
 
-            },
+            // },
             // addPackageLesson()
             // {
             //     var $counter = $("#clone");
