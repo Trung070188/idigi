@@ -203,6 +203,7 @@
                                             <td class="">
                                                 <div class="form-check form-check-sm form-check-custom form-check-solid">
                                                     <input   class="form-check-input" type="checkbox" v-model="lessonId.lessonIds"  :value="lesson.id" @change="updateCheckAll(package)">
+
                                                 </div>
                                             </td>
                                             <td class="" v-text="lesson.name"></td>
@@ -456,12 +457,12 @@
                                         Add lesson package
                                    </button>
                                 </div>
-                                <div class="form-group col-lg-8" id="clone" v-for="(packageLesson,index) in packageLessonPlan">
+                                <div class="form-group col-lg-8" id="clone" v-for="(packageLesson,index) in packageLessonPlan" >
                                     <label>Lesson package {{index+1}}<span class="text-danger">*</span></label>
                                     <div class="card-header  border border-dashed border-gray-300">
                                         <!--begin::Card title-->
                                         <div class="card-title" style="font-size: 15px">
-                                            <div  class="fw-bold text-muted" >{{lessonIds.length}} lesson(s) added</div>
+                                            <div v-for="lesson in lessonIds" v-if="packageLesson.id==lesson.package_id" class="fw-bold text-muted" >{{lesson.lessonIds.length}} lesson(s) added</div>
                                         </div>
                                         <!--end::Card title-->
                                         <!--begin::Card toolbar-->

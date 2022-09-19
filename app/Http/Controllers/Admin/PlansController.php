@@ -194,7 +194,10 @@ class PlansController extends AdminBaseController
             $lessonIdArr = [];
             foreach ($arrays as $item)
             {
-                $lessonIdArr[] = (int)$item;
+                if($item)
+                {
+                    $lessonIdArr[] = (int)$item;
+                }
             }
             $lessonIds[]=[
                 'package_id'=>$packageLesson->id,
