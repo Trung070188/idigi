@@ -11,7 +11,8 @@ class PackageLesson extends Model
     protected $fillable = [
         'total_lesson',
         'plan_id',
-        'package_plan_id',
+        'lesson_ids',
+        'status',
         'created_at',
         'updated_at',
     ];

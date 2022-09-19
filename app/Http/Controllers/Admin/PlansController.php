@@ -98,7 +98,7 @@ class PlansController extends AdminBaseController
     */
     public function edit (Request $req) {
         $id = $req->id;
-        $entry = Plan::with(['lessons','planLesson','schools'])->find($id);
+        $entry = Plan::with(['lessons','planLesson','schools','package_lessons'])->find($id);
         $users=User::query()->with(['roles'])->orderBy('id','ASC')->get();
         $roleIt=[];
         foreach($users as $user)
@@ -119,33 +119,18 @@ class PlansController extends AdminBaseController
         /**
         * @var  Plan $entry
         */
-
         $title = 'Edit';
         $component = 'PlanEdit';
-
         $idRoleIt=$entry->user_id;
         $lessonIds=[];
         $packagePlan=[];
-
-            foreach($entry->planLesson as $package)
-            {
-                        $lessonIds[]=$package->lesson_id;
-                        $packagePlan[]=$package;
-
-
-            }
-
-
         $devices=UserDevice::query()->with(['users'])->where('plan_id','=',$entry->id)->orderBy('created_at','ASC')->get();
-
        $data=[];
-        $fileZipLessons=ZipPlanLesson::where('plan_id','=',$entry->id)->first();
-                @$url=[
-                    'url'=>$fileZipLessons->url,
-                    'status'=>$fileZipLessons->status,
-                    // 'packagePlanId'=>@$fileZipLesson->package_lessons->package_plan_id,
-                    'planId'=>@$fileZipLessons->plan_id
-                ];
+        $fileZipLessons=ZipPlanLesson::where('plan_id','=',$entry->id)->get();
+        foreach ($fileZipLessons as $fileZipLesson)
+        {
+            $url[]=$fileZipLesson;
+        }
 
         $schools=School::query()->orderBy('id','desc')->get();
         $schoolPlan=[];
@@ -154,8 +139,6 @@ class PlansController extends AdminBaseController
         $lengthDevicePlan=0;
         if(@$entry->schools)
         {
-
-
             foreach ($entry->schools as $school)
             {
 
@@ -205,6 +188,22 @@ class PlansController extends AdminBaseController
 
         }
         $packageLessonPlan=PackageLesson::Where('plan_id','=',$entry->id)->get();
+        foreach ($entry->package_lessons  as $packageLesson)
+        {
+            $arrays=explode(',',$packageLesson->lesson_ids);
+            $lessonIdArr = [];
+            foreach ($arrays as $item)
+            {
+                $lessonIdArr[] = (int)$item;
+            }
+            $lessonIds[]=[
+                'package_id'=>$packageLesson->id,
+                'plan_id'=>$packageLesson->plan_id,
+                'lessonIds'=>$lessonIdArr,
+            ];
+
+        }
+
         $jsonData = [
             'lessonIds'=>$lessonIds,
             'idRoleIt' => $idRoleIt,
@@ -598,6 +597,8 @@ class PlansController extends AdminBaseController
                     $payload = [];
                     foreach ($devices as $device) {
                         $payload [] = [
+                            'username'=>$user->username,
+                            'full_name'=>$user->full_name,
                             'plan' => $apiPlan,
                             'user_id' => $user->id,
                             'device_uid' => $device->device_uid,
@@ -785,19 +786,40 @@ class PlansController extends AdminBaseController
                     'message' => 'Không tìm thấy',
                 ];
             }
+
             if(@$dataLesson['lessonIds'])
             {
-               PlanLesson::where('plan_id',$entry->id)->delete();
+               PlanLesson::where('package_id',$dataLesson['package'])->delete();
                 foreach ($dataLesson['lessonIds'] as $lesson)
                 {
-                    PlanLesson::create(['plan_id'=>$entry->id,'lesson_id'=>$lesson,'package_id'=>$dataLesson['package']]);
+                    if($lesson['package_id']==$dataLesson['package'])
+                    {
+                        foreach ($lesson['lessonIds'] as $lessonId)
+                        {
+                            {
+                                PlanLesson::create(['plan_id'=>$entry->id,'lesson_id'=>$lessonId,'package_id'=>$dataLesson['package']]);
+
+                            }
+                        }
+                        $stringLesson=implode(",",$lesson['lessonIds']);
+                        PackageLesson::updateorCreate(
+                            [
+                                'id'=>$dataLesson['package']
+                            ],
+                            [
+                                'lesson_ids'=>$stringLesson,
+                                'status'=>'done'
+                            ]
+                        );
+                    }
+
                 }
+
+
                 $entry->status='Ready';
                 $entry->save();
-//                $stringLesson=implode(",",$dataLesson['lessonIds']);
-//                $user=Auth::user();
-                ZipPlanLesson::where('plan_id',$entry->id)->delete();
-//                ZipPlanLesson::create(['user_id'=>$user->id,'plan_id'=>$entry->id,'lesson_ids'=>$stringLesson]);
+                ZipPlanLesson::where('package_id',$dataLesson['package'])->delete();
+                ZipPlanLesson::create(['package_id'=>$dataLesson['package'],'plan_id'=>$entry->id]);
             }
             return [
                 'code' => 0,
@@ -1033,174 +1055,6 @@ class PlansController extends AdminBaseController
         ];
 
     }
-    // public function downloadLesson(Request $req)
-    // {
-    //     $dataRole=$req->all();
-    //     if (!$req->isMethod('POST')) {
-    //         return ['code' => 405, 'message' => 'Method not allow'];
-    //     }
-
-    //     $data = $req->get('entry');
-
-    //     $rules = [
-
-    //     ];
-
-    //     $v = Validator::make($data, $rules);
-
-    //     if ($v->fails()) {
-    //         return [
-    //             'code' => 2,
-    //             'errors' => $v->errors()
-    //         ];
-    //     }
-
-    //     /**
-    //      * @var  Plan $entry
-    //      */
-    //     if (isset($data['id'])) {
-    //         $entry = Plan::find($data['id']);
-    //         if (!$entry) {
-    //             return [
-    //                 'code' => 3,
-    //                 'message' => 'Không tìm thấy',
-    //             ];
-    //         }
-
-    //         $planLessons = ZipPlanLesson::where('status','waitting')->with('plan')->get();
-    //     $infos = [];
-
-
-    //     foreach ($planLessons as $planLesson){
-    //         $lessonIds = explode(',', $planLesson->lesson_ids);
-    //         $planLesson->status= 'inprogress';
-    //         $planLesson->save();
-    //         $info = [
-    //             'user_id' => $planLesson->user_id,
-    //             'ip_address' => NULL,
-    //             'user_agent' => NULL,
-    //             'device_uid' => NULL,
-    //             'lesson_ids' =>  $lessonIds,
-    //             'plan_id' =>  $planLesson->id,
-    //             'secret_key' =>  @$planLesson->plan->secret_key
-    //         ];
-    //         ob_get_clean();
-
-
-    //         $password = env('SECRET_KEY') . '_' .  $info['secret_key'];
-
-    //         $y = date('Y');
-    //         $m = date('m');
-    //         $d = date('d');
-    //         $dir = "files/downloads/{$y}/{$m}/{$d}/{$info['user_id']}";
-
-    //         if (!is_dir(public_path($dir))) {
-    //             mkdir(public_path($dir), 0755, true);
-    //         }
-
-    //         $lessons = Lesson::whereIn('id', $info['lesson_ids'])
-    //             ->with(['inventories'])->get();
-
-
-    //         $filenameAll = uniqid(time() . rand(10, 100));
-    //         $pathZipAll = $dir . '/all_lessons_' . $filenameAll . '.zip';
-    //         $zipFileAll = public_path($pathZipAll);
-    //         $zipAll = new \ZipArchive();
-    //         $zipAll->open($zipFileAll, \ZipArchive::CREATE | \ZipArchive::OVERWRITE);
-
-    //         $lessonLog = DownloadLessonLog::create([
-    //             'user_id' => $info['user_id'],
-    //             'ip_address' => $info['ip_address'],
-    //             'user_agent' => $info['user_agent'],
-    //             'device_uid' => $info['device_uid'],
-    //             'lesson_ids' => implode(',', $info['lesson_ids']),
-    //             'download_at' => Carbon::now(),
-    //         ]);
-
-    //         foreach ($lessons as $key => $lesson) {
-    //             $filename = uniqid(time() . rand(10, 100));
-    //             $name = explode(':', $lesson->name);
-    //             $zip_file = public_path($dir . '/' . $name[0] . '.zip');
-    //             $zip = new \ZipArchive();
-    //             $zip->open($zip_file, \ZipArchive::CREATE | \ZipArchive::OVERWRITE);
-    //             $structure = json_decode($lesson->structure, true);
-
-
-    //             if ($lesson->inventories) {
-    //                 foreach ($lesson->inventories as $inventory) {
-    //                     $icon = 'Icons/' . basename(public_path($inventory->image));
-    //                     $link = basename(public_path($inventory->virtual_path));
-
-    //                     if (file_exists(public_path($inventory->image)) && is_file(public_path($inventory->image))) {
-    //                         $zip->addFile(public_path($inventory->image), $icon);
-    //                         $zip->setEncryptionName($icon, \ZipArchive::EM_AES_256, $password);
-    //                     }
-    //                     if (file_exists(public_path($inventory->virtual_path)) && is_file(public_path($inventory->virtual_path))) {
-    //                         $zip->addFile(public_path($inventory->virtual_path), $link);
-    //                         $zip->setEncryptionName($link, \ZipArchive::EM_AES_256, $password);
-    //                     }
-
-    //                     $dataDownloadInventory = [
-    //                         'user_id' => $info['user_id'],
-    //                         'ip_address' => $info['ip_address'],
-    //                         'user_agent' => $info['user_agent'],
-    //                         'device_uid' => $info['device_uid'],
-    //                         'lesson_id' => $lesson->id,
-    //                         'download_at' => Carbon::now(),
-    //                         'type' => 'cms',
-    //                         'inventory_id' => $inventory->id
-    //                     ];
-    //                     UpdateDownloadInventory::dispatch($dataDownloadInventory);
-
-    //                 }
-    //             }
-
-    //             Storage::put($dir . '/lesson_detail' . $filename . '.txt', json_encode($structure));
-
-    //             $zip->addFile(storage_path('app/' . $dir . '/lesson_detail' . $filename . '.txt'), 'lesson_detail.txt');
-    //             $zip->setEncryptionName('lesson_detail.txt', \ZipArchive::EM_AES_256, $password);
-    //             $zip->close();
-
-    //             $dataLessonFile = [
-    //                 'download_lesson_log_id' => $lessonLog->id,
-    //                 'path' => $zip_file,
-    //                 'is_main' => 0,
-    //                 'is_deleted_file' => 0
-    //             ];
-
-    //             UpdateDownloadLessonFile::dispatch($dataLessonFile);
-
-    //             $zipAll->addFile($zip_file, $name[0] . '.zip');
-    //             $zipAll->setEncryptionName('/' . $name[0] . '.zip', \ZipArchive::EM_AES_256, $password);
-
-    //         }
-
-    //         $zipAll->close();
-
-    //         $dataLessonFile = [
-    //             'download_lesson_log_id' => $lessonLog->id,
-    //             'path' => $zipFileAll,
-    //             'is_main' => 1,
-    //             'is_deleted_file' => 0
-    //         ];
-    //         UpdateDownloadLessonFile::dispatch($dataLessonFile);
-
-    //         ZipPlanLesson::where('id',$info['plan_id'])->update([
-    //             'url' => url($pathZipAll),
-    //             'status' => 'done',
-    //         ]);
-
-    //         return url($pathZipAll);
-
-    //         $infos[] = $info;
-    //     }
-
-
-
-    //     }
-
-    // }
-
     public function addPackageLesson(Request $req)
     {
         $dataLesson=$req->all();
@@ -1234,6 +1088,7 @@ class PlansController extends AdminBaseController
                 ];
             }
            PackageLesson::create(['plan_id'=>$entry->id]);
+            ZipPlanLesson::create(['plan_id'=>$entry->id]);
             return [
                 'code' => 0,
                 'message' => 'Đã cập nhật',
@@ -1275,13 +1130,20 @@ class PlansController extends AdminBaseController
             }
             if(@$dataLesson['lessonIds'])
             {
+                ZipPlanLesson::where('package_id',$dataLesson['package'])->delete();
+               foreach ($dataLesson['lessonIds'] as $lesson)
+               {
+                   if($lesson['package_id']==$dataLesson['package'])
+                   {
+                       $stringLesson=implode(",",$lesson['lessonIds']);
+                       $user=Auth::user();
+                       ZipPlanLesson::create(['user_id'=>$user->id,'plan_id'=>$entry->id,'lesson_ids'=>$stringLesson,'package_id'=>$dataLesson['package']]);
+                       $entry->status='Packaging';
+                       $entry->save();
 
-                $stringLesson=implode(",",$dataLesson['lessonIds']);
-                $user=Auth::user();
-                ZipPlanLesson::where('plan_id',$entry->id)->delete();
-                ZipPlanLesson::create(['user_id'=>$user->id,'plan_id'=>$entry->id,'lesson_ids'=>$stringLesson,'']);
-                $entry->status='Packaging';
-                $entry->save();
+                   }
+               }
+
             }
             return [
                 'code' => 0,

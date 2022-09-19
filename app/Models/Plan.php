@@ -36,4 +36,8 @@ class Plan extends BaseModel
     {
         return $this->belongsToMany(School::class,'school_plans');
     }
+    public function package_lessons()
+    {
+        return $this->hasMany(PackageLesson::class,'plan_id');
+    }
 }

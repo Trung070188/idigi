@@ -422,6 +422,8 @@ class UserDevicesController extends AdminBaseController
         }
         if($device){
             $payload = [
+                'username'=>$user->username,
+                'full_name'=>$user->full_name,
                 'plan' => $apiPlan,
                 'user_id' => $user->id,
                 'device_uid' =>$device->device_uid,

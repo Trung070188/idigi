@@ -198,18 +198,16 @@
                                             <th></th>
                                         </tr>
                                         </thead>
-                                        <tbody >
-
-                                        <tr  v-for="lesson in entries" >
+                                        <tbody v-for="lessonId in lessonIds" v-if="lessonId.package_id==package">
+                                        <tr v-for="lesson in entries"  >
                                             <td class="">
                                                 <div class="form-check form-check-sm form-check-custom form-check-solid">
-                                                    <input   class="form-check-input" type="checkbox" v-model="lessonIds" :value="lesson.id" @change="updateCheckAll(package)">
+                                                    <input   class="form-check-input" type="checkbox" v-model="lessonId.lessonIds"  :value="lesson.id" @change="updateCheckAll(package)">
                                                 </div>
                                             </td>
                                             <td class="" v-text="lesson.name"></td>
                                             <td class="" v-text="lesson.grade" ></td>
                                             <td class="" v-text="lesson.subject"></td>
-
                                         </tr>
                                         </tbody>
                                     </table>
@@ -240,7 +238,7 @@
 
                             </div>
                             <div class="d-flex justify-content-end">
-                                <button class="btn btn-primary" style="margin: 20px 0px 0px" @click="addLesson">Confirm</button>
+                                <button class="btn btn-primary" style="margin: 20px 0px 0px" @click="addLesson()">Confirm</button>
                             </div>
 
                         </div>
@@ -447,7 +445,7 @@
 
                             <div class="row" >
                                <div >
-                                   <button type="button" class="btn btn-sm btn-flex btn-light-primary " data-bs-toggle="modal" data-bs-target="#kt_modal_add_payment" style=" margin: 7px 0px 10px;" id="newPackage" @click="addPackageLesson" >
+                                   <button type="button" class="btn btn-sm btn-flex btn-light-primary " data-bs-toggle="modal" data-bs-target="#kt_modal_add_payment" style=" margin: 7px 0px 10px;" id="newPackage" @click="addPackageLesson()" >
                                        <span class="svg-icon svg-icon-3">
 																<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
 																	<rect opacity="0.3" x="2" y="2" width="20" height="20" rx="5" fill="black" />
@@ -458,8 +456,8 @@
                                         Add lesson package
                                    </button>
                                 </div>
-                                <div class="form-group col-lg-8" id="clone" v-for="packageLesson in packageLessonPlan">
-                                    <label>Lesson package {{packageLesson.id}}<span class="text-danger">*</span></label>
+                                <div class="form-group col-lg-8" id="clone" v-for="(packageLesson,index) in packageLessonPlan">
+                                    <label>Lesson package {{index+1}}<span class="text-danger">*</span></label>
                                     <div class="card-header  border border-dashed border-gray-300">
                                         <!--begin::Card title-->
                                         <div class="card-title" style="font-size: 15px">
@@ -467,14 +465,17 @@
                                         </div>
                                         <!--end::Card title-->
                                         <!--begin::Card toolbar-->
-                                        <div class="card-toolbar">
-                                            <button class="btn btn-primary"  @click="downloadLesson()" v-if="entry.status=='Ready'">Download package</button>
-                                            <span   v-if="url.status=='waitting' && entry.status=='Packaging' || url.status=='waitting' && entry.status=='Packaging'" style="color:#ffc700 ">inprogress</span>
-                                            <a v-if="url.status=='done' && entry.status=='Packaging'" :href="url.url" type="button" class="btn btn-primary">Dowload Package</a>
-
+                                        <div class="card-toolbar"  v-if="packageLesson.status=='waitting'">
+                                            <button class="btn btn-primary" @click="addLessonPackage(packageLesson.id)" >Add lesson</button>
+                                        </div>
+                                        <div class="card-toolbar" v-for="urls in url" v-if="urls.package_id==packageLesson.id && packageLesson.status=='done'">
+                                            <button class="btn btn-primary"  @click="downloadLesson(packageLesson)" v-if="entry.status=='Ready'  ">Download package</button>
+                                            <span   v-if="urls.status=='waitting' && entry.status=='Packaging' || urls.status=='waitting' && entry.status=='Packaging'" style="color:#ffc700 ">inprogress</span>
+                                            <a v-if="urls.status=='done' && entry.status=='Packaging'" :href="urls.url" type="button" class="btn btn-primary">Dowload Package</a>
                                             <button class="btn btn-primary" style="margin: 0px 15px 0px" data-bs-toggle="modal" data-bs-target="#kt_modal" >View lessons</button>
                                             <button class="btn btn-primary" @click="addLessonPackage(packageLesson.id)" >Add lesson</button>
                                         </div>
+
                                         <!--end::Card toolbar-->
                                     </div>
 <!--                                    <div class="d-flex align-items-center"  style="margin-top: 20px" >-->
@@ -802,7 +803,10 @@
         name: "PlanEdit.vue",
         components: {ActionBar,Treeselect},
         data() {
-
+            let lessonIds=$json.lessonIds;
+            lessonIds.forEach(function (e) {
+                console.log(e);
+            })
 
             // $(document).ready(function() {
             //    $("#newPackage").click(function ()
@@ -823,11 +827,10 @@
                 idListDevice:[],
                 nameSchool:$json.nameSchool || [],
                 schoolPlan:$json.schoolPlan || [],
-                trung:$json.trung || [],
                 schoolId:'',
                 schools:$json.schools || [],
                 exportDevicePlan:'',
-                lessonIds: $json.lessonIds || [],
+                lessonIds: lessonIds,
                 data:$json.data || [],
                 allSelected: false,
                 filter: filter,
@@ -852,7 +855,6 @@
                     },
                 ],
                 entry: $json.entry || {},
-                data:$json.data || [],
                 packageLessonPlan:$json.packageLessonPlan || [],
                 isLoading: false,
                 errors: {},
@@ -892,17 +894,6 @@
                 $('#kt_modal_invite').modal('show');
                 this.package=addLesson;
             },
-            // async downloadLesson() {
-
-
-            //     const res = await $post('/xadmin/plans/downloadLesson', {
-            //         entry:this.entry,
-            //         lessonIds: this.lessonIds,
-            //         device: this.device
-            //     });
-            //     window.location.href = res.url;
-
-            // },
             async deleteLesson(lesson)
             {
                 let new_arr = this.lessonIds.filter(item => item !== lesson);
@@ -1051,19 +1042,15 @@
                 this.lessons = [];
                 let self = this;
 
-
-                self.packagePlan.forEach(function(e2){
-                   if(e2.package_id==self.package)
-                   {
+                {
                     if (self.lessonIds.length === self.entries.length) {
                         self.allSelected = true;
                     }
                     else {
                         self.allSelected = false;
                     }
-                   }
-
-                })
+                }
+                console.log(self.lessonIds);
 
 
                 self.lessonIds.forEach(function (e) {
@@ -1136,7 +1123,7 @@
            async addPackageLesson()
             {
                 this.isLoading = true;
-                const res = await $post('/xadmin/plans/addPackageLesson', {entry:this.entry,lessonIds:this.lessonIds,package:this.package}, false);
+                const res = await $post('/xadmin/plans/addPackageLesson', {entry:this.entry,lessonIds:this.lessonIds}, false);
                 this.isLoading = false;
                 if (res.errors) {
                     this.errors = res.errors;
@@ -1154,10 +1141,10 @@
 
                 }
             },
-            async downloadLesson()
+            async downloadLesson(packageLesson)
             {
                 this.isLoading = true;
-                const res = await $post('/xadmin/plans/downloadLesson', {entry:this.entry,lessonIds:this.lessonIds,package:this.package}, false);
+                const res = await $post('/xadmin/plans/downloadLesson', {entry:this.entry,lessonIds:this.lessonIds,package:packageLesson.id}, false);
                 this.isLoading = false;
                 if (res.errors) {
                     this.errors = res.errors;
