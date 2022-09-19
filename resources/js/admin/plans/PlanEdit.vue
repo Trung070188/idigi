@@ -66,7 +66,7 @@
                                         <tbody >
 
                                         <tr v-for="device in data" v-if="device.school_id==idListDevice && device.plan_id==entry.id">
-                                            
+
                                             <td class="">
                                                 <div
                                                     class="form-check form-check-sm form-check-custom form-check-solid"
@@ -468,9 +468,10 @@
                                         <!--end::Card title-->
                                         <!--begin::Card toolbar-->
                                         <div class="card-toolbar">
-                                            <button class="btn btn-primary"  v-if="url.status=='waitting'">Download package</button>
+                                            <button class="btn btn-primary"   @click="downloadLesson()">Download package</button>
+<!--                                            <button class="btn btn-primary"  v-if="url.status=='waitting'" @click="downloadLesson()">Download package</button>-->
                                             <span   v-if="url.status=='inprogress'">inprogress</span>
-                                            <a v-if="url.status=='done'" :href="url.url" style="button" class="btn btn-primary">Dowload Package</a>
+                                            <a v-if="url.status=='done'" :href="url.url" type="button" class="btn btn-primary">Dowload Package</a>
 
                                             <button class="btn btn-primary" style="margin: 0px 15px 0px" data-bs-toggle="modal" data-bs-target="#kt_modal" >View lessons</button>
                                             <button class="btn btn-primary" @click="addLessonPackage(packageLesson.id)" >Add lesson</button>
@@ -802,8 +803,8 @@
         name: "PlanEdit.vue",
         components: {ActionBar,Treeselect},
         data() {
-            
-            
+
+
             // $(document).ready(function() {
             //    $("#newPackage").click(function ()
             //    {
@@ -885,7 +886,7 @@
             },
              viewDeviceSchoolPlan:function(viewDevice=''){
                 $('#kt_modal_invite_friends').modal('show');
-                this.idListDevice=viewDevice;                
+                this.idListDevice=viewDevice;
             },
             addLessonPackage:function(addLesson='')
             {
@@ -1051,21 +1052,21 @@
                 this.lessons = [];
                 let self = this;
 
-                
+
                 self.packagePlan.forEach(function(e2){
                    if(e2.package_id==self.package)
                    {
                     if (self.lessonIds.length === self.entries.length) {
                         self.allSelected = true;
-                    } 
+                    }
                     else {
                         self.allSelected = false;
                     }
                    }
-                   
+
                 })
-               
-               
+
+
                 self.lessonIds.forEach(function (e) {
                     self.entries.forEach(function (e1) {
                         if (e1.id == e) {
@@ -1136,7 +1137,28 @@
            async addPackageLesson()
             {
                 this.isLoading = true;
-                const res = await $post('/xadmin/plans/addPackageLesson', {entry:this.entry}, false);
+                const res = await $post('/xadmin/plans/addPackageLesson', {entry:this.entry,lessonIds:this.lessonIds,package:this.package}, false);
+                this.isLoading = false;
+                if (res.errors) {
+                    this.errors = res.errors;
+                    return;
+                }
+                if (res.code) {
+                    toastr.error(res.message);
+                } else {
+                    this.errors = {};
+                    toastr.success(res.message);
+
+                    if (!this.entry.id) {
+                        // location.replace('/xadmin/plans/edit?id=' + res.id);
+                    }
+
+                }
+            },
+            async downloadLesson()
+            {
+                this.isLoading = true;
+                const res = await $post('/xadmin/plans/downloadLesson', {entry:this.entry,lessonIds:this.lessonIds,package:this.package}, false);
                 this.isLoading = false;
                 if (res.errors) {
                     this.errors = res.errors;

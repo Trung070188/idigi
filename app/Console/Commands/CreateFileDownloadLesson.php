@@ -201,8 +201,6 @@ class CreateFileDownloadLesson extends Command
             'url' => url($pathZipAll),
             'status' => 'done',
         ]);
-
-
         return url($pathZipAll);
     }
 }
