@@ -320,19 +320,14 @@
                                     <table class="table table-row-bordered align-middle gy-4 gs-9" v-for="lessonId in lessonIds" v-if="lessonId.package_id==viewPackage">
                                         <thead class="border-bottom border-gray-200 fs-6 text-gray-600 fw-bolder bg-light bg-opacity-75">
                                         <tr>
-
                                             <th class="">Name of lesson</th>
                                             <th class="">Grade</th>
                                             <th class="">Subject</th>
-
-
                                             <th></th>
                                         </tr>
                                         </thead>
-                                        <tbody v-for="package in lessonId.lessonIds" >
-
-                                            <tr  v-for="lesson in entries"  v-if="package==lesson.id">
-
+                                        <tbody v-for="packageLesson in lessonId.lessonIds" >
+                                            <tr  v-for="lesson in entries"  v-if="packageLesson==lesson.id">
                                                 <td class="" v-text="lesson.name"></td>
                                                 <td class="" v-text="lesson.grade" ></td>
                                                 <td class="" v-text="lesson.subject"></td>
@@ -342,14 +337,8 @@
                                                             <i class="fa fa-trash mr-1 deleted"></i>
                                                         </button>
                                                     </a>
-
                                                 </td>
-
                                             </tr>
-
-
-
-
                                         </tbody>
                                     </table>
 
