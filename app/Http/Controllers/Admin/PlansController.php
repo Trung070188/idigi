@@ -792,6 +792,8 @@ class PlansController extends AdminBaseController
                 {
                     PlanLesson::create(['plan_id'=>$entry->id,'lesson_id'=>$lesson,'package_id'=>$dataLesson['package']]);
                 }
+                $entry->status='Ready';
+                $entry->save();
 //                $stringLesson=implode(",",$dataLesson['lessonIds']);
 //                $user=Auth::user();
                 ZipPlanLesson::where('plan_id',$entry->id)->delete();
@@ -1278,6 +1280,8 @@ class PlansController extends AdminBaseController
                 $user=Auth::user();
                 ZipPlanLesson::where('plan_id',$entry->id)->delete();
                 ZipPlanLesson::create(['user_id'=>$user->id,'plan_id'=>$entry->id,'lesson_ids'=>$stringLesson,'']);
+                $entry->status='Packaging';
+                $entry->save();
             }
             return [
                 'code' => 0,

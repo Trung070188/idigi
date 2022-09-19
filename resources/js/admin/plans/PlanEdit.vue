@@ -468,10 +468,9 @@
                                         <!--end::Card title-->
                                         <!--begin::Card toolbar-->
                                         <div class="card-toolbar">
-                                            <button class="btn btn-primary"   @click="downloadLesson()">Download package</button>
-<!--                                            <button class="btn btn-primary"  v-if="url.status=='waitting'" @click="downloadLesson()">Download package</button>-->
-                                            <span   v-if="url.status=='inprogress'">inprogress</span>
-                                            <a v-if="url.status=='done'" :href="url.url" type="button" class="btn btn-primary">Dowload Package</a>
+                                            <button class="btn btn-primary"  @click="downloadLesson()" v-if="entry.status=='Ready'">Download package</button>
+                                            <span   v-if="url.status=='waitting' && entry.status=='Packaging' || url.status=='waitting' && entry.status=='Packaging'" style="color:#ffc700 ">inprogress</span>
+                                            <a v-if="url.status=='done' && entry.status=='Packaging'" :href="url.url" type="button" class="btn btn-primary">Dowload Package</a>
 
                                             <button class="btn btn-primary" style="margin: 0px 15px 0px" data-bs-toggle="modal" data-bs-target="#kt_modal" >View lessons</button>
                                             <button class="btn btn-primary" @click="addLessonPackage(packageLesson.id)" >Add lesson</button>
