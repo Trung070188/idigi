@@ -285,9 +285,9 @@ class PlansController extends AdminBaseController
 
             $entry->fill($data);
             $entry->save();
+            SchoolPlan::where('plan_id',$entry->id)->delete();
             if(@$dataRole['schoolPlan'])
             {
-                SchoolPlan::where('plan_id',$entry->id)->delete();
                 foreach ($dataRole['schoolPlan'] as $school)
                 {
                     SchoolPlan::create(['school_id'=>$school,'plan_id'=>$entry->id]);
