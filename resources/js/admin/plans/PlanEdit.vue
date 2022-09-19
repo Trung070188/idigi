@@ -463,8 +463,8 @@
                                             <button class="btn btn-primary" @click="addLessonPackage(packageLesson.id)" >Add lesson</button>
                                         </div>
                                         <div class="card-toolbar" v-for="urls in url" v-if="urls.package_id==packageLesson.id && packageLesson.status=='done'">
-                                            <button class="btn btn-primary"  @click="downloadLesson(packageLesson)" v-if="entry.status=='Ready'  ">Download package</button>
-                                            <span   v-if="urls.status=='waitting' && entry.status=='Packaging' || urls.status=='waitting' && entry.status=='Packaging'" style="color:#ffc700 ">inprogress</span>
+                                            <button class="btn btn-primary"  @click="downloadLesson(packageLesson)" v-if="urls.status=='waitting'  ">Download package</button>
+                                            <span   v-if="urls.status=='inprogress' && entry.status=='Packaging'" style="color:#ffc700 ">inprogress</span>
                                             <a v-if="urls.status=='done' && entry.status=='Packaging'" :href="urls.url" type="button" class="btn btn-primary">Dowload Package</a>
                                             <button class="btn btn-primary" style="margin: 0px 15px 0px" @click="viewPackageLesson(packageLesson.id)">View lessons</button>
                                             <button class="btn btn-primary" @click="addLessonPackage(packageLesson.id)" >Add lesson</button>
@@ -859,9 +859,11 @@
                 } else {
                     this.errors = {};
                     toastr.success(res.message);
+                    location.replace('/xadmin/plans/edit?id=' + this.entry.id);
+
 
                     if (!this.entry.id) {
-                        location.replace('/xadmin/plans/edit?id=' + res.id);
+                        location.replace('/xadmin/plans/edit?id=' + this.entry.id);
                     }
 
                 }
@@ -1010,9 +1012,11 @@
                 } else {
                     this.errors = {};
                     toastr.success(res.message);
+                    location.replace('/xadmin/plans/edit?id=' + this.entry.id);
+
 
                     if (!this.entry.id) {
-                        // location.replace('/xadmin/plans/edit?id=' + res.id);
+                        location.replace('/xadmin/plans/edit?id=' + entry.id);
                     }
 
                 }
@@ -1031,9 +1035,11 @@
                 } else {
                     this.errors = {};
                     toastr.success(res.message);
+                    location.replace('/xadmin/plans/edit?id=' + this.entry.id);
+
 
                     if (!this.entry.id) {
-                        // location.replace('/xadmin/plans/edit?id=' + res.id);
+                        location.replace('/xadmin/plans/edit?id=' + this.entry.id);
                     }
 
                 }
@@ -1070,9 +1076,11 @@
                 } else {
                     this.errors = {};
                     toastr.success(res.message);
+                    location.replace('/xadmin/plans/edit?id=' + this.entry.id);
+
 
                     if (!this.entry.id) {
-                        // location.replace('/xadmin/plans/edit?id=' + res.id);
+                        location.replace('/xadmin/plans/edit?id=' + this.entry.id);
                     }
 
                 }
@@ -1091,9 +1099,11 @@
                 } else {
                     this.errors = {};
                     toastr.success(res.message);
+                    location.replace('/xadmin/plans/edit?id=' + this.entry.id);
+
 
                     if (!this.entry.id) {
-                        // location.replace('/xadmin/plans/edit?id=' + res.id);
+                        location.replace('/xadmin/plans/edit?id=' + this.entry.id);
                     }
 
                 }
