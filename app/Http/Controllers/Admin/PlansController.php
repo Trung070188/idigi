@@ -814,6 +814,7 @@ class PlansController extends AdminBaseController
                                 'status'=>'done'
                             ]
                         );
+
                     }
 
                 }
@@ -1090,8 +1091,7 @@ class PlansController extends AdminBaseController
                     'message' => 'Không tìm thấy',
                 ];
             }
-           PackageLesson::create(['plan_id'=>$entry->id]);
-            ZipPlanLesson::create(['plan_id'=>$entry->id]);
+           PackageLesson::create(['plan_id'=>$entry->id,'status'=>'waitting']);
             return [
                 'code' => 0,
                 'message' => 'Đã cập nhật',
