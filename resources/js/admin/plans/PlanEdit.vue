@@ -317,7 +317,7 @@
                             <div class="d-flex" style="margin: 64px 0px 0px">
 
                                 <div class="mh-300px scroll-y me-n7 pe-7">
-                                    <table class="table table-row-bordered align-middle gy-4 gs-9">
+                                    <table class="table table-row-bordered align-middle gy-4 gs-9" v-for="lessonId in lessonIds" v-if="lessonId.package_id==viewPackage">
                                         <thead class="border-bottom border-gray-200 fs-6 text-gray-600 fw-bolder bg-light bg-opacity-75">
                                         <tr>
 
@@ -329,23 +329,27 @@
                                             <th></th>
                                         </tr>
                                         </thead>
-                                        <tbody v-for="lessonId in lessonIds">
+                                        <tbody v-for="package in lessonId.lessonIds" >
 
-                                        <tr  v-for="lesson in entries"  v-if="lesson.id==lessonId">
+                                            <tr  v-for="lesson in entries"  v-if="package==lesson.id">
 
-                                            <td class="" v-text="lesson.name"></td>
-                                            <td class="" v-text="lesson.grade" ></td>
-                                            <td class="" v-text="lesson.subject"></td>
-                                            <td>
-                                                <a   @click="deleteLesson(lessonId)" href="javascript:;">
-                                        <button type="button" class="btn btn-sm btn-icon btn-light btn-active-light-primary">
-                                            <i class="fa fa-trash mr-1 deleted"></i>
-                                        </button>
-                                    </a>
+                                                <td class="" v-text="lesson.name"></td>
+                                                <td class="" v-text="lesson.grade" ></td>
+                                                <td class="" v-text="lesson.subject"></td>
+                                                <td>
+                                                    <a   @click="deleteLesson(lessonId)" href="javascript:;">
+                                                        <button type="button" class="btn btn-sm btn-icon btn-light btn-active-light-primary">
+                                                            <i class="fa fa-trash mr-1 deleted"></i>
+                                                        </button>
+                                                    </a>
 
-                                            </td>
+                                                </td>
 
-                                        </tr>
+                                            </tr>
+
+
+
+
                                         </tbody>
                                     </table>
 
@@ -473,7 +477,7 @@
                                             <button class="btn btn-primary"  @click="downloadLesson(packageLesson)" v-if="entry.status=='Ready'  ">Download package</button>
                                             <span   v-if="urls.status=='waitting' && entry.status=='Packaging' || urls.status=='waitting' && entry.status=='Packaging'" style="color:#ffc700 ">inprogress</span>
                                             <a v-if="urls.status=='done' && entry.status=='Packaging'" :href="urls.url" type="button" class="btn btn-primary">Dowload Package</a>
-                                            <button class="btn btn-primary" style="margin: 0px 15px 0px" data-bs-toggle="modal" data-bs-target="#kt_modal" >View lessons</button>
+                                            <button class="btn btn-primary" style="margin: 0px 15px 0px" @click="viewPackageLesson(packageLesson.id)">View lessons</button>
                                             <button class="btn btn-primary" @click="addLessonPackage(packageLesson.id)" >Add lesson</button>
                                         </div>
 
@@ -823,6 +827,7 @@
             };
 
             return {
+                viewPackage:this.viewPackage,
                 packagePlan:$json.packagePlan,
                 package:'',
                 idListDevice:[],
@@ -894,6 +899,11 @@
             {
                 $('#kt_modal_invite').modal('show');
                 this.package=addLesson;
+            },
+            viewPackageLesson:function(viewLesson='')
+            {
+                $('#kt_modal').modal('show');
+                this.viewPackage=viewLesson;
             },
             async deleteLesson(lesson)
             {
