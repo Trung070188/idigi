@@ -1056,7 +1056,8 @@ class PlansController extends AdminBaseController
 
                 ],
                 [
-                    'lesson_ids'=>$stringLesson
+                    'lesson_ids'=>$stringLesson,
+//                    'status'=>'done'
                 ]
             );
 
