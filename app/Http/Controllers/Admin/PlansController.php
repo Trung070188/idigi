@@ -122,7 +122,6 @@ class PlansController extends AdminBaseController
         $title = 'Edit';
         $component = 'PlanEdit';
         $idRoleIt=$entry->user_id;
-        $lessonIds=[];
         $packagePlan=[];
         $devices=UserDevice::query()->with(['users'])->where('plan_id','=',$entry->id)->orderBy('created_at','ASC')->get();
        $data=[];
@@ -208,7 +207,7 @@ class PlansController extends AdminBaseController
         }
 
         $jsonData = [
-            'lessonPackagePlans'=>$lessonPackagePlans,
+            'lessonPackagePlans'=>@$lessonPackagePlans,
             'idRoleIt' => $idRoleIt,
             'entry'=>$entry,
             'roleIt'=>$roleIt,
