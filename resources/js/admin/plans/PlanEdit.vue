@@ -198,7 +198,7 @@
                                             <th></th>
                                         </tr>
                                         </thead>
-                                        <tbody v-for="lessonId in lessonIds" v-if="lessonId.package_id==package">
+                                        <tbody v-for="lessonId in lessonPackagePlans" v-if="lessonId.package_id==package">
                                         <tr v-for="lesson in entries"  >
                                             <td class="">
                                                 <div class="form-check form-check-sm form-check-custom form-check-solid">
@@ -315,9 +315,8 @@
                             </div>
 
                             <div class="d-flex" style="margin: 64px 0px 0px">
-
                                 <div class="mh-300px scroll-y me-n7 pe-7">
-                                    <table class="table table-row-bordered align-middle gy-4 gs-9" v-for="lessonId in lessonIds" v-if="lessonId.package_id==viewPackage">
+                                    <table class="table table-row-bordered align-middle gy-4 gs-9" v-for="lessonId in lessonPackagePlans" v-if="lessonId.package_id==viewPackage">
                                         <thead class="border-bottom border-gray-200 fs-6 text-gray-600 fw-bolder bg-light bg-opacity-75">
                                         <tr>
                                             <th class="">Name of lesson</th>
@@ -332,7 +331,7 @@
                                                 <td class="" v-text="lesson.grade" ></td>
                                                 <td class="" v-text="lesson.subject"></td>
                                                 <td>
-                                                    <a   @click="deleteLesson(lessonId)" href="javascript:;">
+                                                    <a   @click="deleteLesson(lessonId.lessonIds)" href="javascript:;">
                                                         <button type="button" class="btn btn-sm btn-icon btn-light btn-active-light-primary">
                                                             <i class="fa fa-trash mr-1 deleted"></i>
                                                         </button>
@@ -455,7 +454,7 @@
                                     <div class="card-header  border border-dashed border-gray-300">
                                         <!--begin::Card title-->
                                         <div class="card-title" style="font-size: 15px">
-                                            <div v-for="lesson in lessonIds" v-if="packageLesson.id==lesson.package_id" class="fw-bold text-muted" >{{lesson.lessonIds.length}} lesson(s) added</div>
+                                            <div v-for="lesson in lessonPackagePlans" v-if="packageLesson.id==lesson.package_id" class="fw-bold text-muted" >{{lesson.lessonIds.length}} lesson(s) added</div>
                                         </div>
                                         <!--end::Card title-->
                                         <!--begin::Card toolbar-->
@@ -752,6 +751,7 @@
             };
 
             return {
+                lessons:[],
                 viewPackage:this.viewPackage,
                 packagePlan:$json.packagePlan,
                 package:'',
@@ -761,7 +761,7 @@
                 schoolId:'',
                 schools:$json.schools || [],
                 exportDevicePlan:'',
-                lessonIds: $json.lessonIds,
+                lessonPackagePlans: $json.lessonPackagePlans,
                 data:$json.data || [],
                 allSelected: false,
                 filter: filter,
@@ -968,33 +968,37 @@
             selectAll() {
                 if (this.allSelected) {
                     const selected = this.entries.map((u) => u.id);
-                    this.lessonIds = selected;
-                    this.lessons = this.entries
+                    let self=this;
+                    self.lessonPackagePlans.forEach(function (e) {
+                        e.lessonIds=selected;
+                        self.lessons = self.entries;
+                    })
                 } else {
-                    this.lessonIds = [];
-                    this.lessons = [];
+                    let self=this;
+                    self.lessonPackagePlans.forEach(function (e1) {
+                        e1.lessonIds=[];
+                    })
+                    self.lessons = [];
                 }
 
             },
             updateCheckAll() {
                 this.lessons = [];
                 let self = this;
-
-                {
-                    if (self.lessonIds.length === self.entries.length) {
+                self.lessonPackagePlans.forEach(function (e) {
+                    if(e.lessonIds.length==self.entries.length)
+                    {
                         self.allSelected = true;
                     }
                     else {
                         self.allSelected = false;
                     }
-                }
-                console.log(self.lessonIds);
 
-
-                self.lessonIds.forEach(function (e) {
-                    self.entries.forEach(function (e1) {
-                        if (e1.id == e) {
-                            self.lessons.push(e1);
+                })
+                self.lessonPackagePlans.forEach(function (e3) {
+                    self.entries.forEach(function (e4) {
+                        if (e4.id == e3) {
+                            self.lessons.push(e3);
                         }
                     })
                 })
@@ -1024,7 +1028,7 @@
             async addLesson()
             {
                 this.isLoading = true;
-                const res = await $post('/xadmin/plans/planLesson', {lessonIds:this.lessonIds,entry:this.entry,package:this.package}, false);
+                const res = await $post('/xadmin/plans/planLesson', {lessonPackagePlans:this.lessonPackagePlans,entry:this.entry,package:this.package}, false);
                 this.isLoading = false;
                 if (res.errors) {
                     this.errors = res.errors;

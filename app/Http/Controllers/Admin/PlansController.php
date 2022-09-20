@@ -199,7 +199,7 @@ class PlansController extends AdminBaseController
                     $lessonIdArr[] = (int)$item;
                 }
             }
-            $lessonIds[]=[
+            $lessonPackagePlans[]=[
                 'package_id'=>$packageLesson->id,
                 'plan_id'=>$packageLesson->plan_id,
                 'lessonIds'=>$lessonIdArr,
@@ -208,7 +208,7 @@ class PlansController extends AdminBaseController
         }
 
         $jsonData = [
-            'lessonIds'=>$lessonIds,
+            'lessonPackagePlans'=>$lessonPackagePlans,
             'idRoleIt' => $idRoleIt,
             'entry'=>$entry,
             'roleIt'=>$roleIt,
@@ -790,10 +790,10 @@ class PlansController extends AdminBaseController
                 ];
             }
 
-            if(@$dataLesson['lessonIds'])
+            if(@$dataLesson['lessonPackagePlans'])
             {
                PlanLesson::where('package_id',$dataLesson['package'])->delete();
-                foreach ($dataLesson['lessonIds'] as $lesson)
+                foreach ($dataLesson['lessonPackagePlans'] as $lesson)
                 {
                     if($lesson['package_id']==$dataLesson['package'])
                     {
