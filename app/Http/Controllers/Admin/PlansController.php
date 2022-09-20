@@ -1048,12 +1048,18 @@ class PlansController extends AdminBaseController
     public function deleteLesson(Request $req)
     {
         $data=$req->all();
-        PlanLesson::where(['plan_id'=>$data['entry']['id']])->delete();
-        foreach($data['lessons'] as $lesson)
-        {
-            PlanLesson::create(['plan_id'=>$data['entry']['id'],'lesson_id'=>$lesson]);
+        $stringLesson=implode(",",$data['packageLesson']);
 
-        }
+            PackageLesson::updateorCreate(
+                [
+                    'id'=>$data['viewPackage']
+
+                ],
+                [
+                    'lesson_ids'=>$stringLesson
+                ]
+            );
+
         return [
             'code' => 0,
             'message' => 'Đã xóa'

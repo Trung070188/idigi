@@ -198,7 +198,7 @@
                                             <th></th>
                                         </tr>
                                         </thead>
-                                        <tbody v-for="lessonId in lessonPackagePlans" v-if="lessonId.package_id==package">
+                                        <tbody v-for="lessonId in lessonPackagePlans" v-if="lessonId.package_id==package ">
                                         <tr v-for="lesson in entries"  >
                                             <td class="">
                                                 <div class="form-check form-check-sm form-check-custom form-check-solid">
@@ -331,7 +331,7 @@
                                                 <td class="" v-text="lesson.grade" ></td>
                                                 <td class="" v-text="lesson.subject"></td>
                                                 <td>
-                                                    <a   @click="deleteLesson(lessonId.lessonIds)" href="javascript:;">
+                                                    <a    @click="deleteLesson(lesson)" href="javascript:;">
                                                         <button type="button" class="btn btn-sm btn-icon btn-light btn-active-light-primary">
                                                             <i class="fa fa-trash mr-1 deleted"></i>
                                                         </button>
@@ -801,10 +801,7 @@
         },
         mounted() {
             $router.on('/', this.load).init();
-            let self = this;
-            $.get('/xadmin/user_devices/getDeviceByUser', function (res) {
-                self.devices = res;
-            });
+
         },
 
         methods: {
@@ -830,17 +827,23 @@
                 $('#kt_modal').modal('show');
                 this.viewPackage=viewLesson;
             },
-            async deleteLesson(lesson)
+          async  deleteLesson(lesson)
             {
-                let new_arr = this.lessonIds.filter(item => item !== lesson);
-                this.lessonIds=new_arr
-                let lessons=this.lessonIds
-                const res = await $post('/xadmin/plans/deleteLesson', {lessons,entry:this.entry});
-                if (res.code) {
-                    toastr.error(res.message);
-                } else {
-                        toastr.success(res.message);
 
+                let self = this;
+                for (const e of self.lessonPackagePlans) {
+                    if(e.package_id==self.viewPackage)
+                    {
+                        let array=e.lessonIds.filter(item => item !== lesson.id);
+                        e.lessonIds=array;
+                        let packageLesson=e.lessonIds
+                        const res =await $post('/xadmin/plans/deleteLesson', {packageLesson,entry:self.entry,viewPackage:self.viewPackage});
+                        if (res.code) {
+                            toastr.error(res.message);
+                        } else {
+                            toastr.success(res.message);
+                        }
+                    }
                 }
             },
             backIndex(){
