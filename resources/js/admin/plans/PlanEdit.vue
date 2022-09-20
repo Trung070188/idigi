@@ -850,6 +850,10 @@
                         } else {
                             toastr.success(res.message);
                         }
+                        if(res.lesson=="")
+                        {
+                            location.replace('/xadmin/plans/edit?id=' + this.entry.id);
+                        }
                     }
                 }
             },

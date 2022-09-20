@@ -24,14 +24,7 @@ class Plan extends BaseModel
     'user_id',
     'secret_key',
 ];
-    public function lessons()
-    {
-        return $this->belongsToMany(Lesson::class, 'plan_lessons');
-    }
-    public function planLesson()
-    {
-        return $this->hasMany(PlanLesson::class,'plan_id');
-    }
+
     public function schools()
     {
         return $this->belongsToMany(School::class,'school_plans');

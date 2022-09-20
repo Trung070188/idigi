@@ -98,7 +98,7 @@ class PlansController extends AdminBaseController
     */
     public function edit (Request $req) {
         $id = $req->id;
-        $entry = Plan::with(['lessons','planLesson','schools','package_lessons'])->find($id);
+        $entry = Plan::with(['schools','package_lessons'])->find($id);
         $users=User::query()->with(['roles'])->orderBy('id','ASC')->get();
         $roleIt=[];
         foreach($users as $user)
@@ -793,18 +793,11 @@ class PlansController extends AdminBaseController
 
             if(@$dataLesson['lessonPackagePlans'])
             {
-               PlanLesson::where('package_id',$dataLesson['package'])->delete();
                 foreach ($dataLesson['lessonPackagePlans'] as $lesson)
                 {
                     if($lesson['package_id']==$dataLesson['package'])
                     {
-                        foreach ($lesson['lessonIds'] as $lessonId)
-                        {
-                            {
-                                PlanLesson::create(['plan_id'=>$entry->id,'lesson_id'=>$lessonId,'package_id'=>$dataLesson['package']]);
 
-                            }
-                        }
                         $stringLesson=implode(",",$lesson['lessonIds']);
                         PackageLesson::updateorCreate(
                             [
@@ -1060,10 +1053,25 @@ class PlansController extends AdminBaseController
 //                    'status'=>'done'
                 ]
             );
+            if($stringLesson=="")
+            {
+                PackageLesson::updateorCreate(
+                    [
+                        'id'=>$data['viewPackage']
+
+                    ],
+                    [
+                        'lesson_ids'=>$stringLesson,
+                    'status'=>'waitting'
+                    ]
+                );
+
+            }
 
         return [
             'code' => 0,
-            'message' => 'Đã xóa'
+            'message' => 'Đã xóa',
+            'lesson'=>$stringLesson
         ];
 
     }
