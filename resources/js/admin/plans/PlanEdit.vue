@@ -955,6 +955,7 @@
                     entry: this.entry,
                     idListDevice:this.idListDevice,
                     schoolId:this.idListDevice,
+                     idRoleIt:this.idRoleIt,
                 });
                  window.location.href = res.url;
             },

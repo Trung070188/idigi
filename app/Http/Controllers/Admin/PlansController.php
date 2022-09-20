@@ -682,9 +682,9 @@ class PlansController extends AdminBaseController
                     'message' => 'Không tìm thấy',
                 ];
             }
-            $user = Auth::user();
             $exportDevice=[];
             $payload = [];
+            $user=User::where('id',$dataImport['idRoleIt'])->first();
 
             if (@$dataImport['dataDevice']) {
                 foreach ($dataImport['dataDevice'] as $import) {
@@ -717,7 +717,7 @@ class PlansController extends AdminBaseController
                             'username'=>$user->username,
                             'full_name'=>$user->full_name,
                             'plan' => $apiPlan,
-                            'user_id' => $user->id,
+                            'user_id' => $dataImport['idRoleIt'],
                             'device_uid' => $import['device_uid'],
                             'device_name' => $import['device_name'],
                             'secret_key' => $import['secret_key'],
