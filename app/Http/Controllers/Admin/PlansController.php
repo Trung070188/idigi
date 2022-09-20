@@ -1141,7 +1141,7 @@ class PlansController extends AdminBaseController
                    {
                        $stringLesson=implode(",",$lesson['lessonIds']);
                        $user=Auth::user();
-                       ZipPlanLesson::create(['user_id'=>$user->id,'plan_id'=>$entry->id,'lesson_ids'=>$stringLesson,'package_id'=>$dataLesson['package'],'status'=>'inprogress']);
+                       ZipPlanLesson::create(['user_id'=>$dataLesson['idRoleIt'],'plan_id'=>$entry->id,'lesson_ids'=>$stringLesson,'package_id'=>$dataLesson['package'],'status'=>'inprogress']);
                        $entry->status='Packaging';
                        $entry->save();
 
