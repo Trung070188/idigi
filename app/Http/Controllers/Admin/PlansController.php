@@ -714,6 +714,8 @@ class PlansController extends AdminBaseController
                     if($import['school_id']==$dataImport['idListDevice'] && $import['plan_id']==$entry->id)
                     {
                         $payload [] = [
+                            'username'=>$user->username,
+                            'full_name'=>$user->full_name,
                             'plan' => $apiPlan,
                             'user_id' => $user->id,
                             'device_uid' => $import['device_uid'],
