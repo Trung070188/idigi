@@ -182,7 +182,7 @@
 
                                         <div>
                                             <!-- {{ lessonIds.length }} lesson selected -->
-                                            <!-- <a href="javascript:;" @click="removeAll" style="color: red; margin-left: 10px">clear all</a> -->
+                                             <a href="javascript:;" @click="removeAll" style="color: red; margin-left: 10px">clear all</a>
                                         </div>
                                     </template>
 
@@ -209,7 +209,7 @@
                             </tr>
                             </thead>
                             <tbody>
-                            <tr v-for="entry in entries">
+                            <tr  v-for="entry in entries">
                                 <td class="">
                                     <div class="form-check form-check-sm form-check-custom form-check-solid">
                                         <input class="form-check-input" type="checkbox" v-model="lessonIds" :value="entry.id" @change="updateCheckAll">
@@ -221,19 +221,26 @@
                                 <td class="" v-text="entry.subject"></td>
                                 <td class="" v-text="entry.enabled == 0 ? 'No' : 'Yes'"></td>
                                 <td class="" v-text=" d(entry.created_at)"></td>
-
                                 <td class="">
-                                    <!--                                    <a :href="'/xadmin/lessons/edit?id='+entry.id" style="margin-right: 10px"><i style="font-size:1.3rem" class="fa fa-edit"></i></a>-->
-                                    <a @click="openModalEntry(entry)" href="javascript:;" class=" btn-action" >
-                                        <button type="button" class="btn btn-sm btn-icon btn-light btn-active-light-primary">
-                                            <i class="fa fa-download"></i>
-                                        </button>
-                                    </a>
-                                    <a v-if="permissions['012']" @click="remove(entry)" href="javascript:;" class="btn-trash btn-action">
-                                        <button type="button" class="btn btn-sm btn-icon btn-light btn-active-light-primary">
-                                            <i class="fa fa-trash"></i>
-                                        </button>
-                                    </a>
+                                    <a href="list.html#" class="btn btn-light btn-active-light-primary btn-sm" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">Actions
+                                        <!--begin::Svg Icon | path: icons/duotune/arrows/arr072.svg-->
+                                        <span class="svg-icon svg-icon-5 m-0">
+															<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+																<path d="M11.4343 12.7344L7.25 8.55005C6.83579 8.13583 6.16421 8.13584 5.75 8.55005C5.33579 8.96426 5.33579 9.63583 5.75 10.05L11.2929 15.5929C11.6834 15.9835 12.3166 15.9835 12.7071 15.5929L18.25 10.05C18.6642 9.63584 18.6642 8.96426 18.25 8.55005C17.8358 8.13584 17.1642 8.13584 16.75 8.55005L12.5657 12.7344C12.2533 13.0468 11.7467 13.0468 11.4343 12.7344Z" fill="black" />
+															</svg>
+														</span>
+                                       </a>
+
+                                    <div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-bold fs-7 w-125px py-4" data-kt-menu="true">
+
+                                        <div class="menu-item px-3">
+                                            <a @click="openModalEntry(entry)" class="menu-link px-3">Download</a>
+                                        </div>
+                                        <div class="menu-item px-3" >
+                                            <a class="menu-link text-danger px-3" v-if="permissions['012']" @click="remove(entry)" data-kt-subscriptions-table-filter="delete_row">Remove</a>
+
+                                        </div>
+                                    </div>
                                 </td>
                             </tr>
                             </tbody>
@@ -401,9 +408,11 @@
                 this.$loading(true);
                 const res = await $get('/xadmin/lessons/data', query);
                 this.$loading(false);
+                setTimeout(function (){
+                    KTMenu.createInstances();
+                }, 0)
                 this.paginate = res.paginate;
                 this.entries = res.data;
-                console.log(this.entries);
                 this.from = (this.paginate.currentPage - 1) * (this.limit) + 1;
                 this.to = (this.paginate.currentPage - 1) * (this.limit) + this.entries.length;
             },
@@ -482,4 +491,5 @@
     option {
         color: black;
     }
+
 </style>
