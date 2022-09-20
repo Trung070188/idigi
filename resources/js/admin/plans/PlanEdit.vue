@@ -1092,7 +1092,7 @@
             async downloadLesson(packageLesson)
             {
                 this.isLoading = true;
-                const res = await $post('/xadmin/plans/downloadLesson', {entry:this.entry,lessonIds:this.lessonIds,package:packageLesson.id,idRoleIt:this.idRoleIt}, false);
+                const res = await $post('/xadmin/plans/downloadLesson', {entry:this.entry,lessonPackagePlans:this.lessonPackagePlans,package:packageLesson.id,idRoleIt:this.idRoleIt}, false);
                 this.isLoading = false;
                 if (res.errors) {
                     this.errors = res.errors;

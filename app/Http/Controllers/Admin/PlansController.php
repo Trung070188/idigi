@@ -1132,10 +1132,10 @@ class PlansController extends AdminBaseController
                     'message' => 'Không tìm thấy',
                 ];
             }
-            if(@$dataLesson['lessonIds'])
+            if(@$dataLesson['lessonPackagePlans'])
             {
                 ZipPlanLesson::where('package_id',$dataLesson['package'])->delete();
-               foreach ($dataLesson['lessonIds'] as $lesson)
+               foreach ($dataLesson['lessonPackagePlans'] as $lesson)
                {
                    if($lesson['package_id']==$dataLesson['package'])
                    {
