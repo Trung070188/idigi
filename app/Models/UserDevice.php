@@ -14,11 +14,11 @@ class UserDevice extends BaseModel
         'user_id',
         'status',
         'plan_id',
-        'school_id',
         'type',
         'secret_key',
         'reason',
         'key_collection_id',
+        'expire_date',
         'created_at',
         'updated_at'
     ];

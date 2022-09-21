@@ -22,6 +22,7 @@ class Plan extends BaseModel
     'due_at',
     'plan_description',
     'user_id',
+    'expire_date',
     'secret_key',
 ];
 

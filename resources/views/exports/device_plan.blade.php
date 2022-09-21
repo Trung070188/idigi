@@ -2,9 +2,9 @@
 <table class="table table-bordered" style="width: 100%">
     <thead>
     <tr>
-        <th>Device Name</th>
+        <th>Device name</th>
         <td>Register code</td>
-        <td>School Name</td>
+        <td>Expire date</td>
         <td>Confirmation code</td>
     </tr>
     </thead>
@@ -15,7 +15,7 @@
 
             <td>{{$item['device_name']}}</td>
             <td>{{$item['device_uid']}}</td>
-            <td>{{$item['school_name']}}</td>
+            <td>{{$item['expire_date']}}</td>
             <td>{{$item['code']}}</td>
 {{--            <td>{{$item['confirmation code']}}</td>--}}
         </tr>
