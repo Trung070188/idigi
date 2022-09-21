@@ -866,7 +866,7 @@
             },
             async saveValidateImportDevice()
             {
-                this.errors = {};
+                // this.errors = {};
                 if(this.$refs.uploader.files)
                 {
                     const files = this.$refs.uploader.files;
@@ -905,7 +905,7 @@
                         this.fileImport=res.fileImport;
                     }
                     if (res.code) {
-                        this.errors = res.errors;
+                        // this.errors = res.errors;
                     } else {
                         $('#uploadApp').modal('hide');
                         this.model = {

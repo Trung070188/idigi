@@ -451,6 +451,7 @@ class PlansController extends AdminBaseController
                                         'device_name'=>$validation['device_name'],
                                         'type'=>$validation['type'],
                                         'device_uid'=>'',
+                                        'expire_date'=>$validation['expire_date'],
                                         'status'=>$validation['status'],
                                         'error'=>$validation['error'],
                                     ];
@@ -540,7 +541,7 @@ class PlansController extends AdminBaseController
                     $device->status = 2;
                     $device->secret_key = Str::random(10);
                     $device->plan_id = $entry->id;
-                    $device->expire_date=Carbon::createFromFormat('d/m/Y',$import['expire_date'])->format('Y-m-d');
+                    $device->expire_date=Carbon::createFromFormat('d/m/Y H:i:s',$import['expire_date'])->format('Y-m-d H:i:s');
                     $device->user_id = $dataImport['idRoleIt'];
                     $device->save();
                 }
