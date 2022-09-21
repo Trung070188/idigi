@@ -144,13 +144,13 @@
                             </div>
                             <div class="d-flex">
 
-                                        <div  class="h-15px me-3">
+                                        <div  class="h-15px me-3" style="width: 218px">
                                             <label>Name </label>
                                             <input  v-model="filter.name" @keydown.enter="doFilter('name', filter.name, $event)"
                                                 class="form-control" placeholder="Enter the lesson name"
                                             />
                                         </div>
-                                        <div  class="h-15px me-3">
+                                        <div  class="h-15px me-3" style="width: 218px">
                                             <label>Subject </label>
                                             <select required class="form-control form-select" v-model="filter.subject" @keydown.enter="doFilter('subject', filter.subject, $event)">
                                                 <option value="" disabled selected>Choose Subject</option>
@@ -160,7 +160,7 @@
                                             </select>
 
                                         </div>
-                                        <div  class="h-15px me-3">
+                                        <div  class="h-15px me-3" style="width: 218px">
                                             <label>Grade </label>
                                             <select required class="form-control form-select" v-model="filter.grade"  @keydown.enter="doFilter('grade', filter.grade, $event)">
                                                 <option value="" disabled selected>Choose Grade</option>
@@ -181,7 +181,7 @@
 
                             <div class="d-flex" style="margin: 64px 0px 0px">
 
-                                <div class="mh-300px scroll-y me-n7 pe-7">
+                                <div class="mh-300px scroll-y me-n7 pe-7" style="width: 703px">
                                     <table class="table table-row-bordered align-middle gy-4 gs-9">
                                         <thead class="border-bottom border-gray-200 fs-6 text-gray-600 fw-bolder bg-light bg-opacity-75">
                                         <tr>
