@@ -148,7 +148,7 @@ class PlansController extends AdminBaseController
                             'school_id'=>$device->school_id,
                             'secret_key'=>$device->secret_key,
                             'reason'=>$device->reason,
-                            'expire_date'=>$device->expire_date,
+                            'expire_date'=>Carbon::parse($device->expire_date)->format('d-m-Y'),
                             'created_at'=>$device->created_at,
                             'updated_at'=>$device->updated_at,
                             'roleName'=>$roleName,
@@ -622,7 +622,7 @@ class PlansController extends AdminBaseController
                         $dataPlanExport[] = [
                             'device_name' => $pay['device_name'],
                             'device_uid' => $pay['device_uid'],
-                            'expire_date'=>$pay['expired'],
+                            'expire_date'=>Carbon::parse($pay['expired'])->format('d/m/Y'),
                             'code' => $jwt
                         ];
                     }

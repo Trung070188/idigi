@@ -58,7 +58,7 @@
                                             <th class="">Device name</th>
                                             <th class="">Type</th>
                                             <th class="">Register code</th>
-                                            <th class="">Status</th>
+                                            <th class="">Expire date</th>
 
                                             <th></th>
                                         </tr>
@@ -82,7 +82,7 @@
                                             <td class="" v-text="device.device_name"></td>
                                             <td class="" >{{device.type}}</td>
                                             <td class="" v-text="device.device_uid"></td>
-                                            <td class="" ></td>
+                                            <td class="" v-text="device.expire_date"></td>
                                             <td class="">
                                                 <!--<a v-if="permissions['014']" :href="'/xadmin/users/edit_teacher?id='+entry.id"><i style="font-size:1.3rem"
                                                                                                         class="fa fa-edit"></i></a>
