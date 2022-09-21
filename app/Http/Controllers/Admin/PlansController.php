@@ -534,7 +534,6 @@ class PlansController extends AdminBaseController
                     $device->secret_key = Str::random(10);
                     $device->plan_id = $entry->id;
                     $device->expire_date=Carbon::createFromFormat('d/m/Y',$import['expire_date'])->format('Y-m-d');
-                    $device->school_id = $dataImport['schoolId'];
                     $device->user_id = $dataImport['idRoleIt'];
                     $device->save();
                 }
