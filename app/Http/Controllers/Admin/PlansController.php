@@ -216,13 +216,22 @@ class PlansController extends AdminBaseController
         }
 
         $data = $req->get('entry');
-
+        $current = Carbon::now();
         $rules = [
-    'name' => 'max:255',
-    'created_by' => 'numeric',
-    'due_at' => 'date_format:Y-m-d H:i:s',
-];
+            'name' => ['required'],
+            'plan_description'=>['required','max:255'],
+        ];
+        if(!isset($data['id']))
+        {
+            if($dataRole['idRoleIt']==null)
+            {
+                $rules['idRoleIt']=['required'];
 
+            }
+            $rules['due_at']=['required','after_or_equal:' .$current];
+            $rules['expire_date']=['required','after_or_equal:' .$current];
+
+        }
         $v = Validator::make($data, $rules);
 
         if ($v->fails()) {
@@ -231,7 +240,6 @@ class PlansController extends AdminBaseController
                 'errors' => $v->errors()
             ];
         }
-
         /**
         * @var  Plan $entry
         */
@@ -269,7 +277,6 @@ class PlansController extends AdminBaseController
             $entry->secret_key=Str::random(10);
             $entry->fill($data);
             $entry->save();
-
             return [
                 'code' => 0,
                 'message' => 'Đã thêm',
@@ -393,7 +400,7 @@ class PlansController extends AdminBaseController
             $ok = move_uploaded_file($file0['tmp_name'], $newFilePath);
             $newUrl = url("/uploads/excel_import/{$y}/{$m}/{$hash}.{$extension}");
             $sheets = Excel::toCollection(new DeviceImport(), "{$y}/{$m}/{$hash}.{$extension}", 'excel-import');
-            $dayExpireDevice=( Carbon::parse($data['expire_date'])->format('d/m/Y'));
+            $dayExpireDevice=( Carbon::parse($data['expire_date'])->format('d/m/Y H:i:s'));
             $deviceLists[] = $sheets;
             $validations = [];
             $error = [];
@@ -422,7 +429,7 @@ class PlansController extends AdminBaseController
                                 'device_uid' => ['required',Rule::unique('user_devices','device_uid')],
                                 'type' => 'required',
                                 'status' => 'required',
-                                'expire_date'=> ['date_format:d/m/Y','before_or_equal:'.$dayExpireDevice]
+                                'expire_date'=> ['date_format:d/m/Y H:i:s','before_or_equal:'.$dayExpireDevice]
                             ]);
 
                             if ($validator->fails()) {
@@ -775,6 +782,8 @@ class PlansController extends AdminBaseController
                 'created_by'=>$fullName,
                 'assign_to'=>$fullNameIt,
                 'created_at'=>$entry->created_at,
+                'status'=>$entry->status,
+                'expire_date'=>$entry->expire_date,
                 'due_at'=>$entry->due_at,
             ];
 

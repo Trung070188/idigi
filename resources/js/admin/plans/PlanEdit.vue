@@ -374,17 +374,17 @@
                                         <label>Plan name <span class="text-danger">*</span></label>
                                         <input  v-model="entry.name"  class="form-control"
                                                 placeholder="Enter the name of plan" >
-                                        <error-label for="f_school_name" ></error-label>
+                                        <error-label :errors="errors.name" for="f_school_name" ></error-label>
 
                                     </div>
 
                                     <div class="form-group col-lg-4">
                                         <label> Assign to IT <span class="text-danger">*</span></label>
-                                        <select   class="form-control form-select" v-model="idRoleIt"
+                                        <select disabled   class="form-control form-select" v-model="idRoleIt"
                                         >
                                             <option v-for="role in roleIt" :value="role.id">{{role.full_name}}</option>
                                         </select>
-                                        <error-label  ></error-label>
+                                        <error-label  :errors="errors.idRoleIt"></error-label>
 
                                     </div>
 
@@ -392,20 +392,22 @@
                                 <div class="row">
                                     <div class="form-group col-lg-8">
                                         <label>Plan description  <span class="text-danger">*</span> </label>
-                                        <input   class="form-control"
+                                        <textarea   class="form-control"
                                                  placeholder="Enter the description" v-model="entry.plan_description">
+                                        </textarea>
+                                        <error-label  :errors="errors.plan_description"></error-label>
                                     </div>
                                     <div class="form-group col-lg-4">
                                         <label>Due date  <span class="text-danger">*</span></label>
-                                        <Datepicker v-model="entry.due_at"/>
-                                        <error-label for="f_title" ></error-label>
+                                        <Datepicker disabled v-model="entry.due_at"/>
+                                        <error-label :errors="errors.due_at" for="f_title" ></error-label>
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="form-group col-lg-4">
                                         <label>Expire date <span class="text-danger">*</span></label>
                                         <Datepicker v-model="entry.expire_date"/>
-                                        <error-label for="f_title" ></error-label>
+                                        <error-label :errors="errors.expire_date" for="f_title" ></error-label>
                                     </div>
                                 </div>
 <!--                                <div class="row">-->
