@@ -397,48 +397,96 @@ class UserDevicesController extends AdminBaseController
 
     public function generateToken(Request  $request){
         $user = Auth::user();
-        $device = UserDevice::where('user_id', $user->id)
-            ->where('id', $request->device_id)
-            ->where('status', 2)
-            ->first();
-        $plans=Plan::where('user_id','=',$user->id)->get();
-        $school = School::where('id', $user->school_id)->first();
-
-        if($school){
-            $expired = $school->license_to;
-        }
-
-        if(!$expired){
-            $expired = Carbon::now()->addHours(-10);
-        }
-        $apiPlan=[];
-        foreach ($plans as $plan)
+        foreach ($user->roles as $role)
         {
-            $apiPlan[]=[
-              'id'=>$plan->id,
-              'name'=>$plan->name,
-              'secret_key'=>$plan->secret_key,
-            ];
+            $roleName=$role->role_name;
         }
-        if($device){
-            $payload = [
-                'username'=>$user->username,
-                'full_name'=>$user->full_name,
-                'plan' => $apiPlan,
-                'user_id' => $user->id,
-                'device_uid' =>$device->device_uid,
-                'device_name' =>$device->device_name,
-                'secret_key' =>$device->secret_key,
-                'create_time' =>  Carbon::now()->timestamp,
-                'expired' => strtotime($expired)
-            ];
-            $jwt = JWT::encode($payload, env('SECRET_KEY'), 'HS256');
+        if($roleName=='School Admin' || $roleName=='Teacher')
+        {
+            $device = UserDevice::where('user_id', $user->id)
+                ->where('id', $request->device_id)
+                ->where('status', 2)
+                ->first();
+//            $plans=Plan::where('user_id','=',$user->id)->get();
+            $school = School::where('id', $user->school_id)->first();
 
-            return ['status' => 1, 'token' =>  $jwt];
+            if($school){
+                $expired = $school->license_to;
+            }
+
+            if(!$expired){
+                $expired = Carbon::now()->addHours(-10);
+            }
+//            $apiPlan=[];
+//            foreach ($plans as $plan)
+//            {
+//                $apiPlan[]=[
+//                    'id'=>$plan->id,
+//                    'name'=>$plan->name,
+//                    'secret_key'=>$plan->secret_key,
+//                ];
+//            }
+            if($device){
+                $payload = [
+                    'username'=>$user->username,
+                    'full_name'=>$user->full_name,
+//                    'plan' => $apiPlan,
+                    'user_id' => $user->id,
+                    'device_uid' =>$device->device_uid,
+                    'device_name' =>$device->device_name,
+                    'secret_key' =>$device->secret_key,
+                    'create_time' =>  Carbon::now()->timestamp,
+                    'expired' => strtotime($expired)
+                ];
+                $jwt = JWT::encode($payload, env('SECRET_KEY'), 'HS256');
+
+                return ['status' => 1, 'token' =>  $jwt];
+
+            }
+
+            return  ['status' => 0, 'token' =>  'Error'];
+
+        }
+        if($roleName!='School Admin' || $roleName!='Teacher')
+        {
+            $device = UserDevice::where('user_id', $user->id)
+                ->where('id', $request->device_id)
+                ->where('status', 2)
+                ->first();
+//            $plans=Plan::where('user_id','=',$user->id)->get();
+
+//
+//            $apiPlan=[];
+//            foreach ($plans as $plan)
+//            {
+//                $apiPlan[]=[
+//                    'id'=>$plan->id,
+//                    'name'=>$plan->name,
+//                    'secret_key'=>$plan->secret_key,
+//                ];
+//            }
+            if($device){
+                $payload = [
+                    'username'=>$user->username,
+                    'full_name'=>$user->full_name,
+//                    'plan' => $apiPlan,
+                    'user_id' => $user->id,
+                    'device_uid' =>$device->device_uid,
+                    'device_name' =>$device->device_name,
+                    'secret_key' =>$device->secret_key,
+                    'create_time' =>  Carbon::now()->timestamp,
+//                    'expired' => strtotime($expired)
+                ];
+                $jwt = JWT::encode($payload, env('SECRET_KEY'), 'HS256');
+
+                return ['status' => 1, 'token' =>  $jwt];
+
+            }
+
+            return  ['status' => 0, 'token' =>  'Error'];
 
         }
 
-        return  ['status' => 0, 'token' =>  'Error'];
     }
 
 }

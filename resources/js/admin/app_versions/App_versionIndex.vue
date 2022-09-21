@@ -214,6 +214,12 @@
                                         <error-label :errors="errors.file_0"></error-label>
                                     </div>
                                     <div class="form-group">
+                                        <label>Update file <span class="required"></span></label>
+                                        <input type="file" ref="uploader" class="form-control-file"
+                                               accept=".zip,.rar,.7zip">
+                                        <error-label :errors="errors.file_0"></error-label>
+                                    </div>
+                                    <div class="form-group">
                                         <label>Name <span class="required"></span></label>
                                         <input type="text" v-model="model.name" class="form-control">
                                         <error-label :errors="errors.name"></error-label>

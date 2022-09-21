@@ -750,7 +750,22 @@ class PlansController extends AdminBaseController
     * @return  array
     */
     public function data(Request $req) {
-        $query = Plan::query()->orderBy('id', 'desc');
+        $user=Auth::user();
+       foreach ($user->roles as $role)
+       {
+           $roleName=$role->role_name;
+       }
+     if($roleName=='IT')
+     {
+         $query = Plan::query()->where('user_id','=',$user->id)->orderBy('id', 'ASC');
+
+     }
+     if($roleName=='Super Administrator')
+     {
+         $query = Plan::query()->orderBy('id', 'ASC');
+
+
+     }
 
         if ($req->keyword) {
             //$query->where('title', 'LIKE', '%' . $req->keyword. '%');
