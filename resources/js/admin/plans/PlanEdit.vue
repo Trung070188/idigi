@@ -489,7 +489,7 @@
                                             </div>
                                         </div>
                                         <div class="card-toolbar" v-for="urls in url" v-if="urls.package_id==packageLesson.id && packageLesson.status=='done'">
-                                            <span  v-if="urls.status=='inprogress' && entry.status=='Packaging'" style="color:#ffc700 ;margin: 0px 8px 0px ">inprogress</span>
+                                            <span  v-if="urls.status=='inprogress' && entry.status=='Packaging'" style="color:#ffc700 ;margin: 0px 8px 0px ">vui lòng đợi  trong khoảng 2 phút hoặc có thể lâu hơn...</span>
                                             <span   v-if="urls.status=='done' " style="color:#50cd89 ;margin: 0px 8px 0px ">done</span>
 
                                             <a href="list.html#" class="btn btn-light btn-active-light-primary btn-sm" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">Actions
@@ -849,42 +849,18 @@
         },
 
         mounted() {
-            // let self = this;
-            // let interval = setInterval(function (){
-            //     $.get('/xadmin/plans/dataZipLessonPlan',function (res){
-            //         let fileZipPlan=[];
-            //         // self.url.push(res.data);
-            //        // res.data.forEach(function (e) {
-            //        //     if(e.plan_id==self.entry.id)
-            //        //     {
-            //        //
-            //        //         self.url.push(e)
-            //        //
-            //        //     }
-            //        // })
-            //       fileZipPlan.forEach(function (e1) {
-            //
-            //               // self.url.forEach(function (e2) {
-            //
-            //                   // e1.status=e2.status;
-            //                   // if(e2.status=='done' )
-            //                   // {
-            //                   //     e2.status='done';
-            //                   //     e2.url=e1.url;
-            //                   // }
-            //
-            //
-            //               // })
-            //
-            //       })
-            //
-            //         // if(res.status == 'done'){
-            //         //     self.url = res.url;
-            //         //     clearInterval(interval);
-            //         // }
-            //     })
-            //     console.log(self.url);
-            // }, 10000);
+            let self = this;
+            let interval = setInterval(function (){
+                $.get('/xadmin/plans/dataZipLessonPlan',function (res){
+                         let array=res.data.filter(item => item.plan_id==self.entry.id);
+                          self.url=array;
+                         let done=array.filter(item => item.status=='done')
+                         if(done.length==array.length)
+                         {
+                           clearInterval(interval);
+                         }
+                })
+            }, 90000);
 
             $router.on('/', this.load).init();
 
