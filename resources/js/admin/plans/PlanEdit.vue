@@ -418,7 +418,7 @@
 
 <!--                                </div>-->
                                 <div class="row" >
-                                    <div class="form-group col-lg-8" >
+                                    <div class="form-group col-lg-4" >
                                         <label>Device  </label>
                                         <div class="card-header  border border-dashed border-gray-300">
                                             <!--begin::Card title-->
@@ -431,9 +431,31 @@
 <!--                                                <button class="btn btn-primary"  @click="importDevice(deviceSchool.id)">Import devices</button>-->
 <!--                                            </div> -->
                                             <div class="card-toolbar">
-                                                <button class="btn btn-primary" @click="viewDeviceSchoolPlan">View devices</button>
-                                                <button class="btn btn-primary" style="margin: 0px 15px 0px" @click="addDevice">Add a device</button>
-                                                <button class="btn btn-primary" @click="importDevice">Import devices</button>
+<!--                                                <button class="btn btn-primary" @click="viewDeviceSchoolPlan">View devices</button>-->
+<!--                                                <button class="btn btn-primary" style="margin: 0px 15px 0px" @click="addDevice">Add a device</button>-->
+<!--                                                <button class="btn btn-primary" @click="importDevice">Import devices</button>-->
+                                                    <a href="list.html#" class="btn btn-light btn-active-light-primary btn-sm" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">Actions
+                                                        <!--begin::Svg Icon | path: icons/duotune/arrows/arr072.svg-->
+                                                        <span class="svg-icon svg-icon-5 m-0">
+															<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+																<path d="M11.4343 12.7344L7.25 8.55005C6.83579 8.13583 6.16421 8.13584 5.75 8.55005C5.33579 8.96426 5.33579 9.63583 5.75 10.05L11.2929 15.5929C11.6834 15.9835 12.3166 15.9835 12.7071 15.5929L18.25 10.05C18.6642 9.63584 18.6642 8.96426 18.25 8.55005C17.8358 8.13584 17.1642 8.13584 16.75 8.55005L12.5657 12.7344C12.2533 13.0468 11.7467 13.0468 11.4343 12.7344Z" fill="black" />
+															</svg>
+														</span>
+                                                    </a>
+
+                                                    <div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-bold fs-7 w-125px py-4" data-kt-menu="true">
+
+                                                        <div class="menu-item px-3">
+                                                            <a  class="menu-link px-3" @click="viewDeviceSchoolPlan">View devices</a>
+                                                        </div>
+                                                        <div class="menu-item px-3">
+                                                            <a  class="menu-link px-3" @click="addDevice">Add a device</a>
+                                                        </div>
+                                                        <div class="menu-item px-3" >
+                                                            <a  class="menu-link px-3" style="width: 117px" @click="importDevice">Import devices</a>
+                                                        </div>
+
+                                                    </div>
                                             </div>
                                         </div>
 
@@ -442,8 +464,8 @@
                             </div>
 
                             <div class="row" >
-                                <div class="form-group col-lg-8" id="clone" v-for="(packageLesson,index) in packageLessonPlan" >
-                                    <label>Lesson package  {{index+1}}<span class="text-danger">*</span></label>
+                                <div class="form-group col-lg-4" id="clone" v-for="(packageLesson,index) in packageLessonPlan" >
+                                    <label>Lesson package  {{index+1}}</label>
                                     <div class="card-header  border border-dashed border-gray-300">
                                         <!--begin::Card title-->
                                         <div class="card-title" style="font-size: 15px">
@@ -452,17 +474,50 @@
                                         <!--end::Card title-->
                                         <!--begin::Card toolbar-->
                                         <div class="card-toolbar"  v-if="packageLesson.status=='waitting'">
-                                            <button class="btn btn-primary" @click="addLessonPackage(packageLesson.id)" >Add lesson</button>
+                                            <a href="list.html#" class="btn btn-light btn-active-light-primary btn-sm" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">Actions
+                                                <span class="svg-icon svg-icon-5 m-0">
+															<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+																<path d="M11.4343 12.7344L7.25 8.55005C6.83579 8.13583 6.16421 8.13584 5.75 8.55005C5.33579 8.96426 5.33579 9.63583 5.75 10.05L11.2929 15.5929C11.6834 15.9835 12.3166 15.9835 12.7071 15.5929L18.25 10.05C18.6642 9.63584 18.6642 8.96426 18.25 8.55005C17.8358 8.13584 17.1642 8.13584 16.75 8.55005L12.5657 12.7344C12.2533 13.0468 11.7467 13.0468 11.4343 12.7344Z" fill="black" />
+															</svg>
+														</span>
+                                            </a>
+                                            <div class="menu menu-sub menu-sub-dropdown  menu-rounded menu-gray-600 menu-state-bg-light-primary fw-bold fs-7  py-4" data-kt-menu="true" style="width: 161px">
+
+                                                <div class="menu-item px-3">
+                                                    <a  class="menu-link px-3" @click="addLessonPackage(packageLesson.id)">Add lesson</a>
+                                                </div>
+                                            </div>
                                         </div>
                                         <div class="card-toolbar" v-for="urls in url" v-if="urls.package_id==packageLesson.id && packageLesson.status=='done'">
-                                            <button class="btn btn-primary"  @click="downloadLesson(packageLesson)" v-if="urls.status=='waitting'  ">Download package</button>
-                                            <span   v-if="urls.status=='inprogress' && entry.status=='Packaging'" style="color:#ffc700 ">inprogress</span>
-                                            <a v-if="urls.status=='done' && entry.status=='Packaging'" :href="urls.url" type="button" class="btn btn-primary">Dowload Package</a>
-                                            <button class="btn btn-primary" style="margin: 0px 15px 0px" @click="viewPackageLesson(packageLesson.id)">View lessons</button>
-                                            <button class="btn btn-primary" @click="addLessonPackage(packageLesson.id)" >Add lesson</button>
+                                            <span  v-model="urls.url==null" v-if="urls.status=='inprogress' && entry.status=='Packaging'" style="color:#ffc700 ;margin: 0px 8px 0px ">inprogress</span>
+                                            <span v-model="urls.url!=null"  v-if="urls.status=='done' && entry.status=='Packaging'" style="color:#50cd89 ;margin: 0px 8px 0px ">done</span>
+
+                                            <a href="list.html#" class="btn btn-light btn-active-light-primary btn-sm" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">Actions
+                                                <span class="svg-icon svg-icon-5 m-0">
+															<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+																<path d="M11.4343 12.7344L7.25 8.55005C6.83579 8.13583 6.16421 8.13584 5.75 8.55005C5.33579 8.96426 5.33579 9.63583 5.75 10.05L11.2929 15.5929C11.6834 15.9835 12.3166 15.9835 12.7071 15.5929L18.25 10.05C18.6642 9.63584 18.6642 8.96426 18.25 8.55005C17.8358 8.13584 17.1642 8.13584 16.75 8.55005L12.5657 12.7344C12.2533 13.0468 11.7467 13.0468 11.4343 12.7344Z" fill="black" />
+															</svg>
+														</span>
+                                            </a>
+
+                                            <div class="menu menu-sub menu-sub-dropdown  menu-rounded menu-gray-600 menu-state-bg-light-primary fw-bold fs-7  py-4" data-kt-menu="true" style="width: 161px">
+
+                                                <div class="menu-item px-3">
+                                                    <a  class="menu-link px-3" @click="downloadLesson(packageLesson)" v-if="urls.status=='waitting'  ">Zip file package</a>
+                                                </div>
+                                                <div class="menu-item px-3">
+                                                    <a  class="menu-link px-3" v-if="urls.status=='done' && entry.status=='Packaging'" :href="urls.url" >Dowload Package</a>
+                                                </div>
+                                                <div class="menu-item px-3" >
+                                                    <a  class="menu-link px-3" style="width: 117px" @click="viewPackageLesson(packageLesson.id)" v-if="urls.status=='waitting' || urls.status=='done'">View lessons</a>
+                                                </div>
+                                                <div class="menu-item px-3" >
+                                                    <a  class="menu-link px-3" style="width: 117px" @click="addLessonPackage(packageLesson.id)" v-if="urls.status=='waitting' || urls.status=='done'">Add lesson</a>
+                                                </div>
+
+                                            </div>
                                         </div>
 
-                                        <!--end::Card toolbar-->
                                     </div>
 
                                 </div>
@@ -727,6 +782,7 @@
     import $router from "../../lib/SimpleRouter";
     import '@riophae/vue-treeselect/dist/vue-treeselect.css'
     import Treeselect from "@riophae/vue-treeselect";
+    import _ from "lodash";
 
     let created = getTimeRangeAll();
     const $q = $router.getQuery();
@@ -791,6 +847,7 @@
                 },
             }
         },
+
         mounted() {
             $router.on('/', this.load).init();
 
