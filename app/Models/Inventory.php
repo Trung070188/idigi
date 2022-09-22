@@ -28,6 +28,7 @@ class Inventory extends BaseModel
         'file_image_id',
         'file_asset_id',
         'old_id',
+        'level',
         'created_at',
         'updated_at',
         'created_by',
