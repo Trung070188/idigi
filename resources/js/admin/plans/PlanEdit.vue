@@ -418,7 +418,7 @@
 
 <!--                                </div>-->
                                 <div class="row" >
-                                    <div class="form-group col-lg-4" >
+                                    <div class="form-group col-lg-8" >
                                         <label>Device  </label>
                                         <div class="card-header  border border-dashed border-gray-300">
                                             <!--begin::Card title-->
@@ -464,7 +464,7 @@
                             </div>
 
                             <div class="row" >
-                                <div class="form-group col-lg-4" id="clone" v-for="(packageLesson,index) in packageLessonPlan" >
+                                <div class="form-group col-lg-8" id="clone" v-for="(packageLesson,index) in packageLessonPlan" >
                                     <label>Lesson package  {{index+1}}</label>
                                     <div class="card-header  border border-dashed border-gray-300">
                                         <!--begin::Card title-->
