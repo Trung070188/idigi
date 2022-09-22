@@ -42,6 +42,7 @@ class Lesson extends BaseModel
         'number',
         'customized',
         'old_id',
+        'level',
         'created_at',
         'updated_at',
         'created_by',
