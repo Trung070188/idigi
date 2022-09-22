@@ -232,6 +232,11 @@ class PlansController extends AdminBaseController
             $rules['expire_date']=['required','after_or_equal:' .$current];
 
         }
+        if(isset($data['id']))
+        {
+            $rules['expire_date']=['required','after_or_equal:' .$current];
+
+        }
         $v = Validator::make($data, $rules);
 
         if ($v->fails()) {
