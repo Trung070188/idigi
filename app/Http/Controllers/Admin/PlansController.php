@@ -905,6 +905,13 @@ class PlansController extends AdminBaseController
             ]
         ];
     }
+    public function dataZipLessonPlan(Request $req)
+    {
+        $zipLessonPlan=ZipPlanLesson::query()->orderBy('id','ASc')->get();
+        return[
+          'data'=>$zipLessonPlan,
+        ];
+    }
 
     public function export() {
                 $keys = [
