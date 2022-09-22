@@ -16,21 +16,21 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
-class SyncData extends Command
+class SyncDataSec extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'sync-from-old-data';
+    protected $signature = 'sync-sec-from-old-data';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Đồng bộ data từ câp 1';
+    protected $description = 'Đồng bộ data cấp 2';
 
     /**
      * Create a new command instance.
@@ -51,10 +51,11 @@ class SyncData extends Command
     {
 
         //Đồng bộ file và inventory
-        /*\DB::connection('mysql2')->table('inventories')
-            ->where('id', '>',209)
+       \DB::connection('mysql3')->table('inventories')
+            //->where('id', '>',209)
             ->chunkById(100, function ($inventories) {
                 foreach ($inventories as $inventory){
+
                     $userCreate = User::where('username', $inventory->created_by)->first();
                     $userUpdate = User::where('username', $inventory->last_modified_by)->first();
 
@@ -76,7 +77,7 @@ class SyncData extends Command
 
                         try {
                             $img = '/files/attachments'.$inventory->image;
-                            file_put_contents(public_path($img), file_get_contents(env('OLD_DOMAIN').$inventory->image));
+                            file_put_contents(public_path($img), file_get_contents(env('OLD_DOMAIN_SEC').$inventory->image));
                             $fileImageId = $this->insertFile($img, 1);
 
                         }
@@ -99,7 +100,7 @@ class SyncData extends Command
                         try {
                             $virtualPath = '/files/attachments'.$inventory->virtual_path;
                             ini_set('memory_limit','2048M');
-                            file_put_contents(public_path($virtualPath), file_get_contents(env('OLD_DOMAIN').$inventory->virtual_path));
+                            file_put_contents(public_path($virtualPath), file_get_contents(env('OLD_DOMAIN_SEC').$inventory->virtual_path));
                             $physicalPath = public_path($virtualPath);
                             $fileAssetId = $this->insertFile($virtualPath, 0);
 
@@ -131,19 +132,20 @@ class SyncData extends Command
                         'tags' => $inventory->tags,
                         'file_image_id' => $fileImageId,
                         'file_asset_id' => $fileAssetId,
-                        'level' => 'pri',
+                        'level' => 'sec',
                     ];
 
                     Inventory::updateOrCreate([
                         'old_id' => $inventory->id,
-                        'level' => 'pri',
+                        'level' => 'sec',
                     ], $newInventory);
 
                     echo 'Sync inventory: '.$inventory->id.PHP_EOL;
+
                 }
-            });*/
+            });
         //Đồng bộ lesson
-        \DB::connection('mysql2')->table('lessons')
+        \DB::connection('mysql3')->table('lessons')
             ->chunkById(100, function ($lessons) {
                 foreach ($lessons as $lesson) {
                     $userCreate = User::where('username', $lesson->created_by)->first();
@@ -208,13 +210,13 @@ class SyncData extends Command
                         'updated_at' => $lesson->last_modified_date,
                         'created_by' => @$userCreate->id,
                         'updated_by' => @$userUpdate->id,
-                        'level' => 'pri',
+                        'level' => 'sec',
                     ];
 
 
                     Lesson::updateOrCreate([
                         'old_id' => $lesson->id,
-                        'level' => 'pri',
+                        'level' => 'sec',
                     ], $newLesson);
 
                     echo 'Sync lesson: ' . $lesson->id . PHP_EOL;
@@ -222,7 +224,7 @@ class SyncData extends Command
             });
 
         //Đồng bộ inventory và lesson
-        \DB::connection('mysql2')->table('lessons')
+        \DB::connection('mysql3')->table('lessons')
             ->chunkById(100, function ($lessons) {
                 foreach ($lessons as $lesson){
                    if($lesson->structure){
