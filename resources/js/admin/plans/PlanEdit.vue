@@ -506,7 +506,7 @@
                                                     <a  class="menu-link px-3" @click="downloadLesson(packageLesson)" v-if="urls.status=='waitting'  ">Zip file package</a>
                                                 </div>
                                                 <div class="menu-item px-3">
-                                                    <a  class="menu-link px-3" v-if="urls.status=='done' && entry.status=='Packaging'" :href="urls.url" >Dowload Package</a>
+                                                    <a  class="menu-link px-3" v-if="urls.status=='done' " :href="urls.url" >Dowload Package</a>
                                                 </div>
                                                 <div class="menu-item px-3" >
                                                     <a  class="menu-link px-3" style="width: 117px" @click="viewPackageLesson(packageLesson.id)" v-if="urls.status=='waitting' || urls.status=='done'">View lessons</a>
