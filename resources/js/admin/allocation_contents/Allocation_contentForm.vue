@@ -38,7 +38,7 @@
                                 </td>
                                 <td >
                                 <treeselect :options="course.units" :multiple="true" v-model="course.total_unit"  />
-                                <error-label  for="f_total_course" :errors="errors.total_unit"></error-label>
+                                <error-label v-if="!course.total_unit" for="f_total_course" :errors="errors.total_unit"></error-label>
 
                                 <!-- <error-label v-if="!course.total_unit " for="f_total_course" :errors="errors.total_unit"></error-label> -->
                                 </td>

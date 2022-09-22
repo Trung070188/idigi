@@ -22,14 +22,16 @@ class Plan extends BaseModel
     'due_at',
     'plan_description',
     'user_id',
-    'secret_key'
+    'expire_date',
+    'secret_key',
 ];
-    public function lessons()
+
+    public function schools()
     {
-        return $this->belongsToMany(Lesson::class, 'plan_lessons');
+        return $this->belongsToMany(School::class,'school_plans');
     }
-    public function planLesson()
+    public function package_lessons()
     {
-        return $this->hasMany(PlanLesson::class,'plan_id');
+        return $this->hasMany(PackageLesson::class,'plan_id');
     }
 }

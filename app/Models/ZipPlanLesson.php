@@ -25,4 +25,8 @@ class ZipPlanLesson extends Model
     {
         return $this->belongsTo(Plan::class);
     }
+    public function package_lessons()
+    {
+        return $this->belongsTo(PackageLesson::class,'package_id');
+    }
 }

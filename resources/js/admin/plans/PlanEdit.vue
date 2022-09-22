@@ -30,9 +30,11 @@
                             <div class="text-center mb-13">
                                 <!--begin::Title-->
                                 <h1 class="mb-3">Device list</h1>
-
-
                             </div>
+
+                                <button @click="exportDevice"  type="button" class="btn btn-primary" style="margin: -20px 0px 15px">
+                                    Export
+                                </button>
 
                             <div class="mb-10">
 
@@ -56,14 +58,15 @@
                                             <th class="">Device name</th>
                                             <th class="">Type</th>
                                             <th class="">Register code</th>
-                                            <th class="">Status</th>
+                                            <th class="">Expire date</th>
 
                                             <th></th>
                                         </tr>
                                         </thead>
                                         <tbody >
 
-                                        <tr v-for="device in data" >
+                                        <tr v-for="device in data" v-if=" device.plan_id==entry.id">
+
                                             <td class="">
                                                 <div
                                                     class="form-check form-check-sm form-check-custom form-check-solid"
@@ -79,49 +82,28 @@
                                             <td class="" v-text="device.device_name"></td>
                                             <td class="" >{{device.type}}</td>
                                             <td class="" v-text="device.device_uid"></td>
-                                            <td class="" ></td>
+                                            <td class="" v-text="device.expire_date"></td>
                                             <td class="">
                                                 <!--<a v-if="permissions['014']" :href="'/xadmin/users/edit_teacher?id='+entry.id"><i style="font-size:1.3rem"
                                                                                                         class="fa fa-edit"></i></a>
                                                 <a v-if="permissions['015']" @click="remove(entry)" href="javascript:;" class="btn-trash deleted"><i
                                                     class="fa fa-trash mr-1 deleted"></i></a>-->
 
-                                                <a  >
-                                                    <button type="button" class="btn btn-sm btn-icon btn-light btn-active-light-primary">
-                                                        <i class="fa fa-edit"></i>
-                                                    </button>
-                                                </a>
-                                                <a  href="javascript:;">
-                                                    <button type="button" class="btn btn-sm btn-icon btn-light btn-active-light-primary">
-                                                        <i class="fa fa-trash mr-1 deleted"></i>
-                                                    </button>
-                                                </a>
+<!--                                                <a  >-->
+<!--                                                    <button type="button" class="btn btn-sm btn-icon btn-light btn-active-light-primary">-->
+<!--                                                        <i class="fa fa-edit"></i>-->
+<!--                                                    </button>-->
+<!--                                                </a>-->
+<!--                                                <a  href="javascript:;">-->
+<!--                                                    <button type="button" class="btn btn-sm btn-icon btn-light btn-active-light-primary">-->
+<!--                                                        <i class="fa fa-trash mr-1 deleted"></i>-->
+<!--                                                    </button>-->
+<!--                                                </a>-->
 
                                             </td>
                                         </tr>
                                         </tbody>
                                     </table>
-                                    <div class="d-flex pl-9 pr-9 mb-8">
-                                        <div class="col-sm-12 col-md-5 d-flex align-items-center justify-content-center justify-content-md-start">
-                                            <!--<div class="mr-2">
-                                                <label>Records per page:</label>
-                                            </div>-->
-                                            <div>
-                                                <select class="form-select form-select-sm form-select-solid"  >
-                                                    <option value="25">25</option>
-                                                    <option value="50">50</option>
-                                                    <option value="100">100</option>
-
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <!--<div style="float: right; margin: 10px">-->
-                                        <div class="col-sm-12 col-md-7 d-flex align-items-center justify-content-center justify-content-md-end">
-                                            <div class="dataTables_paginate paging_simple_numbers" id="kt_customers_table_paginate">
-                                            </div>
-                                        </div>
-                                    </div>
-
                                 </div>
 
                             </div>
@@ -162,13 +144,13 @@
                             </div>
                             <div class="d-flex">
 
-                                        <div  class="h-15px me-3">
+                                        <div  class="h-15px me-3" style="width: 218px">
                                             <label>Name </label>
                                             <input  v-model="filter.name" @keydown.enter="doFilter('name', filter.name, $event)"
                                                 class="form-control" placeholder="Enter the lesson name"
                                             />
                                         </div>
-                                        <div  class="h-15px me-3">
+                                        <div  class="h-15px me-3" style="width: 218px">
                                             <label>Subject </label>
                                             <select required class="form-control form-select" v-model="filter.subject" @keydown.enter="doFilter('subject', filter.subject, $event)">
                                                 <option value="" disabled selected>Choose Subject</option>
@@ -178,7 +160,7 @@
                                             </select>
 
                                         </div>
-                                        <div  class="h-15px me-3">
+                                        <div  class="h-15px me-3" style="width: 218px">
                                             <label>Grade </label>
                                             <select required class="form-control form-select" v-model="filter.grade"  @keydown.enter="doFilter('grade', filter.grade, $event)">
                                                 <option value="" disabled selected>Choose Grade</option>
@@ -199,7 +181,7 @@
 
                             <div class="d-flex" style="margin: 64px 0px 0px">
 
-                                <div class="mh-300px scroll-y me-n7 pe-7">
+                                <div class="mh-300px scroll-y me-n7 pe-7" style="width: 703px">
                                     <table class="table table-row-bordered align-middle gy-4 gs-9">
                                         <thead class="border-bottom border-gray-200 fs-6 text-gray-600 fw-bolder bg-light bg-opacity-75">
                                         <tr>
@@ -216,18 +198,17 @@
                                             <th></th>
                                         </tr>
                                         </thead>
-                                        <tbody >
-
-                                        <tr  v-for="lesson in entries">
+                                        <tbody v-for="lessonId in lessonPackagePlans" v-if="lessonId.package_id==package ">
+                                        <tr v-for="lesson in entries"  >
                                             <td class="">
                                                 <div class="form-check form-check-sm form-check-custom form-check-solid">
-                                                    <input class="form-check-input" type="checkbox" v-model="lessonIds" :value="lesson.id" @change="updateCheckAll">
+                                                    <input   class="form-check-input" type="checkbox" v-model="lessonId.lessonIds"  :value="lesson.id" @change="updateCheckAll(package)">
+
                                                 </div>
                                             </td>
                                             <td class="" v-text="lesson.name"></td>
                                             <td class="" v-text="lesson.grade" ></td>
                                             <td class="" v-text="lesson.subject"></td>
-
                                         </tr>
                                         </tbody>
                                     </table>
@@ -258,7 +239,7 @@
 
                             </div>
                             <div class="d-flex justify-content-end">
-                                <button class="btn btn-primary" style="margin: 20px 0px 0px" @click="addLesson">Confirm</button>
+                                <button class="btn btn-primary" style="margin: 20px 0px 0px" @click="addLesson()">Confirm</button>
                             </div>
 
                         </div>
@@ -296,15 +277,15 @@
                                 <!--begin::Title-->
                                 <h1 class="mb-3">Lesson package</h1>
                             </div>
-                            <div class="d-flex">
+                            <div class="d-flex" >
 
-                                <div  class="h-15px me-3">
+                                <div  class="h-15px me-3" style="width: 200px">
                                     <label>Name </label>
                                     <input  v-model="filter.name" @keydown.enter="doFilter('name', filter.name, $event)"
-                                            class="form-control" placeholder="Enter the lesson name"
+                                            class="form-control " placeholder="Enter the lesson name"
                                     />
                                 </div>
-                                <div  class="h-15px me-3">
+                                <div  class="h-15px me-3" style="width: 200px">
                                     <label>Subject </label>
                                     <select required class="form-control form-select" v-model="filter.subject" @keydown.enter="doFilter('subject', filter.subject, $event)">
                                         <option value="" disabled selected>Choose Subject</option>
@@ -314,7 +295,7 @@
                                     </select>
 
                                 </div>
-                                <div  class="h-15px me-3">
+                                <div  class="h-15px me-3" style="width: 200px">
                                     <label>Grade </label>
                                     <select required class="form-control form-select" v-model="filter.grade"  @keydown.enter="doFilter('grade', filter.grade, $event)">
                                         <option value="" disabled selected>Choose Grade</option>
@@ -334,37 +315,29 @@
                             </div>
 
                             <div class="d-flex" style="margin: 64px 0px 0px">
-
-                                <div class="mh-300px scroll-y me-n7 pe-7">
-                                    <table class="table table-row-bordered align-middle gy-4 gs-9">
+                                <div class="mh-300px scroll-y me-n7 pe-7" style="width: 650px">
+                                    <table class="table table-row-bordered align-middle gy-4 gs-9" v-for="lessonId in lessonPackagePlans" v-if="lessonId.package_id==viewPackage">
                                         <thead class="border-bottom border-gray-200 fs-6 text-gray-600 fw-bolder bg-light bg-opacity-75">
                                         <tr>
-
                                             <th class="">Name of lesson</th>
                                             <th class="">Grade</th>
                                             <th class="">Subject</th>
-
-
                                             <th></th>
                                         </tr>
                                         </thead>
-                                        <tbody v-for="lessonId in lessonIds">
-
-                                        <tr  v-for="lesson in entries"  v-if="lesson.id==lessonId">
-
-                                            <td class="" v-text="lesson.name"></td>
-                                            <td class="" v-text="lesson.grade" ></td>
-                                            <td class="" v-text="lesson.subject"></td>
-                                            <td>
-                                                <a   @click="deleteLesson(lessonId)" href="javascript:;">
-                                        <button type="button" class="btn btn-sm btn-icon btn-light btn-active-light-primary">
-                                            <i class="fa fa-trash mr-1 deleted"></i>
-                                        </button>
-                                    </a>
-
-                                            </td>
-
-                                        </tr>
+                                        <tbody v-for="packageLesson in lessonId.lessonIds" >
+                                            <tr  v-for="lesson in entries"  v-if="packageLesson==lesson.id">
+                                                <td class="" v-text="lesson.name"></td>
+                                                <td class="" v-text="lesson.grade" ></td>
+                                                <td class="" v-text="lesson.subject"></td>
+                                                <td>
+                                                    <a    @click="deleteLesson(lesson)" href="javascript:;">
+                                                        <button type="button" class="btn btn-sm btn-icon btn-light btn-active-light-primary">
+                                                            <i class="fa fa-trash mr-1 deleted"></i>
+                                                        </button>
+                                                    </a>
+                                                </td>
+                                            </tr>
                                         </tbody>
                                     </table>
 
@@ -401,17 +374,17 @@
                                         <label>Plan name <span class="text-danger">*</span></label>
                                         <input  v-model="entry.name"  class="form-control"
                                                 placeholder="Enter the name of plan" >
-                                        <error-label for="f_school_name" ></error-label>
+                                        <error-label :errors="errors.name" for="f_school_name" ></error-label>
 
                                     </div>
 
                                     <div class="form-group col-lg-4">
                                         <label> Assign to IT <span class="text-danger">*</span></label>
-                                        <select   class="form-control form-select" v-model="idRoleIt"
+                                        <select disabled   class="form-control form-select" v-model="idRoleIt"
                                         >
                                             <option v-for="role in roleIt" :value="role.id">{{role.full_name}}</option>
                                         </select>
-                                        <error-label  ></error-label>
+                                        <error-label  :errors="errors.idRoleIt"></error-label>
 
                                     </div>
 
@@ -419,37 +392,49 @@
                                 <div class="row">
                                     <div class="form-group col-lg-8">
                                         <label>Plan description  <span class="text-danger">*</span> </label>
-                                        <input   class="form-control"
+                                        <textarea   class="form-control"
                                                  placeholder="Enter the description" v-model="entry.plan_description">
-
+                                        </textarea>
+                                        <error-label  :errors="errors.plan_description"></error-label>
                                     </div>
-
                                     <div class="form-group col-lg-4">
                                         <label>Due date  <span class="text-danger">*</span></label>
-                                        <Datepicker v-model="entry.due_at"/>
-                                        <error-label for="f_title" ></error-label>
-
-
+                                        <Datepicker disabled v-model="entry.due_at"/>
+                                        <error-label :errors="errors.due_at" for="f_title" ></error-label>
                                     </div>
-
-
                                 </div>
                                 <div class="row">
-                                    <div class="form-group col-lg-8">
-                                        <label>Devices <span class="text-danger">*</span></label>
+                                    <div class="form-group col-lg-4">
+                                        <label>Expire date <span class="text-danger">*</span></label>
+                                        <Datepicker v-model="entry.expire_date"/>
+                                        <error-label :errors="errors.expire_date" for="f_title" ></error-label>
+                                    </div>
+                                </div>
+<!--                                <div class="row">-->
+<!--                                    <div class="form-group col-lg-8">-->
+<!--                                        <label>School<span class="text-danger">*</span> </label>-->
+<!--                                        <treeselect :options="schools" :multiple="true" v-model="schoolPlan" />-->
+<!--                                    </div>-->
+
+<!--                                </div>-->
+                                <div class="row" >
+                                    <div class="form-group col-lg-8" >
+                                        <label>Device  </label>
                                         <div class="card-header  border border-dashed border-gray-300">
                                             <!--begin::Card title-->
                                             <div class="card-title" style="font-size: 15px">
                                                 <div  class="fw-bold text-muted" >{{data.length}} device(s) added</div>
                                             </div>
-                                            <!--end::Card title-->
-                                            <!--begin::Card toolbar-->
+<!--                                            <div class="card-toolbar">-->
+<!--                                                <button class="btn btn-primary" @click="viewDeviceSchoolPlan(deviceSchool.id)">View devices</button>-->
+<!--                                                <button class="btn btn-primary" style="margin: 0px 15px 0px" @click="addDevice(deviceSchool.id)">Add a device</button>-->
+<!--                                                <button class="btn btn-primary"  @click="importDevice(deviceSchool.id)">Import devices</button>-->
+<!--                                            </div> -->
                                             <div class="card-toolbar">
-                                                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#kt_modal_invite_friends">View devices</button>
-                                                <button class="btn btn-primary" style="margin: 0px 15px 0px" @click="modalDevice()">Add a device</button>
-                                                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#kt_modal_create_app" id="kt_toolbar_primary_button">Import devices</button>
+                                                <button class="btn btn-primary" @click="viewDeviceSchoolPlan">View devices</button>
+                                                <button class="btn btn-primary" style="margin: 0px 15px 0px" @click="addDevice">Add a device</button>
+                                                <button class="btn btn-primary" @click="importDevice">Import devices</button>
                                             </div>
-                                            <!--end::Card toolbar-->
                                         </div>
 
                                     </div>
@@ -457,60 +442,44 @@
                             </div>
 
                             <div class="row" >
-                                <div class="form-group col-lg-8">
-                                    <label>Lesson package <span class="text-danger">*</span></label>
+                                <div class="form-group col-lg-8" id="clone" v-for="(packageLesson,index) in packageLessonPlan" >
+                                    <label>Lesson package  {{index+1}}<span class="text-danger">*</span></label>
                                     <div class="card-header  border border-dashed border-gray-300">
                                         <!--begin::Card title-->
                                         <div class="card-title" style="font-size: 15px">
-                                            <div  class="fw-bold text-muted" >{{lessonIds.length}} lesson(s) added</div>
+                                            <div v-for="lesson in lessonPackagePlans" v-if="packageLesson.id==lesson.package_id" class="fw-bold text-muted" >{{lesson.lessonIds.length}} lesson(s) added</div>
                                         </div>
                                         <!--end::Card title-->
                                         <!--begin::Card toolbar-->
-                                        <div class="card-toolbar">
-                                            <button class="btn btn-primary">Download package</button>
-                                            <button class="btn btn-primary" style="margin: 0px 15px 0px" data-bs-toggle="modal" data-bs-target="#kt_modal" >View lessons</button>
-                                            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#kt_modal_invite" >Add lesson</button>
+                                        <div class="card-toolbar"  v-if="packageLesson.status=='waitting'">
+                                            <button class="btn btn-primary" @click="addLessonPackage(packageLesson.id)" >Add lesson</button>
                                         </div>
+                                        <div class="card-toolbar" v-for="urls in url" v-if="urls.package_id==packageLesson.id && packageLesson.status=='done'">
+                                            <button class="btn btn-primary"  @click="downloadLesson(packageLesson)" v-if="urls.status=='waitting'  ">Download package</button>
+                                            <span   v-if="urls.status=='inprogress' && entry.status=='Packaging'" style="color:#ffc700 ">inprogress</span>
+                                            <a v-if="urls.status=='done' && entry.status=='Packaging'" :href="urls.url" type="button" class="btn btn-primary">Dowload Package</a>
+                                            <button class="btn btn-primary" style="margin: 0px 15px 0px" @click="viewPackageLesson(packageLesson.id)">View lessons</button>
+                                            <button class="btn btn-primary" @click="addLessonPackage(packageLesson.id)" >Add lesson</button>
+                                        </div>
+
                                         <!--end::Card toolbar-->
                                     </div>
-                                    <div class="d-flex align-items-center"  style="margin-top: 20px" >
-                                        <!--begin::Checkbox-->
-                                        <label class="form-check form-check-custom form-check-solid me-10">
-                                            <input class="form-check-input h-20px w-20px" type="checkbox" name="communication[]" value="email"  />
-                                            <span class="form-check-label fw-bold">For Windows</span>
-                                        </label>
-                                        <!--end::Checkbox-->
-                                        <!--begin::Checkbox-->
-                                        <label class="form-check form-check-custom form-check-solid">
-                                            <input class="form-check-input h-20px w-20px" type="checkbox" name="communication[]" value="phone" />
-                                            <span class="form-check-label fw-bold">For MacOS</span>
-                                        </label>
-                                        <!--end::Checkbox-->
-                                    </div>
-                                    <div >
-                                        <button type="button" class="btn btn-sm btn-flex btn-light-primary " data-bs-toggle="modal" data-bs-target="#kt_modal_add_payment" style="float: right; margin: -86px -68px 0px;"  >
-                                            <!--begin::Svg Icon | path: icons/duotune/general/gen035.svg-->
-                                            <span class="svg-icon svg-icon-3">
+
+                                </div>
+                                <div >
+                                    <button type="button" class="btn btn-sm btn-flex btn-light-primary " data-bs-toggle="modal" data-bs-target="#kt_modal_add_payment" style=" margin: 7px 0px 10px;" id="newPackage" @click="addPackageLesson()" >
+                                       <span class="svg-icon svg-icon-3">
 																<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
 																	<rect opacity="0.3" x="2" y="2" width="20" height="20" rx="5" fill="black" />
 																	<rect x="10.8891" y="17.8033" width="12" height="2" rx="1" transform="rotate(-90 10.8891 17.8033)" fill="black" />
 																	<rect x="6.01041" y="10.9247" width="12" height="2" rx="1" fill="black" />
 																</svg>
 															</span>
-                                        </button>
-                                    </div>
+                                        Add lesson package
+                                    </button>
+
                                 </div>
                             </div>
-
-<!--                            <button type="button" class="btn btn-sm btn-flex btn-light-primary col-lg-2 " style="float: right;margin: -50px -60px 0px" @click="newPackage"><span class="svg-icon svg-icon-3">-->
-<!--																<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">-->
-<!--																	<rect opacity="0.3" x="2" y="2" width="20" height="20" rx="5" fill="black" />-->
-<!--																	<rect x="10.8891" y="17.8033" width="12" height="2" rx="1" transform="rotate(-90 10.8891 17.8033)" fill="black" />-->
-<!--																	<rect x="6.01041" y="10.9247" width="12" height="2" rx="1" fill="black" />-->
-<!--																</svg>-->
-<!--															</span></button>-->
-
-
                         </div>
 
 
@@ -561,7 +530,6 @@
                 <div class="modal-content">
                     <!--begin::Modal header-->
                     <div class="modal-header">
-                        <!--begin::Modal title-->
                         <h2>Import devices</h2>
                         <!--end::Modal title-->
                         <!--begin::Close-->
@@ -655,51 +623,28 @@
                                         <div class="stepper-label">
                                             <h3 class="stepper-title">Completed</h3>
                                         </div>
-                                        <!--end::Label-->
                                     </div>
-                                    <!--end::Step 4-->
-                                    <!--begin::Step 5-->
-
-                                    <!--end::Step 5-->
                                 </div>
-                                <!--end::Nav-->
                             </div>
-                            <!--begin::Aside-->
-                            <!--begin::Content-->
                             <div class="flex-row-fluid py-lg-5 px-lg-15">
-                                <!--begin::Form-->
                                 <form class="form" novalidate="novalidate" id="kt_modal_create_app_form">
-                                    <!--begin::Step 1-->
                                     <div class="current" data-kt-stepper-element="content">
                                         <div class="w-100">
-                                            <!--begin::Input group-->
                                             <div class="fv-row mb-10">
-                                                <!--begin::Label-->
                                                 <div class="dropzone-panel mb-4">
                                                     <label>File <span class="required"></span></label>
                                                     <input type="file" ref="uploader" class="form-control-file" @change="saveValidateImportDevice">
                                                     <error-label ></error-label>
                                                 </div>
 
-<!--                                                <input type="text" class="form-control form-control-lg form-control-solid" name="name" placeholder="" value="" style="font-size: 22px" />-->
                                                 <div class="d-flex flex-stack py-5 border-bottom border-gray-300 border-bottom-dashed">
-                                                    <!--begin::Details-->
                                                     <div class="d-flex align-items-center">
-                                                        <!--begin::Avatar-->
-
-                                                        <!--end::Avatar-->
-                                                        <!--begin::Details-->
                                                         <div class="ms-6">
 
                                                             <div class="fw-bold text-muted">{{fileImport.length}} new record(s)</div>
-                                                            <!--end::Email-->
                                                         </div>
-                                                        <!--end::Details-->
                                                     </div>
-                                                    <!--end::Details-->
-                                                    <!--begin::Stats-->
                                                     <div class="d-flex">
-                                                        <!--begin::Sales-->
                                                         <div class="text-end">
                                                           	<span class="form-check form-check-custom form-check-solid">
 																					<input class="form-check-input" type="radio" name="category" :value="fileImport" v-model="fileImport"/>
@@ -709,104 +654,70 @@
 																				</span>
 
                                                         </div>
-                                                        <!--end::Sales-->
-                                                    <!--end::Stats-->
+                                                    </div>
                                                 </div>
-                                            </div>
 
                                             </div>
 
                                             <div class="d-flex flex-stack py-5 border-bottom border-gray-300 border-bottom-dashed">
-                                                <!--begin::Details-->
                                                 <div class="d-flex align-items-center">
-                                                    <!--begin::Avatar-->
-
-                                                    <!--end::Avatar-->
-                                                    <!--begin::Details-->
                                                     <div class="ms-6">
 
                                                         <div class="fw-bold text-muted">{{deviceError.length}} error record(s)</div>
-                                                        <!--end::Email-->
                                                     </div>
-                                                    <!--end::Details-->
                                                 </div>
-                                                <!--end::Details-->
-                                                <!--begin::Stats-->
                                                 <div class="d-flex">
-                                                    <!--begin::Sales-->
                                                     <div class="text-end">
                                                         <div class="fs-7 text-muted"><a :href="validateFile" type="button" class="btn btn-primary">Export</a></div>
                                                     </div>
-                                                    <!--end::Sales-->
                                                 </div>
-                                                <!--end::Stats-->
                                             </div>
-                                            </div>
+                                        </div>
 
                                     </div>
 
                                     <div class="d-flex flex-stack pt-10">
-                                        <!--begin::Wrapper-->
                                         <div class="me-2">
                                             <button type="button" class="btn btn-lg btn-light-primary me-3" data-kt-stepper-action="previous">
-                                                <!--begin::Svg Icon | path: icons/duotune/arrows/arr063.svg-->
                                                 <span class="svg-icon svg-icon-3 me-1">
 												<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
 													<rect opacity="0.5" x="6" y="11" width="13" height="2" rx="1" fill="black" />
 													<path d="M8.56569 11.4343L12.75 7.25C13.1642 6.83579 13.1642 6.16421 12.75 5.75C12.3358 5.33579 11.6642 5.33579 11.25 5.75L5.70711 11.2929C5.31658 11.6834 5.31658 12.3166 5.70711 12.7071L11.25 18.25C11.6642 18.6642 12.3358 18.6642 12.75 18.25C13.1642 17.8358 13.1642 17.1642 12.75 16.75L8.56569 12.5657C8.25327 12.2533 8.25327 11.7467 8.56569 11.4343Z" fill="black" />
 												</svg>
 											</span>
-                                                <!--end::Svg Icon-->Back</button>
+                                              Back</button>
                                         </div>
-                                        <!--end::Wrapper-->
-                                        <!--begin::Wrapper-->
                                         <div>
                                             <button type="button" class="btn btn-lg btn-primary" data-kt-stepper-action="submit">
 												<span class="indicator-label">Submit
-                                                    <!--begin::Svg Icon | path: icons/duotune/arrows/arr064.svg-->
 												<span class="svg-icon svg-icon-3 ms-2 me-0">
 													<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
 														<rect opacity="0.5" x="18" y="13" width="13" height="2" rx="1" transform="rotate(-180 18 13)" fill="black" />
 														<path d="M15.4343 12.5657L11.25 16.75C10.8358 17.1642 10.8358 17.8358 11.25 18.25C11.6642 18.6642 12.3358 18.6642 12.75 18.25L18.2929 12.7071C18.6834 12.3166 18.6834 11.6834 18.2929 11.2929L12.75 5.75C12.3358 5.33579 11.6642 5.33579 11.25 5.75C10.8358 6.16421 10.8358 6.83579 11.25 7.25L15.4343 11.4343C15.7467 11.7467 15.7467 12.2533 15.4343 12.5657Z" fill="black" />
 													</svg>
 												</span>
-                                                    <!--end::Svg Icon--></span>
+                                                  </span>
                                                 <span class="indicator-progress">Please wait...
 												<span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
                                             </button>
                                             <button type="button" class="btn btn-lg btn-primary" data-kt-stepper-action="next" @click="saveImport">Continue
-                                                <!--begin::Svg Icon | path: icons/duotune/arrows/arr064.svg-->
                                                 <span class="svg-icon svg-icon-3 ms-1 me-0">
 												<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
 													<rect opacity="0.5" x="18" y="13" width="13" height="2" rx="1" transform="rotate(-180 18 13)" fill="black" />
 													<path d="M15.4343 12.5657L11.25 16.75C10.8358 17.1642 10.8358 17.8358 11.25 18.25C11.6642 18.6642 12.3358 18.6642 12.75 18.25L18.2929 12.7071C18.6834 12.3166 18.6834 11.6834 18.2929 11.2929L12.75 5.75C12.3358 5.33579 11.6642 5.33579 11.25 5.75C10.8358 6.16421 10.8358 6.83579 11.25 7.25L15.4343 11.4343C15.7467 11.7467 15.7467 12.2533 15.4343 12.5657Z" fill="black" />
 												</svg>
 											</span>
-                                                <!--end::Svg Icon--></button>
+                                                </button>
                                         </div>
-                                        <!--end::Wrapper-->
                                     </div>
-                                    <!--end::Actions-->
                                 </form>
-                                <!--end::Form-->
                             </div>
-                            <!--end::Content-->
                         </div>
-                        <!--end::Stepper-->
                     </div>
-                    <!--end::Modal body-->
                 </div>
-                <!--end::Modal content-->
             </div>
-            <!--end::Modal dialog-->
-
-
         </div>
-
-
     </div>
-
-
 
 </template>
 
@@ -814,19 +725,16 @@
     import {$get, $post, forEach, getTimeRangeAll} from "../../utils";
     import ActionBar from "../includes/ActionBar";
     import $router from "../../lib/SimpleRouter";
+    import '@riophae/vue-treeselect/dist/vue-treeselect.css'
+    import Treeselect from "@riophae/vue-treeselect";
+
     let created = getTimeRangeAll();
     const $q = $router.getQuery();
 
     export default {
         name: "PlanEdit.vue",
-        components: {ActionBar},
+        components: {ActionBar,Treeselect},
         data() {
-            // $(document).ready(function() {
-            //    $("#newPackage").click(function ()
-            //    {
-            //        $("#clone").append("<li></li>")
-            //    });
-            // });
             let filter = {
                 keyword: $q.keyword || '',
                 name:$q.name||'',
@@ -835,8 +743,18 @@
             };
 
             return {
-                packageLesson:[],
-                lessonIds: $json.lessonIds || [],
+                lessons:[],
+                viewPackage:this.viewPackage,
+                packagePlan:$json.packagePlan,
+                package:'',
+                idListDevice:[],
+                nameSchool:$json.nameSchool || [],
+                schoolPlan:$json.schoolPlan || [],
+                schoolId:'',
+                schools:$json.schools || [],
+                exportDevicePlan:'',
+                lessonPackagePlans: $json.lessonPackagePlans,
+                data:$json.data || [],
                 allSelected: false,
                 filter: filter,
                 entries:[],
@@ -847,6 +765,7 @@
                 fileImport:[],
                 deviceName:'',
                 deviceUid:'',
+                url:$json.url || [],
                 idRoleIt:$json.idRoleIt,
                 roleIt:$json.roleIt || [],
                 breadcrumbs: [
@@ -859,7 +778,7 @@
                     },
                 ],
                 entry: $json.entry || {},
-                data:$json.data || [],
+                packageLessonPlan:$json.packageLessonPlan || [],
                 isLoading: false,
                 errors: {},
                 limit: $q.limit || 25,
@@ -874,31 +793,58 @@
         },
         mounted() {
             $router.on('/', this.load).init();
+
         },
 
         methods: {
-            async deleteLesson(lesson)
-            {
-                let new_arr = this.lessonIds.filter(item => item !== lesson);
-                this.lessonIds=new_arr
-                let lessons=this.lessonIds
-                const res = await $post('/xadmin/plans/deleteLesson', {lessons,entry:this.entry});
-                if (res.code) {
-                    toastr.error(res.message);
-                } else {
-                        toastr.success(res.message);
-
-                }
+             importDevice:function(addevicePlan=''){
+                $('#kt_modal_create_app').modal('show');
             },
-            modalDevice() {
+             addDevice:function(addDevice=''){
                 $('#deviceConfirm').modal('show');
+            },
+             viewDeviceSchoolPlan:function(viewDevice=''){
+                $('#kt_modal_invite_friends').modal('show');
+            },
+            addLessonPackage:function(addLesson='')
+            {
+                $('#kt_modal_invite').modal('show');
+                this.package=addLesson;
+            },
+            viewPackageLesson:function(viewLesson='')
+            {
+                $('#kt_modal').modal('show');
+                this.viewPackage=viewLesson;
+            },
+          async  deleteLesson(lesson)
+            {
+
+                let self = this;
+                for (const e of self.lessonPackagePlans) {
+                    if(e.package_id==self.viewPackage)
+                    {
+                        let array=e.lessonIds.filter(item => item !== lesson.id);
+                        e.lessonIds=array;
+                        let packageLesson=e.lessonIds
+                        const res =await $post('/xadmin/plans/deleteLesson', {packageLesson,entry:self.entry,viewPackage:self.viewPackage});
+                        if (res.code) {
+                            toastr.error(res.message);
+                        } else {
+                            toastr.success(res.message);
+                        }
+                        if(res.lesson=="")
+                        {
+                            location.replace('/xadmin/plans/edit?id=' + this.entry.id);
+                        }
+                    }
+                }
             },
             backIndex(){
                 window.location.href = '/xadmin/plans/index';
             },
             async save() {
                 this.isLoading = true;
-                const res = await $post('/xadmin/plans/save', {entry: this.entry,idRoleIt:this.idRoleIt}, false);
+                const res = await $post('/xadmin/plans/save', {entry: this.entry,idRoleIt:this.idRoleIt,schoolPlan:this.schoolPlan, schoolId:this.schoolId,idListDevice:this.idListDevice}, false);
                 this.isLoading = false;
                 if (res.errors) {
                     this.errors = res.errors;
@@ -909,17 +855,18 @@
                 } else {
                     this.errors = {};
                     toastr.success(res.message);
+                    location.replace('/xadmin/plans/edit?id=' + this.entry.id);
+
 
                     if (!this.entry.id) {
-                        location.replace('/xadmin/plans/edit?id=' + res.id);
+                        location.replace('/xadmin/plans/edit?id=' + this.entry.id);
                     }
 
                 }
             },
             async saveValidateImportDevice()
             {
-                this.errors = {};
-
+                // this.errors = {};
                 if(this.$refs.uploader.files)
                 {
                     const files = this.$refs.uploader.files;
@@ -931,12 +878,14 @@
 
                     for (let i = 0; i < files.length; i++) {
                         formData.append('file_' + i, files[i]);
+                        formData.append('expire_date', this.entry.expire_date);
                     }
 
                     $('#overlay').show();
                     let res = await fetch('/xadmin/plans/validateImportDevice', {
                         method: 'POST',
-                        body: formData
+                        body: formData,
+
                     })
 
                         .then((response) => response.json())
@@ -949,18 +898,14 @@
                         this.code=res.code;
                         this.validateFile=res.fileError;
                         this.fileImport=res.fileImport;
-
                     }
                     if(res.code==1)
                     {
                         this.code=res.code;
                         this.fileImport=res.fileImport;
-
                     }
-
-
                     if (res.code) {
-                        this.errors = res.errors;
+                        // this.errors = res.errors;
                     } else {
                         $('#uploadApp').modal('hide');
                         this.model = {
@@ -971,11 +916,8 @@
                         toastr.success(res.message);
                     }
                 }
-
-
             },
             async saveImport() {
-
                 if(this.doNotImport=='')
                 {
                     {
@@ -983,31 +925,38 @@
                         const res = await $post('/xadmin/plans/import', {
                             fileImport:this.fileImport,
                             entry: this.entry,
+                            schoolId:this.schoolId,
                             idRoleIt:this.idRoleIt,
-                            doNotImport:this.doNotImport
+                            doNotImport:this.doNotImport,
                         }, false);
                         this.$loading(false);
                         if (res.code) {
+                            console.log('1')
                             toastr.error(res.message);
                         } else {
                             this.errors = {};
+                            this.exportDevicePlan=res.url;
                             toastr.success(res.message);
                             location.replace('/xadmin/plans/index');
-
-
                         }
-
                     }
                 }
                 if(this.doNotImport==1)
                 {
                     location.replace('/xadmin/plans/index');
-
                 }
-
-
-
             },
+            async exportDevice()
+            {
+                 const res = await $post('/xadmin/plans/exportDevice', {
+                    csrf: window.$csrf,
+                    dataDevice: this.data,
+                    entry: this.entry,
+                     idRoleIt:this.idRoleIt,
+                });
+                 window.location.href = res.url;
+            },
+
             changeLimit() {
                 let params = $router.getQuery();
                 params['page'] = 1;
@@ -1017,26 +966,37 @@
             selectAll() {
                 if (this.allSelected) {
                     const selected = this.entries.map((u) => u.id);
-                    this.lessonIds = selected;
-                    this.lessons = this.entries
+                    let self=this;
+                    self.lessonPackagePlans.forEach(function (e) {
+                        e.lessonIds=selected;
+                        self.lessons = self.entries;
+                    })
                 } else {
-                    this.lessonIds = [];
-                    this.lessons = [];
+                    let self=this;
+                    self.lessonPackagePlans.forEach(function (e1) {
+                        e1.lessonIds=[];
+                    })
+                    self.lessons = [];
                 }
 
             },
             updateCheckAll() {
                 this.lessons = [];
-                if (this.lessonIds.length === this.entries.length) {
-                    this.allSelected = true;
-                } else {
-                    this.allSelected = false;
-                }
                 let self = this;
-                self.lessonIds.forEach(function (e) {
-                    self.entries.forEach(function (e1) {
-                        if (e1.id == e) {
-                            self.lessons.push(e1);
+                self.lessonPackagePlans.forEach(function (e) {
+                    if(e.lessonIds.length==self.entries.length)
+                    {
+                        self.allSelected = true;
+                    }
+                    else {
+                        self.allSelected = false;
+                    }
+
+                })
+                self.lessonPackagePlans.forEach(function (e3) {
+                    self.entries.forEach(function (e4) {
+                        if (e4.id == e3) {
+                            self.lessons.push(e3);
                         }
                     })
                 })
@@ -1054,9 +1014,11 @@
                 } else {
                     this.errors = {};
                     toastr.success(res.message);
+                    location.replace('/xadmin/plans/edit?id=' + this.entry.id);
+
 
                     if (!this.entry.id) {
-                        // location.replace('/xadmin/plans/edit?id=' + res.id);
+                        location.replace('/xadmin/plans/edit?id=' + entry.id);
                     }
 
                 }
@@ -1064,7 +1026,7 @@
             async addLesson()
             {
                 this.isLoading = true;
-                const res = await $post('/xadmin/plans/planLesson', {lessonIds:this.lessonIds,entry:this.entry}, false);
+                const res = await $post('/xadmin/plans/planLesson', {lessonPackagePlans:this.lessonPackagePlans,entry:this.entry,package:this.package}, false);
                 this.isLoading = false;
                 if (res.errors) {
                     this.errors = res.errors;
@@ -1075,9 +1037,11 @@
                 } else {
                     this.errors = {};
                     toastr.success(res.message);
+                    location.replace('/xadmin/plans/edit?id=' + this.entry.id);
+
 
                     if (!this.entry.id) {
-                        // location.replace('/xadmin/plans/edit?id=' + res.id);
+                        location.replace('/xadmin/plans/edit?id=' + this.entry.id);
                     }
 
                 }
@@ -1099,6 +1063,52 @@
             },
             onPageChange(page) {
                 $router.updateQuery({page: page})
+            },
+           async addPackageLesson()
+            {
+                this.isLoading = true;
+                const res = await $post('/xadmin/plans/addPackageLesson', {entry:this.entry,lessonIds:this.lessonIds}, false);
+                this.isLoading = false;
+                if (res.errors) {
+                    this.errors = res.errors;
+                    return;
+                }
+                if (res.code) {
+                    toastr.error(res.message);
+                } else {
+                    this.errors = {};
+                    toastr.success(res.message);
+                    location.replace('/xadmin/plans/edit?id=' + this.entry.id);
+
+
+                    if (!this.entry.id) {
+                        location.replace('/xadmin/plans/edit?id=' + this.entry.id);
+                    }
+
+                }
+            },
+            async downloadLesson(packageLesson)
+            {
+                this.isLoading = true;
+                const res = await $post('/xadmin/plans/downloadLesson', {entry:this.entry,lessonPackagePlans:this.lessonPackagePlans,package:packageLesson.id,idRoleIt:this.idRoleIt}, false);
+                this.isLoading = false;
+                if (res.errors) {
+                    this.errors = res.errors;
+                    return;
+                }
+                if (res.code) {
+                    toastr.error(res.message);
+                } else {
+                    this.errors = {};
+                    toastr.success(res.message);
+                    location.replace('/xadmin/plans/edit?id=' + this.entry.id);
+
+
+                    if (!this.entry.id) {
+                        location.replace('/xadmin/plans/edit?id=' + this.entry.id);
+                    }
+
+                }
             }
 
         }

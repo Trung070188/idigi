@@ -4,6 +4,7 @@
     <tr>
         <th>Device Name</th>
         <td>Type</td>
+        <td>Expire date</td>
         <td>Register code</td>
         <td>Status</td>
     </tr>
@@ -15,6 +16,7 @@
 
             <td>{{$item['device_name']}}</td>
             <td>{{$item['type']}}</td>
+            <td>{{$item['expire_date']}}</td>
             <td>{{$item['device_uid']}}</td>
             <td>{{$item['status']}}</td>
             <td>@if(@$item['error'])

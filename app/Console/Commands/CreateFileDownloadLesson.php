@@ -59,13 +59,13 @@ class CreateFileDownloadLesson extends Command
     public function handle()
     {
 
-        $planLessons = ZipPlanLesson::where('status', NULL)->with('plan')->get();
+        $planLessons = ZipPlanLesson::where('status', 'inprogress')->with('plan')->get();
         $infos = [];
 
 
         foreach ($planLessons as $planLesson){
             $lessonIds = explode(',', $planLesson->lesson_ids);
-            $planLesson->status= 'inprogress';
+            // $planLesson->status= 'inprogress';
             $planLesson->save();
             $info = [
                 'user_id' => $planLesson->user_id,
@@ -201,8 +201,6 @@ class CreateFileDownloadLesson extends Command
             'url' => url($pathZipAll),
             'status' => 'done',
         ]);
-
-
         return url($pathZipAll);
     }
 }

@@ -4,14 +4,23 @@ namespace App\Http\Controllers\Admin;
 
 
 use App\Exports\DeviceErrorExport;
+use App\Exports\DevicePlanExport;
 use App\Imports\DeviceImport;
+use App\Jobs\UpdateDownloadInventory;
+use App\Jobs\UpdateDownloadLessonFile;
 use App\Models\AllocationContentSchool;
+use App\Models\DownloadLessonLog;
 use App\Models\File;
 use App\Models\Lesson;
+use App\Models\Notification;
 use App\Models\PackageLesson;
 use App\Models\PlanLesson;
+use App\Models\School;
+use App\Models\SchoolPlan;
 use App\Models\UserDevice;
 use App\Models\ZipPlanLesson;
+use Carbon\Carbon;
+use Facade\Ignition\Support\Packagist\Package;
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
 use Illuminate\Contracts\View\View;
@@ -19,6 +28,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use App\Models\Plan;
 use App\Models\User;
@@ -88,7 +98,7 @@ class PlansController extends AdminBaseController
     */
     public function edit (Request $req) {
         $id = $req->id;
-        $entry = Plan::with(['lessons','planLesson'])->find($id);
+        $entry = Plan::with(['package_lessons'])->find($id);
         $users=User::query()->with(['roles'])->orderBy('id','ASC')->get();
         $roleIt=[];
         foreach($users as $user)
@@ -109,59 +119,72 @@ class PlansController extends AdminBaseController
         /**
         * @var  Plan $entry
         */
-
         $title = 'Edit';
         $component = 'PlanEdit';
-
         $idRoleIt=$entry->user_id;
-        $lessonIds=[];
-        foreach ($entry->lessons as $lesson)
-        {
-
-            $lessonIds[]=$lesson->id;
-        }
-
-
-
+        $packagePlan=[];
         $devices=UserDevice::query()->with(['users'])->where('plan_id','=',$entry->id)->orderBy('created_at','ASC')->get();
-
        $data=[];
-        foreach ($devices as $device)
+        $fileZipLessons=ZipPlanLesson::where('plan_id','=',$entry->id)->get();
+        foreach ($fileZipLessons as $fileZipLesson)
         {
-            $user=Auth::user();
-
-                $role=$device->users->roles;
-                foreach ($role as $roless)
+            $url[]=$fileZipLesson;
+        }
+                foreach ($devices as $device)
                 {
-                    $roleName=$roless->role_name;
+                        $role=$device->users->roles;
+                        foreach ($role as $roless)
+                        {
+                            $roleName=$roless->role_name;
+                        }
+                        $data[]=[
+                            'id'=>$device->id,
+                            'device_uid'=>$device->device_uid,
+                            'device_name'=>$device->device_name,
+                            'user_id'=>$device->user_id,
+                            'plan_id'=>$device->plan_id,
+                            'type'=>$device->type,
+                            'status'=>$device->status,
+                            'school_id'=>$device->school_id,
+                            'secret_key'=>$device->secret_key,
+                            'reason'=>$device->reason,
+                            'expire_date'=>Carbon::parse($device->expire_date)->format('d-m-Y'),
+                            'created_at'=>$device->created_at,
+                            'updated_at'=>$device->updated_at,
+                            'roleName'=>$roleName,
+                        ];
+                    }
+
+        $packageLessonPlan=PackageLesson::Where('plan_id','=',$entry->id)->get();
+        foreach ($entry->package_lessons  as $packageLesson)
+        {
+            $arrays=explode(',',$packageLesson->lesson_ids);
+            $lessonIdArr = [];
+            foreach ($arrays as $item)
+            {
+                if($item)
+                {
+                    $lessonIdArr[] = (int)$item;
                 }
-                $data[]=[
-                    'id'=>$device->id,
-                    'device_uid'=>$device->device_uid,
-                    'device_name'=>$device->device_name,
-                    'user_id'=>$device->user_id,
-                    'plan_id'=>$device->plan_id,
-                    'type'=>$device->type,
-                    'status'=>$device->status,
-                    'secret_key'=>$device->secret_key,
-                    'reason'=>$device->reason,
-                    'created_at'=>$device->created_at,
-                    'updated_at'=>$device->updated_at,
-                    'roleName'=>$roleName,
-                ];
-
-
+            }
+            $lessonPackagePlans[]=[
+                'package_id'=>$packageLesson->id,
+                'plan_id'=>$packageLesson->plan_id,
+                'lessonIds'=>$lessonIdArr,
+            ];
         }
         $jsonData = [
-            'lessonIds'=>$lessonIds,
+            'lessonPackagePlans'=>@$lessonPackagePlans,
             'idRoleIt' => $idRoleIt,
             'entry'=>$entry,
             'roleIt'=>$roleIt,
             'data'=>$data,
+            'url'=>@$url,
+            'packagePlan'=>@$packagePlan,
+            'packageLessonPlan'=>@$packageLessonPlan
         ];
         return view('admin.layouts.vue', compact('title', 'component', 'jsonData'));
     }
-
     /**
     * @uri  /xadmin/plans/remove
     * @return  array
@@ -193,13 +216,27 @@ class PlansController extends AdminBaseController
         }
 
         $data = $req->get('entry');
-
+        $current = Carbon::now();
         $rules = [
-    'name' => 'max:255',
-    'created_by' => 'numeric',
-    'due_at' => 'date_format:Y-m-d H:i:s',
-];
+            'name' => ['required'],
+            'plan_description'=>['required','max:255'],
+        ];
+        if(!isset($data['id']))
+        {
+            if($dataRole['idRoleIt']==null)
+            {
+                $rules['idRoleIt']=['required'];
 
+            }
+            $rules['due_at']=['required','after_or_equal:' .$current];
+            $rules['expire_date']=['required','after_or_equal:' .$current];
+
+        }
+        if(isset($data['id']))
+        {
+            $rules['expire_date']=['required','after_or_equal:' .$current];
+
+        }
         $v = Validator::make($data, $rules);
 
         if ($v->fails()) {
@@ -208,7 +245,6 @@ class PlansController extends AdminBaseController
                 'errors' => $v->errors()
             ];
         }
-
         /**
         * @var  Plan $entry
         */
@@ -223,7 +259,14 @@ class PlansController extends AdminBaseController
 
             $entry->fill($data);
             $entry->save();
-//            PackageLesson::create(['plan_id'=>$entry->id,'total_lesson']);
+            SchoolPlan::where('plan_id',$entry->id)->delete();
+            if(@$dataRole['schoolPlan'])
+            {
+                foreach ($dataRole['schoolPlan'] as $school)
+                {
+                    SchoolPlan::create(['school_id'=>$school,'plan_id'=>$entry->id]);
+                }
+            }
 
             return [
                 'code' => 0,
@@ -239,7 +282,6 @@ class PlansController extends AdminBaseController
             $entry->secret_key=Str::random(10);
             $entry->fill($data);
             $entry->save();
-
             return [
                 'code' => 0,
                 'message' => 'Đã thêm',
@@ -298,38 +340,21 @@ class PlansController extends AdminBaseController
                 $device->user_id=$dataRole['idRoleIt'];
                 $device->plan_id=$entry->id;
                 $device->status=2;
+                $device->expire_date=$entry->expire_date;
                 $device->secret_key=(Str::random(10));
                 $device->save();
-
-            $entry->fill($data);
-            $entry->save();
-
             return [
                 'code' => 0,
                 'message' => 'Đã cập nhật',
                 'id' => $entry->id
             ];
-        } else {
-            $auth=Auth::user();
-
-            $entry = new Plan();
-            $entry->user_id=$dataRole['idRoleIt'];
-            $entry->created_by=$auth->id;
-
-            $entry->fill($data);
-            $entry->save();
-
-            return [
-                'code' => 0,
-                'message' => 'Đã thêm',
-                'id' => $entry->id
-            ];
         }
-
 
     }
     public function validateImportDevice(Request $req)
     {
+        $data=$req->all();
+
         {
             if (!$req->isMethod('POST')) {
                 return ['code' => 405, 'message' => 'Method not allow'];
@@ -348,10 +373,8 @@ class PlansController extends AdminBaseController
                     'errors' => $v->errors()
                 ];
             }
-
             //Upload File
             $file0 = $_FILES['file_0'];
-
             $y = date('Y');
             $m = date('m');
 
@@ -369,7 +392,6 @@ class PlansController extends AdminBaseController
                     'message' => 'Extension: ' . $extension . ' is now allowed'
                 ];
             }
-
             $dir = public_path("uploads/excel_import/{$y}/{$m}");
             if (!is_dir($dir)) {
                 mkdir($dir, 0755, true);
@@ -383,6 +405,7 @@ class PlansController extends AdminBaseController
             $ok = move_uploaded_file($file0['tmp_name'], $newFilePath);
             $newUrl = url("/uploads/excel_import/{$y}/{$m}/{$hash}.{$extension}");
             $sheets = Excel::toCollection(new DeviceImport(), "{$y}/{$m}/{$hash}.{$extension}", 'excel-import');
+            $dayExpireDevice=( Carbon::parse($data['expire_date'])->format('d/m/Y H:i:s'));
             $deviceLists[] = $sheets;
             $validations = [];
             $error = [];
@@ -405,11 +428,13 @@ class PlansController extends AdminBaseController
 
                             }
                             $item['status'] = $dev[3];
+                            $item['expire_date']=$dev[4];
                             $validator = Validator::make($item, [
                                 'device_name' => ['required',Rule::unique('user_devices','device_name')],
                                 'device_uid' => ['required',Rule::unique('user_devices','device_uid')],
                                 'type' => 'required',
                                 'status' => 'required',
+                                'expire_date'=> ['date_format:d/m/Y H:i:s','before_or_equal:'.$dayExpireDevice]
                             ]);
 
                             if ($validator->fails()) {
@@ -417,12 +442,12 @@ class PlansController extends AdminBaseController
                                 $code = 2;//Có lỗi
                             }
                             $validations[] = $item;
-
                         }
                     }
                 }
                 $fileError = [];
                 $fileImport=[];
+                $devicePlan=[];
                 if ($code == 2) {
                     //export
                     foreach ($validations as $validation) {
@@ -431,12 +456,14 @@ class PlansController extends AdminBaseController
                                         'device_name'=>$validation['device_name'],
                                         'type'=>$validation['type'],
                                         'device_uid'=>'',
+                                        'expire_date'=>$validation['expire_date'],
                                         'status'=>$validation['status'],
                                         'error'=>$validation['error'],
                                     ];
                                 }
                         else
                         {
+
                             $fileImport[]=$validation;
                         }
                     }
@@ -463,10 +490,11 @@ class PlansController extends AdminBaseController
 
                 }
                 else{
-                    return [
-                        'code'=>1,
-                        'fileImport'=>$validations,
-                    ];
+                        return [
+                            'code'=>1,
+                            'fileImport'=>$validations,
+                            'exportDevicePlan'=>url("exports/{$y}/{$m}/{$hash}.{$extension}"),
+                        ];
 
                 }
 
@@ -476,7 +504,7 @@ class PlansController extends AdminBaseController
     }
     public function import(Request $req)
     {
-        $dataImport=$req->all();
+        $dataImport = $req->all();
         $data = $req->get('entry');
 
         if (!$req->isMethod('POST')) {
@@ -486,6 +514,7 @@ class PlansController extends AdminBaseController
 
         $rules = [
         ];
+
 
         $v = Validator::make($data, $rules);
 
@@ -508,28 +537,120 @@ class PlansController extends AdminBaseController
                     'message' => 'Không tìm thấy',
                 ];
             }
-            $user=Auth::user();
-            if(@$dataImport['fileImport'] )
-            {
-                foreach ($dataImport['fileImport'] as $import)
-                {
-                    $device=new UserDevice();
-                    $device->device_name=$import['device_name'];
-                    $device->type=$import['type'];
-                    $device->device_uid=$import['device_uid'];
-                    $device->status=$import['status'];
-                    $device->secret_key=Str::random(10);
-                    $device->plan_id=$entry->id;
-                    $device->user_id=$dataImport['idRoleIt'];
+            if (@$dataImport['fileImport']) {
+                foreach ($dataImport['fileImport'] as $import) {
+                    $device = new UserDevice();
+                    $device->device_name = $import['device_name'];
+                    $device->type = $import['type'];
+                    $device->device_uid = $import['device_uid'];
+                    $device->status = 2;
+                    $device->secret_key = Str::random(10);
+                    $device->plan_id = $entry->id;
+                    $device->expire_date=Carbon::createFromFormat('d/m/Y H:i:s',$import['expire_date'])->format('Y-m-d H:i:s');
+                    $device->user_id = $dataImport['idRoleIt'];
                     $device->save();
-
-
                 }
+            }
+            return [
+              'code'=>0,
+              'message'=>'Đã cập nhật '
+            ];
+
+        }
+    }
+
+    public function exportDevice(Request $req)
+    {
+        $dataImport = $req->all();
+        $data = $req->get('entry');
+
+        if (!$req->isMethod('POST')) {
+            return ['code' => 405, 'message' => 'Method not allow'];
+        }
+
+
+        $rules = [
+        ];
+        $v = Validator::make($data, $rules);
+
+        if ($v->fails()) {
+            return [
+                'code' => 2,
+                'errors' => $v->errors()
+            ];
+        }
+
+        /**
+         * @var  Plan $entry
+         */
+
+        if (isset($data['id'])) {
+            $entry = Plan::find($data['id']);
+            if (!$entry) {
                 return [
-                    'code' => 0,
-                    'message' => 'Đã cập nhật',
+                    'code' => 3,
+                    'message' => 'Không tìm thấy',
                 ];
             }
+            $exportDevice=[];
+            $payload = [];
+            $user=User::where('id',$dataImport['idRoleIt'])->first();
+            if (@$dataImport['dataDevice']) {
+                foreach ($dataImport['dataDevice'] as $import) {
+
+                    if( $import['plan_id']==$entry->id)
+                    {
+                        $exportDevice[]=$import;
+                    }
+
+//                    $apiPlan = [];
+//                    {
+//                        $apiPlan[] = [
+//                            'id' => $entry->id,
+//                            'name' => $entry->name,
+//                            'secret_key' => $entry->secret_key,
+//                        ];
+//                    }
+                    if( $import['plan_id']==$entry->id)
+                    {
+                        $payload [] = [
+//                            'secret_key_plan' => $entry->secret_key,
+                            'username'=>$user->username,
+                            'full_name'=>$user->full_name,
+//                            'plan' => $apiPlan,
+                            'user_id' => $dataImport['idRoleIt'],
+                            'device_uid' => $import['device_uid'],
+                            'device_name' => $import['device_name'],
+                            'secret_key' => $import['secret_key'],
+                            'create_time' => Carbon::now()->timestamp,
+                            'expired' => strtotime($import['expire_date']),
+                        ];
+                    }
+                    $dataPlanExport=[];
+
+                    foreach ($payload as $pay) {
+
+
+                        $jwt = JWT::encode($pay, env('SECRET_KEY'), 'HS256');
+                        $dataPlanExport[] = [
+                            'device_name' => $pay['device_name'],
+                            'device_uid' => $pay['device_uid'],
+                            'expire_date'=>Carbon::parse($pay['expired'])->format('d/m/Y'),
+                            'code' => $jwt
+                        ];
+                    }
+                }
+                $y = date('Y');
+                $m = date('m');
+                $hash = sha1(uniqid());
+
+            }
+            Excel::store(new DevicePlanExport($dataPlanExport), "{$y}/{$m}/{$hash}.xlsx", 'excel-export');
+            return [
+              'code'=>0,
+              'url'=>url("exports/{$y}/{$m}/{$hash}.xlsx"),
+            ];
+
         }
 
     }
@@ -568,17 +689,34 @@ class PlansController extends AdminBaseController
                     'message' => 'Không tìm thấy',
                 ];
             }
-            if(@$dataLesson['lessonIds'])
+
+            if(@$dataLesson['lessonPackagePlans'])
             {
-               PlanLesson::where('plan_id',$entry->id)->delete();
-                foreach ($dataLesson['lessonIds'] as $lesson)
+                foreach ($dataLesson['lessonPackagePlans'] as $lesson)
                 {
-                    PlanLesson::create(['plan_id'=>$entry->id,'lesson_id'=>$lesson]);
+                    if($lesson['package_id']==$dataLesson['package'])
+                    {
+
+                        $stringLesson=implode(",",$lesson['lessonIds']);
+                        PackageLesson::updateorCreate(
+                            [
+                                'id'=>$dataLesson['package']
+                            ],
+                            [
+                                'lesson_ids'=>$stringLesson,
+                                'status'=>'done'
+                            ]
+                        );
+
+                    }
+
                 }
-                $stringLesson=implode(",",$dataLesson['lessonIds']);
-                $user=Auth::user();
-                ZipPlanLesson::where('plan_id',$entry->id)->delete();
-                ZipPlanLesson::create(['user_id'=>$user->id,'plan_id'=>$entry->id,'lesson_ids'=>$stringLesson]);
+
+
+                $entry->status='Ready';
+                $entry->save();
+                ZipPlanLesson::where('package_id',$dataLesson['package'])->delete();
+                ZipPlanLesson::create(['package_id'=>$dataLesson['package'],'plan_id'=>$entry->id]);
             }
             return [
                 'code' => 0,
@@ -618,7 +756,22 @@ class PlansController extends AdminBaseController
     * @return  array
     */
     public function data(Request $req) {
-        $query = Plan::query()->orderBy('id', 'desc');
+        $user=Auth::user();
+       foreach ($user->roles as $role)
+       {
+           $roleName=$role->role_name;
+       }
+     if($roleName=='IT')
+     {
+         $query = Plan::query()->where('user_id','=',$user->id)->orderBy('id', 'ASC');
+
+     }
+     if($roleName=='Super Administrator')
+     {
+         $query = Plan::query()->orderBy('id', 'ASC');
+
+
+     }
 
         if ($req->keyword) {
             //$query->where('title', 'LIKE', '%' . $req->keyword. '%');
@@ -650,8 +803,11 @@ class PlansController extends AdminBaseController
                 'created_by'=>$fullName,
                 'assign_to'=>$fullNameIt,
                 'created_at'=>$entry->created_at,
+                'status'=>$entry->status,
+                'expire_date'=>$entry->expire_date,
                 'due_at'=>$entry->due_at,
             ];
+
         }
 
         return [
@@ -801,16 +957,136 @@ class PlansController extends AdminBaseController
     public function deleteLesson(Request $req)
     {
         $data=$req->all();
-        PlanLesson::where(['plan_id'=>$data['entry']['id']])->delete();
-        foreach($data['lessons'] as $lesson)
-        {
-            PlanLesson::create(['plan_id'=>$data['entry']['id'],'lesson_id'=>$lesson]);
+        $stringLesson=implode(",",$data['packageLesson']);
 
-        }
+            PackageLesson::updateorCreate(
+                [
+                    'id'=>$data['viewPackage']
+
+                ],
+                [
+                    'lesson_ids'=>$stringLesson,
+//                    'status'=>'done'
+                ]
+            );
+            if($stringLesson=="")
+            {
+                PackageLesson::updateorCreate(
+                    [
+                        'id'=>$data['viewPackage']
+
+                    ],
+                    [
+                        'lesson_ids'=>$stringLesson,
+                    'status'=>'waitting'
+                    ]
+                );
+
+            }
+
         return [
             'code' => 0,
-            'message' => 'Đã xóa'
+            'message' => 'Đã xóa',
+            'lesson'=>$stringLesson
         ];
 
     }
-}
+    public function addPackageLesson(Request $req)
+    {
+        $dataLesson=$req->all();
+        if (!$req->isMethod('POST')) {
+            return ['code' => 405, 'message' => 'Method not allow'];
+        }
+
+        $data = $req->get('entry');
+
+        $rules = [
+        ];
+
+        $v = Validator::make($data, $rules);
+
+        if ($v->fails()) {
+            return [
+                'code' => 2,
+                'errors' => $v->errors()
+            ];
+        }
+
+        /**
+         * @var  Plan $entry
+         */
+        if (isset($data['id'])) {
+            $entry = Plan::find($data['id']);
+            if (!$entry) {
+                return [
+                    'code' => 3,
+                    'message' => 'Không tìm thấy',
+                ];
+            }
+           PackageLesson::create(['plan_id'=>$entry->id,'status'=>'waitting']);
+            return [
+                'code' => 0,
+                'message' => 'Đã cập nhật',
+            ];
+        }
+
+    }
+    public function downloadLesson(Request $req)
+    {
+        $dataLesson=$req->all();
+        if (!$req->isMethod('POST')) {
+            return ['code' => 405, 'message' => 'Method not allow'];
+        }
+
+        $data = $req->get('entry');
+
+        $rules = [
+        ];
+
+        $v = Validator::make($data, $rules);
+
+        if ($v->fails()) {
+            return [
+                'code' => 2,
+                'errors' => $v->errors()
+            ];
+        }
+
+        /**
+         * @var  Plan $entry
+         */
+        if (isset($data['id'])) {
+            $entry = Plan::find($data['id']);
+            if (!$entry) {
+                return [
+                    'code' => 3,
+                    'message' => 'Không tìm thấy',
+                ];
+            }
+            if(@$dataLesson['lessonPackagePlans'])
+            {
+                ZipPlanLesson::where('package_id',$dataLesson['package'])->delete();
+               foreach ($dataLesson['lessonPackagePlans'] as $lesson)
+               {
+                   if($lesson['package_id']==$dataLesson['package'])
+                   {
+                       $stringLesson=implode(",",$lesson['lessonIds']);
+                       $user=Auth::user();
+                       ZipPlanLesson::create(['user_id'=>$dataLesson['idRoleIt'],'plan_id'=>$entry->id,'lesson_ids'=>$stringLesson,'package_id'=>$dataLesson['package'],'status'=>'inprogress']);
+                       $entry->status='Packaging';
+                       $entry->save();
+
+                   }
+               }
+
+            }
+            return [
+                'code' => 0,
+                'message' => 'Đã cập nhật',
+            ];
+        }
+
+    }
+
+    }
+

@@ -232,30 +232,27 @@
                                 <td  class="" v-text=" d(entry.created_at)"></td>
                                 <td  class="" v-if="entry.state==1">Yes</td>
                                 <td   class="" v-if="entry.state==0">No</td>
-                                <td  class="">
-                                    <!--<a v-if="permissions['002']" :href="'/xadmin/users/edit?id='+entry.id"><i style="font-size:1.3rem"
-                                                                                    class="fa fa-edit"></i></a>
-                                    <a v-if="permissions['003'] && entry.role!=='Super Administrator'" @click="remove(entry)" href="javascript:;" class="btn-trash deleted"><i
-                                        class="fa fa-trash mr-1 deleted"></i></a>
-                                    <a v-if="permissions['003'] && entry.role=='Super Administrator'"  @click="modalDevice()" href="javascript:;" class="btn-trash deleted"><i
-                                        class="fa fa-trash mr-1 deleted"></i></a>-->
-
-                                    <a v-if="permissions['002']" :href="'/xadmin/users/edit?id='+entry.id">
-                                        <button type="button" class="btn btn-sm btn-icon btn-light btn-active-light-primary">
-                                            <i class="fa fa-edit"></i>
-                                        </button>
-                                    </a>
-                                    <a v-if="permissions['003'] && entry.role!=='Super Administrator'" @click="remove(entry)" href="javascript:;">
-                                        <button type="button" class="btn btn-sm btn-icon btn-light btn-active-light-primary">
-                                            <i class="fa fa-trash mr-1 deleted"></i>
-                                        </button>
-                                    </a>
-                                    <a v-if="permissions['003'] && entry.role=='Super Administrator'"  @click="modalDevice()" href="javascript:;">
-                                        <button type="button" class="btn btn-sm btn-icon btn-light btn-active-light-primary">
-                                            <i class="fa fa-trash mr-1 deleted"></i>
-                                        </button>
+                                <td class="">
+                                    <a href="list.html#" class="btn btn-light btn-active-light-primary btn-sm" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">Actions
+                                        <!--begin::Svg Icon | path: icons/duotune/arrows/arr072.svg-->
+                                        <span class="svg-icon svg-icon-5 m-0">
+															<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+																<path d="M11.4343 12.7344L7.25 8.55005C6.83579 8.13583 6.16421 8.13584 5.75 8.55005C5.33579 8.96426 5.33579 9.63583 5.75 10.05L11.2929 15.5929C11.6834 15.9835 12.3166 15.9835 12.7071 15.5929L18.25 10.05C18.6642 9.63584 18.6642 8.96426 18.25 8.55005C17.8358 8.13584 17.1642 8.13584 16.75 8.55005L12.5657 12.7344C12.2533 13.0468 11.7467 13.0468 11.4343 12.7344Z" fill="black" />
+															</svg>
+														</span>
                                     </a>
 
+                                    <div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-bold fs-7 w-125px py-4" data-kt-menu="true">
+
+                                        <div class="menu-item px-3">
+                                            <a v-if="permissions['002']" :href="'/xadmin/users/edit?id='+entry.id"class="menu-link px-3">Edit</a>
+                                        </div>
+                                        <div class="menu-item px-3" >
+                                            <a class="menu-link text-danger px-3" v-if="permissions['003'] && entry.role!=='Super Administrator'" @click="remove(entry)" data-kt-subscriptions-table-filter="delete_row">Remove</a>
+                                            <a class="menu-link text-danger px-3" v-if="permissions['003'] && entry.role=='Super Administrator'"  @click="modalDevice()" data-kt-subscriptions-table-filter="delete_row">Remove</a>
+
+                                        </div>
+                                    </div>
                                 </td>
                             </tr>
                             </tbody>
@@ -369,6 +366,9 @@
                 this.$loading(true);
                 const res = await $get('/xadmin/users/data', query);
                 this.$loading(false);
+                setTimeout(function (){
+                    KTMenu.createInstances();
+                }, 0)
                 this.paginate = res.paginate;
                 this.entries = res.data.data;
                 this.last_updated = res.data.last_updated;
