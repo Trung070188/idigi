@@ -779,17 +779,11 @@ class PlansController extends AdminBaseController
      if($roleName=='Super Administrator')
      {
          $query = Plan::query()->orderBy('id', 'ASC');
-
-
      }
-
         if ($req->keyword) {
-            //$query->where('title', 'LIKE', '%' . $req->keyword. '%');
+            $query->where('name', 'LIKE', '%' . $req->keyword. '%');
         }
-
-        $query->createdIn($req->created);
-
-
+//        $query->createdIn($req->created);
         $entries = $query->paginate();
         $data=[];
         $users=User::query()->orderBy('id','desc')->get();

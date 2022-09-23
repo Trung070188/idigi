@@ -234,7 +234,7 @@
             let isShowFilter = false;
             let filter = {
                 keyword: $q.keyword || '',
-                created: $q.created || created,
+                // created: $q.created || created,
             };
             for (var key in filter) {
                 if (filter[key] != '') {
@@ -302,17 +302,10 @@
                 for( var key in app.filter) {
                     app.filter[key] = '';
                 }
-
                 $router.setQuery({});
             },
-            doFilter(field, value, event) {
-                if (event) {
-                    event.preventDefault();
-                }
-
-                const params = {page: 1};
-                params[field] = value;
-                $router.setQuery(params)
+            doFilter() {
+                $router.setQuery(this.filter)
             },
             changeLimit() {
                 let params = $router.getQuery();
