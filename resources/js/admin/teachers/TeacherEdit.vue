@@ -81,7 +81,7 @@
                                     <div class="form-group col-sm-10"  @change="saveTeacherCourse()">
                                         <label>Course  <span class="text-danger">*</span></label>
                                         <treeselect :options="courses" :multiple="true" @deselect="deleteCourse" v-model="courseTeachers"   />
-                                        <error-label for="f_grade" :errors="errors.courseTeachers"></error-label>
+                                        <error-label  for="f_grade" :errors="errors.courseTeachers"></error-label>
 
                                         <table class="table table-row-bordered align-middle gy-4 gs-9" style="margin:25px 0px 0px">
                             <thead class="border-bottom border-gray-200 fs-6 text-gray-600 fw-bolder bg-light bg-opacity-75">
@@ -90,6 +90,7 @@
                                 <th>Unit<span class="text-danger">*</span></th>
                             </tr>
                             </thead>
+
                             <tbody v-for="courseTeacher in courseTeachers" >
                             <tr v-for="course in courses" v-if="courseTeacher==course.id" >
                                 <td  >
@@ -97,7 +98,7 @@
                                 </td>
                                 <td  >
                                  <treeselect :options="course.total_unit" :multiple="true" v-model="course.courseTea" />
-                                <error-label    :errors="errors.courseTea"></error-label>
+                                <error-label  :errors="errors.courseTea"></error-label>
                                     </td>
 
                             </tr>
@@ -269,7 +270,7 @@
 
             async save() {
                 this.isLoading = true;
-                const res = await $post('/xadmin/users/save', {entry: this.entry, roles: this.roles,courseTeachers:this.courseTeachers,unit:this.courses,name_role:this.nameRole}, false);
+                const res = await $post('/xadmin/users/saveTeacher', {entry: this.entry, roles: this.roles,courseTeachers:this.courseTeachers,unit:this.courses,name_role:this.nameRole}, false);
                 this.isLoading = false;
                 if (res.errors) {
                     this.errors = res.errors;

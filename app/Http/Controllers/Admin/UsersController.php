@@ -262,6 +262,7 @@ class UsersController extends AdminBaseController
         if (@$schoolCousers) {
             $courseTeachers = [];
             foreach ($schoolCousers as $course) {
+                $course['courseTea'] = [];
                 $course['total_unit'] = [];
 
                 foreach ($userCousers as $userCouser) {
@@ -285,9 +286,9 @@ class UsersController extends AdminBaseController
                     }
                 }
 
-                @$course['total_unit'] = $total_unit;
+                $course['total_unit'] = $total_unit;
 
-                @$course['courseTea'] = $unitTeacher;
+                $course['courseTea'] = $unitTeacher;
             }
         }
 
@@ -604,43 +605,8 @@ class UsersController extends AdminBaseController
         if ($data_role['name_role'] == 2 || $data_role['name_role'] == 5) {
             $rules['school_id'] = ['required'];
         }
-
-//        if (@$data_role['courseTeachers']==[]) {
-//            $rules['courseTeachers'] = ['required'];
-//        }
-//        foreach ($data_role['unit'] as $unit)
-//        {
-//            if($unit['courseTea']==[])
-//            {
-//                $rules['courseTea'] = ['required'];
-//            }
-//        }
-//        if (@$data_role['courseTeachers']==[]) {
-//            $rules['courseTeachers'] = ['required'];
-//        }
-//        if(@$data_role['courseTeachers'])
-//        {
-//            foreach($data_role['courseTeachers'] as $courseTeacher)
-//            {
-//                foreach ($data_role['unit'] as $unit)
-//                {
-//                    if($unit['id']==$courseTeacher)
-//                    {
-//                        if($unit['courseTea']==[])
-//                        {
-//                            $rules['courseTea'] = ['required'];
-//
-//                        }
-//                    }
-//                }
-//
-//            }
-//        }
-
         $customMessages = [
             'school_id.required' => 'The school field is required.',
-//            'courseTeachers.required'=>'The course field is required.',
-//           'courseTea.required'=>'The unit field is required.'
         ];
         $v = Validator::make($data, $rules, $customMessages);
 
@@ -678,27 +644,6 @@ class UsersController extends AdminBaseController
                     ]
                 );
             }
-            UserCourseUnit::where('user_id', $entry->id)->delete();
-            if (@$data_role['courseTeachers']) {
-                foreach ($data_role['courseTeachers'] as $courseTeacherId) {
-                    UserCourseUnit::create(['user_id' => $entry->id, 'course_id' => $courseTeacherId, 'school_id' => $schoolId]);
-
-                }
-            }
-            UserUnit::where('user_id', $entry->id)->delete();
-            if (@$data_role['unit']) {
-                foreach ($data_role['unit'] as $UnitId) {
-                    if (@$UnitId['courseTea']) {
-                        foreach ($UnitId['courseTea'] as $uni) {
-                            if (in_array($UnitId['id'], $data_role['courseTeachers'])) {
-                                UserUnit::create(['user_id' => $entry->id, 'unit_id' => $uni, 'course_id' => $UnitId['id'], 'school_id' => $schoolId]);
-
-                            }
-                        }
-                    }
-                }
-            }
-
             return [
                 'code' => 0,
                 'message' => 'Đã cập nhật',
@@ -793,35 +738,169 @@ class UsersController extends AdminBaseController
         $user = Auth::user();
         $schoolId = $user->Schools->id;
 
-        $entry = new User();
-        $entry->school_id = $schoolId;
-        if (@$data['password'] == null) {
-            $entry->password = Str::random(10);
-            $realPassword = $entry->password;
-            $entry->password = Hash::make($entry->password);
+        $data = $req->get('entry');
 
-        }
-        if (@$data['password'] != null) {
-            $realPassword = $data['password'];
-            $data['password'] = Hash::make($data['password']);
-        }
-        $entry->fill($data);
-        $entry->save();
-        if ($entry->email) {
-            $content = [
-                'full_name' => $entry->full_name,
-                'password' => $realPassword,
-                'username' => $entry->username,
-            ];
-            dispatch(new SendMailPassword($entry->email, 'Thông báo tài khoản mới trên iDIGI', $content));
-        }
-        UserRole::create(['user_id' => $entry->id, 'role_id' => 5]);
-
-        return [
-            'code' => 0,
-            'message' => 'Đã thêm',
-            'id' => $entry->id,
+        $data_role = $req->all();
+        $rules = [
+            'full_name' => ['required', function ($attribute, $value, $fail) {
+                if (preg_match('/[\'\/~`\!@#\$%\^&\*\(\)_\-\+=\{\}\[\]\|;:"\<\>,\.\?\\\]/', $value)) {
+                    return $fail(__(' The :attribute no special characters'));
+                }
+            },
+                function ($attribute, $value, $fail) {
+                    if (preg_match('/[0-9]/', $value)) {
+                        return $fail(__(' The :attribute not a number'));
+                    }
+                },
+            ],
         ];
+        if (!isset($data['id'])) {
+            $rules['username'] = ['required', 'min:8', 'unique:users,username', function ($attribute, $value, $fail) {
+                if (preg_match('/[\'\/~`\!@#\$%\^&\*\(\)_\-\+=\{\}\[\]\|;:"\<\>,\.\?\\\]/', $value)) {
+                    return $fail(__(' The :attribute no special characters'));
+                }
+            },];
+            // $rules['email'] = ['email','unique:users,email',];
+
+//            $rules['password'] = 'required|max:191|confirmed';
+        }
+        if (isset($data['id'])) {
+            $user = User::find($data['id']);
+            if ($data['email']) {
+                $rules['email'] = ['email', Rule::unique('users')->ignore($user->id),];
+            }
+        }
+        if (@$data_role['courseTeachers']==[]) {
+            $rules['courseTeachers'] = ['required'];
+        }
+        foreach ($data_role['unit'] as $unit)
+        {
+            if($unit['courseTea']==[])
+            {
+                $rules['courseTea'] = ['required'];
+            }
+        }
+        if (@$data_role['courseTeachers']==[]) {
+            $rules['courseTeachers'] = ['required'];
+        }
+        if(@$data_role['courseTeachers'])
+        {
+            foreach($data_role['courseTeachers'] as $courseTeacher)
+            {
+                foreach ($data_role['unit'] as $unit)
+                {
+                    if($unit['id']==$courseTeacher)
+                    {
+                        if(!$unit['courseTea'])
+                        {
+                            $rules['courseTea'] = ['required'];
+                        }
+                    }
+                }
+            }
+        }
+
+        $customMessages = [
+            'school_id.required' => 'The school field is required.',
+            'courseTeachers.required'=>'The course field is required.',
+           'courseTea.required'=>'The unit field is required.'
+        ];
+        $v = Validator::make($data, $rules, $customMessages);
+
+        if ($v->fails()) {
+            return [
+                'code' => 2,
+                'errors' => $v->errors()
+            ];
+        }
+        if (isset($data['id'])) {
+            $entry = User::find($data['id']);
+
+            if (!$entry) {
+                return [
+                    'code' => 3,
+                    'message' => 'Không tìm thấy',
+                ];
+            }
+//            if ($data['password']) {
+//                $data['password'] = Hash::make($data['password']);
+//            }
+            $entry->fill($data);
+            $entry->save();
+            $schoolId = @$entry->schools->id;
+
+            UserRole::where('user_id', $entry->id)->delete();
+            if (@$data_role['name_role']) {
+                UserRole::updateOrCreate([
+                    'user_id' => $entry->id,
+                    'role_id' => $data_role['name_role']
+                ],
+                    [
+                        'user_id' => $entry->id,
+                        'role_id' => $data_role['name_role']
+                    ]
+                );
+            }
+            UserCourseUnit::where('user_id', $entry->id)->delete();
+            if (@$data_role['courseTeachers']) {
+                foreach ($data_role['courseTeachers'] as $courseTeacherId) {
+                    UserCourseUnit::create(['user_id' => $entry->id, 'course_id' => $courseTeacherId, 'school_id' => $schoolId]);
+
+                }
+            }
+            UserUnit::where('user_id', $entry->id)->delete();
+            if (@$data_role['unit']) {
+                foreach ($data_role['unit'] as $UnitId) {
+                    if (@$UnitId['courseTea']) {
+                        foreach ($UnitId['courseTea'] as $uni) {
+                            if (in_array($UnitId['id'], $data_role['courseTeachers'])) {
+                                UserUnit::create(['user_id' => $entry->id, 'unit_id' => $uni, 'course_id' => $UnitId['id'], 'school_id' => $schoolId]);
+
+                            }
+                        }
+                    }
+                }
+            }
+
+            return [
+                'code' => 0,
+                'message' => 'Đã cập nhật',
+                'id' => $entry->id,
+            ];
+        }
+        else{
+            $entry = new User();
+            $entry->school_id = $schoolId;
+            if (@$data['password'] == null) {
+                $entry->password = Str::random(10);
+                $realPassword = $entry->password;
+                $entry->password = Hash::make($entry->password);
+
+            }
+            if (@$data['password'] != null) {
+                $realPassword = $data['password'];
+                $data['password'] = Hash::make($data['password']);
+            }
+            $entry->fill($data);
+            $entry->save();
+            if ($entry->email) {
+                $content = [
+                    'full_name' => $entry->full_name,
+                    'password' => $realPassword,
+                    'username' => $entry->username,
+                ];
+                dispatch(new SendMailPassword($entry->email, 'Thông báo tài khoản mới trên iDIGI', $content));
+            }
+            UserRole::create(['user_id' => $entry->id, 'role_id' => 5]);
+
+            return [
+                'code' => 0,
+                'message' => 'Đã thêm',
+                'id' => $entry->id,
+            ];
+
+        }
+
     }
 
 
