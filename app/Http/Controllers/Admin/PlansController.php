@@ -70,22 +70,36 @@ class PlansController extends AdminBaseController
     * @throw  NotFoundHttpException
     * @return  View
     */
-    public function create (Request $req) {
+    public function create (Request $req)
+    {
         $component = 'PlanForm';
         $title = 'Create plans';
-        $users=User::query()->with(['roles'])->orderBy('id','ASC')->get();
-        $roleIt=[];
-        foreach($users as $user)
+        $users = User::query()->with(['roles'])->orderBy('id', 'ASC')->get();
+        $roleIt = [];
+        $auth = Auth::user();
+        foreach ($auth->roles as $authRole)
         {
-            foreach($user->roles as $role)
+            $authNameRole=$authRole->role_name;
+        }
+        if($authNameRole!='IT')
+        {
+            foreach($users as $user)
             {
-                if($role->role_name=='IT')
+                foreach($user->roles as $role)
                 {
-                    $roleIt[]=$user;
+                    if($role->role_name=='IT')
+                    {
+                        $roleIt[]=$user;
+                    }
                 }
             }
         }
+        if($authNameRole=='IT')
+        {
+            $roleIt=$auth;
+        }
         $jsonData = [
+            'authNameRole'=>$authNameRole,
             'roleIt' => $roleIt,
         ];
         return view('admin.layouts.vue', compact('title', 'component', 'jsonData'));
@@ -100,18 +114,30 @@ class PlansController extends AdminBaseController
         $id = $req->id;
         $entry = Plan::with(['package_lessons'])->find($id);
         $users=User::query()->with(['roles'])->orderBy('id','ASC')->get();
+        $auth=Auth::user();
         $roleIt=[];
-        foreach($users as $user)
+
+        foreach ($auth->roles as $role)
         {
-            foreach($user->roles as $role)
+            $roleName=$role->role_name;
+        }
+        if($roleName=='IT')
+        {
+            $roleIt[]=$auth;
+        }
+        if($roleName!='IT')
+        {
+            foreach($users as $user)
             {
-                if($role->role_name=='IT')
+                foreach($user->roles as $role)
                 {
-                    $roleIt[]=$user;
+                    if($role->role_name=='IT')
+                    {
+                        $roleIt[]=$user;
+                    }
                 }
             }
         }
-
         if (!$entry) {
             throw new NotFoundHttpException();
         }
@@ -221,6 +247,11 @@ class PlansController extends AdminBaseController
     */
     public function save(Request $req) {
         $dataRole=$req->all();
+        $auth=Auth::user();
+        foreach ($auth->roles as $role)
+        {
+            $roleName=$role->role_name;
+        }
         if (!$req->isMethod('POST')) {
             return ['code' => 405, 'message' => 'Method not allow'];
         }
@@ -233,10 +264,25 @@ class PlansController extends AdminBaseController
         ];
         if(!isset($data['id']))
         {
-            if($dataRole['idRoleIt']==null)
+            if($roleName=='IT')
             {
-                $rules['idRoleIt']=['required'];
+                if(@$dataRole['idRoleIt'])
+                {
+                    if($dataRole['idRoleIt']==null)
+                    {
+                        $rules['idRoleIt']=['required'];
 
+                    }
+                }
+            }
+            if($roleName!='IT')
+            {
+
+                    if($dataRole['idRoleIt']==null)
+                    {
+                        $rules['idRoleIt']=['required'];
+
+                    }
             }
             $rules['due_at']=['required','after_or_equal:' .$current];
             $rules['expire_date']=['required','after_or_equal:' .$current];
@@ -284,14 +330,25 @@ class PlansController extends AdminBaseController
                 'id' => $entry->id
             ];
         } else {
-            $auth=Auth::user();
 
-            $entry = new Plan();
-            $entry->user_id=$dataRole['idRoleIt'];
-            $entry->created_by=$auth->id;
-            $entry->secret_key=Str::random(10);
-            $entry->fill($data);
-            $entry->save();
+            if($roleName!='IT')
+            {
+                $entry = new Plan();
+                $entry->user_id=$dataRole['idRoleIt'];
+                $entry->created_by=$auth->id;
+                $entry->secret_key=Str::random(10);
+                $entry->fill($data);
+                $entry->save();
+            }
+            if($roleName=='IT')
+            {
+                $entry = new Plan();
+                $entry->user_id=$auth->id;
+                $entry->created_by=$auth->id;
+                $entry->secret_key=Str::random(10);
+                $entry->fill($data);
+                $entry->save();
+            }
             return [
                 'code' => 0,
                 'message' => 'Đã thêm',

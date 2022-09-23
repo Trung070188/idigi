@@ -21,13 +21,17 @@
                                                 placeholder="Enter the name of plan" >
                                         <error-label :errors="errors.name" for="f_school_name" ></error-label>
                                     </div>
-                                    <div class="form-group col-lg-4">
+                                    <div v-if="authNameRole!='IT'" class="form-group col-lg-4">
                                         <label> Assign to IT <span class="text-danger">*</span></label>
                                         <select   class="form-control form-select" v-model="idRoleIt"
                                         >
                                             <option v-for="role in roleIt" :value="role.id">{{role.full_name}}</option>
                                         </select>
                                         <error-label :errors="errors.idRoleIt" ></error-label>
+                                    </div>
+                                    <div v-if="authNameRole=='IT'" class="form-group col-lg-4">
+                                        <label> Assign to IT <span class="text-danger">*</span></label>
+                                        <input  v-model="roleIt.full_name"  class="form-control" disabled>
                                     </div>
                                 </div>
                                 <div class="row">
@@ -84,6 +88,7 @@
             return {
                 deviceName:'',
                 deviceUid:'',
+                authNameRole:$json.authNameRole,
                 idRoleIt:'',
                 roleIt:$json.roleIt || [],
                 breadcrumbs: [
