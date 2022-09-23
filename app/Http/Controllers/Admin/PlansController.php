@@ -793,9 +793,17 @@ class PlansController extends AdminBaseController
         $entries = $query->paginate();
         $data=[];
         $users=User::query()->orderBy('id','desc')->get();
-
+        $devices=UserDevice::query()->whereNotNull('plan_id')->get();
         foreach($entries as $entry)
         {
+            foreach ($devices as $device)
+            {
+                $lengthDevice=[];
+                if($entry->id==$device->plan_id)
+                {
+                    $lengthDevice[]=$device;
+                }
+            }
             foreach($users as $user)
             {
                 if($user->id==$entry->created_by)
@@ -814,6 +822,7 @@ class PlansController extends AdminBaseController
                 'assign_to'=>$fullNameIt,
                 'created_at'=>$entry->created_at,
                 'status'=>$entry->status,
+                'lengthDevice'=>$lengthDevice,
                 'expire_date'=>$entry->expire_date,
                 'due_at'=>$entry->due_at,
             ];

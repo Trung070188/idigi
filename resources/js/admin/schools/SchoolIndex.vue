@@ -285,7 +285,7 @@
                 allSelected: false,
                 breadcrumbs: [
                     {
-                        title: 'School & Resource allocation'
+                        title: 'School Management'
                     },
                     {
                         title: 'Manage schools'

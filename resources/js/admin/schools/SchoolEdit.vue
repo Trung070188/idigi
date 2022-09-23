@@ -286,7 +286,7 @@
                 courses2: courseTreeselect2,
                 breadcrumbs: [
                     {
-                        title: 'School & Resource allocation',
+                        title: 'School Management',
 
                     },
                     {
