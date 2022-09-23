@@ -199,7 +199,7 @@
                                             />
                                         </div>
                                     </td>
-                                <th>ID</th>
+                                <th>No.</th>
                                 <th  class="">Username</th>
                                 <th  class="">Full Name</th>
                                 <th  class="">Email</th>
@@ -210,7 +210,7 @@
                             </tr>
                             </thead>
                             <tbody>
-                            <tr v-for="entry in entries">
+                            <tr v-for="(entry,index) in entries">
                                 <td class="">
                                         <div
                                             class="form-check form-check-sm form-check-custom form-check-solid"
@@ -224,7 +224,7 @@
                                             />
                                         </div>
                                     </td>
-                                <td   v-text="entry.id"></td>
+                                <td>{{index+1}}</td>
                                 <td  class="" v-text="entry.username"></td>
                                 <td  class="" v-text="entry.full_name"></td>
                                 <td  class="" v-text="entry.email"></td>

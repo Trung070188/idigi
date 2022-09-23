@@ -774,13 +774,7 @@ class UsersController extends AdminBaseController
         if (@$data_role['courseTeachers']==[]) {
             $rules['courseTeachers'] = ['required'];
         }
-        foreach ($data_role['unit'] as $unit)
-        {
-            if($unit['courseTea']==[])
-            {
-                $rules['courseTea'] = ['required'];
-            }
-        }
+
         if (@$data_role['courseTeachers']==[]) {
             $rules['courseTeachers'] = ['required'];
         }

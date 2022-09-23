@@ -148,14 +148,14 @@
                             </tr>
                             </thead>
                             <tbody>
-                            <tr v-for="entry in entries">
+                            <tr v-for="(entry,index) in entries">
                                 <td class="">
                                     <div class="form-check form-check-sm form-check-custom form-check-solid">
                                         <input class="form-check-input" type="checkbox"
                                             >
                                     </div>
                                 </td>
-                                <td class="" >{{entry.id}}</td>
+                                <td class="" >{{index+1}}</td>
                                 <td class="" >{{entry.name}}</td>
                                 <td class="">{{entry.created_by}}</td>
                                 <td class="" >{{entry.assign_to}}</td>

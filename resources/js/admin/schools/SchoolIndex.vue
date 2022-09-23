@@ -145,14 +145,14 @@
                             </tr>
                             </thead>
                             <tbody>
-                            <tr v-for="entry in entries">
+                            <tr v-for="(entry,index) in entries">
                                 <td class="">
                                     <div class="form-check form-check-sm form-check-custom form-check-solid">
                                         <input class="form-check-input" type="checkbox" v-model="schoolIds"
                                                :value="entry.id" @change="updateCheckAll">
                                     </div>
                                 </td>
-                                <td class="" v-text="entry.id"></td>
+                                <td class="" >{{index+1}}</td>
                                 <td class="" v-text="entry.label"></td>
                                 <td class="" v-text="entry.school_address"></td>
                                 <td></td>
