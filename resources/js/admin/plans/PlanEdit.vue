@@ -1,7 +1,7 @@
 <template>
     <div class="container-fluid" >
         <ActionBar type="index"
-                   :breadcrumbs="breadcrumbs" title ="Create new plan" />
+                   :breadcrumbs="breadcrumbs" title ="Plan details"/>
         <div class="row">
             <div class="modal fade" id="kt_modal_invite_friends" tabindex="-1" aria-hidden="true">
                 <!--begin::Modal dialog-->
@@ -486,6 +486,9 @@
                                                 <div class="menu-item px-3">
                                                     <a  class="menu-link px-3" @click="addLessonPackage(packageLesson.id)">Add lesson</a>
                                                 </div>
+                                                <div class="menu-item px-3" >
+                                                    <a class="menu-link text-danger px-3"  data-kt-subscriptions-table-filter="delete_row" @click="remove(packageLesson)" >Remove</a>
+                                                </div>
                                             </div>
                                         </div>
                                         <div class="card-toolbar" v-for="urls in url" v-if="urls.package_id==packageLesson.id && packageLesson.status=='done'">
@@ -514,6 +517,10 @@
                                                 <div class="menu-item px-3" >
                                                     <a  class="menu-link px-3" style="width: 117px" @click="addLessonPackage(packageLesson.id)" v-if="urls.status=='waitting' || urls.status=='done'">Add lesson</a>
                                                 </div>
+                                                <div class="menu-item px-3" >
+                                                    <a class="menu-link text-danger px-3"  data-kt-subscriptions-table-filter="delete_row" @click="remove(packageLesson)" >Remove</a>
+                                                </div>
+
 
                                             </div>
                                         </div>
@@ -909,6 +916,23 @@
                     }
                 }
             },
+            async remove(packageLesson) {
+                if (!confirm('Xóa bản ghi: ' + packageLesson.id)) {
+                    return false;
+                }
+
+                const res = await $post('/xadmin/plans/removePackageLesson', {packageLesson: packageLesson.id});
+
+                if (res.code) {
+                    toastr.error(res.message);
+                } else {
+                    toastr.success(res.message);
+                    location.replace('/xadmin/plans/edit?id=' + this.entry.id);
+                }
+
+                // $router.updateQuery({page: this.paginate.currentPage, _: Date.now()});
+            },
+
             backIndex(){
                 window.location.href = '/xadmin/plans/index';
             },

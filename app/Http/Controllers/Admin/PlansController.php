@@ -204,6 +204,16 @@ class PlansController extends AdminBaseController
             'message' => 'Đã xóa'
         ];
     }
+    public function removePackageLesson(Request $req)
+    {
+        $dataPackage=$req->all();
+        PackageLesson::where('id',$dataPackage['packageLesson'])->delete();
+        ZipPlanLesson::where('package_id',$dataPackage['packageLesson'])->delete();
+            return [
+                'code' => 0,
+                'message' => 'Đã xóa',
+            ];
+    }
 
     /**
     * @uri  /xadmin/plans/save
