@@ -489,7 +489,7 @@ class UsersController extends AdminBaseController
                     return $fail(__(' The :attribute no special characters'));
                 }
             },],
-            'full_name' => ['required', function ($attribute, $value, $fail) {
+            'full_name' => ['required',function ($attribute, $value, $fail) {
                 if (preg_match('/[\'\/~`\!@#\$%\^&\*\(\)_\-\+=\{\}\[\]\|;:"\<\>,\.\?\\\]/', $value)) {
                     return $fail(__(' The :attribute no special characters'));
                 }
@@ -509,11 +509,12 @@ class UsersController extends AdminBaseController
                 $rules['email'] = ['email', Rule::unique('users')->ignore($user->id),];
 
             }
-
             $rules['username'] = ['required', Rule::unique('users')->ignore($user->id),];
-
         }
-        $v = Validator::make($data, $rules);
+        $customMessages = [
+            'full_name.required' => 'The full name field is required.',
+        ];
+        $v = Validator::make($data, $rules,$customMessages);
 
         if ($v->fails()) {
             return [

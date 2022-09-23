@@ -143,7 +143,7 @@
 
                                 <div class="col-lg-10 fv-row fv-plugins-icon-container">
                                     <input type="text" name="full_name" class="form-control form-control-lg " placeholder="Enter the Fullname" v-model="entry.full_name" />
-                                    <div class="fv-plugins-message-container invalid-feedback" v-if="errors.full_name">{{errors.full_name}}</div>
+                                    <error-label for="f_role_description" :errors="errors.full_name" ></error-label>
                                 </div>
                             </div>
                             <div class="row mb-6">
@@ -151,7 +151,7 @@
 
                                 <div class="col-lg-10 fv-row fv-plugins-icon-container">
                                     <input type="text" name="email" class="form-control form-control-lg " placeholder="Enter the email" v-model="entry.email" />
-                                    <div class="fv-plugins-message-container invalid-feedback" v-if="errors.email">{{errors.email}}</div>
+                                    <error-label for="f_role_description" :errors="errors.email" ></error-label>
                                 </div>
                             </div>
                             <div class="row mb-6">
@@ -159,7 +159,7 @@
 
                                 <div class="col-lg-10 fv-row fv-plugins-icon-container">
                                     <input type="text" name="username" class="form-control form-control-lg " placeholder="Enter the username" v-model="entry.username" disabled />
-                                    <div class="fv-plugins-message-container invalid-feedback" v-if="errors.username">{{errors.username}}</div>
+                                    <error-label for="f_role_description" :errors="errors.username" ></error-label>
                                 </div>
                             </div>
                             <div class="row mb-6">
@@ -167,7 +167,7 @@
 
                                 <div class="col-lg-10 fv-row fv-plugins-icon-container">
                                     <input type="text" name="role" class="form-control form-control-lg " placeholder="Enter the role" v-model="role" disabled />
-                                    <div class="fv-plugins-message-container invalid-feedback" v-if="errors.role">{{errors.role}}</div>
+                                    <error-label for="f_role_description" :errors="errors.role" ></error-label>
                                 </div>
                             </div>
                         </div>
