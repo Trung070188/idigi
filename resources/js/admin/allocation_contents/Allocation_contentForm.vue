@@ -97,10 +97,10 @@
                 return {
                     breadcrumbs: [
                         {
-                            title: 'School & teacher'
+                            title: 'School Management'
                         },
                         {
-                            title: 'Content allocation',
+                            title: 'Resource allocation',
                             url:'/xadmin/allocation_contents/index'
 
                         },

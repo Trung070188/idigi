@@ -176,7 +176,7 @@
                 },
                 breadcrumbs: [
                     {
-                        title: 'School & Resource allocation'
+                        title: 'School Management'
                     },
                     {
                         title: 'Resource allocation'
