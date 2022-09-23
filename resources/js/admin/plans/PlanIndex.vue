@@ -28,8 +28,7 @@
                                        class="form-control form-control-solid w-250px ps-15"
                                        @keydown.enter="doFilter($event)" v-model="filter.keyword"
                                        placeholder="Search..." value=""/>
-                                <span v-if="filter.keyword!==''" class="svg-icon svg-icon-2 svg-icon-lg-1 me-0"
-                                      @click="filterClear">
+                                <span v-if="filter.keyword!==''" class="svg-icon svg-icon-2 svg-icon-lg-1 me-0" @click="filterClear">
                                             <svg type="button" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                                                  viewBox="0 0 24 24" fill="none" style="margin: 3px -25px 0px;">
                                             <rect opacity="0.5" x="6" y="17.3137" width="16" height="2" rx="1"
@@ -299,8 +298,8 @@
                 $router.updateQuery({page: this.paginate.currentPage, _: Date.now()});
             },
             filterClear() {
-                for( var key in app.filter) {
-                    app.filter[key] = '';
+                for (var key in this.filter) {
+                    this.filter[key] = '';
                 }
                 $router.setQuery({});
             },
