@@ -1,7 +1,7 @@
 <template>
     <div class="container-fluid">
         <ActionBar type="index"
-                   :breadcrumbs="breadcrumbs" title ="School details" />
+                   :breadcrumbs="breadcrumbs" title ="Create new school" />
         <div class="row">
             <div class="col-lg-12">
                 <div class="card card-custom card-stretch gutter-b">
@@ -185,8 +185,12 @@
                 allocationContenSchool:null,
                 allocationContens:$json.newAllocationContents,
                 breadcrumbs: [
+
                     {
-                        title: 'Schools',
+                        title: 'School & Resource allocation',
+                    },
+                    {
+                        title: 'Manage schools',
                         url: '/xadmin/schools/index',
                     },
                     {

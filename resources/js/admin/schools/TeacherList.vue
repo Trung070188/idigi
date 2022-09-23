@@ -290,10 +290,10 @@
                 isShowFilter: isShowFilter,
                 breadcrumbs: [
                     {
-                      title:'School & teacher',
+                      title:'School & Resource allocation',
                     },
                     {
-                        title: ' Manage school',
+                        title: ' Manage schools',
                         url: '/xadmin/schools/index',
                     },
                     {
@@ -301,7 +301,7 @@
                         url: '/xadmin/schools/edit?id='+$json.entry.id
                     },
                     {
-                        title: 'Teacher list',
+                        title: 'Teacher lists',
                     },
 
                 ],

@@ -176,10 +176,10 @@
                 },
                 breadcrumbs: [
                     {
-                        title: 'School & teacher'
+                        title: 'School & Resource allocation'
                     },
                     {
-                        title: 'Content Allocation'
+                        title: 'Resource allocation'
                     },
                 ],
                 limit: 25,

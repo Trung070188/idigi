@@ -286,11 +286,11 @@
                 courses2: courseTreeselect2,
                 breadcrumbs: [
                     {
-                        title: 'School & teacher',
+                        title: 'School & Resource allocation',
 
                     },
                     {
-                        title: 'Manage school',
+                        title: 'Manage schools',
                         url: '/xadmin/schools/index',
                     },
                     {

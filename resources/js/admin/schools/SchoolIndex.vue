@@ -285,10 +285,10 @@
                 allSelected: false,
                 breadcrumbs: [
                     {
-                        title: 'School & teacher'
+                        title: 'School & Resource allocation'
                     },
                     {
-                        title: 'Manage school'
+                        title: 'Manage schools'
                     },
                 ],
                 entries: [],
