@@ -693,6 +693,7 @@ class UsersController extends AdminBaseController
 
     public function saveTeacher(Request $req)
     {
+        $dataAll=$req->all();
         if (!$req->isMethod('POST')) {
             return ['code' => 405, 'message' => 'Method not allow'];
         }
@@ -737,7 +738,19 @@ class UsersController extends AdminBaseController
             ];
         }
         $user = Auth::user();
-        $schoolId = $user->Schools->id;
+        foreach ($user->roles as $role)
+        {
+            $roleName=$role->role_name;
+        }
+        if($roleName=='School Admin')
+        {
+            $schoolId = $user->Schools->id;
+
+        }
+        if($roleName!='School Admin')
+        {
+            $schoolId=$dataAll['schoolId'];
+        }
 
         $data = $req->get('entry');
 
