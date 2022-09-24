@@ -847,9 +847,10 @@ class PlansController extends AdminBaseController
         $devices=UserDevice::query()->whereNotNull('plan_id')->get();
         foreach($entries as $entry)
         {
+            $lengthDevice=[];
             foreach ($devices as $device)
             {
-                $lengthDevice=[];
+               
                 if($entry->id==$device->plan_id)
                 {
                     $lengthDevice[]=$device;
