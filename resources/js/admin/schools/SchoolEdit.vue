@@ -7,12 +7,12 @@
                 <div class="modal fade" style="margin-right:50px;border:2px solid #333333  " id="delete" tabindex="-1" role="dialog"
                      aria-hidden="true">
                     <div class="modal-dialog modal-dialog-centered popup-main-1" role="document"
-                         style="max-width: 500px;">
-                        <div class="modal-content box-shadow-main paymment-status" style="left:140px;text-align: center; padding: 27px 0px 10px;">
+                         style="max-width: 450px;">
+                        <div class="modal-content box-shadow-main paymment-status" style="left:140px;text-align: center; padding: 20px 0px 55px;">
                             <div class="close-popup" data-dismiss="modal"></div>
                             <h3 class="popup-title success" style="text-align: center">Delete school</h3>
                             <div class="content">
-                                <p>Are you sure to delete this school?</p>
+                                <p style="margin: 25px 0px 25px;">Are you sure to delete this school?</p>
                             </div>
                             <div class="text-center">
                                 <button type="reset" id="kt_modal_new_target_cancel" class="btn btn-primary" style="margin: 0px 15px 0px;" data-bs-dismiss="modal">Cancel</button>

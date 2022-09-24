@@ -4,6 +4,26 @@
                    :breadcrumbs="breadcrumbs" title="School Management"/>
         <div class="row">
             <div class="col-lg-12">
+                <div class="modal fade" style="margin-right:50px;border:2px solid #333333  " id="delete" tabindex="-1" role="dialog"
+                     aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered popup-main-1" role="document"
+                         style="max-width: 450px;">
+                        <div class="modal-content box-shadow-main paymment-status" style="left:140px;text-align: center; padding: 20px 0px 55px;">
+                            <div class="close-popup" data-dismiss="modal"></div>
+                            <h3 class="popup-title success" style="text-align: center">Delete school</h3>
+                            <div class="content">
+                                <p style="margin: 25px 0px 25px;">Are you sure to delete this school?</p>
+                            </div>
+                            <div class="text-center">
+                                <button type="reset" id="kt_modal_new_target_cancel" class="btn btn-primary" style="margin: 0px 15px 0px;" data-bs-dismiss="modal">Cancel</button>
+                                <button type="submit" id="kt_modal_new_target_submit" class="btn btn-light me-3" @click="remove(entry)">
+                                    <span class="indicator-label">Delete</span>
+                                </button>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
                 <div class="card card-custom card-stretch gutter-b">
 
                     <div class="card-header border-0 pt-6">
@@ -158,30 +178,6 @@
                                 <td class="" v-text="entry.teacher.length"></td>
                                 <td class="" v-text="entry.devices_per_user"></td>
                                 <td  >{{d(entry.license_to)}}</td>
-
-<!--                                <td class="">-->
-<!--                                    &lt;!&ndash;<a :href="'/xadmin/schools/edit?id='+entry.id" style="margin-right: 10px"><i style="font-size:1.3rem" class="fa fa-edit"></i></a>-->
-<!--                                    <a @click="remove(entry)" href="javascript:;" class="btn-trash deleted"><i  class="fa fa-trash mr-1"></i></a>&ndash;&gt;-->
-
-<!--                                    <a v-if="permissions['017']" :href="'/xadmin/schools/edit?id='+entry.id">-->
-<!--                                        <button type="button"-->
-<!--                                                class="btn btn-sm btn-icon btn-light btn-active-light-primary">-->
-<!--                                            <i class="fa fa-edit"></i>-->
-<!--                                        </button>-->
-<!--                                    </a>-->
-<!--                                    <a  v-if="permissions['018'] && entry.teacher.length==0" @click="remove(entry)" href="javascript:;">-->
-<!--                                        <button type="button"-->
-<!--                                                class="btn btn-sm btn-icon btn-light btn-active-light-primary">-->
-<!--                                            <i class="fa fa-trash mr-1 deleted"></i>-->
-<!--                                        </button>-->
-<!--                                    </a>-->
-<!--                                    <a  v-if="permissions['018'] && entry.teacher.length>0" @click="modalDeleteSchool()" href="javascript:;">-->
-<!--                                        <button type="button"-->
-<!--                                                class="btn btn-sm btn-icon btn-light btn-active-light-primary">-->
-<!--                                            <i class="fa fa-trash mr-1 deleted"></i>-->
-<!--                                        </button>-->
-<!--                                    </a>-->
-<!--                                </td>-->
                                 <td class="">
                                     <a href="list.html#" class="btn btn-light btn-active-light-primary btn-sm" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">Actions
                                         <!--begin::Svg Icon | path: icons/duotune/arrows/arr072.svg-->
@@ -198,7 +194,7 @@
                                             <a v-if="permissions['017']" :href="'/xadmin/schools/edit?id='+entry.id" class="menu-link px-3">Edit</a>
                                         </div>
                                         <div class="menu-item px-3" >
-                                            <a class="menu-link text-danger px-3" v-if="permissions['018'] && entry.teacher.length==0" @click="remove(entry)" data-kt-subscriptions-table-filter="delete_row">Remove</a>
+                                            <a class="menu-link text-danger px-3" v-if="permissions['018'] && entry.teacher.length==0" @click="removeSchool(entry.id)" data-kt-subscriptions-table-filter="delete_row">Remove</a>
                                             <a class="menu-link text-danger px-3" v-if="permissions['018'] && entry.teacher.length>0" @click="modalDeleteSchool()" data-kt-subscriptions-table-filter="delete_row">Remove</a>
 
 
@@ -288,6 +284,7 @@
                         title: 'Manage schools'
                     },
                 ],
+                entry:'',
                 entries: [],
                 isShowFilter: isShowFilter,
                 filter: filter,
@@ -305,6 +302,11 @@
             $router.on('/', this.load).init();
         },
         methods: {
+              removeSchool:function(deleteSchool='')
+            {
+                  $('#delete').modal('show');
+                     this.entry=deleteSchool;
+            },
             modalDeleteSchool() {
                 $('#deviceConfirm').modal('show');
             },
@@ -329,17 +331,15 @@
                 this.from = (this.paginate.currentPage - 1) * (this.limit) + 1;
                 this.to = (this.paginate.currentPage - 1) * (this.limit) + this.entries.length;
             },
-            async remove(entry) {
-                if (!confirm('Xóa bản ghi: ' + entry.id)) {
-                    return;
-                }
-
-                const res = await $post('/xadmin/schools/remove', {id: entry.id});
+            async remove() {
+                const res = await $post('/xadmin/schools/remove', {id: this.entry});
 
                 if (res.code) {
                     toastr.error(res.message);
                 } else {
                     toastr.success(res.message);
+                    $('#delete').modal('hide');
+
                 }
 
                 $router.updateQuery({page: this.paginate.currentPage, _: Date.now()});
