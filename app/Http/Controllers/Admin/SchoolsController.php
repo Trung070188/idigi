@@ -692,8 +692,29 @@ class SchoolsController extends AdminBaseController
         }
         $data = [];
         $entries = $query->paginate($limit);
+        $users=User::query()->with(['roles'])->whereNotNull('school_id')->orderBy('id','ASC')->get();
+        $userAdminSchools=[];
+        foreach($users as $user)
+        {
+            foreach($user->roles as $role)
+            {
+               if($role->role_name=='School Admin')
+               {
+                   $userAdminSchools[]=$user;
+               }
+            }
+        }
         foreach ($entries as $entry) {
             $teacher = [];
+            $nameSchoolAdmin='';
+           
+            foreach($userAdminSchools as $userAdminSchool )
+            {
+                if($userAdminSchool->school_id==$entry->id)
+                {
+                    $nameSchoolAdmin=$userAdminSchool->full_name;
+                }
+            }
 
             foreach ($entry->users as $user) {
                 foreach ($user->roles as $role) {
@@ -712,8 +733,9 @@ class SchoolsController extends AdminBaseController
                 'school_phone' => $entry->school_phone,
                 'number_of_users' => $entry->number_of_users,
                 'devices_per_user' => $entry->devices_per_user,
+                'nameSchoolAdmin'=>$nameSchoolAdmin,
 //                'license_info'=>$entry->license_info,
-//                'license_to'=>$entry->license_to,
+               'license_to'=>$entry->license_to,
                 'license_state' => $entry->license_state,
                 'teacher' => $teacher,
 

@@ -139,7 +139,6 @@
                                 <th class="">Administrator name</th>
                                 <th class="">Teacher</th>
                                 <th class="">Devices Per User</th>
-                                <th class="">Province</th>
                                 <th class="">License</th>
                                 <th></th>
                             </tr>
@@ -155,12 +154,10 @@
                                 <td class="" >{{index+1}}</td>
                                 <td class="" v-text="entry.label"></td>
                                 <td class="" v-text="entry.school_address"></td>
-                                <td></td>
+                                <td>{{entry.nameSchoolAdmin}}</td>
                                 <td class="" v-text="entry.teacher.length"></td>
                                 <td class="" v-text="entry.devices_per_user"></td>
-                                <td></td>
-                                <td  class="" v-if="entry.license_state==1">Yes</td>
-                                <td   class="" v-if="entry.license_state==0">No</td>
+                                <td  >{{d(entry.license_to)}}</td>
 
 <!--                                <td class="">-->
 <!--                                    &lt;!&ndash;<a :href="'/xadmin/schools/edit?id='+entry.id" style="margin-right: 10px"><i style="font-size:1.3rem" class="fa fa-edit"></i></a>-->
@@ -328,7 +325,6 @@
                 this.paginate = res.paginate;
                 this.entries = res.data;
                 this.user=res.users;
-                console.log(this.user);
                 console.log(this.entries);
                 this.from = (this.paginate.currentPage - 1) * (this.limit) + 1;
                 this.to = (this.paginate.currentPage - 1) * (this.limit) + this.entries.length;
