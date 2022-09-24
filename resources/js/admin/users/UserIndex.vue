@@ -3,6 +3,26 @@
         <ActionBar type="index"
                    :breadcrumbs="breadcrumbs"  title = "User Management"/>
         <div class="row">
+            <div class="modal fade" style="margin-right:50px;border:2px solid #333333  " id="delete" tabindex="-1" role="dialog"
+                     aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered popup-main-1" role="document"
+                         style="max-width: 450px;">
+                        <div class="modal-content box-shadow-main paymment-status" style="left:140px;text-align: center; padding: 20px 0px 55px;">
+                            <div class="close-popup" data-dismiss="modal"></div>
+                            <h3 class="popup-title success" style="text-align: center">Delete user</h3>
+                            <div class="content">
+                                <p style="margin: 25px 0px 25px;">Are you sure to delete this user?</p>
+                            </div>
+                            <div class="text-center">
+                                <button type="reset" id="kt_modal_new_target_cancel" class="btn btn-primary" style="margin: 0px 15px 0px;" data-bs-dismiss="modal">Cancel</button>
+                                <button type="submit" id="kt_modal_new_target_submit" class="btn btn-light me-3" @click="remove(entry)">
+                                    <span class="indicator-label">Delete</span>
+                                </button>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
             <div class="col-lg-12">
                 <div class="card card-custom card-stretch gutter-b">
 
@@ -245,10 +265,10 @@
                                     <div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-bold fs-7 w-125px py-4" data-kt-menu="true">
 
                                         <div class="menu-item px-3">
-                                            <a v-if="permissions['002']" :href="'/xadmin/users/edit?id='+entry.id"class="menu-link px-3">Edit</a>
+                                            <a v-if="permissions['002']" :href="'/xadmin/users/edit?id='+entry.id" class="menu-link px-3">Edit</a>
                                         </div>
                                         <div class="menu-item px-3" >
-                                            <a class="menu-link text-danger px-3" v-if="permissions['003'] && entry.role!=='Super Administrator'" @click="remove(entry)" data-kt-subscriptions-table-filter="delete_row">Remove</a>
+                                            <a class="menu-link text-danger px-3" v-if="permissions['003'] && entry.role!=='Super Administrator'" @click="removeUser(entry.id)" data-kt-subscriptions-table-filter="delete_row">Remove</a>
                                             <a class="menu-link text-danger px-3" v-if="permissions['003'] && entry.role=='Super Administrator'"  @click="modalDevice()" data-kt-subscriptions-table-filter="delete_row">Remove</a>
 
                                         </div>
@@ -350,6 +370,11 @@
             $router.on('/', this.load).init();
         },
         methods: {
+            removeUser:function(deleteUser='')
+            {
+                  $('#delete').modal('show');
+                  this.entry=deleteUser;
+            },
             modalDevice() {
                 $('#deviceConfirm').modal('show');
             },
@@ -375,17 +400,20 @@
                 this.from = (this.paginate.currentPage - 1) * (this.limit) + 1;
                 this.to = (this.paginate.currentPage - 1) * (this.limit) + this.entries.length;
             },
-            async remove(entry) {
-                if (!confirm('Xóa bản ghi: ' + entry.id)) {
+            async remove() {
+                if (!confirm('Xóa bản ghi: ' + this.entry)) {
                     return false;
                 }
 
-                const res = await $post('/xadmin/users/remove', {id: entry.id});
+                const res = await $post('/xadmin/users/remove', {id: this.entry});
 
                 if (res.code) {
                     toastr.error(res.message);
                 } else {
                     toastr.success(res.message);
+                    $('#delete').modal('hide');
+
+
                 }
 
                 $router.updateQuery({page: this.paginate.currentPage, _: Date.now()});

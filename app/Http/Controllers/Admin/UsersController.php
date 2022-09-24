@@ -693,11 +693,11 @@ class UsersController extends AdminBaseController
 
     public function saveTeacher(Request $req)
     {
-        $dataAll=$req->all();
+        $data_role = $req->all();
+        $data = $req->get('entry');
         if (!$req->isMethod('POST')) {
             return ['code' => 405, 'message' => 'Method not allow'];
         }
-        $data = $req->get('entry');
         $rules = [
             'full_name' => ['required', function ($attribute, $value, $fail) {
                 if (preg_match('/[\'\/~`\!@#\$%\^&\*\(\)_\-\+=\{\}\[\]\|;:"\<\>,\.\?\\\]/', $value)) {
@@ -720,22 +720,6 @@ class UsersController extends AdminBaseController
             },];
             $rules['email'] = 'email|unique:users,email';
 
-
-//            $rules['password'] = 'required|max:191|confirmed';
-        }
-        // if (isset($data['id'])) {
-        //     $user = User::find($data['id']);
-        //     // $rules['email'] = ['required', 'email', Rule::unique('users')->ignore($user->id),];
-        // }
-        $customMessages = [
-        ];
-        $v = Validator::make($data, $rules, $customMessages);
-
-        if ($v->fails()) {
-            return [
-                'code' => 2,
-                'errors' => $v->errors()
-            ];
         }
         $user = Auth::user();
         foreach ($user->roles as $role)
@@ -749,70 +733,44 @@ class UsersController extends AdminBaseController
         }
         if($roleName!='School Admin')
         {
-            $schoolId=$dataAll['schoolId'];
-        }
-
-        $data = $req->get('entry');
-
-        $data_role = $req->all();
-        $rules = [
-            'full_name' => ['required', function ($attribute, $value, $fail) {
-                if (preg_match('/[\'\/~`\!@#\$%\^&\*\(\)_\-\+=\{\}\[\]\|;:"\<\>,\.\?\\\]/', $value)) {
-                    return $fail(__(' The :attribute no special characters'));
-                }
-            },
-                function ($attribute, $value, $fail) {
-                    if (preg_match('/[0-9]/', $value)) {
-                        return $fail(__(' The :attribute not a number'));
-                    }
-                },
-            ],
-        ];
-        if (!isset($data['id'])) {
-            $rules['username'] = ['required', 'min:8', 'unique:users,username', function ($attribute, $value, $fail) {
-                if (preg_match('/[\'\/~`\!@#\$%\^&\*\(\)_\-\+=\{\}\[\]\|;:"\<\>,\.\?\\\]/', $value)) {
-                    return $fail(__(' The :attribute no special characters'));
-                }
-            },];
-            // $rules['email'] = ['email','unique:users,email',];
-
-//            $rules['password'] = 'required|max:191|confirmed';
+            $schoolId=$data_role['schoolId'];
         }
         if (isset($data['id'])) {
             $user = User::find($data['id']);
             if ($data['email']) {
                 $rules['email'] = ['email', Rule::unique('users')->ignore($user->id),];
             }
-        }
-        if (@$data_role['courseTeachers']==[]) {
-            $rules['courseTeachers'] = ['required'];
-        }
-
-        if (@$data_role['courseTeachers']==[]) {
-            $rules['courseTeachers'] = ['required'];
-        }
-        if(@$data_role['courseTeachers'])
-        {
-            foreach($data_role['courseTeachers'] as $courseTeacher)
+            if (@$data_role['courseTeachers']==[]) {
+                $rules['courseTeachers'] = ['required'];
+            }
+    
+            if (@$data_role['courseTeachers']==[]) {
+                $rules['courseTeachers'] = ['required'];
+            }
+            if(@$data_role['courseTeachers'])
             {
-                foreach ($data_role['unit'] as $unit)
+                foreach($data_role['courseTeachers'] as $courseTeacher)
                 {
-                    if($unit['id']==$courseTeacher)
+                    foreach ($data_role['unit'] as $unit)
                     {
-                        if(!$unit['courseTea'])
+                        if($unit['id']==$courseTeacher)
                         {
-                            $rules['courseTea'] = ['required'];
+                            if(!$unit['courseTea'])
+                            {
+                                $rules['courseTea'] = ['required'];
+                            }
                         }
                     }
                 }
             }
         }
+        
 
         $customMessages = [
             'school_id.required' => 'The school field is required.',
             'courseTeachers.required'=>'The course field is required.',
            'courseTea.required'=>'The unit field is required.'
-        ];
+        ];       
         $v = Validator::make($data, $rules, $customMessages);
 
         if ($v->fails()) {
@@ -821,6 +779,7 @@ class UsersController extends AdminBaseController
                 'errors' => $v->errors()
             ];
         }
+        
         if (isset($data['id'])) {
             $entry = User::find($data['id']);
 
@@ -830,9 +789,6 @@ class UsersController extends AdminBaseController
                     'message' => 'Không tìm thấy',
                 ];
             }
-//            if ($data['password']) {
-//                $data['password'] = Hash::make($data['password']);
-//            }
             $entry->fill($data);
             $entry->save();
             $schoolId = @$entry->schools->id;

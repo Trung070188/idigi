@@ -57,7 +57,7 @@
                                         @click="modalDeleteSchool()">
                                     Delete School <i class="fas fa-trash"></i>
                                 </button>
-                                <button v-if="title=='Edit school' &&  teacher==0" class="btn btn-danger button-create "@click="modalDelete">
+                                <button v-if="title=='Edit school' &&  teacher==0" class="btn btn-danger button-create " @click="modalDelete">
                                     Delete School <i class="fas fa-trash"></i>
                                 </button>
                             </div>
