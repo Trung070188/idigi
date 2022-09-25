@@ -179,7 +179,7 @@
                                         >Choose Subject
                                         </option
                                         >
-                                        <option value="0">-</option>
+                                        <option value="0">All</option>
                                         <option value="math">Maths</option>
                                         <option value="science "
                                         >Science
@@ -198,7 +198,7 @@
                                         >Choose Grade
                                         </option
                                         >
-                                        <option value="">-</option>
+                                        <option value="">All</option>
                                         <option value="1">1</option>
                                         <option value="2">2</option>
                                         <option value="3">3</option>
@@ -221,7 +221,7 @@
                                         >Choose Type
                                         </option
                                         >
-                                        <option value="">-</option>
+                                        <option value="">All</option>
                                         <option value="vocabulary"
                                         >Vocabulary
                                         </option
