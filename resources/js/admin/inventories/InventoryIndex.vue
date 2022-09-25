@@ -576,7 +576,7 @@ export default {
             isShowFilter: isShowFilter,
             breadcrumbs: [
                 {
-                    title: "Inventories"
+                    title: "Resource management"
                 }
             ],
             entries: [],

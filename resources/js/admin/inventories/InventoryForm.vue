@@ -3,7 +3,7 @@
         <ActionBar
             type="index"
             :breadcrumbs="breadcrumbs"
-            title="Create New Inventory"
+            :title="title"
         />
         <div class="row">
             <div class="col-lg-12">
@@ -131,14 +131,14 @@
                 ],
                 breadcrumbs: [
                     {
-                        title: 'Inventories',
+                        title: 'Resource management',
                         url: '/xadmin/inventories/index',
                     },
                     {
-                        title: $json.entry ? 'Edit inventory' : 'Create new inventory',
+                        title: $json.entry ? 'Resource detail' : 'Create new resource',
                     },
                 ],
-                title: $json.entry ?  'Edit inventory' : 'Create new inventory',
+                title: $json.entry ?  'Resource detail' : 'Create new resource',
                 entry: $json.entry || {},
                 isLoading: false,
                 errors: {}
