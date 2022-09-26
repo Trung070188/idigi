@@ -470,7 +470,7 @@
                                         </div>
                                         <!--end::Card title-->
                                         <!--begin::Card toolbar-->
-                                        <div class="card-toolbar"  v-if="packageLesson.status=='waitting'">
+                                        <div class="card-toolbar"  v-if="packageLesson.status=='Drafting' && roleAuth=='IT'">
                                             <a href="list.html#" class="btn btn-light btn-active-light-primary btn-sm" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">Actions
                                                 <span class="svg-icon svg-icon-5 m-0">
 															<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
@@ -483,11 +483,12 @@
                                                 <div class="menu-item px-3">
                                                     <a  class="menu-link px-3" @click="addLessonPackage(packageLesson.id)">Add lesson</a>
                                                 </div>
+                                                 <div class="menu-item px-3" >
+                                                    <a  class="menu-link px-3" style="width: 117px" @click="viewPackageLesson(packageLesson.id)">View lessons</a>
+                                                </div>
                                             </div>
                                         </div>
-                                        <div class="card-toolbar" v-for="urls in url" v-if="urls.package_id==packageLesson.id && packageLesson.status=='done'">
-                                            <span  v-if="urls.status=='inprogress' && entry.status=='Packaging'" style="color:#ffc700 ;margin: 0px 8px 0px ">vui lòng đợi  trong khoảng 2 phút hoặc có thể lâu hơn...</span>
-                                            <span   v-if="urls.status=='done' " style="color:#50cd89 ;margin: 0px 8px 0px ">done</span>
+                                         <div class="card-toolbar" v-for="urls in url" v-if="urls.package_id==packageLesson.id && packageLesson.status=='Drafting' && roleAuth=='Super Administrator'">
 
                                             <a href="list.html#" class="btn btn-light btn-active-light-primary btn-sm" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">Actions
                                                 <span class="svg-icon svg-icon-5 m-0">
@@ -533,28 +534,28 @@
                                 </div>
                             </div>
                             </div>
-                            
-
                             </div>
-                                
-                           
-
-                            
                         </div>
-
-
-
-
                     </div>
                     <hr style="margin-top: 5px;">
-                    <div style="margin: 13px 25px 13px">
-                        <button type="reset" @click="save()" class="btn btn-primary mr-2">Save</button>
-                        <button type="reset" @click="backIndex()" class="btn btn-secondary">Cancel</button>
+                    <div style="padding:20px 20px 15px">
+                        <div class="row">
+                            <div class="form-group col-lg-8">
+                                <span>Note</span>
+                                <textarea class="form-control" placeholder="Type the note here"></textarea>
+                            </div>
+                        </div>
+                       
+                        <div class="d-flex justify-content-end" style="margin:-56px 0px 0px">
+                             <button type="reset" @click="save()" class="btn btn-primary mr-2">Save</button>
+                        <button type="reset" @click="backIndex()" class="btn btn-secondary" style="margin:0px 12px 0px">Cancel</button>
+                        <button type="reset" @click="save()" class="btn btn-primary mr-2">Submit</button>
+                        </div>
+                       
+
                     </div>
                 </div>
             </div>
-
-
         </div>
         <div class="modal fade" style="margin-right:50px " id="deviceConfirm" tabindex="-1" role="dialog"
              aria-labelledby="deviceConfirm"
@@ -804,6 +805,7 @@
             };
 
             return {
+                roleAuth:$json.roleAuth,
                 lessons:[],
                 viewPackage:this.viewPackage,
                 packagePlan:$json.packagePlan,

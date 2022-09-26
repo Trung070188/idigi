@@ -152,6 +152,11 @@ class PlansController extends AdminBaseController
         $devices=UserDevice::query()->with(['users'])->where('plan_id','=',$entry->id)->orderBy('created_at','ASC')->get();
        $data=[];
         $fileZipLessons=ZipPlanLesson::where('plan_id','=',$entry->id)->get();
+        $auth=Auth::user();
+        foreach($auth->roles as $role)
+        {
+            $roleAuth=$role->role_name;
+        }
         foreach ($fileZipLessons as $fileZipLesson)
         {
             $url[]=$fileZipLesson;
@@ -200,6 +205,7 @@ class PlansController extends AdminBaseController
             ];
         }
         $jsonData = [
+            'roleAuth'=>$roleAuth,
             'lessonPackagePlans'=>@$lessonPackagePlans,
             'idRoleIt' => $idRoleIt,
             'entry'=>$entry,
@@ -771,7 +777,7 @@ class PlansController extends AdminBaseController
                             ],
                             [
                                 'lesson_ids'=>$stringLesson,
-                                'status'=>'done'
+                                'status'=>'Drafting'
                             ]
                         );
 
