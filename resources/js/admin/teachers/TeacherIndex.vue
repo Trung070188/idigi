@@ -208,7 +208,7 @@
                                 <th></th>
                             </tr>
                             </thead>
-                            <tbody v-for="entry in entries">
+                            <tbody v-for="(entry,index) in entries">
 
                             <tr v-for="teacher in entry.roles" >
                                  <td class="">
@@ -224,7 +224,7 @@
                                             />
                                         </div>
                                     </td>
-                                <td class="" v-text="entry.id"></td>
+                                <td >{{index+1}}</td>
                                 <td class="" v-text="entry.full_name"></td>
                                 <td class="" v-text="entry.email"></td>
                                 <td class="" v-text="entry.class"></td>
