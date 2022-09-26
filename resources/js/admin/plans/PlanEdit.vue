@@ -1,7 +1,7 @@
 <template>
     <div class="container-fluid" >
         <ActionBar type="index"
-                   :breadcrumbs="breadcrumbs" title ="Plan details"/>
+                   :breadcrumbs="breadcrumbs" title ="Create new plan" />
         <div class="row">
             <div class="modal fade" id="kt_modal_invite_friends" tabindex="-1" aria-hidden="true">
                 <!--begin::Modal dialog-->
@@ -410,30 +410,29 @@
                                         <error-label :errors="errors.expire_date" for="f_title" ></error-label>
                                     </div>
                                 </div>
-<!--                                <div class="row">-->
-<!--                                    <div class="form-group col-lg-8">-->
-<!--                                        <label>School<span class="text-danger">*</span> </label>-->
-<!--                                        <treeselect :options="schools" :multiple="true" v-model="schoolPlan" />-->
-<!--                                    </div>-->
+                                 <div class="row">
+                                <div class="card-title " >
+                                    <ul class="nav nav-stretch nav-line-tabs border-transparent" role="tablist">
+                                        <li class="nav-item" role="presentation">
+                                            <a id="kt_billing_6months_tab" class="nav-link fs-5 fw-bold me-3 active" data-bs-toggle="tab" role="tab" href="billing.html#kt_billing_months">Device</a>
+                                        </li>
+                                        <li class="nav-item" role="presentation">
+                                            <a id="kt_billing_1year_tab" class="nav-link fs-5 fw-bold me-3" data-bs-toggle="tab" role="tab" href="billing.html#kt_billing_year">Package lesson</a>
+                                        </li>
+                                    </ul>
 
-<!--                                </div>-->
-                                <div class="row" >
+                                </div>
+                            </div>
+                            <div class="tab-content">
+                                <div  id="kt_billing_months" class="card-body p-0 tab-pane fade show active" role="tabpanel" aria-labelledby="kt_billing_months">
                                     <div class="form-group col-lg-8" >
-                                        <label>Device  </label>
                                         <div class="card-header  border border-dashed border-gray-300">
                                             <!--begin::Card title-->
                                             <div class="card-title" style="font-size: 15px">
                                                 <div  class="fw-bold text-muted" >{{data.length}} device(s) added</div>
                                             </div>
-<!--                                            <div class="card-toolbar">-->
-<!--                                                <button class="btn btn-primary" @click="viewDeviceSchoolPlan(deviceSchool.id)">View devices</button>-->
-<!--                                                <button class="btn btn-primary" style="margin: 0px 15px 0px" @click="addDevice(deviceSchool.id)">Add a device</button>-->
-<!--                                                <button class="btn btn-primary"  @click="importDevice(deviceSchool.id)">Import devices</button>-->
-<!--                                            </div> -->
+
                                             <div class="card-toolbar">
-<!--                                                <button class="btn btn-primary" @click="viewDeviceSchoolPlan">View devices</button>-->
-<!--                                                <button class="btn btn-primary" style="margin: 0px 15px 0px" @click="addDevice">Add a device</button>-->
-<!--                                                <button class="btn btn-primary" @click="importDevice">Import devices</button>-->
                                                     <a href="list.html#" class="btn btn-light btn-active-light-primary btn-sm" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">Actions
                                                         <!--begin::Svg Icon | path: icons/duotune/arrows/arr072.svg-->
                                                         <span class="svg-icon svg-icon-5 m-0">
@@ -461,9 +460,7 @@
 
                                     </div>
                                 </div>
-                            </div>
-
-                            <div class="row" >
+                                <div  id="kt_billing_year" class="card-body p-0 tab-pane fade" role="tabpanel" aria-labelledby="kt_billing_year">
                                 <div class="form-group col-lg-8" id="clone" v-for="(packageLesson,index) in packageLessonPlan" >
                                     <label>Lesson package  {{index+1}}</label>
                                     <div class="card-header  border border-dashed border-gray-300">
@@ -485,9 +482,6 @@
 
                                                 <div class="menu-item px-3">
                                                     <a  class="menu-link px-3" @click="addLessonPackage(packageLesson.id)">Add lesson</a>
-                                                </div>
-                                                <div class="menu-item px-3" >
-                                                    <a class="menu-link text-danger px-3"  data-kt-subscriptions-table-filter="delete_row" @click="remove(packageLesson)" >Remove</a>
                                                 </div>
                                             </div>
                                         </div>
@@ -517,10 +511,6 @@
                                                 <div class="menu-item px-3" >
                                                     <a  class="menu-link px-3" style="width: 117px" @click="addLessonPackage(packageLesson.id)" v-if="urls.status=='waitting' || urls.status=='done'">Add lesson</a>
                                                 </div>
-                                                <div class="menu-item px-3" >
-                                                    <a class="menu-link text-danger px-3"  data-kt-subscriptions-table-filter="delete_row" @click="remove(packageLesson)" >Remove</a>
-                                                </div>
-
 
                                             </div>
                                         </div>
@@ -542,6 +532,14 @@
 
                                 </div>
                             </div>
+                            </div>
+                            
+
+                            </div>
+                                
+                           
+
+                            
                         </div>
 
 
@@ -916,23 +914,6 @@
                     }
                 }
             },
-            async remove(packageLesson) {
-                if (!confirm('Xóa bản ghi: ' + packageLesson.id)) {
-                    return false;
-                }
-
-                const res = await $post('/xadmin/plans/removePackageLesson', {packageLesson: packageLesson.id});
-
-                if (res.code) {
-                    toastr.error(res.message);
-                } else {
-                    toastr.success(res.message);
-                    location.replace('/xadmin/plans/edit?id=' + this.entry.id);
-                }
-
-                // $router.updateQuery({page: this.paginate.currentPage, _: Date.now()});
-            },
-
             backIndex(){
                 window.location.href = '/xadmin/plans/index';
             },
