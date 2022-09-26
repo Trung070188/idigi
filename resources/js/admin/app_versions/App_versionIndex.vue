@@ -3,6 +3,26 @@
         <ActionBar type="index"
                    :breadcrumbs="breadcrumbs" title="Application Settings"/>
             <div class="card card-custom card-stretch gutter-b" v-if="roleName=='Super Administrator'">
+                <div class="modal fade" style="margin-right:50px;border:2px solid #333333  " id="delete" tabindex="-1" role="dialog"
+                     aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered popup-main-1" role="document"
+                         style="max-width: 450px;">
+                        <div class="modal-content box-shadow-main paymment-status" style="left:140px;text-align: center; padding: 20px 0px 55px;">
+                            <div class="close-popup" data-dismiss="modal"></div>
+                            <h3 class="popup-title success" style="text-align: center">Delete app</h3>
+                            <div class="content">
+                                <p style="margin: 25px 0px 25px;">Are you sure to delete this app?</p>
+                            </div>
+                            <div class="text-center">
+                                <button type="reset" id="kt_modal_new_target_cancel" class="btn btn-primary" style="margin: 0px 15px 0px;" data-bs-dismiss="modal">Cancel</button>
+                                <button type="submit" id="kt_modal_new_target_submit" class="btn btn-light me-3" @click="remove(entry)">
+                                    <span class="indicator-label">Delete</span>
+                                </button>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
                 <div class="card-header card-header-stretch border-bottom border-gray-200" >
 
                     <div class="card-title " style="margin: 36px 0px 0px;">
@@ -150,7 +170,7 @@
                                                class="menu-link px-3">Set as Default</a>
                                         </div>
                                         <div class="menu-item px-3">
-                                            <a @click="remove(entry)"
+                                            <a @click="removeApp(entry.id)"
                                                data-kt-subscriptions-table-filter="delete_row"
                                                class="menu-link text-danger px-3">Remove</a>
                                         </div>
@@ -217,7 +237,7 @@
                                         <label>Update file <span class="required"></span></label>
                                         <input type="file" ref="uploader" class="form-control-file"
                                                accept=".zip,.rar,.7zip">
-                                        <error-label :errors="errors.file_0"></error-label>
+<!--                                        <error-label :errors="errors.file_0"></error-label>-->
                                     </div>
                                     <div class="form-group">
                                         <label>Name <span class="required"></span></label>
@@ -356,6 +376,7 @@
         data() {
             const permissions = clone(window.$permissions);
             return {
+                entry:'',
                 roleName:$json.roleName,
                 release_note:'',
                 permissions,
@@ -387,6 +408,12 @@
             $router.on('/', this.load).init();
         },
         methods: {
+            removeApp:function(deleteApp='')
+            {
+                $('#delete').modal('show');
+                this.entry=deleteApp;
+
+            },
             showReleaseNote(release_note)
             {
                 const that=this;
@@ -480,12 +507,12 @@
                 this.from = (this.paginate.currentPage - 1) * (this.limit) + 1;
                 this.to = (this.paginate.currentPage - 1) * (this.limit) + this.entries.length;
             },
-            async remove(entry) {
-                if (!confirm('Xóa bản ghi: ' + entry.id)) {
+            async remove() {
+                if (!confirm('Xóa bản ghi: ' + this.entry)) {
                     return;
                 }
 
-                const res = await $post('/xadmin/app_versions/remove', {id: entry.id});
+                const res = await $post('/xadmin/app_versions/remove', {id: this.entry});
 
                 if (res.code) {
                     toastr.error(res.message);
