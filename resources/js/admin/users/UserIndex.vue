@@ -75,7 +75,7 @@
                                             <i class="fa fa-filter" v-if="!isShowFilter" aria-hidden="true"></i>
                                         </button>
                                         <a v-if="permissions['001']" :href="'/xadmin/users/create'">
-                                            <button class="btn btn-primary button-create" style="margin:0 0 0 15px"> Create New</button>
+                                            <button class="btn btn-primary button-create" style="margin:0 0 0 15px"> Create</button>
                                         </a>
 
                                     </div>

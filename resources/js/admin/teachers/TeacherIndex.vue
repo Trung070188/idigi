@@ -86,7 +86,7 @@
                                 </div>
 
                                         <a v-if="permissions['013']" :href="'/xadmin/users/create_teacher'">
-                                            <button class="btn btn-primary button-create" style="margin:0 0 0 15px"> Create New</button>
+                                            <button class="btn btn-primary button-create" style="margin:0 0 0 15px"> Create</button>
                                         </a>
 
                                     </div>
@@ -444,7 +444,7 @@
                 this.to = (this.paginate.currentPage - 1) * (this.limit) + this.entries.length;
             },
             async remove(entry) {
-               
+
 
                 const res = await $post('/xadmin/users/remove', {id: this.entry});
 
