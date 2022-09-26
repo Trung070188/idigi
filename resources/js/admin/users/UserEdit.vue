@@ -109,7 +109,7 @@
                         </div>
                         <hr style="margin: 0px 0px 16px;">
                         <div>
-                            <button type="reset" @click="save()" :disabled="!changed" class="btn btn-primary mr-2">Save</button>
+                            <button type="reset" @click="save()" class="btn btn-primary mr-2">Save</button>
                             <button type="reset" @click="backIndex()" class="btn btn-secondary">Cancel</button>
                         <label style="margin-left: 20px">Username and password will be sent to the user's email.
                           </label>
@@ -171,14 +171,14 @@
             }
         },
         watch: {
-            entry: {
-                handler(value){
-                    if(value) {
-                        this.changed = !_.isEqual(value, this.actual);
-                    }
-                },
-                deep: true,
-            }
+            // entry: {
+            //     handler(value){
+            //         if(value) {
+            //             this.changed = !_.isEqual(value, this.actual);
+            //         }
+            //     },
+            //     deep: true,
+            // }
         },
         mounted() {
             $('.nospace').keypress(function (e) {
@@ -221,7 +221,7 @@
                 }
             },
              async remove(entry) {
-               
+
 
                 const res = await $post('/xadmin/users/remove', {id: entry.id});
 
