@@ -24,6 +24,26 @@
                 </div>
             </div>
         </div>
+        <div class="modal fade" style="margin-right:50px;border:2px solid #333333  " id="delete" tabindex="-1" role="dialog"
+        aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered popup-main-1" role="document"
+             style="max-width: 450px;">
+            <div class="modal-content box-shadow-main paymment-status" style="left:140px;text-align: center; padding: 20px 0px 55px;">
+                <div class="close-popup" data-dismiss="modal"></div>
+                <h3 class="popup-title success" style="text-align: center">Delete device</h3>
+                <div class="content">
+                    <p style="margin: 25px 0px 25px;">Are you sure to delete this device?</p>
+                </div>
+                <div class="text-center">
+                    <button type="reset" id="kt_modal_new_target_cancel" class="btn btn-primary" style="margin: 0px 15px 0px;" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" id="kt_modal_new_target_submit" class="btn btn-light me-3" @click="remove(idDevice)">
+                        <span class="indicator-label">Delete</span>
+                    </button>
+                </div>
+
+            </div>
+        </div>
+    </div>
 
         <div class="modal fade" style="margin-right:50px " id="deviceConfirm" tabindex="-1" role="dialog"
              aria-labelledby="deviceConfirm"
@@ -275,7 +295,7 @@
                                         <!--end::Menu item-->
                                         <!--begin::Menu item-->
                                         <div class="menu-item px-3" >
-                                            <a class="menu-link text-danger px-3" v-if="entry.roleName!='Teacher'" @click="remove(entry)" data-kt-subscriptions-table-filter="delete_row">Remove</a>
+                                            <a class="menu-link text-danger px-3" v-if="entry.roleName!='Teacher'" @click="removeDevice(entry.id)" data-kt-subscriptions-table-filter="delete_row">Remove</a>
                                             <a class="menu-link text-danger px-3" v-if="entry.roleName=='Teacher' && entry.status==2 " @click="Sent(entry)" data-kt-subscriptions-table-filter="delete_row" >Remove</a>
 
                                         </div>
@@ -337,6 +357,7 @@
                         title: 'User Device'
                     },
                 ],
+                idDevice:'',
                 entries: [],
                 limit: 25,
                 from: 0,
@@ -352,7 +373,10 @@
             $router.on('/', this.load).init();
         },
         methods: {
-
+            removeDevice: function (removeDevice = {}){
+                $('#delete').modal('show');
+                this.idDevice = removeDevice;
+            },
             Sent: function (device = {}){
                 $('#sentConfirm').modal('show');
                 this.curDevice = device;
@@ -398,15 +422,13 @@
                 this.entries = res.data;
                 console.log(this.entries)
             },
-            async remove(entry) {
-                if (!confirm('Xóa bản ghi: ' + entry.id)) {
-                    return;
-                }
-                const res = await $post('/xadmin/user_devices/remove', {id: entry.id});
+            async remove() {
+                const res = await $post('/xadmin/user_devices/remove', {id:this.idDevice});
                 if (res.code) {
                     toastr.error(res.message);
                 } else {
                     toastr.success(res.message);
+                    $('#delete').modal('hide');
                     location.replace('/xadmin/user_devices/index');
 
                 }
