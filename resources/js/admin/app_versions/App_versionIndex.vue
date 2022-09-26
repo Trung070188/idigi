@@ -508,10 +508,6 @@
                 this.to = (this.paginate.currentPage - 1) * (this.limit) + this.entries.length;
             },
             async remove() {
-                if (!confirm('Xóa bản ghi: ' + this.entry)) {
-                    return;
-                }
-
                 const res = await $post('/xadmin/app_versions/remove', {id: this.entry});
 
                 if (res.code) {
