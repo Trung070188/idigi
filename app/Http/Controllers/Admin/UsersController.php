@@ -677,7 +677,7 @@ class UsersController extends AdminBaseController
                     'password' => $realPassword,
                     'username' => $entry->username,
                 ];
-                dispatch(new SendMailPassword($entry->email, 'Thông báo tài khoản mới trên iDIGI', $content));
+                dispatch(new SendMailPassword($entry->email, 'New account information', $content));
             }
             if ($data_role['name_role']) {
                 UserRole::updateOrCreate([
@@ -860,7 +860,7 @@ class UsersController extends AdminBaseController
                     'password' => $realPassword,
                     'username' => $entry->username,
                 ];
-                dispatch(new SendMailPassword($entry->email, 'Thông báo tài khoản mới trên iDIGI', $content));
+                dispatch(new SendMailPassword($entry->email, 'New account information', $content));
             }
             UserRole::create(['user_id' => $entry->id, 'role_id' => 5]);
 
