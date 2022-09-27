@@ -16,5 +16,6 @@ class SchoolCourseUnit extends Model
         'school_id',
         'course_id',
         'unit_id',
+        'allocation_content_id'
     ];
 }

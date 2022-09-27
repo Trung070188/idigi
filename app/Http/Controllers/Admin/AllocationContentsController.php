@@ -13,6 +13,8 @@ use App\Models\AllocationContentSchool;
 use App\Models\AllocationContentUnit;
 use App\Models\Course;
 use App\Models\School;
+use App\Models\SchoolCourse;
+use App\Models\SchoolCourseUnit;
 use App\Models\Unit;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
@@ -285,12 +287,36 @@ class AllocationContentsController extends AdminBaseController
 
             if(@$dataContent['total_course'])
             {
+               
 
                 foreach($dataContent['total_course'] as $courseId)
                 {
                     AllocationContentCourse::create(['course_id'=>$courseId,'allocation_content_id'=>$entry->id]);
                 }
+                $contentCourses=AllocationContentCourse::where('allocation_content_id',$entry->id)->get();
+                $deleteCourses=[];
+                    foreach($contentCourses as $contentCourse)
+                {
 
+                    {
+                        $deleteCourses[]=$contentCourse->course_id;
+                    }
+                
+                }
+                
+                // code cập nhật bảng school_course khi thay đổi content ở bảng allocation_content_course
+                $contentUpdates=SchoolCourse::query()->where('allocation_content_id',$entry->id)->get();
+                foreach($contentUpdates as $contentUpdate)
+                {
+                    SchoolCourse::where('allocation_content_id',$entry->id)->delete();
+
+                    foreach($deleteCourses as $deleteCourse)
+                    {
+                        SchoolCourse::create(['allocation_content_id'=>$entry->id,'school_id'=>$contentUpdate->school_id,'course_id'=>$deleteCourse]);
+
+                    }
+
+                }
                 if(@$dataContent['unit'])
                 {
 
@@ -309,6 +335,22 @@ class AllocationContentsController extends AdminBaseController
                         }
 
                     }
+                    // code cập nhật bảng school_course_unit khi thay đổi content ở bảng allocation_content_course
+                    $contentCourseUnits=AllocationContentUnit::where('allocation_content_id',$entry->id)->get();                   
+                    $contentUnitUpdates=SchoolCourseUnit::query()->where('allocation_content_id',$entry->id)->get();
+                    foreach($contentUnitUpdates as $contentUnitUpdate)
+                    {
+                        SchoolCourseUnit::where('allocation_content_id',$entry->id)->delete();
+    
+                        foreach($contentCourseUnits as $contentCourseUnit)
+                        {
+                            SchoolCourseUnit::create(['allocation_content_id'=>$entry->id,'school_id'=>$contentUnitUpdate->school_id,'course_id'=>$contentCourseUnit->course_id,'unit_id'=>$contentCourseUnit->unit_id]);
+    
+                        }
+    
+                    }
+
+
                 }
 
             }

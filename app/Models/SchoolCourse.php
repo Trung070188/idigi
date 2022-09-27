@@ -15,6 +15,7 @@ class SchoolCourse extends Model
     protected $fillable=[
         'school_id',
         'course_id',
+        'allocation_content_id'
 
     ];
 }
