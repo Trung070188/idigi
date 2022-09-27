@@ -777,16 +777,11 @@ class PlansController extends AdminBaseController
                             ],
                             [
                                 'lesson_ids'=>$stringLesson,
-                                'status'=>'Drafting'
+                                'status'=>'new'
                             ]
                         );
-
                     }
-
                 }
-
-
-                $entry->status='Ready';
                 $entry->save();
                 ZipPlanLesson::where('package_id',$dataLesson['package'])->delete();
                 ZipPlanLesson::create(['package_id'=>$dataLesson['package'],'plan_id'=>$entry->id]);
@@ -856,7 +851,7 @@ class PlansController extends AdminBaseController
             $lengthDevice=[];
             foreach ($devices as $device)
             {
-               
+
                 if($entry->id==$device->plan_id)
                 {
                     $lengthDevice[]=$device;
@@ -1107,7 +1102,7 @@ class PlansController extends AdminBaseController
                     'message' => 'Không tìm thấy',
                 ];
             }
-           PackageLesson::create(['plan_id'=>$entry->id,'status'=>'waitting']);
+           PackageLesson::create(['plan_id'=>$entry->id,'status'=>'new']);
             return [
                 'code' => 0,
                 'message' => 'Đã cập nhật',

@@ -743,7 +743,7 @@ class UsersController extends AdminBaseController
             if (@$data_role['courseTeachers']==[]) {
                 $rules['courseTeachers'] = ['required'];
             }
-    
+
             if (@$data_role['courseTeachers']==[]) {
                 $rules['courseTeachers'] = ['required'];
             }
@@ -764,13 +764,13 @@ class UsersController extends AdminBaseController
                 }
             }
         }
-        
+
 
         $customMessages = [
             'school_id.required' => 'The school field is required.',
             'courseTeachers.required'=>'The course field is required.',
            'courseTea.required'=>'The unit field is required.'
-        ];       
+        ];
         $v = Validator::make($data, $rules, $customMessages);
 
         if ($v->fails()) {
@@ -779,7 +779,7 @@ class UsersController extends AdminBaseController
                 'errors' => $v->errors()
             ];
         }
-        
+
         if (isset($data['id'])) {
             $entry = User::find($data['id']);
 
@@ -977,6 +977,7 @@ class UsersController extends AdminBaseController
     {
         $user = Auth::user();
         $school_id = $user->schools->id;
+        $lengthUserSchool=$user->schools->number_of_users;
        $devicePerUser=$user->schools->devices_per_user;
         $query = User::query()
             ->with(['roles', 'user_devices'])
@@ -1010,10 +1011,12 @@ class UsersController extends AdminBaseController
         $entries = $query->paginate($limit);
         $users = $entries->items();
 
+
         return [
             'code' => 0,
             'data' => $users,
             'devicePerUser'=>$devicePerUser,
+            'lengthUserSchool'=>$lengthUserSchool,
             'paginate' => [
                 'currentPage' => $entries->currentPage(),
                 'lastPage' => $entries->lastPage(),

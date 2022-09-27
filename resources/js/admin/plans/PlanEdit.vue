@@ -470,7 +470,7 @@
                                         </div>
                                         <!--end::Card title-->
                                         <!--begin::Card toolbar-->
-                                        <div class="card-toolbar"  v-if="packageLesson.status=='Drafting' && roleAuth=='IT'">
+                                        <div class="card-toolbar"  v-if="packageLesson.status=='new' && roleAuth=='IT'">
                                             <a href="list.html#" class="btn btn-light btn-active-light-primary btn-sm" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">Actions
                                                 <span class="svg-icon svg-icon-5 m-0">
 															<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
@@ -545,13 +545,13 @@
                                 <textarea class="form-control" placeholder="Type the note here"></textarea>
                             </div>
                         </div>
-                       
+
                         <div class="d-flex justify-content-end" style="margin:-56px 0px 0px">
                              <button type="reset" @click="save()" class="btn btn-primary mr-2">Save</button>
                         <button type="reset" @click="backIndex()" class="btn btn-secondary" style="margin:0px 12px 0px">Cancel</button>
-                        <button type="reset" @click="save()" class="btn btn-primary mr-2">Submit</button>
+                        <button type="reset" @click="save()" class="btn btn-primary mr-2" @click="sentAdmin()">Submit</button>
                         </div>
-                       
+
 
                     </div>
                 </div>
@@ -1104,6 +1104,30 @@
             {
                 this.isLoading = true;
                 const res = await $post('/xadmin/plans/planLesson', {lessonPackagePlans:this.lessonPackagePlans,entry:this.entry,package:this.package}, false);
+                this.isLoading = false;
+                if (res.errors) {
+                    this.errors = res.errors;
+                    return;
+                }
+                if (res.code) {
+                    toastr.error(res.message);
+                } else {
+                    this.errors = {};
+                    toastr.success(res.message);
+                    location.replace('/xadmin/plans/edit?id=' + this.entry.id);
+
+
+                    if (!this.entry.id) {
+                        location.replace('/xadmin/plans/edit?id=' + this.entry.id);
+                    }
+
+                }
+
+            },
+          async  sentAdmin()
+            {
+                this.isLoading = true;
+                const res = await $post('/xadmin/plans/sentAdmin', {entry:this.entry}, false);
                 this.isLoading = false;
                 if (res.errors) {
                     this.errors = res.errors;

@@ -85,9 +85,12 @@
 
                                 </div>
 
-                                        <a v-if="permissions['013']" :href="'/xadmin/users/create_teacher'">
+                                        <a v-if="permissions['013'] && entries.length<lengthUserSchool " :href="'/xadmin/users/create_teacher'">
                                             <button class="btn btn-primary button-create" style="margin:0 0 0 15px"> Create</button>
                                         </a>
+                                <a v-if="permissions['013'] && entries.length==lengthUserSchool " >
+                                    <button class="btn btn-primary button-create" style="margin:0 0 0 15px"> Create</button>
+                                </a>
 
                                     </div>
                                 </div>
@@ -387,6 +390,7 @@
                 }
             }
             return {
+                lengthUserSchool:'',
                 devicePerUser:'',
                 code:0,
                 validateFile:'',
@@ -439,6 +443,7 @@
                 }, 0)
                 this.entries = res.data;
                 this.devicePerUser=res.devicePerUser;
+                this.lengthUserSchool=res.lengthUserSchool;
                 this.paginate = res.paginate;
                 this.from = (this.paginate.currentPage - 1) * (this.limit) + 1;
                 this.to = (this.paginate.currentPage - 1) * (this.limit) + this.entries.length;
