@@ -56,10 +56,10 @@ class DeleteDataSec extends Command
 
 
         foreach ($data as $item){
-            if($item->path){
-                if(is_file($item->path)){
+            if($item->physical_path){
+                if(is_file($item->physical_path)){
                     try {
-                        unlink($item->path);
+                        unlink($item->physical_path);
 
 
                     }
