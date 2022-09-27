@@ -7,35 +7,39 @@
                      aria-hidden="true">
                     <div class="modal-dialog modal-dialog-centered popup-main-1" role="document"
                          style="max-width: 450px;">
-                        <div class="modal-content box-shadow-main paymment-status" style="left:140px;text-align: center; padding: 20px 0px 55px;">
+                        <div class="modal-content box-shadow-main paymment-status" style="left:120px;text-align: center; padding: 20px 0px 55px;">
                             <div class="close-popup" data-dismiss="modal"></div>
-                            <h3 class="popup-title success" style="text-align: center">Delete user</h3>
-                            <div class="content">
-                                <p style="margin: 25px 0px 25px;">Are you sure to delete this user?</p>
+                            <div class="swal2-icon swal2-warning swal2-icon-show">
+                                <div class="swal2-icon-content" style="margin: 0px 24.5px 0px ">!</div>
                             </div>
-                            <div class="text-center">
-                                <button type="reset" id="kt_modal_new_target_cancel" class="btn btn-primary" style="margin: 0px 15px 0px;" data-bs-dismiss="modal">Cancel</button>
-                                <button type="submit" id="kt_modal_new_target_submit" class="btn btn-light me-3" @click="remove(entry)">
-                                    <span class="indicator-label">Delete</span>
+                            <div class="swal2-html-container">
+                                <p >Are you sure to delete this user?</p>
+                            </div>
+                            <div class="swal2-actions">
+                                <button type="submit" id="kt_modal_new_target_submit" class="swal2-confirm btn fw-bold btn-danger" @click="remove(entry)">
+                                    <span class="indicator-label">Yes, delete!</span>
                                 </button>
+                                <button type="reset" id="kt_modal_new_target_cancel" class="swal2-cancel btn fw-bold btn-active-light-primary" data-bs-dismiss="modal" style="margin: 0px 8px 0px">No, cancel</button>
+
                             </div>
 
                         </div>
                     </div>
                 </div>
-            <div class="col-lg-12">
-                <div class="card card-custom card-stretch gutter-b">
 
-                    <div class="card-header border-0 pt-6">
-                        <div class="card-title">
+                            <div class="col-lg-12">
+                                <div class="card card-custom card-stretch gutter-b">
 
-                            <div
-                                class="d-flex align-items-center position-relative my-1"
-                            >
+                                    <div class="card-header border-0 pt-6">
+                                        <div class="card-title">
+
+                                            <div
+                                                class="d-flex align-items-center position-relative my-1"
+                                            >
 
 
-                                        <div class="d-flex align-items-center position-relative my-1">
-                                            <!--begin::Svg Icon | path: icons/duotune/general/gen021.svg-->
+                                                        <div class="d-flex align-items-center position-relative my-1">
+                                                            <!--begin::Svg Icon | path: icons/duotune/general/gen021.svg-->
                                             <span class="svg-icon svg-icon-1 position-absolute ms-6">
                                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
                                                     <rect opacity="0.5" x="17.0365" y="15.1223" width="8.15546" height="2" rx="1" transform="rotate(45 17.0365 15.1223)" fill="black"></rect>
@@ -268,8 +272,8 @@
                                             <a v-if="permissions['002']" :href="'/xadmin/users/edit?id='+entry.id" class="menu-link px-3">Edit</a>
                                         </div>
                                         <div class="menu-item px-3" >
-                                            <a class="menu-link text-danger px-3" v-if="permissions['003'] && entry.role!=='Super Administrator'" @click="removeUser(entry.id)" data-kt-subscriptions-table-filter="delete_row">Remove</a>
-                                            <a class="menu-link text-danger px-3" v-if="permissions['003'] && entry.role=='Super Administrator'"  @click="modalDevice()" data-kt-subscriptions-table-filter="delete_row">Remove</a>
+                                            <a class="menu-link text-danger px-3" v-if="permissions['003'] && entry.role!=='Super Administrator'" @click="removeUser(entry.id)" data-kt-subscriptions-table-filter="delete_row">Delete</a>
+                                            <a class="menu-link text-danger px-3" v-if="permissions['003'] && entry.role=='Super Administrator'"  @click="modalDevice()" data-kt-subscriptions-table-filter="delete_row">Delete</a>
 
                                         </div>
                                     </div>
@@ -401,10 +405,6 @@
                 this.to = (this.paginate.currentPage - 1) * (this.limit) + this.entries.length;
             },
             async remove() {
-                if (!confirm('Xóa bản ghi: ' + this.entry)) {
-                    return false;
-                }
-
                 const res = await $post('/xadmin/users/remove', {id: this.entry});
 
                 if (res.code) {

@@ -252,6 +252,10 @@ class UsersController extends AdminBaseController
 
         $userCousers = ($entry->user_cousers);
         $schools = @$entry->schools;
+
+        $allocationContentId=@$schools->allocation_school->allocation_content_id;
+
+        $schools = @$entry->schools;
         $schoolId=@$entry->schools->id;
         $schoolCousers = ($schools->school_courses);
         $schoolUnits = $schools->school_course_units;
@@ -305,6 +309,7 @@ class UsersController extends AdminBaseController
         $component = 'TeacherEdit';
         $user = Auth::user();
         $jsonData = [
+            'allocationContentId'=>$allocationContentId,
             'entry' => $entry,
             @'user_device' => @$user_device,
             @'schools' => @$schools,
@@ -324,6 +329,7 @@ class UsersController extends AdminBaseController
 
         $userCousers = ($entry->user_cousers);
         $schools = @$entry->schools;
+        $allocationContentId=@$schools->allocation_school->allocation_content_id;
         $schoolId=@$entry->schools->id;
         $schoolCousers = ($schools->school_courses);
         $schoolUnits = $schools->school_course_units;
@@ -376,6 +382,7 @@ class UsersController extends AdminBaseController
         $component = 'TeacherDetails';
         $user = Auth::user();
         $jsonData = [
+            'allocationContentId'=>$allocationContentId,
             'entry' => $entry,
             @'user_device' => @$user_device,
             @'schools' => @$schools,
@@ -808,7 +815,7 @@ class UsersController extends AdminBaseController
             UserCourseUnit::where('user_id', $entry->id)->delete();
             if (@$data_role['courseTeachers']) {
                 foreach ($data_role['courseTeachers'] as $courseTeacherId) {
-                    UserCourseUnit::create(['user_id' => $entry->id, 'course_id' => $courseTeacherId, 'school_id' => $schoolId]);
+                    UserCourseUnit::create(['user_id' => $entry->id, 'course_id' => $courseTeacherId, 'school_id' => $schoolId,'allocation_content_id'=>$data_role['allocationContentId']]);
 
                 }
             }
@@ -818,7 +825,7 @@ class UsersController extends AdminBaseController
                     if (@$UnitId['courseTea']) {
                         foreach ($UnitId['courseTea'] as $uni) {
                             if (in_array($UnitId['id'], $data_role['courseTeachers'])) {
-                                UserUnit::create(['user_id' => $entry->id, 'unit_id' => $uni, 'course_id' => $UnitId['id'], 'school_id' => $schoolId]);
+                                UserUnit::create(['user_id' => $entry->id, 'unit_id' => $uni, 'course_id' => $UnitId['id'], 'school_id' => $schoolId,'allocation_content_id'=>$data_role['allocationContentId']]);
 
                             }
                         }

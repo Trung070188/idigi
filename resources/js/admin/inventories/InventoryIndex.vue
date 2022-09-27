@@ -7,6 +7,29 @@
         />
         <div class="row">
             <div class="col-lg-12">
+                <div class="modal fade" style="margin-right:50px;border:2px solid #333333  " id="delete" tabindex="-1" role="dialog"
+                     aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered popup-main-1" role="document"
+                         style="max-width: 450px;">
+                        <div class="modal-content box-shadow-main paymment-status" style="left:120px;text-align: center; padding: 20px 0px 55px;">
+                            <div class="close-popup" data-dismiss="modal"></div>
+                            <div class="swal2-icon swal2-warning swal2-icon-show">
+                                <div class="swal2-icon-content" style="margin: 0px 24.5px 0px ">!</div>
+                            </div>
+                            <div class="swal2-html-container">
+                                <p >Are you sure to delete this resource?</p>
+                            </div>
+                            <div class="swal2-actions">
+                                <button type="submit" id="kt_modal_new_target_submit" class="swal2-confirm btn fw-bold btn-danger" @click="remove(entry)">
+                                    <span class="indicator-label">Yes, delete!</span>
+                                </button>
+                                <button type="reset" id="kt_modal_new_target_cancel" class="swal2-cancel btn fw-bold btn-active-light-primary" data-bs-dismiss="modal" style="margin: 0px 8px 0px">No, cancel</button>
+
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
                 <div class="card card-custom card-stretch gutter-b">
                     <div class="card-header border-0 pt-6">
                         <div class="card-title">
@@ -476,11 +499,11 @@
                                             <div class="menu-item px-3">
                                                 <a
                                                     class="menu-link text-danger px-3"
-                                                    @click="remove(entry)"
+                                                    @click="removeResource(entry.id)"
                                                     href="javascript:;"
                                                     v-if="permissions['010']"
                                                     data-kt-subscriptions-table-filter="delete_row"
-                                                    >Remove</a
+                                                    >Delete</a
                                                 >
                                             </div>
                                         </div>
@@ -568,6 +591,7 @@ export default {
             }
         }
         return {
+            entry:'',
             inventory: [],
             inventoryIds: [],
             allSelected: false,
@@ -595,6 +619,12 @@ export default {
         $router.on("/", this.load).init();
     },
     methods: {
+        removeResource:function(deleteResource='')
+        {
+            $('#delete').modal('show');
+            this.entry=deleteResource;
+
+        },
         edit: function(id, event) {
             if (!$(event.target).hasClass("deleted")) {
                 window.location.href = "/xadmin/inventories/edit?id=" + id;
@@ -624,13 +654,9 @@ export default {
                 (this.paginate.currentPage - 1) * this.limit +
                 this.entries.length;
         },
-        async remove(entry) {
-            if (!confirm("Xóa bản ghi: " + entry.id)) {
-                return false;
-            }
-
+        async remove() {
             const res = await $post("/xadmin/inventories/remove", {
-                id: entry.id
+                id: this.entry
             });
 
             if (res.code) {

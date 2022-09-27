@@ -549,7 +549,7 @@
                         <div class="d-flex justify-content-end" style="margin:-56px 0px 0px">
                              <button type="reset" @click="save()" class="btn btn-primary mr-2">Save</button>
                         <button type="reset" @click="backIndex()" class="btn btn-secondary" style="margin:0px 12px 0px">Cancel</button>
-                        <button type="reset" @click="save()" class="btn btn-primary mr-2" @click="sentAdmin()">Submit</button>
+                        <button type="reset" @click="save()" class="btn btn-primary mr-2" >Submit</button>
                         </div>
 
 

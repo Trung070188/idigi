@@ -16,6 +16,7 @@ class UserUnit extends Model
         'user_id',
         'unit_id',
         'course_id',
-        'school_id'
+        'school_id',
+        'allocation_content_id',
     ];
 }

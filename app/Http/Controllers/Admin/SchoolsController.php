@@ -476,10 +476,25 @@ class SchoolsController extends AdminBaseController
             $entry->save();
             AllocationContentSchool::where('school_id', $entry->id)->delete();
             SchoolCourseUnit::where('school_id', $entry->id)->delete();
-//            UserUnit::where('school_id',$entry->id)->delete();
-//            UserCourseUnit::where('school_id',$entry->id)->delete();
+            $userUnits=UserUnit::query()->where('school_id','=',$entry->id)->get();
+            foreach ($userUnits as $userUnit)
+            {
+                if($userUnit->allocation_content_id!=$dataContent['allocationContentSchool'])
+                {
+                    UserUnit::where('school_id',$entry->id)->delete();
+                    UserCourseUnit::where('school_id',$entry->id)->delete();
+                }
+            }
             if (@$dataContent['allocationContentSchool']) {
-                AllocationContentSchool::create(['allocation_content_id' => $dataContent['allocationContentSchool'], 'school_id' => $entry->id]);
+                AllocationContentSchool::updateOrCreate(
+                  [
+                      'school_id'=>$entry->id,
+                  ]  ,
+                    [
+                        'allocation_content_id'=>$dataContent['allocationContentSchool']
+                    ]
+                );
+//                AllocationContentSchool::create(['allocation_content_id' => $dataContent['allocationContentSchool'], 'school_id' => $entry->id]);
 
             }
             SchoolCourseUnit::where('school_id',$entry->id)->delete();
@@ -494,8 +509,6 @@ class SchoolsController extends AdminBaseController
                     SchoolCourse::create(['school_id' => $entry->id, 'course_id' => $schoolCourse->id]);
                 }
             }
-
-
 
             return [
                 'code' => 0,

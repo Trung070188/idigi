@@ -25,25 +25,28 @@
             </div>
         </div>
         <div class="modal fade" style="margin-right:50px;border:2px solid #333333  " id="delete" tabindex="-1" role="dialog"
-        aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered popup-main-1" role="document"
-             style="max-width: 450px;">
-            <div class="modal-content box-shadow-main paymment-status" style="left:140px;text-align: center; padding: 20px 0px 55px;">
-                <div class="close-popup" data-dismiss="modal"></div>
-                <h3 class="popup-title success" style="text-align: center">Delete device</h3>
-                <div class="content">
-                    <p style="margin: 25px 0px 25px;">Are you sure to delete this device?</p>
-                </div>
-                <div class="text-center">
-                    <button type="reset" id="kt_modal_new_target_cancel" class="btn btn-primary" style="margin: 0px 15px 0px;" data-bs-dismiss="modal">Cancel</button>
-                    <button type="submit" id="kt_modal_new_target_submit" class="btn btn-light me-3" @click="remove(idDevice)">
-                        <span class="indicator-label">Delete</span>
-                    </button>
-                </div>
+             aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered popup-main-1" role="document"
+                 style="max-width: 450px;">
+                <div class="modal-content box-shadow-main paymment-status" style="left:120px;text-align: center; padding: 20px 0px 55px;">
+                    <div class="close-popup" data-dismiss="modal"></div>
+                    <div class="swal2-icon swal2-warning swal2-icon-show">
+                        <div class="swal2-icon-content" style="margin: 0px 24.5px 0px ">!</div>
+                    </div>
+                    <div class="swal2-html-container">
+                        <p >Are you sure to delete this device?</p>
+                    </div>
+                    <div class="swal2-actions">
+                        <button type="submit" id="kt_modal_new_target_submit" class="swal2-confirm btn fw-bold btn-danger" @click="remove(idDevice)">
+                            <span class="indicator-label">Yes, delete!</span>
+                        </button>
+                        <button type="reset" id="kt_modal_new_target_cancel" class="swal2-cancel btn fw-bold btn-active-light-primary" data-bs-dismiss="modal" style="margin: 0px 8px 0px">No, cancel</button>
 
+                    </div>
+
+                </div>
             </div>
         </div>
-    </div>
 
         <div class="modal fade" style="margin-right:50px " id="deviceConfirm" tabindex="-1" role="dialog"
              aria-labelledby="deviceConfirm"
@@ -295,12 +298,12 @@
                                         <!--end::Menu item-->
                                         <!--begin::Menu item-->
                                         <div class="menu-item px-3" >
-                                            <a class="menu-link text-danger px-3" v-if="entry.roleName!='Teacher'" @click="removeDevice(entry.id)" data-kt-subscriptions-table-filter="delete_row">Remove</a>
-                                            <a class="menu-link text-danger px-3" v-if="entry.roleName=='Teacher' && entry.status==2 " @click="Sent(entry)" data-kt-subscriptions-table-filter="delete_row" >Remove</a>
+                                            <a class="menu-link text-danger px-3" v-if="entry.roleName!='Teacher'" @click="removeDevice(entry.id)" data-kt-subscriptions-table-filter="delete_row">Delete</a>
+                                            <a class="menu-link text-danger px-3" v-if="entry.roleName=='Teacher' && entry.status==2 " @click="Sent(entry)" data-kt-subscriptions-table-filter="delete_row" >Delete</a>
 
                                         </div>
                                         <div class="menu-item px-3"  >
-                                            <a v-if="entry.roleName=='Teacher' && entry.status==1"  data-kt-subscriptions-table-filter="delete_row" class="menu-link text-danger px-3" >Remove</a>
+                                            <a v-if="entry.roleName=='Teacher' && entry.status==1"  data-kt-subscriptions-table-filter="delete_row" class="menu-link text-danger px-3" >Delete</a>
                                         </div>
                                         <!--end::Menu item-->
                                     </div>

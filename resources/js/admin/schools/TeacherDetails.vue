@@ -2,6 +2,29 @@
     <div class="container-fluid">
         <ActionBar type="index"
                    :breadcrumbs="breadcrumbs" title = "Teacher Details"/>
+        <div class="modal fade" style="margin-right:50px;border:2px solid #333333  " id="delete" tabindex="-1" role="dialog"
+             aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered popup-main-1" role="document"
+                 style="max-width: 450px;">
+                <div class="modal-content box-shadow-main paymment-status" style="left:120px;text-align: center; padding: 20px 0px 55px;">
+                    <div class="close-popup" data-dismiss="modal"></div>
+                    <div class="swal2-icon swal2-warning swal2-icon-show">
+                        <div class="swal2-icon-content" style="margin: 0px 25px 0px ">!</div>
+                    </div>
+                    <div class="swal2-html-container">
+                        <p >Are you sure to delete this school?</p>
+                    </div>
+                    <div class="swal2-actions">
+                        <button type="submit" id="kt_modal_new_target_submit" class="swal2-confirm btn fw-bold btn-danger" @click="remove(entry)">
+                            <span class="indicator-label">Yes, delete!</span>
+                        </button>
+                        <button type="reset" id="kt_modal_new_target_cancel" class="swal2-cancel btn fw-bold btn-active-light-primary" data-bs-dismiss="modal" style="margin: 0px 8px 0px">No, cancel</button>
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
 
         <div class="modal fade" style="margin-right:50px " id="deviceConfirm" tabindex="-1" role="dialog"
              aria-labelledby="deviceConfirm"
@@ -30,7 +53,7 @@
                 <div class="card card-custom card-stretch gutter-b">
                     <div  class="d-flex justify-content-end"
                           data-kt-customer-table-toolbar="base">
-                        <button class="btn btn-danger button-create " @click="remove(entry)" style="margin: 15px 25px 0px ">
+                        <button class="btn btn-danger button-create " @click="removeTeacher" style="margin: 15px 25px 0px ">
                             Delete User <i class="fas fa-trash"></i>
                         </button>
                     </div>
@@ -240,6 +263,7 @@
                     roles: []
                 },
                 user_device: $json.user_device || [],
+                allocationContentId:$json.allocationContentId,
                 schools:$json.schools || [],
                 courses:courseTreeselect,
                 isLoading: false,
@@ -247,6 +271,10 @@
             }
         },
         methods: {
+            removeTeacher:function()
+            {
+                $('#delete').modal('show');
+            },
             deleteCourse: function (node, instanceId) {
                 node.courseTea = [];
             },
@@ -279,7 +307,7 @@
 
             async save() {
                 this.isLoading = true;
-                const res = await $post('/xadmin/users/saveTeacher', {entry: this.entry, roles: this.roles,courseTeachers:this.courseTeachers,unit:this.courses,name_role:this.nameRole,schoolId:this.schools.id}, false);
+                const res = await $post('/xadmin/users/saveTeacher', {entry: this.entry, roles: this.roles,courseTeachers:this.courseTeachers,unit:this.courses,name_role:this.nameRole,schoolId:this.schools.id,allocationContentId:this.allocationContentId}, false);
                 this.isLoading = false;
                 if (res.errors) {
                     this.errors = res.errors;
@@ -296,10 +324,6 @@
                 }
             },
             async remove(entry) {
-                if (!confirm('Xóa bản ghi: ' + entry.id)) {
-                    return false;
-                }
-
                 const res = await $post('/xadmin/users/remove', {id: entry.id});
 
                 if (res.code) {
