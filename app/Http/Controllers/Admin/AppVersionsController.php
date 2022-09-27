@@ -139,6 +139,7 @@ class AppVersionsController extends AdminBaseController
 
         //Upload File
         $file0 = $_FILES['file_0'];
+        $file1=$_FILES['file1_0'];
 
         $y = date('Y');
         $m = date('m');
@@ -156,11 +157,17 @@ class AppVersionsController extends AdminBaseController
         $newFilePath = $dir.'/'.$hash.'.'.$extension;
         $ok = move_uploaded_file($file0['tmp_name'], $newFilePath);
         $newUrl = url("/files/app_version/{$y}/{$m}/{$hash}.{$extension}");
+        $info1=pathinfo($file1['name']);
+        $extension1=strtolower($info1['extension']);
+        $newFilePath1= $dir.'/'.$hash.'.'.$extension1;
+        $newUrl1=url("/files/app_version/{$y}/{$m}/{$hash}.{$extension1}");
 
         $data = [
             'name' =>$req->name,
             'path' =>$newFilePath,
+            'path_updated'=>$newFilePath1,
             'url' => $newUrl,
+            'url_updated'=>$newUrl1,
             'type' => $req->type,
             'release_date' => $req->release_date,
             'version'=>$req->version,

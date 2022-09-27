@@ -21,9 +21,11 @@ class AppVersion extends BaseModel
     'release_note',
     'version',
     'url',
+    'url_updated',
+    'path_updated',
     'path',
     'is_default',
     'release_date',
-    
+
 ];
 }

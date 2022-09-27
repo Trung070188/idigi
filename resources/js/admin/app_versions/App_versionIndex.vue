@@ -239,9 +239,9 @@
                                 </div>
                                 <div class="form-group">
                                     <label>Update file <span class="required"></span></label>
-                                    <input type="file" ref="uploader" class="form-control-file"
+                                    <input type="file" ref="uploader1" class="form-control-file"
                                            accept=".zip,.rar,.7zip">
-                                    <error-label :errors="errors.file_0"></error-label>
+                                    <error-label :errors="errors.file_1"></error-label>
                                 </div>
                                 <div class="form-group">
                                     <label>Name <span class="required"></span></label>
@@ -459,14 +459,26 @@
 
             async save() {
                 this.errors = {};
+
                 const files = this.$refs.uploader.files;
+                const files1 = this.$refs.uploader1.files;
                 const formData = new FormData();
                 formData.append('_token', window.$csrf)
                 forEach(files, (v, k) => {
                     formData.append(k, v);
                 });
+                formData.append('_token', window.$csrf)
+                forEach(files1, (c, d) => {
+                    formData.append(c, d);
+                });
+                for (const [c, d] of Object.entries(this.model)) {
+                    formData.append(c, d);
+                }
                 for (const [k, v] of Object.entries(this.model)) {
                     formData.append(k, v);
+                }
+                for (let i = 0; i < files1.length; i++) {
+                    formData.append('file1_' + i, files1[i]);
                 }
 
                 for (let i = 0; i < files.length; i++) {
