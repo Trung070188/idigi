@@ -35,6 +35,7 @@ import TeacherDetails from "./admin/schools/TeacherDetails";
 import PlanIndex from "./admin/plans/PlanIndex";
 import PlanForm from "./admin/plans/PlanForm";
 import PlanEdit from "./admin/plans/PlanEdit";
+import UserDeactive from "./admin/users/UserDeactive";
 export default {
     DashboardIndex,
     UserIndex,
@@ -72,7 +73,8 @@ export default {
     TeacherDetails,
     PlanIndex,
     PlanForm,
-    PlanEdit
+    PlanEdit,
+    UserDeactive
 
 
 }

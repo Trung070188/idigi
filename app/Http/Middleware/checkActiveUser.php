@@ -25,7 +25,7 @@ class checkActiveUser
         $user = Auth::user();
         if($user->state==0)
         {
-            return redirect('/xadmin/school_license/license_expired');
+            return redirect('/xadmin/userDeactive/active');
         }
         if($user->state==1)
         {

@@ -2,6 +2,7 @@
 
 namespace App\Http;
 
+use App\Http\Middleware\checkActiveUser;
 use App\Http\Middleware\CheckAuthApi;
 use App\Http\Middleware\CheckIfRole;
 use App\Http\Middleware\CheckInventories;
@@ -75,6 +76,7 @@ class Kernel extends HttpKernel
         'CheckLicense'=>CheckLicense::class,
         'client' => CheckClientCredentials::class,
         'auth_api' => CheckAuthApi::class,
+        'checkActiveUser'=>checkActiveUser::class,
 
     ];
 }

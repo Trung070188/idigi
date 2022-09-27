@@ -26,7 +26,7 @@ Route::get('/xadmin', function() {
 Route::post('/auth/google-sign', 'Auth\GoogleSignController@login');
 Route::get('/sso', 'SSOController@index');
 
-Route::middleware(['auth', 'CheckIfRole','CheckLicense'])->namespace('Admin')->prefix('xadmin')->group(function () {
+Route::middleware(['auth', 'CheckIfRole','CheckLicense','checkActiveUser'])->namespace('Admin')->prefix('xadmin')->group(function () {
     Route::get('/elfinder', 'ElfinderController@index');
     Route::get('/data-source/index', 'DataSourceController@index')->name('data-source');
     Route::post('/data-source/get-many', 'DataSourceController@getMany')->name('data-source-get-many');
@@ -40,14 +40,14 @@ Route::middleware(['auth', 'CheckIfRole','CheckLicense'])->namespace('Admin')->p
 
 });
 
-Route::middleware(['auth','CheckLicense' ])->namespace('Admin')->prefix('xadmin')->group(function () {
+Route::middleware(['auth','CheckLicense','checkActiveUser' ])->namespace('Admin')->prefix('xadmin')->group(function () {
 
     Route::get('/request_role/index', 'RequestRolesController@index');
     Route::post('/request_role/save', 'RequestRolesController@save');
 
 });
 
-Route::middleware(['auth','CheckLicense'])->namespace('Teacher')->prefix('xadmin')->group(function (){
+Route::middleware(['auth','CheckLicense','checkActiveUser'])->namespace('Teacher')->prefix('xadmin')->group(function (){
     Route::get('/app_versions/downloadApp','AppVersionsController@downloadApp');
 });
 
@@ -61,6 +61,7 @@ Route::group(['prefix' => 'xadmin'], function(){
 Route::middleware(['auth'])->namespace('Admin')->prefix('xadmin')->group(function () {
 
     Route::get('/school_license/license_expired', 'SchoolLicenseController@licenseExpired');
+    Route::get('userDeactive/active', 'UserActiveController@userActive');
 
 });
 
