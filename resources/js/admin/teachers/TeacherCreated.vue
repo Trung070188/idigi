@@ -12,29 +12,29 @@
                                 <div class="row">
                                     <div class="form-group  col-sm-4">
                                         <label>Username <span class="text-danger">*</span></label>
-                                        <input class="form-control" v-model="entry.username">
+                                        <input class="form-control nospace" placeholder="Enter the username" v-model="entry.username">
 
                                         <error-label for="f_category_id" :errors="errors.username"></error-label>
                                     </div>
                                     <div class="form-group  col-sm-4">
                                         <label>Full name <span class="text-danger">*</span></label>
-                                        <input class="form-control" v-model="entry.full_name">
+                                        <input class="form-control" placeholder="Enter the full name" v-model="entry.full_name">
 
                                         <error-label for="f_category_id" :errors="errors.full_name"></error-label>
                                     </div>
                                     <div class="form-group  col-sm-4">
                                         <label>Email </label>
-                                        <input class="form-control" v-model="entry.email" >
+                                        <input class="form-control" placeholder="Enter the email address" v-model="entry.email" >
                                         <error-label for="f_category_id" :errors="errors.email"></error-label>
                                     </div>
                                     <div class="form-group  col-sm-4">
                                         <label>Phone number </label>
-                                        <input class="form-control" v-model="entry.phone">
+                                        <input class="form-control" placeholder="Enter the phone number" v-model="entry.phone">
                                         <error-label for="f_category_id" :errors="errors.phone"></error-label>
                                     </div>
                                      <div class="form-group  col-sm-4">
                                         <label>Class</label>
-                                        <input class="form-control" v-model="entry.class">
+                                        <input class="form-control" placeholder="Enter the class" v-model="entry.class">
                                         <error-label for="f_category_id" :errors="errors.class"></error-label>
                                     </div>
                                     <div class="form-group  col-sm-4">
@@ -46,20 +46,20 @@
                                     <div v-if="entry.id==null" class="form-group  col-sm-4">
                                         <label>Password </label>
                                         <input v-if="auto_gen==true" disabled :type="showPass ? 'text' : 'password'" class="form-control"
-                                               ref="password" v-model="entry.password">
+                                           placeholder="Enter the password"  ref="password" v-model="entry.password">
                                         <input v-if="auto_gen==false"  :type="showPass ? 'text' : 'password'" class="form-control"
-                                               ref="password" v-model="entry.password">
-                                        <i @click="showPass = !showPass" class="fa fa-eye"></i>
+                                            placeholder="Enter the password"   ref="password" v-model="entry.password">
+                                        <!-- <i @click="showPass = !showPass" class="fa fa-eye"></i> -->
                                         <error-label for="f_category_id" :errors="errors.password"></error-label>
                                     </div>
 
                                     <div v-if="entry.id==null" class="form-group  col-sm-4">
                                         <label>Confirm your password</label>
                                         <input v-if="auto_gen==true" disabled class="form-control" :type="showConfirm ? 'text' : 'password'"
-                                               v-model="entry.password_confirmation">
+                                            placeholder="Re-enter to confirm the password"   v-model="entry.password_confirmation">
                                         <input v-if="auto_gen==false"  class="form-control" :type="showConfirm ? 'text' : 'password'"
-                                               v-model="entry.password_confirmation">
-                                        <i @click="showConfirm = !showConfirm" class="fa fa-eye"></i>
+                                             placeholder="Re-enter to confirm the password"  v-model="entry.password_confirmation">
+                                        <!-- <i @click="showConfirm = !showConfirm" class="fa fa-eye"></i> -->
                                         <error-label for="f_category_id" :errors="errors.password_confirmation"></error-label>
                                     </div>
                                 </div>
@@ -78,7 +78,7 @@
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <input id="state" type="checkbox" v-model="entry.state">
+                                    <input id="state" type="checkbox" v-model="entry.state" checked>
                                     <label for="state" class="pl-2">Active</label>
                                     <error-label for="f_grade" :errors="errors.state"></error-label>
                                 </div>
@@ -111,7 +111,7 @@
         data() {
 
             return {
-                auto_gen:true,
+                auto_gen:false,
                 showConfirm: false,
                 showPass: false,
                 types: [],
@@ -133,6 +133,14 @@
                 errors: {}
             }
         },
+        mounted()
+        {
+            $('.nospace').keypress(function (e) {
+                if (e.keyCode == 32 ) {
+                    e.preventDefault();
+                }
+            })
+        },
         methods: {
             // checkbox_roles()
             // {
@@ -144,7 +152,7 @@
             },
             async save() {
                 this.isLoading = true;
-                const res = await $post('/xadmin/users/saveTeacher', {entry: this.entry, roles: this.roles}, false);
+                const res = await $post('/xadmin/users/saveTeacher', {entry: this.entry, roles: this.roles,auto_gen:this.auto_gen}, false);
                 this.isLoading = false;
                 if (res.errors) {
                     this.errors = res.errors;

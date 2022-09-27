@@ -95,9 +95,22 @@
                                         <input class="form-control" v-model="schools.label" disabled>
                                         <error-label for="f_category_id" :errors="errors.label"></error-label>
                                     </div>
+                                    <div class="row">
+                                    <div class="form-group col-sm-8">
+                                        <label>Teacher description</label>
+                                        <textarea v-model="entry.description" rows="5" class="form-control"
+                                                  placeholder="Type the description here (200 characters)"></textarea>
+                                        <error-label for="f_grade" :errors="errors.description"></error-label>
 
-
+                                    </div>
                                 </div>
+                                        <div class="form-group">
+                                    <input id="state" type="checkbox" v-model="entry.state">
+                                    <label for="state" class="pl-2">Active</label>
+                                    <error-label for="f_grade" :errors="errors.state"></error-label>
+                                    </div>
+                                </div>
+                                <hr style="margin-top:5px">
                                   <h4>Content Allocated</h4>
                                 <div class="row">
 
@@ -138,7 +151,7 @@
                             <button type="reset" @click="backIndex()" class="btn btn-secondary">Cancel</button>
                         </div>
                         <hr style="margin-top: 10px">
-                        <h2>Current registed devices</h2>
+                        <h4>Current registed devices</h4>
                         <table class=" table  table-head-custom table-head-bg table-vertical-center">
                             <thead>
                             <tr>
@@ -173,7 +186,7 @@
                             </tr>
                             </tbody>
                         </table>
-                        <h2>Devices activities</h2>
+                        <h4>Devices activities</h4>
                         <table  class=" table  table-head-custom table-head-bg table-vertical-center">
                             <thead>
                             <tr>

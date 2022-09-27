@@ -725,6 +725,14 @@ class UsersController extends AdminBaseController
 //            'password' => '|max:191|confirmed',
         ];
         if (!isset($data['id'])) {
+            if($data_role['auto_gen']==false)
+            {
+                $rules['password']=['required'];
+            }
+            if(@$data['password'])
+            {
+                $rules['password_confirmation']=['required'];
+            }
             $rules['username'] = ['required', 'min:8', 'unique:users,username', function ($attribute, $value, $fail) {
                 if (preg_match('/[\'\/~`\!@#\$%\^&\*\(\)_\-\+=\{\}\[\]\|;:"\<\>,\.\?\\\]/', $value)) {
                     return $fail(__(' The :attribute no special characters'));
