@@ -609,14 +609,19 @@ class UsersController extends AdminBaseController
             {
                 $rules['password_confirmation']=['required'];
             }
+           if($data_role['name_role']==null)
+           {
+               $rules['name_role']=['required'];
+           }
         }
         if ($data_role['name_role'] == 2 || $data_role['name_role'] == 5) {
             $rules['school_id'] = ['required'];
         }
         $customMessages = [
             'school_id.required' => 'The school field is required.',
+            'name_role.required'=>'The role field is required.'
         ];
-        $v = Validator::make($data, $rules, $customMessages);
+        $v = Validator::make($data, $rules, $customMessages,$data_role);
 
         if ($v->fails()) {
             return [

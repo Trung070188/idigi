@@ -63,6 +63,7 @@
                                         <input  type="radio"  v-model="name_role" v-bind:value="role.id">
                                         <label>{{role.role_name}}</label>
                                     </div>
+                                    <error-label for="f_grade" :errors="errors.name_role"></error-label>
                                 </div>
                                 <div class="row" v-if="name_role==2||name_role==5">
                                     <div class="form-group  col-sm-4" >
@@ -85,7 +86,7 @@
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <input id="state" type="checkbox" v-model="entry.state">
+                                    <input id="state" type="checkbox" v-model="entry.state" checked>
                                     <label for="state" class="pl-2">Active</label>
                                     <error-label for="f_grade" :errors="errors.state"></error-label>
                                 </div>
@@ -124,7 +125,7 @@
                 changed: false,
                 user_school:'',
                 name_role:'',
-                auto_gen:true,
+                auto_gen:false,
                 showConfirm: false,
                 showPass: false,
                 types: [],

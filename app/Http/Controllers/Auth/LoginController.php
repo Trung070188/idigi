@@ -93,8 +93,16 @@ class LoginController extends Controller
         $usernameType = $this->findUsername();
 
         $user = User::where($usernameType, $request['login'])->first();
+        
 
         if($user){
+            if($user->state==0)
+            {
+                throw ValidationException::withMessages([
+                    $this->username() => ["Your account has locked. Please contact the administrator to unlock your account.
+                    "],
+                ]);
+            }
             if($user->roles){
                 foreach ($user->roles as $role){
                     if($role->role_name == "Teacher" || $role->role_name == "School Admin"){
@@ -105,12 +113,12 @@ class LoginController extends Controller
                                 if($school->license_to==null)
                                 {
                                     throw ValidationException::withMessages([
-                                        $this->username() => ["Your license has expired"],
+                                        $this->username() => ["Your account has expired. Please contact the administrator to renew your account."],
                                     ]);
                                 }
                                 if(@$school->license_to < Carbon::now() && @$school->license_to!=null){
                                     throw ValidationException::withMessages([
-                                        $this->username() => ["Your license has expired"],
+                                        $this->username() => ["Your account has expired. Please contact the administrator to renew your account."],
                                     ]);
 
                                 }
@@ -118,7 +126,7 @@ class LoginController extends Controller
                             if($school==null)
                             {
                                 throw ValidationException::withMessages([
-                                    $this->username() => ["Error"],
+                                    $this->username() => ["Your account has expired. Please contact the administrator to renew your account."],
                                 ]);
                             }
 

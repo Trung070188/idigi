@@ -134,10 +134,10 @@ License: For each use you must have a valid license purchased only from above li
 									<input class="form-check-input" type="checkbox" name="remember" id="customCheck1" @if(old('remember')) checked @endif>
                                     <span class="form-check-label fw-bold text-gray-700">Remember me</span>
 								</label>
-                                <label class="form-check form-check-custom form-check-solid form-check-inline mb-5">
+                                <!-- <label class="form-check form-check-custom form-check-solid form-check-inline mb-5">
                                     <input class="form-check-input" type="checkbox" name="remember" id="customCheck2">
                                     <span class="form-check-label fw-bold text-gray-700">You're on ISMART teacher</span>
-                                </label>
+                                </label> -->
                             </div>
 
 							<!--end::Input group-->
