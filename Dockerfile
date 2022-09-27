@@ -37,7 +37,7 @@ RUN chmod +x /etc/entrypoint.sh
 RUN chmod +x /etc/schedule.sh
 
 #USER www
-WORKDIR /usr/share/nginx/sites
+WORKDIR /var/www
 #RUN chmod -R 777 storage
 #RUN composer install
 #WORKDIR /usr/share/nginx/sites
