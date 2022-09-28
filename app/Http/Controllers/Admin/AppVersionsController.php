@@ -2,20 +2,15 @@
 
 namespace App\Http\Controllers\Admin;
 
-
-use App\Jobs\UploadFile;
 use App\Models\DownloadAppLog;
-use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use App\Models\AppVersion;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use PhpOffice\PhpSpreadsheet\Spreadsheet;
-use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+
 
 
 class AppVersionsController extends AdminBaseController
@@ -184,7 +179,7 @@ class AppVersionsController extends AdminBaseController
         $hash = sha1(uniqid());
         $newFilePath = $dir.'/'.$hash.'.'.$extension;
 
-       $this->dispatch(new UploadFile($file, $newFilePath));
+        move_uploaded_file($file['tmp_name'], $newFilePath);
         $newUrl = url("/files/app_version/{$y}/{$m}/{$hash}.{$extension}");
 
         return [
