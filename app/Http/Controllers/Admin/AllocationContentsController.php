@@ -57,9 +57,10 @@ class AllocationContentsController extends AdminBaseController
         $schools=School::query()->orderBy('id','desc')->get();
         $courses=Course::query()->with(['unit'])->orderBy('id','desc')->get();
         $units=Unit::query()->orderBy('id','desc')->get();
-
         foreach ($courses as $course)
         {
+
+
             $course['units']=[];
             $unit=[];
 

@@ -18,7 +18,7 @@
 
                                                                     <div class="form-group">
                                         <label>Course <span class="text-danger">*</span></label>
-                                        <treeselect :options="courses" :multiple="true" v-model="total_course"/>
+                                        <treeselect :options="courses" :multiple="true" v-model="total_course" :flat="true" :auto-deselect-descendants="true"  />
                                         <error-label for="f_total_course" :errors="errors.total_course"></error-label>
 
                                     </div>
@@ -62,7 +62,7 @@
 </template>
 
 <script>
-    import {$post} from "../../utils";
+    import {$post, forEach} from "../../utils";
     import ActionBar from "../includes/ActionBar";
     import Treeselect from '@riophae/vue-treeselect'
   // import the styles
@@ -80,12 +80,36 @@
                 }
             })
             const course=$json.courses;
-            course.forEach(function (e) {
-                e.units.forEach(function (e1) {
-                    e1.label = e1.unit_name;
-                })
+            // console.log(course);
+            // course.forEach(function (e) {
+            //     e.units.forEach(function (e1) {
+            //         e1.label = e1.unit_name;
+            //     })
+            // })
 
-            })
+           //  const selectAll=[
+           //      {
+           //          id:'all',
+           //          label:'All',
+           //          children:[
+           //          ]
+           //      }
+           //      ];
+           // const courses=course.map(res=>{
+           //    return{
+           //        'id':res.id,
+           //        'label':res.course_name,
+           //
+           //    }
+           // });
+           //  selectAll.forEach(function (e) {
+           //      courses.forEach(function (e1) {
+           //     e.children.push(e1);
+           //      })
+           //  })
+           //
+           //  console.log(selectAll);
+
             const courseTreeselect = course.map(rec => {
                 return {
                     'id':rec.id,
@@ -112,6 +136,7 @@
                 total_course:[],
                 total_unit:[],
                 value: [],
+                // selectAll:selectAll,
                 courses:courseTreeselect,
                 schools:$json.schools||{},
                 units:unitTreeselect,

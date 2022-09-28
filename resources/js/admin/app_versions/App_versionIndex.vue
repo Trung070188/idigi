@@ -280,7 +280,6 @@
                                     <label for="state" class="pl-2">Set as Default</label>
                                     <error-label for="f_grade" :errors="errors.is_default"></error-label>
                                 </div>
-                                {{model.is_default}}
                             </form>
 
                         </div>
@@ -311,7 +310,7 @@
                     </div>
                 </div>
                 <div class="col-lg-12" style="text-align: center;padding: 0 114px;">
-                    <div v-for="entry in entries" v-if="entry.type=='window'&& entry.is_default==1" style="">
+                    <div v-for="entry in entries" v-if="entry.type=='Window'&& entry.is_default==1" style="">
 
                         <a :href="entry.url">
                             <button class="btn btn-primary">Download for Windows
@@ -321,7 +320,7 @@
                         <br>
                         <label style="margin: 3px 34px 20px;">{{entry.name}}</label>
                     </div>
-                    <div v-for="entry in entries" v-if="entry.type=='ios'&& entry.is_default==1" style="">
+                    <div v-for="entry in entries" v-if="entry.type=='OS'&& entry.is_default==1" style="">
 
                         <a :href="entry.url">
                             <button class="btn btn-primary">Download for MacOS
