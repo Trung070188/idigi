@@ -582,7 +582,7 @@ class UsersController extends AdminBaseController
         ];
         if (!isset($data['id'])) {
             $rules['username'] = ['required', 'min:8', 'unique:users,username', function ($attribute, $value, $fail) {
-                if (preg_match('/[\'\/~`\!@#\$%\^&\*\(\)_\-\+=\{\}\[\]\|;:"\<\>,\.\?\\\]/', $value)) {
+                if (preg_match('/[\'\/~`\!@#\$%\^&\*\(\)\-\+=\{\}\[\]\|;:"\<\>,\?\\\]/', $value)) {
                     return $fail(__(' The :attribute no special characters'));
                 }
             },];
@@ -734,7 +734,7 @@ class UsersController extends AdminBaseController
                 $rules['password_confirmation']=['required'];
             }
             $rules['username'] = ['required', 'min:8', 'unique:users,username', function ($attribute, $value, $fail) {
-                if (preg_match('/[\'\/~`\!@#\$%\^&\*\(\)_\-\+=\{\}\[\]\|;:"\<\>,\.\?\\\]/', $value)) {
+                if (preg_match('/[\'\/~`\!@#\$%\^&\*\(\)\-\+=\{\}\[\]\|;:"\<\>,\?\\\]/', $value)) {
                     return $fail(__(' The :attribute no special characters'));
                 }
             },];
