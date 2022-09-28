@@ -39,9 +39,6 @@ class CheckPermission
 
             $parse = parse_url($request->url());
 
-            if($parse['path'] == '/xadmin/dashboard/index'){
-                return $next($request);
-            }
             $rolePermissionCount = \App\Models\RoleHasPermission::whereIn('role_id', $roleIds)
                 ->whereHas('permission',function($q) use ($parse){
                     $q->where('path',$parse['path']);
@@ -59,7 +56,19 @@ class CheckPermission
                 return $next($request);
             }
         }
+        $roles = \App\Models\RoleHasPermission::whereIn('role_id', $roleIds)
+            ->with('permission')
+            ->get();
 
-        return redirect('/xadmin/dashboard/index');
+        foreach ($roles as $role){
+            if($role->permission){
+                if(@$role->permission->path){
+                    return redirect($role->permission->path);
+                }
+            }
+        }
+
+
+        return response('404', 404);
     }
 }
