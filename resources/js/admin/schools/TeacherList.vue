@@ -219,7 +219,7 @@
                                 <td class="" v-text="entry.email"></td>
                                 <td class="" v-text="entry.class"></td>
                                 <td class="" v-text="entry.phone"></td>
-                                <td class="">{{entry.user_devices.length}} / 3</td>
+                                <td class="">{{entry.user_devices.length}} / {{lengthDeviceTeacher}}</td>
                                 <td class="" v-text=" d(entry.created_at)"></td>
                                 <td class="" v-text="entry.state===0 ? 'No' : 'Yes'"></td>
                                 <td class="">
@@ -308,6 +308,7 @@
                 }
             }
             return {
+                lengthDeviceTeacher:'',
                 idTeacher:'',
                 entries:[],
                 allSelected:false,
@@ -358,12 +359,14 @@
                 let query = $router.getQuery();
                 this.$loading(true);
                 const res = await $get('/xadmin/schools/dataTeacher?id='+this.entry.id, query);
+
                 this.$loading(false);
                 setTimeout(function (){
                     KTMenu.createInstances();
                 }, 0)
                 this.entries = res.data;
                 this.paginate = res.paginate;
+                this.lengthDeviceTeacher=res.lengthDeviceTeacher;
                 this.from = (this.paginate.currentPage - 1) * (this.limit) + 1;
                 this.to = (this.paginate.currentPage - 1) * (this.limit) + this.entries.length;
             },

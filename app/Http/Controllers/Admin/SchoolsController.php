@@ -192,6 +192,7 @@ class SchoolsController extends AdminBaseController
 
         return [
             'code' => 0,
+            'lengthDeviceTeacher'=>$entry->devices_per_user,
             'data' => $users,
             'paginate' => [
                 'currentPage' => $entries->currentPage(),
