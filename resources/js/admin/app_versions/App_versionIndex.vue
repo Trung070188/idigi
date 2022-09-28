@@ -38,7 +38,7 @@
                         <!--end::Tab nav item-->
                         <!--begin::Tab nav item-->
                         <li class="nav-item" role="presentation">
-                            <a id="kt_billing_1year_tab" class="nav-link fs-5 fw-bold me-3" data-bs-toggle="tab" role="tab" href="billing.html#kt_billing_year">MAC OS</a>
+                            <a id="kt_billing_1year_tab" class="nav-link fs-5 fw-bold me-3" data-bs-toggle="tab" role="tab" href="billing.html#kt_billing_year">OS</a>
                         </li>
                         <!--end::Tab nav item-->
                         <!--begin::Tab nav item-->
@@ -69,10 +69,10 @@
                         <thead
                             class="border-bottom border-gray-200 fs-6 text-gray-600 fw-bolder bg-light bg-opacity-75">
                         <tr>
-                            <td>Name</td>
+<!--                            <td>Name</td>-->
                             <th class="">Version</th>
                             <th class="">Release notes</th>
-                            <th class="">Release date</th>
+<!--                            <th class="">Release date</th>-->
                             <th class="">Status</th>
                             <th class="">Actions</th>
 
@@ -81,11 +81,11 @@
                         </thead>
                         <tbody>
 
-                        <tr v-for="entry in entries" v-if="entry.type=='window'">
-                            <td v-text="entry.name"></td>
+                        <tr v-for="entry in entries" v-if="entry.type=='Window'">
+<!--                            <td v-text="entry.name"></td>-->
                             <td v-text="entry.version"></td>
                             <td  class="css_test" v-text="entry.release_note" @click="showReleaseNote(entry.release_note)"></td>
-                            <td> {{ d2(entry.release_date) }}</td>
+<!--                            <td> {{ d2(entry.release_date) }}</td>-->
                             <td style="color:#1aaf21;" class="" v-if="entry.is_default==1">Default</td>
                             <td v-if="entry.is_default==0"></td>
                             <td class="">
@@ -131,21 +131,21 @@
                         <thead
                             class="border-bottom border-gray-200 fs-6 text-gray-600 fw-bolder bg-light bg-opacity-75">
                         <tr>
-                            <td>Application</td>
+<!--                            <td>Application</td>-->
                             <th class="">Version</th>
                             <th class="">Release notes</th>
-                            <th class="">Release date</th>
+<!--                            <th class="">Release date</th>-->
                             <th class="">Status</th>
                             <th class="">Actions</th>
 
                         </tr>
                         </thead>
                         <tbody>
-                        <tr v-for="entry in entries" v-if="entry.type=='ios'">
-                            <td v-text="entry.name"></td>
+                        <tr v-for="entry in entries" v-if="entry.type=='OS'">
+<!--                            <td v-text="entry.name"></td>-->
                             <td v-text="entry.version"></td>
                             <td class="css_test"  v-text="entry.release_note" @click="showReleaseNote(entry.release_note)"></td>
-                            <td> {{ d2(entry.release_date) }}</td>
+<!--                            <td> {{ d2(entry.release_date) }}</td>-->
                             <td style="color:#1aaf21;" v-if="entry.is_default==1">Default</td>
                             <td v-if="entry.is_default==0"></td>
                             <td class="">
@@ -232,29 +232,29 @@
 
                             <form>
                                 <div class="form-group">
-                                    <label>File <span class="required"></span></label>
+                                    <label>Installation file <span class="required"></span></label>
                                     <input type="file" ref="uploader" class="form-control-file"
                                            accept=".zip,.rar,.7zip">
                                     <error-label :errors="errors.file_0"></error-label>
                                 </div>
                                 <div class="form-group">
-                                    <label>Update file <span class="required"></span></label>
+                                    <label>Update OTA file <span class="required"></span></label>
                                     <input type="file" ref="uploader1" class="form-control-file"
                                            accept=".zip,.rar,.7zip">
                                     <error-label :errors="errors.file_1"></error-label>
                                 </div>
-                                <div class="form-group">
-                                    <label>Name <span class="required"></span></label>
-                                    <input type="text" v-model="model.name" class="form-control">
-                                    <error-label :errors="errors.name"></error-label>
-                                </div>
+<!--                                <div class="form-group">-->
+<!--                                    <label>Name <span class="required"></span></label>-->
+<!--                                    <input type="text" v-model="model.name" class="form-control">-->
+<!--                                    <error-label :errors="errors.name"></error-label>-->
+<!--                                </div>-->
 
                                 <div class="form-group">
                                     <label>Type <span class="required"></span></label>
                                     <select v-model="model.type" class="form-control">
                                         <option value="">---</option>
-                                        <option value="ios">Mac OS</option>
-                                        <option value="window">window</option>
+                                        <option value="Os">OS</option>
+                                        <option value="Window">Window</option>
                                     </select>
                                     <error-label :errors="errors.type"></error-label>
                                 </div>
@@ -263,17 +263,24 @@
                                     <input type="text" class="form-control" v-model="model.version">
                                     <error-label></error-label>
                                 </div>
-                                <div class="form-group">
-                                    <label>Release date <span class="required"></span></label>
-                                    <Datepicker v-model="model.release_date"/>
-                                    <error-label for="f_title" :errors="errors.release_date"></error-label>
+<!--                                <div class="form-group">-->
+<!--                                    <label>Release date <span class="required"></span></label>-->
+<!--                                    <Datepicker v-model="model.release_date"/>-->
+<!--                                    <error-label for="f_title" :errors="errors.release_date"></error-label>-->
 
-                                </div>
+<!--                                </div>-->
                                 <div class="form-group">
                                     <label>Release Note <span class="required"></span></label>
                                     <textarea type="text" class="form-control" v-model="model.release_note"/>
                                     <error-label></error-label>
                                 </div>
+                                <div class="form-group">
+                                    <input id="state" type="checkbox" v-model="model.is_default" checked>
+
+                                    <label for="state" class="pl-2">Set as Default</label>
+                                    <error-label for="f_grade" :errors="errors.is_default"></error-label>
+                                </div>
+                                {{model.is_default}}
                             </form>
 
                         </div>
@@ -459,21 +466,10 @@
 
             async save() {
                 this.errors = {};
-
                 const files = this.$refs.uploader.files;
                 const files1 = this.$refs.uploader1.files;
                 const formData = new FormData();
                 formData.append('_token', window.$csrf)
-                forEach(files, (v, k) => {
-                    formData.append(k, v);
-                });
-                formData.append('_token', window.$csrf)
-                forEach(files1, (c, d) => {
-                    formData.append(c, d);
-                });
-                for (const [c, d] of Object.entries(this.model)) {
-                    formData.append(c, d);
-                }
                 for (const [k, v] of Object.entries(this.model)) {
                     formData.append(k, v);
                 }
