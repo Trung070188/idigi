@@ -146,13 +146,13 @@ class AppVersionsController extends AdminBaseController
         $fileUpdate = $this->uploadFile($file1);
 
         $data = [
-            'name' =>$req->name,
+//            'name' =>$req->name,
             'path' =>$fileExe['path'],
             'path_updated'=>$fileUpdate['path'],
             'url' => $fileExe['url'],
             'url_updated'=>$fileUpdate['url'],
             'type' => $req->type,
-            'release_date' => $req->release_date,
+//            'release_date' => $req->release_date,
             'version'=>$req->version,
             'release_note'=>$req->release_note,
         ];
