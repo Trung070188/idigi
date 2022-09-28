@@ -35,7 +35,7 @@ class CheckPermission
         if($isAdmin == 1){
             return $next($request);
         }else{
-            $parse = parse_url($request->url);
+            $parse = parse_url($request->url());
             $rolePermissionCount = \App\Models\RoleHasPermission::whereIn('role_id', $roleIds)
                 ->whereHas('permission',function($q) use ($parse){
                     $q->where('path',$parse['path']);
