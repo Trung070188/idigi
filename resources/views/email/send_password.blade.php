@@ -203,7 +203,7 @@
                                         <![if !mso]>
                                         <tr>
                                             <td align="center" style="box-sizing: border-box;width: 100%; background-color: rgba(232, 78, 28, 0.2); border-radius: 16px; padding: 2px 3px 4px;">
-                                                <a class="btn-primary" href="https://ninox.dreamlab.com.vn/" target="_blank" style="display: block;color: #ffffff;background: linear-gradient(to top, #e84e1c, #ff8760);border: solid 2px white;border-radius: 14px;box-sizing: border-box;cursor: pointer;text-decoration: none;margin: 0;padding: 10px 20px; font-family: 'Montserrat',Arial,sans-serif;-webkit-font-smoothing: antialiased;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;font-size: 19px;font-weight: 600;color: white;">Access Now</a>
+                                                <a class="btn-primary" href="https://idigi.ismart.edu.vn/xadmin/login" target="_blank" style="display: block;color: #ffffff;background: linear-gradient(to top, #e84e1c, #ff8760);border: solid 2px white;border-radius: 14px;box-sizing: border-box;cursor: pointer;text-decoration: none;margin: 0;padding: 10px 20px; font-family: 'Montserrat',Arial,sans-serif;-webkit-font-smoothing: antialiased;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;font-size: 19px;font-weight: 600;color: white;">Access Now</a>
                                             </td>
                                         </tr>
                                         <![endif]>
