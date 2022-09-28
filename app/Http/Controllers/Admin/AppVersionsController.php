@@ -123,10 +123,10 @@ class AppVersionsController extends AdminBaseController
 
 
         $rules = [
-            'name' => 'required|unique:app_versions,name',
+//            'name' => 'required|unique:app_versions,name',
             'type' => 'required',
             'file_0' => 'required',
-            'release_date' => 'required',
+//            'release_date' => 'required',
         ];
 
         $v = Validator::make($req->all(), $rules);
