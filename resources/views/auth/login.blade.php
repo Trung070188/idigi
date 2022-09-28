@@ -96,10 +96,10 @@ License: For each use you must have a valid license purchased only from above li
 							<!--begin::Input group-->
 							<div class="fv-row mb-10">
 								<!--begin::Label-->
-								<label class="form-label fs-6 fw-bolder text-dark">Username or Email</label>
+								<label class="form-label fs-6 fw-bolder text-dark">Username</label>
 								<!--end::Label-->
 								<!--begin::Input-->
-								<input class="form-control form-control-lg form-control-solid" type="text" name="login" autocomplete="off" placeholder="Enter your username or email" value="{{ old('login') }}" />
+								<input class="form-control form-control-lg form-control-solid" type="text" name="login" autocomplete="off" placeholder="Enter your username" value="{{ old('login') }}" />
 								<!--end::Input-->
                                 @error('login')
                                 <div class="fv-plugins-message-container invalid-feedback"><div data-field="email" data-validator="notEmpty">{{ $message }}</div></div>

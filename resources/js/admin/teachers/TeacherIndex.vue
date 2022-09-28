@@ -27,6 +27,20 @@
                         </div>
                     </div>
                 </div>
+                <div class="modal fade" style="margin-right:50px;border:2px solid #333333  " id="teacherFull" tabindex="-1" role="dialog"
+                     aria-labelledby="teacherFull"
+                     aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered popup-main-1" role="document"
+                         style="max-width: 500px;">
+                        <div class="modal-content box-shadow-main paymment-status" style="left:140px;text-align: center; padding: 27px 0px 10px;">
+                            <div class="close-popup" data-dismiss="modal"></div>
+                            <h3 class="popup-title success" >Cannot create new teacher</h3>
+                            <div class="content">
+                                <p>Your teacher list is full, you can not create new teacher.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 <div class="card card-custom card-stretch gutter-b">
 
                     <div class="card-header border-0 pt-6">
@@ -91,9 +105,9 @@
                                         <a v-if="permissions['013'] && entries.length<lengthUserSchool " :href="'/xadmin/users/create_teacher'">
                                             <button class="btn btn-primary button-create" style="margin:0 0 0 15px"> Create</button>
                                         </a>
-                                <a v-if="permissions['013'] && entries.length==lengthUserSchool " >
-                                    <button class="btn btn-primary button-create" style="margin:0 0 0 15px"> Create</button>
-                                </a>
+                                <button v-if="permissions['013'] && entries.length==lengthUserSchool "  @click="teacherFull" class="btn btn-primary button-create" style="margin:0 0 0 15px">
+                                    Create
+                                </button>
 
                                     </div>
                                 </div>
@@ -426,6 +440,10 @@
             $router.on('/', this.load).init();
         },
         methods: {
+            teacherFull()
+            {
+              $('#teacherFull').modal('show');
+            },
              removeTeacher:function(deleteTeacher='')
             {
                   $('#delete').modal('show');

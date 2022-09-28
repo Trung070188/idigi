@@ -84,8 +84,7 @@ To establish a new session, please contact us to renew your license.',
                 if ($check == 0 && $totalDevice >= $allDevice) {
                     return [
                         'code' => 3,
-                        'msg' => 'Your account is not registered for use on this device.
-Would you like to register this device now?',
+                        'msg' => 'Device Limit Exceeded! Please contact the administrator to deauthorize your old device.',
                     ];
                 } else {
                     if ($check == 0) {
