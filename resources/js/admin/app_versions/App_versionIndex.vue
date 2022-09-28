@@ -297,7 +297,7 @@
 									
 									<!--end::Col-->
 									<!--begin::Col-->
-									<div class="col-xl-6" v-for="entry in entries" v-if="entry.type=='Window'&& entry.is_default==1">
+									<div class="col-xl-6" v-for="entry in entries" v-if="entry.type=='Window'">
 										<!--begin::Charts Widget 1-->
 										<div class="card mb-5 mb-xxl-8">
 											<!--begin::Header-->
@@ -307,12 +307,14 @@
 											<div class="card-body" style="position: relative;text-align: center;">
                                                 <h3 class="card-title align-items-start flex-column">
 													<div class="card-label fw-bolder fs-1 mb-1">Installation for Windows</div>
-													<div class="text-muted fw-bold fs-7">Version: {{entry.version}}</div>
+													<div v-if=" entry.is_default==1" class="text-muted fw-bold fs-7">Version: {{entry.version}}</div>
+                                                <div v-if=" entry.is_default!=1" class="text-muted fw-bold fs-7">Version: N/A</div>
+
 												</h3>
                                                 <div class="d-block bgi-no-repeat bgi-size-contain bgi-position-center rounded mb-10 h-300px" style="background-image:url('https://img-prod-cms-rt-microsoft-com.akamaized.net/cms/api/am/imageFileData/RE4LqQX');"></div>
 												<!--begin::Chart-->
 												
-										<a :href="entry.url">
+										<a :href="entry.url" v-if="entry.is_default==1">
                                             		<button class="btn btn-primary col-xl-8 text-center mb-5" id="kt_widget_5_load_more_btn">
                                                     
 											<span class="indicator-label">Start Download</span>
@@ -320,36 +322,11 @@
 											<span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
 										</button><!--end::Chart-->
                                         </a>
-											<div class="resize-triggers"><div class="expand-trigger"><div style="width: 610px; height: 418px;"></div></div><div class="contract-trigger"></div></div></div>
-											<!--end::Body-->
-										</div>
-										<!--end::Charts Widget 1-->
-										<!--begin::List Widget 5-->
-										
-										<!--end: List Widget 5-->
-									</div>
-                                    <div class="col-xl-6" v-for="entry in entries" v-if="entry.type=='Window'&& entry.is_default!=1">
-										<!--begin::Charts Widget 1-->
-										<div class="card mb-5 mb-xxl-8">
-											<!--begin::Header-->
-											
-											<!--end::Header-->
-											<!--begin::Body-->
-											<div class="card-body" style="position: relative;text-align: center;">
-                                                <h3 class="card-title align-items-start flex-column">
-													<div class="card-label fw-bolder fs-1 mb-1">Installation for Windows</div>
-													<div class="text-muted fw-bold fs-7">Version: N/A</div>
-												</h3>
-                                                <div class="d-block bgi-no-repeat bgi-size-contain bgi-position-center rounded mb-10 h-300px" style="background-image:url('https://img-prod-cms-rt-microsoft-com.akamaized.net/cms/api/am/imageFileData/RE4LqQX');"></div>
-												<!--begin::Chart-->
-												
-											<button class="btn btn-light col-xl-8 text-center mb-5" id="kt_widget_5_load_more_btn">
+                                        	<button class="btn btn-light col-xl-8 text-center mb-5" id="kt_widget_5_load_more_btn" v-if="entry.is_default!=1">
 											<span class="indicator-label">Unavailable to download</span>
 											<span class="indicator-progress">Loading... 
 											<span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
 										</button>
-												
-												<!--end::Chart-->
 											<div class="resize-triggers"><div class="expand-trigger"><div style="width: 610px; height: 418px;"></div></div><div class="contract-trigger"></div></div></div>
 											<!--end::Body-->
 										</div>
@@ -358,7 +335,8 @@
 										
 										<!--end: List Widget 5-->
 									</div>
-									<div class="col-xl-6" v-for="entry in entries" v-if="entry.type=='OS'&& entry.is_default==1" >
+                                  
+									<div class="col-xl-6" v-for="entry in entries" v-if="entry.type=='OS'" >
 										<!--begin::Charts Widget 1-->
 										<div class="card mb-5 mb-xxl-8">
 											<!--begin::Header-->
@@ -368,17 +346,19 @@
 											<div class="card-body" style="position: relative;text-align: center;">
     <h3 class="card-title align-items-start flex-column">
 													<div class="card-label fw-bolder fs-1 mb-1">Installation for Mac OS</div>
-													<div class="text-muted fw-bold fs-7">Version: {{entry.version}}</div>
+													<div v-if="entry.is_default==1" class="text-muted fw-bold fs-7">Version: {{entry.version}}</div>
+                                                    <div v-if="entry.is_default!=1" class="text-muted fw-bold fs-7">Version: N/A</div>
+
 												</h3>
     <div class="d-block bgi-no-repeat bgi-size-contain bgi-position-center rounded mb-10 h-300px" style="background-image:url('https://img-prod-cms-rt-microsoft-com.akamaized.net/cms/api/am/imageFileData/RE4LqQX');"></div>
-												<!-- <button class="btn btn-light col-xl-8 text-center mb-5" id="kt_widget_5_load_more_btn">
+												<button v-if="entry.is_default!=1" class="btn btn-light col-xl-8 text-center mb-5" id="kt_widget_5_load_more_btn">
 											<span class="indicator-label">Unavailable to download</span>
 											<span class="indicator-progress">Loading... 
 											<span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
-										</button>begin::Chart -->
+										</button>
 												
 												<!--end::Chart-->
-                                                	<a :href="entry.url">
+                                                	<a :href="entry.url" v-if="entry.is_default==1">
                                             		<button class="btn btn-primary col-xl-8 text-center mb-5" id="kt_widget_5_load_more_btn">
                                                     
 											<span class="indicator-label">Start Download</span>
@@ -395,36 +375,7 @@
 										
 										<!--end: List Widget 5-->
 									</div>
-                                     <div class="col-xl-6" v-for="entry in entries" v-if="entry.type=='OS'&& entry.is_default!=1">
-										<!--begin::Charts Widget 1-->
-										<div class="card mb-5 mb-xxl-8">
-											<!--begin::Header-->
-											
-											<!--end::Header-->
-											<!--begin::Body-->
-											<div class="card-body" style="position: relative;text-align: center;">
-                                                <h3 class="card-title align-items-start flex-column">
-													<div class="card-label fw-bolder fs-1 mb-1">Installation for Mac OS</div>
-													<div class="text-muted fw-bold fs-7">Version: N/A</div>
-												</h3>
-                                                <div class="d-block bgi-no-repeat bgi-size-contain bgi-position-center rounded mb-10 h-300px" style="background-image:url('https://img-prod-cms-rt-microsoft-com.akamaized.net/cms/api/am/imageFileData/RE4LqQX');"></div>
-												<!--begin::Chart-->
-												
-											<button class="btn btn-light col-xl-8 text-center mb-5" id="kt_widget_5_load_more_btn">
-											<span class="indicator-label">Unavailable to download</span>
-											<span class="indicator-progress">Loading... 
-											<span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
-										</button>
-												
-												<!--end::Chart-->
-											<div class="resize-triggers"><div class="expand-trigger"><div style="width: 610px; height: 418px;"></div></div><div class="contract-trigger"></div></div></div>
-											<!--end::Body-->
-										</div>
-										<!--end::Charts Widget 1-->
-										<!--begin::List Widget 5-->
-										
-										<!--end: List Widget 5-->
-									</div>
+                                    
 								</div>
 
         <!-- <div class="card card-custom card-stretch gutter-b" v-if="roleName!='Super Administrator'">
