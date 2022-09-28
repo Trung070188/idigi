@@ -27,15 +27,21 @@ class CheckPermission
         $roleIds = [];
         foreach ($roles as $role){
             $roleIds[] = $role->id;
-            if($role->role_admin == "Super Administrator"){
+            if($role->role_name == "Super Administrator"){
                 $isAdmin = 1;
             }
+
         }
 
         if($isAdmin == 1){
             return $next($request);
         }else{
+
             $parse = parse_url($request->url());
+
+            if($parse['path'] == '/xadmin/dashboard/index'){
+                return $next($request);
+            }
             $rolePermissionCount = \App\Models\RoleHasPermission::whereIn('role_id', $roleIds)
                 ->whereHas('permission',function($q) use ($parse){
                     $q->where('path',$parse['path']);
@@ -49,7 +55,7 @@ class CheckPermission
             $permissionCount = Permission::where('path', $parse['path'])->count();
 
 
-            if($permissionCount > 0){
+            if($permissionCount == 0){
                 return $next($request);
             }
         }
