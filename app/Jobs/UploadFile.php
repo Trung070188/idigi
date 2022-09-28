@@ -7,9 +7,9 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
-use Illuminate\Support\Facades\Mail;
 
-class SendMailPassword implements ShouldQueue
+
+class UploadFile implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
@@ -18,15 +18,13 @@ class SendMailPassword implements ShouldQueue
      *
      * @return void
      */
-    protected $email;
-    protected $subject;
-    protected $content;
+   protected $file;
+   protected $path;
 
-    public function __construct($email, $subject, $content)
+    public function __construct($file,$path)
     {
-        $this->email = $email;
-        $this->subject = $subject;
-        $this->content = $content;
+        $this->file = $file;
+        $this->path = $path;
     }
 
     /**
@@ -36,6 +34,7 @@ class SendMailPassword implements ShouldQueue
      */
     public function handle()
     {
-        Mail::to($this->email)->send(new \App\Mail\SendMailPassword($this->subject, $this->content));
+        $file = $this->file;
+        move_uploaded_file($file['tmp_name'], $this->path);
     }
 }

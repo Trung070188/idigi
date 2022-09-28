@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 
+use App\Jobs\UploadFile;
 use App\Models\DownloadAppLog;
 use App\Models\User;
 use Carbon\Carbon;
@@ -141,33 +142,15 @@ class AppVersionsController extends AdminBaseController
         $file0 = $_FILES['file_0'];
         $file1=$_FILES['file1_0'];
 
-        $y = date('Y');
-        $m = date('m');
-
-        $dir = public_path("files/app_version/{$y}/{$m}");
-
-        if (!is_dir($dir)) {
-            mkdir($dir, 0755, true);
-        }
-
-        $info = pathinfo($file0['name']);
-        $extension = strtolower($info['extension']);
-
-        $hash = sha1(uniqid());
-        $newFilePath = $dir.'/'.$hash.'.'.$extension;
-        $ok = move_uploaded_file($file0['tmp_name'], $newFilePath);
-        $newUrl = url("/files/app_version/{$y}/{$m}/{$hash}.{$extension}");
-        $info1=pathinfo($file1['name']);
-        $extension1=strtolower($info1['extension']);
-        $newFilePath1= $dir.'/'.$hash.'.'.$extension1;
-        $newUrl1=url("/files/app_version/{$y}/{$m}/{$hash}.{$extension1}");
+        $fileExe = $this->uploadFile($file0);
+        $fileUpdate = $this->uploadFile($file1);
 
         $data = [
             'name' =>$req->name,
-            'path' =>$newFilePath,
-            'path_updated'=>$newFilePath1,
-            'url' => $newUrl,
-            'url_updated'=>$newUrl1,
+            'path' =>$fileExe['path'],
+            'path_updated'=>$fileUpdate['path'],
+            'url' => $fileExe['url'],
+            'url_updated'=>$fileUpdate['url'],
             'type' => $req->type,
             'release_date' => $req->release_date,
             'version'=>$req->version,
@@ -182,6 +165,31 @@ class AppVersionsController extends AdminBaseController
             'code' => 0,
             'message' => 'Đã thêm',
             'id' => $entry->id
+        ];
+    }
+
+    protected function uploadFile($file){
+        $y = date('Y');
+        $m = date('m');
+
+        $dir = public_path("files/app_version/{$y}/{$m}");
+
+        if (!is_dir($dir)) {
+            mkdir($dir, 0755, true);
+        }
+
+        $info = pathinfo($file['name']);
+        $extension = strtolower($info['extension']);
+
+        $hash = sha1(uniqid());
+        $newFilePath = $dir.'/'.$hash.'.'.$extension;
+
+       $this->dispatch(new UploadFile($file, $newFilePath));
+        $newUrl = url("/files/app_version/{$y}/{$m}/{$hash}.{$extension}");
+
+        return [
+            'url' => $newUrl,
+            'path' => $newFilePath
         ];
     }
 
