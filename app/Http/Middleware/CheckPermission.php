@@ -42,16 +42,18 @@ class CheckPermission
                 })
                 ->count();
 
+
             if($rolePermissionCount > 0){
                 return $next($request);
             }
             $permissionCount = Permission::where('path', $parse['path'])->count();
 
-            if($permissionCount == 0){
+
+            if($permissionCount > 0){
                 return $next($request);
             }
         }
 
-        return redirect('/xadmin/dashboard');
+        return redirect('/xadmin/dashboard/index');
     }
 }
