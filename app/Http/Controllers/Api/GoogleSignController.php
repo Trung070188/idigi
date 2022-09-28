@@ -37,8 +37,16 @@ class GoogleSignController
 
                 if (!$user) {
                     return [
+                        'code' => 1,
+                        'message' => 'Your account has not registered to use this application.
+Please visit idigi.ismart.edu.vn to register!',
+                    ];
+                }
+
+                if ($user->state == 0){
+                    return [
                         'code' => 2,
-                        'message' => 'Đăng nhập thất bại',
+                        'msg' => 'Your account has been de-activated.',
                     ];
                 }
 
@@ -64,7 +72,8 @@ class GoogleSignController
                 if(@$school->license_to < Carbon::now()){
                     return [
                         'code' => 4,
-                        'msg' => 'License expired',
+                        'msg' => 'Your session is about to expire due to the license.
+To establish a new session, please contact us to renew your license.',
                     ];
                 }
 
@@ -75,7 +84,8 @@ class GoogleSignController
                 if ($check == 0 && $totalDevice >= $allDevice) {
                     return [
                         'code' => 3,
-                        'message' => 'Bạn đã đăng ký quá nhiều thiết bị',
+                        'msg' => 'Your account is not registered for use on this device.
+Would you like to register this device now?',
                     ];
                 } else {
                     if ($check == 0) {
@@ -133,6 +143,7 @@ class GoogleSignController
                 return [
                     'code' => 0,
                     'access_token' => $jwt,
+                    'msg' => 'Success',
                 ];
             }
         } catch (\Exception $e) {
@@ -141,7 +152,8 @@ class GoogleSignController
 
         return [
             'code' => 1,
-            'message' => 'Đăng nhập thất bại',
+            'msg' => 'Your account has not registered to use this application.
+Please visit idigi.ismart.edu.vn to register!',
         ];
     }
 }

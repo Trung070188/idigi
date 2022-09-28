@@ -39,6 +39,12 @@ class LoginController extends Controller
                 $deviceName = '';
                 $deviceID = '';
 
+                if ($user->state == 0){
+                    return [
+                        'code' => 2,
+                        'msg' => 'Your account has been de-activated.',
+                    ];
+                }
                 if ($user->user_devices) {
                     foreach ($user->user_devices as $device) {
                         $totalDevice++;
@@ -56,7 +62,8 @@ class LoginController extends Controller
                 if(@$school->license_to < Carbon::now()){
                     return [
                         'code' => 4,
-                        'msg' => 'License expired',
+                        'msg' => 'Your session is about to expire due to the license.
+To establish a new session, please contact us to renew your license.',
                     ];
                 }
 
@@ -67,7 +74,8 @@ class LoginController extends Controller
                 if ($check == 0 && $totalDevice >= $allDevice) {
                     return [
                         'code' => 3,
-                        'message' => 'Bạn đã đăng ký quá nhiều thiết bị',
+                        'msg' => 'Your account is not registered for use on this device.
+Would you like to register this device now?',
                     ];
                 } else {
                     if ($check == 0) {
@@ -86,9 +94,6 @@ class LoginController extends Controller
                     }
 
                 }
-                Auth::login($user);
-
-
 
                 if($school){
                     $expired = $school->license_to;
@@ -127,7 +132,8 @@ class LoginController extends Controller
 
         return [
             'code' => 1,
-            'msg' => 'Invalid username or password',
+            'msg' => 'Your account has not registered to use this application.
+Please visit idigi.ismart.edu.vn to register!',
         ];
 
     }
