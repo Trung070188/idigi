@@ -153,7 +153,7 @@
                         </tr>
                         </thead>
                         <tbody>
-                        <tr v-for="entry in entries" v-if="entry.type=='OS'">
+                        <tr v-for="entry in entries" v-if="entry.type=='Mac'">
                             <!--                            <td v-text="entry.name"></td>-->
                             <td v-text="entry.version"></td>
                             <td class="css_test" v-text="entry.release_note"
@@ -266,7 +266,7 @@
                                     <label>OS <span class="required"></span></label>
                                     <select v-model="model.type" class="form-control">
                                         <option value="">---</option>
-                                        <option value="OS">Mac OS</option>
+                                        <option value="Mac">Mac OS</option>
                                         <option value="Window">Window</option>
                                     </select>
                                     <error-label :errors="errors.type"></error-label>
@@ -643,7 +643,7 @@
                 setTimeout(function () {
                     KTMenu.createInstances();
                 }, 0)
-                this.totalVersionIos = this.entries.filter(e => e.type == 'OS').length;
+                this.totalVersionIos = this.entries.filter(e => e.type == 'Mac').length;
                 this.totalVersionWindow = this.entries.filter(e => e.type == 'Window').length;
                 this.from = (this.paginate.currentPage - 1) * (this.limit) + 1;
                 this.to = (this.paginate.currentPage - 1) * (this.limit) + this.entries.length;

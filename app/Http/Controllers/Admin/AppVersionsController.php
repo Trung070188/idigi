@@ -243,7 +243,7 @@ class AppVersionsController extends AdminBaseController
         $appVersionsOs=null;
 
         $appVersionsWindow=AppVersion::where('is_default',1)->where('type','Window')->first();
-        $appVersionsOs=AppVersion::where('is_default',1)->where('type','OS')->first();
+        $appVersionsOs=AppVersion::where('is_default',1)->where('type','Mac')->first();
         return [
             'code' => 0,
             'data' => $entries->items(),
