@@ -160,7 +160,7 @@ class AppVersionsController extends AdminBaseController
         //    dd(1);
            $entry->is_default=0;
            $entry->save();
-            
+
         return [
             'code' => 0,
             'message' => 'Đã thêm',

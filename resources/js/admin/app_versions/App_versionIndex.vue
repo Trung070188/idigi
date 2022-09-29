@@ -250,10 +250,10 @@
 <!--                                </div>-->
 
                                 <div class="form-group">
-                                    <label>Type <span class="required"></span></label>
+                                    <label>OS <span class="required"></span></label>
                                     <select v-model="model.type" class="form-control">
                                         <option value="">---</option>
-                                        <option value="Os">OS</option>
+                                        <option value="OS">Mac OS</option>
                                         <option value="Window">Window</option>
                                     </select>
                                     <error-label :errors="errors.type"></error-label>
@@ -293,14 +293,14 @@
         </div>
         <div class="row g-5 g-xxl-8" v-if="roleName!='Super Administrator'">
 									<!--begin::Col-->
-									
+
 									<!--end::Col-->
 									<!--begin::Col-->
 									<div class="col-xl-6"  v-if="appVersionsWindow">
 										<!--begin::Charts Widget 1-->
 										<div class="card mb-5 mb-xxl-8">
 											<!--begin::Header-->
-											
+
 											<!--end::Header-->
 											<!--begin::Body-->
 											<div class="card-body" style="position: relative;text-align: center;" >
@@ -311,32 +311,32 @@
 												</h3>
                                                 <div class="d-block bgi-no-repeat bgi-size-contain bgi-position-center rounded mb-10 h-300px" style="background-image:url('https://img-prod-cms-rt-microsoft-com.akamaized.net/cms/api/am/imageFileData/RE4LqQX');"></div>
 												<!--begin::Chart-->
-												
+
 										<a :href="appVersionsWindow.url" >
                                             		<button class="btn btn-primary col-xl-8 text-center mb-5" id="kt_widget_5_load_more_btn">
-                                                    
+
 											<span class="indicator-label">Start Download</span>
-											<span class="indicator-progress">Loading... 
+											<span class="indicator-progress">Loading...
 											<span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
 										</button><!--end::Chart-->
                                         </a>
-                                        
-												
+
+
 												<!--end::Chart-->
-                                        	
+
 											<div class="resize-triggers"><div class="expand-trigger"><div style="width: 610px; height: 418px;"></div></div><div class="contract-trigger"></div></div></div>
 											<!--end::Body-->
 										</div>
 										<!--end::Charts Widget 1-->
 										<!--begin::List Widget 5-->
-										
+
 										<!--end: List Widget 5-->
 									</div>
                                     <div class="col-xl-6"  v-if="!appVersionsWindow">
 										<!--begin::Charts Widget 1-->
 										<div class="card mb-5 mb-xxl-8">
 											<!--begin::Header-->
-											
+
 											<!--end::Header-->
 											<!--begin::Body-->
 											<div class="card-body" style="position: relative;text-align: center;" >
@@ -347,30 +347,30 @@
 												</h3>
                                                 <div class="d-block bgi-no-repeat bgi-size-contain bgi-position-center rounded mb-10 h-300px" style="background-image:url('https://img-prod-cms-rt-microsoft-com.akamaized.net/cms/api/am/imageFileData/RE4LqQX');"></div>
 												<!--begin::Chart-->
-												
-										
+
+
                                         <button  class="btn btn-light col-xl-8 text-center mb-5" id="kt_widget_5_load_more_btn">
 											<span class="indicator-label">Unavailable to download</span>
-											<span class="indicator-progress">Loading... 
+											<span class="indicator-progress">Loading...
 											<span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
 										</button><!--begin::Chart-->
-												
+
 												<!--end::Chart-->
-                                        	
+
 											<div class="resize-triggers"><div class="expand-trigger"><div style="width: 610px; height: 418px;"></div></div><div class="contract-trigger"></div></div></div>
 											<!--end::Body-->
 										</div>
 										<!--end::Charts Widget 1-->
 										<!--begin::List Widget 5-->
-										
+
 										<!--end: List Widget 5-->
 									</div>
-                                  
+
 									<div class="col-xl-6"  v-if="appVersionsOs" >
 										<!--begin::Charts Widget 1-->
 										<div class="card mb-5 mb-xxl-8">
 											<!--begin::Header-->
-											
+
 											<!--end::Header-->
 											<!--begin::Body-->
 											<div class="card-body" style="position: relative;text-align: center;">
@@ -381,32 +381,32 @@
 
 												</h3>
     <div class="d-block bgi-no-repeat bgi-size-contain bgi-position-center rounded mb-10 h-300px" style="background-image:url('https://img-prod-cms-rt-microsoft-com.akamaized.net/cms/api/am/imageFileData/RE4LqQX');"></div>
-												
-												
+
+
 												<!--end::Chart-->
                                                 	<a :href="appVersionsOs.url" >
                                             		<button class="btn btn-primary col-xl-8 text-center mb-5" id="kt_widget_5_load_more_btn">
-                                                    
+
 											<span class="indicator-label">Start Download</span>
-											<span class="indicator-progress">Loading... 
+											<span class="indicator-progress">Loading...
 											<span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
 										</button><!--end::Chart-->
                                         </a>
-                                         
+
 
 											<div class="resize-triggers"><div class="expand-trigger"><div style="width: 610px; height: 418px;"></div></div><div class="contract-trigger"></div></div></div>
 											<!--end::Body-->
 										</div>
 										<!--end::Charts Widget 1-->
 										<!--begin::List Widget 5-->
-										
+
 										<!--end: List Widget 5-->
 									</div>
                                     <div class="col-xl-6"  v-if="!appVersionsOs" >
 										<!--begin::Charts Widget 1-->
 										<div class="card mb-5 mb-xxl-8">
 											<!--begin::Header-->
-											
+
 											<!--end::Header-->
 											<!--begin::Body-->
 											<div class="card-body" style="position: relative;text-align: center;">
@@ -417,13 +417,13 @@
 
 												</h3>
                                             <div class="d-block bgi-no-repeat bgi-size-contain bgi-position-center rounded mb-10 h-300px" style="background-image:url('https://img-prod-cms-rt-microsoft-com.akamaized.net/cms/api/am/imageFileData/RE4LqQX');"></div>
-												
-												
+
+
 												<!--end::Chart-->
-                                                	
+
                                          <button  class="btn btn-light col-xl-8 text-center mb-5" id="kt_widget_5_load_more_btn">
 											<span class="indicator-label">Unavailable to download</span>
-											<span class="indicator-progress">Loading... 
+											<span class="indicator-progress">Loading...
 											<span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
 										</button>
 
@@ -432,13 +432,13 @@
 										</div>
 										<!--end::Charts Widget 1-->
 										<!--begin::List Widget 5-->
-										
+
 										<!--end: List Widget 5-->
 									</div>
-                                    
+
 								</div>
 
-        
+
         <div class="modal fade" style="margin-right:50px;border:2px solid #333333  " id="deviceConfirmLimit" tabindex="-1" role="dialog"
              aria-labelledby="deviceConfirmLimit"
              aria-hidden="true">
