@@ -310,17 +310,17 @@
             <!-- Windows -->
             <div class="col-xl-6" v-if="appVersionsWindow">
                 <div class="card mb-5 mb-xxl-8">
-                    <div class="card-header border-0 pt-5">
-                        <h3 class="card-title align-items-start flex-column">
-                            <span class="card-label fw-bolder fs-2 mb-1">Installation for Windows</span>
-                            <span class="text-muted mt-1 fw-bold fs-7">Version: {{appVersionsWindow.version}}</span>
-                        </h3>
-                        <div class="card-toolbar">
+                    <div class="card-header border-0 pt-5 justify-content-start">
+                        <div class="card-toolbar mr-3">
                             <div class="d-block">
                                 <img src="/images/windows_logo.png" height="48px"/>
                             </div>
 
                         </div>
+                        <h3 class="card-title align-items-start flex-column">
+                            <span class="card-label fw-bolder fs-2 mb-1">Installation for Windows</span>
+                            <span class="text-muted mt-1 fw-bold fs-7">Version: {{appVersionsWindow.version}}</span>
+                        </h3>
                     </div>
                     <div class="card-body" style="position: relative; text-align: center;">
                         <div class="d-block mb-5">
@@ -328,11 +328,11 @@
                         </div>
 
                         <a :href="appVersionsWindow.url">
-                            <button id="kt_widget_5_load_more_btn"
-                                    class="btn btn-primary col-xl-8 text-center mb-4"><span class="indicator-label">Start Downloading</span>
+                            <button id="kt_widget_5_load_more_btn" class="btn btn-primary col-xl-7 text-center mb-4">
+                                <span class="indicator-label">Start Downloading</span>
                                 <span class="indicator-progress">Loading...
-											<span
-                                                class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
+								    <span class="spinner-border spinner-border-sm align-middle ms-2"></span>
+                                </span>
                             </button>
                         </a>
                         <p class="text-gray-600 fw-bold fs-7">By downloading iSMART DIGI, you accept Terms Of Use,
@@ -348,25 +348,28 @@
             </div>
             <div class="col-xl-6" v-if="!appVersionsWindow">
                 <div class="card mb-5 mb-xxl-8">
-                    <div class="card-header border-0 pt-5">
+                    <div class="card-header border-0 pt-5 justify-content-start">
+                        <div class="card-toolbar mr-3">
+                            <div class="d-block">
+                                <img src="/images/windows_logo.png" height="48px"/>
+                            </div>
+
+                        </div>
                         <h3 class="card-title align-items-start flex-column">
                             <span class="card-label fw-bolder fs-2 mb-1">Installation for Windows</span>
-                            <span class="text-muted mt-1 fw-bold fs-7">Version: N/A</span>
+                            <span class="text-muted mt-1 fw-bold fs-7">Version: {{appVersionsWindow.version}}</span>
                         </h3>
-                        <div class="card-toolbar">
-                            <div class="d-block"><img src="/images/windows_logo.png" height="48px"/></div>
-                        </div>
                     </div>
                     <div class="card-body" style="position: relative; text-align: center;">
                         <div class="d-block mb-5">
                             <img src="/images/laptop_win.png" height="300px"/>
                         </div>
 
-                        <button id="kt_widget_5_load_more_btn"
-                                class="btn btn-light col-xl-8 text-center mb-4"><span class="indicator-label">Unavailable to Download</span>
+                        <button id="kt_widget_5_load_more_btn" class="btn btn-light col-xl-7 text-center mb-4">
+                            <span class="indicator-label">Unavailable to Download</span>
                             <span class="indicator-progress">Loading...
-                                        <span
-                                            class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
+                                <span class="spinner-border spinner-border-sm align-middle ms-2"></span>
+                            </span>
                         </button>
                         <p class="text-gray-600 fw-bold fs-7">By downloading iSMART DIGI, you accept Terms Of Use,
                             Privacy and Cookies.</p>
@@ -384,25 +387,25 @@
             <!-- Mac OS -->
             <div class="col-xl-6" v-if="appVersionsOs">
                 <div class="card mb-5 mb-xxl-8">
-                    <div class="card-header border-0 pt-5">
+                    <div class="card-header border-0 pt-5 justify-content-start">
+                        <div class="card-toolbar mr-3">
+                            <div class="d-block"><img src="/images/macos_logo.png" height="48px"/></div>
+                        </div>
                         <h3 class="card-title align-items-start flex-column">
                             <span class="card-label fw-bolder fs-2 mb-1">Installation for Mac OS</span>
                             <span class="text-muted mt-1 fw-bold fs-7">Version: {{appVersionsOs.version}}</span>
                         </h3>
-                        <div class="card-toolbar">
-                            <div class="d-block"><img src="/images/macos_logo.png" height="48px"/></div>
-                        </div>
                     </div>
                     <div class="card-body" style="position: relative; text-align: center;">
                         <div class="d-block mb-5">
                             <img src="/images/laptop_mac.png" height="300px"/>
                         </div>
                         <a :href="appVersionsOs.url">
-                            <button id="kt_widget_5_load_more_btn" class="btn btn-light col-xl-8 text-center mb-4">
-                                <span class="indicator-label">Unavailable to Download</span> <span
-                                class="indicator-progress">Loading...
-											<span
-                                                class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
+                            <button id="kt_widget_5_load_more_btn" class="btn btn-light col-xl-7 text-center mb-4">
+                                <span class="indicator-label">Unavailable to Download</span>
+                                <span class="indicator-progress">Loading...
+								    <span class="spinner-border spinner-border-sm align-middle ms-2"></span>
+                                </span>
                             </button>
                         </a>
                         <p class="text-gray-600 fw-bold fs-7">By downloading iSMART DIGI, you accept Terms Of Use,
@@ -418,24 +421,24 @@
             </div>
             <div class="col-xl-6" v-if="!appVersionsOs">
                 <div class="card mb-5 mb-xxl-8">
-                    <div class="card-header border-0 pt-5">
-                        <h3 class="card-title align-items-start flex-column">
-                            <span class="card-label fw-bolder fs-2 mb-1">Installation for Mac OS</span>
-                            <span class="text-muted mt-1 fw-bold fs-7">Version: N/A</span>
-                        </h3>
-                        <div class="card-toolbar">
+                    <div class="card-header border-0 pt-5 justify-content-start">
+                        <div class="card-toolbar mr-3">
                             <div class="d-block"><img src="/images/macos_logo.png" height="48px"/></div>
                         </div>
+                        <h3 class="card-title align-items-start flex-column">
+                            <span class="card-label fw-bolder fs-2 mb-1">Installation for Mac OS</span>
+                            <span class="text-muted mt-1 fw-bold fs-7">Version: {{appVersionsOs.version}}</span>
+                        </h3>
                     </div>
                     <div class="card-body" style="position: relative; text-align: center;">
                         <div class="d-block mb-5">
                             <img src="/images/laptop_mac.png" height="300px"/>
                         </div>
-                        <button id="kt_widget_5_load_more_btn" class="btn btn-light col-xl-8 text-center mb-4">
-                            <span class="indicator-label">Unavailable to Download</span> <span
-                            class="indicator-progress">Loading...
-                                        <span
-                                            class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
+                        <button id="kt_widget_5_load_more_btn" class="btn btn-light col-xl-7 text-center mb-4">
+                            <span class="indicator-label">Unavailable to Download</span>
+                            <span class="indicator-progress">Loading...
+                                <span class="spinner-border spinner-border-sm align-middle ms-2"></span>
+                            </span>
                         </button>
 
                         <p class="text-gray-600 fw-bold fs-7">By downloading iSMART DIGI, you accept Terms Of Use,
