@@ -365,7 +365,7 @@
 
                     </div>
 
-                    <div class="card-body d-flex flex-column" >
+                    <div class="card-body d-flex flex-column"  >
                         <div class="row">
                             <div class="col-lg-12">
                                 <input v-model="entry.id" type="hidden" name="id" value="">
@@ -501,16 +501,16 @@
                                             <div class="menu menu-sub menu-sub-dropdown  menu-rounded menu-gray-600 menu-state-bg-light-primary fw-bold fs-7  py-4" data-kt-menu="true" style="width: 161px">
 
                                                 <div class="menu-item px-3">
-                                                    <a  class="menu-link px-3" @click="downloadLesson(packageLesson)" v-if="urls.status=='waitting'  ">Zip file package</a>
+                                                    <a  class="menu-link px-3" @click="downloadLesson(packageLesson)" v-if="urls.status=='new'  ">Zip file package</a>
                                                 </div>
                                                 <div class="menu-item px-3">
                                                     <a  class="menu-link px-3" v-if="urls.status=='done' " :href="urls.url" >Dowload Package</a>
                                                 </div>
                                                 <div class="menu-item px-3" >
-                                                    <a  class="menu-link px-3" style="width: 117px" @click="viewPackageLesson(packageLesson.id)" v-if="urls.status=='waitting' || urls.status=='done'">View lessons</a>
+                                                    <a  class="menu-link px-3" style="width: 117px" @click="viewPackageLesson(packageLesson.id)" v-if="urls.status=='new' || urls.status=='done'">View lessons</a>
                                                 </div>
                                                 <div class="menu-item px-3" >
-                                                    <a  class="menu-link px-3" style="width: 117px" @click="addLessonPackage(packageLesson.id)" v-if="urls.status=='waitting' || urls.status=='done'">Add lesson</a>
+                                                    <a  class="menu-link px-3" style="width: 117px" @click="addLessonPackage(packageLesson.id)" v-if="urls.status=='new' || urls.status=='done'">Add lesson</a>
                                                 </div>
 
                                             </div>
@@ -549,7 +549,7 @@
                         <div class="d-flex justify-content-end" style="margin:-56px 0px 0px">
                              <button type="reset" @click="save()" class="btn btn-primary mr-2">Save</button>
                         <button type="reset" @click="backIndex()" class="btn btn-secondary" style="margin:0px 12px 0px">Cancel</button>
-                        <button type="reset" @click="save()" class="btn btn-primary mr-2" >Submit</button>
+                        <button type="reset"  class="btn btn-primary mr-2" @click="sentSale">Submit</button>
                         </div>
 
 
@@ -1211,6 +1211,30 @@
                     }
 
                 }
+            },
+            async sentSale()
+            {
+                this.isLoading = true;
+                const res = await $post('/xadmin/plans/sentSale', {entry:this.entry}, false);
+                this.isLoading = false;
+                if (res.errors) {
+                    this.errors = res.errors;
+                    return;
+                }
+                if (res.code) {
+                    toastr.error(res.message);
+                } else {
+                    this.errors = {};
+                    toastr.success(res.message);
+                    location.replace('/xadmin/plans/index');
+
+
+                    if (!this.entry.id) {
+                        location.replace('/xadmin/plans/edit?id=' + this.entry.id);
+                    }
+
+                }
+
             }
 
         }

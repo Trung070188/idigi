@@ -329,6 +329,7 @@
 
                         <a :href="appVersionsWindow.url">
                             <button id="kt_widget_5_load_more_btn" class="btn btn-primary col-xl-7 text-center mb-4">
+                                <span class="svg-icon"><i class="bi bi-download"></i></span>
                                 <span class="indicator-label">Start Downloading</span>
                                 <span class="indicator-progress">Loading...
 								    <span class="spinner-border spinner-border-sm align-middle ms-2"></span>
@@ -362,10 +363,11 @@
                     </div>
                     <div class="card-body" style="position: relative; text-align: center;">
                         <div class="d-block mb-5">
-                            <img src="/images/laptop_win.png" height="300px"/>
+                            <img src="/images/laptop_win.png" height="300px" style="-webkit-filter: grayscale(100%); / Safari 6.0 - 9.0 /filter: grayscale(100%);opacity: 0.6;" />
                         </div>
 
                         <button id="kt_widget_5_load_more_btn" class="btn btn-light col-xl-7 text-center mb-4">
+                            <span class="svg-icon"><i class="bi bi-exclamation-lg"></i></span>
                             <span class="indicator-label">Unavailable to Download</span>
                             <span class="indicator-progress">Loading...
                                 <span class="spinner-border spinner-border-sm align-middle ms-2"></span>
@@ -402,6 +404,7 @@
                         </div>
                         <a :href="appVersionsOs.url">
                             <button id="kt_widget_5_load_more_btn" class="btn btn-primary col-xl-7 text-center mb-4">
+                                <span class="svg-icon"><i class="bi bi-download"></i></span>
                                 <span class="indicator-label">Start Downloading</span>
                                 <span class="indicator-progress">Loading...
 								    <span class="spinner-border spinner-border-sm align-middle ms-2"></span>
@@ -432,9 +435,10 @@
                     </div>
                     <div class="card-body" style="position: relative; text-align: center;">
                         <div class="d-block mb-5">
-                            <img src="/images/laptop_mac.png" height="300px"/>
+                            <img src="/images/laptop_mac.png" height="300px" style="-webkit-filter: grayscale(100%); / Safari 6.0 - 9.0 /filter: grayscale(100%);opacity: 0.6;" />
                         </div>
                         <button id="kt_widget_5_load_more_btn" class="btn btn-light col-xl-7 text-center mb-4">
+                            <span class="svg-icon"><i class="bi bi-exclamation-lg"></i></span>
                             <span class="indicator-label">Unavailable to Download</span>
                             <span class="indicator-progress">Loading...
                                 <span class="spinner-border spinner-border-sm align-middle ms-2"></span>
