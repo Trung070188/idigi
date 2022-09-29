@@ -109,6 +109,7 @@
                 //menu
                 $groupPermissions = \App\Models\GroupPermission::with(['permissions.roles', 'permissions', 'childs'])
                     ->where('parent_id', NULL)
+                    ->orderBy('order', 'ASC')
                     ->get();
                 $roles = $user->roles;
                 $menus = [];
