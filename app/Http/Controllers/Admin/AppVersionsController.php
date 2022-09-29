@@ -2,20 +2,15 @@
 
 namespace App\Http\Controllers\Admin;
 
-
-use App\Jobs\UploadFile;
 use App\Models\DownloadAppLog;
-use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use App\Models\AppVersion;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use PhpOffice\PhpSpreadsheet\Spreadsheet;
-use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+
 
 
 class AppVersionsController extends AdminBaseController
@@ -146,6 +141,7 @@ class AppVersionsController extends AdminBaseController
         $fileUpdate = $this->uploadFile($file1);
 
         $data = [
+            'is_default'=>$req->is_default,
 //            'name' =>$req->name,
             'path' =>$fileExe['path'],
             'path_updated'=>$fileUpdate['path'],
@@ -159,8 +155,21 @@ class AppVersionsController extends AdminBaseController
 
         $entry = new AppVersion();
         $entry->fill($data);
-        $entry->save();
-
+       if($entry->is_default=='false')
+       {
+        //    dd(1);
+           $entry->is_default=0;
+           $entry->save();
+            
+        return [
+            'code' => 0,
+            'message' => 'Đã thêm',
+            'id' => $entry->id
+        ];
+       }
+    AppVersion::where('is_default','=',1)->where('type',$entry->type)->update(['is_default' => 0]);
+    $entry->is_default=1;
+    $entry->save();
         return [
             'code' => 0,
             'message' => 'Đã thêm',
@@ -184,7 +193,7 @@ class AppVersionsController extends AdminBaseController
         $hash = sha1(uniqid());
         $newFilePath = $dir.'/'.$hash.'.'.$extension;
 
-       $this->dispatch(new UploadFile($file, $newFilePath));
+        move_uploaded_file($file['tmp_name'], $newFilePath);
         $newUrl = url("/files/app_version/{$y}/{$m}/{$hash}.{$extension}");
 
         return [
@@ -230,10 +239,15 @@ class AppVersionsController extends AdminBaseController
         }
         $query->createdIn($req->created);
         $entries = $query->paginate(100);
+        $appVersionsWindow=AppVersion::where('is_default',1)->where('type','Window')->first();
+        $appVersionsOs=AppVersion::where('is_default',1)->where('type','OS')->first();
+
 
         return [
             'code' => 0,
             'data' => $entries->items(),
+            'appVersionsWindow'=>$appVersionsWindow,
+            'appVersionsOs'=>$appVersionsOs,
             'paginate' => [
                 'currentPage' => $entries->currentPage(),
                 'lastPage' => $entries->lastPage(),

@@ -276,7 +276,6 @@
                                 </div>
                                 <div class="form-group">
                                     <input id="state" type="checkbox" v-model="model.is_default" checked>
-
                                     <label for="state" class="pl-2">Set as Default</label>
                                     <error-label for="f_grade" :errors="errors.is_default"></error-label>
                                 </div>
@@ -292,47 +291,154 @@
             </div>
 
         </div>
+        <div class="row g-5 g-xxl-8" v-if="roleName!='Super Administrator'">
+									<!--begin::Col-->
+									
+									<!--end::Col-->
+									<!--begin::Col-->
+									<div class="col-xl-6"  v-if="appVersionsWindow">
+										<!--begin::Charts Widget 1-->
+										<div class="card mb-5 mb-xxl-8">
+											<!--begin::Header-->
+											
+											<!--end::Header-->
+											<!--begin::Body-->
+											<div class="card-body" style="position: relative;text-align: center;" >
+                                                <h3 class="card-title align-items-start flex-column">
+													<div class="card-label fw-bolder fs-1 mb-1">Installation for Windows</div>
+													<div   class="text-muted fw-bold fs-7">Version: {{appVersionsWindow.version}}</div>
 
-        <div class="card card-custom card-stretch gutter-b" v-if="roleName!='Super Administrator'">
-            <div class="card-body d-flex flex-column" style="height: 563px">
-                <div class="" style="margin-top: 65px; margin-bottom: 50px">
-                    <h2 style="text-align: center;font-size: 30px">Tải iDIGI PC cho máy tính</h2>
-                    <h5 style="text-align: center;font-size:20px">Ứng dụng đã có mặt trên Windows và MacOS.</h5>
-                    <br>
-                    <div style="text-align: center;font-size: 14px;">
-                        <label>Cài đặt bài giảng số iDIGI thuận lợi và giảng dạy nhanh chóng.
-                        </label>
-                        <br>
-                        <label>Sử dụng trực tuyến (online) và ngoại tuyến (offline) mà không gặp gián
-                            đoạn.</label>
-                        <br>
-                        <label>Bảo mật bài giảng riêng cho thiết bị được đăng ký trước.</label>
-                    </div>
-                </div>
-                <div class="col-lg-12" style="text-align: center;padding: 0 114px;">
-                    <div v-for="entry in entries" v-if="entry.type=='Window'&& entry.is_default==1" style="">
+												</h3>
+                                                <div class="d-block bgi-no-repeat bgi-size-contain bgi-position-center rounded mb-10 h-300px" style="background-image:url('https://img-prod-cms-rt-microsoft-com.akamaized.net/cms/api/am/imageFileData/RE4LqQX');"></div>
+												<!--begin::Chart-->
+												
+										<a :href="appVersionsWindow.url" >
+                                            		<button class="btn btn-primary col-xl-8 text-center mb-5" id="kt_widget_5_load_more_btn">
+                                                    
+											<span class="indicator-label">Start Download</span>
+											<span class="indicator-progress">Loading... 
+											<span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
+										</button><!--end::Chart-->
+                                        </a>
+                                        
+												
+												<!--end::Chart-->
+                                        	
+											<div class="resize-triggers"><div class="expand-trigger"><div style="width: 610px; height: 418px;"></div></div><div class="contract-trigger"></div></div></div>
+											<!--end::Body-->
+										</div>
+										<!--end::Charts Widget 1-->
+										<!--begin::List Widget 5-->
+										
+										<!--end: List Widget 5-->
+									</div>
+                                    <div class="col-xl-6"  v-if="!appVersionsWindow">
+										<!--begin::Charts Widget 1-->
+										<div class="card mb-5 mb-xxl-8">
+											<!--begin::Header-->
+											
+											<!--end::Header-->
+											<!--begin::Body-->
+											<div class="card-body" style="position: relative;text-align: center;" >
+                                                <h3 class="card-title align-items-start flex-column">
+													<div class="card-label fw-bolder fs-1 mb-1">Installation for Windows</div>
+                                                <div class="text-muted fw-bold fs-7">Version: N/A</div>
 
-                        <a :href="entry.url">
-                            <button class="btn btn-primary">Download for Windows
-                                <i class="bi bi-windows"></i>
-                            </button>
-                        </a>
-                        <br>
-                        <label style="margin: 3px 34px 20px;">{{entry.name}}</label>
-                    </div>
-                    <div v-for="entry in entries" v-if="entry.type=='OS'&& entry.is_default==1" style="">
+												</h3>
+                                                <div class="d-block bgi-no-repeat bgi-size-contain bgi-position-center rounded mb-10 h-300px" style="background-image:url('https://img-prod-cms-rt-microsoft-com.akamaized.net/cms/api/am/imageFileData/RE4LqQX');"></div>
+												<!--begin::Chart-->
+												
+										
+                                        <button  class="btn btn-light col-xl-8 text-center mb-5" id="kt_widget_5_load_more_btn">
+											<span class="indicator-label">Unavailable to download</span>
+											<span class="indicator-progress">Loading... 
+											<span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
+										</button><!--begin::Chart-->
+												
+												<!--end::Chart-->
+                                        	
+											<div class="resize-triggers"><div class="expand-trigger"><div style="width: 610px; height: 418px;"></div></div><div class="contract-trigger"></div></div></div>
+											<!--end::Body-->
+										</div>
+										<!--end::Charts Widget 1-->
+										<!--begin::List Widget 5-->
+										
+										<!--end: List Widget 5-->
+									</div>
+                                  
+									<div class="col-xl-6"  v-if="appVersionsOs" >
+										<!--begin::Charts Widget 1-->
+										<div class="card mb-5 mb-xxl-8">
+											<!--begin::Header-->
+											
+											<!--end::Header-->
+											<!--begin::Body-->
+											<div class="card-body" style="position: relative;text-align: center;">
+    <h3 class="card-title align-items-start flex-column">
+													<div class="card-label fw-bolder fs-1 mb-1">Installation for Mac OS</div>
+													<div  class="text-muted fw-bold fs-7">Version: {{appVersionsOs.version}}</div>
 
-                        <a :href="entry.url">
-                            <button class="btn btn-primary">Download for MacOS
-                                <i style="margin:-3px 0px 0px" class="bi bi-apple"></i>
-                            </button>
-                        </a>
-                        <br>
-                        <label style="margin: 4px 34px 0px;">{{entry.name}}</label>
-                    </div>
-                </div>
-            </div>
-        </div>
+
+												</h3>
+    <div class="d-block bgi-no-repeat bgi-size-contain bgi-position-center rounded mb-10 h-300px" style="background-image:url('https://img-prod-cms-rt-microsoft-com.akamaized.net/cms/api/am/imageFileData/RE4LqQX');"></div>
+												
+												
+												<!--end::Chart-->
+                                                	<a :href="appVersionsOs.url" >
+                                            		<button class="btn btn-primary col-xl-8 text-center mb-5" id="kt_widget_5_load_more_btn">
+                                                    
+											<span class="indicator-label">Start Download</span>
+											<span class="indicator-progress">Loading... 
+											<span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
+										</button><!--end::Chart-->
+                                        </a>
+                                         
+
+											<div class="resize-triggers"><div class="expand-trigger"><div style="width: 610px; height: 418px;"></div></div><div class="contract-trigger"></div></div></div>
+											<!--end::Body-->
+										</div>
+										<!--end::Charts Widget 1-->
+										<!--begin::List Widget 5-->
+										
+										<!--end: List Widget 5-->
+									</div>
+                                    <div class="col-xl-6"  v-if="!appVersionsOs" >
+										<!--begin::Charts Widget 1-->
+										<div class="card mb-5 mb-xxl-8">
+											<!--begin::Header-->
+											
+											<!--end::Header-->
+											<!--begin::Body-->
+											<div class="card-body" style="position: relative;text-align: center;">
+                                            <h3 class="card-title align-items-start flex-column">
+													<div class="card-label fw-bolder fs-1 mb-1">Installation for Mac OS</div>
+                                                        <div  class="text-muted fw-bold fs-7">Version: N/A</div>
+
+
+												</h3>
+                                            <div class="d-block bgi-no-repeat bgi-size-contain bgi-position-center rounded mb-10 h-300px" style="background-image:url('https://img-prod-cms-rt-microsoft-com.akamaized.net/cms/api/am/imageFileData/RE4LqQX');"></div>
+												
+												
+												<!--end::Chart-->
+                                                	
+                                         <button  class="btn btn-light col-xl-8 text-center mb-5" id="kt_widget_5_load_more_btn">
+											<span class="indicator-label">Unavailable to download</span>
+											<span class="indicator-progress">Loading... 
+											<span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
+										</button>
+
+											<div class="resize-triggers"><div class="expand-trigger"><div style="width: 610px; height: 418px;"></div></div><div class="contract-trigger"></div></div></div>
+											<!--end::Body-->
+										</div>
+										<!--end::Charts Widget 1-->
+										<!--begin::List Widget 5-->
+										
+										<!--end: List Widget 5-->
+									</div>
+                                    
+								</div>
+
+        
         <div class="modal fade" style="margin-right:50px;border:2px solid #333333  " id="deviceConfirmLimit" tabindex="-1" role="dialog"
              aria-labelledby="deviceConfirmLimit"
              aria-hidden="true">
@@ -404,6 +510,8 @@
                 role: '',
                 errors: {},
                 entries: [],
+                appVersionsWindow:'',
+                appVersionsOs:'',
                 totalVersionIos: 0,
                 totalVersionWindow: 0,
                 curVersion: '',
@@ -507,8 +615,11 @@
             async load() {
                 let query = $router.getQuery();
                 const res = await $get('/xadmin/app_versions/data', query);
+                console.log(res);
                 this.paginate = res.paginate;
                 this.entries = res.data;
+                this.appVersionsWindow=res.appVersionsWindow;
+                this.appVersionsOs=res.appVersionsOs;
                 setTimeout(function () {
                     KTMenu.createInstances();
                 }, 0)

@@ -27,31 +27,48 @@ class CheckPermission
         $roleIds = [];
         foreach ($roles as $role){
             $roleIds[] = $role->id;
-            if($role->role_admin == "Super Administrator"){
+            if($role->role_name == "Super Administrator"){
                 $isAdmin = 1;
             }
+
         }
 
         if($isAdmin == 1){
             return $next($request);
         }else{
-            $parse = parse_url($request->url);
+
+            $parse = parse_url($request->url());
+
             $rolePermissionCount = \App\Models\RoleHasPermission::whereIn('role_id', $roleIds)
                 ->whereHas('permission',function($q) use ($parse){
                     $q->where('path',$parse['path']);
                 })
                 ->count();
 
+
             if($rolePermissionCount > 0){
                 return $next($request);
             }
             $permissionCount = Permission::where('path', $parse['path'])->count();
 
+
             if($permissionCount == 0){
                 return $next($request);
             }
         }
+        $roles = \App\Models\RoleHasPermission::whereIn('role_id', $roleIds)
+            ->with('permission')
+            ->get();
 
-        return redirect('/xadmin/dashboard');
+        foreach ($roles as $role){
+            if($role->permission){
+                if(@$role->permission->path){
+                    return redirect($role->permission->path);
+                }
+            }
+        }
+
+
+        return response('404', 404);
     }
 }
