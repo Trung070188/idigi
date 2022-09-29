@@ -357,7 +357,7 @@
                         </div>
                         <h3 class="card-title align-items-start flex-column">
                             <span class="card-label fw-bolder fs-2 mb-1">Installation for Windows</span>
-                            <span class="text-muted mt-1 fw-bold fs-7">Version: {{appVersionsWindow.version}}</span>
+                            <span class="text-muted mt-1 fw-bold fs-7">Version: N/A </span>
                         </h3>
                     </div>
                     <div class="card-body" style="position: relative; text-align: center;">
@@ -401,8 +401,8 @@
                             <img src="/images/laptop_mac.png" height="300px"/>
                         </div>
                         <a :href="appVersionsOs.url">
-                            <button id="kt_widget_5_load_more_btn" class="btn btn-light col-xl-7 text-center mb-4">
-                                <span class="indicator-label">Unavailable to Download</span>
+                            <button id="kt_widget_5_load_more_btn" class="btn btn-primary col-xl-7 text-center mb-4">
+                                <span class="indicator-label">Start Downloading</span>
                                 <span class="indicator-progress">Loading...
 								    <span class="spinner-border spinner-border-sm align-middle ms-2"></span>
                                 </span>
@@ -427,7 +427,7 @@
                         </div>
                         <h3 class="card-title align-items-start flex-column">
                             <span class="card-label fw-bolder fs-2 mb-1">Installation for Mac OS</span>
-                            <span class="text-muted mt-1 fw-bold fs-7">Version: {{appVersionsOs.version}}</span>
+                            <span class="text-muted mt-1 fw-bold fs-7">Version: N/A</span>
                         </h3>
                     </div>
                     <div class="card-body" style="position: relative; text-align: center;">
@@ -529,7 +529,7 @@
                 role: '',
                 errors: {},
                 entries: [],
-                appVersionsWindow: '',
+                appVersionsWindow:'',
                 appVersionsOs: '',
                 totalVersionIos: 0,
                 totalVersionWindow: 0,
@@ -636,12 +636,15 @@
                 this.paginate = res.paginate;
                 this.entries = res.data;
                 this.appVersionsWindow = res.appVersionsWindow;
+                console.log(this.appVersionsWindow);
                 this.appVersionsOs = res.appVersionsOs;
+                console.log(this.appVersionsOs);
+
                 setTimeout(function () {
                     KTMenu.createInstances();
                 }, 0)
-                this.totalVersionIos = this.entries.filter(e => e.type == 'ios').length;
-                this.totalVersionWindow = this.entries.filter(e => e.type == 'window').length;
+                this.totalVersionIos = this.entries.filter(e => e.type == 'OS').length;
+                this.totalVersionWindow = this.entries.filter(e => e.type == 'Window').length;
                 this.from = (this.paginate.currentPage - 1) * (this.limit) + 1;
                 this.to = (this.paginate.currentPage - 1) * (this.limit) + this.entries.length;
             },

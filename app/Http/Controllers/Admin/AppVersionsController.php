@@ -239,10 +239,11 @@ class AppVersionsController extends AdminBaseController
         }
         $query->createdIn($req->created);
         $entries = $query->paginate(100);
+        $appVersionsWindow=null;
+        $appVersionsOs=null;
+
         $appVersionsWindow=AppVersion::where('is_default',1)->where('type','Window')->first();
         $appVersionsOs=AppVersion::where('is_default',1)->where('type','OS')->first();
-
-
         return [
             'code' => 0,
             'data' => $entries->items(),
