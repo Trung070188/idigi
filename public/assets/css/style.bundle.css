@@ -3291,8 +3291,8 @@ fieldset:disabled a.btn {
 
 .btn-primary {
     color: #ffffff;
-    background-color: #696CFF;
-    border-color: #696CFF;
+    background-color: #f14b1a; /*#696CFF;*/
+    border-color: #d53201;
     -webkit-box-shadow: none;
     box-shadow: none;
 }
@@ -52675,8 +52675,8 @@ button {
 
 .btn.btn-primary {
     color: #FFFFFF;
-    background-color: #696CFF;
-    border-color: #696CFF;
+    background-color: #f14b1a; /*#696CFF;*/
+    border-color: #d53201;
 }
 
 .btn.btn-primary i {

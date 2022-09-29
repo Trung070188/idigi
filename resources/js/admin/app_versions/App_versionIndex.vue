@@ -3,23 +3,29 @@
         <ActionBar type="index"
                    :breadcrumbs="breadcrumbs" title="Application Settings"/>
         <div class="card card-custom card-stretch gutter-b" v-if="roleName=='Super Administrator'">
-            <div class="modal fade" style="margin-right:50px;border:2px solid #333333  " id="delete" tabindex="-1" role="dialog"
+            <div class="modal fade" style="margin-right:50px;border:2px solid #333333  " id="delete" tabindex="-1"
+                 role="dialog"
                  aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered popup-main-1" role="document"
                      style="max-width: 450px;">
-                    <div class="modal-content box-shadow-main paymment-status" style="left:120px;text-align: center; padding: 20px 0px 55px;">
+                    <div class="modal-content box-shadow-main paymment-status"
+                         style="left:120px;text-align: center; padding: 20px 0px 55px;">
                         <div class="close-popup" data-dismiss="modal"></div>
                         <div class="swal2-icon swal2-warning swal2-icon-show">
                             <div class="swal2-icon-content" style="margin: 0px 24.5px 0px ">!</div>
                         </div>
                         <div class="swal2-html-container">
-                            <p >Are you sure to delete this version?</p>
+                            <p>Are you sure to delete this version?</p>
                         </div>
                         <div class="swal2-actions">
-                            <button type="submit" id="kt_modal_new_target_submit" class="swal2-confirm btn fw-bold btn-danger" @click="remove(entry)">
+                            <button type="submit" id="kt_modal_new_target_submit"
+                                    class="swal2-confirm btn fw-bold btn-danger" @click="remove(entry)">
                                 <span class="indicator-label">Yes, delete!</span>
                             </button>
-                            <button type="reset" id="kt_modal_new_target_cancel" class="swal2-cancel btn fw-bold btn-active-light-primary" data-bs-dismiss="modal" style="margin: 0px 8px 0px">No, cancel</button>
+                            <button type="reset" id="kt_modal_new_target_cancel"
+                                    class="swal2-cancel btn fw-bold btn-active-light-primary" data-bs-dismiss="modal"
+                                    style="margin: 0px 8px 0px">No, cancel
+                            </button>
 
                         </div>
 
@@ -27,18 +33,20 @@
                 </div>
             </div>
 
-            <div class="card-header card-header-stretch border-bottom border-gray-200" >
+            <div class="card-header card-header-stretch border-bottom border-gray-200">
 
                 <div class="card-title " style="margin: 36px 0px 0px;">
                     <ul class="nav nav-stretch nav-line-tabs border-transparent" role="tablist">
                         <!--begin::Tab nav item-->
                         <li class="nav-item" role="presentation">
-                            <a id="kt_billing_6months_tab" class="nav-link fs-5 fw-bold me-3 active" data-bs-toggle="tab" role="tab" href="billing.html#kt_billing_months">WINDOWS</a>
+                            <a id="kt_billing_6months_tab" class="nav-link fs-5 fw-bold me-3 active"
+                               data-bs-toggle="tab" role="tab" href="billing.html#kt_billing_months">WINDOWS</a>
                         </li>
                         <!--end::Tab nav item-->
                         <!--begin::Tab nav item-->
                         <li class="nav-item" role="presentation">
-                            <a id="kt_billing_1year_tab" class="nav-link fs-5 fw-bold me-3" data-bs-toggle="tab" role="tab" href="billing.html#kt_billing_year">OS</a>
+                            <a id="kt_billing_1year_tab" class="nav-link fs-5 fw-bold me-3" data-bs-toggle="tab"
+                               role="tab" href="billing.html#kt_billing_year">OS</a>
                         </li>
                         <!--end::Tab nav item-->
                         <!--begin::Tab nav item-->
@@ -63,16 +71,17 @@
             </div>
 
 
-            <div class="tab-content" >
-                <div id="kt_billing_months" class="card-body p-0 tab-pane fade show active" role="tabpanel" aria-labelledby="kt_billing_months">
+            <div class="tab-content">
+                <div id="kt_billing_months" class="card-body p-0 tab-pane fade show active" role="tabpanel"
+                     aria-labelledby="kt_billing_months">
                     <table class="table table-row-bordered align-middle gy-4 gs-9">
                         <thead
                             class="border-bottom border-gray-200 fs-6 text-gray-600 fw-bolder bg-light bg-opacity-75">
                         <tr>
-<!--                            <td>Name</td>-->
+                            <!--                            <td>Name</td>-->
                             <th class="">Version</th>
                             <th class="">Release notes</th>
-<!--                            <th class="">Release date</th>-->
+                            <!--                            <th class="">Release date</th>-->
                             <th class="">Status</th>
                             <th class="">Actions</th>
 
@@ -82,10 +91,11 @@
                         <tbody>
 
                         <tr v-for="entry in entries" v-if="entry.type=='Window'">
-<!--                            <td v-text="entry.name"></td>-->
+                            <!--                            <td v-text="entry.name"></td>-->
                             <td v-text="entry.version"></td>
-                            <td  class="css_test" v-text="entry.release_note" @click="showReleaseNote(entry.release_note)"></td>
-<!--                            <td> {{ d2(entry.release_date) }}</td>-->
+                            <td class="css_test" v-text="entry.release_note"
+                                @click="showReleaseNote(entry.release_note)"></td>
+                            <!--                            <td> {{ d2(entry.release_date) }}</td>-->
                             <td style="color:#1aaf21;" class="" v-if="entry.is_default==1">Default</td>
                             <td v-if="entry.is_default==0"></td>
                             <td class="">
@@ -110,7 +120,8 @@
                                         <a :href="entry.url" class="menu-link px-3">Download</a>
                                     </div>
                                     <div class="menu-item px-3">
-                                        <a v-if="entry.is_default==0" class="menu-link px-3" @click="showSetDefaultModal(entry.id)">Set as Default</a>
+                                        <a v-if="entry.is_default==0" class="menu-link px-3"
+                                           @click="showSetDefaultModal(entry.id)">Set as Default</a>
                                     </div>
                                     <div class="menu-item px-3">
                                         <a @click="removeApp(entry.id)"
@@ -126,15 +137,16 @@
                     </table>
 
                 </div>
-                <div id="kt_billing_year" class="card-body p-0 tab-pane fade" role="tabpanel" aria-labelledby="kt_billing_year">
+                <div id="kt_billing_year" class="card-body p-0 tab-pane fade" role="tabpanel"
+                     aria-labelledby="kt_billing_year">
                     <table class="table table-row-bordered align-middle gy-4 gs-9">
                         <thead
                             class="border-bottom border-gray-200 fs-6 text-gray-600 fw-bolder bg-light bg-opacity-75">
                         <tr>
-<!--                            <td>Application</td>-->
+                            <!--                            <td>Application</td>-->
                             <th class="">Version</th>
                             <th class="">Release notes</th>
-<!--                            <th class="">Release date</th>-->
+                            <!--                            <th class="">Release date</th>-->
                             <th class="">Status</th>
                             <th class="">Actions</th>
 
@@ -142,10 +154,11 @@
                         </thead>
                         <tbody>
                         <tr v-for="entry in entries" v-if="entry.type=='OS'">
-<!--                            <td v-text="entry.name"></td>-->
+                            <!--                            <td v-text="entry.name"></td>-->
                             <td v-text="entry.version"></td>
-                            <td class="css_test"  v-text="entry.release_note" @click="showReleaseNote(entry.release_note)"></td>
-<!--                            <td> {{ d2(entry.release_date) }}</td>-->
+                            <td class="css_test" v-text="entry.release_note"
+                                @click="showReleaseNote(entry.release_note)"></td>
+                            <!--                            <td> {{ d2(entry.release_date) }}</td>-->
                             <td style="color:#1aaf21;" v-if="entry.is_default==1">Default</td>
                             <td v-if="entry.is_default==0"></td>
                             <td class="">
@@ -243,11 +256,11 @@
                                            accept=".zip,.rar,.7zip">
                                     <error-label :errors="errors.file_1"></error-label>
                                 </div>
-<!--                                <div class="form-group">-->
-<!--                                    <label>Name <span class="required"></span></label>-->
-<!--                                    <input type="text" v-model="model.name" class="form-control">-->
-<!--                                    <error-label :errors="errors.name"></error-label>-->
-<!--                                </div>-->
+                                <!--                                <div class="form-group">-->
+                                <!--                                    <label>Name <span class="required"></span></label>-->
+                                <!--                                    <input type="text" v-model="model.name" class="form-control">-->
+                                <!--                                    <error-label :errors="errors.name"></error-label>-->
+                                <!--                                </div>-->
 
                                 <div class="form-group">
                                     <label>OS <span class="required"></span></label>
@@ -263,12 +276,12 @@
                                     <input type="text" class="form-control" v-model="model.version">
                                     <error-label></error-label>
                                 </div>
-<!--                                <div class="form-group">-->
-<!--                                    <label>Release date <span class="required"></span></label>-->
-<!--                                    <Datepicker v-model="model.release_date"/>-->
-<!--                                    <error-label for="f_title" :errors="errors.release_date"></error-label>-->
+                                <!--                                <div class="form-group">-->
+                                <!--                                    <label>Release date <span class="required"></span></label>-->
+                                <!--                                    <Datepicker v-model="model.release_date"/>-->
+                                <!--                                    <error-label for="f_title" :errors="errors.release_date"></error-label>-->
 
-<!--                                </div>-->
+                                <!--                                </div>-->
                                 <div class="form-group">
                                     <label>Release Note <span class="required"></span></label>
                                     <textarea type="text" class="form-control" v-model="model.release_note"/>
@@ -291,163 +304,166 @@
             </div>
 
         </div>
+
+        <!-- Code updated 29/09/2022 -->
         <div class="row g-5 g-xxl-8" v-if="roleName!='Super Administrator'">
-									<!--begin::Col-->
+            <!-- Windows -->
+            <div class="col-xl-6" v-if="appVersionsWindow">
+                <div class="card mb-5 mb-xxl-8">
+                    <div class="card-header border-0 pt-5">
+                        <h3 class="card-title align-items-start flex-column">
+                            <span class="card-label fw-bolder fs-2 mb-1">Installation for Windows</span>
+                            <span class="text-muted mt-1 fw-bold fs-7">Version: {{appVersionsWindow.version}}</span>
+                        </h3>
+                        <div class="card-toolbar">
+                            <div class="d-block">
+                                <img src="/images/windows_logo.png" height="48px"/>
+                            </div>
 
-									<!--end::Col-->
-									<!--begin::Col-->
-									<div class="col-xl-6"  v-if="appVersionsWindow">
-										<!--begin::Charts Widget 1-->
-										<div class="card mb-5 mb-xxl-8">
-											<!--begin::Header-->
+                        </div>
+                    </div>
+                    <div class="card-body" style="position: relative; text-align: center;">
+                        <div class="d-block mb-5">
+                            <img src="/images/laptop_win.png" height="300px"/>
+                        </div>
 
-											<!--end::Header-->
-											<!--begin::Body-->
-											<div class="card-body" style="position: relative;text-align: center;" >
-                                                <h3 class="card-title align-items-start flex-column">
-													<div class="card-label fw-bolder fs-1 mb-1">Installation for Windows</div>
-													<div   class="text-muted fw-bold fs-7">Version: {{appVersionsWindow.version}}</div>
+                        <a :href="appVersionsWindow.url">
+                            <button id="kt_widget_5_load_more_btn"
+                                    class="btn btn-primary col-xl-8 text-center mb-4"><span class="indicator-label">Start Downloading</span>
+                                <span class="indicator-progress">Loading...
+											<span
+                                                class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
+                            </button>
+                        </a>
+                        <p class="text-gray-600 fw-bold fs-7">By downloading iSMART DIGI, you accept Terms Of Use,
+                            Privacy and Cookies.</p>
+                        <div class="resize-triggers">
+                            <div class="expand-trigger">
+                                <div style="width: 610px; height: 418px;"></div>
+                            </div>
+                            <div class="contract-trigger"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-6" v-if="!appVersionsWindow">
+                <div class="card mb-5 mb-xxl-8">
+                    <div class="card-header border-0 pt-5">
+                        <h3 class="card-title align-items-start flex-column">
+                            <span class="card-label fw-bolder fs-2 mb-1">Installation for Windows</span>
+                            <span class="text-muted mt-1 fw-bold fs-7">Version: N/A</span>
+                        </h3>
+                        <div class="card-toolbar">
+                            <div class="d-block"><img src="/images/windows_logo.png" height="48px"/></div>
+                        </div>
+                    </div>
+                    <div class="card-body" style="position: relative; text-align: center;">
+                        <div class="d-block mb-5">
+                            <img src="/images/laptop_win.png" height="300px"/>
+                        </div>
 
-												</h3>
-                                                <div class="d-block bgi-no-repeat bgi-size-contain bgi-position-center rounded mb-10 h-300px" style="background-image:url('https://img-prod-cms-rt-microsoft-com.akamaized.net/cms/api/am/imageFileData/RE4LqQX');"></div>
-												<!--begin::Chart-->
+                        <button id="kt_widget_5_load_more_btn"
+                                class="btn btn-light col-xl-8 text-center mb-4"><span class="indicator-label">Unavailable to Download</span>
+                            <span class="indicator-progress">Loading...
+                                        <span
+                                            class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
+                        </button>
+                        <p class="text-gray-600 fw-bold fs-7">By downloading iSMART DIGI, you accept Terms Of Use,
+                            Privacy and Cookies.</p>
+                        <div class="resize-triggers">
+                            <div class="expand-trigger">
+                                <div style="width: 610px; height: 418px;"></div>
+                            </div>
+                            <div class="contract-trigger"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- End Windows -->
 
-										<a :href="appVersionsWindow.url" >
-                                            		<button class="btn btn-primary col-xl-8 text-center mb-5" id="kt_widget_5_load_more_btn">
+            <!-- Mac OS -->
+            <div class="col-xl-6" v-if="appVersionsOs">
+                <div class="card mb-5 mb-xxl-8">
+                    <div class="card-header border-0 pt-5">
+                        <h3 class="card-title align-items-start flex-column">
+                            <span class="card-label fw-bolder fs-2 mb-1">Installation for Mac OS</span>
+                            <span class="text-muted mt-1 fw-bold fs-7">Version: {{appVersionsOs.version}}</span>
+                        </h3>
+                        <div class="card-toolbar">
+                            <div class="d-block"><img src="/images/macos_logo.png" height="48px"/></div>
+                        </div>
+                    </div>
+                    <div class="card-body" style="position: relative; text-align: center;">
+                        <div class="d-block mb-5">
+                            <img src="/images/laptop_mac.png" height="300px"/>
+                        </div>
+                        <a :href="appVersionsOs.url">
+                            <button id="kt_widget_5_load_more_btn" class="btn btn-light col-xl-8 text-center mb-4">
+                                <span class="indicator-label">Unavailable to Download</span> <span
+                                class="indicator-progress">Loading...
+											<span
+                                                class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
+                            </button>
+                        </a>
+                        <p class="text-gray-600 fw-bold fs-7">By downloading iSMART DIGI, you accept Terms Of Use,
+                            Privacy and Cookies.</p>
+                        <div class="resize-triggers">
+                            <div class="expand-trigger">
+                                <div style="width: 610px; height: 418px;"></div>
+                            </div>
+                            <div class="contract-trigger"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-6" v-if="!appVersionsOs">
+                <div class="card mb-5 mb-xxl-8">
+                    <div class="card-header border-0 pt-5">
+                        <h3 class="card-title align-items-start flex-column">
+                            <span class="card-label fw-bolder fs-2 mb-1">Installation for Mac OS</span>
+                            <span class="text-muted mt-1 fw-bold fs-7">Version: N/A</span>
+                        </h3>
+                        <div class="card-toolbar">
+                            <div class="d-block"><img src="/images/macos_logo.png" height="48px"/></div>
+                        </div>
+                    </div>
+                    <div class="card-body" style="position: relative; text-align: center;">
+                        <div class="d-block mb-5">
+                            <img src="/images/laptop_mac.png" height="300px"/>
+                        </div>
+                        <button id="kt_widget_5_load_more_btn" class="btn btn-light col-xl-8 text-center mb-4">
+                            <span class="indicator-label">Unavailable to Download</span> <span
+                            class="indicator-progress">Loading...
+                                        <span
+                                            class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
+                        </button>
 
-											<span class="indicator-label">Start Download</span>
-											<span class="indicator-progress">Loading...
-											<span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
-										</button><!--end::Chart-->
-                                        </a>
+                        <p class="text-gray-600 fw-bold fs-7">By downloading iSMART DIGI, you accept Terms Of Use,
+                            Privacy and Cookies.</p>
+                        <div class="resize-triggers">
+                            <div class="expand-trigger">
+                                <div style="width: 610px; height: 418px;"></div>
+                            </div>
+                            <div class="contract-trigger"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- End Mac OS -->
+        </div>
+        <!-- End Code updated 29/09/2022 -->
 
-
-												<!--end::Chart-->
-
-											<div class="resize-triggers"><div class="expand-trigger"><div style="width: 610px; height: 418px;"></div></div><div class="contract-trigger"></div></div></div>
-											<!--end::Body-->
-										</div>
-										<!--end::Charts Widget 1-->
-										<!--begin::List Widget 5-->
-
-										<!--end: List Widget 5-->
-									</div>
-                                    <div class="col-xl-6"  v-if="!appVersionsWindow">
-										<!--begin::Charts Widget 1-->
-										<div class="card mb-5 mb-xxl-8">
-											<!--begin::Header-->
-
-											<!--end::Header-->
-											<!--begin::Body-->
-											<div class="card-body" style="position: relative;text-align: center;" >
-                                                <h3 class="card-title align-items-start flex-column">
-													<div class="card-label fw-bolder fs-1 mb-1">Installation for Windows</div>
-                                                <div class="text-muted fw-bold fs-7">Version: N/A</div>
-
-												</h3>
-                                                <div class="d-block bgi-no-repeat bgi-size-contain bgi-position-center rounded mb-10 h-300px" style="background-image:url('https://img-prod-cms-rt-microsoft-com.akamaized.net/cms/api/am/imageFileData/RE4LqQX');"></div>
-												<!--begin::Chart-->
-
-
-                                        <button  class="btn btn-light col-xl-8 text-center mb-5" id="kt_widget_5_load_more_btn">
-											<span class="indicator-label">Unavailable to download</span>
-											<span class="indicator-progress">Loading...
-											<span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
-										</button><!--begin::Chart-->
-
-												<!--end::Chart-->
-
-											<div class="resize-triggers"><div class="expand-trigger"><div style="width: 610px; height: 418px;"></div></div><div class="contract-trigger"></div></div></div>
-											<!--end::Body-->
-										</div>
-										<!--end::Charts Widget 1-->
-										<!--begin::List Widget 5-->
-
-										<!--end: List Widget 5-->
-									</div>
-
-									<div class="col-xl-6"  v-if="appVersionsOs" >
-										<!--begin::Charts Widget 1-->
-										<div class="card mb-5 mb-xxl-8">
-											<!--begin::Header-->
-
-											<!--end::Header-->
-											<!--begin::Body-->
-											<div class="card-body" style="position: relative;text-align: center;">
-    <h3 class="card-title align-items-start flex-column">
-													<div class="card-label fw-bolder fs-1 mb-1">Installation for Mac OS</div>
-													<div  class="text-muted fw-bold fs-7">Version: {{appVersionsOs.version}}</div>
-
-
-												</h3>
-    <div class="d-block bgi-no-repeat bgi-size-contain bgi-position-center rounded mb-10 h-300px" style="background-image:url('https://img-prod-cms-rt-microsoft-com.akamaized.net/cms/api/am/imageFileData/RE4LqQX');"></div>
-
-
-												<!--end::Chart-->
-                                                	<a :href="appVersionsOs.url" >
-                                            		<button class="btn btn-primary col-xl-8 text-center mb-5" id="kt_widget_5_load_more_btn">
-
-											<span class="indicator-label">Start Download</span>
-											<span class="indicator-progress">Loading...
-											<span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
-										</button><!--end::Chart-->
-                                        </a>
-
-
-											<div class="resize-triggers"><div class="expand-trigger"><div style="width: 610px; height: 418px;"></div></div><div class="contract-trigger"></div></div></div>
-											<!--end::Body-->
-										</div>
-										<!--end::Charts Widget 1-->
-										<!--begin::List Widget 5-->
-
-										<!--end: List Widget 5-->
-									</div>
-                                    <div class="col-xl-6"  v-if="!appVersionsOs" >
-										<!--begin::Charts Widget 1-->
-										<div class="card mb-5 mb-xxl-8">
-											<!--begin::Header-->
-
-											<!--end::Header-->
-											<!--begin::Body-->
-											<div class="card-body" style="position: relative;text-align: center;">
-                                            <h3 class="card-title align-items-start flex-column">
-													<div class="card-label fw-bolder fs-1 mb-1">Installation for Mac OS</div>
-                                                        <div  class="text-muted fw-bold fs-7">Version: N/A</div>
-
-
-												</h3>
-                                            <div class="d-block bgi-no-repeat bgi-size-contain bgi-position-center rounded mb-10 h-300px" style="background-image:url('https://img-prod-cms-rt-microsoft-com.akamaized.net/cms/api/am/imageFileData/RE4LqQX');"></div>
-
-
-												<!--end::Chart-->
-
-                                         <button  class="btn btn-light col-xl-8 text-center mb-5" id="kt_widget_5_load_more_btn">
-											<span class="indicator-label">Unavailable to download</span>
-											<span class="indicator-progress">Loading...
-											<span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
-										</button>
-
-											<div class="resize-triggers"><div class="expand-trigger"><div style="width: 610px; height: 418px;"></div></div><div class="contract-trigger"></div></div></div>
-											<!--end::Body-->
-										</div>
-										<!--end::Charts Widget 1-->
-										<!--begin::List Widget 5-->
-
-										<!--end: List Widget 5-->
-									</div>
-
-								</div>
-
-
-        <div class="modal fade" style="margin-right:50px;border:2px solid #333333  " id="deviceConfirmLimit" tabindex="-1" role="dialog"
+        <div class="modal fade" style="margin-right:50px;border:2px solid #333333  " id="deviceConfirmLimit"
+             tabindex="-1" role="dialog"
              aria-labelledby="deviceConfirmLimit"
              aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered popup-main-1" role="document"
                  style="max-width: 500px;">
-                <div class="modal-content box-shadow-main paymment-status" style="left:140px;text-align: center; padding: 27px 0px 10px;">
+                <div class="modal-content box-shadow-main paymment-status"
+                     style="left:140px;text-align: center; padding: 27px 0px 10px;">
                     <div class="close-popup" data-dismiss="modal"></div>
                     <div class="content">
-                        <p  style="word-break: break-word;margin-right: 20px;margin-left: 20px;}">{{release_note}}</p>
+                        <p style="word-break: break-word;margin-right: 20px;margin-left: 20px;}">{{release_note}}</p>
                     </div>
                 </div>
             </div>
@@ -492,26 +508,26 @@
         data() {
             const permissions = clone(window.$permissions);
             return {
-                entry:'',
-                roleName:$json.roleName,
-                release_note:'',
+                entry: '',
+                roleName: $json.roleName,
+                release_note: '',
                 permissions,
-                window:[],
-                macos:[],
-                windowIds:[],
-                win:[],
+                window: [],
+                macos: [],
+                windowIds: [],
+                win: [],
                 appIds: [],
                 app: [],
                 allSelected: false,
-                windowAllSelected:false,
+                windowAllSelected: false,
                 model: {
                     type: ''
                 },
                 role: '',
                 errors: {},
                 entries: [],
-                appVersionsWindow:'',
-                appVersionsOs:'',
+                appVersionsWindow: '',
+                appVersionsOs: '',
                 totalVersionIos: 0,
                 totalVersionWindow: 0,
                 curVersion: '',
@@ -526,16 +542,14 @@
             $router.on('/', this.load).init();
         },
         methods: {
-            showReleaseNote(release_note)
-            {
-                const that=this;
-                that.release_note=release_note;
+            showReleaseNote(release_note) {
+                const that = this;
+                that.release_note = release_note;
                 $('#deviceConfirmLimit').modal('show');
             },
-            removeApp:function(deleteApp='')
-            {
+            removeApp: function (deleteApp = '') {
                 $('#delete').modal('show');
-                this.entry=deleteApp;
+                this.entry = deleteApp;
             },
 
             showSetDefaultModal: function (id) {
@@ -618,8 +632,8 @@
                 console.log(res);
                 this.paginate = res.paginate;
                 this.entries = res.data;
-                this.appVersionsWindow=res.appVersionsWindow;
-                this.appVersionsOs=res.appVersionsOs;
+                this.appVersionsWindow = res.appVersionsWindow;
+                this.appVersionsOs = res.appVersionsOs;
                 setTimeout(function () {
                     KTMenu.createInstances();
                 }, 0)
@@ -666,8 +680,7 @@
                     })
                 })
             },
-            WindowSelectAll()
-            {
+            WindowSelectAll() {
                 if (this.windowAllSelected) {
                     const selected = this.window.map((u) => u.id);
                     this.windowIds = selected;
@@ -677,8 +690,7 @@
                     this.win = [];
                 }
             },
-            async removeAll()
-            {
+            async removeAll() {
                 if (!confirm('Xóa bản ghi: ' + JSON.stringify(this.appIds))) {
                     return;
                 }
@@ -696,8 +708,7 @@
                 $router.updateQuery({page: this.paginate.currentPage, _: Date.now()});
 
             },
-            async windowRemoveAll()
-            {
+            async windowRemoveAll() {
                 if (!confirm('Xóa bản ghi: ' + JSON.stringify(this.windowIds))) {
                     return;
                 }
@@ -729,7 +740,8 @@
         border-radius: 0.475rem;
 
     }
-    .css_test{
+
+    .css_test {
         max-width: 0px;
         overflow: hidden;
         text-overflow: ellipsis;
