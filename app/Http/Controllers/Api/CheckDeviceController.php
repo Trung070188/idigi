@@ -66,8 +66,8 @@ class CheckDeviceController extends Controller
     }
 
     public function checkVersion(Request  $request){
-        $curApp = AppVersion::where('type', $request->os)
-            ->where('is_default', 1)->first();
+        $curApp = AppVersion::
+            where('is_default', 1)->first();
         if(!$curApp){
             return [
                 'code' => 1,
@@ -81,7 +81,7 @@ class CheckDeviceController extends Controller
             'msg' => "Success",
             'results' => [
                 'latest_version' => $curApp->version,
-                'link_version' => $curApp->url,
+                'link_version' => $curApp->url_updated,
             ]
         ];
     }
