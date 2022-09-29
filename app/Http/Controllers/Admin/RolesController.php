@@ -273,7 +273,7 @@ class RolesController extends AdminBaseController
         $check = $req->check;
 
         $permission = Permission::where('id', $permissionId)->first();
-        $groupPermission = GroupPermission::where('id', $permission->group_permission_id)->first();
+        $groupPermission = GroupPermission::where('id', $permission->group_permission_id)->with(['parent'])->first();
         $childCount = Permission::where('group_permission_id', $permission->group_permission_id)
             ->whereHas('roles', function ($q) use ($roleId){
                 $q->where('id', $roleId);
@@ -299,11 +299,17 @@ class RolesController extends AdminBaseController
                 $groupPermission->role_id = implode(';', $newRole);
                 $groupPermission->save();
 
+
                 if($groupPermission->parent_id){//Xóa role ở parent_group
                     $parentPermission = GroupPermission::where('id', $groupPermission->parent_id)->first();
-                    $childCount = GroupPermission::where('parent_id', $groupPermission->parent_id)
+                    $childIds = GroupPermission::where('parent_id', $groupPermission->parent_id)
                         ->where('id','<>', $groupPermission->id)
-                        ->count();
+                        ->pluck('id')->toArray();
+
+                    $childCount = Permission::whereHas('roles', function ($q) use ($roleId){
+                            $q->where('id', $roleId);
+                        })
+                        ->whereIn('group_permission_id', $childIds)->count();
 
                     if($childCount == 0){
                         $permissionRole = $parentPermission->role_id;
