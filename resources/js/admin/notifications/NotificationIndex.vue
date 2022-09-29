@@ -135,14 +135,10 @@
                     </div>
                     <div class="tab-content">
                         <div class="d-flex flex-stack pt-4 pl-9 pr-9">
-                            <div
-                                class="badge badge-lg badge-light-primary mb-15"
-                            >
-                                <div
-                                    class="d-flex align-items-center flex-wrap"
-                                >
+                            <div class="badge badge-lg badge-light-dark mb-15">
+                                <div class="d-flex align-items-center flex-wrap">
                                     <span
-                                        class="svg-icon svg-icon-2x svg-icon-primary mx-1"
+                                        class="svg-icon svg-icon-dark mx-1"
                                     >
                                         <svg
                                             xmlns="http://www.w3.org/2000/svg"

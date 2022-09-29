@@ -10,11 +10,11 @@
 
                         <template >
                             <div data-kt-menu-trigger="click" data-kt-menu-placement="bottom-start" class="menu-item menu-lg-down-accordion me-lg-1" style="margin: 12px 0px 0px">
-                                <span class="menu-link py-3">
+                                <span class="py-3">
 
-                           <div class="badge badge-lg badge-light-primary mb-15">
+                           <div class="badge badge-lg badge-light-success mb-15">
                                <div class="d-flex align-items-center flex-wrap" v-if="roleName=='School Admin' || roleName=='Teacher' ">
-                                   <div v-text="'Trường '+ schoolName " ></div>
+                                   <div v-text="'School: '+ schoolName " ></div>
 
 
 

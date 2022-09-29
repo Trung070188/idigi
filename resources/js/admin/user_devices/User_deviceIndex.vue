@@ -244,7 +244,7 @@
                     </div>
                       <div class="tab-content">
                         <div class="d-flex flex-stack pt-4 pl-9 pr-9">
-                            <div class="badge badge-lg badge-light-primary mb-15">
+                            <div class="badge badge-lg badge-light-dark mb-15">
                                 <div class="d-flex align-items-center flex-wrap" v-if="roleName=='School Admin' || roleName=='Teacher'  ">
 
 
