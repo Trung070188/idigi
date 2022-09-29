@@ -319,7 +319,7 @@
                         </div>
                         <h3 class="card-title align-items-start flex-column">
                             <span class="card-label fw-bolder fs-2 mb-1">Installation for Windows</span>
-                            <span class="text-muted mt-1 fw-bold fs-7">Version: {{appVersionsWindow.version}}</span>
+                            <span class="badge badge-light-success fs-7">Version: {{appVersionsWindow.version}}</span>
                         </h3>
                     </div>
                     <div class="card-body" style="position: relative; text-align: center;">
@@ -358,7 +358,7 @@
                         </div>
                         <h3 class="card-title align-items-start flex-column">
                             <span class="card-label fw-bolder fs-2 mb-1">Installation for Windows</span>
-                            <span class="text-muted mt-1 fw-bold fs-7">Version: N/A </span>
+                            <span class="badge badge-light-dark fs-7">Version: N/A </span>
                         </h3>
                     </div>
                     <div class="card-body" style="position: relative; text-align: center;">
@@ -395,7 +395,7 @@
                         </div>
                         <h3 class="card-title align-items-start flex-column">
                             <span class="card-label fw-bolder fs-2 mb-1">Installation for Mac OS</span>
-                            <span class="text-muted mt-1 fw-bold fs-7">Version: {{appVersionsOs.version}}</span>
+                            <span class="badge badge-light-success fs-7">Version: {{appVersionsOs.version}}</span>
                         </h3>
                     </div>
                     <div class="card-body" style="position: relative; text-align: center;">
@@ -430,7 +430,7 @@
                         </div>
                         <h3 class="card-title align-items-start flex-column">
                             <span class="card-label fw-bolder fs-2 mb-1">Installation for Mac OS</span>
-                            <span class="text-muted mt-1 fw-bold fs-7">Version: N/A</span>
+                            <span class="badge badge-light-dark fs-7">Version: N/A</span>
                         </h3>
                     </div>
                     <div class="card-body" style="position: relative; text-align: center;">
