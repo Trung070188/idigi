@@ -63,15 +63,13 @@
                                 data-kt-customer-table-toolbar="base"
                                 v-if="teacherIds == ''"
                             >
-                                <button type="button" style="margin-left: 10px"
-                                        @click="isShowFilter = !isShowFilter"
-                                        class="btn btn-primary" v-if="isShowFilter"> Close Advanced Search
+                                <button type="button" style="margin-left: 10px" @click="isShowFilter = !isShowFilter" class="btn btn-secondary" v-if="isShowFilter">
                                     <i style="margin-left: 5px" class="fas fa-times"></i>
+                                    Close Advanced Search
                                 </button>
-                                <button type="button" style="margin-left: 10px"
-                                        @click="isShowFilter = !isShowFilter"
-                                        class="btn btn-primary" v-if="!isShowFilter"> Advanced Search
-                                    <i class="fa fa-filter" v-if="!isShowFilter" aria-hidden="true"></i>
+                                <button type="button" style="margin-left: 10px" @click="isShowFilter = !isShowFilter" class="btn btn-secondary" v-if="!isShowFilter">
+                                    <i class="bi bi-funnel"></i>
+                                    Advanced Search
                                 </button>
 <!--                                <a v-if="permissions['013']" :href="'/xadmin/users/create_teacher'">-->
 <!--                                    <button class="btn btn-primary button-create" style="margin:0 0 0 15px"> Create New</button>-->

@@ -82,8 +82,9 @@
 
                             >
                                 <a :href="'/xadmin/allocation_contents/create'">
-                                    <button   type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#kt_modal_add_customer" >Create</button>
-
+                                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#kt_modal_add_customer" >
+                                        <i class="bi bi-plus-lg"></i>New Allocation
+                                    </button>
                                 </a>
 
                             </div>

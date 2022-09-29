@@ -31,8 +31,8 @@
                      <div class="card-header border-0 pt-6" style="margin:0px 0px -35px">
                          <div class="card-title"></div>
                          <div class="card-toolbar">
-                             <button v-if="permissions['003'] && auth.id!=entry.id" class="btn btn-danger button-create " @click="removeUser">
-                                 Delete User <i class="fas fa-trash"></i>
+                             <button v-if="permissions['003'] && auth.id!=entry.id" class="btn btn-danger" @click="removeUser">
+                                 <i class="bi bi-person-dash mr-1"></i>Delete user
                              </button>
                          </div>
                     </div>
@@ -112,7 +112,7 @@
                         </div>
                         <hr style="margin: 0px 0px 16px;">
                         <div>
-                            <button type="reset" @click="save()" class="btn btn-primary mr-2">Save</button>
+                            <button type="reset" @click="save()" class="btn btn-primary mr-2"><i class="bi bi-save2 mr-1"></i>Save</button>
                             <button type="reset" @click="backIndex()" class="btn btn-secondary">Cancel</button>
                         <label style="margin-left: 20px">Username and password will be sent to the user's email.
                           </label>

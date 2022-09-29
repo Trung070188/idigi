@@ -72,21 +72,15 @@
 
                                 </div>
                                 <div class="card-toolbar">
-                            <div
-                                class="d-flex justify-content-end"
-                                data-kt-customer-table-toolbar="base"
-                                v-if="teacherIds == ''"
-                            >
-                                        <button type="button" style="margin:0px 15px 0px"
-                                                @click="isShowFilter = !isShowFilter"
-                                                class="btn btn-primary" v-if="isShowFilter"> Close Advanced Search
-                                            <i style="margin-left: 5px" class="fas fa-times"></i>
-                                        </button>
-                                        <button type="button" style="margin:0px 15px 0px"
-                                                @click="isShowFilter = !isShowFilter"
-                                                class="btn btn-primary" v-if="!isShowFilter"> Advanced Search
-                                            <i class="fa fa-filter" v-if="!isShowFilter" aria-hidden="true"></i>
-                                        </button>
+                            <div class="d-flex justify-content-end" data-kt-customer-table-toolbar="base" v-if="teacherIds == ''">
+                                <button type="button" style="margin-left: 10px" @click="isShowFilter = !isShowFilter" class="btn btn-secondary" v-if="isShowFilter">
+                                    <i style="margin-left: 5px" class="fas fa-times"></i>
+                                    Close Advanced Search
+                                </button>
+                                <button type="button" style="margin-left: 10px" @click="isShowFilter = !isShowFilter" class="btn btn-secondary" v-if="!isShowFilter">
+                                    <i class="bi bi-funnel"></i>
+                                    Advanced Search
+                                </button>
                                 <div class="d-flex justify-content-end" data-kt-filemanager-table-toolbar="base">
 
 

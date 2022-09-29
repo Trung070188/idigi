@@ -55,21 +55,21 @@
                  style="max-width: 500px;">
                 <div class="modal-content box-shadow-main paymment-status" style="margin-right:20px; left:140px">
                     <div class="close-popup" data-dismiss="modal"></div>
-                    <h3 style="margin:20px auto;font-weight: 500;" class="popup-title success">Add more device</h3>
-                    <div class="content" style="margin: -30px 20px 20px">
-                        <p>Bước 1 :Sử dụng máy tính mà bạn muốn thêm thiết bị mở ứng dụng IDIGI trên Desktop</p>
-                        <p>Bước 2:Nhấn vào nút "Get device information" và copy đoạn mã thông tin thiết bị </p>
-                        <p>Bước 3:Dán đoạn mã vào ô phía dưới</p>
-                        <input type="text" class="form-control " placeholder="Enter the device name" aria-label="" style="margin-bottom: 10px" aria-describedby="basic-addon1" v-model="entry.device_name" >
+                    <h3 style="text-align: center;" class="pt-7 fs-1 fw-bolder">New Device</h3>
+                    <div class="px-10 py-5 text-left">
+                        <p>Step 1 : Open iSMART DIGI application on your device.</p>
+                        <p>Step 2 : Click on button "Get device information" and copy "Register Code".</p>
+                        <p>Step 3 : Paste it to the following input field.</p>
+                        <input type="text" class="form-control mb-3 mw-100" placeholder="Enter the device name" aria-label="" aria-describedby="basic-addon1" v-model="entry.device_name" >
                         <error-label for="f_category_id" :errors="errors.device_name"></error-label>
 
-                        <input type="text" class="form-control col-2" placeholder="Enter the register code" aria-label="" aria-describedby="basic-addon1" v-model="entry.device_uid" >
+                        <input type="text" class="form-control mw-100" placeholder="Enter the register code" aria-label="" aria-describedby="basic-addon1" v-model="entry.device_uid" >
                         <error-label for="f_category_id" :errors="errors.device_uid"></error-label>
                     </div>
-                    <div class="form-group d-flex justify-content-between">
+                    <div class="form-group d-flex justify-content-center">
                         <!--                        <button  class="btn btn-danger ito-btn-small" data-dismiss="modal" @click="save()">Add now</button>-->
-                        <button class="btn btn-primary ito-btn-add" data-dismiss="modal" @click="save_send()" style="margin:0 auto">
-                            Add now
+                        <button class="btn btn-primary ito-btn-add" data-dismiss="modal" @click="save_send()">
+                            <i class="bi bi-send mr-1"></i>Add Device
                         </button>
                     </div>
                 </div>
@@ -231,9 +231,9 @@
                                 data-kt-customer-table-toolbar="base"
 
                             >
-                                <button  v-if="entries.length<devicesPerUser && permissions['019'] && roleName=='School Admin' ||entries.length<devicesPerUser && permissions['019'] && roleName=='Teacher'  " type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#kt_modal_add_customer" @click="modalDevice()">Add More Device</button>
-                                <button  v-if="entries.length>=devicesPerUser && roleName=='School Admin' || entries.length>=devicesPerUser && roleName=='Teacher' " type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#kt_modal_add_customer" @click="closeModal()">Add More Device</button>
-                                <button  v-if="roleName!='School Admin' && roleName!='Teacher'  " type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#kt_modal_add_customer" @click="modalDevice()">Add More Device</button>
+                                <button  v-if="entries.length<devicesPerUser && permissions['019'] && roleName=='School Admin' ||entries.length<devicesPerUser && permissions['019'] && roleName=='Teacher'  " type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#kt_modal_add_customer" @click="modalDevice()"><i class="bi bi-plus-lg"></i>New Device</button>
+                                <button  v-if="entries.length>=devicesPerUser && roleName=='School Admin' || entries.length>=devicesPerUser && roleName=='Teacher' " type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#kt_modal_add_customer" @click="closeModal()"><i class="bi bi-plus-lg"></i>New Device</button>
+                                <button  v-if="roleName!='School Admin' && roleName!='Teacher'  " type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#kt_modal_add_customer" @click="modalDevice()"><i class="bi bi-plus-lg"></i>New Device</button>
 
 
                             </div>

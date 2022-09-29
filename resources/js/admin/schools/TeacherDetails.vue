@@ -54,7 +54,7 @@
                     <div  class="d-flex justify-content-end"
                           data-kt-customer-table-toolbar="base">
                         <button class="btn btn-danger button-create " @click="removeTeacher" style="margin: 15px 25px 0px ">
-                            Delete User <i class="fas fa-trash"></i>
+                            <i class="bi bi-person-dash mr-1"></i>Delete teacher
                         </button>
                     </div>
                     <div class="card-body d-flex flex-column">
@@ -145,7 +145,7 @@
                         </div>
                         <hr style="margin-top: 10px">
                         <div>
-                            <button type="reset" @click="save()" class="btn btn-primary mr-2">Save change</button>
+                            <button type="reset" @click="save()" class="btn btn-primary mr-2"><i class="bi bi-save2 mr-1"></i>Save</button>
                             <button type="reset" @click="backIndex()" class="btn btn-secondary">Cancel</button>
                         </div>
                         <hr style="margin-top: 10px">

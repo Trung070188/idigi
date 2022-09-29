@@ -18,7 +18,7 @@
 
                                                                     <div class="form-group">
                                         <label>Course <span class="text-danger">*</span></label>
-                                        <treeselect :options="courses" :multiple="true" v-model="total_course" :flat="true" :auto-deselect-descendants="true"  />
+                                        <treeselect :options="selectAll" :multiple="true" v-model="total_course"   />
                                         <error-label for="f_total_course" :errors="errors.total_course"></error-label>
 
                                     </div>
@@ -50,7 +50,7 @@
 
                         <hr style="margin:20px 0px 20px">
                         <div >
-                            <button type="reset" @click="save()" class="btn btn-primary mr-2">Save</button>
+                            <button type="reset" @click="save()" class="btn btn-primary mr-2"><i class="bi bi-send mr-1"></i>Submit</button>
                             <button type="reset" @click="backIndex()" class="btn btn-secondary">Cancel</button>
                         </div>
                     </div>
@@ -80,35 +80,35 @@
                 }
             })
             const course=$json.courses;
-            // console.log(course);
-            // course.forEach(function (e) {
-            //     e.units.forEach(function (e1) {
-            //         e1.label = e1.unit_name;
-            //     })
-            // })
+            console.log(course);
+            course.forEach(function (e) {
+                e.units.forEach(function (e1) {
+                    e1.label = e1.unit_name;
+                })
+            })
 
-           //  const selectAll=[
-           //      {
-           //          id:'all',
-           //          label:'All',
-           //          children:[
-           //          ]
-           //      }
-           //      ];
-           // const courses=course.map(res=>{
-           //    return{
-           //        'id':res.id,
-           //        'label':res.course_name,
-           //
-           //    }
-           // });
-           //  selectAll.forEach(function (e) {
-           //      courses.forEach(function (e1) {
-           //     e.children.push(e1);
-           //      })
-           //  })
-           //
-           //  console.log(selectAll);
+            const selectAll=[
+                {
+                    id:'all',
+                    label:'All',
+                    children:[
+                    ]
+                }
+                ];
+           const courses=course.map(res=>{
+              return{
+                  'id':res.id,
+                  'label':res.course_name,
+
+              }
+           });
+            selectAll.forEach(function (e) {
+                courses.forEach(function (e1) {
+               e.children.push(e1);
+                })
+            })
+
+            console.log(selectAll);
 
             const courseTreeselect = course.map(rec => {
                 return {
@@ -136,7 +136,7 @@
                 total_course:[],
                 total_unit:[],
                 value: [],
-                // selectAll:selectAll,
+                selectAll:selectAll,
                 courses:courseTreeselect,
                 schools:$json.schools||{},
                 units:unitTreeselect,

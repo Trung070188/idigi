@@ -3291,8 +3291,8 @@ fieldset:disabled a.btn {
 
 .btn-primary {
     color: #ffffff;
-    background-color: #f14b1a; /*#696CFF;*/
-    border-color: #d53201;
+    background-color: #187DE4; /*#696CFF;*/
+    border-color: #187DE4;
     -webkit-box-shadow: none;
     box-shadow: none;
 }
@@ -52675,8 +52675,8 @@ button {
 
 .btn.btn-primary {
     color: #FFFFFF;
-    background-color: #f14b1a; /*#696CFF;*/
-    border-color: #d53201;
+    background-color: #187DE4; /*#696CFF;*/
+    border-color: #187DE4;
 }
 
 .btn.btn-primary i {
@@ -52702,8 +52702,8 @@ button {
 .btn.btn-primary:focus:not(.btn-text),
 .btn.btn-primary.focus:not(.btn-text) {
     color: #FFFFFF;
-    background-color: #187DE4;
-    border-color: #187DE4;
+    background-color: #6fc400;/*#187DE4;*/
+    border-color: #6fc400;/*#187DE4;*/
 }
 
 .btn.btn-primary:hover:not(.btn-text):not(:disabled):not(.disabled) i,

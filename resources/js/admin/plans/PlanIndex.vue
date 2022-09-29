@@ -79,7 +79,8 @@
 <!--                                </button>-->
 
                                 <a :href="'/xadmin/plans/create'">
-                                    <button  class="btn btn-primary button-create" style="margin:0 0 0 15px"> Create
+                                    <button  class="btn btn-primary button-create" style="margin:0 0 0 15px">
+                                        <i class="bi bi-clipboard-plus"></i>New Plan
                                     </button>
                                 </a>
                             </div>

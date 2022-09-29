@@ -124,42 +124,20 @@
                                 data-kt-customer-table-toolbar="base"
                                 v-if="inventoryIds == ''"
                             >
-                                <button
-                                    type="button"
-                                    style="margin-left: 10px"
-                                    @click="isShowFilter = !isShowFilter"
-                                    class="btn btn-primary"
-                                    v-if="isShowFilter"
-                                >
+                                <button type="button" style="margin-left: 10px" @click="isShowFilter = !isShowFilter" class="btn btn-secondary" v-if="isShowFilter">
+                                    <i style="margin-left: 5px" class="fas fa-times"></i>
                                     Close Advanced Search
-                                    <i
-                                        style="margin-left: 5px"
-                                        class="fas fa-times"
-                                    ></i>
                                 </button>
-                                <button
-                                    type="button"
-                                    style="margin-left: 10px"
-                                    @click="isShowFilter = !isShowFilter"
-                                    class="btn btn-primary"
-                                    v-if="!isShowFilter"
-                                >
+                                <button type="button" style="margin-left: 10px" @click="isShowFilter = !isShowFilter" class="btn btn-secondary" v-if="!isShowFilter">
+                                    <i class="bi bi-funnel"></i>
                                     Advanced Search
-                                    <i
-                                        class="fa fa-filter"
-                                        v-if="!isShowFilter"
-                                        aria-hidden="true"
-                                    ></i>
                                 </button>
                                 <a
                                     :href="'/xadmin/inventories/create'"
                                     v-if="permissions['007']"
                                 >
-                                    <button
-                                        class="btn btn-primary button-create"
-                                        style="margin: 0 0 0 15px"
-                                    >
-                                        Create
+                                    <button class="btn btn-primary button-create" style="margin: 0 0 0 15px">
+                                        <i class="bi bi-plus-lg"></i>New Resource
                                     </button>
                                 </a>
                             </div>

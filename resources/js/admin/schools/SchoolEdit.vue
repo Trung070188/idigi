@@ -51,17 +51,15 @@
                                 class="d-flex justify-content-end"
                                 data-kt-customer-table-toolbar="base">
                                 <a :href="'/xadmin/schools/teacherList?id='+entry.id">
-                                    <button style="margin: 0px 8px 25px;" v-if="title=='Edit school'"
-                                            class="btn btn-primary button-create ">
-                                        Teacher list <i class="fa fa-users"></i>
+                                    <button style="margin: 0px 8px 25px;" v-if="title=='Edit school'" class="btn btn-primary button-create ">
+                                        <i class="bi bi-person-lines-fill mr-1"></i>Teacher list
                                     </button>
                                 </a>
-                                <button v-if="title=='Edit school' && teacher!=0" class="btn btn-danger button-create "
-                                        @click="modalDeleteSchool()">
-                                    Delete School <i class="fas fa-trash"></i>
+                                <button v-if="title=='Edit school' && teacher!=0" class="btn btn-danger button-create " @click="modalDeleteSchool()">
+                                    <i class="bi bi-trash mr-1"></i>Delete School
                                 </button>
                                 <button v-if="title=='Edit school' &&  teacher==0" class="btn btn-danger button-create " @click="modalDelete">
-                                    Delete School <i class="fas fa-trash"></i>
+                                    <i class="bi bi-trash mr-1"></i>Delete School
                                 </button>
                             </div>
                         </div>
@@ -155,7 +153,7 @@
                             </div>
                             <div class="col-lg-12">
                             <div class="row">
-                                    <div class="form-group col-lg-10">
+                                    <div class="form-group col-lg-8">
                                         <label>Resource allocated <span class="text-danger">*</span></label>
 
                                         <select class="form-control form-select " required v-model="allocationContentSchool"
@@ -167,9 +165,9 @@
                                         </select>
 
                                     </div>
-                                    <div class="col-lg-2">
+                                    <div class="col-lg-4">
                                         <a :href="'/xadmin/allocation_contents/edit?id='+allocationContentSchool">
-                                            <button style="margin: 20px 0px 0px" class="btn btn-primary">Edit allocation</button>
+                                            <button style="margin: 20px 0px 0px" class="btn btn-primary"><i class="bi bi-pencil-square mr-1"></i>Edit</button>
                                         </a>
                                     </div>
                                 </div>
@@ -218,7 +216,7 @@
                         </div>
                         <hr style="margin-top: 5px;">
                         <div>
-                            <button type="reset" @click="save()" class="btn btn-primary mr-2">Save</button>
+                            <button type="reset" @click="save()" class="btn btn-primary mr-2"><i class="bi bi-save2 mr-1"></i>Save</button>
                             <button type="reset" @click="backIndex()" class="btn btn-secondary">Cancel</button>
                         </div>
                     </div>

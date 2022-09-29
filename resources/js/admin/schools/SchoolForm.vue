@@ -109,7 +109,7 @@
                                 </div>
                             </div>
                              <div class="row">
-                                    <div class="form-group col-lg-10">
+                                    <div class="form-group col-lg-8">
                                         <label>Content Allocated </label>
                                        <select class="form-control form-select" v-model="allocationContenSchool" required @change="changeAllocationContent()">
                                            <option v-for="allocationConten in allocationContens" :value="allocationConten.id">{{allocationConten.title}}</option>
@@ -137,7 +137,7 @@
                         </div>
                         <hr style="margin-top: 5px;">
                         <div >
-                            <button type="reset" @click="save()" class="btn btn-primary mr-2">Save</button>
+                            <button type="reset" @click="save()" class="btn btn-primary mr-2"><i class="bi bi-send mr-1"></i>Submit</button>
                             <button type="reset" @click="backIndex()" class="btn btn-secondary">Cancel</button>
                         </div>
                     </div>

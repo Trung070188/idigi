@@ -61,8 +61,8 @@
                         class="d-flex justify-content-end"
                         data-kt-customer-table-toolbar="base">
                         <a>
-                            <button class="btn btn-primary button-create" style="margin:0 0 0 15px"
-                                    @click="showModalUpload()" v-if=" appIds=='' && windowIds==''"> Upload Application
+                            <button class="btn btn-primary button-create" style="margin:0 0 0 15px" @click="showModalUpload()" v-if=" appIds=='' && windowIds==''">
+                                <i class="bi bi-cloud-plus"></i>New version
                             </button>
                         </a>
 
