@@ -31,7 +31,13 @@ class InventoryController extends Controller
         $decoded = JWT::decode($token, new Key(env('SECRET_KEY'), 'HS256'));
         $user = User::where('username', $decoded->username)->first();
         $inventory = Inventory::where('id', $id)->with(['lessons'])->first();
-        $file = File::find($inventory->file_asset_id);
+
+        if($request->os == "Mac"){
+            $file = File::find($inventory->file_asset_mac_id);
+        }else{
+            $file = File::find($inventory->file_asset_id);
+        }
+
         $lessonId = NULL;
 
         if($inventory->lessons){
