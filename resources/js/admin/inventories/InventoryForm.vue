@@ -71,11 +71,10 @@
 
                                 </div>
 
-                                <div class="form-group">
-                                    <input id="enabled" type="checkbox" v-model="entry.enabled">
-                                    <label for="enabled"  class="pl-2">Active</label>
+                                <div class="form-check form-check-custom form-check-solid me-10 pb-5">
+                                    <input id="enabled" type="checkbox" class="form-check-input h-20px w-20px" v-model="entry.enabled">
+                                    <label for="enabled" class="form-check-label fw-bold">Active</label>
                                     <error-label for="f_grade" :errors="errors.enabled"></error-label>
-
                                 </div>
                             </div>
 
@@ -99,7 +98,7 @@
                         <hr style="margin-top: 5px;" >
                         <div >
                             <button type="reset" @click="save()" class="btn btn-primary mr-2"><i class="bi bi-save2 mr-1"></i>Save</button>
-                            <button type="reset" @click="backIndex()" class="btn btn-secondary">Cancel</button>
+                            <button type="reset" @click="backIndex()" class="btn btn-light">Cancel</button>
                         </div>
                     </div>
                 </div>

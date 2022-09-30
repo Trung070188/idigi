@@ -1,7 +1,7 @@
 <template>
     <div class="container-fluid">
         <ActionBar type="index"
-                   :breadcrumbs="breadcrumbs"  title = "Create new user"/>
+                   :breadcrumbs="breadcrumbs"  title = "Create New User"/>
 
         <div class="row">
             <div class="col-lg-12">
@@ -11,29 +11,29 @@
                             <div class=" col-sm-12">
                                 <input v-model="entry.id" type="hidden" name="id" value="">
                                 <div class="row">
-                                    <div v-if="errors!==''"  class="form-group  col-sm-4">
+                                    <div v-if="errors!==''"  class="form-group col-sm-4">
                                         <label>Username <span class="text-danger">*</span></label>
                                         <input class="form-control nospace" placeholder="Enter the username" v-model="entry.username">
                                         <error-label  for="f_category_id" :errors="errors.username"></error-label>
                                     </div>
-                                    <div v-if="errors==''" class="form-group  col-sm-4">
+                                    <div v-if="errors==''" class="form-group col-sm-4">
                                         <label>Username <span class="text-danger">*</span></label>
                                         <input class="form-control nospace" placeholder="Enter the username" v-model="entry.username">
                                     </div>
 
-                                    <div class="form-group  col-sm-4">
+                                    <div class="form-group col-sm-4">
                                         <label>Full name <span class="text-danger">*</span></label>
                                         <input class="form-control" placeholder="Enter the full name" v-model="entry.full_name">
 
                                         <error-label for="f_category_id" :errors="errors.full_name"></error-label>
                                     </div>
-                                    <div class="form-group  col-sm-4">
+                                    <div class="form-group col-sm-4">
                                         <label>Email </label>
                                         <input class="form-control" placeholder="Enter the email address" v-model="entry.email">
                                         <error-label for="f_category_id" :errors="errors.email"></error-label>
                                     </div>
-                                    <div v-if="entry.id==null" class="form-group  col-sm-4">
-                                        <label>Password </label>
+                                    <div v-if="entry.id==null" class="form-group col-sm-4 mb-3">
+                                        <label>Password <span class="text-danger">*</span></label>
                                         <input v-if="auto_gen==true" disabled :type="showPass ? 'text' : 'password'" class="form-control"  placeholder="Enter the password"
                                                ref="password" v-model="entry.password">
                                         <input v-if="auto_gen==false"  :type="showPass ? 'text' : 'password'" class="form-control"  placeholder="Enter the password"
@@ -42,8 +42,8 @@
                                         <error-label for="f_category_id" :errors="errors.password"></error-label>
                                     </div>
 
-                                    <div v-if="entry.id==null" class="form-group  col-sm-4">
-                                        <label>Confirm password</label>
+                                    <div v-if="entry.id==null" class="form-group col-sm-4 mb-3">
+                                        <label>Confirm password <span class="text-danger">*</span></label>
                                         <input v-if="auto_gen==true" disabled class="form-control" :type="showConfirm ? 'text' : 'password'"  placeholder="Re-enter to confirm the password"
                                                v-model="entry.password_confirmation">
                                         <input v-if="auto_gen==false"  class="form-control" :type="showConfirm ? 'text' : 'password'"  placeholder="Re-enter to confirm the password"
@@ -51,53 +51,54 @@
 <!--                                        <i @click="showConfirm = !showConfirm" class="fa fa-eye"></i>-->
                                         <error-label for="f_category_id" :errors="errors.password_confirmation"></error-label>
                                     </div>
-                                    <div class="form-group  col-sm-8">
-                                        <input  type="checkbox" v-model="auto_gen">
-                                        <label>Auto password</label>
+                                    <div class="form-check form-check-custom form-check-solid ml-3 pb-5">
+                                        <input type="checkbox" v-model="auto_gen" class="form-check-input h-20px w-20px">
+                                        <label class="form-check-label fw-bold">Auto generate password</label>
                                     </div>
                                 </div>
-                                <div class="row">
-
-                                    <label>Role</label>
-                                    <div  class="form-group col-sm-2" v-for="role in roles">
-                                        <input  type="radio"  v-model="name_role" v-bind:value="role.id">
-                                        <label>{{role.role_name}}</label>
+                                <div class="row py-3">
+                                    <div class="form-group col-sm-12">
+                                        <label>Role <span class="text-danger">*</span></label>
+                                        <div class="d-flex align-items-center justify-content-start mt-2">
+                                            <div class="form-check form-check-custom form-check-solid mr-10" v-for="role in roles">
+                                                <input type="radio" class="form-check-input mr-2" v-model="name_role" v-bind:value="role.id">
+                                                <span>{{role.role_name}}</span>
+                                            </div>
+                                            <error-label for="f_grade" :errors="errors.name_role"></error-label>
+                                        </div>
                                     </div>
-                                    <error-label for="f_grade" :errors="errors.name_role"></error-label>
                                 </div>
                                 <div class="row" v-if="name_role==2||name_role==5">
-                                    <div class="form-group  col-sm-4" >
+                                    <div class="form-group col-sm-4">
                                         <label>School <span class="text-danger">*</span></label>
                                         <select required  class="form-control form-select"  v-model="entry.school_id" >
                                             <option  :value="null" disabled selected >Choose role</option>
                                             <option v-for="school in schools" :value="school.id">{{school.label}}</option>
-
                                         </select>
                                         <error-label for="f_grade" :errors="errors.school_id"></error-label>
                                     </div>
                                 </div>
                                 <div class="row">
-                                    <div class="form-group col-sm-8">
-                                        <label>User description</label>
+                                    <div class="form-group col-sm-12 mb-5">
+                                        <label>Description</label>
                                         <textarea v-model="entry.description" rows="5" class="form-control"
                                                   placeholder="Type the description here (200 characters)"></textarea>
                                         <error-label for="f_grade" :errors="errors.description"></error-label>
 
                                     </div>
                                 </div>
-                                <div class="form-group">
-                                    <input id="state" type="checkbox" v-model="entry.state" checked>
-                                    <label for="state" class="pl-2">Active</label>
+                                <div class="form-check form-check-custom form-check-solid pb-5">
+                                    <input id="state" type="checkbox" v-model="entry.state" class="form-check-input h-20px w-20px" checked>
+                                    <label for="state" class="form-check-label fw-bold">Active</label>
                                     <error-label for="f_grade" :errors="errors.state"></error-label>
                                 </div>
                             </div>
                         </div>
-                        <hr style="margin: 0px 0px 16px;">
-                        <div>
-                            <button type="reset" @click="save()"  class="btn btn-primary mr-2"><i class="bi bi-send mr-1"></i>Submit</button>
-                            <button type="reset" @click="backIndex()" class="btn btn-secondary">Cancel</button>
-                        <label style="margin-left: 20px">Username and password will be sent to the user's email.
-                           </label>
+                        <!--<hr style="margin: 0px 0px 16px;">-->
+                        <div class="mt-5">
+                            <button type="reset" @click="save()"  class="btn btn-primary mr-3"><i class="bi bi-send mr-1"></i>Submit</button>
+                            <button type="reset" @click="backIndex()" class="btn btn-light">Cancel</button>
+                            <label class="fw-bold ml-4">Username and password will be sent to the user's email.</label>
                         </div>
                     </div>
                 </div>

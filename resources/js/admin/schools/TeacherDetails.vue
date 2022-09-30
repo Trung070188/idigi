@@ -90,9 +90,9 @@
                                         <input class="form-control" v-model="entry.class">
                                         <error-label for="f_category_id" :errors="errors.class"></error-label>
                                     </div>
-                                    <div class="form-group  col-sm-4">
+                                    <div class="form-group col-sm-4">
                                         <label>School</label>
-                                        <input class="form-control" v-model="schools.label" disabled>
+                                        <input class="form-control form-control-solid" v-model="schools.label" disabled>
                                         <error-label for="f_category_id" :errors="errors.label"></error-label>
                                     </div>
                                 <div class="row">
@@ -104,10 +104,10 @@
 
                                     </div>
                                 </div>
-                                        <div class="form-group">
-                                    <input id="state" type="checkbox" v-model="entry.state">
-                                    <label for="state" class="pl-2">Active</label>
-                                    <error-label for="f_grade" :errors="errors.state"></error-label>
+                                    <div class="form-check form-check-custom form-check-solid ml-3 pb-5">
+                                        <input id="state" type="checkbox" v-model="entry.state" class="form-check-input h-20px w-20px">
+                                        <label for="state" class="form-check-label fw-bold">Active</label>
+                                        <error-label for="f_grade" :errors="errors.state"></error-label>
                                     </div>
                                 </div>
                                 <hr style="margin-top:5px">
@@ -146,7 +146,7 @@
                         <hr style="margin-top: 10px">
                         <div>
                             <button type="reset" @click="save()" class="btn btn-primary mr-2"><i class="bi bi-save2 mr-1"></i>Save</button>
-                            <button type="reset" @click="backIndex()" class="btn btn-secondary">Cancel</button>
+                            <button type="reset" @click="backIndex()" class="btn btn-light">Cancel</button>
                         </div>
                         <hr style="margin-top: 10px">
                         <h4>Current registed devices</h4>

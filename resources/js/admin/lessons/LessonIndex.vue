@@ -73,11 +73,11 @@
                                  <div class="card-toolbar">
                                     <div class="d-flex justify-content-end" data-kt-customer-table-toolbar="base" v-if="lessonIds==''">
 
-                                        <button type="button" style="margin-left: 10px" @click="isShowFilter = !isShowFilter" class="btn btn-secondary" v-if="isShowFilter">
+                                        <button type="button" style="margin-left: 10px" @click="isShowFilter = !isShowFilter" class="btn btn-light" v-if="isShowFilter">
                                             <i style="margin-left: 5px" class="fas fa-times"></i>
                                             Close Advanced Search
                                         </button>
-                                        <button type="button" style="margin-left: 10px" @click="isShowFilter = !isShowFilter" class="btn btn-secondary" v-if="!isShowFilter">
+                                        <button type="button" style="margin-left: 10px" @click="isShowFilter = !isShowFilter" class="btn btn-light" v-if="!isShowFilter">
                                             <i class="bi bi-funnel"></i>
                                             Advanced Search
                                         </button>
@@ -229,7 +229,7 @@
 														</span>
                                        </a>
 
-                                    <div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-bold fs-7 w-125px py-4" data-kt-menu="true">
+                                    <div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-bold fs-7 w-auto py-4" data-kt-menu="true">
 
                                         <div class="menu-item px-3">
                                             <a @click="openModalEntry(entry)" class="menu-link px-3">Download</a>

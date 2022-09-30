@@ -33,7 +33,7 @@
                             <thead class="border-bottom border-gray-200 fs-6 text-gray-600 fw-bolder bg-light bg-opacity-75">
                             <tr>
                                 <th class="">Course Name</th>
-                                <th>Unit <span class="text-danger">*</span></th>
+                                <th>Unit</th>
                             </tr>
                             </thead>
                             <tbody v-for="number_course in total_course" >
@@ -50,7 +50,7 @@
                         <hr style="margin:20px 0px 20px">
                         <div >
                             <button type="reset" @click="save()" class="btn btn-primary mr-2"><i class="bi bi-save2 mr-1"></i>Save</button>
-                            <button type="reset" @click="backIndex()" class="btn btn-secondary">Cancel</button>
+                            <button type="reset" @click="backIndex()" class="btn btn-light">Cancel</button>
                         </div>
                     </div>
                 </div>

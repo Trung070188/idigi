@@ -3228,7 +3228,7 @@ textarea.form-control.is-invalid {
 
 .btn {
     display: inline-block;
-    font-weight: 500;
+    font-weight: 600;
     color: #3F4254;
     text-align: center;
     vertical-align: middle;
@@ -3239,7 +3239,7 @@ textarea.form-control.is-invalid {
     background-color: transparent;
     border: 1px solid transparent;
     padding: .75rem 1.5rem;
-    font-size: 1.02rem;
+    font-size: 1.05rem;
     line-height: 1.5;
     border-radius: 0.475rem;
     -webkit-transition: color 0.3s ease-in-out, background-color 0.3s ease-in-out, border-color 0.3s ease-in-out, -webkit-box-shadow 0.3s ease-in-out;
@@ -5323,7 +5323,7 @@ input[type=button].btn-block {
 .nav-pills .nav-link.active,
 .nav-pills .show>.nav-link {
     color: #ffffff;
-    background-color: #696CFF;
+    background-color: #50cd89;
 }
 
 .nav-fill>.nav-link,
@@ -48481,7 +48481,7 @@ button {
     transition: color 0.15s ease, background-color 0.15s ease, border-color 0.15s ease, -webkit-box-shadow 0.15s ease;
     transition: color 0.15s ease, background-color 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
     transition: color 0.15s ease, background-color 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease, -webkit-box-shadow 0.15s ease;
-    color: #696CFF;
+    color: #50cd89;
 }
 
 .nav .show>.nav-link .nav-text,
@@ -48491,7 +48491,8 @@ button {
     transition: color 0.15s ease, background-color 0.15s ease, border-color 0.15s ease, -webkit-box-shadow 0.15s ease;
     transition: color 0.15s ease, background-color 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
     transition: color 0.15s ease, background-color 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease, -webkit-box-shadow 0.15s ease;
-    color: #696CFF;
+    color: #50cd89
+;
 }
 
 .nav .show>.nav-link .nav-icon i,
@@ -48501,7 +48502,7 @@ button {
     transition: color 0.15s ease, background-color 0.15s ease, border-color 0.15s ease, -webkit-box-shadow 0.15s ease;
     transition: color 0.15s ease, background-color 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
     transition: color 0.15s ease, background-color 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease, -webkit-box-shadow 0.15s ease;
-    color: #696CFF;
+    color: #50cd89;
 }
 
 .nav .show>.nav-link .nav-icon .svg-icon svg g [fill],
@@ -48509,7 +48510,7 @@ button {
 .nav .nav-link.active .nav-icon .svg-icon svg g [fill] {
     -webkit-transition: fill 0.3s ease;
     transition: fill 0.3s ease;
-    fill: #696CFF;
+    fill: #50cd89;
 }
 
 .nav .show>.nav-link .nav-icon .svg-icon svg:hover g [fill],
@@ -48526,7 +48527,7 @@ button {
     transition: color 0.15s ease, background-color 0.15s ease, border-color 0.15s ease, -webkit-box-shadow 0.15s ease;
     transition: color 0.15s ease, background-color 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
     transition: color 0.15s ease, background-color 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease, -webkit-box-shadow 0.15s ease;
-    color: #696CFF;
+    color: #50cd89;
 }
 
 .nav.nav-bold .nav-item .nav-link {
@@ -48603,7 +48604,7 @@ button {
 .nav.nav-tabs.nav-tabs-line .show>.nav-link {
     background-color: transparent;
     border: 0;
-    border-bottom: 1px solid #696CFF;
+    border-bottom: 2px solid #50cd89;
     -webkit-transition: color 0.15s ease, background-color 0.15s ease, border-color 0.15s ease, -webkit-box-shadow 0.15s ease;
     transition: color 0.15s ease, background-color 0.15s ease, border-color 0.15s ease, -webkit-box-shadow 0.15s ease;
     transition: color 0.15s ease, background-color 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
@@ -48625,7 +48626,8 @@ button {
 .nav.nav-tabs.nav-tabs-line.nav-tabs-line-2x .nav-link:hover:not(.disabled),
 .nav.nav-tabs.nav-tabs-line.nav-tabs-line-2x .nav-link.active,
 .nav.nav-tabs.nav-tabs-line.nav-tabs-line-2x .show>.nav-link {
-    border-bottom: 2px solid #696CFF;
+    border-bottom: 2px solid #50cd89
+;
 }
 
 .nav.nav-tabs.nav-tabs-line.nav-tabs-line-3x {
@@ -48643,7 +48645,7 @@ button {
 .nav.nav-tabs.nav-tabs-line.nav-tabs-line-3x .nav-link:hover:not(.disabled),
 .nav.nav-tabs.nav-tabs-line.nav-tabs-line-3x .nav-link.active,
 .nav.nav-tabs.nav-tabs-line.nav-tabs-line-3x .show>.nav-link {
-    border-bottom: 3px solid #696CFF;
+    border-bottom: 3px solid #50cd89;
 }
 
 .nav.nav-tabs.nav-tabs-line.nav-tabs-line-transparent-white {

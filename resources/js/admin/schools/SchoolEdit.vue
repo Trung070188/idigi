@@ -105,14 +105,14 @@
                                     </div>
 
                                     <div class="form-group col-lg-4">
-                                        <label>Setup device per user <span class="text-danger">*</span></label>
+                                        <label>No. of Device per user <span class="text-danger">*</span></label>
                                         <input v-model="entry.devices_per_user" class="form-control"
                                                placeholder="Nhập số lượng cho phép thiết bị của mỗi giáo viên">
                                         <error-label :errors="errors.devices_per_user"></error-label>
 
                                     </div>
                                     <div class="form-group col-lg-4">
-                                        <label>Setup no. of user <span class="text-danger">*</span></label>
+                                        <label>No. of User <span class="text-danger">*</span></label>
                                         <input v-model="entry.number_of_users" class="form-control"
                                                placeholder="Nhập số lượng giáo viên">
                                         <error-label :errors="errors.number_of_users"></error-label>
@@ -154,7 +154,7 @@
                             <div class="col-lg-12">
                             <div class="row">
                                     <div class="form-group col-lg-8">
-                                        <label>Resource allocated <span class="text-danger">*</span></label>
+                                        <label>Content Allocation <span class="text-danger">*</span></label>
 
                                         <select class="form-control form-select " required v-model="allocationContentSchool"
                                                 @change="changeAllocationContent() ">
@@ -217,7 +217,7 @@
                         <hr style="margin-top: 5px;">
                         <div>
                             <button type="reset" @click="save()" class="btn btn-primary mr-2"><i class="bi bi-save2 mr-1"></i>Save</button>
-                            <button type="reset" @click="backIndex()" class="btn btn-secondary">Cancel</button>
+                            <button type="reset" @click="backIndex()" class="btn btn-light">Cancel</button>
                         </div>
                     </div>
                 </div>

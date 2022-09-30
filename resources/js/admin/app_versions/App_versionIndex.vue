@@ -46,7 +46,7 @@
                         <!--begin::Tab nav item-->
                         <li class="nav-item" role="presentation">
                             <a id="kt_billing_1year_tab" class="nav-link fs-5 fw-bold me-3" data-bs-toggle="tab"
-                               role="tab" href="billing.html#kt_billing_year">OS</a>
+                               role="tab" href="billing.html#kt_billing_year">MAC OS</a>
                         </li>
                         <!--end::Tab nav item-->
                         <!--begin::Tab nav item-->
@@ -223,10 +223,10 @@
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title">Upload App</h5>
-                            <button type="button" class="close" data-bs-dismiss="modal">
+                            <h5 class="modal-title fw-bolder text-center w-100">Create new application</h5>
+                            <!--<button type="button" class="close" data-bs-dismiss="modal">
                                 &times;
-                            </button>
+                            </button>-->
                         </div>
                         <div class="modal-body">
 
@@ -256,7 +256,7 @@
                                 <!--                                </div>-->
 
                                 <div class="form-group">
-                                    <label>OS <span class="required"></span></label>
+                                    <label>Operating System <span class="required"></span></label>
                                     <select v-model="model.type" class="form-control">
                                         <option value="">---</option>
                                         <option value="Mac">Mac OS</option>
@@ -280,9 +280,9 @@
                                     <textarea type="text" class="form-control" v-model="model.release_note"/>
                                     <error-label></error-label>
                                 </div>
-                                <div class="form-group">
-                                    <input id="state" type="checkbox" v-model="model.is_default" checked>
-                                    <label for="state" class="pl-2 fw-bold">Release this version</label>
+                                <div class="form-check form-check-custom form-check-solid me-10">
+                                    <input id="state" type="checkbox" v-model="model.is_default" class="form-check-input h-20px w-20px" checked>
+                                    <label for="state" class="form-check-label fw-bold">Release this version</label>
                                     <error-label for="f_grade" :errors="errors.is_default"></error-label>
                                 </div>
                             </form>
@@ -290,7 +290,7 @@
                         </div>
                         <div class="modal-footer" style="justify-content: center">
                             <button type="button" class="btn btn-primary mr-2" @click="save"><i class="bi bi-send mr-1"></i>Submit</button>
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                            <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancel</button>
                         </div>
                     </div>
                 </div>
@@ -323,7 +323,7 @@
                         <a :href="appVersionsWindow.url">
                             <button id="kt_widget_5_load_more_btn" class="btn btn-primary col-xl-6 text-center mb-3">
                                 <span class="svg-icon"><i class="bi bi-download"></i></span>
-                                <span class="indicator-label">Download Now</span>
+                                <span class="indicator-label fs-6">Download Now</span>
                                 <span class="indicator-progress">Loading...
 								    <span class="spinner-border spinner-border-sm align-middle ms-2"></span>
                                 </span>
@@ -361,7 +361,7 @@
 
                         <button id="kt_widget_5_load_more_btn" class="btn btn-light col-xl-6 text-center mb-3">
                             <span class="svg-icon"><i class="bi bi-exclamation-lg"></i></span>
-                            <span class="indicator-label">Unavailable to Download</span>
+                            <span class="indicator-label fs-6">Unavailable to Download</span>
                             <span class="indicator-progress">Loading...
                                 <span class="spinner-border spinner-border-sm align-middle ms-2"></span>
                             </span>
@@ -398,7 +398,7 @@
                         <a :href="appVersionsOs.url">
                             <button id="kt_widget_5_load_more_btn" class="btn btn-primary col-xl-6 text-center mb-3">
                                 <span class="svg-icon"><i class="bi bi-download"></i></span>
-                                <span class="indicator-label">Download Now</span>
+                                <span class="indicator-label fs-6">Download Now</span>
                                 <span class="indicator-progress">Loading...
 								    <span class="spinner-border spinner-border-sm align-middle ms-2"></span>
                                 </span>
@@ -432,7 +432,7 @@
                         </div>
                         <button id="kt_widget_5_load_more_btn" class="btn btn-light col-xl-6 text-center mb-3">
                             <span class="svg-icon"><i class="bi bi-exclamation-lg"></i></span>
-                            <span class="indicator-label">Unavailable to Download</span>
+                            <span class="indicator-label fs-6">Unavailable to Download</span>
                             <span class="indicator-progress">Loading...
                                 <span class="spinner-border spinner-border-sm align-middle ms-2"></span>
                             </span>
