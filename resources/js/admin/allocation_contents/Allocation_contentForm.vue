@@ -51,7 +51,7 @@
                         <hr style="margin:20px 0px 20px">
                         <div >
                             <button type="reset" @click="save()" class="btn btn-primary mr-2"><i class="bi bi-send mr-1"></i>Submit</button>
-                            <button type="reset" @click="backIndex()" class="btn btn-secondary">Cancel</button>
+                            <button type="reset" @click="backIndex()" class="btn btn-light">Cancel</button>
                         </div>
                     </div>
                 </div>

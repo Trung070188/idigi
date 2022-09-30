@@ -2576,8 +2576,8 @@ textarea.form-control-lg {
 }
 
 .form-check-input:checked {
-    background-color: #696CFF;
-    border-color: #696CFF
+    background-color: #50cd89;
+    border-color: #50cd89;
 }
 
 .form-check-input:checked[type=checkbox] {
@@ -2589,8 +2589,8 @@ textarea.form-control-lg {
 }
 
 .form-check-input[type=checkbox]:indeterminate {
-    background-color: #696CFF;
-    border-color: #696CFF;
+    background-color: #50cd89;
+    border-color: #50cd89;
     background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3e%3cpath fill='none' stroke='%23FFFFFF' stroke-linecap='round' stroke-linejoin='round' stroke-width='3' d='M6 10h8'/%3e%3c/svg%3e")
 }
 
@@ -4496,7 +4496,7 @@ fieldset:disabled .btn {
 .nav-link {
     display: block;
     padding: .5rem 1rem;
-    color: #696CFF;
+    color: #50cd89;
     transition: color .15s ease-in-out, background-color .15s ease-in-out, border-color .15s ease-in-out
 }
 
@@ -4564,7 +4564,7 @@ fieldset:disabled .btn {
 .nav-pills .nav-link.active,
 .nav-pills .show>.nav-link {
     color: #fff;
-    background-color: #696CFF
+    background-color: #50cd89
 }
 
 .nav-fill .nav-item,
@@ -29646,7 +29646,7 @@ a:hover {
 .nav-line-tabs .nav-item.show .nav-link {
     background-color: transparent;
     border: 0;
-    border-bottom: 1px solid #696CFF;
+    border-bottom: 2px solid #50cd89;
     transition: color .2s ease, background-color .2s ease
 }
 
@@ -40314,7 +40314,7 @@ code:not([class*=language-]) {
 }
 
 .form-check.form-check-solid .form-check-input:checked {
-    background-color: #696CFF
+    background-color: #50cd89
 }
 
 .form-check.form-check-success .form-check-input:checked {

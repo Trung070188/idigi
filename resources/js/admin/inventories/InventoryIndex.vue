@@ -124,11 +124,11 @@
                                 data-kt-customer-table-toolbar="base"
                                 v-if="inventoryIds == ''"
                             >
-                                <button type="button" style="margin-left: 10px" @click="isShowFilter = !isShowFilter" class="btn btn-secondary" v-if="isShowFilter">
+                                <button type="button" style="margin-left: 10px" @click="isShowFilter = !isShowFilter" class="btn btn-light" v-if="isShowFilter">
                                     <i style="margin-left: 5px" class="fas fa-times"></i>
                                     Close Advanced Search
                                 </button>
-                                <button type="button" style="margin-left: 10px" @click="isShowFilter = !isShowFilter" class="btn btn-secondary" v-if="!isShowFilter">
+                                <button type="button" style="margin-left: 10px" @click="isShowFilter = !isShowFilter" class="btn btn-light" v-if="!isShowFilter">
                                     <i class="bi bi-funnel"></i>
                                     Advanced Search
                                 </button>
@@ -420,12 +420,7 @@
                                 <td v-text="entry.name"></td>
                                 <td class="" v-text="entry.grade"></td>
                                 <td class="" v-text="entry.type"></td>
-                                <td
-                                    class=""
-                                    v-text="
-                                            entry.enabled == 0 ? 'No' : 'Yes'
-                                        "
-                                ></td>
+                                <td class="" v-text="entry.enabled == 0 ? '<span class=No' : 'Yes'"></td>
                                 <td
                                     class=""
                                     v-text="d(entry.created_at)"
@@ -467,7 +462,7 @@
                         menu-state-bg-light-primary
                         fw-bold
                         fs-7
-                        w-125px
+                        w-auto
                         py-4
                       "
                                         data-kt-menu="true"

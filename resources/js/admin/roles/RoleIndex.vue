@@ -6,20 +6,21 @@
             <div class="col-lg-12">
                 <div class="card card-custom card-stretch gutter-b">
                     <div class="card-header border-0 pt-5">
-                        <div class="title">
-                            <label>Role</label>
-                        </div>
-                        <button class="btn btn-primary button-create " @click="showModalRole()"><i class="bi bi-plus-lg"></i>New Role</button>
+                        <!--<div class="title">
+                            <label>Roles</label>
+                        </div>-->
+                        <button class="btn btn-primary button-create mb-3" @click="showModalRole()"><i class="bi bi-plus-lg"></i>New Role</button>
                     </div>
-                    <hr>
-                    <div class="card-header border-0 pt-5">
+                    <!--<hr>-->
+                    <div class="card-header border-0 pt-2">
                         <table class="table bg-white table-bordered">
                             <tbody>
                             <tr>
                                 <td></td>
                                 <td  v-for="role in roles" >
-                                    <div   class="text-center" style="cursor: pointer">
-                                        <span  @click="showModalRole(role)" >{{role.role_name}} </span><span><i v-if="role.allow_deleted == 1" @click="remove(role)" class="fa fa-trash" style="margin-left:10px"></i></span>
+                                    <div class="text-center" style="cursor: pointer">
+                                        <span class="badge badge-warning fs-6 fw-bold" @click="showModalRole(role)" >{{role.role_name}} </span>
+                                        <span><i v-if="role.allow_deleted == 1" @click="remove(role)" class="fa fa-trash" style="margin-left:10px"></i></span>
                                     </div>
                                 </td>
                             </tr>
@@ -27,13 +28,13 @@
                             <tr v-for="groupPermission in groupPermissions">
                                 <th scope="col">
                                     <span v-text="groupPermission.name"></span>
-                                    <span  v-for="permission in groupPermission.permissions" class="d-block"  style="margin-left: 18px; font-size:12px">{{permission.name}}</span>
+                                    <span v-for="permission in groupPermission.permissions" class="d-block fw-bold ml-5 text-lowercase"><i class="bi bi-arrow-right-short mr-1"></i>{{permission.name}}</span>
                                 </th>
 
                                 <td v-for="role in roles">
 
-                                    <div   class="text-center check" v-for="permission in role.permissions" v-if="permission.group_permission==groupPermission.id">
-                                        <input @change="changeRolePermission(role.id,permission.id,permission.value)"  class="form-check-input" v-model="permission.value"   type="checkbox"  value="" >
+                                    <div class="form-check form-check-custom form-check-solid justify-content-center" v-for="permission in role.permissions" v-if="permission.group_permission==groupPermission.id">
+                                        <input @change="changeRolePermission(role.id,permission.id,permission.value)" class="form-check-input h-20px w-20px" v-model="permission.value"   type="checkbox"  value="" >
                                         <br>
                                     </div>
                                 </td>
@@ -52,7 +53,7 @@
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <div style="text-align: center"><h2 class="modal-title">Add new role</h2></div>
+                        <div class="w-100 text-center"><span class="fw-bolder fs-3">Create new role</span></div>
 
                         <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
@@ -64,23 +65,23 @@
                             <div class="form-group">
                                 <label>Role Name <span class="text-danger">*</span></label>
                                 <input id="f_role_name" v-model="curRole.role_name" name="name" class="form-control"
-                                       placeholder="role_name" >
+                                       placeholder="Type your role name" >
                                 <error-label for="f_role_name" :errors="errors.role_name"></error-label>
 
                             </div>
                             <div class="form-group">
                                 <label>Role Description</label>
                                 <input id="f_role_description" v-model="curRole.role_description" name="name" class="form-control"
-                                       placeholder="role_description" >
+                                       placeholder="Description of your role" >
                                 <error-label for="f_role_description" :errors="errors.role_description"></error-label>
 
                             </div>
 
                         </div>
                     </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-primary" @click="save">Save role</button>
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <div class="d-flex align-items-center justify-content-center pb-8">
+                        <button type="button" class="btn btn-primary mr-3" @click="save"><i class="bi bi-send mr-1"></i>Submit</button>
+                        <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancel</button>
                     </div>
                 </div>
             </div>

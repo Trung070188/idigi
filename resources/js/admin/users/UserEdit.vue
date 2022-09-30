@@ -37,20 +37,20 @@
                          </div>
                     </div>
                    <!-- <div class="card-body d-flex flex-column"> -->
-                    <div class="card-body d-flex flex-column">
+                    <div class="card-body d-flex flex-column mt-4">
                         <div class="row">
                             <div class=" col-sm-12">
                                 <input v-model="entry.id" type="hidden" name="id" value="">
                                 <div class="row">
-                                    <div  class="form-group  col-sm-4">
+                                    <div class="form-group col-sm-4">
                                         <label>Username <span class="text-danger">*</span></label>
-                                        <input class="form-control nospace" placeholder="Enter the username" v-model="entry.username" disabled>
+                                        <input class="form-control form-control-solid nospace" placeholder="Enter the username" v-model="entry.username" disabled>
 
                                         <error-label for="f_category_id" :errors="errors.username"></error-label>
                                     </div>
-                                    <div class="form-group  col-sm-4">
+                                    <div class="form-group col-sm-4">
                                         <label>Full name <span class="text-danger">*</span></label>
-                                        <input class="form-control " placeholder="Enter the full name" v-model="entry.full_name">
+                                        <input class="form-control" placeholder="Enter the full name" v-model="entry.full_name">
 
                                         <error-label for="f_category_id" :errors="errors.full_name"></error-label>
                                     </div>
@@ -76,44 +76,52 @@
                                                      :errors="errors.password_confirmation"></error-label>
                                     </div>
                                 </div>
-                                <div class="row">
-
-                                    <label>Role</label>
-                                    <div  class="form-group col-sm-2" v-for="role in roles">
-                                        <input  type="radio" :id="role.id" v-model="name_role" :value="role.id">
-                                        <label :for="role.id">{{role.role_name}}</label>
+                                <div class="row py-3">
+                                    <div class="form-group col-sm-12">
+                                        <label>Role <span class="text-danger">*</span></label>
+                                        <div class="d-flex align-items-center justify-content-start mt-2">
+                                            <div class="form-check form-check-custom form-check-solid mr-10" v-for="role in roles">
+                                                <input class="form-check-input mr-2" type="radio" :id="role.id" v-model="name_role" :value="role.id">
+                                                <span :for="role.id">{{role.role_name}}</span>
+                                            </div>
+                                            <error-label for="f_grade" :errors="errors.name_role"></error-label>
+                                        </div>
                                     </div>
+
+                                    <!--<div  class="form-group col-sm-2" v-for="role in roles">
+                                        <input type="radio" :id="role.id" v-model="name_role" :value="role.id">
+                                        <label :for="role.id">{{role.role_name}}</label>
+                                    </div>-->
                                 </div>
                                 <div class="row" v-if="name_role==2 || name_role==5">
-                                    <div class="form-group  col-sm-4">
+                                    <div class="form-group col-sm-4 mb-7">
                                         <label>School <span class="text-danger">*</span></label>
                                         <select  class="form-control form-select" v-model="entry.school_id" required>
                                             <option v-for="school in schools" :value="school.id" >{{school.label}}</option>
                                         </select>
                                         <error-label for="f_grade" :errors="errors.school_id"></error-label>
-
                                     </div>
                                 </div>
                                 <div class="row">
-                                    <div class="form-group col-sm-8">
-                                        <label>User description</label>
+                                    <div class="form-group col-sm-12 mb-3">
+                                        <label>Description</label>
                                         <textarea v-model="entry.description" rows="5" class="form-control"
                                                   placeholder="Type the description here (200 characters)"></textarea>
                                         <error-label for="f_grade" :errors="errors.description"></error-label>
 
                                     </div>
                                 </div>
-                                <div class="form-group">
-                                    <input id="state" type="checkbox" v-model="entry.state">
-                                    <label for="state" class="pl-2">Active</label>
+                                <div class="form-check form-check-custom form-check-solid pb-5">
+                                    <input id="state" type="checkbox" v-model="entry.state" class="form-check-input h-20px w-20px">
+                                    <label for="state" class="form-check-label fw-bold">Active</label>
                                     <error-label for="f_grade" :errors="errors.state"></error-label>
                                 </div>
                             </div>
                         </div>
-                        <hr style="margin: 0px 0px 16px;">
-                        <div>
-                            <button type="reset" @click="save()" class="btn btn-primary mr-2"><i class="bi bi-save2 mr-1"></i>Save</button>
-                            <button type="reset" @click="backIndex()" class="btn btn-secondary">Cancel</button>
+                        <!--<hr style="margin: 0px 0px 16px;">-->
+                        <div class="mt-5">
+                            <button type="reset" @click="save()" class="btn btn-primary mr-3"><i class="bi bi-save2 mr-1"></i>Save</button>
+                            <button type="reset" @click="backIndex()" class="btn btn-light">Cancel</button>
                         <label style="margin-left: 20px">Username and password will be sent to the user's email.
                           </label>
                         </div>
