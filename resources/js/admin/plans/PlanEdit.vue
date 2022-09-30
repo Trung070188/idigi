@@ -461,8 +461,12 @@
                                     <!-- list device plan -->
 
                                     <div id="kt_billing_months" class="card-body p-0 tab-pane fade show active" role="tabpanel" aria-labelledby="kt_billing_months">
-                                        <div>
+                                       
                                             <div class="d-flex justify-content-end mb-4">
+                                                 <a v-if="deviceIds!=''" href="list.html#"
+                                                   class="btn btn-danger btn-sm mr-3"
+                                                   data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">Delete
+                                                </a>
                                                 <a href="list.html#"
                                                    class="btn btn-light btn-active-light-primary btn-sm"
                                                    data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">Actions
@@ -475,6 +479,7 @@
 															</svg>
                                                     </span>
                                                 </a>
+                                                 
                                                 <div class="menu menu-sub menu-sub-dropdown  menu-rounded menu-gray-600 menu-state-bg-light-primary fw-bold fs-7 py-4" data-kt-menu="true" style="width: 150px">
                                                     <!--begin::Menu item-->
                                                     <div class="menu-item px-3">
@@ -486,14 +491,10 @@
                                                     <div class="menu-item px-3">
                                                         <a class="menu-link px-3" @click="exportDevice">Export device list</a>
                                                     </div>
-                                                    <div class="menu-item px-3">
-                                                        <a data-kt-subscriptions-table-filter="delete_row"
-                                                           class="menu-link text-danger px-3" @click="removeDeviceAll">Delete</a>
-                                                    </div>
                                                 </div>
 
                                             </div>
-                                            <div class="d-flex flex-stack " style="margin-top: -45px">
+                                            <!-- <div class="d-flex flex-stack " style="margin-top: -45px">
                                                 <div class="badge badge-lg badge-light-dark mb-15">
                                                     <div class="d-flex align-items-center flex-wrap">
                                                             <span class="svg-icon svg-icon-dark mx-1">
@@ -506,8 +507,8 @@
                                                             </span>
                                                         </div>
                                                     </div>
-                                            </div>
-                                        </div>
+                                            </div> -->
+                                       
 
                                         <!-- table device plan-->
                                         <table class="table table-row-bordered align-middle gy-4 gs-9">

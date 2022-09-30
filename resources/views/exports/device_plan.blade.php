@@ -17,7 +17,6 @@
             <td>{{$item['device_uid']}}</td>
             <td>{{$item['expire_date']}}</td>
             <td>{{$item['code']}}</td>
-{{--            <td>{{$item['confirmation code']}}</td>--}}
         </tr>
     @endforeach
 
