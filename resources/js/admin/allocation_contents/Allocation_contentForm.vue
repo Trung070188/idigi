@@ -18,7 +18,7 @@
 
                                                                     <div class="form-group">
                                         <label>Course <span class="text-danger">*</span></label>
-                                        <treeselect :options="selectAll" :multiple="true" v-model="total_course"   />
+                                        <treeselect :options="courses" :multiple="true" v-model="total_course"   />
                                         <error-label for="f_total_course" :errors="errors.total_course"></error-label>
 
                                     </div>
@@ -87,28 +87,28 @@
                 })
             })
 
-            const selectAll=[
-                {
-                    id:'all',
-                    label:'All',
-                    children:[
-                    ]
-                }
-                ];
-           const courses=course.map(res=>{
-              return{
-                  'id':res.id,
-                  'label':res.course_name,
-
-              }
-           });
-            selectAll.forEach(function (e) {
-                courses.forEach(function (e1) {
-               e.children.push(e1);
-                })
-            })
-
-            console.log(selectAll);
+           //  const selectAll=[
+           //      {
+           //          id:'all',
+           //          label:'All',
+           //          children:[
+           //          ]
+           //      }
+           //      ];
+           // const courses=course.map(res=>{
+           //    return{
+           //        'id':res.id,
+           //        'label':res.course_name,
+           //
+           //    }
+           // });
+           //  selectAll.forEach(function (e) {
+           //      courses.forEach(function (e1) {
+           //     e.children.push(e1);
+           //      })
+           //  })
+           //
+           //  console.log(selectAll);
 
             const courseTreeselect = course.map(rec => {
                 return {
@@ -136,7 +136,7 @@
                 total_course:[],
                 total_unit:[],
                 value: [],
-                selectAll:selectAll,
+                // selectAll:selectAll,
                 courses:courseTreeselect,
                 schools:$json.schools||{},
                 units:unitTreeselect,
