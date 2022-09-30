@@ -63,8 +63,8 @@
                                 <input v-model="entry.id" type="hidden" name="id" value="">
                                 <div class="row">
                                     <div class="form-group  col-sm-4">
-                                        <label>Teacher name <span class="text-danger">*</span></label>
-                                        <input class="form-control" v-model="entry.username">
+                                        <label>Username <span class="text-danger">*</span></label>
+                                        <input class="form-control" v-model="entry.username" disabled>
 
                                         <error-label for="f_category_id" :errors="errors.username"></error-label>
                                     </div>

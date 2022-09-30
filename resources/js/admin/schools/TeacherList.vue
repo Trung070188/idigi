@@ -71,9 +71,6 @@
                                     <i class="bi bi-funnel"></i>
                                     Advanced Search
                                 </button>
-<!--                                <a v-if="permissions['013']" :href="'/xadmin/users/create_teacher'">-->
-<!--                                    <button class="btn btn-primary button-create" style="margin:0 0 0 15px"> Create New</button>-->
-<!--                                </a>-->
 
                             </div>
                         </div>
@@ -189,8 +186,6 @@
                                 <th class="">ID</th>
                                 <th class="">Teacher name</th>
                                 <th class="">Teacher email</th>
-                                <th class="">Class</th>
-                                <th class="">Teacher phone number</th>
                                 <th class="">Registed devices</th>
                                 <th class="">Creation Date</th>
                                 <th class="">Status</th>
@@ -216,8 +211,6 @@
                                 <td class="" v-text="entry.id"></td>
                                 <td class="" v-text="entry.full_name"></td>
                                 <td class="" v-text="entry.email"></td>
-                                <td class="" v-text="entry.class"></td>
-                                <td class="" v-text="entry.phone"></td>
                                 <td class="">{{entry.user_devices.length}} / {{lengthDeviceTeacher}}</td>
                                 <td class="" v-text=" d(entry.created_at)"></td>
                                 <td class="" v-text="entry.state===0 ? 'No' : 'Yes'"></td>

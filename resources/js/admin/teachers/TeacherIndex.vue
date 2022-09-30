@@ -215,8 +215,6 @@
                                 <th class="">No.</th>
                                 <th class="">Teacher's name</th>
                                 <th class="">Email</th>
-                                <th class="">Class</th>
-                                <th class="">Phone number</th>
                                 <th class="">Registered devices</th>
                                 <th class="">Creation Date</th>
                                 <th class="">Status</th>
@@ -242,8 +240,6 @@
                                 <td >{{index+1}}</td>
                                 <td class="" v-text="entry.full_name"></td>
                                 <td class="" v-text="entry.email"></td>
-                                <td class="" v-text="entry.class"></td>
-                                <td class="" v-text="entry.phone"></td>
                                 <td class="">{{entry.user_devices.length}} /{{devicePerUser}}</td>
                                 <td class="" v-text=" d(entry.created_at)"></td>
                                 <td class="" v-text="entry.state===0 ? 'No' : 'Yes'"></td>
