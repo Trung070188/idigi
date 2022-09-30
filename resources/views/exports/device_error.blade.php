@@ -6,7 +6,6 @@
         <td>Type</td>
         <td>Expire date</td>
         <td>Register code</td>
-        <td>Status</td>
     </tr>
     </thead>
 
@@ -18,7 +17,6 @@
             <td>{{$item['type']}}</td>
             <td>{{$item['expire_date']}}</td>
             <td>{{$item['device_uid']}}</td>
-            <td>{{$item['status']}}</td>
             <td>@if(@$item['error'])
                     @foreach($item['error'] as $er)
                         @foreach($er as $value)

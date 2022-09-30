@@ -25,6 +25,7 @@ use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Redirect;
@@ -347,13 +348,14 @@ class PlansController extends AdminBaseController
 
         $data = $req->get('entry');
 
+
         $rules = [
-            'name' => 'max:255',
-            'created_by' => 'numeric',
-            'due_at' => 'date_format:Y-m-d H:i:s',
+//            'deviceExpireDate' => 'max:255',
+//            'created_by' => 'numeric',
+//            'due_at' => 'date_format:Y-m-d H:i:s',
         ];
 
-        $v = Validator::make($data, $rules);
+        $v = Validator::make($data, $rules,$dataRole);
 
         if ($v->fails()) {
             return [
@@ -384,12 +386,19 @@ class PlansController extends AdminBaseController
             } catch (\Exception $e) {
 
             }
+            if ($dataRole['deviceExpireDate'] ==null)
+            {
+                $device->expire_date = $entry->expire_date;
+            }
+            else{
+                $device->expire_date =$dataRole['deviceExpireDate'];
+            }
             $device->user_id = $dataRole['idRoleIt'];
             $device->plan_id = $entry->id;
             $device->status = 2;
-            $device->expire_date = $entry->expire_date;
             $device->secret_key = (Str::random(10));
             $device->save();
+
             return [
                 'code' => 0,
                 'message' => 'Đã cập nhật',
@@ -473,13 +482,11 @@ class PlansController extends AdminBaseController
                             } catch (\Exception $e) {
 
                             }
-                            $item['status'] = $dev[3];
-                            $item['expire_date'] = $dev[4];
+                            $item['expire_date'] = $dev[3];
                             $validator = Validator::make($item, [
                                 'device_name' => ['required', Rule::unique('user_devices', 'device_name')],
                                 'device_uid' => ['required', Rule::unique('user_devices', 'device_uid')],
                                 'type' => 'required',
-                                'status' => 'required',
                                 'expire_date' => ['date_format:d/m/Y H:i:s', 'before_or_equal:' . $dayExpireDevice]
                             ]);
 
@@ -503,7 +510,6 @@ class PlansController extends AdminBaseController
                                 'type' => $validation['type'],
                                 'device_uid' => '',
                                 'expire_date' => $validation['expire_date'],
-                                'status' => $validation['status'],
                                 'error' => $validation['error'],
                             ];
                         } else {
@@ -554,12 +560,8 @@ class PlansController extends AdminBaseController
         if (!$req->isMethod('POST')) {
             return ['code' => 405, 'message' => 'Method not allow'];
         }
-
-
         $rules = [
         ];
-
-
         $v = Validator::make($data, $rules);
 
         if ($v->fails()) {
@@ -1176,6 +1178,36 @@ class PlansController extends AdminBaseController
                 'message' => 'Đã cập nhật',
             ];
         }
+        /** Remove device all device 30/09/2022 dev: Trung */
+    public function removeDeviceAll(Request $req)
+    {
+        $dataAll=$req->all();
+        $data = $req->get('entry');
+        if (isset($data['id'])) {
+            $entry = Plan::find($data['id']);
+            UserDevice::Where('plan_id',$entry->id)->whereIn('id',$dataAll['ids'])->delete();
+            return [
+                'code' => 0,
+                'message' => 'Đã xóa',
+            ];
+
+        }
+    }
+    public function removeDevice(Request $req)
+    {
+        $dataAll=$req->all();
+        $data = $req->get('entry');
+        if (isset($data['id'])) {
+            $entry = Plan::find($data['id']);
+            UserDevice::Where('plan_id',$entry->id)->where('id',$dataAll['id'])->delete();
+            return [
+                'code' => 0,
+                'message' => 'Đã xóa',
+            ];
+
+        }
+
+    }
 
 
 
