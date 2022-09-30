@@ -62,7 +62,7 @@
                         data-kt-customer-table-toolbar="base">
                         <a>
                             <button class="btn btn-primary button-create" style="margin:0 0 0 15px" @click="showModalUpload()" v-if=" appIds=='' && windowIds==''">
-                                <i class="bi bi-cloud-plus"></i>New version
+                                <i class="bi bi-upload mr-1"></i></i>Create App
                             </button>
                         </a>
 
@@ -96,32 +96,25 @@
                             <td class="css_test" v-text="entry.release_note"
                                 @click="showReleaseNote(entry.release_note)"></td>
                             <!--                            <td> {{ d2(entry.release_date) }}</td>-->
-                            <td style="color:#1aaf21;" class="" v-if="entry.is_default==1">Default</td>
-                            <td v-if="entry.is_default==0"></td>
+                            <td style="color:#1aaf21;" class="" v-if="entry.is_default==1"><span class="badge badge-light-success">Release</span></td>
+                            <td v-if="entry.is_default==0"><span class="badge badge-light-warning">Draft</span></td>
                             <td class="">
-                                <a href="list.html#" class="btn btn-light btn-active-light-primary btn-sm"
-                                   data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">Actions
-                                    <!--begin::Svg Icon | path: icons/duotune/arrows/arr072.svg-->
+                                <a href="list.html#" class="btn btn-light btn-active-light-primary btn-sm" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">Actions
                                     <span class="svg-icon svg-icon-5 m-0">
-															<svg xmlns="http://www.w3.org/2000/svg" width="24"
-                                                                 height="24" viewBox="0 0 24 24" fill="none">
-																<path
-                                                                    d="M11.4343 12.7344L7.25 8.55005C6.83579 8.13583 6.16421 8.13584 5.75 8.55005C5.33579 8.96426 5.33579 9.63583 5.75 10.05L11.2929 15.5929C11.6834 15.9835 12.3166 15.9835 12.7071 15.5929L18.25 10.05C18.6642 9.63584 18.6642 8.96426 18.25 8.55005C17.8358 8.13584 17.1642 8.13584 16.75 8.55005L12.5657 12.7344C12.2533 13.0468 11.7467 13.0468 11.4343 12.7344Z"
-                                                                    fill="black"/>
-															</svg>
-														</span>
-                                    <!--end::Svg Icon--></a>
+                                        <!--begin::Svg Icon | path: icons/duotune/arrows/arr072.svg-->
+                                        <svg data-v-535b11e0="" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M11.4343 12.7344L7.25 8.55005C6.83579 8.13583 6.16421 8.13584 5.75 8.55005C5.33579 8.96426 5.33579 9.63583 5.75 10.05L11.2929 15.5929C11.6834 15.9835 12.3166 15.9835 12.7071 15.5929L18.25 10.05C18.6642 9.63584 18.6642 8.96426 18.25 8.55005C17.8358 8.13584 17.1642 8.13584 16.75 8.55005L12.5657 12.7344C12.2533 13.0468 11.7467 13.0468 11.4343 12.7344Z" fill="black"></path></svg>
+                                        <!--end::Svg Icon-->
+                                    </span>
+                                </a>
                                 <!--begin::Menu-->
-                                <div
-                                    class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-bold fs-7 w-125px py-4"
-                                    data-kt-menu="true">
+                                <div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-bold fs-7 w-auto py-4" data-kt-menu="true">
                                     <!--begin::Menu item-->
                                     <div class="menu-item px-3">
                                         <a :href="entry.url" class="menu-link px-3">Download</a>
                                     </div>
                                     <div class="menu-item px-3">
                                         <a v-if="entry.is_default==0" class="menu-link px-3"
-                                           @click="showSetDefaultModal(entry.id)">Set as Default</a>
+                                           @click="showSetDefaultModal(entry.id)">Release this version</a>
                                     </div>
                                     <div class="menu-item px-3">
                                         <a @click="removeApp(entry.id)"
@@ -289,14 +282,14 @@
                                 </div>
                                 <div class="form-group">
                                     <input id="state" type="checkbox" v-model="model.is_default" checked>
-                                    <label for="state" class="pl-2">Set as Default</label>
+                                    <label for="state" class="pl-2 fw-bold">Release this version</label>
                                     <error-label for="f_grade" :errors="errors.is_default"></error-label>
                                 </div>
                             </form>
 
                         </div>
                         <div class="modal-footer" style="justify-content: center">
-                            <button type="button" class="btn btn-primary" @click="save">Save</button>
+                            <button type="button" class="btn btn-primary mr-2" @click="save"><i class="bi bi-send mr-1"></i>Submit</button>
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
                         </div>
                     </div>
@@ -318,7 +311,7 @@
 
                         </div>
                         <h3 class="card-title align-items-start flex-column">
-                            <span class="card-label fw-bolder fs-2 mb-1">Installation for Windows</span>
+                            <span class="card-label fw-bolder fs-2 mb-1">Installation package for Windows</span>
                             <span class="badge badge-light-success fs-7">Version: {{appVersionsWindow.version}}</span>
                         </h3>
                     </div>
@@ -328,9 +321,9 @@
                         </div>
 
                         <a :href="appVersionsWindow.url">
-                            <button id="kt_widget_5_load_more_btn" class="btn btn-primary col-xl-7 text-center mb-4">
+                            <button id="kt_widget_5_load_more_btn" class="btn btn-primary col-xl-6 text-center mb-3">
                                 <span class="svg-icon"><i class="bi bi-download"></i></span>
-                                <span class="indicator-label">Start Downloading</span>
+                                <span class="indicator-label">Download Now</span>
                                 <span class="indicator-progress">Loading...
 								    <span class="spinner-border spinner-border-sm align-middle ms-2"></span>
                                 </span>
@@ -357,7 +350,7 @@
 
                         </div>
                         <h3 class="card-title align-items-start flex-column">
-                            <span class="card-label fw-bolder fs-2 mb-1">Installation for Windows</span>
+                            <span class="card-label fw-bolder fs-2 mb-1">Installation package for Windows</span>
                             <span class="badge badge-light-dark fs-7">Version: N/A </span>
                         </h3>
                     </div>
@@ -366,7 +359,7 @@
                             <img src="/images/laptop_win.png" height="300px" style="-webkit-filter: grayscale(100%); / Safari 6.0 - 9.0 /filter: grayscale(100%);opacity: 0.6;" />
                         </div>
 
-                        <button id="kt_widget_5_load_more_btn" class="btn btn-light col-xl-7 text-center mb-4">
+                        <button id="kt_widget_5_load_more_btn" class="btn btn-light col-xl-6 text-center mb-3">
                             <span class="svg-icon"><i class="bi bi-exclamation-lg"></i></span>
                             <span class="indicator-label">Unavailable to Download</span>
                             <span class="indicator-progress">Loading...
@@ -394,7 +387,7 @@
                             <div class="d-block"><img src="/images/macos_logo.png" height="48px"/></div>
                         </div>
                         <h3 class="card-title align-items-start flex-column">
-                            <span class="card-label fw-bolder fs-2 mb-1">Installation for Mac OS</span>
+                            <span class="card-label fw-bolder fs-2 mb-1">Installation package for Mac OS</span>
                             <span class="badge badge-light-success fs-7">Version: {{appVersionsOs.version}}</span>
                         </h3>
                     </div>
@@ -403,9 +396,9 @@
                             <img src="/images/laptop_mac.png" height="300px"/>
                         </div>
                         <a :href="appVersionsOs.url">
-                            <button id="kt_widget_5_load_more_btn" class="btn btn-primary col-xl-7 text-center mb-4">
+                            <button id="kt_widget_5_load_more_btn" class="btn btn-primary col-xl-6 text-center mb-3">
                                 <span class="svg-icon"><i class="bi bi-download"></i></span>
-                                <span class="indicator-label">Start Downloading</span>
+                                <span class="indicator-label">Download Now</span>
                                 <span class="indicator-progress">Loading...
 								    <span class="spinner-border spinner-border-sm align-middle ms-2"></span>
                                 </span>
@@ -429,7 +422,7 @@
                             <div class="d-block"><img src="/images/macos_logo.png" height="48px"/></div>
                         </div>
                         <h3 class="card-title align-items-start flex-column">
-                            <span class="card-label fw-bolder fs-2 mb-1">Installation for Mac OS</span>
+                            <span class="card-label fw-bolder fs-2 mb-1">Installation package for Mac OS</span>
                             <span class="badge badge-light-dark fs-7">Version: N/A</span>
                         </h3>
                     </div>
@@ -437,7 +430,7 @@
                         <div class="d-block mb-5">
                             <img src="/images/laptop_mac.png" height="300px" style="-webkit-filter: grayscale(100%); / Safari 6.0 - 9.0 /filter: grayscale(100%);opacity: 0.6;" />
                         </div>
-                        <button id="kt_widget_5_load_more_btn" class="btn btn-light col-xl-7 text-center mb-4">
+                        <button id="kt_widget_5_load_more_btn" class="btn btn-light col-xl-6 text-center mb-3">
                             <span class="svg-icon"><i class="bi bi-exclamation-lg"></i></span>
                             <span class="indicator-label">Unavailable to Download</span>
                             <span class="indicator-progress">Loading...

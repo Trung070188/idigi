@@ -3228,7 +3228,7 @@ textarea.form-control.is-invalid {
 
 .btn {
     display: inline-block;
-    font-weight: normal;
+    font-weight: 500;
     color: #3F4254;
     text-align: center;
     vertical-align: middle;
@@ -3238,10 +3238,10 @@ textarea.form-control.is-invalid {
     user-select: none;
     background-color: transparent;
     border: 1px solid transparent;
-    padding: 0.65rem 1rem;
-    font-size: 1rem;
+    padding: .75rem 1.5rem;
+    font-size: 1.02rem;
     line-height: 1.5;
-    border-radius: 0.42rem;
+    border-radius: 0.475rem;
     -webkit-transition: color 0.3s ease-in-out, background-color 0.3s ease-in-out, border-color 0.3s ease-in-out, -webkit-box-shadow 0.3s ease-in-out;
     transition: color 0.3s ease-in-out, background-color 0.3s ease-in-out, border-color 0.3s ease-in-out, -webkit-box-shadow 0.3s ease-in-out;
     transition: color 0.3s ease-in-out, background-color 0.3s ease-in-out, border-color 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
@@ -3256,7 +3256,7 @@ textarea.form-control.is-invalid {
 }
 
 .btn:hover {
-    color: #3F4254;
+    color: #30b86e;
     text-decoration: none;
 }
 
@@ -3291,47 +3291,47 @@ fieldset:disabled a.btn {
 
 .btn-primary {
     color: #ffffff;
-    background-color: #187DE4; /*#696CFF;*/
-    border-color: #187DE4;
+    background-color: #50cd89; /*#187DE4; #696CFF;*/
+    border-color: #50cd89;
     -webkit-box-shadow: none;
     box-shadow: none;
 }
 
 .btn-primary:hover {
     color: #ffffff;
-    background-color: #1086ff;
-    border-color: #037fff;
+    background-color: #30b86e;
+    border-color: #30b86e;
 }
 
 .btn-primary:focus,
 .btn-primary.focus {
     color: #ffffff;
-    background-color: #1086ff;
-    border-color: #037fff;
-    -webkit-box-shadow: 0 0 0 0.2rem rgba(84, 168, 255, 0.5);
-    box-shadow: 0 0 0 0.2rem rgba(84, 168, 255, 0.5);
+    background-color: #30b86e;
+    border-color: #30b86e;
+    -webkit-box-shadow: 0 0 0 0.2rem rgba(48, 184, 110, 0.7);
+    box-shadow: 0 0 0 0.2rem rgba(48, 184, 110, 0.7);
 }
 
 .btn-primary.disabled,
 .btn-primary:disabled {
     color: #ffffff;
-    background-color: #696CFF;
-    border-color: #696CFF;
+    background-color: #adadad;
+    border-color: #adadad;
 }
 
 .btn-primary:not(:disabled):not(.disabled):active,
 .btn-primary:not(:disabled):not(.disabled).active,
 .show>.btn-primary.dropdown-toggle {
     color: #ffffff;
-    background-color: #037fff;
-    border-color: #0079f5;
+    background-color: #30b86e;
+    border-color: #30b86e;
 }
 
 .btn-primary:not(:disabled):not(.disabled):active:focus,
 .btn-primary:not(:disabled):not(.disabled).active:focus,
 .show>.btn-primary.dropdown-toggle:focus {
-    -webkit-box-shadow: 0 0 0 0.2rem rgba(84, 168, 255, 0.5);
-    box-shadow: 0 0 0 0.2rem rgba(84, 168, 255, 0.5);
+    -webkit-box-shadow: 0 0 0 0.2rem rgba(48, 184, 110, 0.7);
+    box-shadow: 0 0 0 0.2rem rgba(48, 184, 110, 0.7);
 }
 
 .btn-secondary {
@@ -6329,14 +6329,14 @@ input[type=button].btn-block {
 
 .badge {
     display: inline-block;
-    padding: 0.5em 0.75em;
+    padding: 0.5em 0.85em;
     font-size: 85%;
     font-weight: 500;
     line-height: 1;
     text-align: center;
     white-space: nowrap;
     vertical-align: baseline;
-    border-radius: 0.42rem;
+    border-radius: 0.475rem;
     -webkit-transition: color 0.3s ease-in-out, background-color 0.3s ease-in-out, border-color 0.3s ease-in-out, -webkit-box-shadow 0.3s ease-in-out;
     transition: color 0.3s ease-in-out, background-color 0.3s ease-in-out, border-color 0.3s ease-in-out, -webkit-box-shadow 0.3s ease-in-out;
     transition: color 0.3s ease-in-out, background-color 0.3s ease-in-out, border-color 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
@@ -52675,8 +52675,8 @@ button {
 
 .btn.btn-primary {
     color: #FFFFFF;
-    background-color: #187DE4; /*#696CFF;*/
-    border-color: #187DE4;
+    background-color: #50cd89; /*#696CFF;*/
+    border-color: #50cd89;
 }
 
 .btn.btn-primary i {
@@ -52702,8 +52702,8 @@ button {
 .btn.btn-primary:focus:not(.btn-text),
 .btn.btn-primary.focus:not(.btn-text) {
     color: #FFFFFF;
-    background-color: #6fc400;/*#187DE4;*/
-    border-color: #6fc400;/*#187DE4;*/
+    background-color: #50cd89;/*#187DE4;*/
+    border-color: #50cd89;/*#187DE4;*/
 }
 
 .btn.btn-primary:hover:not(.btn-text):not(:disabled):not(.disabled) i,
@@ -86408,7 +86408,7 @@ body.swal2-height-auto {
 
 .uppy .uppy-btn-primary:focus,
 .uppy .uppy-btn-primary:hover {
-    background-color: #1789ff;
+    background-color: #30b86e;
 }
 
 .uppy .uppy-DashboardContent-back {
