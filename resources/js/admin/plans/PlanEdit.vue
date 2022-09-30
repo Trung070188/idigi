@@ -23,16 +23,10 @@
                                                                   transform="rotate(45 7.41422 6)" fill="black"/>
 														</svg>
 													</span>
-                                <!--end::Svg Icon-->
                             </div>
-                            <!--end::Close-->
                         </div>
-                        <!--begin::Modal header-->
-                        <!--begin::Modal body-->
                         <div class="modal-body scroll-y mx-5 mx-xl-18 pt-0 pb-15">
-                            <!--begin::Heading-->
                             <div class="text-center mb-13">
-                                <!--begin::Title-->
                                 <h1 class="mb-3">Device list</h1>
                             </div>
 
@@ -490,7 +484,7 @@
                                                         <a class="menu-link px-3" @click="importDevice()">Import devices</a>
                                                     </div>
                                                     <div class="menu-item px-3">
-                                                        <a class="menu-link px-3">Export device list</a>
+                                                        <a class="menu-link px-3" @click="exportDevice">Export device list</a>
                                                     </div>
                                                     <div class="menu-item px-3">
                                                         <a data-kt-subscriptions-table-filter="delete_row"
