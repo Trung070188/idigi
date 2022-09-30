@@ -73,18 +73,18 @@
                                 </div>
                                 <div class="card-toolbar">
                             <div class="d-flex justify-content-end" data-kt-customer-table-toolbar="base" v-if="teacherIds == ''">
-                                <button type="button" style="margin-left: 10px" @click="isShowFilter = !isShowFilter" class="btn btn-secondary" v-if="isShowFilter">
+                                <button type="button"  @click="isShowFilter = !isShowFilter" class="btn btn-secondary mr-2" v-if="isShowFilter">
                                     <i style="margin-left: 5px" class="fas fa-times"></i>
                                     Close Advanced Search
                                 </button>
-                                <button type="button" style="margin-left: 10px" @click="isShowFilter = !isShowFilter" class="btn btn-secondary" v-if="!isShowFilter">
+                                <button type="button"  @click="isShowFilter = !isShowFilter" class="btn btn-secondary mr-2" v-if="!isShowFilter">
                                     <i class="bi bi-funnel"></i>
                                     Advanced Search
                                 </button>
                                 <div class="d-flex justify-content-end" data-kt-filemanager-table-toolbar="base">
 
 
-                                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#kt_modal_upload">
+                                    <button type="button" class="btn btn-primary mr-2" data-bs-toggle="modal" data-bs-target="#kt_modal_upload">
                                         <span class="svg-icon svg-icon-2">
 													<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
 														<path opacity="0.3" d="M10 4H21C21.6 4 22 4.4 22 5V7H10V4Z" fill="black" />
@@ -97,9 +97,9 @@
                                 </div>
 
                                         <a v-if="permissions['013'] && entries.length<lengthUserSchool " :href="'/xadmin/users/create_teacher'">
-                                            <button class="btn btn-primary button-create" style="margin:0 0 0 15px"> Create</button>
+                                            <button class="btn btn-primary button-create ml-0" style="margin:0 0 0 15px"> Create</button>
                                         </a>
-                                <button v-if="permissions['013'] && entries.length==lengthUserSchool "  @click="teacherFull" class="btn btn-primary button-create" style="margin:0 0 0 15px">
+                                <button v-if="permissions['013'] && entries.length==lengthUserSchool "  @click="teacherFull" class="btn btn-primary button-create ml-0" style="margin:0 0 0 15px">
                                     Create
                                 </button>
 
