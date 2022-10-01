@@ -919,9 +919,9 @@ class PlansController extends AdminBaseController
             $query->where('enabled', $req->enabled);
         }
 
-        $query->createdIn($req->created);
+//        $query->createdIn($req->created);
 
-        $limit = 25;
+     $limit = $query->count();
 
         if ($req->limit) {
             $limit = $req->limit;
@@ -932,11 +932,11 @@ class PlansController extends AdminBaseController
         return [
             'code' => 0,
             'data' => $entries->items(),
-            'paginate' => [
-                'currentPage' => $entries->currentPage(),
-                'lastPage' => $entries->lastPage(),
-                'totalRecord' => $query->count(),
-            ]
+//            'paginate' => [
+//                'currentPage' => $entries->currentPage(),
+//                'lastPage' => $entries->lastPage(),
+//                'totalRecord' => $query->count(),
+//            ]
         ];
     }
 

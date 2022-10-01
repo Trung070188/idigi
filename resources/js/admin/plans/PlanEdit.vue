@@ -3,45 +3,35 @@
         <ActionBar type="index"
                    :breadcrumbs="breadcrumbs" title="Create new plan"/>
         <div class="row">
+
+            <!-- BEGIN: MODAL ADD LESSON PACKAGE PLAN -->
+
             <div class="modal fade" id="kt_modal_invite" tabindex="-1" aria-hidden="true">
-                <!--begin::Modal dialog-->
                 <div class="modal-dialog " style="width: 1000px">
-                    <!--begin::Modal content-->
                     <div class="modal-content" style="width: max-content;margin: 0px -150px 0px">
-                        <!--begin::Modal header-->
                         <div class="modal-header pb-0 border-0 justify-content-end">
-                            <!--begin::Close-->
                             <div class="btn btn-sm btn-icon btn-active-color-primary" data-bs-dismiss="modal">
-                                <!--begin::Svg Icon | path: icons/duotune/arrows/arr061.svg-->
                                 <span class="svg-icon svg-icon-1">
-														<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                                             viewBox="0 0 24 24" fill="none">
-															<rect opacity="0.5" x="6" y="17.3137" width="16" height="2"
-                                                                  rx="1" transform="rotate(-45 6 17.3137)"
-                                                                  fill="black"/>
-															<rect x="7.41422" y="6" width="16" height="2" rx="1"
-                                                                  transform="rotate(45 7.41422 6)" fill="black"/>
-														</svg>
-													</span>
-                                <!--end::Svg Icon-->
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                         viewBox="0 0 24 24" fill="none">
+                                        <rect opacity="0.5" x="6" y="17.3137" width="16" height="2"
+                                              rx="1" transform="rotate(-45 6 17.3137)"
+                                              fill="black"/>
+                                        <rect x="7.41422" y="6" width="16" height="2" rx="1"
+                                              transform="rotate(45 7.41422 6)" fill="black"/>
+                                    </svg>
+                                </span>
                             </div>
-                            <!--end::Close-->
                         </div>
-                        <!--begin::Modal header-->
-                        <!--begin::Modal body-->
                         <div class="modal-body scroll-y mx-5 mx-xl-18 pt-0 pb-15">
-                            <!--begin::Heading-->
                             <div class="text-center mb-13">
-                                <!--begin::Title-->
                                 <h1 class="mb-3">Lesson package</h1>
                             </div>
                             <div class="d-flex">
-
                                 <div class="h-15px me-3" style="width: 218px">
                                     <label>Name </label>
-                                    <input v-model="filter.name" @keydown.enter="doFilter('name', filter.name, $event)"
-                                           class="form-control" placeholder="Enter the lesson name"
-                                    />
+                                    <input v-model="filter.keyword" @keydown.enter="doFilter($event)"
+                                           class="form-control" placeholder="Enter the lesson name"/>
                                 </div>
                                 <div class="h-15px me-3" style="width: 218px">
                                     <label>Subject </label>
@@ -52,7 +42,6 @@
                                         <option value="Math">Math</option>
                                         <option value="Science ">Science</option>
                                     </select>
-
                                 </div>
                                 <div class="h-15px me-3" style="width: 218px">
                                     <label>Grade </label>
@@ -73,9 +62,10 @@
                                 </div>
 
                             </div>
-
-                            <div class="d-flex" style="margin: 64px 0px 0px">
-
+                            <div class="d-flex mt-20">
+                                <div class="btn btn-primary" @click="doFilter">Search</div>
+                            </div>
+                            <div class="d-flex mb-1 mt-5">
                                 <div class="mh-300px scroll-y me-n7 pe-7" style="width: 703px">
                                     <table class="table table-row-bordered align-middle gy-4 gs-9">
                                         <thead
@@ -85,27 +75,23 @@
                                                 <div
                                                     class="form-check form-check-sm form-check-custom form-check-solid">
                                                     <input class="form-check-input" type="checkbox"
-                                                           v-model="allSelected" @change="selectAll()">
+                                                           v-model="allLessonSelected" @change="selectLessonAll()">
                                                 </div>
                                             </td>
                                             <th class="">Name of lesson</th>
                                             <th class="">Grade</th>
                                             <th class="">Subject</th>
-
-
                                             <th></th>
                                         </tr>
                                         </thead>
-                                        <tbody >
+                                        <tbody  v-for="lessonPackagePlan in lessonPackagePlans">
                                         <tr v-for="lesson in entries">
                                             <td class="">
-                                                <!-- <div
+                                                <div
                                                     class="form-check form-check-sm form-check-custom form-check-solid">
                                                     <input class="form-check-input" type="checkbox"
-                                                           v-model="lessonId.lessonIds" :value="lesson.id"
-                                                           @change="updateCheckAll( package)">
-
-                                                </div> -->
+                                                         v-model="lessonPackagePlan.lessonIds" :value="lesson.id"  @change="updateLessonAll()">
+                                                </div>
                                             </td>
                                             <td class="" v-text="lesson.name"></td>
                                             <td class="" v-text="lesson.grade"></td>
@@ -113,35 +99,26 @@
                                         </tr>
                                         </tbody>
                                     </table>
-                                    <div class="d-flex pl-9 pr-9 mb-8">
-                                        <div
-                                            class="col-sm-12 col-md-5 d-flex align-items-center justify-content-center justify-content-md-start">
-                                            <!--<div class="mr-2">
-                                                <label>Records per page:</label>
-                                            </div>-->
-                                            <div>
-                                                <select class="form-select form-select-sm form-select-solid"
-                                                        v-model="limit" @change="changeLimit">
-                                                    <option value="25">25</option>
-                                                    <option value="50">50</option>
-                                                    <option value="100">100</option>
-
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <!--<div style="float: right; margin: 10px">-->
-                                        <div
-                                            class="col-sm-12 col-md-7 d-flex align-items-center justify-content-center justify-content-md-end">
-                                            <div class="dataTables_paginate paging_simple_numbers"
-                                                 id="kt_customers_table_paginate1">
-                                                <Paginate :value="paginate" :pagechange="onPageChange"></Paginate>
-
-                                            </div>
-                                        </div>
-                                    </div>
-
+<!--                                    <div class="d-flex pl-9 pr-9 mb-8">-->
+<!--                                        <div-->
+<!--                                            class="col-sm-12 col-md-5 d-flex align-items-center justify-content-center justify-content-md-start">-->
+<!--                                            <div>-->
+<!--                                                <select class="form-select form-select-sm form-select-solid" v-model="limit" @change="changeLimit">-->
+<!--                                                    <option value="25">25</option>-->
+<!--                                                    <option value="50">50</option>-->
+<!--                                                    <option value="100">100</option>-->
+<!--                                                </select>-->
+<!--                                            </div>-->
+<!--                                        </div>-->
+<!--                                        <div-->
+<!--                                            class="col-sm-12 col-md-7 d-flex align-items-center justify-content-center justify-content-md-end">-->
+<!--                                            <div class="dataTables_paginate paging_simple_numbers"-->
+<!--                                                 id="kt_customers_table_paginate1">-->
+<!--                                                <Paginate :value="paginate" :pagechange="onPageChange"></Paginate>-->
+<!--                                            </div>-->
+<!--                                        </div>-->
+<!--                                    </div>-->
                                 </div>
-
                             </div>
                             <div class="d-flex justify-content-end">
                                 <button class="btn btn-primary" style="margin: 20px 0px 0px" @click="addLesson()">
@@ -150,12 +127,12 @@
                             </div>
 
                         </div>
-
                     </div>
-
                 </div>
-
             </div>
+
+            <!-- END: MODAL ADD LESSON PACKAGE PLAN -->
+
             <div class="modal fade" id="kt_modal" tabindex="-1" aria-hidden="true">
                 <!--begin::Modal dialog-->
                 <div class="modal-dialog " style="width: 1000px">
@@ -342,7 +319,7 @@
                                                    @click="tabPackageLesson(packageLesson.id)">Package lesson
                                                     {{index+1}}</a>
                                             </li>
-                                            <li> <a 
+                                            <li> <a
                                                    class="btn btn-primary btn-active-primary btn-sm mt-2 ml-2"
                                                    data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end" @click="addPackageLesson">Add package
                                                 </a></li>
@@ -354,7 +331,7 @@
                                     <!--BEGIN: LIST DEVICE PLAN-->
 
                                     <div id="kt_billing_months" class="card-body p-0 tab-pane fade show active" role="tabpanel" aria-labelledby="kt_billing_months">
-                                       
+
                                             <div class="d-flex justify-content-end mb-4">
                                                  <a v-if="deviceIds!=''" class="btn btn-danger btn-sm mr-3" @click="removeDeviceAll" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">Delete
                                                 </a>
@@ -370,7 +347,7 @@
 															</svg>
                                                     </span>
                                                 </a>
-                                                 
+
                                                 <div class="menu menu-sub menu-sub-dropdown  menu-rounded menu-gray-600 menu-state-bg-light-primary fw-bold fs-7 py-4" data-kt-menu="true" style="width: 150px">
                                                     <!--begin::Menu item-->
                                                     <div class="menu-item px-3">
@@ -399,7 +376,7 @@
                                                         </div>
                                                     </div>
                                             </div> -->
-                                       
+
 
                                         <!-- BEGIN : TABLE LIST DEVICE-->
                                         <table class="table table-row-bordered align-middle gy-4 gs-9">
@@ -444,7 +421,7 @@
                                         <!--END : TABLE LIST DEVICE-->
                                     </div>
                                     <!-- END: DEVICE LIST PLAN -->
-                                    
+
                                     <!--BEGIN: PACKAGE LESSON PLAN -->
 
                                     <div id="kt_billing_year" class="card-body p-0 tab-pane fade" role="tabpanel"
@@ -464,10 +441,10 @@
 															</svg>
                                                     </span>
                                                 </a>
-                                                 
+
                                                 <div class="menu menu-sub menu-sub-dropdown  menu-rounded menu-gray-600 menu-state-bg-light-primary fw-bold fs-7 py-4" data-kt-menu="true" style="width: 150px">
                                                     <div class="menu-item px-3">
-                                                        <a class="menu-link px-3" @click="addLessonPackage()">Add lesson</a>
+                                                        <a class="menu-link px-3" @click="addLessonPackage(tabLessonContent)">Add lesson</a>
                                                     </div>
                                                     <div class="menu-item px-3">
                                                     </div>
@@ -483,7 +460,7 @@
                                             <tr>
                                                 <td width="25">
                                                     <div class="form-check form-check-sm form-check-custom form-check-solid">
-                                                        <input class="form-check-input" type="checkbox"  v-model="allDeviceSelected" @change="selectDeviceAll()">
+                                                        <input class="form-check-input" type="checkbox"  >
                                                     </div>
                                                 </td>
                                                 <td>No.</td>
@@ -495,27 +472,25 @@
                                             </tr>
                                             </thead>
                                             <tbody>
-                                            <tr v-for="(device,index) in data">
+                                            <tr >
                                                 <td class="">
                                                     <div
                                                         class="form-check form-check-sm form-check-custom form-check-solid">
-                                                        <input class="form-check-input" type="checkbox" v-model="deviceIds" :value="device.id" @change="updateDeviceCheckAll">
+                                                        <input class="form-check-input" type="checkbox" >
                                                     </div>
                                                 </td>
-                                                <td>{{index+1}}</td>
-                                                <td>{{device.device_name}}</td>
-                                                <td>{{device.type}}</td>
-                                                <td>{{device.device_uid}}</td>
-                                                <td>{{device.expire_date}}</td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
                                                 <td class="">
-                                                    <a  class="btn btn-active-danger btn-light-danger btn-sm" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end" @click="removeDevice(device)">Delete
-                                                    </a>
-
+                                                    <a  class="btn btn-active-danger btn-light-danger btn-sm" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end" >Delete</a>
                                                 </td>
                                             </tr>
                                             </tbody>
                                         </table>
-                                       
+
                                     </div>
 
                                     <!-- END : PACKAGE LESSON PLAN -->
@@ -784,6 +759,7 @@
             };
 
             return {
+                lessonIds:[],
                 device:[],
                 deviceIds:[],
                 tabLessonContent: '',
@@ -800,7 +776,7 @@
                 exportDevicePlan: '',
                 lessonPackagePlans: $json.lessonPackagePlans,
                 data: $json.data || [],
-                allSelected: false,
+                allLessonSelected: false,
                 allDeviceSelected:false,
                 filter: filter,
                 entries: [],
@@ -1040,11 +1016,49 @@
                 }
 
             },
+            selectLessonAll() {
+                if (this.allLessonSelected)
+                {
+                    const selected=this.entries.map((u)=>u.id);
+                    let self=this;
+                    self.lessonPackagePlans.forEach(function (e){
+                        e.lessonIds=selected;
+                    })
+                }
+                else {
+                        let self = this;
+                        self.lessonPackagePlans.forEach(function (e1) {
+                            e1.lessonIds = [];
+                        })
+                        self.lessons = [];
+                    }
+
+            },
+            updateLessonAll()
+            {
+                this.lessons = [];
+                let self = this;
+                self.lessonPackagePlans.forEach(function (e) {
+                    if (e.lessonIds.length == self.entries.length) {
+                        self.allLessonSelected = true;
+                    } else {
+                        self.allLessonSelected = false;
+                    }
+
+                })
+                self.lessonPackagePlans.forEach(function (e3) {
+                    self.entries.forEach(function (e4) {
+                        if (e4.id == e3) {
+                            self.lessons.push(e3);
+                        }
+                    })
+                })
+            },
+
             selectDeviceAll() {
                 if (this.allDeviceSelected) {
                     const selected = this.data.map(u => u.id);
                     this.deviceIds = selected;
-                    console.log(this.deviceIds);
                 } else {
                     this.deviceIds = [];
                     this.device = [];
@@ -1208,10 +1222,10 @@
                 const res = await $get('/xadmin/plans/dataLesson', query);
                 this.$loading(false);
 
-                this.paginate = res.paginate;
+                // this.paginate = res.paginate;
                 this.entries = res.data;
-                this.from = (this.paginate.currentPage - 1) * (this.limit) + 1;
-                this.to = (this.paginate.currentPage - 1) * (this.limit) + this.entries.length;
+                // this.from = (this.paginate.currentPage - 1) * (this.limit) + 1;
+                // this.to = (this.paginate.currentPage - 1) * (this.limit) + this.entries.length;
             },
             onPageChange(page) {
                 $router.updateQuery({page: page})
