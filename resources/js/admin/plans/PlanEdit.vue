@@ -396,8 +396,8 @@
                                                 <th class="">Actions</th>
                                             </tr>
                                             </thead>
-                                            <tbody>
-                                            <tr v-for="(device,index) in data">
+                                            <tbody >
+                                            <tr v-for="(device,index) in data" >
                                                 <td class="">
                                                     <div
                                                         class="form-check form-check-sm form-check-custom form-check-solid">
@@ -427,7 +427,7 @@
                                     <div id="kt_billing_year" class="card-body p-0 tab-pane fade" role="tabpanel"
                                          aria-labelledby="kt_billing_year">
                                           <div class="d-flex justify-content-end mb-4">
-                                                 <a v-if="deviceIds!=''" class="btn btn-danger btn-sm mr-3" @click="removeDeviceAll" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">Delete
+                                                 <a  class="btn btn-danger btn-sm mr-3" @click="removeDeviceAll" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">Delete
                                                 </a>
                                                 <a href="list.html#"
                                                    class="btn btn-light btn-active-light-primary btn-sm"
@@ -457,7 +457,7 @@
                                             <table class="table table-row-bordered align-middle gy-4 gs-9">
                                             <thead
                                                 class="border-bottom border-gray-200 fs-6 text-gray-600 fw-bolder bg-light bg-opacity-75">
-                                            <tr>
+                                            <tr >
                                                 <td width="25">
                                                     <div class="form-check form-check-sm form-check-custom form-check-solid">
                                                         <input class="form-check-input" type="checkbox"  >
@@ -471,18 +471,19 @@
                                                 <th class="">Actions</th>
                                             </tr>
                                             </thead>
-                                            <tbody>
-                                            <tr >
+                                                {{dataAddLessonPlan}}
+                                            <tbody v-for="packageLesson in lessonPackagePlans" >
+                                            <tr v-for="(lesson,index) in entries">
                                                 <td class="">
                                                     <div
                                                         class="form-check form-check-sm form-check-custom form-check-solid">
                                                         <input class="form-check-input" type="checkbox" >
                                                     </div>
                                                 </td>
-                                                <td></td>
-                                                <td></td>
-                                                <td></td>
-                                                <td></td>
+                                                <td>{{index+1}}</td>
+                                                <td>{{lesson.name}}</td>
+                                                <td>{{lesson.grade}}</td>
+                                                <td>{{lesson.subject}}</td>
                                                 <td></td>
                                                 <td class="">
                                                     <a  class="btn btn-active-danger btn-light-danger btn-sm" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end" >Delete</a>
@@ -812,10 +813,12 @@
                     lastPage: 1,
                     totalRecord: 0
                 },
+                dataAddLessonPlan:[],
             }
         },
 
         mounted() {
+
             let self = this;
             let interval = setInterval(function () {
                 $.get('/xadmin/plans/dataZipLessonPlan', function (res) {
@@ -826,7 +829,7 @@
                         clearInterval(interval);
                     }
                 })
-            }, 90000);
+            }, 900000);
 
             $router.on('/', this.load).init();
 
@@ -836,6 +839,26 @@
             tabPackageLesson: function (tabPackage = '') {
                 $('#kt_billing_year').show();
                 this.tabLessonContent = tabPackage;
+                let self = this;
+
+                self.lessonPackagePlans.forEach(function (e)
+                {
+                    self.dataAddLessonPlan=[];
+
+                    if(e.package_id==tabPackage)
+                    {
+                        e.lessonIds.forEach(function (e1)
+                        {
+                          let data= self.entries.filter(item =>item.id==e1) ;
+                            self.dataAddLessonPlan=data;
+
+                        })
+
+
+                    }
+
+
+                });
 
             },
             importDevice: function (addevicePlan = '') {

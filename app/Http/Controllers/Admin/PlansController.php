@@ -188,6 +188,7 @@ class PlansController extends AdminBaseController
                 'lessonIds' => $lessonIdArr,
             ];
         }
+
         $jsonData = [
             'roleAuth' => $roleAuth,
             'lessonPackagePlans' => @$lessonPackagePlans,
