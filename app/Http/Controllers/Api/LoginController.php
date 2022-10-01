@@ -103,6 +103,7 @@ To establish a new session, please contact us to renew your license.',
                 }
 
                 $payload = [
+                    'full_name'=>$user->full_name,
                     'email' => $user->email,
                     'username' => $user->username,
                     'user_id' => $user->id,
