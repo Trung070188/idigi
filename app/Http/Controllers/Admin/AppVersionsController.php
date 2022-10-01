@@ -135,10 +135,10 @@ class AppVersionsController extends AdminBaseController
 
         //Upload File
         $file0 = $_FILES['file_0'];
-        $file1=$_FILES['file1_0'];
+        @$file1=$_FILES['file1_0'];
 
         $fileExe = $this->uploadFile($file0);
-        $fileUpdate = $this->uploadFile($file1);
+        @$fileUpdate = $this->uploadFile($file1);
 
         $data = [
             'is_default'=>$req->is_default,

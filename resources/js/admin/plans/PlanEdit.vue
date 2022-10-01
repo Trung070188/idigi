@@ -3,116 +3,6 @@
         <ActionBar type="index"
                    :breadcrumbs="breadcrumbs" title="Create new plan"/>
         <div class="row">
-            <div class="modal fade" id="kt_modal_invite_friends" tabindex="-1" aria-hidden="true">
-                <!--begin::Modal dialog-->
-                <div class="modal-dialog ">
-                    <!--begin::Modal content-->
-                    <div class="modal-content" style="width: max-content;margin: 0px -150px 0px">
-                        <!--begin::Modal header-->
-                        <div class="modal-header pb-0 border-0 justify-content-end">
-                            <!--begin::Close-->
-                            <div class="btn btn-sm btn-icon btn-active-color-primary" data-bs-dismiss="modal">
-                                <!--begin::Svg Icon | path: icons/duotune/arrows/arr061.svg-->
-                                <span class="svg-icon svg-icon-1">
-														<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                                             viewBox="0 0 24 24" fill="none">
-															<rect opacity="0.5" x="6" y="17.3137" width="16" height="2"
-                                                                  rx="1" transform="rotate(-45 6 17.3137)"
-                                                                  fill="black"/>
-															<rect x="7.41422" y="6" width="16" height="2" rx="1"
-                                                                  transform="rotate(45 7.41422 6)" fill="black"/>
-														</svg>
-													</span>
-                            </div>
-                        </div>
-                        <div class="modal-body scroll-y mx-5 mx-xl-18 pt-0 pb-15">
-                            <div class="text-center mb-13">
-                                <h1 class="mb-3">Device list</h1>
-                            </div>
-
-                            <button @click="exportDevice" type="button" class="btn btn-primary"
-                                    style="margin: -20px 0px 15px">
-                                Export
-                            </button>
-
-                            <div class="mb-10">
-
-                                <div class="mh-300px scroll-y me-n7 pe-7">
-                                    <table class="table table-row-bordered align-middle gy-4 gs-9">
-                                        <thead
-                                            class="border-bottom border-gray-200 fs-6 text-gray-600 fw-bolder bg-light bg-opacity-75">
-                                        <tr>
-                                            <td width="25">
-                                                <div
-                                                    class="form-check form-check-sm form-check-custom form-check-solid"
-                                                >
-                                                    <input
-                                                        class="form-check-input"
-                                                        type="checkbox"
-
-
-                                                    />
-                                                </div>
-                                            </td>
-                                            <th class="">No.</th>
-                                            <th class="">Device name</th>
-                                            <th class="">Type</th>
-                                            <th class="">Register code</th>
-                                            <th class="">Expire date</th>
-
-                                            <th></th>
-                                        </tr>
-                                        </thead>
-                                        <tbody>
-
-                                        <tr v-for="device in data" v-if=" device.plan_id==entry.id">
-
-                                            <td class="">
-                                                <div
-                                                    class="form-check form-check-sm form-check-custom form-check-solid"
-                                                >
-                                                    <input
-                                                        class="form-check-input"
-                                                        type="checkbox"
-                                                    />
-                                                </div>
-                                            </td>
-                                            <td class="" v-text="device.id"></td>
-                                            <td class="" v-text="device.device_name"></td>
-                                            <td class="">{{device.type}}</td>
-                                            <td class="" v-text="device.device_uid"></td>
-                                            <td class="" v-text="device.expire_date"></td>
-                                            <td class="">
-                                                <!--<a v-if="permissions['014']" :href="'/xadmin/users/edit_teacher?id='+entry.id"><i style="font-size:1.3rem"
-                                                                                                        class="fa fa-edit"></i></a>
-                                                <a v-if="permissions['015']" @click="remove(entry)" href="javascript:;" class="btn-trash deleted"><i
-                                                    class="fa fa-trash mr-1 deleted"></i></a>-->
-
-                                                <!--                                                <a  >-->
-                                                <!--                                                    <button type="button" class="btn btn-sm btn-icon btn-light btn-active-light-primary">-->
-                                                <!--                                                        <i class="fa fa-edit"></i>-->
-                                                <!--                                                    </button>-->
-                                                <!--                                                </a>-->
-                                                <!--                                                <a  href="javascript:;">-->
-                                                <!--                                                    <button type="button" class="btn btn-sm btn-icon btn-light btn-active-light-primary">-->
-                                                <!--                                                        <i class="fa fa-trash mr-1 deleted"></i>-->
-                                                <!--                                                    </button>-->
-                                                <!--                                                </a>-->
-
-                                            </td>
-                                        </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-
-                            </div>
-
-                        </div>
-
-                    </div>
-                </div>
-
-            </div>
             <div class="modal fade" id="kt_modal_invite" tabindex="-1" aria-hidden="true">
                 <!--begin::Modal dialog-->
                 <div class="modal-dialog " style="width: 1000px">
@@ -206,17 +96,16 @@
                                             <th></th>
                                         </tr>
                                         </thead>
-                                        <tbody v-for="lessonId in lessonPackagePlans"
-                                               v-if="lessonId.package_id==package ">
+                                        <tbody >
                                         <tr v-for="lesson in entries">
                                             <td class="">
-                                                <div
+                                                <!-- <div
                                                     class="form-check form-check-sm form-check-custom form-check-solid">
                                                     <input class="form-check-input" type="checkbox"
                                                            v-model="lessonId.lessonIds" :value="lesson.id"
-                                                           @change="updateCheckAll(package)">
+                                                           @change="updateCheckAll( package)">
 
-                                                </div>
+                                                </div> -->
                                             </td>
                                             <td class="" v-text="lesson.name"></td>
                                             <td class="" v-text="lesson.grade"></td>
@@ -453,19 +342,21 @@
                                                    @click="tabPackageLesson(packageLesson.id)">Package lesson
                                                     {{index+1}}</a>
                                             </li>
+                                            <li> <a 
+                                                   class="btn btn-primary btn-active-primary btn-sm mt-2 ml-2"
+                                                   data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end" @click="addPackageLesson">Add package
+                                                </a></li>
                                         </ul>
                                     </div>
                                 </div>
                                 <div class="tab-content">
 
-                                    <!-- list device plan -->
+                                    <!--BEGIN: LIST DEVICE PLAN-->
 
                                     <div id="kt_billing_months" class="card-body p-0 tab-pane fade show active" role="tabpanel" aria-labelledby="kt_billing_months">
                                        
                                             <div class="d-flex justify-content-end mb-4">
-                                                 <a v-if="deviceIds!=''" href="list.html#"
-                                                   class="btn btn-danger btn-sm mr-3"
-                                                   data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">Delete
+                                                 <a v-if="deviceIds!=''" class="btn btn-danger btn-sm mr-3" @click="removeDeviceAll" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">Delete
                                                 </a>
                                                 <a href="list.html#"
                                                    class="btn btn-light btn-active-light-primary btn-sm"
@@ -510,7 +401,7 @@
                                             </div> -->
                                        
 
-                                        <!-- table device plan-->
+                                        <!-- BEGIN : TABLE LIST DEVICE-->
                                         <table class="table table-row-bordered align-middle gy-4 gs-9">
                                             <thead
                                                 class="border-bottom border-gray-200 fs-6 text-gray-600 fw-bolder bg-light bg-opacity-75">
@@ -550,117 +441,84 @@
                                             </tbody>
                                         </table>
 
-                                        <!--end table device plan-->
+                                        <!--END : TABLE LIST DEVICE-->
                                     </div>
-                                    <!-- end device list device plan -->
+                                    <!-- END: DEVICE LIST PLAN -->
+                                    
+                                    <!--BEGIN: PACKAGE LESSON PLAN -->
 
                                     <div id="kt_billing_year" class="card-body p-0 tab-pane fade" role="tabpanel"
                                          aria-labelledby="kt_billing_year">
-                                        <div class="form-group col-lg-8">
-                                            <label>trung</label>
-                                            <div class="card-header  border border-dashed border-gray-300">
-                                                <div class="card-title" style="font-size: 15px">
-                                                    <div class="fw-bold text-muted"></div>
-                                                </div>
-                                                <div class="card-toolbar">
-                                                    <a href="list.html#"
-                                                       class="btn btn-light btn-active-light-primary btn-sm"
-                                                       data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">Actions
-                                                        <span class="svg-icon svg-icon-5 m-0">
+                                          <div class="d-flex justify-content-end mb-4">
+                                                 <a v-if="deviceIds!=''" class="btn btn-danger btn-sm mr-3" @click="removeDeviceAll" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">Delete
+                                                </a>
+                                                <a href="list.html#"
+                                                   class="btn btn-light btn-active-light-primary btn-sm"
+                                                   data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">Actions
+                                                    <span class="svg-icon svg-icon-5 m-0">
 															<svg xmlns="http://www.w3.org/2000/svg" width="24"
                                                                  height="24" viewBox="0 0 24 24" fill="none">
 																<path
                                                                     d="M11.4343 12.7344L7.25 8.55005C6.83579 8.13583 6.16421 8.13584 5.75 8.55005C5.33579 8.96426 5.33579 9.63583 5.75 10.05L11.2929 15.5929C11.6834 15.9835 12.3166 15.9835 12.7071 15.5929L18.25 10.05C18.6642 9.63584 18.6642 8.96426 18.25 8.55005C17.8358 8.13584 17.1642 8.13584 16.75 8.55005L12.5657 12.7344C12.2533 13.0468 11.7467 13.0468 11.4343 12.7344Z"
                                                                     fill="black"/>
 															</svg>
-														</span>
-                                                    </a>
-                                                    <!--                                                    <div-->
-                                                    <!--                                                        class="menu menu-sub menu-sub-dropdown  menu-rounded menu-gray-600 menu-state-bg-light-primary fw-bold fs-7  py-4"-->
-                                                    <!--                                                        data-kt-menu="true" style="width: 161px">-->
-
-                                                    <!--                                                        <div class="menu-item px-3">-->
-                                                    <!--                                                            <a class="menu-link px-3"-->
-                                                    <!--                                                               @click="addLessonPackage(packageLesson.id)">Add-->
-                                                    <!--                                                                lesson</a>-->
-                                                    <!--                                                        </div>-->
-                                                    <!--                                                        <div class="menu-item px-3">-->
-                                                    <!--                                                            <a class="menu-link px-3" style="width: 117px"-->
-                                                    <!--                                                               @click="viewPackageLesson(packageLesson.id)">View-->
-                                                    <!--                                                                lessons</a>-->
-                                                    <!--                                                        </div>-->
-                                                    <!--                                                    </div>-->
+                                                    </span>
+                                                </a>
+                                                 
+                                                <div class="menu menu-sub menu-sub-dropdown  menu-rounded menu-gray-600 menu-state-bg-light-primary fw-bold fs-7 py-4" data-kt-menu="true" style="width: 150px">
+                                                    <div class="menu-item px-3">
+                                                        <a class="menu-link px-3" @click="addLessonPackage()">Add lesson</a>
+                                                    </div>
+                                                    <div class="menu-item px-3">
+                                                    </div>
+                                                    <div class="menu-item px-3">
+                                                        <a class="menu-link px-3" @click="exportDevice">Zip package</a>
+                                                    </div>
                                                 </div>
-                                                <!--                                                <div class="card-toolbar" v-for="urls in url"-->
-                                                <!--                                                     v-if="urls.package_id==packageLesson.id && packageLesson.status=='Drafting' && roleAuth=='Super Administrator'">-->
-
-                                                <!--                                                    <a href="list.html#"-->
-                                                <!--                                                       class="btn btn-light btn-active-light-primary btn-sm"-->
-                                                <!--                                                       data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">Actions-->
-                                                <!--                                                        <span class="svg-icon svg-icon-5 m-0">-->
-                                                <!--															<svg xmlns="http://www.w3.org/2000/svg" width="24"-->
-                                                <!--                                                                 height="24" viewBox="0 0 24 24" fill="none">-->
-                                                <!--																<path-->
-                                                <!--                                                                    d="M11.4343 12.7344L7.25 8.55005C6.83579 8.13583 6.16421 8.13584 5.75 8.55005C5.33579 8.96426 5.33579 9.63583 5.75 10.05L11.2929 15.5929C11.6834 15.9835 12.3166 15.9835 12.7071 15.5929L18.25 10.05C18.6642 9.63584 18.6642 8.96426 18.25 8.55005C17.8358 8.13584 17.1642 8.13584 16.75 8.55005L12.5657 12.7344C12.2533 13.0468 11.7467 13.0468 11.4343 12.7344Z"-->
-                                                <!--                                                                    fill="black"/>-->
-                                                <!--															</svg>-->
-                                                <!--														</span>-->
-                                                <!--                                                    </a>-->
-
-                                                <!--                                                    <div-->
-                                                <!--                                                        class="menu menu-sub menu-sub-dropdown  menu-rounded menu-gray-600 menu-state-bg-light-primary fw-bold fs-7  py-4"-->
-                                                <!--                                                        data-kt-menu="true" style="width: 161px">-->
-
-                                                <!--                                                        <div class="menu-item px-3">-->
-                                                <!--                                                            <a class="menu-link px-3"-->
-                                                <!--                                                               @click="downloadLesson(packageLesson)"-->
-                                                <!--                                                               v-if="urls.status=='new'  ">Zip file package</a>-->
-                                                <!--                                                        </div>-->
-                                                <!--                                                        <div class="menu-item px-3">-->
-                                                <!--                                                            <a class="menu-link px-3" v-if="urls.status=='done' "-->
-                                                <!--                                                               :href="urls.url">Dowload Package</a>-->
-                                                <!--                                                        </div>-->
-                                                <!--                                                        <div class="menu-item px-3">-->
-                                                <!--                                                            <a class="menu-link px-3" style="width: 117px"-->
-                                                <!--                                                               @click="viewPackageLesson(packageLesson.id)"-->
-                                                <!--                                                               v-if="urls.status=='new' || urls.status=='done'">View-->
-                                                <!--                                                                lessons</a>-->
-                                                <!--                                                        </div>-->
-                                                <!--                                                        <div class="menu-item px-3">-->
-                                                <!--                                                            <a class="menu-link px-3" style="width: 117px"-->
-                                                <!--                                                               @click="addLessonPackage(packageLesson.id)"-->
-                                                <!--                                                               v-if="urls.status=='new' || urls.status=='done'">Add-->
-                                                <!--                                                                lesson</a>-->
-                                                <!--                                                        </div>-->
-
-                                                <!--                                                    </div>-->
-                                                <!--                                                </div>-->
 
                                             </div>
+                                            <table class="table table-row-bordered align-middle gy-4 gs-9">
+                                            <thead
+                                                class="border-bottom border-gray-200 fs-6 text-gray-600 fw-bolder bg-light bg-opacity-75">
+                                            <tr>
+                                                <td width="25">
+                                                    <div class="form-check form-check-sm form-check-custom form-check-solid">
+                                                        <input class="form-check-input" type="checkbox"  v-model="allDeviceSelected" @change="selectDeviceAll()">
+                                                    </div>
+                                                </td>
+                                                <td>No.</td>
+                                                <th class="">Lesson name</th>
+                                                <th class="">Grade</th>
+                                                <th class="">Subject</th>
+                                                <td>Added time</td>
+                                                <th class="">Actions</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            <tr v-for="(device,index) in data">
+                                                <td class="">
+                                                    <div
+                                                        class="form-check form-check-sm form-check-custom form-check-solid">
+                                                        <input class="form-check-input" type="checkbox" v-model="deviceIds" :value="device.id" @change="updateDeviceCheckAll">
+                                                    </div>
+                                                </td>
+                                                <td>{{index+1}}</td>
+                                                <td>{{device.device_name}}</td>
+                                                <td>{{device.type}}</td>
+                                                <td>{{device.device_uid}}</td>
+                                                <td>{{device.expire_date}}</td>
+                                                <td class="">
+                                                    <a  class="btn btn-active-danger btn-light-danger btn-sm" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end" @click="removeDevice(device)">Delete
+                                                    </a>
 
-                                        </div>
-                                        <div>
-                                            <button type="button" class="btn btn-sm btn-flex btn-light-primary "
-                                                    data-bs-toggle="modal" data-bs-target="#kt_modal_add_payment"
-                                                    style=" margin: 7px 0px 10px;" id="newPackage"
-                                                    @click="addPackageLesson()">
-                                       <span class="svg-icon svg-icon-3">
-																<svg xmlns="http://www.w3.org/2000/svg" width="24"
-                                                                     height="24" viewBox="0 0 24 24" fill="none">
-																	<rect opacity="0.3" x="2" y="2" width="20"
-                                                                          height="20" rx="5" fill="black"/>
-																	<rect x="10.8891" y="17.8033" width="12" height="2"
-                                                                          rx="1" transform="rotate(-90 10.8891 17.8033)"
-                                                                          fill="black"/>
-																	<rect x="6.01041" y="10.9247" width="12" height="2"
-                                                                          rx="1" fill="black"/>
-																</svg>
-															</span>
-                                                Add lesson package
-                                            </button>
-
-                                        </div>
+                                                </td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                       
                                     </div>
+
+                                    <!-- END : PACKAGE LESSON PLAN -->
                                 </div>
                             </div>
                         </div>
@@ -1009,9 +867,6 @@
             },
             addDevice: function (addDevice = '') {
                 $('#deviceConfirm').modal('show');
-            },
-            viewDeviceSchoolPlan: function (viewDevice = '') {
-                $('#kt_modal_invite_friends').modal('show');
             },
             addLessonPackage: function (addLesson = '') {
                 $('#kt_modal_invite').modal('show');

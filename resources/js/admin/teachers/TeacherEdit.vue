@@ -147,7 +147,7 @@
                         </div>
                         <hr style="margin-top: 10px">
                         <div>
-                            <button type="reset" @click="save()" class="btn btn-primary mr-2">Save<i class="bi bi-save2 mr-1"></i>Save</button>
+                            <button type="reset" @click="save()" class="btn btn-primary mr-2"><i class="bi bi-save2 mr-1"></i>Save</button>
                             <button type="reset" @click="backIndex()" class="btn btn-secondary">Cancel</button>
                         </div>
                         <hr style="margin-top: 10px">
