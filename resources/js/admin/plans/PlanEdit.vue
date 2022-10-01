@@ -84,8 +84,8 @@
                                             <th></th>
                                         </tr>
                                         </thead>
-                                        <tbody  v-for="lessonPackagePlan in lessonPackagePlans">
-                                        <tr v-for="lesson in entries">
+                                        <tbody  v-for="lessonPackagePlan in lessonPackagePlans" v-if="lessonPackagePlan.package_id==package">
+                                        <tr v-for="lesson in entries" >
                                             <td class="">
                                                 <div
                                                     class="form-check form-check-sm form-check-custom form-check-solid">
@@ -426,8 +426,8 @@
 
                                     <div id="kt_billing_year" class="card-body p-0 tab-pane fade" role="tabpanel"
                                          aria-labelledby="kt_billing_year">
-                                          <div class="d-flex justify-content-end mb-4">
-                                                 <a  class="btn btn-danger btn-sm mr-3" @click="removeDeviceAll" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">Delete
+                                            <div class="d-flex justify-content-end mb-4">
+                                                 <a v-if="deviceIds!=''" class="btn btn-danger btn-sm mr-3" @click="removeDeviceAll" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">Delete
                                                 </a>
                                                 <a href="list.html#"
                                                    class="btn btn-light btn-active-light-primary btn-sm"
@@ -443,13 +443,12 @@
                                                 </a>
 
                                                 <div class="menu menu-sub menu-sub-dropdown  menu-rounded menu-gray-600 menu-state-bg-light-primary fw-bold fs-7 py-4" data-kt-menu="true" style="width: 150px">
+                                                    <!--begin::Menu item-->
                                                     <div class="menu-item px-3">
                                                         <a class="menu-link px-3" @click="addLessonPackage(tabLessonContent)">Add lesson</a>
                                                     </div>
-                                                    <div class="menu-item px-3">
-                                                    </div>
-                                                    <div class="menu-item px-3">
-                                                        <a class="menu-link px-3" @click="exportDevice">Zip package</a>
+                                                   <div class="menu-item px-3">
+                                                        <a class="menu-link px-3" @click="downloadLesson(tabLessonContent)">Zip package lesson</a>
                                                     </div>
                                                 </div>
 
@@ -460,7 +459,7 @@
                                             <tr >
                                                 <td width="25">
                                                     <div class="form-check form-check-sm form-check-custom form-check-solid">
-                                                        <input class="form-check-input" type="checkbox"  >
+                                                        <input class="form-check-input" type="checkbox" v-model="allViewLessonSelected" @change="selectViewLessonAll(tabLessonContent)" >
                                                     </div>
                                                 </td>
                                                 <td>No.</td>
@@ -471,13 +470,12 @@
                                                 <th class="">Actions</th>
                                             </tr>
                                             </thead>
-                                                {{dataAddLessonPlan}}
-                                            <tbody v-for="packageLesson in lessonPackagePlans" >
-                                            <tr v-for="(lesson,index) in entries">
+                                            <tbody v-for="lessonPackagePlan in lessonPackagePlans" v-if="lessonPackagePlan.package_id==tabLessonContent">
+                                            <tr v-for="(lesson,index) in dataAddLessonPlan" >
                                                 <td class="">
                                                     <div
                                                         class="form-check form-check-sm form-check-custom form-check-solid">
-                                                        <input class="form-check-input" type="checkbox" >
+                                                        <input class="form-check-input" type="checkbox" v-model="viewLessonIds" :value="lesson.id" @change="updateViewLessonCheckAll(lessonPackagePlan.id)">
                                                     </div>
                                                 </td>
                                                 <td>{{index+1}}</td>
@@ -486,7 +484,7 @@
                                                 <td>{{lesson.subject}}</td>
                                                 <td></td>
                                                 <td class="">
-                                                    <a  class="btn btn-active-danger btn-light-danger btn-sm" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end" >Delete</a>
+                                                    <a  class="btn btn-active-danger btn-light-danger btn-sm" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end" @click="deleteLesson(lesson)">Delete</a>
                                                 </td>
                                             </tr>
                                             </tbody>
@@ -760,6 +758,7 @@
             };
 
             return {
+                viewLessonIds:[],
                 lessonIds:[],
                 device:[],
                 deviceIds:[],
@@ -779,6 +778,7 @@
                 data: $json.data || [],
                 allLessonSelected: false,
                 allDeviceSelected:false,
+                allViewLessonSelected:false,
                 filter: filter,
                 entries: [],
                 doNotImport: '',
@@ -840,26 +840,22 @@
                 $('#kt_billing_year').show();
                 this.tabLessonContent = tabPackage;
                 let self = this;
-
-                self.lessonPackagePlans.forEach(function (e)
+                for(const e of self.lessonPackagePlans)
                 {
-                    self.dataAddLessonPlan=[];
-
+                    
                     if(e.package_id==tabPackage)
                     {
-                        e.lessonIds.forEach(function (e1)
+                          self.dataAddLessonPlan=[];
+                        for(const e1 of e.lessonIds )
                         {
                           let data= self.entries.filter(item =>item.id==e1) ;
-                            self.dataAddLessonPlan=data;
-
-                        })
-
-
+                          for(const e2 of data)
+                        {
+                             self.dataAddLessonPlan.push(e2);
+                        }                         
+                        }
                     }
-
-
-                });
-
+                };
             },
             importDevice: function (addevicePlan = '') {
                 $('#kt_modal_create_app').modal('show');
@@ -867,9 +863,9 @@
             addDevice: function (addDevice = '') {
                 $('#deviceConfirm').modal('show');
             },
-            addLessonPackage: function (addLesson = '') {
+            addLessonPackage: function (tabLessonContent = '') {
                 $('#kt_modal_invite').modal('show');
-                this.package = addLesson;
+                this.package = tabLessonContent;
             },
             viewPackageLesson: function (viewLesson = '') {
                 $('#kt_modal').modal('show');
@@ -879,19 +875,20 @@
 
                 let self = this;
                 for (const e of self.lessonPackagePlans) {
-                    if (e.package_id == self.viewPackage) {
+                    if (e.package_id == self.tabLessonContent) {
                         let array = e.lessonIds.filter(item => item !== lesson.id);
                         e.lessonIds = array;
                         let packageLesson = e.lessonIds
                         const res = await $post('/xadmin/plans/deleteLesson', {
                             packageLesson,
                             entry: self.entry,
-                            viewPackage: self.viewPackage
+                            viewPackage: self.tabLessonContent
                         });
                         if (res.code) {
                             toastr.error(res.message);
                         } else {
                             toastr.success(res.message);
+                            self.dataAddLessonPlan= self.dataAddLessonPlan.filter(item => item.id !==lesson.id);
                         }
                         if (res.lesson == "") {
                             location.replace('/xadmin/plans/edit?id=' + this.entry.id);
@@ -1022,23 +1019,6 @@
                 params['limit'] = this.limit;
                 $router.setQuery(params)
             },
-            selectAll() {
-                if (this.allSelected) {
-                    const selected = this.entries.map((u) => u.id);
-                    let self = this;
-                    self.lessonPackagePlans.forEach(function (e) {
-                        e.lessonIds = selected;
-                        self.lessons = self.entries;
-                    })
-                } else {
-                    let self = this;
-                    self.lessonPackagePlans.forEach(function (e1) {
-                        e1.lessonIds = [];
-                    })
-                    self.lessons = [];
-                }
-
-            },
             selectLessonAll() {
                 if (this.allLessonSelected)
                 {
@@ -1076,6 +1056,25 @@
                         }
                     })
                 })
+            },
+            selectViewLessonAll()
+            {
+                 if (this.allViewLessonSelected) {
+                    const selected = this.dataAddLessonPlan.map((u) => u.id);
+                    this.viewLessonIds = selected;
+                } else {
+                    this.viewLessonIds = [];
+                }
+            },
+            updateViewLessonCheckAll()
+            {
+                
+                if (this.viewLessonIds.length === this.dataAddLessonPlan.length ) {
+                    this.allViewLessonSelected = true;
+                } else {
+                    this.allViewLessonSelected = false;
+                }                
+
             },
 
             selectDeviceAll() {
@@ -1135,25 +1134,6 @@
                     this.deviceIds = [];
                     this.device = [];
                 }
-            },
-            updateCheckAll() {
-                this.lessons = [];
-                let self = this;
-                self.lessonPackagePlans.forEach(function (e) {
-                    if (e.lessonIds.length == self.entries.length) {
-                        self.allSelected = true;
-                    } else {
-                        self.allSelected = false;
-                    }
-
-                })
-                self.lessonPackagePlans.forEach(function (e3) {
-                    self.entries.forEach(function (e4) {
-                        if (e4.id == e3) {
-                            self.lessons.push(e3);
-                        }
-                    })
-                })
             },
             async saveDevice() {
                 this.isLoading = true;
@@ -1242,13 +1222,12 @@
             async load() {
                 let query = $router.getQuery();
                 this.$loading(true);
+                setTimeout(function (){
+                    KTMenu.createInstances();
+                }, 0)
                 const res = await $get('/xadmin/plans/dataLesson', query);
                 this.$loading(false);
-
-                // this.paginate = res.paginate;
                 this.entries = res.data;
-                // this.from = (this.paginate.currentPage - 1) * (this.limit) + 1;
-                // this.to = (this.paginate.currentPage - 1) * (this.limit) + this.entries.length;
             },
             onPageChange(page) {
                 $router.updateQuery({page: page})
@@ -1278,12 +1257,12 @@
 
                 }
             },
-            async downloadLesson(packageLesson) {
+            async downloadLesson(tabLessonContent) {
                 this.isLoading = true;
                 const res = await $post('/xadmin/plans/downloadLesson', {
                     entry: this.entry,
                     lessonPackagePlans: this.lessonPackagePlans,
-                    package: packageLesson.id,
+                    package: tabLessonContent,
                     idRoleIt: this.idRoleIt
                 }, false);
                 this.isLoading = false;
@@ -1327,8 +1306,8 @@
 
                 }
 
-            }
-
+            },
+        
         }
     }
 </script>
