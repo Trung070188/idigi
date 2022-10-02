@@ -18,7 +18,7 @@
 
                                                                     <div class="form-group">
                                         <label>Course <span class="text-danger">*</span></label>
-                                        <treeselect :options="courses" :multiple="true" v-model="total_course"   />
+                                        <treeselect :options="allCourses" :multiple="true" v-model="total_course" @input="selectTotalCourse"  />
                                         <error-label for="f_total_course" :errors="errors.total_course"></error-label>
 
                                     </div>
@@ -31,13 +31,13 @@
                                 <th>Unit</th>
                             </tr>
                             </thead>
-                            <tbody v-for="entry in total_course" >
+                            <tbody v-for="entry in newTotalCourse" >
                             <tr v-for="course in courses" v-if="entry==course.id">
                                 <td >
                                     {{course.label}}
                                 </td>
                                 <td >
-                                <treeselect :options="course.units" :multiple="true" v-model="course.total_unit"  />
+                                <treeselect :options="course.units" :multiple="true" v-model="course.total_unit" @input="selectTotalUnit(course)" />
                                 <error-label v-if="!course.total_unit" for="f_total_course" :errors="errors.total_unit"></error-label>
 
                                 <!-- <error-label v-if="!course.total_unit " for="f_total_course" :errors="errors.total_unit"></error-label> -->
@@ -80,45 +80,60 @@
                 }
             })
             const course=$json.courses;
-            console.log(course);
             course.forEach(function (e) {
                 e.units.forEach(function (e1) {
                     e1.label = e1.unit_name;
                 })
             })
-
-           //  const selectAll=[
-           //      {
-           //          id:'all',
-           //          label:'All',
-           //          children:[
-           //          ]
-           //      }
-           //      ];
-           // const courses=course.map(res=>{
-           //    return{
-           //        'id':res.id,
-           //        'label':res.course_name,
-           //
-           //    }
-           // });
-           //  selectAll.forEach(function (e) {
-           //      courses.forEach(function (e1) {
-           //     e.children.push(e1);
-           //      })
-           //  })
-           //
-           //  console.log(selectAll);
+            const selectAllCourses=[
+                {
+                    id:'all',
+                    label:'All courses',
+                    children:[
+                    ]
+                }
+            ];
+            const selectAllUnits=[
+                {
+                    id:'all',
+                    label:'All units',
+                    children:[
+                    ]
+                }
+            ];
 
             const courseTreeselect = course.map(rec => {
+                let unitAll=selectAllUnits.map(res =>{
+                    return {
+                        id:res.id,
+                        label:res.label,
+                        children:rec.units,
+
+                    }
+                })
+
                 return {
                     'id':rec.id,
                     'label': rec.course_name,
-                    'total_unit':rec.total_unit,
-                    'units':rec.units,
+                    'units':unitAll,
+                }
+            })
+            selectAllCourses.forEach(function (e) {
+                courseTreeselect.forEach(function (e1) {
+                    e.children.push(e1);
+                })
+            })
+            const allCourses= selectAllCourses.map(res => {
+
+
+                return{
+                    'id':'all',
+                    'label':res.label,
+                    'children':res.children
                 }
             })
                 return {
+                    allCourses:allCourses,
                     breadcrumbs: [
                         {
                             title: 'School Management'
@@ -136,16 +151,59 @@
                 total_course:[],
                 total_unit:[],
                 value: [],
-                // selectAll:selectAll,
                 courses:courseTreeselect,
                 schools:$json.schools||{},
                 units:unitTreeselect,
                 entry: $json.entry || {},
                 isLoading: false,
-                errors: {}
+                errors: {},
+                newTotalCourse:[],
             }
         },
         methods: {
+            selectTotalUnit(course)
+            {
+
+              let self=this;
+              self.courses.forEach(function (e)
+              {
+                  if(e.id==course.id)
+                  {
+                      if(e.units.length>0 && e.total_unit[0]=='all')
+                      {
+                          e.childrens=e.units.map(res =>{
+                              return res.children;
+                          })
+                          e.total_unit=e.childrens[0].map(rec => {
+                              return rec.id;
+                          })
+                      }
+
+                  }
+
+
+              })
+            },
+            selectTotalCourse()
+            {
+               if(this.total_course.length > 0 && this.total_course[0]=='all')
+               {
+                   this.total_course=this.courses.map(res=>{
+                       return res.id;
+                   })
+               }
+
+                if(this.total_course.length > 0 && this.total_course[0]=='all'){
+
+                    this.newTotalCourse =  this.courses.map(rec => {
+                        return rec.id;
+                    })
+
+                }else{
+                    this.newTotalCourse = this.total_course;
+                }
+            },
+
             backIndex(){
                 window.location.href = '/xadmin/allocation_contents/index';
             },
