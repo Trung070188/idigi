@@ -17,8 +17,7 @@
                                         <rect opacity="0.5" x="6" y="17.3137" width="16" height="2"
                                               rx="1" transform="rotate(-45 6 17.3137)"
                                               fill="black"/>
-                                        <rect x="7.41422" y="6" width="16" height="2" rx="1"
-                                              transform="rotate(45 7.41422 6)" fill="black"/>
+                                        <rect x="7.41422" y="6" width="16" height="2" rx="1" transform="rotate(45 7.41422 6)" fill="black"/>
                                     </svg>
                                 </span>
                             </div>
@@ -30,8 +29,7 @@
                             <div class="d-flex">
                                 <div class="h-15px me-3" style="width: 218px">
                                     <label>Name </label>
-                                    <input v-model="filter.keyword" @keydown.enter="doFilter($event)"
-                                           class="form-control" placeholder="Enter the lesson name"/>
+                                    <input v-model="filter.keyword" @keydown.enter="doFilter($event)" class="form-control" placeholder="Enter the lesson name"/>
                                 </div>
                                 <div class="h-15px me-3" style="width: 218px">
                                     <label>Subject </label>
@@ -60,7 +58,6 @@
                                         <option value="9">9</option>
                                     </select>
                                 </div>
-
                             </div>
                             <div class="d-flex mt-20">
                                 <div class="btn btn-primary" @click="doFilter">Search</div>
@@ -68,14 +65,11 @@
                             <div class="d-flex mb-1 mt-5">
                                 <div class="mh-300px scroll-y me-n7 pe-7" style="width: 703px">
                                     <table class="table table-row-bordered align-middle gy-4 gs-9">
-                                        <thead
-                                            class="border-bottom border-gray-200 fs-6 text-gray-600 fw-bolder bg-light bg-opacity-75">
+                                        <thead class="border-bottom border-gray-200 fs-6 text-gray-600 fw-bolder bg-light bg-opacity-75">
                                         <tr>
                                             <td width="25">
-                                                <div
-                                                    class="form-check form-check-sm form-check-custom form-check-solid">
-                                                    <input class="form-check-input" type="checkbox"
-                                                           v-model="allLessonSelected" @change="selectLessonAll()">
+                                                <div class="form-check form-check-sm form-check-custom form-check-solid">
+                                                    <input class="form-check-input" type="checkbox" v-model="allLessonSelected" @change="selectLessonAll()">
                                                 </div>
                                             </td>
                                             <th class="">Name of lesson</th>
@@ -87,10 +81,8 @@
                                         <tbody  v-for="lessonPackagePlan in lessonPackagePlans" v-if="lessonPackagePlan.package_id==package">
                                         <tr v-for="lesson in entries" >
                                             <td class="">
-                                                <div
-                                                    class="form-check form-check-sm form-check-custom form-check-solid">
-                                                    <input class="form-check-input" type="checkbox"
-                                                         v-model="lessonPackagePlan.lessonIds" :value="lesson.id"  @change="updateLessonAll()">
+                                                <div class="form-check form-check-sm form-check-custom form-check-solid">
+                                                    <input class="form-check-input" type="checkbox" v-model="lessonPackagePlan.lessonIds" :value="lesson.id"  @change="updateLessonAll()">
                                                 </div>
                                             </td>
                                             <td class="" v-text="lesson.name"></td>
@@ -99,25 +91,6 @@
                                         </tr>
                                         </tbody>
                                     </table>
-<!--                                    <div class="d-flex pl-9 pr-9 mb-8">-->
-<!--                                        <div-->
-<!--                                            class="col-sm-12 col-md-5 d-flex align-items-center justify-content-center justify-content-md-start">-->
-<!--                                            <div>-->
-<!--                                                <select class="form-select form-select-sm form-select-solid" v-model="limit" @change="changeLimit">-->
-<!--                                                    <option value="25">25</option>-->
-<!--                                                    <option value="50">50</option>-->
-<!--                                                    <option value="100">100</option>-->
-<!--                                                </select>-->
-<!--                                            </div>-->
-<!--                                        </div>-->
-<!--                                        <div-->
-<!--                                            class="col-sm-12 col-md-7 d-flex align-items-center justify-content-center justify-content-md-end">-->
-<!--                                            <div class="dataTables_paginate paging_simple_numbers"-->
-<!--                                                 id="kt_customers_table_paginate1">-->
-<!--                                                <Paginate :value="paginate" :pagechange="onPageChange"></Paginate>-->
-<!--                                            </div>-->
-<!--                                        </div>-->
-<!--                                    </div>-->
                                 </div>
                             </div>
                             <div class="d-flex justify-content-end">
@@ -125,7 +98,6 @@
                                     Confirm
                                 </button>
                             </div>
-
                         </div>
                     </div>
                 </div>
@@ -133,155 +105,34 @@
 
             <!-- END: MODAL ADD LESSON PACKAGE PLAN -->
 
-            <div class="modal fade" id="kt_modal" tabindex="-1" aria-hidden="true">
-                <!--begin::Modal dialog-->
-                <div class="modal-dialog " style="width: 1000px">
-                    <!--begin::Modal content-->
-                    <div class="modal-content" style="width: max-content;margin: 0px -150px 0px">
-                        <!--begin::Modal header-->
-                        <div class="modal-header pb-0 border-0 justify-content-end">
-                            <!--begin::Close-->
-                            <div class="btn btn-sm btn-icon btn-active-color-primary" data-bs-dismiss="modal">
-                                <!--begin::Svg Icon | path: icons/duotune/arrows/arr061.svg-->
-                                <span class="svg-icon svg-icon-1">
-														<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                                             viewBox="0 0 24 24" fill="none">
-															<rect opacity="0.5" x="6" y="17.3137" width="16" height="2"
-                                                                  rx="1" transform="rotate(-45 6 17.3137)"
-                                                                  fill="black"/>
-															<rect x="7.41422" y="6" width="16" height="2" rx="1"
-                                                                  transform="rotate(45 7.41422 6)" fill="black"/>
-														</svg>
-													</span>
-                                <!--end::Svg Icon-->
-                            </div>
-                            <!--end::Close-->
-                        </div>
-                        <!--begin::Modal header-->
-                        <!--begin::Modal body-->
-                        <div class="modal-body scroll-y mx-5 mx-xl-18 pt-0 pb-15">
-                            <!--begin::Heading-->
-                            <div class="text-center mb-13">
-                                <!--begin::Title-->
-                                <h1 class="mb-3">Lesson package</h1>
-                            </div>
-                            <div class="d-flex">
-
-                                <div class="h-15px me-3" style="width: 200px">
-                                    <label>Name </label>
-                                    <input v-model="filter.name" @keydown.enter="doFilter('name', filter.name, $event)"
-                                           class="form-control " placeholder="Enter the lesson name"
-                                    />
-                                </div>
-                                <div class="h-15px me-3" style="width: 200px">
-                                    <label>Subject </label>
-                                    <select required class="form-control form-select" v-model="filter.subject"
-                                            @keydown.enter="doFilter('subject', filter.subject, $event)">
-                                        <option value="" disabled selected>Choose Subject</option>
-                                        <option value="0">All</option>
-                                        <option value="Math">Math</option>
-                                        <option value="Science ">Science</option>
-                                    </select>
-
-                                </div>
-                                <div class="h-15px me-3" style="width: 200px">
-                                    <label>Grade </label>
-                                    <select required class="form-control form-select" v-model="filter.grade"
-                                            @keydown.enter="doFilter('grade', filter.grade, $event)">
-                                        <option value="" disabled selected>Choose Grade</option>
-                                        <option value="0">All</option>
-                                        <option value="1">1</option>
-                                        <option value="2">2</option>
-                                        <option value="3">3</option>
-                                        <option value="4">4</option>
-                                        <option value="5">5</option>
-                                        <option value="6">6</option>
-                                        <option value="7">7</option>
-                                        <option value="8">8</option>
-                                        <option value="9">9</option>
-                                    </select>
-                                </div>
-
-                            </div>
-
-                            <div class="d-flex" style="margin: 64px 0px 0px">
-                                <div class="mh-300px scroll-y me-n7 pe-7" style="width: 650px">
-                                    <table class="table table-row-bordered align-middle gy-4 gs-9"
-                                           v-for="lessonId in lessonPackagePlans"
-                                           v-if="lessonId.package_id==viewPackage">
-                                        <thead
-                                            class="border-bottom border-gray-200 fs-6 text-gray-600 fw-bolder bg-light bg-opacity-75">
-                                        <tr>
-                                            <th class="">Name of lesson</th>
-                                            <th class="">Grade</th>
-                                            <th class="">Subject</th>
-                                            <th></th>
-                                        </tr>
-                                        </thead>
-                                        <tbody v-for="packageLesson in lessonId.lessonIds">
-                                        <tr v-for="lesson in entries" v-if="packageLesson==lesson.id">
-                                            <td class="" v-text="lesson.name"></td>
-                                            <td class="" v-text="lesson.grade"></td>
-                                            <td class="" v-text="lesson.subject"></td>
-                                            <td>
-                                                <a @click="deleteLesson(lesson)" href="javascript:;">
-                                                    <button type="button"
-                                                            class="btn btn-sm btn-icon btn-light btn-active-light-primary">
-                                                        <i class="fa fa-trash mr-1 deleted"></i>
-                                                    </button>
-                                                </a>
-                                            </td>
-                                        </tr>
-                                        </tbody>
-                                    </table>
-
-
-                                </div>
-
-                            </div>
-
-                        </div>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-
+           
             <div class="col-lg-12">
+                 
                 <div class="card card-custom card-stretch gutter-b">
                     <div class="card-header border-0 pt-6" style="margin:0px 0px -35px">
                         <div class="card-title"></div>
-                        <div class="card-toolbar">
-
-                        </div>
-
+                        <div class="card-toolbar"></div>
                     </div>
-
                     <div class="card-body d-flex flex-column">
+
+                         <!-- BEGIN : THONG TIN PLAN -->
+
                         <div class="row">
                             <div class="col-lg-12">
                                 <input v-model="entry.id" type="hidden" name="id" value="">
                                 <div class="row">
                                     <div class="form-group col-lg-8">
                                         <label>Plan name <span class="text-danger">*</span></label>
-                                        <input v-model="entry.name" class="form-control"
-                                               placeholder="Enter the name of plan">
+                                        <input v-model="entry.name" class="form-control" placeholder="Enter the name of plan">
                                         <error-label :errors="errors.name" for="f_school_name"></error-label>
-
                                     </div>
-
                                     <div class="form-group col-lg-4">
                                         <label> Assign to IT <span class="text-danger">*</span></label>
-                                        <select disabled class="form-control form-select" v-model="idRoleIt"
-                                        >
+                                        <select disabled class="form-control form-select" v-model="idRoleIt">
                                             <option v-for="role in roleIt" :value="role.id">{{role.full_name}}</option>
                                         </select>
                                         <error-label :errors="errors.idRoleIt"></error-label>
-
                                     </div>
-
                                 </div>
                                 <div class="row">
                                     <div class="form-group col-lg-8">
@@ -319,88 +170,67 @@
                                                    @click="tabPackageLesson(packageLesson.id)">Package lesson
                                                     {{index+1}}</a>
                                             </li>
-                                            <li> <a
-                                                   class="btn btn-primary btn-active-primary btn-sm mt-2 ml-2"
+                                            <li>
+                                                <a class="btn btn-primary btn-active-primary btn-sm mt-2 ml-2"
                                                    data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end" @click="addPackageLesson">Add package
-                                                </a></li>
+                                                </a>
+                                            </li>
                                         </ul>
                                     </div>
                                 </div>
+
+                                <!-- END : THONG TIN PLAN -->
+
                                 <div class="tab-content">
 
                                     <!--BEGIN: LIST DEVICE PLAN-->
 
                                     <div id="kt_billing_months" class="card-body p-0 tab-pane fade show active" role="tabpanel" aria-labelledby="kt_billing_months">
-
-                                            <div class="d-flex justify-content-end mb-4">
-                                                 <a v-if="deviceIds!=''" class="btn btn-danger btn-sm mr-3" @click="removeDeviceAll" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">Delete
-                                                </a>
-                                                <a href="list.html#"
-                                                   class="btn btn-light btn-active-light-primary btn-sm"
-                                                   data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">Actions
+                                        <div class="d-flex justify-content-end mb-4">
+                                            <a v-if="deviceIds!=''" class="btn btn-danger btn-sm mr-3" @click="removeDeviceAll" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">Delete</a>
+                                                <a href="list.html#" class="btn btn-light btn-active-light-primary btn-sm" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">Actions
                                                     <span class="svg-icon svg-icon-5 m-0">
-															<svg xmlns="http://www.w3.org/2000/svg" width="24"
-                                                                 height="24" viewBox="0 0 24 24" fill="none">
-																<path
-                                                                    d="M11.4343 12.7344L7.25 8.55005C6.83579 8.13583 6.16421 8.13584 5.75 8.55005C5.33579 8.96426 5.33579 9.63583 5.75 10.05L11.2929 15.5929C11.6834 15.9835 12.3166 15.9835 12.7071 15.5929L18.25 10.05C18.6642 9.63584 18.6642 8.96426 18.25 8.55005C17.8358 8.13584 17.1642 8.13584 16.75 8.55005L12.5657 12.7344C12.2533 13.0468 11.7467 13.0468 11.4343 12.7344Z"
-                                                                    fill="black"/>
+															<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+																<path d="M11.4343 12.7344L7.25 8.55005C6.83579 8.13583 6.16421 8.13584 5.75 8.55005C5.33579 8.96426 5.33579 9.63583 5.75 10.05L11.2929 15.5929C11.6834 15.9835 12.3166 15.9835 12.7071 15.5929L18.25 10.05C18.6642 9.63584 18.6642 8.96426 18.25 8.55005C17.8358 8.13584 17.1642 8.13584 16.75 8.55005L12.5657 12.7344C12.2533 13.0468 11.7467 13.0468 11.4343 12.7344Z" fill="black"/>
 															</svg>
                                                     </span>
                                                 </a>
-
-                                                <div class="menu menu-sub menu-sub-dropdown  menu-rounded menu-gray-600 menu-state-bg-light-primary fw-bold fs-7 py-4" data-kt-menu="true" style="width: 150px">
-                                                    <!--begin::Menu item-->
-                                                    <div class="menu-item px-3">
-                                                        <a class="menu-link px-3" @click="addDevice()">Add a device</a>
-                                                    </div>
-                                                    <div class="menu-item px-3">
-                                                        <a class="menu-link px-3" @click="importDevice()">Import devices</a>
-                                                    </div>
-                                                    <div class="menu-item px-3">
-                                                        <a class="menu-link px-3" @click="exportDevice">Export device list</a>
-                                                    </div>
+                                            <div class="menu menu-sub menu-sub-dropdown  menu-rounded menu-gray-600 menu-state-bg-light-primary fw-bold fs-7 py-4" data-kt-menu="true" style="width: 150px">
+                                                <div class="menu-item px-3">
+                                                    <a class="menu-link px-3" @click="addDevice()">Add a device</a>
                                                 </div>
-
+                                                <div class="menu-item px-3">
+                                                    <a class="menu-link px-3" @click="importDevice()">Import devices</a>
+                                                </div>
+                                                <div class="menu-item px-3">
+                                                    <a class="menu-link px-3" @click="exportDevice">Export device list</a>
+                                                </div>
                                             </div>
-                                            <!-- <div class="d-flex flex-stack " style="margin-top: -45px">
-                                                <div class="badge badge-lg badge-light-dark mb-15">
-                                                    <div class="d-flex align-items-center flex-wrap">
-                                                            <span class="svg-icon svg-icon-dark mx-1">
-                                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                                                     viewBox="0 0 24 24" fill="none">
-                                                                    <path
-                                                                        d="M12.6343 12.5657L8.45001 16.75C8.0358 17.1642 8.0358 17.8358 8.45001 18.25C8.86423 18.6642 9.5358 18.6642 9.95001 18.25L15.4929 12.7071C15.8834 12.3166 15.8834 11.6834 15.4929 11.2929L9.95001 5.75C9.5358 5.33579 8.86423 5.33579 8.45001 5.75C8.0358 6.16421 8.0358 6.83579 8.45001 7.25L12.6343 11.4343C12.9467 11.7467 12.9467 12.2533 12.6343 12.5657Z"
-                                                                        fill="black"></path>
-                                                                </svg>
-                                                            </span>
-                                                        </div>
-                                                    </div>
-                                            </div> -->
-
-
+                                        </div>
+                                            
                                         <!-- BEGIN : TABLE LIST DEVICE-->
+
+                                    <div class="mh-300px scroll-y me-n7 pe-7">
                                         <table class="table table-row-bordered align-middle gy-4 gs-9">
-                                            <thead
-                                                class="border-bottom border-gray-200 fs-6 text-gray-600 fw-bolder bg-light bg-opacity-75">
-                                            <tr>
-                                                <td width="25">
-                                                    <div class="form-check form-check-sm form-check-custom form-check-solid">
-                                                        <input class="form-check-input" type="checkbox"  v-model="allDeviceSelected" @change="selectDeviceAll()">
-                                                    </div>
-                                                </td>
-                                                <td>No.</td>
-                                                <th class="">Device name</th>
-                                                <th class="">OS</th>
-                                                <th class="">Register code</th>
-                                                <td>Expire date</td>
-                                                <th class="">Actions</th>
-                                            </tr>
+                                            <thead class="border-bottom border-gray-200 fs-6 text-gray-600 fw-bolder bg-light bg-opacity-75">
+                                                <tr>
+                                                    <td width="25">
+                                                        <div class="form-check form-check-sm form-check-custom form-check-solid">
+                                                            <input class="form-check-input" type="checkbox"  v-model="allDeviceSelected" @change="selectDeviceAll()">
+                                                        </div>
+                                                    </td>
+                                                    <td>No.</td>
+                                                    <th class="">Device name</th>
+                                                    <th class="">OS</th>
+                                                    <th class="">Register code</th>
+                                                    <td>Expire date</td>
+                                                    <th class="">Actions</th>
+                                                </tr>
                                             </thead>
                                             <tbody >
                                             <tr v-for="(device,index) in data" >
                                                 <td class="">
-                                                    <div
-                                                        class="form-check form-check-sm form-check-custom form-check-solid">
+                                                    <div class="form-check form-check-sm form-check-custom form-check-solid">
                                                         <input class="form-check-input" type="checkbox" v-model="deviceIds" :value="device.id" @change="updateDeviceCheckAll">
                                                     </div>
                                                 </td>
@@ -410,13 +240,12 @@
                                                 <td>{{device.device_uid}}</td>
                                                 <td>{{device.expire_date}}</td>
                                                 <td class="">
-                                                    <a  class="btn btn-active-danger btn-light-danger btn-sm" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end" @click="removeDevice(device)">Delete
-                                                    </a>
-
+                                                    <a  class="btn btn-active-danger btn-light-danger btn-sm" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end" @click="removeDeviceModal(device.id)">Delete</a>
                                                 </td>
                                             </tr>
                                             </tbody>
                                         </table>
+                                        </div>
 
                                         <!--END : TABLE LIST DEVICE-->
                                     </div>
@@ -424,80 +253,73 @@
 
                                     <!--BEGIN: PACKAGE LESSON PLAN -->
 
-                                    <div id="kt_billing_year" class="card-body p-0 tab-pane fade" role="tabpanel"
-                                         aria-labelledby="kt_billing_year">
+                                        <div id="kt_billing_year" class="card-body p-0 tab-pane fade" role="tabpanel" aria-labelledby="kt_billing_year">
                                             <div class="d-flex justify-content-end mb-4">
-                                                 <a v-if="deviceIds!=''" class="btn btn-danger btn-sm mr-3" @click="removeDeviceAll" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">Delete
-                                                </a>
-                                                <a href="list.html#"
+                                                 <a v-if="viewLessonIds!=''" class="btn btn-danger btn-sm mr-3" @click="deleteAllLesson" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">Delete</a><a
                                                    class="btn btn-light btn-active-light-primary btn-sm"
                                                    data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">Actions
                                                     <span class="svg-icon svg-icon-5 m-0">
 															<svg xmlns="http://www.w3.org/2000/svg" width="24"
                                                                  height="24" viewBox="0 0 24 24" fill="none">
-																<path
-                                                                    d="M11.4343 12.7344L7.25 8.55005C6.83579 8.13583 6.16421 8.13584 5.75 8.55005C5.33579 8.96426 5.33579 9.63583 5.75 10.05L11.2929 15.5929C11.6834 15.9835 12.3166 15.9835 12.7071 15.5929L18.25 10.05C18.6642 9.63584 18.6642 8.96426 18.25 8.55005C17.8358 8.13584 17.1642 8.13584 16.75 8.55005L12.5657 12.7344C12.2533 13.0468 11.7467 13.0468 11.4343 12.7344Z"
-                                                                    fill="black"/>
+																<path d="M11.4343 12.7344L7.25 8.55005C6.83579 8.13583 6.16421 8.13584 5.75 8.55005C5.33579 8.96426 5.33579 9.63583 5.75 10.05L11.2929 15.5929C11.6834 15.9835 12.3166 15.9835 12.7071 15.5929L18.25 10.05C18.6642 9.63584 18.6642 8.96426 18.25 8.55005C17.8358 8.13584 17.1642 8.13584 16.75 8.55005L12.5657 12.7344C12.2533 13.0468 11.7467 13.0468 11.4343 12.7344Z" fill="black"/>
 															</svg>
                                                     </span>
                                                 </a>
-
                                                 <div class="menu menu-sub menu-sub-dropdown  menu-rounded menu-gray-600 menu-state-bg-light-primary fw-bold fs-7 py-4" data-kt-menu="true" style="width: 150px">
-                                                    <!--begin::Menu item-->
                                                     <div class="menu-item px-3">
                                                         <a class="menu-link px-3" @click="addLessonPackage(tabLessonContent)">Add lesson</a>
                                                     </div>
-                                                   <div class="menu-item px-3">
+                                                    <div class="menu-item px-3">
                                                         <a class="menu-link px-3" @click="downloadLesson(tabLessonContent)">Zip package lesson</a>
                                                     </div>
+                                                    <div class="menu-item px-3">
+                                                        <a class="menu-link px-3" @click="deletePackageLesson(tabLessonContent)">Delete package lesson</a>
+                                                    </div>
                                                 </div>
-
                                             </div>
-                                            <table class="table table-row-bordered align-middle gy-4 gs-9">
-                                            <thead
-                                                class="border-bottom border-gray-200 fs-6 text-gray-600 fw-bolder bg-light bg-opacity-75">
-                                            <tr >
-                                                <td width="25">
-                                                    <div class="form-check form-check-sm form-check-custom form-check-solid">
-                                                        <input class="form-check-input" type="checkbox" v-model="allViewLessonSelected" @change="selectViewLessonAll(tabLessonContent)" >
-                                                    </div>
-                                                </td>
-                                                <td>No.</td>
-                                                <th class="">Lesson name</th>
-                                                <th class="">Grade</th>
-                                                <th class="">Subject</th>
-                                                <td>Added time</td>
-                                                <th class="">Actions</th>
-                                            </tr>
-                                            </thead>
-                                            <tbody v-for="lessonPackagePlan in lessonPackagePlans" v-if="lessonPackagePlan.package_id==tabLessonContent">
-                                            <tr v-for="(lesson,index) in dataAddLessonPlan" >
-                                                <td class="">
-                                                    <div
-                                                        class="form-check form-check-sm form-check-custom form-check-solid">
-                                                        <input class="form-check-input" type="checkbox" v-model="viewLessonIds" :value="lesson.id" @change="updateViewLessonCheckAll(lessonPackagePlan.id)">
-                                                    </div>
-                                                </td>
-                                                <td>{{index+1}}</td>
-                                                <td>{{lesson.name}}</td>
-                                                <td>{{lesson.grade}}</td>
-                                                <td>{{lesson.subject}}</td>
-                                                <td></td>
-                                                <td class="">
-                                                    <a  class="btn btn-active-danger btn-light-danger btn-sm" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end" @click="deleteLesson(lesson)">Delete</a>
-                                                </td>
-                                            </tr>
-                                            </tbody>
-                                        </table>
-
-                                    </div>
-
-                                    <!-- END : PACKAGE LESSON PLAN -->
+                                            <div class="mh-300px scroll-y me-n7 pe-7">
+                                                <table class="table table-row-bordered align-middle gy-4 gs-9">
+                                                    <thead class="border-bottom border-gray-200 fs-6 text-gray-600 fw-bolder bg-light bg-opacity-75">
+                                                        <tr >
+                                                            <td width="25">
+                                                                <div class="form-check form-check-sm form-check-custom form-check-solid">
+                                                                    <input class="form-check-input" type="checkbox" v-model="allViewLessonSelected" @change="selectViewLessonAll(tabLessonContent)" >
+                                                                </div>
+                                                            </td>
+                                                            <td>No.</td>
+                                                            <th class="">Lesson name</th>
+                                                            <th class="">Grade</th>
+                                                            <th class="">Subject</th>
+                                                            <td>Added time</td>
+                                                            <th class="">Actions</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody v-for="lessonPackagePlan in lessonPackagePlans" v-if="lessonPackagePlan.package_id==tabLessonContent">
+                                                        <tr v-for="(lesson,index) in dataAddLessonPlan" >
+                                                            <td class="">
+                                                                <div class="form-check form-check-sm form-check-custom form-check-solid">
+                                                                    <input class="form-check-input" type="checkbox" v-model="viewLessonIds" :value="lesson.id" @change="updateViewLessonCheckAll(lessonPackagePlan.id)">
+                                                                </div>
+                                                            </td>
+                                                            <td>{{index+1}}</td>
+                                                            <td>{{lesson.name}}</td>
+                                                            <td>{{lesson.grade}}</td>
+                                                            <td>{{lesson.subject}}</td>
+                                                            <td></td>
+                                                            <td class="">
+                                                                <a  class="btn btn-active-danger btn-light-danger btn-sm" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end" @click="deleteLessonModal(lesson.id)">Delete</a>
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                     <hr style="margin-top: 5px;">
+
                     <div class="mt-3 mb-5" style="margin-left: 18px">
                         <button type="reset" @click="save()" class="btn btn-primary mr-2">Save plan</button>
                         <button type="reset" class="btn btn-primary mr-2" @click="sentSale"><i
@@ -510,6 +332,9 @@
                     </div>
                 </div>
             </div>
+
+            <!-- END : PACKAGE LESSON PLAN -->
+
         </div>
 
         <!-- Begin:modal add device-->
@@ -517,8 +342,7 @@
         <div class="modal fade" style="margin-right:50px " id="deviceConfirm" tabindex="-1" role="dialog"
              aria-labelledby="deviceConfirm"
              aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered popup-main-1" role="document"
-                 style="max-width: 500px;">
+            <div class="modal-dialog modal-dialog-centered popup-main-1" role="document" style="max-width: 500px;">
                 <div class="modal-content box-shadow-main paymment-status" style="margin-right:20px; left:140px">
                     <div class="close-popup" data-dismiss="modal"></div>
                     <h3 style="margin:20px auto;font-weight: 500;" class="popup-title success">Add more device</h3>
@@ -544,6 +368,8 @@
         </div>
 
         <!-- end: modal add device-->
+
+        <!-- BEGIN: MODAL IMPPORT DEVICE -->
         <div class="modal fade" id="kt_modal_create_app" tabindex="-1" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered mw-900px">
                 <div class="modal-content">
@@ -634,17 +460,12 @@
                                                     <div class="d-flex">
                                                         <div class="text-end">
                                                           	<span class="form-check form-check-custom form-check-solid">
-																					<input class="form-check-input"
-                                                                                           type="radio" name="category"
-                                                                                           :value="fileImport"
-                                                                                           v-model="fileImport"/>
+                                                                <input class="form-check-input" type="radio" name="category" :value="fileImport" v-model="fileImport"/>
                                                                 <label style="margin: 0px 10px 0px">Import</label>
                                                                 <input class="form-check-input" type="radio"
                                                                        name="category" value="1" v-model="doNotImport"/>
-                                                                <label
-                                                                    style="margin: 0px 10px 0px">Do not import</label>
-																				</span>
-
+                                                                <label style="margin: 0px 10px 0px"> Do not import </label>
+                                                            </span>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -663,9 +484,8 @@
                                                 </div>
                                                 <div class="d-flex">
                                                     <div class="text-end">
-                                                        <div class="fs-7 text-muted"><a :href="validateFile"
-                                                                                        type="button"
-                                                                                        class="btn btn-primary">Export</a>
+                                                        <div class="fs-7 text-muted">
+                                                        <a :href="validateFile" type="button" class="btn btn-primary">Export</a>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -731,6 +551,63 @@
                 </div>
             </div>
         </div>
+
+        <!-- END : MOADAL IMPORT DEVIVE -->
+
+        <!--BEGIN : MODAL DELETE DEVICE PLAN -->
+                <div class="modal fade" style="margin-right:50px;border:2px solid #333333  " id="deleteDevice" tabindex="-1" role="dialog"
+                     aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered popup-main-1" role="document"
+                         style="max-width: 450px;">
+                        <div class="modal-content box-shadow-main paymment-status" style="left:120px;text-align: center; padding: 20px 0px 55px;">
+                            <div class="close-popup" data-dismiss="modal"></div>
+                            <div class="swal2-icon swal2-warning swal2-icon-show">
+                                <div class="swal2-icon-content" style="margin: 0px 25px 0px ">!</div>
+                            </div>
+                            <div class="swal2-html-container">
+                                <p >Are you sure to delete this device?</p>
+                            </div>
+                            <div class="swal2-actions">
+                                <button type="submit" id="kt_modal_new_target_submit" class="swal2-confirm btn fw-bold btn-danger" @click="removeDevice(deleteDevice)">
+                                    <span class="indicator-label">Yes, delete!</span>
+                                </button>
+                                <button type="reset" id="kt_modal_new_target_cancel" class="swal2-cancel btn fw-bold btn-active-light-primary" data-bs-dismiss="modal" style="margin: 0px 8px 0px">No, cancel</button>
+
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+        <!-- END : MODAL DELETE DEVICE PLAN -->
+
+        <!-- BEGIN : MODAL DELETE LESSON PLAN -->
+
+                <div class="modal fade" style="margin-right:50px;border:2px solid #333333  " id="deleteLesson" tabindex="-1" role="dialog"
+                     aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered popup-main-1" role="document"
+                         style="max-width: 450px;">
+                        <div class="modal-content box-shadow-main paymment-status" style="left:120px;text-align: center; padding: 20px 0px 55px;">
+                            <div class="close-popup" data-dismiss="modal"></div>
+                            <div class="swal2-icon swal2-warning swal2-icon-show">
+                                <div class="swal2-icon-content" style="margin: 0px 25px 0px ">!</div>
+                            </div>
+                            <div class="swal2-html-container">
+                                <p >Are you sure to delete this lesson?</p>
+                            </div>
+                            <div class="swal2-actions">
+                                <button type="submit" id="kt_modal_new_target_submit" class="swal2-confirm btn fw-bold btn-danger" @click="deleteLesson(deleteLessons)">
+                                    <span class="indicator-label">Yes, delete!</span>
+                                </button>
+                                <button type="reset" id="kt_modal_new_target_cancel" class="swal2-cancel btn fw-bold btn-active-light-primary" data-bs-dismiss="modal" style="margin: 0px 8px 0px">No, cancel</button>
+
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+        <!-- END : MODAL DELETE LESSON PLAN -->
     </div>
 
 </template>
@@ -758,6 +635,8 @@
             };
 
             return {
+                deleteLessons:'',
+                deleteDevice:'',
                 viewLessonIds:[],
                 lessonIds:[],
                 device:[],
@@ -836,13 +715,24 @@
         },
 
         methods: {
+            deleteLessonModal:function(deleteIdLesson='')
+            {
+                $('#deleteLesson').modal('show');
+                this.deleteLessons=deleteIdLesson;
+            },
+            removeDeviceModal:function(deleteIdDevice='')
+            {
+                $('#deleteDevice').modal('show');
+                this.deleteDevice=deleteIdDevice;
+
+            },
             tabPackageLesson: function (tabPackage = '') {
                 $('#kt_billing_year').show();
                 this.tabLessonContent = tabPackage;
                 let self = this;
                 for(const e of self.lessonPackagePlans)
                 {
-                    
+
                     if(e.package_id==tabPackage)
                     {
                           self.dataAddLessonPlan=[];
@@ -852,12 +742,12 @@
                           for(const e2 of data)
                         {
                              self.dataAddLessonPlan.push(e2);
-                        }                         
+                        }
                         }
                     }
                 };
             },
-            importDevice: function (addevicePlan = '') {
+            importDevice(){
                 $('#kt_modal_create_app').modal('show');
             },
             addDevice: function (addDevice = '') {
@@ -867,16 +757,11 @@
                 $('#kt_modal_invite').modal('show');
                 this.package = tabLessonContent;
             },
-            viewPackageLesson: function (viewLesson = '') {
-                $('#kt_modal').modal('show');
-                this.viewPackage = viewLesson;
-            },
-            async deleteLesson(lesson) {
-
+            async deleteLesson(deleteLessons) {
                 let self = this;
                 for (const e of self.lessonPackagePlans) {
                     if (e.package_id == self.tabLessonContent) {
-                        let array = e.lessonIds.filter(item => item !== lesson.id);
+                        let array = e.lessonIds.filter(item => item !== deleteLessons);
                         e.lessonIds = array;
                         let packageLesson = e.lessonIds
                         const res = await $post('/xadmin/plans/deleteLesson', {
@@ -888,12 +773,53 @@
                             toastr.error(res.message);
                         } else {
                             toastr.success(res.message);
-                            self.dataAddLessonPlan= self.dataAddLessonPlan.filter(item => item.id !==lesson.id);
-                        }
-                        if (res.lesson == "") {
-                            location.replace('/xadmin/plans/edit?id=' + this.entry.id);
+                            self.dataAddLessonPlan= self.dataAddLessonPlan.filter(item => item.id !==deleteLessons);
+                            $('#deleteLesson').modal('hide');
                         }
                     }
+                }
+            },
+            async deleteAllLesson()
+            {
+              let self=this;
+              for(const e of self.lessonPackagePlans)
+              {
+                  if(e.package_id==self.tabLessonContent)
+                  {
+                      for( const e1 of self.viewLessonIds)
+                      {
+                          let array=e.lessonIds.filter(item=>item !==e1);
+                          e.lessonIds = array;
+                          let packageLesson = e.lessonIds
+                          const res = await $post('/xadmin/plans/deleteLesson', {
+                              packageLesson,
+                              entry: self.entry,
+                              viewPackage: self.tabLessonContent
+                          });
+                          if (res.code) {
+                              toastr.error(res.message);
+                          } else {
+                              toastr.success(res.message);
+                              self.viewLessonIds=[];
+                              self.allViewLessonSelected=false;
+                              self.dataAddLessonPlan= self.dataAddLessonPlan.filter(item => item.id !==e1);
+                          }
+
+                      }
+                  }
+              }
+            },
+            async deletePackageLesson(tabLessonContent)
+            {
+                let self = this;
+                const res = await $post('/xadmin/plans/deletePackageLesson', {id: tabLessonContent,entry:this.entry});
+                if (res.code) {
+                    toastr.error(res.message);
+                } else {
+                    toastr.success(res.message);
+                    let self =this;
+                  self.packageLessonPlan=  self.packageLessonPlan.filter(item => item.id !==self.tabLessonContent);
+
                 }
             },
             backIndex() {
@@ -1059,7 +985,8 @@
             },
             selectViewLessonAll()
             {
-                 if (this.allViewLessonSelected) {
+
+                if (this.allViewLessonSelected ) {
                     const selected = this.dataAddLessonPlan.map((u) => u.id);
                     this.viewLessonIds = selected;
                 } else {
@@ -1068,12 +995,11 @@
             },
             updateViewLessonCheckAll()
             {
-                
                 if (this.viewLessonIds.length === this.dataAddLessonPlan.length ) {
                     this.allViewLessonSelected = true;
                 } else {
                     this.allViewLessonSelected = false;
-                }                
+                }
 
             },
 
@@ -1102,9 +1028,6 @@
                         }
                     });
                 });
-                console.log(self.device);
-
-
             },
             async removeDeviceAll() {
                 let self = this;
@@ -1122,15 +1045,16 @@
                 }
 
             },
-            async removeDevice(device)
+            async removeDevice(deleteDevice)
             {
                 let self = this;
-                    self.data= self.data.filter(item => item.id !==device.id);
-                const res = await $post('/xadmin/plans/removeDevice', {id: device.id,entry:this.entry});
+                    self.data= self.data.filter(item => item.id !==deleteDevice);
+                const res = await $post('/xadmin/plans/removeDevice', {id: deleteDevice,entry:this.entry});
                 if (res.code) {
                     toastr.error(res.message);
                 } else {
                     toastr.success(res.message);
+                    $('#deleteDevice').modal('hide');
                     this.deviceIds = [];
                     this.device = [];
                 }
@@ -1307,7 +1231,7 @@
                 }
 
             },
-        
+
         }
     }
 </script>

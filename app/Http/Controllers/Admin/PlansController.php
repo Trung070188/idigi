@@ -1022,7 +1022,7 @@ class PlansController extends AdminBaseController
                 ],
                 [
                     'lesson_ids' => $stringLesson,
-                    'status' => 'waitting'
+                    'status' => 'new'
                 ]
             );
 
@@ -1209,6 +1209,21 @@ class PlansController extends AdminBaseController
         }
 
     }
-   
+    public function deletePackageLesson(Request  $req)
+    {
+        $dataAll=$req->all();
+        $data = $req->get('entry');
+        if (isset($data['id'])) {
+            $entry = Plan::find($data['id']);
+            PackageLesson::Where('plan_id',$entry->id)->where('id',$dataAll['id'])->delete();
+            return [
+                'code' => 0,
+                'message' => 'Đã xóa',
+            ];
+
+        }
+
+    }
+
     }
 
