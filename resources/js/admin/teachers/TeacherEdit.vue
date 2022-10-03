@@ -116,7 +116,7 @@
 
                                     <div class="form-group col-sm-10"  @change="saveTeacherCourse()">
                                         <label>Course  <span class="text-danger">*</span></label>
-                                        <treeselect :options="courses" :multiple="true" @deselect="deleteCourse" v-model="courseTeachers"   />
+                                        <treeselect :options="allCourses" :multiple="true" @deselect="deleteCourse" v-model="courseTeachers" @input="selectTotalCourse"/>
                                         <error-label  for="f_grade" :errors="errors.courseTeachers"></error-label>
 
                                         <table class="table table-row-bordered align-middle gy-4 gs-9" style="margin:25px 0px 0px">
@@ -133,7 +133,7 @@
                                 {{course.label}}
                                 </td>
                                 <td  >
-                                 <treeselect :options="course.total_unit" :multiple="true" v-model="course.courseTea" />
+                                 <treeselect :options="course.total_unit" :multiple="true" v-model="course.courseTea" @input="selectTotalUnit(course)"/>
                                 <error-label  :errors="errors.courseTea"></error-label>
                                     </td>
 
@@ -238,15 +238,54 @@
                 })
 
             })
-            let courseTreeselect =!course ? null : course.map(rec => {
+            const selectAllCourses=[
+                {
+                    id:'all',
+                    label:'All courses',
+                    children:[
+                    ]
+                }
+            ];
+            const selectAllUnits=[
+                {
+                    id:'all',
+                    label:'All units',
+                    children:[
+                    ]
+                }
+            ];
+            const courseTreeselect =!course ? null :  course.map(rec => {
+                let unitAll=selectAllUnits.map(res =>{
+                    return {
+                        id:res.id,
+                        label:res.label,
+                        children:rec.total_unit,
+
+                    }
+                })
                 return {
                     'id':rec.id,
                     'label': rec.course_name,
-                    'total_unit':rec.total_unit,
                     'courseTea':rec.courseTea,
+                    'total_unit':unitAll,
+                }
+            })
+            selectAllCourses.forEach(function (e) {
+                courseTreeselect.forEach(function (e1) {
+                    e.children.push(e1);
+                })
+            })
+            const allCourses= selectAllCourses.map(res => {
+
+
+                return{
+                    'id':'all',
+                    'label':res.label,
+                    'children':res.children,
                 }
             })
             return {
+                allCourses:allCourses,
                 nameRole:5,
                 courseTeachers:$json.courseTeachers || {},
                 showConfirm: false,
@@ -275,6 +314,31 @@
             }
         },
         methods: {
+            selectTotalUnit(course)
+            {
+                let self=this;
+                self.courses.forEach(function (e)
+                {
+                    if(e.id==course.id)
+                    {
+                        if(e.total_unit.length>0 && e.courseTea[0]=='all')
+                        {
+                            e.courseTea=e.total_unit[0].children.map(rec => {
+                                return rec.id;
+                            })
+                        }
+                    }
+                })
+            },
+            selectTotalCourse()
+            {
+                if(this.courseTeachers.length > 0 && this.courseTeachers[0]=='all')
+                {
+                    this.courseTeachers=this.courses.map(res=>{
+                        return res.id;
+                    })
+                }
+            },
             removeTeacher()
             {
                 $('#delete').modal('show');

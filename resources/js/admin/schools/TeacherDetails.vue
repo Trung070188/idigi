@@ -266,7 +266,6 @@
                     'total_unit':unitAll,
                 }
             })
-            console.log(courseTreeselect);
             selectAllCourses.forEach(function (e) {
                 courseTreeselect.forEach(function (e1) {
                     e.children.push(e1);
