@@ -170,7 +170,7 @@
                                                    @click="tabPackageLesson(packageLesson.id)">Package lesson
                                                     {{index+1}}</a>
                                             </li>
-                                            <li>
+                                            <li v-if="roleAuth=='Super Administrator'">
                                                 <a class="btn btn-primary btn-active-primary btn-sm mt-2 ml-2"
                                                    data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end" @click="addPackageLesson">Add package
                                                 </a>
@@ -256,7 +256,7 @@
                                         <div id="kt_billing_year" class="card-body p-0 tab-pane fade" role="tabpanel" aria-labelledby="kt_billing_year" >
                                             <div class="d-flex justify-content-end mb-4" v-if="!dataZipLesson">
                                                 <a v-if="viewLessonIds!=''" class="btn btn-danger btn-sm mr-3" @click="deleteAllLesson" >Delete</a>
-                                                <a class="btn btn-light btn-active-light-primary btn-sm" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">Actions
+                                                <a class="btn btn-light btn-active-light-primary btn-sm" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end" v-if="roleAuth=='Super Administrator'">Actions
                                                     <span class="svg-icon svg-icon-5 m-0">
 															<svg xmlns="http://www.w3.org/2000/svg" width="24"
                                                                  height="24" viewBox="0 0 24 24" fill="none">
@@ -264,21 +264,20 @@
 															</svg>
                                                     </span>
                                                 </a>
-                                                <div class="menu menu-sub menu-sub-dropdown  menu-rounded menu-gray-600 menu-state-bg-light-primary fw-bold fs-7 py-4" data-kt-menu="true" style="width: 150px">
-                                                    <div class="menu-item px-3">
+                                                <div class="menu menu-sub menu-sub-dropdown  menu-rounded menu-gray-600 menu-state-bg-light-primary fw-bold fs-7 py-4" data-kt-menu="true" style="width: 150px" >
+                                                    <div class="menu-item px-3" v-if="roleAuth=='Super Administrator'">
                                                         <a class="menu-link px-3" @click="addLessonPackage(tabLessonContent)">Add lesson</a>
                                                     </div>
-                                                    <div class="menu-item px-3">
+                                                    <div class="menu-item px-3" v-if="roleAuth=='Super Administrator'">
                                                         <a class="menu-link px-3 text-danger " @click="deletePackageLesson(tabLessonContent)" >Delete package lesson</a>
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="d-flex justify-content-end mb-4" v-if="dataZipLesson" >
-                                                <a v-if="viewLessonIds!='' && dataZipLesson=='waitting'" class="btn btn-danger btn-sm mr-3" @click="deleteAllLesson" >Delete</a>
-                                             <a  v-if="dataZipLesson.status=='inprogress'"  class="mr-3"> improgress</a>
-                                                <a  v-if=" roleAuth=='IT' && dataZipLesson.status=='done'" :href="dataZipLesson.url" class="btn btn-primary btn-sm mr-3 "> Download package</a>
-                                                <a v-if="viewLessonIds!='' && dataZipLesson.status=='waitting'" class="btn btn-danger btn-sm mr-3" @click="deleteAllLesson" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">Delete</a>
-                                                <a class="btn btn-light btn-active-light-primary btn-sm" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end" v-if="dataZipLesson.status=='waitting'">Actions
+                                            <div class="d-flex justify-content-end mb-4" v-if="dataZipLesson">
+                                                <a v-if="viewLessonIds!='' && dataZipLesson=='waitting' && roleAuth=='Super Administrator'" class="btn btn-danger btn-sm mr-3" @click="deleteAllLesson" >Delete</a>
+                                             <a  v-if="dataZipLesson.status=='inprogress'"  class="mt-2 mr-5" style="color: rgb(230 180 0)"> Lesson list is packaging...</a>
+                                                <a  v-if="  dataZipLesson.status=='done'" :href="dataZipLesson.url" class="btn btn-primary btn-sm mr-3 "> Download package</a>
+                                                <a class="btn btn-light btn-active-light-primary btn-sm isDisabled" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end" >Actions
                                                     <span class="svg-icon svg-icon-5 m-0">
 															<svg xmlns="http://www.w3.org/2000/svg" width="24"
                                                                  height="24" viewBox="0 0 24 24" fill="none">
@@ -288,13 +287,24 @@
                                                 </a>
                                                 <div class="menu menu-sub menu-sub-dropdown  menu-rounded menu-gray-600 menu-state-bg-light-primary fw-bold fs-7 py-4" data-kt-menu="true" style="width: 150px" v-if="dataZipLesson.status=='waitting'">
                                                     <div class="menu-item px-3" >
-                                                        <a class="menu-link px-3 " @click="addLessonPackage(tabLessonContent)" >Add lesson</a>
+                                                        <a class="menu-link px-3 " v-if="roleAuth=='Super Administrator'" @click="addLessonPackage(tabLessonContent)" >Add lesson</a>
                                                     </div>
                                                     <div class="menu-item px-3">
-                                                        <a v-if="roleAuth=='IT'" class="menu-link px-3 " @click="downloadLesson(tabLessonContent)" >Zip package lesson</a>
+                                                        <a class="menu-link px-3 " @click="downloadLesson(tabLessonContent)" >Zip package lesson</a>
                                                     </div>
                                                     <div class="menu-item px-3">
-                                                        <a class="menu-link px-3 text-danger " @click="deletePackageLesson(tabLessonContent)" >Delete package lesson</a>
+                                                        <a class="menu-link px-3 text-danger " v-if="roleAuth=='Super Administrator'" @click="deletePackageLesson(tabLessonContent)" >Delete package lesson</a>
+                                                    </div>
+                                                </div>
+                                                <div class="menu menu-sub menu-sub-dropdown  menu-rounded menu-gray-600 menu-state-bg-light-primary fw-bold fs-7 py-4" data-kt-menu="true" style="width: 150px" v-if="dataZipLesson.status=='done'">
+                                                    <div class="menu-item px-3" >
+                                                        <a class="menu-link px-3 isDisabled" v-if="roleAuth=='Super Administrator'" @click="addLessonPackage(tabLessonContent)" >Add lesson</a>
+                                                    </div>
+                                                    <div class="menu-item px-3">
+                                                        <a class="menu-link px-3 isDisabled" @click="downloadLesson(tabLessonContent)" >Zip package lesson</a>
+                                                    </div>
+                                                    <div class="menu-item px-3">
+                                                        <a class="menu-link px-3 text-danger isDisabled" v-if="roleAuth=='Super Administrator'" @click="deletePackageLesson(tabLessonContent)" >Delete package lesson</a>
                                                     </div>
                                                 </div>
 
@@ -715,26 +725,38 @@
                     totalRecord: 0
                 },
                 dataAddLessonPlan:[],
-                dataZipLesson:'',
+                dataZipLesson:[],
             }
         },
 
         mounted() {
-
-            let self = this;
-            let interval = setInterval(function () {
-                $.get('/xadmin/plans/dataZipLessonPlan', function (res) {
-                    let array = res.data.filter(item => item.plan_id == self.entry.id);
-                    self.dataZipLesson = array;
-                    let done = array.filter(item => item.status == 'done')
-                    if (done.length == array.length) {
-                        clearInterval(interval);
-                    }
-                })
-            }, 90000);
-
+            let self=this;
+            let dataZip=[];
+            // let interval = setInterval(function () {
+            //     $.get('/xadmin/plans/dataZipLessonPlan', function (res) {
+            //         setTimeout(function (){
+            //             KTMenu.createInstances();
+            //         }, 0)
+            //         let array = res.data.filter(item => item.plan_id ==self.entry.id);
+            //
+            //         array.forEach(function (e) {
+            //
+            //             if(e.package_id==self.tabLessonContent)
+            //             {
+            //                 dataZip.push(e);
+            //             }
+            //
+            //         })
+            //         self.dataZipLesson=dataZip[0];
+            //         console.log(self.dataZipLesson);
+            //         let done = array.filter(item => item.status=='done')
+            //         if(done.length==array.length)
+            //         {
+            //             clearInterval(interval);
+            //         }
+            //     })
+            // }, 5000);
             $router.on('/', this.load).init();
-
         },
 
         methods: {
@@ -770,18 +792,19 @@
                         }
                     }
                 };
+
+
+
                 if(self.urls)
                 {
-                    self.dataZipLesson = self.urls.filter( item => item.package_id==tabPackage)
+                    self.dataZipLesson = self.urls.filter( item => item.package_id==tabPackage);
                     setTimeout(function (){
                         KTMenu.createInstances();
                     }, 0)
+                    console.log(self.dataZipLesson[0]);
+
                     return   self.dataZipLesson=self.dataZipLesson[0];
                 }
-
-
-
-
             },
             importDevice(){
                 $('#kt_modal_create_app').modal('show');
