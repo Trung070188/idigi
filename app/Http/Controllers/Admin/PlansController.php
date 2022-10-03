@@ -196,7 +196,7 @@ class PlansController extends AdminBaseController
             'entry' => $entry,
             'roleIt' => $roleIt,
             'data' => $data,
-            'url' => @$url,
+            'urls' => @$url,
             'packagePlan' => @$packagePlan,
             'packageLessonPlan' => @$packageLessonPlan
         ];
@@ -1116,9 +1116,8 @@ class PlansController extends AdminBaseController
                         $stringLesson = implode(",", $lesson['lessonIds']);
                         $user = Auth::user();
                         ZipPlanLesson::create(['user_id' => $dataLesson['idRoleIt'], 'plan_id' => $entry->id, 'lesson_ids' => $stringLesson, 'package_id' => $dataLesson['package'], 'status' => 'inprogress']);
-                        $entry->status = 'Packaging';
+                        $entry->status = 'ready';
                         $entry->save();
-
                     }
                 }
 
@@ -1222,6 +1221,14 @@ class PlansController extends AdminBaseController
             ];
 
         }
+
+    }
+    public function dataPackage(Request $req)
+    {
+            $packageLesson=  PackageLesson::query()->orderBy('id','ASC')->get();
+        return [
+            'data' => $packageLesson,
+        ];
 
     }
 

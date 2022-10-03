@@ -105,9 +105,9 @@
 
             <!-- END: MODAL ADD LESSON PACKAGE PLAN -->
 
-           
+
             <div class="col-lg-12">
-                 
+
                 <div class="card card-custom card-stretch gutter-b">
                     <div class="card-header border-0 pt-6" style="margin:0px 0px -35px">
                         <div class="card-title"></div>
@@ -165,7 +165,7 @@
                                             </li>
                                             <li v-for="(packageLesson,index) in packageLessonPlan" class="nav-item"
                                                 role="presentation">
-                                                <a id="kt_billing_1year_tab" class="nav-link fs-5 fw-bold me-3"
+                                                <a :id="'kt_billing_1year_tab' +index" class="package-lesson-link nav-link fs-5 fw-bold me-3" :class="packageLesson.className"
                                                    data-bs-toggle="tab" role="tab" href="#kt_billing_year"
                                                    @click="tabPackageLesson(packageLesson.id)">Package lesson
                                                     {{index+1}}</a>
@@ -186,7 +186,7 @@
                                     <!--BEGIN: LIST DEVICE PLAN-->
 
                                     <div id="kt_billing_months" class="card-body p-0 tab-pane fade show active" role="tabpanel" aria-labelledby="kt_billing_months">
-                                        <div class="d-flex justify-content-end mb-4">
+                                        <div class="d-flex justify-content-end mb-4" >
                                             <a v-if="deviceIds!=''" class="btn btn-danger btn-sm mr-3" @click="removeDeviceAll" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">Delete</a>
                                                 <a href="list.html#" class="btn btn-light btn-active-light-primary btn-sm" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">Actions
                                                     <span class="svg-icon svg-icon-5 m-0">
@@ -207,7 +207,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                            
+
                                         <!-- BEGIN : TABLE LIST DEVICE-->
 
                                     <div class="mh-300px scroll-y me-n7 pe-7">
@@ -253,11 +253,10 @@
 
                                     <!--BEGIN: PACKAGE LESSON PLAN -->
 
-                                        <div id="kt_billing_year" class="card-body p-0 tab-pane fade" role="tabpanel" aria-labelledby="kt_billing_year">
-                                            <div class="d-flex justify-content-end mb-4">
-                                                 <a v-if="viewLessonIds!=''" class="btn btn-danger btn-sm mr-3" @click="deleteAllLesson" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">Delete</a><a
-                                                   class="btn btn-light btn-active-light-primary btn-sm"
-                                                   data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">Actions
+                                        <div id="kt_billing_year" class="card-body p-0 tab-pane fade" role="tabpanel" aria-labelledby="kt_billing_year" >
+                                            <div class="d-flex justify-content-end mb-4" v-if="!dataZipLesson">
+                                                <a v-if="viewLessonIds!=''" class="btn btn-danger btn-sm mr-3" @click="deleteAllLesson" >Delete</a>
+                                                <a class="btn btn-light btn-active-light-primary btn-sm" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">Actions
                                                     <span class="svg-icon svg-icon-5 m-0">
 															<svg xmlns="http://www.w3.org/2000/svg" width="24"
                                                                  height="24" viewBox="0 0 24 24" fill="none">
@@ -270,12 +269,35 @@
                                                         <a class="menu-link px-3" @click="addLessonPackage(tabLessonContent)">Add lesson</a>
                                                     </div>
                                                     <div class="menu-item px-3">
-                                                        <a class="menu-link px-3" @click="downloadLesson(tabLessonContent)">Zip package lesson</a>
-                                                    </div>
-                                                    <div class="menu-item px-3">
-                                                        <a class="menu-link px-3" @click="deletePackageLesson(tabLessonContent)">Delete package lesson</a>
+                                                        <a class="menu-link px-3 text-danger " @click="deletePackageLesson(tabLessonContent)" >Delete package lesson</a>
                                                     </div>
                                                 </div>
+                                            </div>
+                                            <div class="d-flex justify-content-end mb-4" v-if="dataZipLesson" >
+                                                <a v-if="viewLessonIds!='' && dataZipLesson=='waitting'" class="btn btn-danger btn-sm mr-3" @click="deleteAllLesson" >Delete</a>
+                                             <a  v-if="dataZipLesson.status=='inprogress'"  class="mr-3"> improgress</a>
+                                                <a  v-if=" roleAuth=='IT' && dataZipLesson.status=='done'" :href="dataZipLesson.url" class="btn btn-primary btn-sm mr-3 "> Download package</a>
+                                                <a v-if="viewLessonIds!='' && dataZipLesson.status=='waitting'" class="btn btn-danger btn-sm mr-3" @click="deleteAllLesson" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">Delete</a>
+                                                <a class="btn btn-light btn-active-light-primary btn-sm" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end" v-if="dataZipLesson.status=='waitting'">Actions
+                                                    <span class="svg-icon svg-icon-5 m-0">
+															<svg xmlns="http://www.w3.org/2000/svg" width="24"
+                                                                 height="24" viewBox="0 0 24 24" fill="none">
+																<path d="M11.4343 12.7344L7.25 8.55005C6.83579 8.13583 6.16421 8.13584 5.75 8.55005C5.33579 8.96426 5.33579 9.63583 5.75 10.05L11.2929 15.5929C11.6834 15.9835 12.3166 15.9835 12.7071 15.5929L18.25 10.05C18.6642 9.63584 18.6642 8.96426 18.25 8.55005C17.8358 8.13584 17.1642 8.13584 16.75 8.55005L12.5657 12.7344C12.2533 13.0468 11.7467 13.0468 11.4343 12.7344Z" fill="black"/>
+															</svg>
+                                                    </span>
+                                                </a>
+                                                <div class="menu menu-sub menu-sub-dropdown  menu-rounded menu-gray-600 menu-state-bg-light-primary fw-bold fs-7 py-4" data-kt-menu="true" style="width: 150px" v-if="dataZipLesson.status=='waitting'">
+                                                    <div class="menu-item px-3" >
+                                                        <a class="menu-link px-3 " @click="addLessonPackage(tabLessonContent)" >Add lesson</a>
+                                                    </div>
+                                                    <div class="menu-item px-3">
+                                                        <a v-if="roleAuth=='IT'" class="menu-link px-3 " @click="downloadLesson(tabLessonContent)" >Zip package lesson</a>
+                                                    </div>
+                                                    <div class="menu-item px-3">
+                                                        <a class="menu-link px-3 text-danger " @click="deletePackageLesson(tabLessonContent)" >Delete package lesson</a>
+                                                    </div>
+                                                </div>
+
                                             </div>
                                             <div class="mh-300px scroll-y me-n7 pe-7">
                                                 <table class="table table-row-bordered align-middle gy-4 gs-9">
@@ -668,7 +690,7 @@
                 deviceExpireDate:'',
                 deviceName: '',
                 deviceUid: '',
-                url: $json.url || [],
+                urls: $json.urls || [],
                 idRoleIt: $json.idRoleIt,
                 roleIt: $json.roleIt || [],
                 breadcrumbs: [
@@ -693,6 +715,7 @@
                     totalRecord: 0
                 },
                 dataAddLessonPlan:[],
+                dataZipLesson:'',
             }
         },
 
@@ -702,13 +725,13 @@
             let interval = setInterval(function () {
                 $.get('/xadmin/plans/dataZipLessonPlan', function (res) {
                     let array = res.data.filter(item => item.plan_id == self.entry.id);
-                    self.url = array;
+                    self.dataZipLesson = array;
                     let done = array.filter(item => item.status == 'done')
                     if (done.length == array.length) {
                         clearInterval(interval);
                     }
                 })
-            }, 900000);
+            }, 90000);
 
             $router.on('/', this.load).init();
 
@@ -728,6 +751,7 @@
             },
             tabPackageLesson: function (tabPackage = '') {
                 $('#kt_billing_year').show();
+
                 this.tabLessonContent = tabPackage;
                 let self = this;
                 for(const e of self.lessonPackagePlans)
@@ -746,6 +770,18 @@
                         }
                     }
                 };
+                if(self.urls)
+                {
+                    self.dataZipLesson = self.urls.filter( item => item.package_id==tabPackage)
+                    setTimeout(function (){
+                        KTMenu.createInstances();
+                    }, 0)
+                    return   self.dataZipLesson=self.dataZipLesson[0];
+                }
+
+
+
+
             },
             importDevice(){
                 $('#kt_modal_create_app').modal('show');
@@ -819,6 +855,7 @@
                     toastr.success(res.message);
                     let self =this;
                   self.packageLessonPlan=  self.packageLessonPlan.filter(item => item.id !==self.tabLessonContent);
+                  self.lessonPackagePlans=self.lessonPackagePlans.filter(item => item.id!==self.tabLessonContent);
 
                 }
             },
@@ -1156,6 +1193,7 @@
             onPageChange(page) {
                 $router.updateQuery({page: page})
             },
+            // add packageLesson
             async addPackageLesson() {
                 this.isLoading = true;
                 const res = await $post('/xadmin/plans/addPackageLesson', {
@@ -1163,22 +1201,28 @@
                     lessonIds: this.lessonIds
                 }, false);
                 this.isLoading = false;
-                if (res.errors) {
-                    this.errors = res.errors;
-                    return;
-                }
                 if (res.code) {
                     toastr.error(res.message);
                 } else {
                     this.errors = {};
                     toastr.success(res.message);
-                    location.replace('/xadmin/plans/edit?id=' + this.entry.id);
-
-
+                    let self=this;
+                   setTimeout(function ()
+                    {
+                        $.get('/xadmin/plans/dataPackage',function (res) {
+                       let dataPackage=   res.data.filter(item => item.plan_id==self.entry)
+                            self.packageLessonPlan.forEach(function (e){
+                                e.className = '';
+                            })
+                            $('.package-lesson-link').removeClass('active');
+                            dataPackage.className = 'active';
+                          self.packageLessonPlan.push(dataPackage);
+                          self.tabPackageLesson(dataPackage.id)
+                        })
+                    },0);
                     if (!this.entry.id) {
                         location.replace('/xadmin/plans/edit?id=' + this.entry.id);
                     }
-
                 }
             },
             async downloadLesson(tabLessonContent) {
@@ -1237,5 +1281,46 @@
 </script>
 
 <style scoped>
+.isDisabled {
+    color: currentColor;
+    cursor: not-allowed;
+    opacity: 0.5;
+    text-decoration: none;
+}
+.lds-ring {
+    display: inline-block;
+    position: relative;
+    width: 80px;
+    height: 80px;
+}
+.lds-ring div {
+    box-sizing: border-box;
+    display: block;
+    position: absolute;
+    width: 64px;
+    height: 64px;
+    margin: 8px;
+    border: 8px solid #fff;
+    border-radius: 50%;
+    animation: lds-ring 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+    border-color: #fff transparent transparent transparent;
+}
+.lds-ring div:nth-child(1) {
+    animation-delay: -0.45s;
+}
+.lds-ring div:nth-child(2) {
+    animation-delay: -0.3s;
+}
+.lds-ring div:nth-child(3) {
+    animation-delay: -0.15s;
+}
+@keyframes lds-ring {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
 
 </style>
