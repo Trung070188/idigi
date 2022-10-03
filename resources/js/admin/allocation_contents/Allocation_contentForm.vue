@@ -85,6 +85,7 @@
                     e1.label = e1.unit_name;
                 })
             })
+            console.log(course);
             const selectAllCourses=[
                 {
                     id:'all',

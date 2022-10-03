@@ -116,7 +116,7 @@
 
                                     <div class="form-group col-sm-10"  @change="saveTeacherCourse()">
                                         <label>Course</label>
-                                        <treeselect :options="courses" :multiple="true" @deselect="deleteCourse" v-model="courseTeachers"   />
+                                        <treeselect :options="allCourses" :multiple="true" @deselect="deleteCourse" v-model="courseTeachers" @input="selectTotalCourse" />
                                         <error-label  for="f_grade" :errors="errors.courseTeachers"></error-label>
 
                                         <table class="table table-row-bordered align-middle gy-4 gs-9" style="margin:25px 0px 0px">
@@ -132,7 +132,7 @@
                                                     {{course.label}}
                                                 </td>
                                                 <td  >
-                                                    <treeselect :options="course.total_unit" :multiple="true" v-model="course.courseTea" />
+                                                    <treeselect :options="course.total_unit" :multiple="true" v-model="course.courseTea" @input="selectTotalUnit(course)"/>
                                                     <error-label  :errors="errors.courseTea"></error-label>
                                                 </td>
                                             </tr>
@@ -213,7 +213,7 @@
 </template>
 
 <script>
-    import {$post} from "../../utils";
+    import {$post, forEach} from "../../utils";
 
     import ActionBar from "../includes/ActionBar";
     import SwitchButton from "../../components/SwitchButton";
@@ -226,24 +226,63 @@
         name: "TeacherDetails.vue",
         components: {ActionBar, SwitchButton,Treeselect},
         data() {
-
-
             const course=$json.schoolCousers;
+            console.log(course);
             !course ? null : course.forEach(function (e) {
                 e.total_unit.forEach(function (e1) {
                     e1.label = e1.unit_name;
                 })
 
             })
-            let courseTreeselect =!course ? null : course.map(rec => {
+            const selectAllCourses=[
+                {
+                    id:'all',
+                    label:'All courses',
+                    children:[
+                    ]
+                }
+            ];
+            const selectAllUnits=[
+                {
+                    id:'all',
+                    label:'All units',
+                    children:[
+                    ]
+                }
+            ];
+            const courseTreeselect =!course ? null :  course.map(rec => {
+                let unitAll=selectAllUnits.map(res =>{
+                    return {
+                        id:res.id,
+                        label:res.label,
+                        children:rec.total_unit,
+
+                    }
+                })
                 return {
                     'id':rec.id,
                     'label': rec.course_name,
-                    'total_unit':rec.total_unit,
                     'courseTea':rec.courseTea,
+                    'total_unit':unitAll,
+                }
+            })
+            console.log(courseTreeselect);
+            selectAllCourses.forEach(function (e) {
+                courseTreeselect.forEach(function (e1) {
+                    e.children.push(e1);
+                })
+            })
+            const allCourses= selectAllCourses.map(res => {
+
+
+                return{
+                    'id':'all',
+                    'label':res.label,
+                    'children':res.children,
                 }
             })
             return {
+                allCourses:allCourses,
                 nameRole:5,
                 courseTeachers:$json.courseTeachers || {},
                 schoolId:$json.schoolId,
@@ -280,10 +319,35 @@
                 schools:$json.schools || [],
                 courses:courseTreeselect,
                 isLoading: false,
-                errors: {}
+                errors: {},
             }
         },
         methods: {
+           selectTotalUnit(course)
+            {
+              let self=this;
+              self.courses.forEach(function (e)
+              {
+                  if(e.id==course.id)
+                  {
+                      if(e.total_unit.length>0 && e.courseTea[0]=='all')
+                      {
+                          e.courseTea=e.total_unit[0].children.map(rec => {
+                              return rec.id;
+                          })
+                      }
+                  }
+              })
+            },
+             selectTotalCourse()
+            {
+               if(this.courseTeachers.length > 0 && this.courseTeachers[0]=='all')
+               {
+                   this.courseTeachers=this.courses.map(res=>{
+                       return res.id;
+                   })
+               }
+            },
             removeTeacher:function()
             {
                 $('#delete').modal('show');

@@ -23,7 +23,7 @@
 <!--                                    </div>-->
                                                                     <div class="form-group">
                                         <label>Course <span class="text-danger">*</span></label>
-                                        <treeselect :options="courses" :multiple="true" @deselect="deleteCourse" v-model="total_course" @input=""/>
+                                        <treeselect :options="allCourses" :multiple="true" @deselect="deleteCourse" v-model="total_course" @input="selectTotalCourse"/>
                                         <error-label for="f_total_course" :errors="errors.total_course"></error-label>
                                     </div>
 
@@ -42,7 +42,7 @@
                                     {{course.label}}
                                 </td>
                                 <td >
-                                <treeselect :options="course.unit" :multiple="true"  v-model="course.total_unit" />
+                                <treeselect :options="course.units" :multiple="true"  v-model="course.total_unit" @input="selectTotalUnit(course)" />
                                     </td>
                             </tr>
                             </tbody>
@@ -80,21 +80,61 @@
             const course=$json.courses;
             course.forEach(function (e) {
                 e.unit.forEach(function (e1) {
-                    e1.label = e1.unit_name;
+                    e1.label = e1.unit_name;    
                 })
 
             })
+            const selectAllCourses=[
+                {
+                    id:'all',
+                    label:'All courses',
+                    children:[
+                    ]
+                }
+            ];
+            const selectAllUnits=[
+                {
+                    id:'all',
+                    label:'All units',
+                    children:[
+                    ]
+                }
+            ];
+
             const courseTreeselect = course.map(rec => {
+                let unitAll=selectAllUnits.map(res =>{
+                    return {
+                        id:res.id,
+                        label:res.label,
+                        children:rec.unit,
+
+                    }
+                })
+
                 return {
                     'id':rec.id,
                     'label': rec.course_name,
                     'total_unit':rec.total_unit,
-                    'unit':rec.unit,
+                    'units':unitAll,
                 }
             })
             console.log(courseTreeselect);
+            selectAllCourses.forEach(function (e) {
+                courseTreeselect.forEach(function (e1) {
+                    e.children.push(e1);
+                })
+            })
+            const allCourses= selectAllCourses.map(res => {
 
+
+                return{
+                    'id':'all',
+                    'label':res.label,
+                    'children':res.children
+                }
+            })
             return {
+                newTotalCourse:[],
                 breadcrumbs: [
                     {
                         title: 'School Management'
@@ -108,6 +148,7 @@
                         title: 'Allocation details'
                     },
                 ],
+                allCourses:allCourses,
                 unit:[],
                 total_school:$json.totalSchoolArray ||{},
                 total_course:$json.totalCourseArray ||{},
@@ -121,6 +162,47 @@
 
         },
         methods: {
+             selectTotalUnit(course)
+            {
+              let self=this;
+              self.courses.forEach(function (e)
+              {
+                  if(e.id==course.id)
+                  {
+                      console.log(e.units);
+                      
+                      if(e.units.length>0 && e.total_unit[0]=='all')
+                      {
+                          e.childrens=e.units.map(res =>{
+                              return res.children;
+                          })
+                          e.total_unit=e.childrens[0].map(rec => {
+                              return rec.id;
+                          })
+                      }
+
+                  }
+              })
+            },
+            selectTotalCourse()
+            {
+               if(this.total_course.length > 0 && this.total_course[0]=='all')
+               {
+                   this.total_course=this.courses.map(res=>{
+                       return res.id;
+                   })
+               }
+
+                if(this.total_course.length > 0 && this.total_course[0]=='all'){
+
+                    this.newTotalCourse =  this.courses.map(rec => {
+                        return rec.id;
+                    })
+
+                }else{
+                    this.newTotalCourse = this.total_course;
+                }
+            },
             deleteCourse: function (node, instanceId) {
                 node.total_unit = [];
             },
