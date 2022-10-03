@@ -256,7 +256,7 @@
                                         <div id="kt_billing_year" class="card-body p-0 tab-pane fade" role="tabpanel" aria-labelledby="kt_billing_year" >
                                             <div class="d-flex justify-content-end mb-4" v-if="!dataZipLesson">
                                                 <a v-if="viewLessonIds!=''" class="btn btn-danger btn-sm mr-3" @click="deleteAllLesson" >Delete</a>
-                                                <a class="btn btn-light btn-active-light-primary btn-sm" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end" v-if="roleAuth=='Super Administrator'">Actions
+                                                <a class="btn btn-light btn-active-light-primary btn-sm" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end" >Actions
                                                     <span class="svg-icon svg-icon-5 m-0">
 															<svg xmlns="http://www.w3.org/2000/svg" width="24"
                                                                  height="24" viewBox="0 0 24 24" fill="none">
@@ -792,9 +792,6 @@
                         }
                     }
                 };
-
-
-
                 if(self.urls)
                 {
                     self.dataZipLesson = self.urls.filter( item => item.package_id==tabPackage);
@@ -1229,20 +1226,23 @@
                 } else {
                     this.errors = {};
                     toastr.success(res.message);
-                    let self=this;
-                   setTimeout(function ()
-                    {
-                        $.get('/xadmin/plans/dataPackage',function (res) {
-                       let dataPackage=   res.data.filter(item => item.plan_id==self.entry)
-                            self.packageLessonPlan.forEach(function (e){
-                                e.className = '';
-                            })
-                            $('.package-lesson-link').removeClass('active');
-                            dataPackage.className = 'active';
-                          self.packageLessonPlan.push(dataPackage);
-                          self.tabPackageLesson(dataPackage.id)
-                        })
-                    },0);
+                    location.replace('/xadmin/plans/edit?id=' + this.entry.id);
+                    // $('.package-lesson-link').removeClass('active');
+
+                    // let self=this;
+                   // setTimeout(function ()
+                   //  {
+                   //      $.get('/xadmin/plans/dataPackage',function (res) {
+                   //     let dataPackage=   res.data.filter(item => item.plan_id==self.entry)
+                   //          self.packageLessonPlan.forEach(function (e){
+                   //              e.className = '';
+                   //          })
+                   //          $('.package-lesson-link').removeClass('active');
+                   //          dataPackage.className = 'active';
+                   //        self.packageLessonPlan.push(dataPackage);
+                   //        self.tabPackageLesson(self.tabLessonContent)
+                   //      })
+                   //  },0);
                     if (!this.entry.id) {
                         location.replace('/xadmin/plans/edit?id=' + this.entry.id);
                     }
