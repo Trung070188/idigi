@@ -151,7 +151,8 @@
                                 <div class="row">
                                     <div class="form-group col-lg-4">
                                         <label>Expire date <span class="text-danger">*</span></label>
-                                        <Datepicker v-model="entry.expire_date"/>
+                                        <Datepicker v-if="roleAuth=='IT'" v-model="entry.expire_date" disabled/>
+                                        <Datepicker v-if="roleAuth!='IT'" v-model="entry.expire_date" />
                                         <error-label :errors="errors.expire_date" for="f_title"></error-label>
                                     </div>
                                 </div>
@@ -186,7 +187,7 @@
                                     <!--BEGIN: LIST DEVICE PLAN-->
 
                                     <div id="kt_billing_months" class="card-body p-0 tab-pane fade show active" role="tabpanel" aria-labelledby="kt_billing_months">
-                                        <div class="d-flex justify-content-end mb-4" >
+                                        <div class="d-flex justify-content-end mb-4" v-if="roleAuth=='Super Administrator'">
                                             <a v-if="deviceIds!=''" class="btn btn-danger btn-sm mr-3" @click="removeDeviceAll" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">Delete</a>
                                                 <a href="list.html#" class="btn btn-light btn-active-light-primary btn-sm" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">Actions
                                                     <span class="svg-icon svg-icon-5 m-0">
@@ -210,7 +211,7 @@
 
                                         <!-- BEGIN : TABLE LIST DEVICE-->
 
-                                    <div class="mh-300px scroll-y me-n7 pe-7">
+                                    <div class="mh-650px scroll-y me-n7 pe-7">
                                         <table class="table table-row-bordered align-middle gy-4 gs-9">
                                             <thead class="border-bottom border-gray-200 fs-6 text-gray-600 fw-bolder bg-light bg-opacity-75">
                                                 <tr>
@@ -274,7 +275,7 @@
                                                 </div>
                                             </div>
                                             <div class="d-flex justify-content-end mb-4" v-if="dataZipLesson">
-                                                <a v-if="viewLessonIds!='' && dataZipLesson=='waitting' && roleAuth=='Super Administrator'" class="btn btn-danger btn-sm mr-3" @click="deleteAllLesson" >Delete</a>
+                                                <a v-if="viewLessonIds!='' && dataZipLesson.status=='waitting' && roleAuth=='Super Administrator'" class="btn btn-danger btn-sm mr-3" @click="deleteAllLesson" >Delete</a>
                                              <a  v-if="dataZipLesson.status=='inprogress'"  class="mt-2 mr-5" style="color: rgb(230 180 0)"> Lesson list is packaging...</a>
                                                 <a  v-if="  dataZipLesson.status=='done'" :href="dataZipLesson.url" class="btn btn-primary btn-sm mr-3 "> Download package</a>
                                                 <a class="btn btn-light btn-active-light-primary btn-sm isDisabled" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end" >Actions
@@ -309,7 +310,7 @@
                                                 </div>
 
                                             </div>
-                                            <div class="mh-300px scroll-y me-n7 pe-7">
+                                            <div class="mh-650px scroll-y me-n7 pe-7">
                                                 <table class="table table-row-bordered align-middle gy-4 gs-9">
                                                     <thead class="border-bottom border-gray-200 fs-6 text-gray-600 fw-bolder bg-light bg-opacity-75">
                                                         <tr >
@@ -354,7 +355,7 @@
 
                     <div class="mt-3 mb-5" style="margin-left: 18px">
                         <button type="reset" @click="save()" class="btn btn-primary mr-2">Save plan</button>
-                        <button type="reset" class="btn btn-primary mr-2" @click="sentSale"><i
+                        <button type="reset" class="btn btn-primary mr-2" @click="exportPlan"><i
                             class="bi bi-arrow-up-square-fill"></i>Export plan
                         </button>
                         <button type="reset" @click="backIndex()" class="btn btn-secondary"
@@ -1298,6 +1299,16 @@
                 }
 
             },
+             exportPlan()
+            {
+                let packageIds = [];
+                this.packageLessonPlan.forEach(function (e) {
+                    packageIds.push(e.lesson_ids);
+                })
+                window.location.href= '/xadmin/plans/exportPlan?entry=' + JSON.stringify(this.entry)+
+                '&packageLessonPlan=' + JSON.stringify(this.packageLessonPlan)+
+                '&dataDevice=' + JSON.stringify(this.data);
+            }
 
         }
     }

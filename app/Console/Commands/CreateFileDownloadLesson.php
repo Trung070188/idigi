@@ -13,6 +13,7 @@ use App\Models\Inventory;
 use App\Models\Lesson;
 use App\Models\LessonInventory;
 use App\Models\Notification;
+use App\Models\Plan;
 use App\Models\Product;
 use App\Models\Unit;
 use App\Models\User;
@@ -73,7 +74,8 @@ class CreateFileDownloadLesson extends Command
                 'user_agent' => NULL,
                 'device_uid' => NULL,
                 'lesson_ids' =>  $lessonIds,
-                'plan_id' =>  $planLesson->id,
+                'zip_plan_id' =>  $planLesson->id,
+                'plan_id'=>$planLesson->plan_id,
                 'secret_key' =>  @$planLesson->plan->secret_key
             ];
 
@@ -81,14 +83,15 @@ class CreateFileDownloadLesson extends Command
         }
 
         foreach ($infos as $info){
+            $plan=Plan::where('id',$info['plan_id'])->first();
             $url = $this->createFile($info);
             $notify = new Notification();
             $notify->status = 'new';
-            $notify->content = "File download";
+            $notify->content = $plan['name'];
             $notify->channel = 'inapp';
             $notify->user_id = $info['user_id'];
             $notify->url = $url;
-            $notify->title = 'File download đã hoàn thành';
+            $notify->title = 'File download plan';
             $notify->save();
         }
 
@@ -197,7 +200,7 @@ class CreateFileDownloadLesson extends Command
         ];
         UpdateDownloadLessonFile::dispatch($dataLessonFile);
 
-        ZipPlanLesson::where('id',$info['plan_id'])->update([
+        ZipPlanLesson::where('id',$info['zip_plan_id'])->update([
             'url' => url($pathZipAll),
             'status' => 'done',
         ]);

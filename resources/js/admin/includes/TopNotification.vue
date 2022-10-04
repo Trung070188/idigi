@@ -6,19 +6,12 @@
 											<span class="svg-icon svg-icon-xl svg-icon-primary">
 												<!--begin::Svg Icon | path:assets/media/svg/icons/Code/Compiling.svg-->
                                                 <div class="nva" v-if="status!==1">
-                                                <i  class="fa fa-bell" style="margin: 11px 0px 0px; font-size: 16px"></i>
-
+                                                <i  class="fa fa-bell" style="margin: 11px 0px 0px; font-size: 16px"></i></div>
+                                                <div class="nva" v-if="status==1"><i  class="fa fa-bell" style="margin: 11px 0px 0px; font-size: 16px"></i>
                                                 </div>
-                                                <div class="nva" v-if="status==1">
-                                                        <i  class="fa fa-bell" style="margin: 11px 0px 0px; font-size: 16px"></i>
-                                                </div>
-                                                   <span  class="notifiy_num"
-                                                         v-if="notification>0 && status==2">{{notification}}</span>
-                                                <span  class="notifiy_num"
-                                                      v-if="admin>0 && status==3">{{admin}}</span>
-
-
-                                                <!--end::Svg Icon-->
+                                                <span  class="notifiy_num" v-if="notificationSuperAdmin>0 && status==2">{{notificationSuperAdmin}}</span>
+                                                <span  class="notifiy_num" v-if="admin>0 && status==3">{{admin}}</span>
+                                                <span  class="notifiy_num" v-if="it>0 && status==4">{{it}}</span>
 											</span>
 
                 <!--                <span v-for="pulse_ring in entries" v-if="admin>0 && pulse_ring.title=='Yêu cầu xóa thiết bị'"-->
@@ -42,7 +35,7 @@
                         <h4 v-if="notification>0"
                             class="d-flex flex-center rounded-top">
                             <span class="text-white">User Notifications</span>
-                            <span class="btn btn-text btn-success btn-sm font-weight-bold btn-font-md ml-2">{{notification}} new</span>
+                            <span class="btn btn-text btn-success btn-sm font-weight-bold btn-font-md ml-2">{{notificationSuperAdmin}} new</span>
                         </h4>
                         <h4 v-if="notification==0"
                             class="d-flex flex-center rounded-top">
@@ -63,7 +56,20 @@
                             <span class="text-white">No Notifications</span>
                         </h4>
                     </div>
-
+                <div  v-if="status==4"
+                      class="d-flex flex-column pt-12 bgi-size-cover bgi-no-repeat rounded-top"
+                      style="background-image: url(/assets/media/misc/bg-1.jpg)">
+                    <!--begin::Title-->
+                    <h4 v-if="it>0"
+                        class="d-flex flex-center rounded-top">
+                        <span class="text-white">User Notifications</span>
+                        <span class="btn btn-text btn-success btn-sm font-weight-bold btn-font-md ml-2">{{it}} new</span>
+                    </h4>
+                    <h4 v-if="it==0"
+                        class="d-flex flex-center rounded-top">
+                        <span class="text-white">No Notifications</span>
+                    </h4>
+                </div>
 
                 <div class="tab-content" style="overflow: auto;height: 200px;" v-if="status!==1">
                     <div v-for="entry in entries" class="tab-pane active" id="topbar_notifications_events"
@@ -101,12 +107,26 @@
                                     </div>
                                 </div>
                             </a>
+                            <a href="#" class="navi-item" :href="'/xadmin/plans/edit?id='+ entry.plan_id" @click="abc(entry)" v-if="status==4">
+                                <div class="navi-link" v-if="entry.title=='File download plan'">
+
+                                    <div v-if="entry.status=='new'" class="navi-text">
+                                        <div class="font-weight" style="font-weight: 700">  Lesson package of plan {{entry.content}} is ready to download
+                                        </div>
+                                    </div>
+                                    <div v-if="entry.status=='unread'" style="opacity: 0.6" class="navi-text">
+                                        <div class="font-weight-bold">  Lesson package of plan {{entry.content}} is ready to download</div>
+
+                                    </div>
+                                </div>
+                            </a>
 
                             <!--end::Nav-->
                         </div>
 
                     </div>
                 </div>
+
 
             </form>
             <form v-if="status==1">
@@ -148,6 +168,8 @@
 
         data() {
             return {
+                notificationSuperAdmin:'',
+                it:'',
                 status:'',
                 admin: '',
                 notification: '',
@@ -163,6 +185,8 @@
                 this.notification = res.data.notification;
                 this.admin = res.data.admin;
                 this.status=res.data.status;
+                this.it=res.data.it;
+                this.notificationSuperAdmin=res.notificationSuperAdmin
 
             },
             async abc(entry) {

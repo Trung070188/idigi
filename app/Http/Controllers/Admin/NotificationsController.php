@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 
+use App\Models\Plan;
 use App\Models\User;
 use App\Models\UserDevice;
 use Carbon\Carbon;
@@ -283,15 +284,27 @@ class NotificationsController extends AdminBaseController
             $limit = $req->limit;
         }
         $entries = $query->paginate($limit);
+        $dataSuper=[];
+        foreach ($entries as $dataSuperAdmin)
+        {
+            if($dataSuperAdmin->status=='new' && $dataSuperAdmin->title=='File download plan')
+            {
+                $dataSuper[]=$dataSuperAdmin->title;
+            }
+        }
         $data = [
         ];
         $status=1;
         $notification=Notification::query()->where('status','=','new')->count();
+
+        $notificationSuperAdmin=Notification::query()->whereNotIn('title',$dataSuper)->where('status','=','new')->count();
         $admin=Notification::query()->where('title','=','Yêu cầu xóa thiết bị')
             ->Where('status','=','new')
             ->count();
+        $it=Notification::query()->where('title','=','File download plan')->where('status','=','new')->count();
 
         foreach ($entries as $entry) {
+            $plan=Plan::where('name','=',$entry->content)->first();
 
             foreach ($users as $user) {
                 if ($entry->user_id == $user->id) {
@@ -300,7 +313,7 @@ class NotificationsController extends AdminBaseController
             }
             $user = Auth::user();
             foreach ($user->roles as $role) {
-                if($entry->title=='Yêu cầu cấp quyền' || $entry->title=='Yêu cầu xóa thiết bị')
+                if($entry->title=='Yêu cầu cấp quyền' || $entry->title=='Yêu cầu xóa thiết bị' )
                 {
 
 
@@ -318,14 +331,12 @@ class NotificationsController extends AdminBaseController
                             'updated_at' => $entry->updated_at,
                             'username' => $entry->user_name,
                         ];
-
                     }
-
                 }
                 if($entry->title=='Yêu cầu xóa thiết bị')
                 {
 
-                    if ( $role->role_name=='Administrator') {
+                    if ( $role->role_name=='School Admin') {
                         $status=3;
 
                         $data[] = [
@@ -344,6 +355,25 @@ class NotificationsController extends AdminBaseController
                     }
 
                 }
+                if($entry->title=='File download plan' && $role->role_name=='IT')
+                {
+                    $status=4;
+                    $data[] = [
+                        'plan_id'=>$plan->id,
+                        'id' => $entry->id,
+                        'user_id' => $entry->user_id,
+                        'read_at' => $entry->read_at,
+                        'status' => $entry->status,
+                        'title' => $entry->title,
+                        'url' => $entry->url,
+                        'content' => $entry->content,
+                        'created_at' => $entry->created_at,
+                        'updated_at' => $entry->updated_at,
+                        'username' => $entry->user_name,
+                    ];
+
+                }
+
             }
         }
         return [
@@ -353,6 +383,8 @@ class NotificationsController extends AdminBaseController
                 'notification'=>$notification,
                 'admin'=>$admin,
                 'status'=>$status,
+                'it'=>$it,
+                'notificationSuperAdmin'=>$notificationSuperAdmin
 
             ]
 

@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Admin;
 
 use App\Exports\DeviceErrorExport;
 use App\Exports\DevicePlanExport;
+use App\Exports\LessonPlanExport;
+use App\Exports\PlanExport;
 use App\Imports\DeviceImport;
 use App\Jobs\UpdateDownloadInventory;
 use App\Jobs\UpdateDownloadLessonFile;
@@ -1229,6 +1231,70 @@ class PlansController extends AdminBaseController
         return [
             'data' => $packageLesson,
         ];
+    }
+    public function exportPlan(Request $req)
+    {
+
+        $dataAll=$req->all();
+
+        $data = json_decode($req->get('entry'), true);
+
+
+
+        if (isset($data['id'])) {
+            $entry = Plan::find($data['id']);
+            $lessons=[];
+            $assignTo=User::where('id',$entry->user_id)->first();
+            $dataAll['packageLessonPlan'] = json_decode($dataAll['packageLessonPlan'], true);
+
+            foreach ($dataAll['packageLessonPlan'] as $key => $packageLessonPlan)
+           {
+               $lessonIds=explode(',',$packageLessonPlan['lesson_ids']);
+               foreach ($lessonIds as $item) {
+                   if ($item) {
+                       $lessonIdArr[] = (int)$item;
+                   }
+               }
+               $lessonsArr=Lesson::query()->whereIn('id',$lessonIdArr)->get();
+               $lessons[]=[
+                   'package_name'=>'package_' . $key,
+                 'plan_name'=>$entry->name,
+                 'assign_to'=>$assignTo->full_name,
+                 'due_at'=>$entry->due_at,
+                 'expire_date'=>$entry->expire_date,
+                   'lessons'=>$lessonsArr,
+               ];
+           }
+            $payload=[];
+            $devices= json_decode($dataAll['dataDevice'], true);
+           foreach ($devices as $device)
+           {
+               $payload [] = [
+//                            'secret_key_plan' => $entry->secret_key,
+                   'username' => $assignTo->username,
+                   'full_name' => $assignTo->full_name,
+//                            'plan' => $apiPlan,
+                   'user_id' => $assignTo->id,
+                   'device_uid' => $device['device_uid'],
+                   'device_name' => $device['device_name'],
+                   'secret_key' => $device['secret_key'],
+                   'create_time' => Carbon::now()->timestamp,
+                   'expired' => strtotime($device['expire_date']),
+               ];
+           }
+            $dataDevicePlanExport = [];
+            foreach ($payload as $pay) {
+                $jwt = JWT::encode($pay, env('SECRET_KEY'), 'HS256');
+                $dataDevicePlanExport[] = [
+                    'device_name' => $pay['device_name'],
+                    'device_uid' => $pay['device_uid'],
+                    'expire_date' => Carbon::parse($pay['expired'])->format('d/m/Y'),
+                    'code' => $jwt
+                ];
+            }
+
+       return   Excel::download(new PlanExport($lessons,$dataDevicePlanExport), "Kế_Hoạch_Plan.xlsx");
+        }
 
     }
 
