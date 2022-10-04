@@ -1120,6 +1120,14 @@ class PlansController extends AdminBaseController
                         ZipPlanLesson::create(['user_id' => $dataLesson['idRoleIt'], 'plan_id' => $entry->id, 'lesson_ids' => $stringLesson, 'package_id' => $dataLesson['package'], 'status' => 'inprogress']);
                         $entry->status = 'ready';
                         $entry->save();
+                        PackageLesson::updateOrCreate(
+                            [
+                                'id'=>$lesson['package_id']
+                            ],
+                            [
+                                'status'=>'done'
+                            ]
+                        );
                     }
                 }
 
@@ -1246,15 +1254,27 @@ class PlansController extends AdminBaseController
             $lessons=[];
             $assignTo=User::where('id',$entry->user_id)->first();
             $dataAll['packageLessonPlan'] = json_decode($dataAll['packageLessonPlan'], true);
+            $dataPackageDones=[];
+         foreach ($dataAll['packageLessonPlan'] as $dataPackageDone)
+         {
+             if($dataPackageDone['status']=='done')
+             {
+                 $dataPackageDones[]=$dataPackageDone;
+             }
+         }
 
-            foreach ($dataAll['packageLessonPlan'] as $key => $packageLessonPlan)
+            foreach ($dataPackageDones as $key => $packageLessonPlan)
            {
-               $lessonIds=explode(',',$packageLessonPlan['lesson_ids']);
-               foreach ($lessonIds as $item) {
-                   if ($item) {
-                       $lessonIdArr[] = (int)$item;
+
+               {
+                   $lessonIds=explode(',',$packageLessonPlan['lesson_ids']);
+                   foreach ($lessonIds as $item) {
+                       if ($item) {
+                           $lessonIdArr[] = (int)$item;
+                       }
                    }
                }
+
                $lessonsArr=Lesson::query()->whereIn('id',$lessonIdArr)->get();
                $lessons[]=[
                    'package_name'=>'package_' . $key,

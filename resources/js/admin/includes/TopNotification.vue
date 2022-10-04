@@ -163,7 +163,23 @@
         name: "TopNotification",
 
         mounted() {
-            this.Notification();
+            let self =this;
+            let solan=0;
+            let notifications= setInterval(function () {
+               solan+=1
+                $.get('/xadmin/notifications/notification',function (res) {
+                    self.entries=res.data.entries;
+                    self.status=res.data.status;
+                    self.admin=res.data.admin;
+                    self.notification=res.data.notification;
+                    self.it=res.data.it;
+                })
+               if(solan===50){
+                   clearInterval(notifications);
+               }
+               console.log(solan);
+            },5000)
+            // this.Notification();
         },
 
         data() {
@@ -177,18 +193,18 @@
             }
         },
         methods: {
-            async Notification() {
-
-                let query = $router.getQuery();
-                const res = await $get('/xadmin/notifications/notification', query);
-                this.entries = res.data.entries;
-                this.notification = res.data.notification;
-                this.admin = res.data.admin;
-                this.status=res.data.status;
-                this.it=res.data.it;
-                this.notificationSuperAdmin=res.notificationSuperAdmin
-
-            },
+            // async Notification() {
+            //
+            //     let query = $router.getQuery();
+            //     const res = await $get('/xadmin/notifications/notification', query);
+            //     this.entries = res.data.entries;
+            //     this.notification = res.data.notification;
+            //     this.admin = res.data.admin;
+            //     this.status=res.data.status;
+            //     this.it=res.data.it;
+            //     this.notificationSuperAdmin=res.notificationSuperAdmin
+            //
+            // },
             async abc(entry) {
                 const res = await $post('/xadmin/notifications/toggleStatus', {
                     id: entry.id,
