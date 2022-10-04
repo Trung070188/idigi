@@ -177,9 +177,8 @@
                if(solan===50){
                    clearInterval(notifications);
                }
-               console.log(solan);
-            },5000)
-            // this.Notification();
+        
+            },15000)
         },
 
         data() {
