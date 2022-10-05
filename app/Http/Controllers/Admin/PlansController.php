@@ -217,9 +217,10 @@ class PlansController extends AdminBaseController
         if (!$entry) {
             throw new NotFoundHttpException();
         }
-
         $entry->delete();
-
+        PackageLesson::where('plan_id',$entry->id)->delete();
+        ZipPlanLesson::where('plan_id',$entry->id)->delete();
+        UserDevice::where('plan_id',$entry->id)->delete();
         return [
             'code' => 0,
             'message' => 'Đã xóa'
@@ -943,13 +944,7 @@ class PlansController extends AdminBaseController
         ];
     }
 
-    public function dataZipLessonPlan(Request $req)
-    {
-        $zipLessonPlan = ZipPlanLesson::query()->orderBy('id', 'ASc')->get();
-        return [
-            'data' => $zipLessonPlan,
-        ];
-    }
+
 
     public function export()
     {
@@ -1225,6 +1220,7 @@ class PlansController extends AdminBaseController
         if (isset($data['id'])) {
             $entry = Plan::find($data['id']);
             PackageLesson::Where('plan_id',$entry->id)->where('id',$dataAll['id'])->delete();
+            ZipPlanLesson::where('plan_id',$entry->id)->where('package_id',$dataAll['id'])->delete();
             return [
                 'code' => 0,
                 'message' => 'Đã xóa',
@@ -1235,7 +1231,24 @@ class PlansController extends AdminBaseController
     }
     public function dataPackage(Request $req)
     {
-            $packageLesson=  PackageLesson::query()->orderBy('id','ASC')->get();
+            $packageLessonss=  PackageLesson::query()->orderBy('id','ASC')->get();
+        $packageLesson=[];
+            foreach ($packageLessonss as $packageLessons)
+            {
+                $arrays = explode(',', $packageLessons->lesson_ids);
+                $lessonIdArr = [];
+                foreach ($arrays as $item) {
+                    if ($item) {
+                        $lessonIdArr[] = (int)$item;
+                    }
+                }
+                $packageLesson[]=[
+                  'id'=>$packageLessons->id,
+                  'plan_id'=>$packageLessons->plan_id ,
+                  'lesson_ids'=>$lessonIdArr
+                ];
+
+            }
         return [
             'data' => $packageLesson,
         ];
@@ -1260,17 +1273,7 @@ class PlansController extends AdminBaseController
            {
                $index=$key+1;
 
-               {
-                   $lessonIds=explode(',',$packageLessonPlan['lesson_ids']);
-                   $lessonIdArr=[];
-                   foreach ($lessonIds as $item) {
-                       if ($item) {
-                           $lessonIdArr[] = (int)$item;
-                       }
-                   }
-               }
-
-               $lessonsArr=Lesson::query()->whereIn('id',$lessonIdArr)->get();
+               $lessonsArr=Lesson::query()->whereIn('id',$packageLessonPlan['lessonIds'])->get();
                $lessons[]=[
                    'package_name'=>'Package lesson' . ' ' .$index ,
                  'plan_name'=>$entry->name,
@@ -1311,6 +1314,22 @@ class PlansController extends AdminBaseController
        return   Excel::download(new PlanExport($lessons,$dataDevicePlanExport), "Kế_Hoạch_Plan.xlsx");
         }
 
+    }
+    public function dataZipLessonPlan(Request $req)
+    {
+        $zipLessonPlan = ZipPlanLesson::query()->orderBy('id', 'ASC')->get();
+//        $zipLessonPlanWaiting=[];
+//        foreach ($zipLessonPlanAlls as $zipLessonPlanAll)
+//        {
+//            if ($zipLessonPlanAll['status']=='waitting')
+//            {
+//                $zipLessonPlanWaiting[]=$zipLessonPlanAll->status;
+//            }
+//        }
+//        $zipLessonPlan=ZipPlanLesson::query()->whereNotIn('status',$zipLessonPlanWaiting)->get();
+        return [
+            'data' => $zipLessonPlan,
+        ];
     }
 
     }

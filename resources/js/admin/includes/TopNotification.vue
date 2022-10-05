@@ -177,8 +177,8 @@
                if(solan===50){
                    clearInterval(notifications);
                }
-        
-            },15000)
+
+            },30000)
         },
 
         data() {
