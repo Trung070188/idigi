@@ -5,9 +5,12 @@ namespace App\Exports;
 
 use Illuminate\Contracts\View\View;
 use Maatwebsite\Excel\Concerns\FromView;
+use Maatwebsite\Excel\Concerns\WithColumnWidths;
+use Maatwebsite\Excel\Concerns\WithStyles;
 use Maatwebsite\Excel\Concerns\WithTitle;
+use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 
-class LessonPlanExport implements FromView,WithTitle
+class LessonPlanExport implements FromView,WithTitle,WithStyles,WithColumnWidths
 {
     protected $data;
 
@@ -25,5 +28,20 @@ class LessonPlanExport implements FromView,WithTitle
     public function title(): string
     {
         return $this->data['package_name'];
+    }
+
+    public function styles(Worksheet $sheet)
+    {
+
+    }
+
+    public function columnWidths(): array
+    {
+        return [
+            'A' => 5,
+            'B' => 60,
+            'C'=>15,
+
+        ];
     }
 }

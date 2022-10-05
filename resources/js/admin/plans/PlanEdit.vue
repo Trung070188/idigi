@@ -241,7 +241,7 @@
                                                 <td>{{device.device_uid}}</td>
                                                 <td>{{device.expire_date}}</td>
                                                 <td class="">
-                                                    <a  class="btn btn-active-danger btn-light-danger btn-sm" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end" @click="removeDeviceModal(device.id)">Delete</a>
+                                                    <a v-if="roleAuth=='Super Administrator'" class="btn btn-active-danger btn-light-danger btn-sm" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end" @click="removeDeviceModal(device.id)">Delete</a>
                                                 </td>
                                             </tr>
                                             </tbody>
@@ -278,7 +278,7 @@
                                                 <a v-if="viewLessonIds!='' && dataZipLesson.status=='waitting' && roleAuth=='Super Administrator'" class="btn btn-danger btn-sm mr-3" @click="deleteAllLesson" >Delete</a>
                                              <a  v-if="dataZipLesson.status=='inprogress'"  class="mt-2 mr-5" style="color: rgb(230 180 0)"> Lesson list is packaging...</a>
                                                 <a  v-if="  dataZipLesson.status=='done'" :href="dataZipLesson.url" class="btn btn-primary btn-sm mr-3 "> Download package</a>
-                                                <a class="btn btn-light btn-active-light-primary btn-sm isDisabled" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end" >Actions
+                                                <a class="btn btn-light btn-active-light-primary btn-sm " data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end" >Actions
                                                     <span class="svg-icon svg-icon-5 m-0">
 															<svg xmlns="http://www.w3.org/2000/svg" width="24"
                                                                  height="24" viewBox="0 0 24 24" fill="none">
@@ -286,26 +286,15 @@
 															</svg>
                                                     </span>
                                                 </a>
-                                                <div class="menu menu-sub menu-sub-dropdown  menu-rounded menu-gray-600 menu-state-bg-light-primary fw-bold fs-7 py-4" data-kt-menu="true" style="width: 150px" v-if="dataZipLesson.status=='waitting'">
-                                                    <div class="menu-item px-3" >
-                                                        <a class="menu-link px-3 " v-if="roleAuth=='Super Administrator'" @click="addLessonPackage(tabLessonContent)" >Add lesson</a>
+                                                <div class="menu menu-sub menu-sub-dropdown  menu-rounded menu-gray-600 menu-state-bg-light-primary fw-bold fs-7 py-4" data-kt-menu="true" style="width: 150px" >
+                                                    <div class="menu-item px-3"  v-if="roleAuth=='Super Administrator' && dataZipLesson.status=='waitting'">
+                                                        <a class="menu-link px-3 " @click="addLessonPackage(tabLessonContent)" >Add lesson</a>
                                                     </div>
-                                                    <div class="menu-item px-3">
-                                                        <a class="menu-link px-3 " @click="downloadLesson(tabLessonContent)" >Zip package lesson</a>
+                                                    <div class="menu-item px-3" v-if="dataZipLesson.status=='waitting'">
+                                                        <a class="menu-link px-3 " @click="downloadLesson(tabLessonContent)"  >Zip package lesson</a>
                                                     </div>
-                                                    <div class="menu-item px-3">
-                                                        <a class="menu-link px-3 text-danger " v-if="roleAuth=='Super Administrator'" @click="deletePackageLesson(tabLessonContent)" >Delete package lesson</a>
-                                                    </div>
-                                                </div>
-                                                <div class="menu menu-sub menu-sub-dropdown  menu-rounded menu-gray-600 menu-state-bg-light-primary fw-bold fs-7 py-4" data-kt-menu="true" style="width: 150px" v-if="dataZipLesson.status=='done'">
-                                                    <div class="menu-item px-3" >
-                                                        <a class="menu-link px-3 isDisabled" v-if="roleAuth=='Super Administrator'" @click="addLessonPackage(tabLessonContent)" >Add lesson</a>
-                                                    </div>
-                                                    <div class="menu-item px-3">
-                                                        <a class="menu-link px-3 isDisabled" @click="downloadLesson(tabLessonContent)" >Zip package lesson</a>
-                                                    </div>
-                                                    <div class="menu-item px-3">
-                                                        <a class="menu-link px-3 text-danger isDisabled" v-if="roleAuth=='Super Administrator'" @click="deletePackageLesson(tabLessonContent)" >Delete package lesson</a>
+                                                    <div class="menu-item px-3" v-if="roleAuth=='Super Administrator' &&dataZipLesson.status=='done'">
+                                                        <a class="menu-link px-3 text-danger "  @click="deletePackageLesson(tabLessonContent)" >Delete package lesson</a>
                                                     </div>
                                                 </div>
 
@@ -323,7 +312,6 @@
                                                             <th class="">Lesson name</th>
                                                             <th class="">Grade</th>
                                                             <th class="">Subject</th>
-                                                            <td>Added time</td>
                                                             <th class="">Actions</th>
                                                         </tr>
                                                     </thead>
@@ -338,9 +326,8 @@
                                                             <td>{{lesson.name}}</td>
                                                             <td>{{lesson.grade}}</td>
                                                             <td>{{lesson.subject}}</td>
-                                                            <td></td>
                                                             <td class="">
-                                                                <a  class="btn btn-active-danger btn-light-danger btn-sm" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end" @click="deleteLessonModal(lesson.id)">Delete</a>
+                                                                <a v-if="dataZipLesson.status!='done'" class="btn btn-active-danger btn-light-danger btn-sm" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end" @click="deleteLessonModal(lesson.id)">Delete</a>
                                                             </td>
                                                         </tr>
                                                     </tbody>

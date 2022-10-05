@@ -1,4 +1,6 @@
 @if($data)
+
+
 <h1>Bảng chi tiết kế hoạch cài đặt</h1>
 <span>Plan name : {{$data['plan_name']}} </span>
 <br>
@@ -8,6 +10,7 @@
 <br>
 <span>Expire date : {{$data['expire_date']}}</span>
 <br>
+
 <h2>Danh sách bài giảng cần cài đặt</h2>
 <br>
 <table class="table table-bordered" style="width: 100%">
@@ -22,6 +25,7 @@
 
     <tbody>
     @foreach($data['lessons'] as $key => $abc)
+
         <tr>
             <td>{{$key+1}}</td>
             <td>{{$abc['name']}}</td>
@@ -30,7 +34,9 @@
         </tr>
     @endforeach
 
+
     </tbody>
 </table>
+
 @endif
 
