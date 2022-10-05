@@ -1237,17 +1237,19 @@
                     // $('.package-lesson-link').removeClass('active');
 
                     let self=this;
+
                    setTimeout(function ()
                     {
                         $.get('/xadmin/plans/dataPackage',function (res) {
                        let dataPackage=   res.data.filter(item => item.plan_id==self.entry.id)
-                            self.lessonPackagePlans.forEach(function (e){
-                                e.className = '';
-                            })
+                            // self.lessonPackagePlans.forEach(function (e){
+                            //     e.className = '';
+                            // })
                             $('.package-lesson-link').removeClass('active');
                             // dataPackage.className = 'active';
-                          self.lessonPackagePlans.push(dataPackage);
-                           self.tabPackageLesson(self.tabLessonContent);
+                          // self.lessonPackagePlans.push(dataPackage);
+                          //  self.tabPackageLesson(self.tabLessonContent);
+                            console.log(self.tabLessonContent);
                             let data= dataPackage.map(rec =>{
                                 return{
                                     'package_id':rec.id,
