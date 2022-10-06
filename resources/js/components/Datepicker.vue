@@ -1,9 +1,9 @@
 <template>
     <input :id="id" name="time"
            @change="onChange()"
-           :placeholder="placeholder"
+           placeholder="Choose date"
             autocomplete="off"
-            class="form-control daterange1"  >
+            class="form-control daterange1">
 </template>
 
 <script>

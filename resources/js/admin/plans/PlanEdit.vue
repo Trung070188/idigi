@@ -123,30 +123,35 @@
                                 <div class="row">
                                     <div class="form-group col-lg-8">
                                         <label>Plan name <span class="text-danger">*</span></label>
-                                        <input v-model="entry.name" class="form-control" placeholder="Enter the name of plan">
+                                        <input v-if="roleAuth=='IT'" disabled v-model="entry.name" class="form-control" placeholder="Enter the name of plan">
+                                        <input v-if="roleAuth!='IT'" v-model="entry.name" class="form-control" placeholder="Enter the name of plan">
                                         <error-label :errors="errors.name" for="f_school_name"></error-label>
                                     </div>
                                     <div class="form-group col-lg-4">
+                                        <label>Due date </label>
+                                        <Datepicker disabled v-model="entry.due_at"/>
+                                        <error-label :errors="errors.due_at" for="f_title"></error-label>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group col-lg-8">
+                                        <label>Plan description</label>
+                                        <textarea v-if="roleAuth=='IT'" disabled class="form-control"
+                                                  placeholder="Enter the description" v-model="entry.plan_description">
+                                        </textarea>
+                                        <textarea v-if="roleAuth!='IT'" class="form-control"
+                                                  placeholder="Enter the description" v-model="entry.plan_description">
+                                        </textarea>
+                                        <error-label :errors="errors.plan_description"></error-label>
+                                    </div>
+                                     <div class="form-group col-lg-4">
                                         <label> Assign to IT <span class="text-danger">*</span></label>
                                         <select disabled class="form-control form-select" v-model="idRoleIt">
                                             <option v-for="role in roleIt" :value="role.id">{{role.full_name}}</option>
                                         </select>
                                         <error-label :errors="errors.idRoleIt"></error-label>
                                     </div>
-                                </div>
-                                <div class="row">
-                                    <div class="form-group col-lg-8">
-                                        <label>Plan description <span class="text-danger">*</span> </label>
-                                        <textarea class="form-control"
-                                                  placeholder="Enter the description" v-model="entry.plan_description">
-                                        </textarea>
-                                        <error-label :errors="errors.plan_description"></error-label>
-                                    </div>
-                                    <div class="form-group col-lg-4">
-                                        <label>Due date <span class="text-danger">*</span></label>
-                                        <Datepicker disabled v-model="entry.due_at"/>
-                                        <error-label :errors="errors.due_at" for="f_title"></error-label>
-                                    </div>
+                        
                                 </div>
                                 <div class="row">
                                     <div class="form-group col-lg-4">
@@ -366,9 +371,9 @@
                     <div class="close-popup" data-dismiss="modal"></div>
                     <h3 style="margin:20px auto;font-weight: 500;" class="popup-title success">Add more device</h3>
                     <div class="content" style="margin: -30px 20px 20px">
-                        <p>Bước 1 :Sử dụng máy tính mà bạn muốn thêm thiết bị mở ứng dụng IDIGI trên Desktop</p>
-                        <p>Bước 2:Nhấn vào nút "Get device information" và copy đoạn mã thông tin thiết bị </p>
-                        <p>Bước 3:Dán đoạn mã vào ô phía dưới</p>
+                        <p>Bước 1: Sử dụng máy tính mà bạn muốn thêm thiết bị mở ứng dụng IDIGI trên Desktop</p>
+                        <p>Bước 2: Nhấn vào nút "Get device information" và copy đoạn mã thông tin thiết bị </p>
+                        <p>Bước 3: Dán đoạn mã vào ô phía dưới</p>
                         <datepicker v-model="deviceExpireDate" class="form-control mb-4" ></datepicker>
                         <input type="text" class="form-control " placeholder="Enter the device name" aria-label="" style="margin-bottom: 10px" aria-describedby="basic-addon1" v-model="deviceName">
                         <!--                        <error-label for="f_category_id" :errors="errors.device_name"></error-label>-->

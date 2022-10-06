@@ -259,7 +259,7 @@ class PlansController extends AdminBaseController
         $current = Carbon::now();
         $rules = [
             'name' => ['required'],
-            'plan_description' => ['required', 'max:255'],
+            'plan_description' => ['max:255'],
         ];
         if (!isset($data['id'])) {
             if ($roleName == 'IT') {
@@ -277,7 +277,7 @@ class PlansController extends AdminBaseController
 
                 }
             }
-            $rules['due_at'] = ['required', 'after_or_equal:' . $current];
+            $rules['due_at'] = ['after_or_equal:' . $current];
             $rules['expire_date'] = ['required', 'after_or_equal:' . $current];
 
         }
@@ -812,11 +812,11 @@ class PlansController extends AdminBaseController
             $roleName = $role->role_name;
         }
         if ($roleName == 'IT') {
-            $query = Plan::query()->where('user_id', '=', $user->id)->orderBy('id', 'ASC');
+            $query = Plan::query()->where('user_id', '=', $user->id)->orderBy('id', 'desc');
 
         }
         if ($roleName == 'Super Administrator') {
-            $query = Plan::query()->orderBy('id', 'ASC');
+            $query = Plan::query()->orderBy('id', 'desc');
         }
         if ($req->keyword) {
             $query->where('name', 'LIKE', '%' . $req->keyword . '%');

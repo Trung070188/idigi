@@ -78,7 +78,7 @@
 <!--                                    <i class="fa fa-filter" v-if="!isShowFilter" aria-hidden="true"></i>-->
 <!--                                </button>-->
 
-                                <a :href="'/xadmin/plans/create'">
+                                <a :href="'/xadmin/plans/create'" v-if="permissions['039']">
                                     <button  class="btn btn-primary button-create" style="margin:0 0 0 15px">
                                         <i class="bi bi-clipboard-plus"></i>New Plan
                                     </button>
@@ -201,10 +201,10 @@
                                     <div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-bold fs-7 w-125px py-4" data-kt-menu="true">
 
                                         <div class="menu-item px-3">
-                                            <a :href="'/xadmin/plans/edit?id='+entry.id" class="menu-link px-3">Edit</a>
+                                            <a v-if="permissions['040']" :href="'/xadmin/plans/edit?id='+entry.id" class="menu-link px-3">Edit</a>
                                         </div>
                                         <div class="menu-item px-3" >
-                                            <a class="menu-link text-danger px-3"  @click="removePlan(entry.id)" data-kt-subscriptions-table-filter="delete_row">Delete</a>
+                                            <a v-if="permissions['042']" class="menu-link text-danger px-3"  @click="removePlan(entry.id)" data-kt-subscriptions-table-filter="delete_row">Delete</a>
 
                                         </div>
                                     </div>
@@ -244,7 +244,7 @@
 </template>
 
 <script>
-    import {$get, $post, getTimeRangeAll} from "../../utils";
+    import {$get, $post, clone, getTimeRangeAll} from "../../utils";
     import $router from '../../lib/SimpleRouter';
     import ActionBar from "../includes/ActionBar";
 
@@ -255,6 +255,7 @@
         name: "PlansIndex.vue",
         components: {ActionBar},
         data() {
+             const permissions = clone(window.$permissions)
             let isShowFilter = false;
             let filter = {
                 keyword: $q.keyword || '',
@@ -271,6 +272,7 @@
                         title: 'Manage plans'
                     },
                 ],
+                permissions,
                 entry:'',
                 devices:[],
                 entries: [],
