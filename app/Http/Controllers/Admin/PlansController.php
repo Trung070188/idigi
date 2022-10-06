@@ -1333,7 +1333,7 @@ class PlansController extends AdminBaseController
     }
     public function downloadTemplate() : BinaryFileResponse
     {
-        return response()->download(public_path('files/template/template.xlsx'));
+        return response()->download(public_path('sample/template.xlsx'));
     }
 
 
