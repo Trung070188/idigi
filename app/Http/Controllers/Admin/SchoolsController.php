@@ -524,7 +524,20 @@ class SchoolsController extends AdminBaseController
             $entry->save();
             if (@$dataContent['allocationContenSchool']) {
                 AllocationContentSchool::create(['allocation_content_id' => $dataContent['allocationContenSchool'], 'school_id' => $entry->id]);
+
+                foreach ($entry->allocation_contents as $contents) {
+                    foreach ($contents->course_unit as $schoolCourse) {
+                        SchoolCourseUnit::create(['school_id' => $entry->id, 'course_id' => $schoolCourse->course_id, 'unit_id' => $schoolCourse->unit_id,'allocation_content_id'=>$dataContent['allocationContenSchool']]);
+                    }
+                }
+
+                foreach ($entry->allocation_contents as $contents) {
+                    foreach ($contents->courses as $schoolCourse) {
+                        SchoolCourse::create(['school_id' => $entry->id, 'course_id' => $schoolCourse->id,'allocation_content_id'=>$dataContent['allocationContenSchool']]);
+                    }
+                }
             }
+
             return [
                 'code' => 0,
                 'message' => 'Đã thêm',
