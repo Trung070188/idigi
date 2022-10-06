@@ -153,7 +153,7 @@
                                 @click="showReleaseNote(entry.release_note)"></td>
                             <!--                            <td> {{ d2(entry.release_date) }}</td>-->
                             <td style="color:#1aaf21;" v-if="entry.is_default==1">Default</td>
-                            <td v-if="entry.is_default==0"></td>
+                            <td v-if="entry.is_default==0"><span class="badge badge-light-warning">Draft</span></td>
                             <td class="">
                                 <a href="list.html#" class="btn btn-light btn-active-light-primary btn-sm"
                                    data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">Actions
@@ -180,7 +180,7 @@
                                            class="menu-link px-3">Set as Default</a>
                                     </div>
                                     <div class="menu-item px-3">
-                                        <a @click="remove(entry)"
+                                        <a @click="removeApp(entry.id)"
                                            data-kt-subscriptions-table-filter="delete_row"
                                            class="menu-link text-danger px-3">Remove</a>
                                     </div>

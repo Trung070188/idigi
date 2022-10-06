@@ -137,22 +137,26 @@ class AppVersionsController extends AdminBaseController
         $file0 = $_FILES['file_0'];
         @$file1=$_FILES['file1_0'];
 
+
         $fileExe = $this->uploadFile($file0);
-        @$fileUpdate = $this->uploadFile($file1);
+        if($file1!=null)
+        {
+            $fileUpdate = $this->uploadFile($file1);
+        }
+
 
         $data = [
             'is_default'=>$req->is_default,
 //            'name' =>$req->name,
             'path' =>$fileExe['path'],
-            'path_updated'=>$fileUpdate['path'],
+            'path_updated'=>@$fileUpdate['path'],
             'url' => $fileExe['url'],
-            'url_updated'=>$fileUpdate['url'],
+            'url_updated'=>@$fileUpdate['url'],
             'type' => $req->type,
 //            'release_date' => $req->release_date,
             'version'=>$req->version,
             'release_note'=>$req->release_note,
         ];
-
         $entry = new AppVersion();
         $entry->fill($data);
        if($entry->is_default=='false')
