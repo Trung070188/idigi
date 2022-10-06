@@ -129,7 +129,14 @@
                                     </div>
                                     <div class="form-group col-lg-4">
                                         <label>Due date </label>
-                                        <Datepicker disabled v-model="entry.due_at"/>
+                                        <Datepicker v-if="roleAuth=='IT'" disabled v-model="entry.due_at" readonly/>
+                                         <Datepicker v-if="roleAuth!='IT'"  v-model="entry.due_at" readonly/>
+                                         <span v-if="entry.due_at!=''" class="svg-icon svg-icon-2 svg-icon-lg-1 me-0" @click="dueAtClear">
+                                            <svg type="button" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" style="float: right;margin: -32px 3px 0px;">
+                                            <rect opacity="0.5" x="6" y="17.3137" width="16" height="2" rx="1" transform="rotate(-45 6 17.3137)" fill="black" style="fill:red"/>
+                                                        <rect x="7.41422" y="6" width="16" height="2" rx="1" transform="rotate(45 7.41422 6)" fill="black" style="fill:red"/>
+                                            </svg>
+                                        </span>
                                         <error-label :errors="errors.due_at" for="f_title"></error-label>
                                     </div>
                                 </div>
@@ -156,8 +163,14 @@
                                 <div class="row">
                                     <div class="form-group col-lg-4">
                                         <label>Expire date <span class="text-danger">*</span></label>
-                                        <Datepicker v-if="roleAuth=='IT'" v-model="entry.expire_date" disabled/>
-                                        <Datepicker v-if="roleAuth!='IT'" v-model="entry.expire_date" />
+                                        <Datepicker v-if="roleAuth=='IT'" v-model="entry.expire_date" disabled  readonly/>
+                                        <Datepicker v-if="roleAuth!='IT'" v-model="entry.expire_date" readonly/>
+                                        <span v-if="entry.expire_date!=''" class="svg-icon svg-icon-2 svg-icon-lg-1 me-0" @click="expireDateClear">
+                                            <svg type="button" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" style="float: right;margin: -32px 3px 0px;">
+                                            <rect opacity="0.5" x="6" y="17.3137" width="16" height="2" rx="1" transform="rotate(-45 6 17.3137)" fill="black" style="fill:red"/>
+                                                        <rect x="7.41422" y="6" width="16" height="2" rx="1" transform="rotate(45 7.41422 6)" fill="black" style="fill:red"/>
+                                            </svg>
+                                        </span>
                                         <error-label :errors="errors.expire_date" for="f_title"></error-label>
                                     </div>
                                 </div>
@@ -363,7 +376,7 @@
 
         <!-- Begin:modal add device-->
 
-        <div class="modal fade" style="margin-right:50px " id="deviceConfirm" tabindex="-1" role="dialog"
+        <!-- <div class="modal fade" style="margin-right:50px " id="deviceConfirm" tabindex="-1" role="dialog"
              aria-labelledby="deviceConfirm"
              aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered popup-main-1" role="document" style="max-width: 500px;">
@@ -376,16 +389,70 @@
                         <p>Bước 3: Dán đoạn mã vào ô phía dưới</p>
                         <datepicker v-model="deviceExpireDate" class="form-control mb-4" ></datepicker>
                         <input type="text" class="form-control " placeholder="Enter the device name" aria-label="" style="margin-bottom: 10px" aria-describedby="basic-addon1" v-model="deviceName">
-                        <!--                        <error-label for="f_category_id" :errors="errors.device_name"></error-label>-->
-
-                        <input type="text" class="form-control " placeholder="Enter the register code" aria-label=""
-                               aria-describedby="basic-addon1" v-model="deviceUid">
-                        <!--                        <error-label for="f_category_id" :errors="errors.device_uid"></error-label>-->
+                        <error-label for="f_category_id" :errors="errors.deviceName"></error-label>
+                        <input type="text" class="form-control " placeholder="Enter the register code" aria-label="" aria-describedby="basic-addon1" v-model="deviceUid">
+                        <error-label for="f_category_id" :errors="errors.deviceUid"></error-label>
                     </div>
                     <div class="form-group d-flex justify-content-between">
                         <button class="btn btn-primary ito-btn-add" data-dismiss="modal" @click="saveDevice()" style="margin:0 auto">
                             Add now
                         </button>
+                    </div>
+                </div>
+            </div>
+        </div> -->
+         <div class="modal fade" style="margin-right:50px " id="deviceConfirm" tabindex="-1" role="dialog"
+             aria-labelledby="deviceConfirm"
+             aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered popup-main-1" role="document"
+                 style="max-width: 500px;">
+                <div class="modal-content box-shadow-main paymment-status" style="margin-right:20px; left:140px">
+                    <div class="close-popup" data-dismiss="modal"></div>
+                    <h3 style="text-align: center;" class="pt-7 fs-1 fw-bolder">Register New Device</h3>
+                    <div class="px-10 py-5 text-left">
+                        <div class="d-flex align-items-start justify-content-start mb-5">
+                            <span class="svg svg-icon mr-3">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-1-circle" viewBox="0 0 16 16">
+                                    <path d="M1 8a7 7 0 1 0 14 0A7 7 0 0 0 1 8Zm15 0A8 8 0 1 1 0 8a8 8 0 0 1 16 0ZM9.283 4.002V12H7.971V5.338h-.065L6.072 6.656V5.385l1.899-1.383h1.312Z"/>
+                                </svg>
+                            </span>
+                            <span>Open iSMART DIGI application on your device.</span>
+                        </div>
+                        <div class="d-flex align-items-start justify-content-start mb-5">
+                            <span class="svg svg-icon mr-3">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-2-circle" viewBox="0 0 16 16">
+                                  <path d="M1 8a7 7 0 1 0 14 0A7 7 0 0 0 1 8Zm15 0A8 8 0 1 1 0 8a8 8 0 0 1 16 0ZM6.646 6.24v.07H5.375v-.064c0-1.213.879-2.402 2.637-2.402 1.582 0 2.613.949 2.613 2.215 0 1.002-.6 1.667-1.287 2.43l-.096.107-1.974 2.22v.077h3.498V12H5.422v-.832l2.97-3.293c.434-.475.903-1.008.903-1.705 0-.744-.557-1.236-1.313-1.236-.843 0-1.336.615-1.336 1.306Z"/>
+                                </svg>
+                            </span>
+                            <span>Click on button "Get device information" and copy "Register Code".</span>
+                        </div>
+                        <div class="d-flex align-items-start justify-content-start mb-7">
+                            <span class="svg svg-icon mr-3">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-3-circle" viewBox="0 0 16 16">
+                                  <path d="M7.918 8.414h-.879V7.342h.838c.78 0 1.348-.522 1.342-1.237 0-.709-.563-1.195-1.348-1.195-.79 0-1.312.498-1.348 1.055H5.275c.036-1.137.95-2.115 2.625-2.121 1.594-.012 2.608.885 2.637 2.062.023 1.137-.885 1.776-1.482 1.875v.07c.703.07 1.71.64 1.734 1.917.024 1.459-1.277 2.396-2.93 2.396-1.705 0-2.707-.967-2.754-2.144H6.33c.059.597.68 1.06 1.541 1.066.973.006 1.6-.563 1.588-1.354-.006-.779-.621-1.318-1.541-1.318Z"/>
+                                  <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0ZM1 8a7 7 0 1 0 14 0A7 7 0 0 0 1 8Z"/>
+                                </svg>
+                            </span>
+                            <span>Paste it to the following input field.</span>
+                        </div>
+                         <datepicker readonly v-model="deviceExpireDate" class="form-control mb-4" ></datepicker>
+                         <span v-if="deviceExpireDate!=''" class="svg-icon svg-icon-2 svg-icon-lg-1 me-0" @click="deviceExpireDateClear">
+                                            <svg type="button" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" style="float: right;margin: -32px 3px 0px;">
+                                            <rect opacity="0.5" x="6" y="17.3137" width="16" height="2" rx="1" transform="rotate(-45 6 17.3137)" fill="black" style="fill:red"/>
+                                                        <rect x="7.41422" y="6" width="16" height="2" rx="1" transform="rotate(45 7.41422 6)" fill="black" style="fill:red"/>
+                                            </svg>
+                                        </span>
+                        <input type="text" class="form-control " placeholder="Enter the device name" aria-label="" style="margin-bottom: 10px" aria-describedby="basic-addon1" v-model="deviceName">
+                        <error-label for="f_category_id" :errors="errors.deviceName"></error-label>
+                        <input type="text" class="form-control " placeholder="Enter the register code" aria-label="" aria-describedby="basic-addon1" v-model="deviceUid">
+                        <error-label for="f_category_id" :errors="errors.deviceUid"></error-label>
+                    </div>
+                    <div class="form-group d-flex justify-content-center">
+                        <!--                        <button  class="btn btn-danger ito-btn-small" data-dismiss="modal" @click="save()">Add now</button>-->
+                        <button class="btn btn-primary ito-btn-add mr-3" data-dismiss="modal" @click="saveDevice()">
+                            <i class="bi bi-send mr-1"></i>Add Device
+                        </button>
+                        <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancel</button>
                     </div>
                 </div>
             </div>
@@ -729,6 +796,18 @@
         },
 
         methods: {
+            deviceExpireDateClear()
+            {
+                this.deviceExpireDate='';
+            },
+            expireDateClear()
+            {
+                this.entry.expire_date='';
+            },
+            dueAtClear()
+            {
+                this.entry.due_at='';
+            },
             deleteLessonModal:function(deleteIdLesson='')
             {
                 $('#deleteLesson').modal('show');

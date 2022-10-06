@@ -61,23 +61,18 @@
                                             </svg>
                                         </span>
                             </div>
+                             <button type="button" style="margin-left: 10px" @click="isShowFilter = !isShowFilter" class="btn btn-light" v-if="isShowFilter">
+                                    <i style="margin-left: 5px" class="fas fa-times"></i>
+                                    Close Advanced Search
+                                </button>
+                                <button type="button" style="margin-left: 10px" @click="isShowFilter = !isShowFilter" class="btn btn-light" v-if="!isShowFilter">
+                                    <i class="bi bi-funnel"></i>
+                                    Advanced Search
+                                </button>
                         </div>
                         <div class="card-toolbar">
                             <div class="d-flex justify-content-end" data-kt-customer-table-toolbar="base"
                                 >
-
-<!--                                <button type="button"-->
-<!--                                        @click="isShowFilter = !isShowFilter"-->
-<!--                                        class="btn btn-primary" v-if="isShowFilter"> Close Advanced Search-->
-<!--                                    <i style="margin-left: 5px" class="fas fa-times"></i>-->
-
-<!--                                </button>-->
-<!--                                <button type="button"-->
-<!--                                        @click="isShowFilter = !isShowFilter"-->
-<!--                                        class="btn btn-primary" v-if="!isShowFilter"> Advanced Search-->
-<!--                                    <i class="fa fa-filter" v-if="!isShowFilter" aria-hidden="true"></i>-->
-<!--                                </button>-->
-
                                 <a :href="'/xadmin/plans/create'" v-if="permissions['039']">
                                     <button  class="btn btn-primary button-create" style="margin:0 0 0 15px">
                                         <i class="bi bi-clipboard-plus"></i>New Plan
@@ -93,39 +88,68 @@
 <!--                                        data-kt-customer-table-select="delete_selected">Delete Selected-->
 <!--                                </button>-->
                             </div>
-
                         </div>
-<!--                        <form class="col-lg-12" v-if="isShowFilter">-->
-<!--                            <div class="row">-->
-<!--                                <div class="form-group col-lg-3">-->
-<!--                                    <label>School name </label>-->
-<!--                                    <input class="form-control" type="text" placeholder="Enter your school name"-->
-<!--                                          />-->
-
-<!--                                </div>-->
-<!--                                <div class="form-group col-lg-3">-->
-<!--                                    <label>Administrator name </label>-->
-<!--                                    <input class="form-control" type="text"-->
-<!--                                           placeholder="Enter the administrator name">-->
-
-<!--                                </div>-->
-<!--                                <div class="form-group col-lg-3">-->
-<!--                                    <label>Region/City </label>-->
-<!--                                    <input class="form-control" type="text" placeholder="Enter the region/city">-->
-
-<!--                                </div>-->
-
-<!--                            </div>-->
-
-<!--                            <div style="margin: auto 0">-->
-<!--                                <button type="button" class="btn btn-primary" @click="doFilter($event)">Search-->
-<!--                                </button>-->
-<!--                            </div>-->
-<!--                        </form>-->
+                       <form class="col-lg-12" v-if="isShowFilter">
+                           <div class="row">
+                                <div class="form-group col-lg-8">
+                                    <label>Plan name</label>
+                                    <input class="form-control" v-model="filter.name" @keydown.enter="doFilter('name', filter.full_name, $event)" type="text" placeholder="Enter the lesson name"/>
+                               </div>
+                                <div class="form-group col-lg-4">
+                                    <label>Due date</label>
+                                   <Datepicker  />
+                                </div>
+                            </div>
+                            <div class="row">
+                               <div class="form-group col-lg-2">
+                                    <label>Create by</label>
+                                    <select class="form-control form-select">
+                                        <option></option>
+                                    </select>
+                               </div> 
+                               <div class="form-group col-lg-2">
+                                    <label>Assign to</label>
+                                    <select class="form-control form-select">
+                                        <option></option>
+                                    </select>
+                               </div> 
+                               <div class="form-group col-lg-2">
+                                    <label>Status</label>
+                                    <select class="form-control form-select" v-model="filter.status" required>
+                                         <option value="" disabled selected>Actions</option>
+                                        <option value="0">All</option>
+                                        <option value="Drafting ">Drafting </option>
+                                        <option value="packaging">Packaging</option>
+                                        <option value="waiting ">Waiting </option>
+                                        <option value="ready">Ready</option>
+                                    </select>
+                               </div> 
+                               <div class="form-group col-lg-2">
+                                    <label>Deployed</label>
+                                    <select class="form-control form-select">
+                                        <option value="0">Action</option>
+                                        <option value="Yes">Yes</option>
+                                        <option value="No">No</option>
+                                    </select>
+                               </div> 
+                               <div class="form-group col-lg-4">
+                                    <label>Creation date</label>
+                                     <Daterangepicker v-model="filter.created" readonly></Daterangepicker>
+                                     <span v-if="filter.created!==''" class="svg-icon svg-icon-2 svg-icon-lg-1 me-0" @click="filterClear">
+                                            <svg type="button" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" style="float: right;margin: -32px 3px 0px;">
+                                            <rect opacity="0.5" x="6" y="17.3137" width="16" height="2" rx="1" transform="rotate(-45 6 17.3137)" fill="black" style="fill:red"/>
+                                                        <rect x="7.41422" y="6" width="16" height="2" rx="1" transform="rotate(45 7.41422 6)" fill="black" style="fill:red"/>
+                                            </svg>
+                                        </span>
+                               </div> 
+                            </div>
+                            <div style="margin: auto 0">
+                                <button type="button" class="btn btn-primary" @click="doFilter($event)">Search
+                                </button>
+                            </div>
+                        </form>
                     </div>
                     <div class="tab-content">
-
-
                         <div class="d-flex flex-stack pt-4 pl-9 pr-9">
 
                             <div class="badge badge-lg badge-light-dark mb-15">
@@ -247,19 +271,22 @@
     import {$get, $post, clone, getTimeRangeAll} from "../../utils";
     import $router from '../../lib/SimpleRouter';
     import ActionBar from "../includes/ActionBar";
+    import Daterangepicker from '../../components/Daterangepicker.vue';
 
     let created = getTimeRangeAll();
     const $q = $router.getQuery();
 
     export default {
         name: "PlansIndex.vue",
-        components: {ActionBar},
+        components: {ActionBar,Daterangepicker},
         data() {
              const permissions = clone(window.$permissions)
             let isShowFilter = false;
             let filter = {
                 keyword: $q.keyword || '',
-                // created: $q.created || created,
+                name:$q.name || '',
+                status:$q.status || '',
+                created: $q.created || '',
             };
             for (var key in filter) {
                 if (filter[key] != '') {

@@ -67,7 +67,10 @@ class PlansController extends AdminBaseController
     {
         $title = 'Plan';
         $component = 'PlanIndex';
-        return component($component, compact('title'));
+        $jsonData = [
+           
+        ];
+        return view('admin.layouts.vue', compact('title', 'component', 'jsonData'));
     }
 
     /**
@@ -360,6 +363,17 @@ class PlansController extends AdminBaseController
 //            'created_by' => 'numeric',
 //            'due_at' => 'date_format:Y-m-d H:i:s',
         ];
+        if(isset($data['id']))
+        {
+            if($dataRole['deviceName']==null)
+            {
+                $rules['deviceName']=['required'];
+            }
+            if($dataRole['deviceUid']==null)
+            {
+                $rules['deviceUid']=['required'];
+            }
+        }
 
         $v = Validator::make($data, $rules,$dataRole);
 
@@ -821,7 +835,16 @@ class PlansController extends AdminBaseController
         if ($req->keyword) {
             $query->where('name', 'LIKE', '%' . $req->keyword . '%');
         }
-//        $query->createdIn($req->created);
+        if($req->name)
+        {
+            $query->where('name', 'LIKE', '%' . $req->name . '%');
+        }
+        if($req->status)
+        {
+            $query->where('status', 'LIKE', '%' . $req->status . '%');
+        }
+
+       $query->createdIn($req->created);
         $entries = $query->paginate();
         $data = [];
         $users = User::query()->orderBy('id', 'desc')->get();

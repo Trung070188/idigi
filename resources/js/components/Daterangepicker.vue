@@ -1,5 +1,5 @@
 <template>
-    <input ref="input"  name="time" :placeholder="placeholder"
+    <input ref="input"  name="time" placeholder="Choose date"
            autocomplete="off"
            :class="className" >
 </template>
