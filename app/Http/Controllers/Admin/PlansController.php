@@ -486,7 +486,10 @@ class PlansController extends AdminBaseController
                             try {
                                 $decoded = JWT::decode($item['device_uid'], new Key(env('SECRET_KEY'), 'HS256'));
                                 $item['device_uid'] = $decoded->device_uid;
-                            } catch (\Exception $e) {
+                               // dd($decoded->device_uid);
+
+                            }
+                            catch (\Exception $e) {
                             }
                             $validator = Validator::make($item, [
 //                                'device_name' => ['required', Rule::unique('user_devices', 'device_name')],
@@ -669,7 +672,7 @@ class PlansController extends AdminBaseController
                             'user_id' => $dataImport['idRoleIt'],
                             'device_uid' => $import['device_uid'],
                             'device_name' => $import['device_name'],
-                            'secret_key' => $import['secret_key'],
+                            'secret_key' => $entry->secret_key,
                             'create_time' => Carbon::now()->timestamp,
                             'expired' => strtotime($import['expire_date']),
                         ];
