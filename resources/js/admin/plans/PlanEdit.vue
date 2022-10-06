@@ -996,7 +996,7 @@
                 } else {
                     this.errors = {};
                     toastr.success(res.message);
-                    location.replace('/xadmin/plans/edit?id=' + this.entry.id);
+                    location.replace('/xadmin/plans/index');
 
 
                     if (!this.entry.id) {
