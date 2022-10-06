@@ -365,8 +365,6 @@
                         lastPage: 1,
                         totalRecord: 0
                     }
-
-
                 }
             },
             mounted() {

@@ -25,6 +25,7 @@ use Carbon\Carbon;
 use Facade\Ignition\Support\Packagist\Package;
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
+use http\Env\Response;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Date;
@@ -40,6 +41,7 @@ use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 use Maatwebsite\Excel\Facades\Excel;
 use phpseclib3\Crypt\Random;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
@@ -409,7 +411,6 @@ class PlansController extends AdminBaseController
                 'id' => $entry->id
             ];
         }
-
     }
 
     public function validateImportDevice(Request $req)
@@ -475,25 +476,24 @@ class PlansController extends AdminBaseController
 
                 foreach ($deviceList as $device) {
                     foreach ($device as $key => $dev) {
-                        if ($key > 0) {
+
+                        if ($key > 6) {
                             $item = [];
                             $item['device_name'] = $dev[0];
                             $item['type'] = $dev[1];
-                            $item['device_uid'] = $dev[2];
+                            $item['expire_date'] = $dev[2];
+                            $item['device_uid'] = $dev[3];
                             try {
                                 $decoded = JWT::decode($item['device_uid'], new Key(env('SECRET_KEY'), 'HS256'));
                                 $item['device_uid'] = $decoded->device_uid;
                             } catch (\Exception $e) {
-
                             }
-                            $item['expire_date'] = $dev[3];
                             $validator = Validator::make($item, [
-                                'device_name' => ['required', Rule::unique('user_devices', 'device_name')],
-                                'device_uid' => ['required', Rule::unique('user_devices', 'device_uid')],
+//                                'device_name' => ['required', Rule::unique('user_devices', 'device_name')],
+//                                'device_uid' => ['required', Rule::unique('user_devices', 'device_uid')],
                                 'type' => 'required',
-                                'expire_date' => ['date_format:d/m/Y H:i:s', 'before_or_equal:' . $dayExpireDevice]
+                                'expire_date' => ['date_format:dd/mm/YYYY', 'before_or_equal:' . $dayExpireDevice]
                             ]);
-
                             if ($validator->fails()) {
                                 $item['error'] = $validator->errors()->messages();
                                 $code = 2;//Có lỗi
@@ -1331,6 +1331,11 @@ class PlansController extends AdminBaseController
             'data' => $zipLessonPlan,
         ];
     }
+    public function downloadTemplate() : BinaryFileResponse
+    {
+        return response()->download(public_path('files/template/template.xlsx'));
+    }
+
 
     }
 

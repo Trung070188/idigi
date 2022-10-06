@@ -465,9 +465,12 @@
                                                            @change="saveValidateImportDevice">
                                                     <error-label></error-label>
                                                 </div>
+                                                <div class="dropzone-panel mb-4  ">
+                                                   <a class="btn btn-light btn-active-light-primary btn-sm" data-kt-menu-trigger="click" @click="downloadTemplate()" ><i class="bi bi-download mr-2"></i>Download template here</a>
 
-                                                <div
-                                                    class="d-flex flex-stack py-5 border-bottom border-gray-300 border-bottom-dashed">
+                                                </div>
+
+                                                <div class="d-flex flex-stack py-5 border-bottom border-gray-300 border-bottom-dashed">
                                                     <div class="d-flex align-items-center">
                                                         <div class="ms-6">
 
@@ -850,7 +853,8 @@
                               toastr.success(res.message);
                               self.viewLessonIds=[];
                               self.allViewLessonSelected=false;
-                              self.dataAddLessonPlan= self.dataAddLessonPlan.filter(item => item.id !==e1);
+                               self.dataAddLessonPlan= self.dataAddLessonPlan.filter(item => item.id !==e1);
+                              // location.replace('/xadmin/plans/edit?id=' + self.entry.id);
                           }
 
                       }
@@ -1328,6 +1332,10 @@
                 window.location.href= '/xadmin/plans/exportPlan?entry=' + JSON.stringify(this.entry)+
                 '&packageLessonPlan=' + JSON.stringify(this.lessonPackagePlans)+
                 '&dataDevice=' + JSON.stringify(this.data);
+            },
+            downloadTemplate()
+            {
+                window.location.href= '/xadmin/plans/downloadTemplate';
             },
         }
     }
