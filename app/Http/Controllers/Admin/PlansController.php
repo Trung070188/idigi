@@ -467,35 +467,41 @@ class PlansController extends AdminBaseController
             $ok = move_uploaded_file($file0['tmp_name'], $newFilePath);
             $newUrl = url("/uploads/excel_import/{$y}/{$m}/{$hash}.{$extension}");
             $sheets = Excel::toCollection(new DeviceImport(), "{$y}/{$m}/{$hash}.{$extension}", 'excel-import');
-            $dayExpireDevice = (Carbon::parse($data['expire_date'])->format('d/m/Y H:i:s'));
+            $dayExpireDevice = (Carbon::parse($data['expire_date'])->format('dd/mm/YYYY'));
             $deviceLists[] = $sheets;
             $validations = [];
             $error = [];
             $code = 0;
             foreach ($deviceLists as $deviceList) {
 
-                foreach ($deviceList as $device) {
+                foreach ($deviceList as  $device ) {
                     foreach ($device as $key => $dev) {
 
-                        if ($key > 6) {
+                        if ($key > 6 ) {
                             $item = [];
                             $item['device_name'] = $dev[0];
                             $item['type'] = $dev[1];
                             $item['expire_date'] = $dev[2];
                             $item['device_uid'] = $dev[3];
-                            try {
-                                $decoded = JWT::decode($item['device_uid'], new Key(env('SECRET_KEY'), 'HS256'));
-                                $item['device_uid'] = $decoded->device_uid;
-                               // dd($decoded->device_uid);
+                            if($item['device_uid']!=null)
+                            {
+                                try {
+                                    $decoded = JWT::decode($item['device_uid'], new Key(env('SECRET_KEY'), 'HS256'));
+                                    $item['device_uid'] = $decoded->device_uid;
+                                    // dd($decoded->device_uid);
 
+                                }
+                                catch (\Exception $e) {
+                                }
                             }
-                            catch (\Exception $e) {
+                            else{
+                                $item['device_uid'] = $dev[3];
                             }
                             $validator = Validator::make($item, [
-//                                'device_name' => ['required', Rule::unique('user_devices', 'device_name')],
-//                                'device_uid' => ['required', Rule::unique('user_devices', 'device_uid')],
+                                'device_name' => ['required'],
+                                'device_uid' => ['required'],
                                 'type' => 'required',
-                                'expire_date' => ['date_format:dd/mm/YYYY', 'before_or_equal:' . $dayExpireDevice]
+                                'expire_date' => ['date_format:d/m/Y', 'before_or_equal:' . $dayExpireDevice]
                             ]);
                             if ($validator->fails()) {
                                 $item['error'] = $validator->errors()->messages();
