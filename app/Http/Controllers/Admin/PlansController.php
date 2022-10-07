@@ -1091,15 +1091,30 @@ class PlansController extends AdminBaseController
     public function removeAllLesson(Request $req)
     {
         $dataAll=$req->all();
-        PackageLesson::updateorCreate(
-            [
-                'id' => $dataAll['viewPackage']
-            ],
-            [
-                'lesson_ids' => Null,
+        $stringLessonIds=implode(",",$dataAll['ids']);
+        if($stringLessonIds!="")
+        {
+            PackageLesson::updateorCreate(
+                [
+                    'id' => $dataAll['viewPackage']
+                ],
+                [
+                    'lesson_ids' => $stringLessonIds,
                     'status'=>'new'
-            ]
-        );
+                ]
+            );
+        }
+       else{
+           PackageLesson::updateorCreate(
+               [
+                   'id' => $dataAll['viewPackage']
+               ],
+               [
+                   'lesson_ids' => NUll,
+                   'status'=>'new'
+               ]
+           );
+       }
         return [
             'code' => 0,
             'message' => 'Đã xóa',

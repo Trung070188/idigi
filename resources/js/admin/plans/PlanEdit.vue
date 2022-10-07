@@ -743,6 +743,8 @@
                 dataAddLessonPlan:[],
                 dataZipLesson:[],
                 improgress:'',
+                abc:'',
+
             }
         },
 
@@ -793,38 +795,7 @@
                         }
                         }
                     }
-                };
-                // let interval = setInterval(function () {
-                //     $.get('/xadmin/plans/dataZipLessonPlan', function (res) {
-                //         setTimeout(function (){
-                //             KTMenu.createInstances();
-                //         }, 0)
-                //         let array = res.data.filter(item => item.plan_id ==self.entry.id);
-                //
-                //         array.forEach(function (e) {
-                //
-                //
-                //             if(e.package_id==tabPackage)
-                //             {
-                //                 let dataZip=[];
-                //                 dataZip.push(e);
-                //                 self.improgress=dataZip[0].status;
-                //                 self.dataZipLesson=dataZip[0];
-                //             }
-                //
-                //         })
-                //         let done =res.data.filter(item => item.status=='done');
-                //         if(array.length==done.length)
-                //         {
-                //             clearInterval(interval);
-                //         }
-                //         console.log('1');
-                //     })
-                //
-                // }, 1000);
-                // console.log(self.dataZipLesson);
-
-
+                }
                 setTimeout(function () {
                     $.get('/xadmin/plans/dataZipLessonPlan',function (res) {
                         let array=res.data.filter(item => item.plan_id==self.entry.id);
@@ -870,10 +841,16 @@
             async deleteAllLesson()
             {
                         let self=this;
+                        self.abc=[];
+                        let array=self.lessonPackagePlans.filter(item => item.package_id==self.tabLessonContent);
+                                self.viewLessonIds.forEach(function (e1) {
 
+                                array[0].lessonIds= array[0].lessonIds.filter(item => item!==e1);
+                                })
+                                self.abc=array[0].lessonIds
 
                           const res = await $post('/xadmin/plans/removeAllLesson', {
-                              ids:self.viewLessonIds,
+                              ids:self.abc,
                               entry: self.entry,
                               viewPackage: self.tabLessonContent
                           });
@@ -883,16 +860,29 @@
                               toastr.success(res.message);
                               self.viewLessonIds=[];
                               self.allViewLessonSelected=false;
-                              self.lessonPackagePlans.forEach(function (e) {
-                                  if(e.package_id==self.tabLessonContent)
-                                  {
-                                     self.dataAddLessonPlan=[];
-                                  }
-                              })
+                              console.log(self.dataZipLesson);
+
+
+                                  self.lessonPackagePlans.forEach(function (e) {
+                                      if(e.package_id==self.tabLessonContent)
+                                      {
+                                          if(self.abc.length==array[0].length)
+                                          {
+                                              self.dataAddLessonPlan=[];
+                                          }
+                                          else {
+                                              self.abc.forEach(function (e1) {
+                                                  self.dataAddLessonPlan.filter(item =>item.id!==e1);
+                                              })
+                                          }
+                                      }
+                                  })
+
+
+
                               setTimeout(function ()
                               {
                                   $.get('/xadmin/plans/dataPackage',function (res) {
-                                      console.log(res.data);
 
                                       let dataPackage= res.data.filter(item => item.plan_id==self.entry.id)
                                       let data= dataPackage.map(res =>{
