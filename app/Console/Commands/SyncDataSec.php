@@ -50,7 +50,7 @@ class SyncDataSec extends Command
     public function handle()
     {
 
-        //Đồng bộ file và inventory
+       /* //Đồng bộ file và inventory
        \DB::connection('mysql3')->table('inventories')
             //->where('id', '>',209)
             ->chunkById(100, function ($inventories) {
@@ -221,7 +221,7 @@ class SyncDataSec extends Command
 
                     echo 'Sync lesson: ' . $lesson->id . PHP_EOL;
                 }
-            });
+            });*/
 
         //Đồng bộ inventory và lesson
         \DB::connection('mysql3')->table('lessons')
