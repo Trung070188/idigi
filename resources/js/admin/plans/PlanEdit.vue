@@ -272,26 +272,7 @@
                                     <!--BEGIN: PACKAGE LESSON PLAN -->
 
                                         <div id="kt_billing_year" class="card-body p-0 tab-pane fade"  role="tabpanel" aria-labelledby="kt_billing_year" >
-                                            <div class="d-flex justify-content-end mb-4" v-if="!dataZipLesson">
-                                                <a v-if="viewLessonIds!=''" class="btn btn-danger btn-sm mr-3" @click="deleteAllLesson" >Delete</a>
-                                                <a class="btn btn-light btn-active-light-primary btn-sm" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end" >Actions
-                                                    <span class="svg-icon svg-icon-5 m-0">
-															<svg xmlns="http://www.w3.org/2000/svg" width="24"
-                                                                 height="24" viewBox="0 0 24 24" fill="none">
-																<path d="M11.4343 12.7344L7.25 8.55005C6.83579 8.13583 6.16421 8.13584 5.75 8.55005C5.33579 8.96426 5.33579 9.63583 5.75 10.05L11.2929 15.5929C11.6834 15.9835 12.3166 15.9835 12.7071 15.5929L18.25 10.05C18.6642 9.63584 18.6642 8.96426 18.25 8.55005C17.8358 8.13584 17.1642 8.13584 16.75 8.55005L12.5657 12.7344C12.2533 13.0468 11.7467 13.0468 11.4343 12.7344Z" fill="black"/>
-															</svg>
-                                                    </span>
-                                                </a>
-                                                <div class="menu menu-sub menu-sub-dropdown  menu-rounded menu-gray-600 menu-state-bg-light-primary fw-bold fs-7 py-4" data-kt-menu="true" style="width: 150px" >
-                                                    <div class="menu-item px-3" v-if="roleAuth=='Super Administrator'">
-                                                        <a class="menu-link px-3" @click="addLessonPackage(tabLessonContent)">Add lesson</a>
-                                                    </div>
-                                                    <div class="menu-item px-3" v-if="roleAuth=='Super Administrator'">
-                                                        <a class="menu-link px-3 text-danger " @click="deletePackageLesson(tabLessonContent)" >Delete package lesson</a>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="d-flex justify-content-end mb-4" v-if="dataZipLesson">
+                                            <div class="d-flex justify-content-end mb-4" >
                                                 <a v-if="viewLessonIds!='' && dataZipLesson.status=='waitting' && roleAuth=='Super Administrator'" class="btn btn-danger btn-sm mr-3" @click="deleteAllLesson" >Delete</a>
                                              <a  v-if="dataZipLesson.status=='inprogress'"  class="mt-2 mr-5" style="color: rgb(230 180 0)"> Lesson list is packaging...</a>
                                                 <a  v-if="  dataZipLesson.status=='done'" :href="dataZipLesson.url" class="btn btn-primary btn-sm mr-3 "> Download package</a>
@@ -375,32 +356,6 @@
         </div>
 
         <!-- Begin:modal add device-->
-
-        <!-- <div class="modal fade" style="margin-right:50px " id="deviceConfirm" tabindex="-1" role="dialog"
-             aria-labelledby="deviceConfirm"
-             aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered popup-main-1" role="document" style="max-width: 500px;">
-                <div class="modal-content box-shadow-main paymment-status" style="margin-right:20px; left:140px">
-                    <div class="close-popup" data-dismiss="modal"></div>
-                    <h3 style="margin:20px auto;font-weight: 500;" class="popup-title success">Add more device</h3>
-                    <div class="content" style="margin: -30px 20px 20px">
-                        <p>Bước 1: Sử dụng máy tính mà bạn muốn thêm thiết bị mở ứng dụng IDIGI trên Desktop</p>
-                        <p>Bước 2: Nhấn vào nút "Get device information" và copy đoạn mã thông tin thiết bị </p>
-                        <p>Bước 3: Dán đoạn mã vào ô phía dưới</p>
-                        <datepicker v-model="deviceExpireDate" class="form-control mb-4" ></datepicker>
-                        <input type="text" class="form-control " placeholder="Enter the device name" aria-label="" style="margin-bottom: 10px" aria-describedby="basic-addon1" v-model="deviceName">
-                        <error-label for="f_category_id" :errors="errors.deviceName"></error-label>
-                        <input type="text" class="form-control " placeholder="Enter the register code" aria-label="" aria-describedby="basic-addon1" v-model="deviceUid">
-                        <error-label for="f_category_id" :errors="errors.deviceUid"></error-label>
-                    </div>
-                    <div class="form-group d-flex justify-content-between">
-                        <button class="btn btn-primary ito-btn-add" data-dismiss="modal" @click="saveDevice()" style="margin:0 auto">
-                            Add now
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div> -->
          <div class="modal fade" style="margin-right:50px " id="deviceConfirm" tabindex="-1" role="dialog"
              aria-labelledby="deviceConfirm"
              aria-hidden="true">
@@ -822,9 +777,7 @@
             tabPackageLesson: function (tabPackage = '') {
                 $('#kt_billing_year').show();
                 console.log(this.dataAddLessonPlan);
-
                 this.tabLessonContent = tabPackage;
-                console.log(this.lessonPackagePlans);
                 let self = this;
                 for(const e of self.lessonPackagePlans)
                 {
@@ -872,15 +825,14 @@
                 // console.log(self.dataZipLesson);
 
 
+                setTimeout(function () {
+                    $.get('/xadmin/plans/dataZipLessonPlan',function (res) {
+                        let array=res.data.filter(item => item.plan_id==self.entry.id);
+                      let arrZipPlan= array.filter(item =>item.package_id==tabPackage);
+                        self.dataZipLesson=arrZipPlan[0];
+                    })
 
-                if(self.urls)
-                {
-                    self.dataZipLesson = self.urls.filter( item => item.package_id==tabPackage);
-                    setTimeout(function (){
-                        KTMenu.createInstances();
-                    }, 0)
-                    return   self.dataZipLesson=self.dataZipLesson[0];
-                }
+                },0)
             },
             importDevice(){
                 $('#kt_modal_create_app').modal('show');
@@ -1294,8 +1246,6 @@
                                     'lessonIds':res.lesson_ids
                                 }
                             })
-                           self.lessonPackagePlans=data;
-                            console.log(self.lessonPackagePlans);
                             self.lessonPackagePlans.forEach(function (e) {
                                 if(e.package_id==self.tabLessonContent)
                                 {
@@ -1419,9 +1369,14 @@
                 } else {
                     this.errors = {};
                     toastr.success(res.message);
-                    location.replace('/xadmin/plans/edit?id=' + this.entry.id);
-
-
+                    let self=this;
+                    setTimeout(function () {
+                        $.get('/xadmin/plans/dataZipLessonPlan',function (res) {
+                            let arrZipPackage= res.data.filter(item => item.plan_id==self.entry.id)
+                            let dataPackage=arrZipPackage.filter(item => item.package_id==self.tabLessonContent)
+                            self.dataZipLesson=dataPackage[0];
+                        })
+                    },0)
                     if (!this.entry.id) {
                         location.replace('/xadmin/plans/edit?id=' + this.entry.id);
                     }

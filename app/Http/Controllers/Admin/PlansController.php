@@ -779,8 +779,6 @@ class PlansController extends AdminBaseController
                     }
                 }
                 $entry->save();
-                ZipPlanLesson::where('package_id', $dataLesson['package'])->delete();
-                ZipPlanLesson::create(['package_id' => $dataLesson['package'], 'plan_id' => $entry->id]);
             }
             return [
                 'code' => 0,
@@ -1115,13 +1113,13 @@ class PlansController extends AdminBaseController
                     'message' => 'Không tìm thấy',
                 ];
             }
-            PackageLesson::create(['plan_id' => $entry->id, 'status' => 'new']);
+          $package= PackageLesson::create(['plan_id' => $entry->id, 'status' => 'new']);
+            ZipPlanLesson::create(['plan_id'=>$entry->id,'package_id'=>$package->id]);
             return [
                 'code' => 0,
                 'message' => 'Đã cập nhật',
             ];
         }
-
     }
 
     public function downloadLesson(Request $req)
