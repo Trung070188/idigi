@@ -821,6 +821,7 @@
             },
             tabPackageLesson: function (tabPackage = '') {
                 $('#kt_billing_year').show();
+                console.log(this.dataAddLessonPlan);
 
                 this.tabLessonContent = tabPackage;
                 console.log(this.lessonPackagePlans);
@@ -1273,22 +1274,41 @@
                     package: this.package
                 }, false);
                 this.isLoading = false;
-                if (res.errors) {
-                    this.errors = res.errors;
-                    return;
-                }
                 if (res.code) {
                     toastr.error(res.message);
                 } else {
                     this.errors = {};
                     toastr.success(res.message);
-                    location.replace('/xadmin/plans/edit?id=' + this.entry.id);
+                    $('#kt_modal_invite').modal('hide');
+                    let self =this;
 
+                    setTimeout(function ()
+                    {
+                        $.get('/xadmin/plans/dataPackage',function (res) {
+                            let dataPackage= res.data.filter(item => item.plan_id==self.entry.id)
+                            // return self.lessonPackagePlans=dataPackage;
+                            let data= dataPackage.map(res =>{
+                                return{
+                                    'package_id':res.id,
+                                    'plan_id':res.plan_id,
+                                    'lessonIds':res.lesson_ids
+                                }
+                            })
+                           self.lessonPackagePlans=data;
+                            console.log(self.lessonPackagePlans);
+                            self.lessonPackagePlans.forEach(function (e) {
+                                if(e.package_id==self.tabLessonContent)
+                                {
+                                    self.dataAddLessonPlan=[];
+                                   e.lessonIds.forEach(function (e1) {
+                                      let array=self.entries.filter(item => item.id==e1)
+                                      self.dataAddLessonPlan.push(array[0]);
 
-                    if (!this.entry.id) {
-                        location.replace('/xadmin/plans/edit?id=' + this.entry.id);
-                    }
-
+                                   })
+                                }
+                            })
+                        })
+                    },0);
                 }
 
             },
