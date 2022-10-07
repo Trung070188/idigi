@@ -103,16 +103,18 @@
                             <div class="row">
                                <div class="form-group col-lg-2">
                                     <label>Create by</label>
-                                    <select class="form-control form-select">
-                                        <option></option>
+                                    <select class="form-control form-select" v-model="filter.created_by">
+                                        <option value="0">All</option>
+                                        <option v-for="create in createBy" :value="create.id">{{create.full_name}}</option>
                                     </select>
-                               </div> 
+                               </div>
                                <div class="form-group col-lg-2">
                                     <label>Assign to</label>
-                                    <select class="form-control form-select">
-                                        <option></option>
+                                    <select class="form-control form-select" v-model="filter.user_id">
+                                        <option value="0">All</option>
+                                        <option v-for="assign in assignTo" :value="assign.id">{{assign.full_name}}</option>
                                     </select>
-                               </div> 
+                               </div>
                                <div class="form-group col-lg-2">
                                     <label>Status</label>
                                     <select class="form-control form-select" v-model="filter.status" required>
@@ -123,7 +125,7 @@
                                         <option value="waiting ">Waiting </option>
                                         <option value="ready">Ready</option>
                                     </select>
-                               </div> 
+                               </div>
                                <div class="form-group col-lg-2">
                                     <label>Deployed</label>
                                     <select class="form-control form-select">
@@ -131,7 +133,7 @@
                                         <option value="Yes">Yes</option>
                                         <option value="No">No</option>
                                     </select>
-                               </div> 
+                               </div>
                                <div class="form-group col-lg-4">
                                     <label>Creation date</label>
                                      <Daterangepicker v-model="filter.created" readonly></Daterangepicker>
@@ -141,7 +143,7 @@
                                                         <rect x="7.41422" y="6" width="16" height="2" rx="1" transform="rotate(45 7.41422 6)" fill="black" style="fill:red"/>
                                             </svg>
                                         </span>
-                               </div> 
+                               </div>
                             </div>
                             <div style="margin: auto 0">
                                 <button type="button" class="btn btn-primary" @click="doFilter($event)">Search
@@ -239,9 +241,6 @@
                         </table>
                         <div class="d-flex pl-9 pr-9 mb-8">
                             <div class="col-sm-12 col-md-5 d-flex align-items-center justify-content-center justify-content-md-start">
-                                <!--<div class="mr-2">
-                                    <label>Records per page:</label>
-                                </div>-->
                                 <div>
                                     <select class="form-select form-select-sm form-select-solid" v-model="limit" @change="changeLimit">
                                         <option value="25">25</option>
@@ -286,7 +285,10 @@
                 keyword: $q.keyword || '',
                 name:$q.name || '',
                 status:$q.status || '',
+                user_id:$q.user_id || '',
+                created_by:$q.created_by || '',
                 created: $q.created || '',
+
             };
             for (var key in filter) {
                 if (filter[key] != '') {
@@ -300,6 +302,8 @@
                     },
                 ],
                 permissions,
+                createBy:$json.createBy || [],
+                assignTo:$json.assignTo || [],
                 entry:'',
                 devices:[],
                 entries: [],

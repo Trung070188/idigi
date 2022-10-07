@@ -67,8 +67,26 @@ class PlansController extends AdminBaseController
     {
         $title = 'Plan';
         $component = 'PlanIndex';
+        $users=User::query()->orderby('id','desc')->get();
+        $createBy=[];
+        $assignTo=[];
+        foreach ($users as $user)
+        {
+            foreach ($user->roles as $role)
+            {
+                if($role->role_name=='Super Administrator')
+                {
+                    $createBy[]=$user;
+                }
+                if($role->role_name=='IT')
+                {
+                    $assignTo[]=$user;
+                }
+            }
+        }
         $jsonData = [
-
+            'createBy'=>$createBy,
+            'assignTo'=>$assignTo,
         ];
         return view('admin.layouts.vue', compact('title', 'component', 'jsonData'));
     }
@@ -840,6 +858,14 @@ class PlansController extends AdminBaseController
         if($req->status)
         {
             $query->where('status', 'LIKE', '%' . $req->status . '%');
+        }
+        if($req->user_id)
+        {
+            $query->where('user_id', 'LIKE', '%' . $req->user_id . '%');
+        }
+        if($req->created_by)
+        {
+            $query->where('created_by', 'LIKE', '%' . $req->created_by . '%');
         }
 
        $query->createdIn($req->created);
