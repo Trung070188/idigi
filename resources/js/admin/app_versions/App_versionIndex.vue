@@ -61,8 +61,8 @@
                         class="d-flex justify-content-end"
                         data-kt-customer-table-toolbar="base">
                         <a>
-                            <button class="btn btn-primary button-create" style="margin:0 0 0 15px" @click="showModalUpload()" v-if=" appIds=='' && windowIds==''">
-                                <i class="bi bi-upload mr-1"></i></i>Create App
+                            <button  class="btn btn-primary button-create" style="margin:0 0 0 15px" @click="showModalUpload()" v-if=" appIds=='' && windowIds=='' && permissions['022']">
+                                <i class="bi bi-upload mr-1"></i>Create App
                             </button>
                         </a>
 
@@ -173,14 +173,14 @@
                                     data-kt-menu="true">
                                     <!--begin::Menu item-->
                                     <div class="menu-item px-3">
-                                        <a :href="entry.url" class="menu-link px-3">Download</a>
+                                        <a v-if="permissions['023']" :href="entry.url" class="menu-link px-3">Download</a>
                                     </div>
                                     <div class="menu-item px-3">
                                         <a v-if="entry.is_default==0" @click="showSetDefaultModal(entry.id)"
                                            class="menu-link px-3">Set as Default</a>
                                     </div>
                                     <div class="menu-item px-3">
-                                        <a @click="removeApp(entry.id)"
+                                        <a v-if="permissions['024']" @click="removeApp(entry.id)"
                                            data-kt-subscriptions-table-filter="delete_row"
                                            class="menu-link text-danger px-3">Remove</a>
                                     </div>
