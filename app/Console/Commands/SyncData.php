@@ -152,7 +152,9 @@ class SyncData extends Command
                     $name = explode(':', $lesson->name);
                     if(@$oldStructure['sublesson']){
                         foreach ($oldStructure['sublesson'] as $key1 => $subLesson){
-                            $inventory = Inventory::where('old_id',@$subLesson['idSublesson'] )->first();
+                            $inventory = Inventory::where('old_id',@$subLesson['idSublesson'] )
+                                ->where('level', 'pri')
+                                ->first();
                             $link = '';
 
                             if($inventory && @$inventory->virtual_path){
@@ -230,16 +232,22 @@ class SyncData extends Command
                        if($structure){
                            if(@$structure['sublesson']){
                                $inventories= $structure['sublesson'];
-                               $newLesson = Lesson::where('old_id', $lesson->id)->first();
+                               $newLesson = Lesson::where('old_id', $lesson->id)
+                                   ->where('level', 'pri')
+                                   ->first();
                                foreach ($inventories as $inventory){
-                                    $newInventory = Inventory::where('old_id', $inventory['idSublesson'])->first();
+                                    $newInventory = Inventory::where('old_id', $inventory['idSublesson'])
+                                        ->where('level', 'pri')
+                                        ->first();
                                     if($newLesson && $newInventory){
                                         LessonInventory::updateOrCreate([
                                             'lesson_id' => @$newLesson->id,
                                             'inventory_id' => @$newInventory->id,
+                                            'level' =>'pri',
                                         ],[
                                             'lesson_id' => @$newLesson->id,
                                             'inventory_id' => @$newInventory->id,
+                                            'level' =>'pri',
                                         ]);
                                     }
                                }
