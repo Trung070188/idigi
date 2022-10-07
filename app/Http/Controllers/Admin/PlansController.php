@@ -68,7 +68,7 @@ class PlansController extends AdminBaseController
         $title = 'Plan';
         $component = 'PlanIndex';
         $jsonData = [
-           
+
         ];
         return view('admin.layouts.vue', compact('title', 'component', 'jsonData'));
     }
@@ -1061,6 +1061,24 @@ class PlansController extends AdminBaseController
             'code' => 0,
             'message' => 'Đã xóa',
             'lesson' => $stringLesson
+        ];
+
+    }
+    public function removeAllLesson(Request $req)
+    {
+        $dataAll=$req->all();
+        PackageLesson::updateorCreate(
+            [
+                'id' => $dataAll['viewPackage']
+            ],
+            [
+                'lesson_ids' => Null,
+                    'status'=>'new'
+            ]
+        );
+        return [
+            'code' => 0,
+            'message' => 'Đã xóa',
         ];
 
     }

@@ -158,7 +158,7 @@
                                         </select>
                                         <error-label :errors="errors.idRoleIt"></error-label>
                                     </div>
-                        
+
                                 </div>
                                 <div class="row">
                                     <div class="form-group col-lg-4">
@@ -823,7 +823,7 @@
                 $('#kt_billing_year').show();
 
                 this.tabLessonContent = tabPackage;
-                console.log(this.tabLessonContent);
+                console.log(this.lessonPackagePlans);
                 let self = this;
                 for(const e of self.lessonPackagePlans)
                 {
@@ -916,18 +916,11 @@
             },
             async deleteAllLesson()
             {
-              let self=this;
-              for(const e of self.lessonPackagePlans)
-              {
-                  if(e.package_id==self.tabLessonContent)
-                  {
-                      for( const e1 of self.viewLessonIds)
-                      {
-                          let array=e.lessonIds.filter(item=>item !==e1);
-                          e.lessonIds = array;
-                          let packageLesson = e.lessonIds
-                          const res = await $post('/xadmin/plans/deleteLesson', {
-                              packageLesson,
+                        let self=this;
+
+
+                          const res = await $post('/xadmin/plans/removeAllLesson', {
+                              ids:self.viewLessonIds,
                               entry: self.entry,
                               viewPackage: self.tabLessonContent
                           });
@@ -937,13 +930,30 @@
                               toastr.success(res.message);
                               self.viewLessonIds=[];
                               self.allViewLessonSelected=false;
-                               self.dataAddLessonPlan= self.dataAddLessonPlan.filter(item => item.id !==e1);
-                              // location.replace('/xadmin/plans/edit?id=' + self.entry.id);
-                          }
+                              self.lessonPackagePlans.forEach(function (e) {
+                                  if(e.package_id==self.tabLessonContent)
+                                  {
+                                     self.dataAddLessonPlan=[];
+                                  }
+                              })
+                              setTimeout(function ()
+                              {
+                                  $.get('/xadmin/plans/dataPackage',function (res) {
+                                      console.log(res.data);
 
-                      }
-                  }
-              }
+                                      let dataPackage= res.data.filter(item => item.plan_id==self.entry.id)
+                                      let data= dataPackage.map(res =>{
+                                          return{
+                                              'package_id':res.id,
+                                              'plan_id':res.plan_id,
+                                              'lessonIds':res.lesson_ids
+                                          }
+                                      })
+                                    return self.lessonPackagePlans=data;
+                                  })
+                              },0);
+
+                          }
             },
             async deletePackageLesson(tabLessonContent)
             {
@@ -1141,8 +1151,13 @@
                 if (this.allViewLessonSelected ) {
                     const selected = this.dataAddLessonPlan.map((u) => u.id);
                     this.viewLessonIds = selected;
-                } else {
-                    this.viewLessonIds = [];
+                }
+                else {
+                    let self = this;
+                    self.lessonPackagePlans.forEach(function (e1) {
+                        e1.viewLessonIds = [];
+                    })
+                    self.lessons = [];
                 }
             },
             updateViewLessonCheckAll()
@@ -1152,6 +1167,15 @@
                 } else {
                     this.allViewLessonSelected = false;
                 }
+                this.lessons=[];
+                let self=this;
+                self.lessonPackagePlans.forEach(function (e3) {
+                    self.entries.forEach(function (e4) {
+                        if (e4.id == e3) {
+                            self.lessons.push(e3);
+                        }
+                    })
+                })
 
             },
 
