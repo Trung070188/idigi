@@ -232,9 +232,13 @@ class SyncDataSec extends Command
                        if($structure){
                            if(@$structure['sublesson']){
                                $inventories= $structure['sublesson'];
-                               $newLesson = Lesson::where('old_id', $lesson->id)->first();
+                               $newLesson = Lesson::where('old_id', $lesson->id)
+                                   ->where('level', 'sec')
+                                   ->first();
                                foreach ($inventories as $inventory){
-                                    $newInventory = Inventory::where('old_id', $inventory['idSublesson'])->first();
+                                    $newInventory = Inventory::where('old_id', $inventory['idSublesson'])
+                                        ->where('level', 'sec')
+                                        ->first();
                                     if($newLesson && $newInventory){
                                         LessonInventory::updateOrCreate([
                                             'lesson_id' => @$newLesson->id,
