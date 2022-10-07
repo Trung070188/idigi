@@ -50,7 +50,7 @@ class SyncDataSec extends Command
     public function handle()
     {
 
-       /* //Đồng bộ file và inventory
+        /*//Đồng bộ file và inventory
        \DB::connection('mysql3')->table('inventories')
             //->where('id', '>',209)
             ->chunkById(100, function ($inventories) {
@@ -143,7 +143,7 @@ class SyncDataSec extends Command
                     echo 'Sync inventory: '.$inventory->id.PHP_EOL;
 
                 }
-            });
+            });*/
         //Đồng bộ lesson
         \DB::connection('mysql3')->table('lessons')
             ->chunkById(100, function ($lessons) {
@@ -154,7 +154,9 @@ class SyncDataSec extends Command
                     $name = explode(':', $lesson->name);
                     if(@$oldStructure['sublesson']){
                         foreach ($oldStructure['sublesson'] as $key1 => $subLesson){
-                            $inventory = Inventory::where('old_id',@$subLesson['idSublesson'] )->first();
+                            $inventory = Inventory::where('old_id',@$subLesson['idSublesson'] )
+                                ->where('level', 'sec')
+                                ->first();
                             $link = '';
 
                             if($inventory && @$inventory->virtual_path){
@@ -221,7 +223,7 @@ class SyncDataSec extends Command
 
                     echo 'Sync lesson: ' . $lesson->id . PHP_EOL;
                 }
-            });*/
+            });
 
         //Đồng bộ inventory và lesson
         \DB::connection('mysql3')->table('lessons')
@@ -243,9 +245,11 @@ class SyncDataSec extends Command
                                         LessonInventory::updateOrCreate([
                                             'lesson_id' => @$newLesson->id,
                                             'inventory_id' => @$newInventory->id,
+                                            'level' =>'sec',
                                         ],[
                                             'lesson_id' => @$newLesson->id,
                                             'inventory_id' => @$newInventory->id,
+                                            'level' =>'sec'
                                         ]);
                                     }
                                }

@@ -143,7 +143,7 @@ class SyncData extends Command
                 }
             });*/
         //Đồng bộ lesson
-      /*  \DB::connection('mysql2')->table('lessons')
+        \DB::connection('mysql2')->table('lessons')
             ->chunkById(100, function ($lessons) {
                 foreach ($lessons as $lesson) {
                     $userCreate = User::where('username', $lesson->created_by)->first();
@@ -152,7 +152,9 @@ class SyncData extends Command
                     $name = explode(':', $lesson->name);
                     if(@$oldStructure['sublesson']){
                         foreach ($oldStructure['sublesson'] as $key1 => $subLesson){
-                            $inventory = Inventory::where('old_id',@$subLesson['idSublesson'] )->first();
+                            $inventory = Inventory::where('old_id',@$subLesson['idSublesson'] )
+                                ->where('level', 'pri')
+                                ->first();
                             $link = '';
 
                             if($inventory && @$inventory->virtual_path){
@@ -219,7 +221,7 @@ class SyncData extends Command
 
                     echo 'Sync lesson: ' . $lesson->id . PHP_EOL;
                 }
-            });*/
+            });
 
         //Đồng bộ inventory và lesson
         \DB::connection('mysql2')->table('lessons')
@@ -241,9 +243,11 @@ class SyncData extends Command
                                         LessonInventory::updateOrCreate([
                                             'lesson_id' => @$newLesson->id,
                                             'inventory_id' => @$newInventory->id,
+                                            'level' =>'pri',
                                         ],[
                                             'lesson_id' => @$newLesson->id,
                                             'inventory_id' => @$newInventory->id,
+                                            'level' =>'pri',
                                         ]);
                                     }
                                }
