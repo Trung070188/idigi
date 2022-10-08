@@ -317,7 +317,7 @@
                                                         <tr v-for="(lesson,index) in dataAddLessonPlan" >
                                                             <td class="">
                                                                 <div class="form-check form-check-sm form-check-custom form-check-solid">
-                                                                    <input class="form-check-input" type="checkbox" v-model="viewLessonIds" :value="lesson.id" @change="updateViewLessonCheckAll(lessonPackagePlan.id)">
+                                                                    <input class="form-check-input" type="checkbox" v-model="viewLessonIds" :value="lesson.id" @change="updateViewLessonCheckAll()">
                                                                 </div>
                                                             </td>
                                                             <td>{{index+1}}</td>
@@ -796,6 +796,9 @@
                         }
                     }
                 }
+
+                //call lại bảng ZipPlanLesson
+
                 setTimeout(function () {
                     $.get('/xadmin/plans/dataZipLessonPlan',function (res) {
                         let array=res.data.filter(item => item.plan_id==self.entry.id);
@@ -816,6 +819,7 @@
                 console.log(tabLessonContent);
                 this.package = tabLessonContent;
             },
+        // xoa lesson theo từng id
             async deleteLesson(deleteLessons) {
                 let self = this;
                 for (const e of self.lessonPackagePlans) {
@@ -838,10 +842,12 @@
                     }
                 }
             },
+            // dung select để xóa lesson view
             async deleteAllLesson()
             {
                         let self=this;
                         self.abc=[];
+                        // lấy Id của lesson cập nhật lại vào bảng package lesson
                         let array=self.lessonPackagePlans.filter(item => item.package_id==self.tabLessonContent);
                                 self.viewLessonIds.forEach(function (e1) {
 
@@ -860,26 +866,34 @@
                               toastr.success(res.message);
                               self.viewLessonIds=[];
                               self.allViewLessonSelected=false;
-                              console.log(self.dataZipLesson);
 
-
+                                    //view lesson theo packagelesson khi delete all
                                   self.lessonPackagePlans.forEach(function (e) {
+                                      
                                       if(e.package_id==self.tabLessonContent)
                                       {
-                                          if(self.abc.length==array[0].length)
+                                          if(e.lessonIds.length==0)
                                           {
                                               self.dataAddLessonPlan=[];
                                           }
                                           else {
-                                              self.abc.forEach(function (e1) {
-                                                  self.dataAddLessonPlan.filter(item =>item.id!==e1);
-                                              })
+                                      let dataLesson=[];
+                                      self.abc.forEach(function(e1)
+                                      {
+                                          self.dataAddLessonPlan.forEach(function(e2)
+                                          {
+                                              if(e1==e2.id)
+                                              {
+                                                  dataLesson.push(e2);
+                                              }
+                                          })
+                                      })
+                                       self.dataAddLessonPlan=dataLesson;
                                           }
                                       }
                                   })
 
-
-
+                                //call lại bảng PackageLesson
                               setTimeout(function ()
                               {
                                   $.get('/xadmin/plans/dataPackage',function (res) {
@@ -930,6 +944,8 @@
             backIndex() {
                 window.location.href = '/xadmin/plans/index';
             },
+
+            // luu plan
             async save() {
                 this.isLoading = true;
                 const res = await $post('/xadmin/plans/save', {
@@ -958,8 +974,9 @@
 
                 }
             },
+
+            // validate device khi import 
             async saveValidateImportDevice() {
-                // this.errors = {};
                 if (this.$refs.uploader.files) {
                     const files = this.$refs.uploader.files;
                     const formData = new FormData();
@@ -1007,6 +1024,7 @@
                     }
                 }
             },
+            // save device vào db khi khi các device qua validate
             async saveImport() {
                 if (this.doNotImport == '') {
                     {
@@ -1034,6 +1052,8 @@
                     location.replace('/xadmin/plans/index');
                 }
             },
+
+            // export devive
             async exportDevice() {
                 const res = await $post('/xadmin/plans/exportDevice', {
                     csrf: window.$csrf,
@@ -1050,9 +1070,11 @@
                 params['limit'] = this.limit;
                 $router.setQuery(params)
             },
+
             selectLessonAll() {
                 if (this.allLessonSelected)
                 {
+                    console.log('1');
                     const selected=this.entries.map((u)=>u.id);
                     let self=this;
                     self.lessonPackagePlans.forEach(function (e){
@@ -1092,13 +1114,16 @@
             {
 
                 if (this.allViewLessonSelected ) {
+                    console.log('1');
                     const selected = this.dataAddLessonPlan.map((u) => u.id);
                     this.viewLessonIds = selected;
                 }
+                
                 else {
                     let self = this;
-                    self.lessonPackagePlans.forEach(function (e1) {
-                        e1.viewLessonIds = [];
+                    self.lessonPackagePlans.forEach(function (e) {
+                        e.lessonIds = [];
+                        self.viewLessonIds=e.lessonIds
                     })
                     self.lessons = [];
                 }
@@ -1178,7 +1203,8 @@
                     this.device = [];
                 }
             },
-            async saveDevice() {
+
+           async saveDevice() {
                 this.isLoading = true;
                 const res = await $post('/xadmin/plans/saveDevice', {
                     idRoleIt: this.idRoleIt,
@@ -1207,7 +1233,7 @@
                 }
             },
 
-
+            // save lesson: thêm lesson_ids vào bảng PackageLesson
             async addLesson() {
                 this.isLoading = true;
                 const res = await $post('/xadmin/plans/planLesson', {
@@ -1252,33 +1278,36 @@
                 }
 
             },
-            async sentAdmin() {
-                this.isLoading = true;
-                const res = await $post('/xadmin/plans/sentAdmin', {entry: this.entry}, false);
-                this.isLoading = false;
-                if (res.errors) {
-                    this.errors = res.errors;
-                    return;
-                }
-                if (res.code) {
-                    toastr.error(res.message);
-                } else {
-                    this.errors = {};
-                    toastr.success(res.message);
-                    location.replace('/xadmin/plans/edit?id=' + this.entry.id);
+            // async sentAdmin() {
+            //     this.isLoading = true;
+            //     const res = await $post('/xadmin/plans/sentAdmin', {entry: this.entry}, false);
+            //     this.isLoading = false;
+            //     if (res.errors) {
+            //         this.errors = res.errors;
+            //         return;
+            //     }
+            //     if (res.code) {
+            //         toastr.error(res.message);
+            //     } else {
+            //         this.errors = {};
+            //         toastr.success(res.message);
+            //         location.replace('/xadmin/plans/edit?id=' + this.entry.id);
 
 
-                    if (!this.entry.id) {
-                        location.replace('/xadmin/plans/edit?id=' + this.entry.id);
-                    }
+            //         if (!this.entry.id) {
+            //             location.replace('/xadmin/plans/edit?id=' + this.entry.id);
+            //         }
 
-                }
+            //     }
 
-            },
+            // },
             doFilter() {
 
                 $router.setQuery(this.filter)
             },
+
+            // data all lesson
+
             async load() {
                 let query = $router.getQuery();
                 this.$loading(true);
@@ -1292,6 +1321,7 @@
             onPageChange(page) {
                 $router.updateQuery({page: page})
             },
+
             // add packageLesson
             async addPackageLesson() {
                 this.isLoading = true;
@@ -1341,6 +1371,8 @@
                     }
                 }
             },
+
+            //download lesson khi da zip xong: link url trong bảng zip_plan_lesson
             async downloadLesson(tabLessonContent) {
                 this.isLoading = true;
                 const res = await $post('/xadmin/plans/downloadLesson', {
@@ -1373,29 +1405,32 @@
 
                 }
             },
-            async sentSale() {
-                this.isLoading = true;
-                const res = await $post('/xadmin/plans/sentSale', {entry: this.entry}, false);
-                this.isLoading = false;
-                if (res.errors) {
-                    this.errors = res.errors;
-                    return;
-                }
-                if (res.code) {
-                    toastr.error(res.message);
-                } else {
-                    this.errors = {};
-                    toastr.success(res.message);
-                    location.replace('/xadmin/plans/index');
+            // async sentSale() {
+            //     this.isLoading = true;
+            //     const res = await $post('/xadmin/plans/sentSale', {entry: this.entry}, false);
+            //     this.isLoading = false;
+            //     if (res.errors) {
+            //         this.errors = res.errors;
+            //         return;
+            //     }
+            //     if (res.code) {
+            //         toastr.error(res.message);
+            //     } else {
+            //         this.errors = {};
+            //         toastr.success(res.message);
+            //         location.replace('/xadmin/plans/index');
 
 
-                    if (!this.entry.id) {
-                        location.replace('/xadmin/plans/edit?id=' + this.entry.id);
-                    }
+            //         if (!this.entry.id) {
+            //             location.replace('/xadmin/plans/edit?id=' + this.entry.id);
+            //         }
 
-                }
+            //     }
 
-            },
+            // },
+
+            //export kế hoạch triển khai cho IT
+
              exportPlan()
             {
                 let packageIds = [];
@@ -1406,6 +1441,8 @@
                 '&packageLessonPlan=' + JSON.stringify(this.lessonPackagePlans)+
                 '&dataDevice=' + JSON.stringify(this.data);
             },
+
+            //download mẫu template excel add device
             downloadTemplate()
             {
                 window.location.href= '/xadmin/plans/downloadTemplate';
