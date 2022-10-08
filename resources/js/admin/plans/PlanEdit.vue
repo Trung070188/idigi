@@ -778,7 +778,6 @@
             },
             tabPackageLesson: function (tabPackage = '') {
                 $('#kt_billing_year').show();
-                console.log(this.dataAddLessonPlan);
                 this.tabLessonContent = tabPackage;
                 let self = this;
                 for(const e of self.lessonPackagePlans)
@@ -816,7 +815,6 @@
             },
             addLessonPackage: function (tabLessonContent = '') {
                 $('#kt_modal_invite').modal('show');
-                console.log(tabLessonContent);
                 this.package = tabLessonContent;
             },
         // xoa lesson theo từng id
@@ -924,8 +922,6 @@
                     setTimeout(function ()
                     {
                         $.get('/xadmin/plans/dataPackage',function (res) {
-                          console.log(res.data);
-
                             let dataPackage= res.data.filter(item => item.plan_id==self.entry.id)
                            // return self.lessonPackagePlans=dataPackage;
                            let data= dataPackage.map(res =>{
@@ -1038,7 +1034,6 @@
                         }, false);
                         this.$loading(false);
                         if (res.code) {
-                            console.log('1')
                             toastr.error(res.message);
                         } else {
                             this.errors = {};
@@ -1074,7 +1069,6 @@
             selectLessonAll() {
                 if (this.allLessonSelected)
                 {
-                    console.log('1');
                     const selected=this.entries.map((u)=>u.id);
                     let self=this;
                     self.lessonPackagePlans.forEach(function (e){
@@ -1114,17 +1108,13 @@
             {
 
                 if (this.allViewLessonSelected ) {
-                    console.log('1');
                     const selected = this.dataAddLessonPlan.map((u) => u.id);
                     this.viewLessonIds = selected;
                 }
                 
                 else {
                     let self = this;
-                    self.lessonPackagePlans.forEach(function (e) {
-                        e.lessonIds = [];
-                        self.viewLessonIds=e.lessonIds
-                    })
+                    self.viewLessonIds=[];
                     self.lessons = [];
                 }
             },
@@ -1351,7 +1341,6 @@
                             // dataPackage.className = 'active';
                           // self.lessonPackagePlans.push(dataPackage);
                           //  self.tabPackageLesson(self.tabLessonContent);
-                            console.log(self.tabLessonContent);
                             let data= dataPackage.map(rec =>{
                                 return{
                                     'package_id':rec.id,
