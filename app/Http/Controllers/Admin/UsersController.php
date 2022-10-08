@@ -643,6 +643,26 @@ class UsersController extends AdminBaseController
 //            }
             $entry->fill($data);
             $entry->save();
+         $userUnits= UserUnit::query()->where('user_id',$entry->id)->get();
+         $schoolUnitIds=[];
+         $schoolCourseIds=[];
+        foreach($userUnits as $userUnit)
+        {
+            if($userUnit->school_id!=$entry->school_id)
+            {
+                $schoolUnitIds[]=$userUnit->school_id;
+            }
+        }
+        UserUnit::whereIn('school_id',$schoolUnitIds)->where('user_id',$entry->id)->delete();
+        $userCousers=UserCourseUnit::query()->where('user_id',$entry->id)->get();
+        foreach($userCousers as $userCouser)
+        {
+            if($userCouser->school_id!=$entry->school_id)
+            {
+                $schoolCourseIds[]=$userCouser->school_id;
+            }
+        }
+        UserCourseUnit::whereIn('school_id',$schoolCourseIds)->where('user_id',$entry->id)->delete();
             $schoolId = @$entry->schools->id;
 
             UserRole::where('user_id', $entry->id)->delete();
