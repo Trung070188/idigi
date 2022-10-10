@@ -118,7 +118,7 @@ class AppVersionsController extends AdminBaseController
 
 
         $rules = [
-//            'name' => 'required|unique:app_versions,name',
+           'version' => 'required',
             'type' => 'required',
             'file_0' => 'required',
 //            'release_date' => 'required',
@@ -139,11 +139,24 @@ class AppVersionsController extends AdminBaseController
 
 
         $fileExe = $this->uploadFile($file0);
-        if($file1!=null)
+        if($fileExe['code']==3)
         {
-            $fileUpdate = $this->uploadFile($file1);
+            return [
+                'message'=>'The installation file is not in the correct format'
+            ];
         }
 
+        if($file1!=null)
+        {
+
+            $fileUpdate = $this->uploadFile($file1);
+            if($fileUpdate['code']==3)
+            {
+                return [
+                    'message'=>'The update OTA file is not the correct format'
+                ];
+            }
+        }
 
         $data = [
             'is_default'=>$req->is_default,
@@ -161,7 +174,6 @@ class AppVersionsController extends AdminBaseController
         $entry->fill($data);
        if($entry->is_default=='false')
        {
-        //    dd(1);
            $entry->is_default=0;
            $entry->save();
 
@@ -185,6 +197,11 @@ class AppVersionsController extends AdminBaseController
         $y = date('Y');
         $m = date('m');
 
+        $allowed = [
+            'exe','rar',
+        ];
+
+
         $dir = public_path("files/app_version/{$y}/{$m}");
 
         if (!is_dir($dir)) {
@@ -193,6 +210,11 @@ class AppVersionsController extends AdminBaseController
 
         $info = pathinfo($file['name']);
         $extension = strtolower($info['extension']);
+        if (!in_array($extension, $allowed)) {
+            return [
+                'code' => 3,
+            ];
+        }
 
         $hash = sha1(uniqid());
         $newFilePath = $dir.'/'.$hash.'.'.$extension;
@@ -201,6 +223,7 @@ class AppVersionsController extends AdminBaseController
         $newUrl = url("/files/app_version/{$y}/{$m}/{$hash}.{$extension}");
 
         return [
+            'code'=>1,
             'url' => $newUrl,
             'path' => $newFilePath
         ];
