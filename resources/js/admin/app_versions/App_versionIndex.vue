@@ -244,7 +244,7 @@
                                     <error-label :errors="errors.file_0"></error-label>
                                 </div>
                                 <div class="form-group">
-                                    <label>Update OTA file <span class="required"></span></label>
+                                    <label>Update OTA file </label>
                                     <input type="file" ref="uploader1" class="form-control-file"
                                            accept=".zip,.rar,.7zip">
                                     <error-label :errors="errors.file_1"></error-label>
@@ -267,7 +267,7 @@
                                 <div class="form-group">
                                     <label>Version <span class="required"></span></label>
                                     <input type="text" class="form-control" v-model="model.version">
-                                    <error-label></error-label>
+                                    <error-label :errors="errors.version"></error-label>
                                 </div>
                                 <!--                                <div class="form-group">-->
                                 <!--                                    <label>Release date <span class="required"></span></label>-->
@@ -276,7 +276,7 @@
 
                                 <!--                                </div>-->
                                 <div class="form-group">
-                                    <label>Release Note <span class="required"></span></label>
+                                    <label>Release Note </label>
                                     <textarea type="text" class="form-control" v-model="model.release_note"/>
                                     <error-label></error-label>
                                 </div>

@@ -174,7 +174,7 @@
                     self.notification=res.data.notification;
                     self.it=res.data.it;
                 })
-               if(solan===50){
+               if(solan===20){
                    clearInterval(notifications);
                }
 
