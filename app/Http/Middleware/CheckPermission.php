@@ -56,9 +56,15 @@ class CheckPermission
                 return $next($request);
             }
         }
-        $roles = \App\Models\RoleHasPermission::whereIn('role_id', $roleIds)
+        $roles = \App\Models\RoleHasPermission::whereIn('role_has_permissions.role_id', $roleIds)
+            ->join('permissions', 'permissions.id', '=', 'role_has_permissions.permission_id')
+            ->join('group_permissions', 'group_permissions.id', '=', 'permissions.group_permission_id')
             ->with('permission')
+            ->orderBy('group_permissions.order', 'ASC')
+            ->orderBy('permissions.order', 'ASC')
+            ->select(['role_has_permissions.role_id', 'role_has_permissions.permission_id'])
             ->get();
+
 
         foreach ($roles as $role){
             if($role->permission){
