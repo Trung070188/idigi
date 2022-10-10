@@ -868,7 +868,9 @@ class PlansController extends AdminBaseController
             $query = Plan::query()->orderBy('id', 'desc');
         }
         if ($req->keyword) {
-            $query->where('name', 'LIKE', '%' . $req->keyword . '%');
+            $query->where('name', 'LIKE', '%' . $req->keyword . '%')->orWhereHas('users',function ($q) use ($req){
+                $q->where('full_name','LIKE', '%' . $req->keyword . '%');
+            });
 
         }
         if($req->name)

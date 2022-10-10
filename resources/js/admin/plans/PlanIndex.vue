@@ -189,8 +189,8 @@
                                 <th class="">Created by</th>
                                 <th class="">Assign to</th>
                                 <th class="">Creation date</th>
-                                <th class="">Devices</th>
                                 <th class="">Due date</th>
+                                <th>Expire date</th>
                                 <th class="">Status</th>
                                 <th>Deployed</th>
                                 <th></th>
@@ -210,8 +210,8 @@
                                 <td class="">{{entry.created_by}}</td>
                                 <td class="" >{{entry.assign_to}}</td>
                                 <td class="" >{{d(entry.created_at)}}</td>
-                                <td>{{entry.lengthDevice.length}}</td>
                                 <td  class="" >{{d(entry.due_at)}}</td>
+                                <td>{{d(entry.expire_date)}}</td>
                                 <td   class="">{{entry.status}}</td>
                                 <th class=""></th>
                                 <td class="">

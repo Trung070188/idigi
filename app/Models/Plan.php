@@ -34,4 +34,8 @@ class Plan extends BaseModel
     {
         return $this->hasMany(PackageLesson::class,'plan_id');
     }
+    public function users()
+    {
+        return $this->belongsTo(User::class,'user_id');
+    }
 }
