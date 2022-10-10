@@ -509,7 +509,7 @@ class PlansController extends AdminBaseController
                 foreach ($deviceList as  $device ) {
                     foreach ($device as $key => $dev) {
 
-                        if ($key > 6 ) {
+                        if ($key > 6 && $dev[0]!=null) {
                             $item = [];
                             $item['device_name'] = $dev[0];
                             $item['type'] = $dev[1];
@@ -529,12 +529,24 @@ class PlansController extends AdminBaseController
                             else{
                                 $item['device_uid'] = $dev[3];
                             }
-                            $validator = Validator::make($item, [
+                            if($item['expire_date']!=null)
+                            {
+                                $validator = Validator::make($item, [
+                                    'device_name' => ['required'],
+                                    'device_uid' => ['required'],
+                                    'type' => 'required',
+                                    'expire_date' => ['date_format:d/m/Y', 'before_or_equal:' . $dayExpireDevice]
+                                ]);
+                            }
+                            if($item['expire_date']==null)
+                            {
+                                $validator = Validator::make($item, [
                                 'device_name' => ['required'],
                                 'device_uid' => ['required'],
                                 'type' => 'required',
-                                'expire_date' => ['date_format:d/m/Y', 'before_or_equal:' . $dayExpireDevice]
                             ]);
+                            }
+
                             if ($validator->fails()) {
                                 $item['error'] = $validator->errors()->messages();
                                 $code = 2;//Có lỗi
@@ -637,7 +649,14 @@ class PlansController extends AdminBaseController
                     $device->status = 2;
                     $device->secret_key = Str::random(10);
                     $device->plan_id = $entry->id;
-                    $device->expire_date = Carbon::createFromFormat('d/m/Y H:i:s', $import['expire_date'])->format('Y-m-d H:i:s');
+                    if($import['expire_date']!=null)
+                    {
+                        $device->expire_date = Carbon::createFromFormat('d/m/Y', $import['expire_date'])->format('Y-m-d H:i:s');
+                    }
+                    if($import['expire_date']==null)
+                    {
+                        $device->expire_date = $entry->expire_date;
+                    }
                     $device->user_id = $dataImport['idRoleIt'];
                     $device->save();
                 }
@@ -850,6 +869,7 @@ class PlansController extends AdminBaseController
         }
         if ($req->keyword) {
             $query->where('name', 'LIKE', '%' . $req->keyword . '%');
+
         }
         if($req->name)
         {
