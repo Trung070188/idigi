@@ -392,7 +392,7 @@
                         </div>
                          <datepicker readonly v-model="deviceExpireDate" class="form-control mb-4" ></datepicker>
                          <span v-if="deviceExpireDate!=''" class="svg-icon svg-icon-2 svg-icon-lg-1 me-0" @click="deviceExpireDateClear">
-                                            <svg type="button" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" style="float: right;margin: -32px 3px 0px;">
+                                            <svg type="button" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" style="float: right;margin: -45px 3px 0px;">
                                             <rect opacity="0.5" x="6" y="17.3137" width="16" height="2" rx="1" transform="rotate(-45 6 17.3137)" fill="black" style="fill:red"/>
                                                         <rect x="7.41422" y="6" width="16" height="2" rx="1" transform="rotate(45 7.41422 6)" fill="black" style="fill:red"/>
                                             </svg>
@@ -867,7 +867,7 @@
 
                                     //view lesson theo packagelesson khi delete all
                                   self.lessonPackagePlans.forEach(function (e) {
-                                      
+
                                       if(e.package_id==self.tabLessonContent)
                                       {
                                           if(e.lessonIds.length==0)
@@ -971,7 +971,7 @@
                 }
             },
 
-            // validate device khi import 
+            // validate device khi import
             async saveValidateImportDevice() {
                 if (this.$refs.uploader.files) {
                     const files = this.$refs.uploader.files;
@@ -984,6 +984,7 @@
                     for (let i = 0; i < files.length; i++) {
                         formData.append('file_' + i, files[i]);
                         formData.append('expire_date', this.entry.expire_date);
+                        formData.append('plan_id', this.entry.id);
                     }
 
                     $('#overlay').show();
@@ -1111,7 +1112,7 @@
                     const selected = this.dataAddLessonPlan.map((u) => u.id);
                     this.viewLessonIds = selected;
                 }
-                
+
                 else {
                     let self = this;
                     self.viewLessonIds=[];
@@ -1213,7 +1214,8 @@
                 } else {
                     this.errors = {};
                     toastr.success(res.message);
-                    location.replace('/xadmin/plans/edit?id=' + this.entry.id);
+                    // location.replace('/xadmin/plans/edit?id=' + this.entry.id);
+
 
 
                     if (!this.entry.id) {

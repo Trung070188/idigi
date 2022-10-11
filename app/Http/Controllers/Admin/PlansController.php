@@ -394,7 +394,27 @@ class PlansController extends AdminBaseController
         }
 
         $v = Validator::make($data, $rules,$dataRole);
+        $v->after(function ($validate) use ($data,$dataRole)
+        {
+           $existDeviceName=UserDevice::query()->where('plan_id',$data['id'])->where('device_name',$dataRole['deviceName'])->first();
+            $token = $dataRole['deviceUid'];
+            try {
+                $decoded = JWT::decode($token, new Key(env('SECRET_KEY'), 'HS256'));
+                $dataRole['deviceUid']=$decoded->device_uid;
+            }catch (\Exception $e)
+            {
 
+            }
+           $existDeviceUid=UserDevice::query()->where('plan_id',$data['id'])->where('device_uid',$dataRole['deviceUid'])->first();
+           if($existDeviceName)
+           {
+               $validate->errors()->add('deviceName','The device name has already been taken.');
+           }
+            if($existDeviceUid)
+            {
+                $validate->errors()->add('deviceUid','The device uid has already been taken.');
+            }
+        });
         if ($v->fails()) {
             return [
                 'code' => 2,
@@ -500,6 +520,7 @@ class PlansController extends AdminBaseController
             $newUrl = url("/uploads/excel_import/{$y}/{$m}/{$hash}.{$extension}");
             $sheets = Excel::toCollection(new DeviceImport(), "{$y}/{$m}/{$hash}.{$extension}", 'excel-import');
             $dayExpireDevice = (Carbon::parse($data['expire_date'])->format('dd/mm/YYYY'));
+            $planId=$data['plan_id'];
             $deviceLists[] = $sheets;
             $validations = [];
             $error = [];
@@ -520,8 +541,6 @@ class PlansController extends AdminBaseController
                                 try {
                                     $decoded = JWT::decode($item['device_uid'], new Key(env('SECRET_KEY'), 'HS256'));
                                     $item['device_uid'] = $decoded->device_uid;
-                                    // dd($decoded->device_uid);
-
                                 }
                                 catch (\Exception $e) {
                                 }
@@ -537,6 +556,19 @@ class PlansController extends AdminBaseController
                                     'type' => 'required',
                                     'expire_date' => ['date_format:d/m/Y', 'before_or_equal:' . $dayExpireDevice]
                                 ]);
+
+                                $validator->after(function ($validate) use ($item,$planId){
+                                    $existDeviceName=UserDevice::query()->where('plan_id',$planId)->where('device_name',$item['device_name'])->first();
+                                       if($existDeviceName)
+                                        {
+                                            $validate->errors()->add('deviceName','The device name has already been taken.');
+                                        }
+                                    $existDeviceUid=UserDevice::query()->where('plan_id',$planId)->where('device_uid',$item['device_uid'])->first();
+                                        if($existDeviceUid)
+                                        {
+                                            $validate->errors()->add('deviceUid','The device uid has already been taken.');
+                                        }
+                                });
                             }
                             if($item['expire_date']==null)
                             {
@@ -544,8 +576,21 @@ class PlansController extends AdminBaseController
                                 'device_name' => ['required'],
                                 'device_uid' => ['required'],
                                 'type' => 'required',
-                            ]);
+                                ]);
+                                $validator->after(function ($validate) use ($item,$planId){
+                                    $existDeviceName=UserDevice::query()->where('plan_id',$planId)->where('device_name',$item['device_name'])->first();
+                                    if($existDeviceName)
+                                    {
+                                        $validate->errors()->add('deviceName','The device name has already been taken.');
+                                    }
+                                    $existDeviceUid=UserDevice::query()->where('plan_id',$planId)->where('device_uid',$item['device_uid'])->first();
+                                    if($existDeviceUid)
+                                    {
+                                        $validate->errors()->add('deviceUid','The device uid has already been taken.');
+                                    }
+                                });
                             }
+
 
                             if ($validator->fails()) {
                                 $item['error'] = $validator->errors()->messages();
