@@ -154,7 +154,7 @@
                             <div class="col-lg-12">
                             <div class="row">
                                     <div class="form-group col-lg-8">
-                                        <label>Content Allocation <span class="text-danger">*</span></label>
+                                        <label>Content enrollment <span class="text-danger">*</span></label>
 
                                         <select class="form-control form-select " required v-model="allocationContentSchool"
                                                 @change="changeAllocationContent() ">

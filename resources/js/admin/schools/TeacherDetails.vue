@@ -2,17 +2,15 @@
     <div class="container-fluid">
         <ActionBar type="index"
                    :breadcrumbs="breadcrumbs" title = "Teacher Details"/>
-        <div class="modal fade" style="margin-right:50px;border:2px solid #333333  " id="delete" tabindex="-1" role="dialog"
-             aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered popup-main-1" role="document"
-                 style="max-width: 450px;">
-                <div class="modal-content box-shadow-main paymment-status" style="left:120px;text-align: center; padding: 20px 0px 55px;">
+        <div class="modal fade" style="" id="delete" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered popup-main-1" role="document" style="max-width: 450px;">
+                <div class="modal-content box-shadow-main paymment-status" style="padding: 0px 0px 30px;">
                     <div class="close-popup" data-dismiss="modal"></div>
                     <div class="swal2-icon swal2-warning swal2-icon-show">
                         <div class="swal2-icon-content" style="margin: 0px 25px 0px ">!</div>
                     </div>
                     <div class="swal2-html-container">
-                        <p >Are you sure to delete this school?</p>
+                        <p >Are you sure to delete this teacher?</p>
                     </div>
                     <div class="swal2-actions">
                         <button type="submit" id="kt_modal_new_target_submit" class="swal2-confirm btn fw-bold btn-danger" @click="remove(entry)">
@@ -26,24 +24,21 @@
             </div>
         </div>
 
-        <div class="modal fade" style="margin-right:50px " id="deviceConfirm" tabindex="-1" role="dialog"
-             aria-labelledby="deviceConfirm"
-             aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered popup-main-1" role="document"
-                 style="max-width: 500px;">
-
-                <div  class="modal-content box-shadow-main paymment-status" style="margin-right:20px; left:140px">
+        <div class="modal fade" style="" id="deviceConfirm" tabindex="-1" role="dialog" aria-labelledby="deviceConfirm" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered popup-main-1" role="document" style="max-width: 450px;">
+                <div class="modal-content box-shadow-main paymment-status" style="padding: 0px 0px 30px;">
                     <div class="close-popup" data-dismiss="modal"></div>
-                    <h3 class="popup-title success" style="text-align: center;margin:15px 0px 0px" >Delete device </h3>
-                    <div class="content" style="text-align: center;" v-for="device in user_device" v-if="device.id==currId">
-                        <p>Bạn có chắc chắn muốn xóa thiết bị “{{device.device_name}}”
-                            của giáo viên “{{entry.full_name}}”??</p>
+                    <div class="swal2-icon swal2-warning swal2-icon-show">
+                        <div class="swal2-icon-content" style="margin: 0px 25px 0px ">!</div>
                     </div>
-                    <div class="form-group d-flex justify-content-between" style="margin: auto;margin-bottom: 20px">
-                        <button class="btn btn-primary ito-btn-add" data-dismiss="modal" style="margin-right: 5px" data-bs-dismiss="modal">
-                            Cancel
+                    <div class="swal2-html-container" v-for="device in user_device" v-if="device.id==currId">
+                        <p>Are you sure to delete the device "{{device.device_name}}"?</p>
+                    </div>
+                    <div class="swal2-actions">
+                        <button type="submit" class="swal2-confirm btn fw-bold btn-danger" @click="remove_device(device)">
+                            <span class="indicator-label">Yes, delete!</span>
                         </button>
-                        <button v-for="device in user_device" v-if="device.id==currId" class="btn btn-danger ito-btn-small" data-dismiss="modal" @click="remove_device(device)" >Yes</button>
+                        <button type="reset" id="kt_modal_new_target_cancel" class="swal2-cancel btn fw-bold btn-active-light-primary" data-bs-dismiss="modal" style="margin: 0px 8px 0px">No, cancel</button>
                     </div>
                 </div>
             </div>
@@ -111,7 +106,7 @@
                                     </div>
                                 </div>
                                 <hr style="margin-top:5px">
-                                <h4>Content Allocated</h4>
+                                <h4>Content enrollment</h4>
                                 <div class="row">
 
                                     <div class="form-group col-sm-10"  @change="saveTeacherCourse()">
