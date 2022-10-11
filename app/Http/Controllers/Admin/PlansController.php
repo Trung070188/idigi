@@ -823,9 +823,9 @@ class PlansController extends AdminBaseController
         $data = $req->get('entry');
 
         $rules = [
-            'name' => 'max:255',
-            'created_by' => 'numeric',
-            'due_at' => 'date_format:Y-m-d H:i:s',
+//            'name' => 'max:255',
+//            'created_by' => 'numeric',
+//            'due_at' => 'date_format:Y-m-d ',
         ];
 
         $v = Validator::make($data, $rules);

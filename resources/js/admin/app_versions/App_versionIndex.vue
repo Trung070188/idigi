@@ -8,8 +8,7 @@
                  aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered popup-main-1" role="document"
                      style="max-width: 450px;">
-                    <div class="modal-content box-shadow-main paymment-status"
-                         style="left:120px;text-align: center; padding: 20px 0px 55px;">
+                    <div class="modal-content box-shadow-main paymment-status" style="padding: 0px 0px 30px;">
                         <div class="close-popup" data-dismiss="modal"></div>
                         <div class="swal2-icon swal2-warning swal2-icon-show">
                             <div class="swal2-icon-content" style="margin: 0px 24.5px 0px ">!</div>
@@ -62,7 +61,7 @@
                         data-kt-customer-table-toolbar="base">
                         <a>
                             <button  class="btn btn-primary button-create" style="margin:0 0 0 15px" @click="showModalUpload()" v-if=" appIds=='' && windowIds=='' && permissions['022']">
-                                <i class="bi bi-upload mr-1"></i>Create App
+                                <i class="bi bi-upload mr-1"></i>New Application
                             </button>
                         </a>
 
@@ -152,7 +151,7 @@
                             <td class="css_test" v-text="entry.release_note"
                                 @click="showReleaseNote(entry.release_note)"></td>
                             <!--                            <td> {{ d2(entry.release_date) }}</td>-->
-                            <td style="color:#1aaf21;" v-if="entry.is_default==1">Default</td>
+                            <td style="color:#1aaf21;" class="" v-if="entry.is_default==1"><span class="badge badge-light-success">Release</span></td>
                             <td v-if="entry.is_default==0"><span class="badge badge-light-warning">Draft</span></td>
                             <td class="">
                                 <a href="list.html#" class="btn btn-light btn-active-light-primary btn-sm"
@@ -168,16 +167,14 @@
 														</span>
                                     <!--end::Svg Icon--></a>
                                 <!--begin::Menu-->
-                                <div
-                                    class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-bold fs-7 w-125px py-4"
-                                    data-kt-menu="true">
+                                <div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-bold fs-7 w-auto py-4" data-kt-menu="true">
                                     <!--begin::Menu item-->
                                     <div class="menu-item px-3">
                                         <a v-if="permissions['023']" :href="entry.url" class="menu-link px-3">Download</a>
                                     </div>
                                     <div class="menu-item px-3">
-                                        <a v-if="entry.is_default==0" @click="showSetDefaultModal(entry.id)"
-                                           class="menu-link px-3">Set as Default</a>
+                                        <a v-if="entry.is_default==0" class="menu-link px-3"
+                                           @click="showSetDefaultModal(entry.id)">Release this version</a>
                                     </div>
                                     <div class="menu-item px-3">
                                         <a v-if="permissions['024']" @click="removeApp(entry.id)"
@@ -220,15 +217,15 @@
 
             </div>
             <div class="modal" id="uploadApp" tabindex="-1">
-                <div class="modal-dialog">
+                <div class="modal-dialog modal-dialog-centered popup-main-1">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title fw-bolder text-center w-100">Create new application</h5>
+                            <h3 class="modal-title fw-bolder text-center w-100">Create new application</h3>
                             <!--<button type="button" class="close" data-bs-dismiss="modal">
                                 &times;
                             </button>-->
                         </div>
-                        <div class="modal-body">
+                        <div class="modal-body px-10">
 
                             <div id="overlay">
                                 <div class="la-3x text">
@@ -459,8 +456,7 @@
              aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered popup-main-1" role="document"
                  style="max-width: 500px;">
-                <div class="modal-content box-shadow-main paymment-status"
-                     style="left:140px;text-align: center; padding: 27px 0px 10px;">
+                <div class="modal-content box-shadow-main paymment-status" style="left:140px;text-align: center; padding: 27px 0px 10px;">
                     <div class="close-popup" data-dismiss="modal"></div>
                     <div class="content">
                         <p style="word-break: break-word;margin-right: 20px;margin-left: 20px;}">{{release_note}}</p>
