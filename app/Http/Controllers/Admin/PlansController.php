@@ -940,8 +940,11 @@ class PlansController extends AdminBaseController
         {
             $query->where('created_by', 'LIKE', '%' . $req->created_by . '%');
         }
-
-       $query->createdIn($req->created);
+        if($req->due_at)
+        {
+            $query->where('due_at', 'LIKE', '%' . $req->due_at . '%');
+        }
+        $query->createdIn($req->created);
         $limit = 25;
         if ($req->limit) {
             $limit = $req->limit;
@@ -974,12 +977,10 @@ class PlansController extends AdminBaseController
                 'created_at' => $entry->created_at,
                 'status' => $entry->status,
                 'lengthDevice' => $lengthDevice,
-                'expire_date' => $entry->expire_date,
-                'due_at' => $entry->due_at,
+                'expire_date' =>Carbon::parse($entry->expire_date)->format('d/m/Y'),
+                'due_at' =>Carbon::parse($entry->due_at)->format('d/m/Y'),
             ];
-
         }
-
         return [
             'code' => 0,
             'data' => $data,

@@ -96,8 +96,14 @@
                                     <input class="form-control" v-model="filter.name" @keydown.enter="doFilter('name', filter.full_name, $event)" type="text" placeholder="Enter the lesson name"/>
                                </div>
                                 <div class="form-group col-lg-4">
-                                    <label>Due date</label>
-                                   <Datepicker  />
+                                    <label >Due date</label>
+                                   <Datepicker v-model="filter.due_at" @keydown.enter="doFilter('due_at', filter.due_at, $event)" readonly />
+                                    <span v-if="filter.due_at!==''" class="svg-icon svg-icon-2 svg-icon-lg-1 me-0" @click="filterClear">
+                                            <svg type="button" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" style="float: right;margin: -32px 3px 0px;">
+                                            <rect opacity="0.5" x="6" y="17.3137" width="16" height="2" rx="1" transform="rotate(-45 6 17.3137)" fill="black" style="fill:red"/>
+                                                        <rect x="7.41422" y="6" width="16" height="2" rx="1" transform="rotate(45 7.41422 6)" fill="black" style="fill:red"/>
+                                            </svg>
+                                        </span>
                                 </div>
                             </div>
                             <div class="row">
@@ -213,8 +219,8 @@
                                 <td class="">{{entry.created_by}}</td>
                                 <td class="" >{{entry.assign_to}}</td>
                                 <td class="" >{{d(entry.created_at)}}</td>
-                                <td  class="" >{{d(entry.due_at)}}</td>
-                                <td>{{d(entry.expire_date)}}</td>
+                                <td  class="" >{{(entry.due_at)}}</td>
+                                <td>{{(entry.expire_date)}}</td>
                                 <td   class="">{{entry.status}}</td>
                                 <th class=""></th>
                                 <td class="">
@@ -291,6 +297,7 @@
                 user_id:$q.user_id || '',
                 created_by:$q.created_by || '',
                 created: $q.created || '',
+                due_at:$q.due_at || '',
 
             };
             for (var key in filter) {
