@@ -621,6 +621,7 @@
                         type: ''
                     }
                     this.$refs.uploader.value = null;
+                    this.$refs.uploader1.value = null;
                     $router.on('/', this.load).init();
                     toastr.success(res.message);
                 }

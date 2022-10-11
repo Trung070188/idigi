@@ -277,7 +277,7 @@ class PlansController extends AdminBaseController
         }
 
         $data = $req->get('entry');
-        $current = Carbon::now();
+        $current = Carbon::now()->format('Y/m/d');
         $rules = [
             'name' => ['required'],
             'plan_description' => ['max:255'],
@@ -306,7 +306,12 @@ class PlansController extends AdminBaseController
             $rules['expire_date'] = ['required', 'after_or_equal:' . $current];
 
         }
-        $v = Validator::make($data, $rules);
+        $formatMessage = Carbon::now()->format('d/m/Y');
+        $message=[
+            'due_at.after_or_equal'=>'The due at must be a date after or equal to ' .$formatMessage,
+            'expire_date.after_or_equal'=>'The expire date must be a date after or equal to '  .$formatMessage
+        ];
+        $v = Validator::make($data, $rules,$message);
 
         if ($v->fails()) {
             return [
@@ -519,7 +524,7 @@ class PlansController extends AdminBaseController
             $ok = move_uploaded_file($file0['tmp_name'], $newFilePath);
             $newUrl = url("/uploads/excel_import/{$y}/{$m}/{$hash}.{$extension}");
             $sheets = Excel::toCollection(new DeviceImport(), "{$y}/{$m}/{$hash}.{$extension}", 'excel-import');
-            $dayExpireDevice = (Carbon::parse($data['expire_date'])->format('dd/mm/YYYY'));
+            $dayExpireDevice = (Carbon::parse($data['expire_date'])->format('d/m/Y'));
             $planId=$data['plan_id'];
             $deviceLists[] = $sheets;
             $validations = [];

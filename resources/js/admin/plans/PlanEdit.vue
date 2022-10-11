@@ -1047,6 +1047,11 @@
                                     let dataDevicePlan=res.data.filter(item => item.plan_id==self.entry.id)
                                     self.data=dataDevicePlan;
                                     $('#kt_modal_create_app').modal('hide');
+                                    self.$refs.uploader.value = null;
+                                    self.fileImport.length=0;
+                                    self.deviceError.length=0;
+
+
                                 })
                             },0)
                         }
@@ -1229,11 +1234,14 @@
                             let dataDevicePlan=res.data.filter(item => item.plan_id==self.entry.id)
                             self.data=dataDevicePlan;
                             $('#deviceConfirm').modal('hide');
-
+                           self.deviceExpireDate='';
+                           self.deviceName='';
+                           self.deviceUid='';
 
                         })
 
                     },0)
+
                     if (!this.entry.id) {
                         location.replace('/xadmin/plans/edit?id=' + entry.id);
                     }

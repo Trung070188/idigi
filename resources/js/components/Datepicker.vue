@@ -68,7 +68,7 @@
 
 
             var value =   this.value ? moment( this.value) : moment();
-            const format = 'DD/MM/YYYY HH:mm';
+            const format = 'DD/MM/YYYY';
 
             let minDate=  undefined;
             if (this.mindate === 'now') {
@@ -87,12 +87,12 @@
                 //minDate
 
             },  (start, end) => {
-                this.$emit('input', start.format('YYYY-MM-DD HH:mm:ss'));
+                this.$emit('input', start.format('YYYY-MM-DD'));
                 this.$el.value = start.format(format);
             });
 
             $(this.$el).on('apply.daterangepicker', function(ev, picker) {
-                self.$emit('input', picker.startDate.format('YYYY-MM-DD HH:mm:ss'));
+                self.$emit('input', picker.startDate.format('YYYY-MM-DD'));
                 self.$el.value = picker.endDate.format(format);
             });
 
