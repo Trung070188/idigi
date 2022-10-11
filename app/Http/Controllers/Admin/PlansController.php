@@ -460,7 +460,7 @@ class PlansController extends AdminBaseController
             return [
                 'code' => 0,
                 'message' => 'Đã cập nhật',
-                'id' => $entry->id
+                'id' => $entry->id,
             ];
         }
     }
@@ -1474,17 +1474,15 @@ class PlansController extends AdminBaseController
     public function dataZipLessonPlan(Request $req)
     {
         $zipLessonPlan = ZipPlanLesson::query()->orderBy('id', 'ASC')->get();
-//        $zipLessonPlanWaiting=[];
-//        foreach ($zipLessonPlanAlls as $zipLessonPlanAll)
-//        {
-//            if ($zipLessonPlanAll['status']=='waitting')
-//            {
-//                $zipLessonPlanWaiting[]=$zipLessonPlanAll->status;
-//            }
-//        }
-//        $zipLessonPlan=ZipPlanLesson::query()->whereNotIn('status',$zipLessonPlanWaiting)->get();
         return [
             'data' => $zipLessonPlan,
+        ];
+    }
+    public function dataDevice(Request $req)
+    {
+        $dataDevice=UserDevice::query()->whereNotNull('plan_id')->get();
+        return[
+          'data'=>$dataDevice
         ];
     }
     public function downloadTemplate() : BinaryFileResponse

@@ -1040,7 +1040,15 @@
                             this.errors = {};
                             this.exportDevicePlan = res.url;
                             toastr.success(res.message);
-                            location.replace('/xadmin/plans/index');
+                            let self=this;
+                            setTimeout(function () {
+                                $.get('/xadmin/plans/dataDevice',function (res) {
+                                    console.log(res)
+                                    let dataDevicePlan=res.data.filter(item => item.plan_id==self.entry.id)
+                                    self.data=dataDevicePlan;
+                                    $('#kt_modal_create_app').modal('hide');
+                                })
+                            },0)
                         }
                     }
                 }
@@ -1214,10 +1222,18 @@
                 } else {
                     this.errors = {};
                     toastr.success(res.message);
-                    // location.replace('/xadmin/plans/edit?id=' + this.entry.id);
+                    let self=this
+                    setTimeout(function () {
+                        $.get('/xadmin/plans/dataDevice',function (res) {
+                            console.log(res)
+                            let dataDevicePlan=res.data.filter(item => item.plan_id==self.entry.id)
+                            self.data=dataDevicePlan;
+                            $('#deviceConfirm').modal('hide');
 
 
+                        })
 
+                    },0)
                     if (!this.entry.id) {
                         location.replace('/xadmin/plans/edit?id=' + entry.id);
                     }
