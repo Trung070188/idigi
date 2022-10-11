@@ -604,7 +604,6 @@ class PlansController extends AdminBaseController
                             $validations[] = $item;
                         }
                     }
-                    dd($validations);
                 }
                 $fileError = [];
                 $fileImport = [];
