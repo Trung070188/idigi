@@ -103,14 +103,16 @@
                             <div class="row">
                                <div class="form-group col-lg-2">
                                     <label>Create by</label>
-                                    <select class="form-control form-select" v-model="filter.created_by">
+                                    <select class="form-control form-select" v-model="filter.created_by" required>
+                                        <option value="" disabled selected>search...</option>
                                         <option value="0">All</option>
                                         <option v-for="create in createBy" :value="create.id">{{create.full_name}}</option>
                                     </select>
                                </div>
                                <div class="form-group col-lg-2">
                                     <label>Assign to</label>
-                                    <select class="form-control form-select" v-model="filter.user_id">
+                                    <select class="form-control form-select" v-model="filter.user_id" required>
+                                        <option value="" disabled selected>search...</option>
                                         <option value="0">All</option>
                                         <option v-for="assign in assignTo" :value="assign.id">{{assign.full_name}}</option>
                                     </select>
@@ -128,8 +130,9 @@
                                </div>
                                <div class="form-group col-lg-2">
                                     <label>Deployed</label>
-                                    <select class="form-control form-select">
-                                        <option value="0">Action</option>
+                                    <select class="form-control form-select" required>
+                                        <option value="" disabled selected>Actions</option>
+                                        <option value="0">All</option>
                                         <option value="Yes">Yes</option>
                                         <option value="No">No</option>
                                     </select>
@@ -193,7 +196,7 @@
                                 <th>Expire date</th>
                                 <th class="">Status</th>
                                 <th>Deployed</th>
-                                <th></th>
+                                <th>Action</th>
 
                             </tr>
                             </thead>
@@ -395,5 +398,17 @@
 </script>
 
 <style scoped>
+    select:required:invalid {
+        color: #adadad;
+    }
+
+    option[value=""][disabled] {
+        display: none;
+    }
+
+    option {
+        color: black;
+    }
+
 
 </style>
