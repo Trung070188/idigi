@@ -131,7 +131,7 @@
                                         <label>Due date </label>
                                         <Datepicker v-if="roleAuth=='IT'" disabled v-model="entry.due_at" readonly/>
                                          <Datepicker v-if="roleAuth!='IT'"  v-model="entry.due_at" readonly/>
-                                         <span v-if="entry.due_at!=''" class="svg-icon svg-icon-2 svg-icon-lg-1 me-0" @click="dueAtClear">
+                                         <span v-if="entry.due_at!='' && roleAuth!='IT'" class="svg-icon svg-icon-2 svg-icon-lg-1 me-0" @click="dueAtClear">
                                             <svg type="button" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" style="float: right;margin: -32px 3px 0px;">
                                             <rect opacity="0.5" x="6" y="17.3137" width="16" height="2" rx="1" transform="rotate(-45 6 17.3137)" fill="black" style="fill:red"/>
                                                         <rect x="7.41422" y="6" width="16" height="2" rx="1" transform="rotate(45 7.41422 6)" fill="black" style="fill:red"/>
@@ -165,7 +165,7 @@
                                         <label>Expire date <span class="text-danger">*</span></label>
                                         <Datepicker v-if="roleAuth=='IT'" v-model="entry.expire_date" disabled  readonly/>
                                         <Datepicker v-if="roleAuth!='IT'" v-model="entry.expire_date" readonly/>
-                                        <span v-if="entry.expire_date!=''" class="svg-icon svg-icon-2 svg-icon-lg-1 me-0" @click="expireDateClear">
+                                        <span v-if="entry.expire_date!='' && roleAuth!='IT'" class="svg-icon svg-icon-2 svg-icon-lg-1 me-0" @click="expireDateClear">
                                             <svg type="button" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" style="float: right;margin: -32px 3px 0px;">
                                             <rect opacity="0.5" x="6" y="17.3137" width="16" height="2" rx="1" transform="rotate(-45 6 17.3137)" fill="black" style="fill:red"/>
                                                         <rect x="7.41422" y="6" width="16" height="2" rx="1" transform="rotate(45 7.41422 6)" fill="black" style="fill:red"/>
