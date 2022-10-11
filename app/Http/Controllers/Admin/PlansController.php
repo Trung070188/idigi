@@ -1029,7 +1029,7 @@ class PlansController extends AdminBaseController
 
         }
 
-        $query = Lesson::query()->orderBy('id', 'ASC');
+        $query = Lesson::query()->orderBy('name', 'ASC');
 
 
 //        $query->whereHas('planLesson', function ($q) use ($req) {
