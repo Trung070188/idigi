@@ -1461,7 +1461,7 @@ class PlansController extends AdminBaseController
                    'user_id' => $assignTo->id,
                    'device_uid' => $device['device_uid'],
                    'device_name' => $device['device_name'],
-                   'secret_key' => $device['secret_key'],
+                   'secret_key' => $entry->secret_key,
                    'create_time' => Carbon::now()->timestamp,
                    'expired' => strtotime($device['expire_date']),
                ];
