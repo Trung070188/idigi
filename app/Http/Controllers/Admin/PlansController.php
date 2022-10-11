@@ -942,7 +942,11 @@ class PlansController extends AdminBaseController
         }
 
        $query->createdIn($req->created);
-        $entries = $query->paginate();
+        $limit = 25;
+        if ($req->limit) {
+            $limit = $req->limit;
+        }
+        $entries = $query->paginate($limit);
         $data = [];
         $users = User::query()->orderBy('id', 'desc')->get();
         $devices = UserDevice::query()->whereNotNull('plan_id')->get();
