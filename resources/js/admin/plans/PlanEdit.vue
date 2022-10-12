@@ -185,7 +185,7 @@
                                             <li v-for="(packageLesson,index) in lessonPackagePlans" class="nav-item" role="presentation">
                                                 <a :id="'kt_billing_1year_tab' +index" class="package-lesson-link nav-link fs-5 fw-bold me-3" :class="packageLesson.className"
                                                    data-bs-toggle="tab" role="tab" href="#kt_billing_year"
-                                                   @click="tabPackageLesson(packageLesson.package_id)">Package lesson
+                                                   @click="tabPackageLesson(packageLesson.package_id)">Lesson package
                                                     {{index+1}}</a>
                                             </li>
                                             <li v-if="roleAuth=='Super Administrator'">
@@ -420,87 +420,128 @@
 
         <!-- BEGIN: MODAL IMPPORT DEVICE -->
         <div class="modal fade" id="kt_modal_create_app" tabindex="-1" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered mw-900px">
+            <div class="modal-dialog modal-dialog-centered mw-700px">
                 <div class="modal-content">
-                    <div class="modal-header">
-                        <h2>Import devices</h2>
-                        <div class="btn btn-sm btn-icon btn-active-color-primary" data-bs-dismiss="modal">
-                            <span class="svg-icon svg-icon-1">
-								<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                                     fill="none">
-									<rect opacity="0.5" x="6" y="17.3137" width="16" height="2" rx="1"
-                                          transform="rotate(-45 6 17.3137)" fill="black"/>
-									<rect x="7.41422" y="6" width="16" height="2" rx="1"
-                                          transform="rotate(45 7.41422 6)" fill="black"/>
-								</svg>
-							</span>
-                        </div>
-                    </div>
+                           <div class="text-center mt-10">
+                               <h2>Import devices</h2>
+                           </div>
+<!--                        <div class="btn btn-sm btn-icon btn-active-color-primary" data-bs-dismiss="modal">-->
+<!--                            <span class="svg-icon svg-icon-1">-->
+<!--								<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"-->
+<!--                                     fill="none">-->
+<!--									<rect opacity="0.5" x="6" y="17.3137" width="16" height="2" rx="1"-->
+<!--                                          transform="rotate(-45 6 17.3137)" fill="black"/>-->
+<!--									<rect x="7.41422" y="6" width="16" height="2" rx="1"-->
+<!--                                          transform="rotate(45 7.41422 6)" fill="black"/>-->
+<!--								</svg>-->
+<!--							</span>-->
+<!--                        </div>-->
+
+
                     <div class="modal-body py-lg-10 px-lg-10">
                         <div class="stepper stepper-pills stepper-column d-flex flex-column flex-xl-row flex-row-fluid"
                              id="kt_modal_create_app_stepper">
-                            <div
-                                class="d-flex justify-content-center justify-content-xl-start flex-row-auto w-100 w-xl-300px">
-                                <div class="stepper-nav ps-lg-10">
-                                    <div class="stepper-item current" data-kt-stepper-element="nav">
-                                        <div class="stepper-line w-40px"></div>
-                                        <div class="stepper-icon w-40px h-40px">
-                                            <i class="stepper-check fas fa-check"></i>
-                                            <span class="stepper-number">1</span>
-                                        </div>
-                                        <div class="stepper-label">
-                                            <h3 class="stepper-title">Upload file</h3>
-                                        </div>
-                                    </div>
-                                    <div class="stepper-item" data-kt-stepper-element="nav">
-                                        <div class="stepper-line w-40px"></div>
-                                        <div class="stepper-icon w-40px h-40px">
-                                            <i class="stepper-check fas fa-check"></i>
-                                            <span class="stepper-number">2</span>
-                                        </div>
-                                        <div class="stepper-label">
-                                            <h3 class="stepper-title">Validation</h3>
-                                        </div>
-                                    </div>
-                                    <div class="stepper-item" data-kt-stepper-element="nav">
-                                        <div class="stepper-line w-40px"></div>
-                                        <div class="stepper-icon w-40px h-40px">
-                                            <i class="stepper-check fas fa-check"></i>
-                                            <span class="stepper-number">3</span>
-                                        </div>
-                                        <div class="stepper-label">
-                                            <h3 class="stepper-title">Import process</h3>
-                                        </div>
-                                    </div>
-                                    <div class="stepper-item" data-kt-stepper-element="nav">
-                                        <div class="stepper-line w-40px"></div>
-                                        <div class="stepper-icon w-40px h-40px">
-                                            <i class="stepper-check fas fa-check"></i>
-                                            <span class="stepper-number">4</span>
-                                        </div>
-                                        <div class="stepper-label">
-                                            <h3 class="stepper-title">Completed</h3>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+<!--                            <div-->
+<!--                                class="d-flex justify-content-center justify-content-xl-start flex-row-auto w-100 w-xl-300px">-->
+<!--                                <div class="stepper-nav ps-lg-10">-->
+<!--                                    <div class="stepper-item current" data-kt-stepper-element="nav">-->
+<!--                                        <div class="stepper-line w-40px"></div>-->
+<!--                                        <div class="stepper-icon w-40px h-40px">-->
+<!--                                            <i class="stepper-check fas fa-check"></i>-->
+<!--                                            <span class="stepper-number">1</span>-->
+<!--                                        </div>-->
+<!--                                        <div class="stepper-label">-->
+<!--                                            <h3 class="stepper-title">Upload file</h3>-->
+<!--                                        </div>-->
+<!--                                    </div>-->
+<!--                                    <div class="stepper-item" data-kt-stepper-element="nav">-->
+<!--                                        <div class="stepper-line w-40px"></div>-->
+<!--                                        <div class="stepper-icon w-40px h-40px">-->
+<!--                                            <i class="stepper-check fas fa-check"></i>-->
+<!--                                            <span class="stepper-number">2</span>-->
+<!--                                        </div>-->
+<!--                                        <div class="stepper-label">-->
+<!--                                            <h3 class="stepper-title">Validation</h3>-->
+<!--                                        </div>-->
+<!--                                    </div>-->
+<!--                                    <div class="stepper-item" data-kt-stepper-element="nav">-->
+<!--                                        <div class="stepper-line w-40px"></div>-->
+<!--                                        <div class="stepper-icon w-40px h-40px">-->
+<!--                                            <i class="stepper-check fas fa-check"></i>-->
+<!--                                            <span class="stepper-number">3</span>-->
+<!--                                        </div>-->
+<!--                                        <div class="stepper-label">-->
+<!--                                            <h3 class="stepper-title">Import process</h3>-->
+<!--                                        </div>-->
+<!--                                    </div>-->
+<!--                                    <div class="stepper-item" data-kt-stepper-element="nav">-->
+<!--                                        <div class="stepper-line w-40px"></div>-->
+<!--                                        <div class="stepper-icon w-40px h-40px">-->
+<!--                                            <i class="stepper-check fas fa-check"></i>-->
+<!--                                            <span class="stepper-number">4</span>-->
+<!--                                        </div>-->
+<!--                                        <div class="stepper-label">-->
+<!--                                            <h3 class="stepper-title">Completed</h3>-->
+<!--                                        </div>-->
+<!--                                    </div>-->
+<!--                                </div>-->
+<!--                            </div>-->
                             <div class="flex-row-fluid py-lg-5 px-lg-15">
                                 <form class="form" novalidate="novalidate" id="kt_modal_create_app_form">
                                     <div class="current" data-kt-stepper-element="content">
                                         <div class="w-100">
                                             <div class="fv-row mb-10">
-                                                <div class="dropzone-panel mb-4">
-                                                    <label>File <span class="required"></span></label>
-                                                    <input type="file" ref="uploader" class="form-control-file"
-                                                           @change="saveValidateImportDevice">
+                                                <div  class="dropzone dropzone-queue mb-2 ">
+                                                    <label v-if="valueValidateImportDevice==0"  for="file-upload" class="btn btn-primary btn-active-primary btn-sm">
+                                                        Upload file
+                                                    </label>
+                                                    <label v-if="valueValidateImportDevice!=0"  >
+                                                        Validation result !
+                                                    </label>
+<!--                                                    <button for="file-upload" class="btn btn-primary" > Upload file</button>-->
+                                                    <input type="file" id="file-upload" ref="uploader" class="form-control-file" @change="importFileDevice">
                                                     <error-label></error-label>
+                                                    <div class="dropzone-items wm-200px"></div>
+
+                                                    <div class="dropzone-item p-5" v-if="fileUpLoad!=''">
+                                                        <!--begin::File-->
+                                                        <div class="dropzone-file">
+                                                            <div class="dropzone-filename text-dark" title="some_image_file_name.jpg">
+                                                                <span data-dz-name="">{{fileUpLoad}}</span>
+                                                                <strong>(
+                                                                    <span data-dz-size="">{{sizeFile}}</span>)</strong>
+                                                            </div>
+                                                            <div class="dropzone-error mt-0" data-dz-errormessage=""></div>
+                                                        </div>
+                                                        <!--end::File-->
+                                                        <!--begin::Progress-->
+<!--                                                        <div class="dropzone-progress">-->
+<!--                                                            <div class="progress bg-light-primary">-->
+<!--                                                                <div class="progress-bar bg-primary" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" data-dz-uploadprogress=""></div>-->
+<!--                                                            </div>-->
+<!--                                                        </div>-->
+                                                        <!--end::Progress-->
+                                                        <!--begin::Toolbar-->
+                                                        <div class="dropzone-toolbar">
+																		<span class="dropzone-start">
+																			<i class="bi bi-play-fill fs-3" @click="saveValidateImportDevice"></i>
+																		</span>
+<!--                                                            <span class="dropzone-cancel" data-dz-remove="" style="display: none;">-->
+<!--																			<i class="bi bi-x fs-3"></i>-->
+<!--																		</span>-->
+                                                            <span class="dropzone-delete" data-dz-remove="">
+																			<i class="bi bi-x fs-1" @click="removeFileDevice"></i>
+																		</span>
+                                                        </div>
+                                                        <!--end::Toolbar-->
+                                                    </div>
                                                 </div>
-                                                <div class="dropzone-panel mb-4  ">
+                                                <div v-if="valueValidateImportDevice==0" class="dropzone-panel mb-4  ">
                                                    <a class="btn btn-light btn-active-light-primary btn-sm" data-kt-menu-trigger="click" @click="downloadTemplate()" ><i class="bi bi-download mr-2"></i>Download template here</a>
 
                                                 </div>
 
-                                                <div class="d-flex flex-stack py-5 border-bottom border-gray-300 border-bottom-dashed">
+                                                <div v-if="valueValidateImportDevice!=0" class="d-flex flex-stack py-5 border-bottom border-gray-300 border-bottom-dashed">
                                                     <div class="d-flex align-items-center">
                                                         <div class="ms-6">
 
@@ -524,7 +565,7 @@
 
                                             </div>
 
-                                            <div
+                                            <div v-if="valueValidateImportDevice!=0"
                                                 class="d-flex flex-stack py-5 border-bottom border-gray-300 border-bottom-dashed">
                                                 <div class="d-flex align-items-center">
                                                     <div class="ms-6">
@@ -534,7 +575,7 @@
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <div class="d-flex">
+                                                <div class="d-flex" v-if="deviceError.length>0">
                                                     <div class="text-end">
                                                         <div class="fs-7 text-muted">
                                                         <a :href="validateFile" type="button" class="btn btn-primary">Export</a>
@@ -546,7 +587,7 @@
 
                                     </div>
 
-                                    <div class="d-flex flex-stack pt-10">
+                                    <div class="d-flex flex-stack pt-10" v-if="valueValidateImportDevice!=0">
                                         <div class="me-2">
                                             <button type="button" class="btn btn-lg btn-light-primary me-3"
                                                     data-kt-stepper-action="previous">
@@ -687,6 +728,9 @@
             };
 
             return {
+                valueValidateImportDevice:0,
+                sizeFile:'',
+                fileUpLoad:'',
                 deleteLessons:'',
                 deleteDevice:'',
                 viewLessonIds:[],
@@ -975,8 +1019,38 @@
             },
 
             // validate device khi import
+            async importFileDevice() {
+                console.log(this.$refs.uploader.files)
+                if (this.$refs.uploader.files) {
+                   let fileSize=(this.$refs.uploader.files[0].size.toString());
+                    if(fileSize.length < 7)
+                    {
+                        let size= `${Math.round(+fileSize/1024).toFixed(2)}kb`
+                        this.sizeFile=size;
+                    }
+                    else {
+                       let size= `${(Math.round(+fileSize/1024)/1000).toFixed(2)}MB`
+                        this.sizeFile=size;
+                    }
+
+                    this.fileUpLoad=this.$refs.uploader.files[0].name
+                    const files = this.$refs.uploader.files;
+                }
+            },
+            removeFileDevice(){
+            if(this.$refs.uploader.files)
+            {
+                this.fileUpLoad='';
+                this.$refs.uploader.value = null;
+                this.valueValidateImportDevice=0;
+
+            }
+
+            },
+
             async saveValidateImportDevice() {
                 if (this.$refs.uploader.files) {
+                    this.valueValidateImportDevice=1;
                     const files = this.$refs.uploader.files;
                     const formData = new FormData();
                     formData.append('_token', window.$csrf)
@@ -1051,6 +1125,8 @@
                                     self.data=dataDevicePlan;
                                     $('#kt_modal_create_app').modal('hide');
                                     self.$refs.uploader.value = null;
+                                    self.fileUpLoad='';
+                                    self.valueValidateImportDevice=0;
                                     self.fileImport.length=0;
                                     self.deviceError.length=0;
 
@@ -1510,6 +1586,9 @@
     100% {
         transform: rotate(360deg);
     }
+}
+input[type="file"] {
+    display: none;
 }
 
 </style>
