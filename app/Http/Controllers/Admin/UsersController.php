@@ -742,6 +742,7 @@ class UsersController extends AdminBaseController
                     }
                 },
             ],
+          'phone'=>['min:10']
 //            'password' => '|max:191|confirmed',
         ];
         if (!isset($data['id'])) {

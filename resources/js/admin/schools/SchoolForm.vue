@@ -31,7 +31,7 @@
                                 <div class="row">
                                      <div class="form-group col-lg-4">
                                         <label>School Name <span class="text-danger">*</span></label>
-                                        <input  v-model="entry.label"  class="form-control"
+                                        <input  v-model="entry.label"  class="form-control "
                                                placeholder="Nhập vào tên trường" >
                                         <error-label for="f_school_name" :errors="errors.label"></error-label>
 
@@ -56,7 +56,7 @@
                                 <div class="row">
                                     <div class="form-group col-lg-4">
                                         <label>Phone number </label>
-                                        <input  v-model="entry.school_phone"  class="form-control"
+                                        <input  v-model="entry.school_phone"  class="form-control noString"
                                                 placeholder="Nhập vào số điện thoại của trường" >
                                         <error-label for="f_school_name" :errors="errors.school_phone"></error-label>
 
@@ -64,14 +64,14 @@
 
                                     <div class="form-group col-lg-4">
                                         <label>No. of Device per user <span class="text-danger">*</span></label>
-                                        <input  v-model="entry.devices_per_user" class="form-control"
+                                        <input type="number" min="1" max="20" v-model="entry.devices_per_user" class="form-control"
                                                 placeholder="Nhập số lượng cho phép thiết bị của mỗi giáo viên" >
                                         <error-label  :errors="errors.devices_per_user"></error-label>
 
                                     </div>
                                     <div class="form-group col-lg-4">
                                         <label>No. of User <span class="text-danger">*</span></label>
-                                        <input  v-model="entry.number_of_users"  class="form-control"
+                                        <input type="number" min="1" max="10000" v-model="entry.number_of_users"  class="form-control"
                                                 placeholder="Nhập số lượng giáo viên" >
                                         <error-label  :errors="errors.number_of_users"></error-label>
 
@@ -203,6 +203,13 @@
                 isLoading: false,
                 errors: {}
             }
+        },
+        mounted() {
+            $('.noString').keypress(function (e) {
+                if (e.keyCode < 48 || e.keyCode > 57) {
+                    e.preventDefault();
+                }
+            })
         },
         methods: {
             changeAllocationContent() {
