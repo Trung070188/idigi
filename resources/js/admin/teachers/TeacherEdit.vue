@@ -10,11 +10,11 @@
                     <div class="swal2-icon swal2-warning swal2-icon-show">
                         <div class="swal2-icon-content" style="margin: 0px 25px 0px ">!</div>
                     </div>
-                    <div class="swal2-html-container" v-for="device in user_device" v-if="device.id==currId">
-                        <p>Are you sure to delete the device "{{device.device_name}}"?</p>
+                    <div class="swal2-html-container" >
+                        <p>Are you sure to delete the device "{{deviceTeacher.device_name}}"?</p>
                     </div>
                     <div class="swal2-actions">
-                        <button type="submit" class="swal2-confirm btn fw-bold btn-danger" @click="remove_device(device)">
+                        <button type="submit" class="swal2-confirm btn fw-bold btn-danger" @click="remove_device(deviceTeacher)">
                             <span class="indicator-label">Yes, delete!</span>
                         </button>
                         <button type="reset" id="kt_modal_new_target_cancel" class="swal2-cancel btn fw-bold btn-active-light-primary" data-bs-dismiss="modal" style="margin: 0px 8px 0px">No, cancel</button>
@@ -164,7 +164,7 @@
                                 <td v-text="device.device_name"></td>
                                 <td v-text="d(device.created_at)"></td>
                                 <td>
-                                    <a @click="modalDevice(device.id)" href="javascript:;" class="btn-trash deleted"><i
+                                    <a @click="modalDevice(device)" href="javascript:;" class="btn-trash deleted"><i
                                         class="fa fa-trash mr-1 deleted"></i></a>
                                 </td>
                             </tr>
@@ -174,7 +174,7 @@
                                 <td v-text="d(device.created_at)"></td>
                                 <td style="color: #f1c40f">Deleting request</td>
                                 <td>
-                                    <a @click="modalDevice(device.id)" href="javascript:;" class="btn-trash deleted"><i
+                                    <a @click="modalDevice(device)" href="javascript:;" class="btn-trash deleted"><i
                                         class="fa fa-trash mr-1 deleted"></i></a>
                                 </td>
 
@@ -280,6 +280,7 @@
                 }
             })
             return {
+                deviceTeacher:[],
                 allCourses:allCourses,
                 nameRole:5,
                 courseTeachers:$json.courseTeachers || {},
@@ -342,21 +343,18 @@
             deleteCourse: function (node, instanceId) {
                 node.courseTea = [];
             },
-            modalDevice(id) {
-                const that=this;
-                that.currId = id;
-                console.log(that.currId);
+            modalDevice:function(device=[]) {
                 $('#deviceConfirm').modal('show');
-
+                this.deviceTeacher=device;
             },
 
             backIndex() {
 
                 window.location.href = '/xadmin/users/index';
             },
-            async remove_device(entry) {
+            async remove_device(deviceTeacher) {
 
-                const res = await $post('/xadmin/users/removeDevice', {id: entry.id});
+                const res = await $post('/xadmin/users/removeDevice', {id: deviceTeacher.id});
 
                 if (res.code) {
                     toastr.error(res.message);
