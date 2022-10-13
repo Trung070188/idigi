@@ -123,8 +123,11 @@ class AppVersionsController extends AdminBaseController
             'file_0' => 'required',
 //            'release_date' => 'required',
         ];
+        $message=[
+            'file_0.required'=>'The installation file is required.'
+        ];
 
-        $v = Validator::make($req->all(), $rules);
+        $v = Validator::make($req->all(), $rules,$message);
 
         if ($v->fails()) {
             return [

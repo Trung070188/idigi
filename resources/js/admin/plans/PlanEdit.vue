@@ -291,7 +291,7 @@
                                                         <a class="menu-link px-3 " @click="addLessonPackage(tabLessonContent)" >Add lesson</a>
                                                     </div>
                                                     <div class="menu-item px-3" v-if="dataZipLesson.status=='waitting'">
-                                                        <a class="menu-link px-3 " @click="downloadLesson(tabLessonContent)"  >Zip package lesson</a>
+                                                        <a v-if="checkZipPackage[0].lessonIds.length>0" class="menu-link px-3 " @click="downloadLesson(tabLessonContent)"  >Zip package lesson</a>
                                                     </div>
                                                     <div class="menu-item px-3" v-if="roleAuth=='Super Administrator' && dataZipLesson.status=='done' ||  roleAuth=='Super Administrator' &&dataZipLesson.status=='waitting'">
                                                         <a class="menu-link px-3 text-danger "  @click="deletePackageLesson(tabLessonContent)" >Delete package lesson</a>
@@ -794,6 +794,7 @@
                 dataZipLesson:[],
                 improgress:'',
                 abc:'',
+                checkZipPackage:[],
 
             }
         },
@@ -830,6 +831,11 @@
                 $('#kt_billing_year').show();
                 this.tabLessonContent = tabPackage;
                 let self = this;
+                self.checkZipPackage=[];
+                let dataPackage=self.lessonPackagePlans.filter(item =>item.package_id==tabPackage);
+               self.checkZipPackage.push(dataPackage[0]);
+
+                console.log(self.checkZipPackage);
                 for(const e of self.lessonPackagePlans)
                 {
                     if(e.package_id==tabPackage)
