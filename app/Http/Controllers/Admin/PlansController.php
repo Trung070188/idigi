@@ -1444,8 +1444,8 @@ class PlansController extends AdminBaseController
                    'package_name'=>'Package lesson' . ' ' .$index ,
                  'plan_name'=>$entry->name,
                  'assign_to'=>$assignTo->full_name,
-                 'due_at'=>$entry->due_at,
-                 'expire_date'=>$entry->expire_date,
+                 'due_at'=>Carbon::parse($entry->due_at)->format('d/m/Y'),
+                 'expire_date'=>Carbon::parse($entry->expire_date)->format('d/m/Y'),
                    'lessons'=>$lessonsArr,
                ];
            }

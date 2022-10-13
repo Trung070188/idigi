@@ -6,7 +6,7 @@
 <br>
 <span>Assign to : {{$data['assign_to']}}</span>
 <br>
-<span>Due date :{{$data['due_at']}}</span>
+<span>Due date : {{$data['due_at']}}</span>
 <br>
 <span>Expire date : {{$data['expire_date']}}</span>
 <br>
