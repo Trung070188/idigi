@@ -204,6 +204,9 @@ class CreateFileDownloadLesson extends Command
             'url' => url($pathZipAll),
             'status' => 'done',
         ]);
+        Plan::where('id',$info['plan_id'])->update([
+           'status'=>'Ready'
+        ]);
         return url($pathZipAll);
     }
 }
