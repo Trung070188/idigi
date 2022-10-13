@@ -420,12 +420,11 @@
 
         <!-- BEGIN: MODAL IMPPORT DEVICE -->
         <div class="modal fade" id="kt_modal_create_app" tabindex="-1" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered mw-700px">
+            <div class="modal-dialog modal-dialog-centered mw-900px">
                 <div class="modal-content">
                            <div class="text-center mt-10">
                                <h2>Import devices</h2>
-                           </div>
-<!--                        <div class="btn btn-sm btn-icon btn-active-color-primary" data-bs-dismiss="modal">-->
+                           </div>0
 <!--                            <span class="svg-icon svg-icon-1">-->
 <!--								<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"-->
 <!--                                     fill="none">-->
@@ -441,39 +440,39 @@
                     <div class="modal-body py-lg-10 px-lg-10">
                         <div class="stepper stepper-pills stepper-column d-flex flex-column flex-xl-row flex-row-fluid"
                              id="kt_modal_create_app_stepper">
-<!--                            <div-->
-<!--                                class="d-flex justify-content-center justify-content-xl-start flex-row-auto w-100 w-xl-300px">-->
-<!--                                <div class="stepper-nav ps-lg-10">-->
-<!--                                    <div class="stepper-item current" data-kt-stepper-element="nav">-->
-<!--                                        <div class="stepper-line w-40px"></div>-->
-<!--                                        <div class="stepper-icon w-40px h-40px">-->
-<!--                                            <i class="stepper-check fas fa-check"></i>-->
-<!--                                            <span class="stepper-number">1</span>-->
-<!--                                        </div>-->
-<!--                                        <div class="stepper-label">-->
-<!--                                            <h3 class="stepper-title">Upload file</h3>-->
-<!--                                        </div>-->
-<!--                                    </div>-->
-<!--                                    <div class="stepper-item" data-kt-stepper-element="nav">-->
-<!--                                        <div class="stepper-line w-40px"></div>-->
-<!--                                        <div class="stepper-icon w-40px h-40px">-->
-<!--                                            <i class="stepper-check fas fa-check"></i>-->
-<!--                                            <span class="stepper-number">2</span>-->
-<!--                                        </div>-->
-<!--                                        <div class="stepper-label">-->
-<!--                                            <h3 class="stepper-title">Validation</h3>-->
-<!--                                        </div>-->
-<!--                                    </div>-->
-<!--                                    <div class="stepper-item" data-kt-stepper-element="nav">-->
-<!--                                        <div class="stepper-line w-40px"></div>-->
-<!--                                        <div class="stepper-icon w-40px h-40px">-->
-<!--                                            <i class="stepper-check fas fa-check"></i>-->
-<!--                                            <span class="stepper-number">3</span>-->
-<!--                                        </div>-->
-<!--                                        <div class="stepper-label">-->
-<!--                                            <h3 class="stepper-title">Import process</h3>-->
-<!--                                        </div>-->
-<!--                                    </div>-->
+                            <div
+                                class="d-flex justify-content-center justify-content-xl-start flex-row-auto w-100 w-xl-300px">
+                                <div class="stepper-nav ps-lg-10">
+                                    <div class="stepper-item current" data-kt-stepper-element="nav">
+                                        <div class="stepper-line w-40px"></div>
+                                        <div class="stepper-icon w-40px h-40px">
+                                            <i class="stepper-check fas fa-check"></i>
+                                            <span class="stepper-number">1</span>
+                                        </div>
+                                        <div class="stepper-label">
+                                            <h3 class="stepper-title">Upload file</h3>
+                                        </div>
+                                    </div>
+                                    <div class="stepper-item" data-kt-stepper-element="nav">
+                                        <div class="stepper-line w-40px"></div>
+                                        <div class="stepper-icon w-40px h-40px">
+                                            <i class="stepper-check fas fa-check"></i>
+                                            <span class="stepper-number">2</span>
+                                        </div>
+                                        <div class="stepper-label">
+                                            <h3 class="stepper-title">Validation</h3>
+                                        </div>
+                                    </div>
+                                    <div class="stepper-item" data-kt-stepper-element="nav">
+                                        <div class="stepper-line w-40px"></div>
+                                        <div class="stepper-icon w-40px h-40px">
+                                            <i class="stepper-check fas fa-check"></i>
+                                            <span class="stepper-number">3</span>
+                                        </div>
+                                        <div class="stepper-label">
+                                            <h3 class="stepper-title">Import process</h3>
+                                        </div>
+                                    </div>
 <!--                                    <div class="stepper-item" data-kt-stepper-element="nav">-->
 <!--                                        <div class="stepper-line w-40px"></div>-->
 <!--                                        <div class="stepper-icon w-40px h-40px">-->
@@ -484,8 +483,8 @@
 <!--                                            <h3 class="stepper-title">Completed</h3>-->
 <!--                                        </div>-->
 <!--                                    </div>-->
-<!--                                </div>-->
-<!--                            </div>-->
+                                </div>
+                            </div>
                             <div class="flex-row-fluid py-lg-5 px-lg-15">
                                 <form class="form" novalidate="novalidate" id="kt_modal_create_app_form">
                                     <div class="current" data-kt-stepper-element="content">
@@ -496,7 +495,7 @@
                                                         Upload file
                                                     </label>
                                                     <label v-if="valueValidateImportDevice!=0"  >
-                                                        Validation result !
+                                                        Validation result
                                                     </label>
 <!--                                                    <button for="file-upload" class="btn btn-primary" > Upload file</button>-->
                                                     <input type="file" id="file-upload" ref="uploader" class="form-control-file" @change="importFileDevice">
@@ -1269,8 +1268,8 @@
                     toastr.success(res.message);
                     this.deviceIds = [];
                     this.device = [];
+                    this.allDeviceSelected=false;
                 }
-
             },
             async removeDevice(deleteDevice)
             {
