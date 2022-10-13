@@ -50,7 +50,7 @@ class SyncDataSec extends Command
     public function handle()
     {
 
-        //Đồng bộ file và inventory
+       /* //Đồng bộ file và inventory
        \DB::connection('mysql3')->table('inventories')
             //->where('id', '>',209)
             ->chunkById(100, function ($inventories) {
@@ -144,7 +144,7 @@ class SyncDataSec extends Command
 
                 }
             });
-        //Đồng bộ lesson
+        //Đồng bộ lesson*/
         \DB::connection('mysql3')->table('lessons')
             ->chunkById(100, function ($lessons) {
                 foreach ($lessons as $lesson) {
@@ -158,13 +158,15 @@ class SyncDataSec extends Command
                                 ->where('level', 'sec')
                                 ->first();
                             $link = '';
+                            $fullLink = '';
 
                             if($inventory && @$inventory->virtual_path){
                                 $link = basename(public_path($inventory->virtual_path));
+                                $fullLink =  url(@$inventory->virtual_path);
                             }
 
                             $oldStructure['sublesson'][$key1]['link'] = $link;
-                            $oldStructure['sublesson'][$key1]['full_link'] = url(@$inventory->virtual_path);
+                            $oldStructure['sublesson'][$key1]['full_link'] = $fullLink;
                         }
                     }
 
