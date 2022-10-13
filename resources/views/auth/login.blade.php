@@ -76,7 +76,7 @@ License: For each use you must have a valid license purchased only from above li
 					<!--begin::Logo-->
 					<a href="/" class="mb-12">
 						<!--<img alt="Logo" src="/images/Logo_iDIGI.png" class="h-40px" />-->
-                        <img src="{{asset('/images/imgpsh_fullsize_anim.png')}}" style="height: 100px;"/>
+                        <img src="{{asset('/images/Logo_login_idigi.png')}}" style="height: 200px;"/>
 					</a>
 					<!--end::Logo-->
 					<!--begin::Wrapper-->
