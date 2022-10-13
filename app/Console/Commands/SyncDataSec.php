@@ -50,7 +50,7 @@ class SyncDataSec extends Command
     public function handle()
     {
 
-        /*//Đồng bộ file và inventory
+       /* //Đồng bộ file và inventory
        \DB::connection('mysql3')->table('inventories')
             //->where('id', '>',209)
             ->chunkById(100, function ($inventories) {
@@ -143,8 +143,8 @@ class SyncDataSec extends Command
                     echo 'Sync inventory: '.$inventory->id.PHP_EOL;
 
                 }
-            });*/
-        //Đồng bộ lesson
+            });
+        //Đồng bộ lesson*/
         \DB::connection('mysql3')->table('lessons')
             ->chunkById(100, function ($lessons) {
                 foreach ($lessons as $lesson) {
@@ -158,13 +158,15 @@ class SyncDataSec extends Command
                                 ->where('level', 'sec')
                                 ->first();
                             $link = '';
+                            $fullLink = '';
 
                             if($inventory && @$inventory->virtual_path){
                                 $link = basename(public_path($inventory->virtual_path));
+                                $fullLink =  url(@$inventory->virtual_path);
                             }
 
                             $oldStructure['sublesson'][$key1]['link'] = $link;
-                            $oldStructure['sublesson'][$key1]['full_link'] = url(@$inventory->virtual_path);
+                            $oldStructure['sublesson'][$key1]['full_link'] = $fullLink;
                         }
                     }
 
@@ -265,9 +267,14 @@ class SyncDataSec extends Command
 
     protected function insertFile($path, $isImage = 0)
     {
+        $file = File::where("path", public_path($path))->first();
+
+        if(!$file){
+            $file = new File();
+        }
         $newFilePath = public_path($path);
         $info = pathinfo($path);
-        $file = new File();
+
         $file->type = \Illuminate\Support\Facades\File::type($newFilePath);
         $file->hash = sha1($newFilePath);
         $file->url = url($path);
