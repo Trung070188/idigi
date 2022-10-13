@@ -430,7 +430,7 @@ class PlansController extends AdminBaseController
            }
            if($dataRole['deviceUid']==null)
            {
-               $validate->errors()->add('deviceUid','The register field is required.');
+               $validate->errors()->add('deviceUid','The register code field is required.');
            }
             $existDeviceName=UserDevice::query()->where('plan_id',$data['id'])->where('device_name',$dataRole['deviceName'])->first();
            if($existDeviceName)
