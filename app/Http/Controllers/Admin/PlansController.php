@@ -1467,7 +1467,7 @@ class PlansController extends AdminBaseController
            {
                $index=$key+1;
 
-               $lessonsArr=Lesson::query()->whereIn('id',$packageLessonPlan['lessonIds'])->get();
+               $lessonsArr=Lesson::query()->whereIn('id',$packageLessonPlan['lessonIds'])->orderBy('name','ASC')->get();
                $lessons[]=[
                    'package_name'=>'Package lesson' . ' ' .$index ,
                  'plan_name'=>$entry->name,
