@@ -374,7 +374,7 @@
                                     <path d="M1 8a7 7 0 1 0 14 0A7 7 0 0 0 1 8Zm15 0A8 8 0 1 1 0 8a8 8 0 0 1 16 0ZM9.283 4.002V12H7.971V5.338h-.065L6.072 6.656V5.385l1.899-1.383h1.312Z"/>
                                 </svg>
                             </span>
-                            <span>Open iSMART DIGI application on your device.</span>
+                            <span>Open DIGI application on your device.</span>
                         </div>
                         <div class="d-flex align-items-start justify-content-start mb-5">
                             <span class="svg svg-icon mr-3">
@@ -400,6 +400,8 @@
                                                         <rect x="7.41422" y="6" width="16" height="2" rx="1" transform="rotate(45 7.41422 6)" fill="black" style="fill:red"/>
                                             </svg>
                                         </span>
+                        <error-label for="f_category_id" :errors="errors.deviceExpireDate"></error-label>
+
                         <input type="text" class="form-control " placeholder="Enter the device name" aria-label="" style="margin-bottom: 10px" aria-describedby="basic-addon1" v-model="deviceName">
                         <error-label for="f_category_id" :errors="errors.deviceName"></error-label>
                         <input type="text" class="form-control " placeholder="Enter the register code" aria-label="" aria-describedby="basic-addon1" v-model="deviceUid">

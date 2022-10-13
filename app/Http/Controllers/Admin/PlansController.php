@@ -311,7 +311,20 @@ class PlansController extends AdminBaseController
             'due_at.after_or_equal'=>'The due at must be a date after or equal to ' .$formatMessage,
             'expire_date.after_or_equal'=>'The expire date must be a date after or equal to '  .$formatMessage
         ];
+
         $v = Validator::make($data, $rules,$message);
+        $v->after(function ($validate) use ($data)
+        {
+            if(@$data['due_at'])
+            {
+                if($data['expire_date']<$data['due_at'])
+                {
+                    $validate->errors()->add('due_at','The due date must be a date before or equal to ' .Carbon::parse($data['expire_date'])->format('d/m/Y') .'.');
+
+                }
+            }
+
+        });
 
         if ($v->fails()) {
             return [
@@ -388,6 +401,7 @@ class PlansController extends AdminBaseController
         ];
         if(isset($data['id']))
         {
+
             if($dataRole['deviceName']==null)
             {
                 $rules['deviceName']=['required'];
@@ -396,6 +410,11 @@ class PlansController extends AdminBaseController
             {
                 $rules['deviceUid']=['required'];
             }
+//            if($dataRole['deviceExpireDate']!=null)
+//            {
+//                $rules['deviceExpireDate']=['before_or_equal:' .$data['expire_date']];
+//
+//            }
         }
 
         $v = Validator::make($data, $rules,$dataRole);
@@ -418,6 +437,13 @@ class PlansController extends AdminBaseController
             if($existDeviceUid)
             {
                 $validate->errors()->add('deviceUid','The device uid has already been taken.');
+            }
+            if($dataRole['deviceExpireDate']!=null)
+            {
+                if($dataRole['deviceExpireDate']>$data['expire_date'])
+                {
+                    $validate->errors()->add('deviceExpireDate','The expire date must be a date before or equal to ' .Carbon::parse($data['expire_date'])->format('d/m/Y') .'.');
+                }
             }
         });
         if ($v->fails()) {
