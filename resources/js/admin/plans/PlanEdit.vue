@@ -1152,13 +1152,9 @@
 
             // export devive
             async exportDevice() {
-                const res = await $post('/xadmin/plans/exportDevice', {
-                    csrf: window.$csrf,
-                    dataDevice: this.data,
-                    entry: this.entry,
-                    idRoleIt: this.idRoleIt,
-                });
-                window.location.href = res.url;
+                window.location.href= '/xadmin/plans/exportDevice?entry=' + JSON.stringify(this.entry)+
+                '&idRoleIt=' + JSON.stringify(this.idRoleIt)+
+                '&dataDevice=' + JSON.stringify(this.data);
             },
 
             changeLimit() {

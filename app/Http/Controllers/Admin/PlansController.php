@@ -40,6 +40,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 use Maatwebsite\Excel\Facades\Excel;
+use phpDocumentor\Reflection\PseudoTypes\True_;
 use phpseclib3\Crypt\Random;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -747,11 +748,12 @@ class PlansController extends AdminBaseController
     public function exportDevice(Request $req)
     {
         $dataImport = $req->all();
-        $data = $req->get('entry');
+        $data = json_decode($req->get('entry'),true);
 
-        if (!$req->isMethod('POST')) {
-            return ['code' => 405, 'message' => 'Method not allow'];
-        }
+
+        // if (!$req->isMethod('POST')) {
+        //     return ['code' => 405, 'message' => 'Method not allow'];
+        // }
 
 
         $rules = [
@@ -779,11 +781,10 @@ class PlansController extends AdminBaseController
             }
             $exportDevice = [];
             $payload = [];
-            $user = User::where('id', $dataImport['idRoleIt'])->first();
-            if (@$dataImport['dataDevice']) {
-                foreach ($dataImport['dataDevice'] as $import) {
-
-                    if ($import['plan_id'] == $entry->id) {
+            $user = User::where('id', json_decode($dataImport['idRoleIt']))->first();
+            if (@json_decode($dataImport['dataDevice'])) {
+                foreach (json_decode($dataImport['dataDevice']) as $import) {
+                    if ($import->plan_id == $entry->id) {
                         $exportDevice[] = $import;
                     }
 
@@ -795,18 +796,18 @@ class PlansController extends AdminBaseController
 //                            'secret_key' => $entry->secret_key,
 //                        ];
 //                    }
-                    if ($import['plan_id'] == $entry->id) {
+                    if ($import->plan_id == $entry->id) {
                         $payload [] = [
 //                            'secret_key_plan' => $entry->secret_key,
                             'username' => $user->username,
                             'full_name' => $user->full_name,
 //                            'plan' => $apiPlan,
-                            'user_id' => $dataImport['idRoleIt'],
-                            'device_uid' => $import['device_uid'],
-                            'device_name' => $import['device_name'],
+                            'user_id' => json_decode($dataImport['idRoleIt']),
+                            'device_uid' => $import->device_uid,
+                            'device_name' => $import->device_name,
                             'secret_key' => $entry->secret_key,
                             'create_time' => Carbon::now()->timestamp,
-                            'expired' => strtotime($import['expire_date']),
+                            'expired' => strtotime(Carbon::createFromFormat('d/m/Y',$import->expire_date)->format('d-m-Y')),
                         ];
                     }
                     $dataPlanExport = [];
@@ -818,22 +819,13 @@ class PlansController extends AdminBaseController
                         $dataPlanExport[] = [
                             'device_name' => $pay['device_name'],
                             'device_uid' => $pay['device_uid'],
-                            'expire_date' => Carbon::parse($pay['expired'])->format('d/m/Y'),
+                            'expire_date' => date('d/m/Y', $pay['expired']),
                             'code' => $jwt
                         ];
                     }
                 }
-                $y = date('Y');
-                $m = date('m');
-                $hash = sha1(uniqid());
-
             }
-            Excel::store(new DevicePlanExport($dataPlanExport), "{$y}/{$m}/{$hash}.xlsx", 'excel-export');
-            return [
-                'code' => 0,
-                'url' => url("exports/{$y}/{$m}/{$hash}.xlsx"),
-            ];
-
+           return Excel::download(new DevicePlanExport($dataPlanExport), "Device_export_plan.xlsx");
         }
 
     }
@@ -1478,9 +1470,12 @@ class PlansController extends AdminBaseController
                ];
            }
             $payload=[];
+            // dd(strtotime('09-03-2018'));
+            // dd(strtotime('01-10-2022'));
             $devices= json_decode($dataAll['dataDevice'], true);
            foreach ($devices as $device)
            {
+            //    dd($device['expire_date']);
                $payload [] = [
 //                            'secret_key_plan' => $entry->secret_key,
                    'username' => $assignTo->username,
@@ -1491,7 +1486,7 @@ class PlansController extends AdminBaseController
                    'device_name' => $device['device_name'],
                    'secret_key' => $entry->secret_key,
                    'create_time' => Carbon::now()->timestamp,
-                   'expired' => strtotime($device['expire_date']),
+                   'expired' => $device['expire_date'],
                ];
            }
             $dataDevicePlanExport = [];
@@ -1500,7 +1495,7 @@ class PlansController extends AdminBaseController
                 $dataDevicePlanExport[] = [
                     'device_name' => $pay['device_name'],
 //                    'device_uid' => $pay['device_uid'],
-                    'expire_date' => Carbon::parse($pay['expired'])->format('d/m/Y'),
+                    'expire_date' => $pay['expired'],
 //                    'code' => $jwt
                 ];
             }
