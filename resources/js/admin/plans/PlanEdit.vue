@@ -424,7 +424,7 @@
                 <div class="modal-content">
                            <div class="text-center mt-10">
                                <h2>Import devices</h2>
-                           </div>0
+                           </div>
 <!--                            <span class="svg-icon svg-icon-1">-->
 <!--								<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"-->
 <!--                                     fill="none">-->
@@ -443,7 +443,7 @@
                             <div
                                 class="d-flex justify-content-center justify-content-xl-start flex-row-auto w-100 w-xl-300px">
                                 <div class="stepper-nav ps-lg-10">
-                                    <div class="stepper-item current" data-kt-stepper-element="nav">
+                                    <div class="stepper-item " data-kt-stepper-element="nav">
                                         <div class="stepper-line w-40px"></div>
                                         <div class="stepper-icon w-40px h-40px">
                                             <i class="stepper-check fas fa-check"></i>
@@ -473,16 +473,16 @@
                                             <h3 class="stepper-title">Import process</h3>
                                         </div>
                                     </div>
-<!--                                    <div class="stepper-item" data-kt-stepper-element="nav">-->
-<!--                                        <div class="stepper-line w-40px"></div>-->
-<!--                                        <div class="stepper-icon w-40px h-40px">-->
-<!--                                            <i class="stepper-check fas fa-check"></i>-->
-<!--                                            <span class="stepper-number">4</span>-->
-<!--                                        </div>-->
-<!--                                        <div class="stepper-label">-->
-<!--                                            <h3 class="stepper-title">Completed</h3>-->
-<!--                                        </div>-->
-<!--                                    </div>-->
+                                    <div class="stepper-item" data-kt-stepper-element="nav">
+                                        <div class="stepper-line w-40px"></div>
+                                        <div class="stepper-icon w-40px h-40px">
+                                            <i class="stepper-check fas fa-check"></i>
+                                            <span class="stepper-number">4</span>
+                                        </div>
+                                        <div class="stepper-label">
+                                            <h3 class="stepper-title">Completed</h3>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                             <div class="flex-row-fluid py-lg-5 px-lg-15">
