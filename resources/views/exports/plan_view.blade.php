@@ -18,6 +18,7 @@
     <tr>
         <th>No</th>
         <th>Lesson</th>
+        <th>Unit</th>
         <td>Subject</td>
         <td>Grade</td>
     </tr>
@@ -29,6 +30,7 @@
         <tr>
             <td>{{$key+1}}</td>
             <td>{{$abc['name']}}</td>
+            <td>{{$abc['unit']}}</td>
             <td>{{$abc['subject']}}</td>
             <td>{{$abc['grade']}}</td>
         </tr>
