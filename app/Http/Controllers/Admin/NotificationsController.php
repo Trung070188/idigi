@@ -304,8 +304,6 @@ class NotificationsController extends AdminBaseController
         $it=Notification::query()->where('title','=','File download plan')->where('status','=','new')->count();
 
         foreach ($entries as $entry) {
-            $plan=Plan::where('name','=',$entry->content)->first();
-
             foreach ($users as $user) {
                 if ($entry->user_id == $user->id) {
                     $entry->user_name = $user->username;
@@ -357,6 +355,7 @@ class NotificationsController extends AdminBaseController
                 }
                 if($entry->title=='File download plan' && $role->role_name=='IT')
                 {
+                    $plan=Plan::where('name','=',$entry->content)->where('user_id',$entry->user_id)->first();
                     $status=4;
                     $data[] = [
                         'plan_id'=>$plan->id,
