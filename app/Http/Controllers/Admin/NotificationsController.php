@@ -358,7 +358,7 @@ class NotificationsController extends AdminBaseController
                     $plan=Plan::where('name','=',$entry->content)->where('user_id',$entry->user_id)->first();
                     $status=4;
                     $data[] = [
-                        'plan_id'=>$plan->id,
+                        'plan_id'=>$plan['id'],
                         'id' => $entry->id,
                         'user_id' => $entry->user_id,
                         'read_at' => $entry->read_at,
