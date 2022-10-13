@@ -198,7 +198,7 @@ class AppVersionsController extends AdminBaseController
         $m = date('m');
 
         $allowed = [
-            'exe','rar',
+            'exe','rar','zip'
         ];
 
 
