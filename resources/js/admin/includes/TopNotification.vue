@@ -179,6 +179,7 @@
                }
 
             },30000)
+            this.Notification();
         },
 
         data() {
@@ -192,18 +193,18 @@
             }
         },
         methods: {
-            // async Notification() {
-            //
-            //     let query = $router.getQuery();
-            //     const res = await $get('/xadmin/notifications/notification', query);
-            //     this.entries = res.data.entries;
-            //     this.notification = res.data.notification;
-            //     this.admin = res.data.admin;
-            //     this.status=res.data.status;
-            //     this.it=res.data.it;
-            //     this.notificationSuperAdmin=res.notificationSuperAdmin
-            //
-            // },
+            async Notification() {
+
+                let query = $router.getQuery();
+                const res = await $get('/xadmin/notifications/notification', query);
+                this.entries = res.data.entries;
+                this.notification = res.data.notification;
+                this.admin = res.data.admin;
+                this.status=res.data.status;
+                this.it=res.data.it;
+                this.notificationSuperAdmin=res.notificationSuperAdmin
+
+            },
             async abc(entry) {
                 const res = await $post('/xadmin/notifications/toggleStatus', {
                     id: entry.id,
