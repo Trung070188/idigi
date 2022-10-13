@@ -271,7 +271,8 @@ class NotificationsController extends AdminBaseController
 
     public function notification(Request $req)
     {
-        $query = Notification::query()->orderBy('created_at', 'desc');
+        $auth=Auth::user();
+        $query = Notification::query()->where('user_id',$auth->id)->orderBy('created_at', 'desc');
         $users = User::with(['notification'])->orderBy('username')->get();
         if ($req->keyword) {
             //$query->where('title', 'LIKE', '%' . $req->keyword. '%');
@@ -301,7 +302,7 @@ class NotificationsController extends AdminBaseController
         $admin=Notification::query()->where('title','=','Yêu cầu xóa thiết bị')
             ->Where('status','=','new')
             ->count();
-        $it=Notification::query()->where('title','=','File download plan')->where('status','=','new')->count();
+        $it=Notification::query()->where('title','=','File download plan')->where('user_id',$auth->id)->where('status','=','new')->count();
 
         foreach ($entries as $entry) {
             foreach ($users as $user) {
@@ -355,10 +356,11 @@ class NotificationsController extends AdminBaseController
                 }
                 if($entry->title=='File download plan' && $role->role_name=='IT')
                 {
-                    $plan=Plan::where('name','=',$entry->content)->where('user_id',$entry->user_id)->first();
+
+                    $plan=Plan::where('name','=',$entry->content)->where('user_id',$auth->id)->first();
                     $status=4;
                     $data[] = [
-                        'plan_id'=>$plan['id'],
+                        'plan_id'=>@$plan['id'],
                         'id' => $entry->id,
                         'user_id' => $entry->user_id,
                         'read_at' => $entry->read_at,

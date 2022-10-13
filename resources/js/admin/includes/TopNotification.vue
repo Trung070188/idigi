@@ -173,6 +173,8 @@
                     self.admin=res.data.admin;
                     self.notification=res.data.notification;
                     self.it=res.data.it;
+                    self.notificationSuperAdmin=res.notificationSuperAdmin
+
                 })
                if(solan===20){
                    clearInterval(notifications);
