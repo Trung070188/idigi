@@ -37,7 +37,7 @@ class PlanExport implements WithMultipleSheets
             $sheets[] = new LessonPlanExport($lesson);
 
         }
-        $sheets[] = new DevicePlanExport($devices);
+        $sheets[] = new DevicePlan($devices);
 
         return $sheets;
     }

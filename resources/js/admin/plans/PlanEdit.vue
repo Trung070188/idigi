@@ -225,6 +225,10 @@
                                                 </div>
                                             </div>
                                         </div>
+                                        <div class="d-flex justify-content-end mb-4" v-if="roleAuth=='IT'">
+                                            <a  class="btn btn-primary btn-sm" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end" @click="exportDevice">Export device
+                                            </a>
+                                        </div>
 
                                         <!-- BEGIN : TABLE LIST DEVICE-->
 
@@ -240,7 +244,6 @@
                                                     <td>No.</td>
                                                     <th class="">Device name</th>
                                                     <th class="">OS</th>
-                                                    <th class="">Register code</th>
                                                     <td>Expire date</td>
                                                     <th class="">Actions</th>
                                                 </tr>
@@ -255,7 +258,6 @@
                                                 <td>{{index+1}}</td>
                                                 <td>{{device.device_name}}</td>
                                                 <td>{{device.type}}</td>
-                                                <td>{{device.device_uid}}</td>
                                                 <td>{{device.expire_date}}</td>
                                                 <td class="">
                                                     <a v-if="roleAuth=='Super Administrator'" class="btn btn-active-danger btn-light-danger btn-sm" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end" @click="removeDeviceModal(device.id)">Delete</a>

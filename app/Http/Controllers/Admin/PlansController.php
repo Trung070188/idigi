@@ -191,7 +191,7 @@ class PlansController extends AdminBaseController
                 'school_id' => $device->school_id,
                 'secret_key' => $device->secret_key,
                 'reason' => $device->reason,
-                'expire_date' => Carbon::parse($device->expire_date)->format('d-m-Y'),
+                'expire_date' => Carbon::parse($device->expire_date)->format('d/m/Y'),
                 'created_at' => $device->created_at,
                 'updated_at' => $device->updated_at,
                 'roleName' => $roleName,
@@ -406,38 +406,37 @@ class PlansController extends AdminBaseController
             {
                 $rules['deviceName']=['required'];
             }
-            if($dataRole['deviceUid']==null)
-            {
-                $rules['deviceUid']=['required'];
-            }
-//            if($dataRole['deviceExpireDate']!=null)
-//            {
-//                $rules['deviceExpireDate']=['before_or_equal:' .$data['expire_date']];
-//
-//            }
         }
 
         $v = Validator::make($data, $rules,$dataRole);
         $v->after(function ($validate) use ($data,$dataRole)
         {
-           $existDeviceName=UserDevice::query()->where('plan_id',$data['id'])->where('device_name',$dataRole['deviceName'])->first();
-            $token = $dataRole['deviceUid'];
-            try {
-                $decoded = JWT::decode($token, new Key(env('SECRET_KEY'), 'HS256'));
-                $dataRole['deviceUid']=$decoded->device_uid;
-            }catch (\Exception $e)
-            {
+           if($dataRole['deviceUid']!=null)
+           {
+               $token = $dataRole['deviceUid'];
+               try {
+                   $decoded = JWT::decode($token, new Key(env('SECRET_KEY'), 'HS256'));
+                   $dataRole['deviceUid']=$decoded->device_uid;
+               }catch (\Exception $e)
+               {
 
-            }
-           $existDeviceUid=UserDevice::query()->where('plan_id',$data['id'])->where('device_uid',$dataRole['deviceUid'])->first();
+               }
+               $existDeviceUid=UserDevice::query()->where('plan_id',$data['id'])->where('device_uid',$dataRole['deviceUid'])->first();
+               if($existDeviceUid)
+               {
+                   $validate->errors()->add('deviceUid','The device uid has already been taken.');
+               }
+           }
+           if($dataRole['deviceUid']==null)
+           {
+               $validate->errors()->add('deviceUid','The device uid field is required.');
+           }
+            $existDeviceName=UserDevice::query()->where('plan_id',$data['id'])->where('device_name',$dataRole['deviceName'])->first();
            if($existDeviceName)
            {
                $validate->errors()->add('deviceName','The device name has already been taken.');
            }
-            if($existDeviceUid)
-            {
-                $validate->errors()->add('deviceUid','The device uid has already been taken.');
-            }
+
             if($dataRole['deviceExpireDate']!=null)
             {
                 if($dataRole['deviceExpireDate']>$data['expire_date'])
@@ -1304,8 +1303,11 @@ class PlansController extends AdminBaseController
                     if ($lesson['package_id'] == $dataLesson['package']) {
                         $stringLesson = implode(",", $lesson['lessonIds']);
                         $user = Auth::user();
-                        ZipPlanLesson::create(['user_id' => $dataLesson['idRoleIt'], 'plan_id' => $entry->id, 'lesson_ids' => $stringLesson, 'package_id' => $dataLesson['package'], 'status' => 'inprogress']);
-                        $entry->status = 'ready';
+                      $zipFile= ZipPlanLesson::create(['user_id' => $dataLesson['idRoleIt'], 'plan_id' => $entry->id, 'lesson_ids' => $stringLesson, 'package_id' => $dataLesson['package'], 'status' => 'inprogress']);
+                        if($zipFile->status=='inprogress')
+                        {
+                            $entry->status='Packaging';
+                        }
                         $entry->save();
                         PackageLesson::updateOrCreate(
                             [
@@ -1494,12 +1496,12 @@ class PlansController extends AdminBaseController
            }
             $dataDevicePlanExport = [];
             foreach ($payload as $pay) {
-                $jwt = JWT::encode($pay, env('SECRET_KEY'), 'HS256');
+//                $jwt = JWT::encode($pay, env('SECRET_KEY'), 'HS256');
                 $dataDevicePlanExport[] = [
                     'device_name' => $pay['device_name'],
-                    'device_uid' => $pay['device_uid'],
+//                    'device_uid' => $pay['device_uid'],
                     'expire_date' => Carbon::parse($pay['expired'])->format('d/m/Y'),
-                    'code' => $jwt
+//                    'code' => $jwt
                 ];
             }
 
