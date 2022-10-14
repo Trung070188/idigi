@@ -12,6 +12,7 @@ use App\Models\UserCourseUnit;
 use App\Models\UserDevice;
 use App\Models\UserRole;
 use App\Models\UserUnit;
+use Carbon\Carbon;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -20,6 +21,7 @@ use Illuminate\Support\Facades\Validator;
 use App\Models\User;
 use Illuminate\Support\Str;
 use Maatwebsite\Excel\Facades\Excel;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
@@ -1127,17 +1129,13 @@ class UsersController extends AdminBaseController
         ];
     }
 
-    public function saveImportTeacher(Request $req)
+    public function validateImportTeacher(Request $req)
     {
         if (!$req->isMethod('POST')) {
             return ['code' => 405, 'message' => 'Method not allow'];
         }
-
-
         $rules = [
-
         ];
-
         $v = Validator::make($req->all(), $rules);
 
         if ($v->fails()) {
@@ -1190,8 +1188,9 @@ class UsersController extends AdminBaseController
         foreach ($teacherLists as $teacherList) {
 
             foreach ($teacherList as $teacher) {
+
                 foreach ($teacher as $key => $tea) {
-                    if($key>0)
+                    if($key>6 && $tea[0]!=null)
                     {
                         $item = [];
                         $item['username'] = $tea[0];
@@ -1237,9 +1236,11 @@ class UsersController extends AdminBaseController
                         $fileError[] = $validation;
                     }
                 }
-
-                Excel::store(new TeacherErrorExport($validations), "{$y}/{$m}/{$hash}.{$extension}", 'excel-export');
-
+                return [
+                  'code'=>2,
+                  'fileError'=>$fileError,
+                ];
+            } else {
                 $file = new File();
                 $file->type = $file0['type'];
                 $file->hash = sha1($newFilePath);
@@ -1251,47 +1252,58 @@ class UsersController extends AdminBaseController
                 $file->path = $newFilePath;
                 $file->extension = $extension;
                 $file->save();
-
                 return [
-                    'code'=>2,
-                    'message' => 'Đã có lỗi',
-                    'file' => url("exports/{$y}/{$m}/{$hash}.{$extension}"),
-
+                    'code' => 0,
+                    'fileImport'=>$validations
                 ];
-
-            } else {
-
-                {
-                    foreach ($teacher as $key => $tea) {
-                        if ($key > 0) {
-                            $entry = new User();
-                            $entry->username = $tea[0];
-                            $entry->full_name = $tea[1];
-                            $entry->school_id = $school;
-                            $entry->password = Hash::make($tea[2]);
-                            $entry->phone = $tea[3];
-                            $entry->email = $tea[4];
-                            $entry->class = $tea[5];
-                            $entry->state =1;
-                            $entry->save();
-                            UserRole::create(['user_id' => $entry->id, 'role_id' => 5]);
-                        }
-                    }
-                }
             }
-
-
-
-            return [
-                'code' => 0,
-                'message' => 'Đã thêm',
-//            'id' => $entry->id
-            ];
 
         }
 
     }
+    public function exportErrorTeacher(Request $req)
+    {
+        $dataAll=$req->all();
+        $fileError=json_decode($dataAll['fileError'],true);
+        return Excel::download(new TeacherErrorExport($fileError), "File_import_teacher_error.xlsx");
+    }
+    public function downloadTemplate() : BinaryFileResponse
+    {
+        return response()->download(public_path('sample/Import_Teacher_Template.xlsx'));
+    }
+    public function import(Request $req)
+    {
+        $dataImport = $req->all();
 
+        if (!$req->isMethod('POST')) {
+            return ['code' => 405, 'message' => 'Method not allow'];
+        }
+            if ($dataImport['fileImport']!=[]) {
+                $user=Auth::user();
+                $school = $user->schools->id;
+                foreach ($dataImport['fileImport'] as $import) {
+                    $user = new User();
+                    $user->username = $import['username'];
+                    $user->full_name=$import['full_name'];
+                    $user->phone=$import['phone'];
+                    $user->email=$import['email'];
+                    $user->class=$import['class'];
+                    $user->password=Hash::make($import['password']);
+                    $user->school_id=$school;
+                    $user->state =1;
+                    $user->save();
+                    UserRole::create(['user_id' => $user->id, 'role_id' => 5]);
+                }
+            return [
+                'code' => 0,
+                'message' => 'Đã cập nhật '
+            ];
+        }
+            else{
+                return [
+                    'message'=>'Không có teacher nào được thêm'
+                ];
 
-
+            }
+    }
 }

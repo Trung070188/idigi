@@ -556,7 +556,7 @@
                                                     <div class="d-flex">
                                                         <div class="text-end">
                                                           	<span class="form-check form-check-custom form-check-solid">
-                                                                <input class="form-check-input" type="radio" name="category" :value="fileImport" v-model="fileImport"/>
+                                                                <input class="form-check-input" type="radio" name="category" value="0" v-model="doNotImport"/>
                                                                 <label style="margin: 0px 10px 0px">Import</label>
                                                                 <input class="form-check-input" type="radio"
                                                                        name="category" value="1" v-model="doNotImport"/>
@@ -759,7 +759,7 @@
                 allViewLessonSelected:false,
                 filter: filter,
                 entries: [],
-                doNotImport: '',
+                doNotImport:0,
                 deviceError: [],
                 code: 0,
                 validateFile: '',
@@ -1109,7 +1109,7 @@
             },
             // save device vào db khi khi các device qua validate
             async saveImport() {
-                if (this.doNotImport == '') {
+                if (this.doNotImport ==0) {
                     {
                         this.$loading(true);
                         const res = await $post('/xadmin/plans/import', {
@@ -1117,7 +1117,6 @@
                             entry: this.entry,
                             schoolId: this.schoolId,
                             idRoleIt: this.idRoleIt,
-                            doNotImport: this.doNotImport,
                         }, false);
                         this.$loading(false);
                         if (res.code) {
@@ -1145,8 +1144,14 @@
                         }
                     }
                 }
-                if (this.doNotImport == 1) {
-                    location.replace('/xadmin/plans/index');
+                if (this.doNotImport ==1) {
+                    let self=this;
+                    $('#kt_modal_create_app').modal('hide');
+                    self.$refs.uploader.value = null;
+                    self.fileUpLoad='';
+                    self.valueValidateImportDevice=0;
+                    self.fileImport.length=0;
+                    self.deviceError.length=0;
                 }
             },
 
