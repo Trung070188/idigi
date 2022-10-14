@@ -39,10 +39,10 @@ class LessonPlanExport implements FromView,WithTitle,WithStyles,WithColumnWidths
     {
         return [
             'A' => 5,
-            'B' => 60,
-            'C'=>10,
-            'D'=>15,
-            'E'=>10
+            'B' => 45,
+            'C'=>20,
+            'D'=>10,
+            'E'=>6
 
         ];
     }

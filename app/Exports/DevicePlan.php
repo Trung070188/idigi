@@ -31,9 +31,9 @@ class DevicePlan implements FromView,WithTitle,WithColumnWidths
     public function columnWidths(): array
     {
         return [
-            'A' => 10,
-            'B'=>30,
-            'C'=>20,
+            'A'=>5,
+            'B'=>35,
+            'C'=>12,
             'D'=>30
         ];
     }
