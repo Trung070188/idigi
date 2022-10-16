@@ -44,7 +44,7 @@ class CheckAuthApi
 
             if($roles){
                 foreach ($roles as $role){
-                    if($role->role_name == 'Teacher' || $role->role_name == 'Super Administrator' || $role->role_name == 'Administrator'){
+                    if($role->role_name == 'Teacher' || $role->role_name == 'Super Administrator' || $role->role_name == 'School Admin'){
                         $check = 1;
                     }
                 }
