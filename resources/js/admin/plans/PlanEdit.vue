@@ -286,12 +286,13 @@
 															</svg>
                                                     </span>
                                                 </a>
-                                                <div class="menu menu-sub menu-sub-dropdown  menu-rounded menu-gray-600 menu-state-bg-light-primary fw-bold fs-7 py-4" data-kt-menu="true" style="width: 150px" >
+                                                <div class="menu menu-sub menu-sub-dropdown  menu-rounded menu-gray-600 menu-state-bg-light-primary fw-bold fs-7 py-4" data-kt-menu="true" >
                                                     <div class="menu-item px-3"  v-if="roleAuth=='Super Administrator' && dataZipLesson.status=='waitting'">
                                                         <a class="menu-link px-3 " @click="addLessonPackage(tabLessonContent)" >Add lesson</a>
                                                     </div>
                                                     <div class="menu-item px-3" v-if="dataZipLesson.status=='waitting'">
-                                                        <a v-if="checkZipPackage[0].lessonIds.length>0" class="menu-link px-3 " @click="downloadLesson(tabLessonContent)"  >Zip package lesson</a>
+                                                        <a v-if="checkZipPackage[0].lessonIds.length>0" class="menu-link px-3" @click="downloadLesson(tabLessonContent)">Zip package lesson</a>
+                                                        <a v-else class="menu-link px-3 isDisabled" @click="downloadLesson(tabLessonContent)" >Zip package lesson</a>
                                                     </div>
                                                     <div class="menu-item px-3" v-if="roleAuth=='Super Administrator' && dataZipLesson.status=='done' ||  roleAuth=='Super Administrator' &&dataZipLesson.status=='waitting'">
                                                         <a class="menu-link px-3 text-danger "  @click="deletePackageLesson(tabLessonContent)" >Delete package lesson</a>
@@ -800,6 +801,21 @@
         },
 
         mounted() {
+            let self=this;
+            let notification=setInterval(function () {
+                $.get('/xadmin/plans/dataZipLessonPlan',function (res) {
+                   let dataZipPackage=res.data.filter(item => item.plan_id==self.entry.id)
+                    let dataPackage=dataZipPackage.filter(item => item.package_id==self.tabLessonContent)
+                    self.dataZipLesson=dataPackage[0];
+                    let statusZip=dataZipPackage.filter(item =>item.status=='done')
+                    if(statusZip.length==dataZipPackage.length)
+                    {
+                        clearInterval(notification);
+                    }
+
+                })
+
+            },10000)
             $router.on('/', this.load).init();
         },
 
@@ -834,8 +850,6 @@
                 self.checkZipPackage=[];
                 let dataPackage=self.lessonPackagePlans.filter(item =>item.package_id==tabPackage);
                self.checkZipPackage.push(dataPackage[0]);
-
-                console.log(self.checkZipPackage);
                 for(const e of self.lessonPackagePlans)
                 {
                     if(e.package_id==tabPackage)
@@ -1566,6 +1580,7 @@
     cursor: not-allowed;
     opacity: 0.5;
     text-decoration: none;
+    pointer-events: none
 }
 .lds-ring {
     display: inline-block;
