@@ -868,41 +868,38 @@ class PlansController extends AdminBaseController
 
             if (@$dataLesson['lessonPackagePlans']) {
                 foreach ($dataLesson['lessonPackagePlans'] as $lesson) {
-                    if($lesson['lessonIds']!=[])
-                    {
-                        if ($lesson['package_id'] == $dataLesson['package']) {
+                        if ($lesson['package_id'] == $dataLesson['package'])
+                        {
+                            if($lesson['lessonIds']!=[]){
+                                $stringLesson = implode(",", $lesson['lessonIds']);
+                                PackageLesson::updateorCreate(
+                                    [
+                                        'id' => $dataLesson['package']
+                                    ],
+                                    [
+                                        'lesson_ids' => $stringLesson,
+                                        'status' => 'new'
+                                    ]
+                                );
+                                return [
+                                    'code'=>0,
+                                    'message'=>'Đã cập nhật'
+                                ];
+                            }
+                            else
+                            {
+                                return [
+                                    'code'=>0,
+                                    'message'=>'Chưa có lesson nào được thêm vào.'
+                                ];
+                            }
 
-                            $stringLesson = implode(",", $lesson['lessonIds']);
-                            PackageLesson::updateorCreate(
-                                [
-                                    'id' => $dataLesson['package']
-                                ],
-                                [
-                                    'lesson_ids' => $stringLesson,
-                                    'status' => 'new'
-                                ]
-                            );
                         }
-                        return [
-                          'code'=>0,
-                          'message'=>'Đã cập nhật'
-                        ];
-                    }
-                    else
-                    {
-                        return [
-                          'code'=>0,
-                          'message'=>'Chưa có lesson nào được thêm vào.'
-                        ];
-                    }
 
+                    }
                 }
 
             }
-
-
-        }
-
     }
 
     /**
