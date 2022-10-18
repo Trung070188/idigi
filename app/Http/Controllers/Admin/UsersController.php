@@ -1229,15 +1229,20 @@ class UsersController extends AdminBaseController
                 }
             }
             $fileError = [];
+            $fileImport=[];
             if ($code == 2) {
                 //export
                 foreach ($validations as $validation) {
                     if (@$validation['error']) {
                         $fileError[] = $validation;
                     }
+                    else{
+                        $fileImport[]=$validation;
+                    }
                 }
                 return [
-                  'code'=>2,
+                  'code'=> 2,
+                  'fileImport' =>$fileImport,
                   'fileError'=>$fileError,
                 ];
             } else {

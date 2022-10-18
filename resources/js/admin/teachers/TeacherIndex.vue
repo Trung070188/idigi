@@ -639,7 +639,6 @@
                     $router.updateQuery({page: this.paginate.currentPage, _: Date.now()});
                 },
                 async importFileTeacher() {
-                    console.log(this.$refs.uploader.files);
                     if (this.$refs.uploader.files) {
                         let fileSize = (this.$refs.uploader.files[0].size.toString());
                         if (fileSize.length < 7) {
@@ -678,6 +677,7 @@
                     if (res.code == 2) {
                         this.code = res.code;
                         this.fileError = res.fileError;
+                        this.fileImport=res.fileImport;
                     }
                     if (res.code == 0) {
                         this.fileImport = res.fileImport;
