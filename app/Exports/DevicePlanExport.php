@@ -32,11 +32,10 @@ class DevicePlanExport implements FromView,WithTitle,WithColumnWidths
     {
         return [
             'A' => 10,
-            'B' => 5,
+            'B' => 30,
             'C'=>40,
-            'D'=>55,
-            'E'=>25,
-            'F'=>70
+            'D'=>20,
+            'E'=>50,
         ];
     }
 }

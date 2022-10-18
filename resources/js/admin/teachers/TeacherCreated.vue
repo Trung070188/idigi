@@ -29,7 +29,7 @@
                                     </div>
                                     <div class="form-group  col-sm-4">
                                         <label>Phone number </label>
-                                        <input class="form-control" placeholder="Enter the phone number" v-model="entry.phone">
+                                        <input class="form-control noString" placeholder="Enter the phone number" v-model="entry.phone">
                                         <error-label for="f_category_id" :errors="errors.phone"></error-label>
                                     </div>
                                      <div class="form-group  col-sm-4">
@@ -140,6 +140,13 @@
                     e.preventDefault();
                 }
             })
+
+            $('.noString').keypress(function (e) {
+                if (e.keyCode < 48 || e.keyCode > 57) {
+                    e.preventDefault();
+                }
+            })
+
         },
         methods: {
             // checkbox_roles()

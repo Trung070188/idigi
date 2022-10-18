@@ -139,7 +139,7 @@
                     <form id="kt_account_profile_details_form" class="form fv-plugins-bootstrap5 fv-plugins-framework" novalidate="novalidate">
                         <div class="card-body border-top p-9">
                             <div class="row mb-6">
-                                <label class="col-lg-2 col-form-label fw-bold fs-6">Fullname</label>
+                                <label class="col-lg-2 col-form-label fw-bold fs-6">Fullname<span class="text-danger">*</span></label>
 
                                 <div class="col-lg-10 fv-row fv-plugins-icon-container">
                                     <input type="text" name="full_name" class="form-control form-control-lg " placeholder="Enter the Fullname" v-model="entry.full_name" />

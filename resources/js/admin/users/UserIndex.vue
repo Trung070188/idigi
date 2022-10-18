@@ -26,7 +26,6 @@
                         </div>
                     </div>
                 </div>
-
                             <div class="col-lg-12">
                                 <div class="card card-custom card-stretch gutter-b">
 
