@@ -1,7 +1,7 @@
 <template>
     <div class="container-fluid">
         <ActionBar type="index"
-                   :breadcrumbs="breadcrumbs" title="Create new plan"/>
+                   :breadcrumbs="breadcrumbs" title="Plan details"/>
         <div class="row">
 
             <!-- BEGIN: MODAL ADD LESSON PACKAGE PLAN -->
@@ -205,7 +205,7 @@
 
                                     <div id="kt_billing_months" class="card-body p-0 tab-pane fade show active" role="tabpanel" aria-labelledby="kt_billing_months">
                                         <div class="d-flex justify-content-end mb-4" v-if="roleAuth=='Super Administrator'">
-                                            <a v-if="deviceIds!=''" class="btn btn-danger btn-sm mr-3" @click="removeDeviceAll" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">Delete</a>
+                                            <a v-if="deviceIds!=''" class="btn btn-danger btn-sm mr-3" @click="removeDeviceAll" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">Remove device</a>
                                                 <a href="list.html#" class="btn btn-light btn-active-light-primary btn-sm" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">Actions
                                                     <span class="svg-icon svg-icon-5 m-0">
 															<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
@@ -777,7 +777,7 @@
                         url: '/xadmin/plans/index'
                     },
                     {
-                        title: 'Create new plan'
+                        title: 'Plan details'
                     },
                 ],
                 entry: $json.entry || {},
