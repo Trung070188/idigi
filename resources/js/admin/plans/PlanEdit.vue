@@ -270,12 +270,11 @@
                                         <!--END : TABLE LIST DEVICE-->
                                     </div>
                                     <!-- END: DEVICE LIST PLAN -->
-
                                     <!--BEGIN: PACKAGE LESSON PLAN -->
 
                                         <div id="kt_billing_year" class="card-body p-0 tab-pane fade"  role="tabpanel" aria-labelledby="kt_billing_year" >
                                             <div class="d-flex justify-content-end mb-4" >
-                                                <a v-if="viewLessonIds!='' && dataZipLesson.status=='waitting' && roleAuth=='Super Administrator'" class="btn btn-danger btn-sm mr-3" @click="deleteAllLesson" >Delete</a>
+                                                <a v-if="viewLessonIds!='' && dataZipLesson.status=='waitting' && roleAuth=='Super Administrator'" class="btn btn-danger btn-sm mr-3" @click="deleteAllLesson" >Remove lesson</a>
                                              <a  v-if="dataZipLesson.status=='inprogress'"  class="mt-2 mr-5" style="color: rgb(230 180 0)"> Lesson list is packaging...</a>
                                                 <a  v-if="  dataZipLesson.status=='done'" :href="dataZipLesson.url" class="btn btn-primary btn-sm mr-3 "> Download package</a>
                                                 <a class="btn btn-light btn-active-light-primary btn-sm " data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end" >Actions
@@ -499,6 +498,7 @@
                                                     <label v-if="valueValidateImportDevice==0"  for="file-upload" class="btn btn-primary btn-active-primary btn-sm">
                                                         Upload file
                                                     </label>
+                                                    <label v-if="valueValidateImportDevice==0">Click to select file (*.xls, *.xlsx). Max file size is 5Mb</label>
                                                     <label v-if="valueValidateImportDevice!=0"  >
                                                         Validation result
                                                     </label>
@@ -801,21 +801,6 @@
         },
 
         mounted() {
-            let self=this;
-            let notification=setInterval(function () {
-                $.get('/xadmin/plans/dataZipLessonPlan',function (res) {
-                   let dataZipPackage=res.data.filter(item => item.plan_id==self.entry.id)
-                    let dataPackage=dataZipPackage.filter(item => item.package_id==self.tabLessonContent)
-                    self.dataZipLesson=dataPackage[0];
-                    let statusZip=dataZipPackage.filter(item =>item.status=='done')
-                    if(statusZip.length==dataZipPackage.length)
-                    {
-                        clearInterval(notification);
-                    }
-
-                })
-
-            },10000)
             $router.on('/', this.load).init();
         },
 
@@ -868,7 +853,7 @@
 
                 //call lại bảng ZipPlanLesson
 
-                setTimeout(function () {
+               setTimeout(function () {
                     $.get('/xadmin/plans/dataZipLessonPlan',function (res) {
                         let array=res.data.filter(item => item.plan_id==self.entry.id);
                       let arrZipPlan= array.filter(item =>item.package_id==tabPackage);
