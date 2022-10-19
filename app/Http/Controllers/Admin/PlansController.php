@@ -330,10 +330,13 @@ class PlansController extends AdminBaseController
         {
             if(@$data['due_at'])
             {
-                if($data['expire_date']<$data['due_at'])
+                if(@$data['expire_date'])
                 {
-                    $validate->errors()->add('due_at','The due date must be a date before or equal to ' .Carbon::parse($data['expire_date'])->format('d/m/Y') .'.');
+                    if($data['expire_date']<$data['due_at'])
+                    {
+                        $validate->errors()->add('due_at','The due date must be a date before or equal to ' .Carbon::parse($data['expire_date'])->format('d/m/Y') .'.');
 
+                    }
                 }
             }
 

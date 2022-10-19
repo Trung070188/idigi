@@ -30,7 +30,7 @@
                                                         <rect x="7.41422" y="6" width="16" height="2" rx="1" transform="rotate(45 7.41422 6)" fill="black" style="fill:red"/>
                                             </svg>
                                         </span> -->
-                                        <error-label :errors="errors.due_at" for="f_title" ></error-label>
+                                        <error-label  :errors="errors.due_at" for="f_title" ></error-label>
                                     </div>
                                 </div>
                                 <div class="row">
