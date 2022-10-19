@@ -250,6 +250,18 @@ class PlansController extends AdminBaseController
             'message' => 'Đã xóa'
         ];
     }
+    public function removeAllPlan(Request $req)
+    {
+       $dataAll=$req->all();
+       Plan::whereIn('id',$dataAll['ids'])->delete();
+        PackageLesson::whereIn('plan_id',$dataAll['ids'])->delete();
+        ZipPlanLesson::whereIn('plan_id',$dataAll['ids'])->delete();
+        UserDevice::whereIn('plan_id',$dataAll['ids'])->delete();
+        return [
+            'code' => 0,
+            'message' => 'Đã xóa'
+        ];
+    }
 
     public function removePackageLesson(Request $req)
     {
@@ -280,7 +292,7 @@ class PlansController extends AdminBaseController
         $data = $req->get('entry');
         $current = Carbon::now()->format('Y/m/d');
         $rules = [
-            'name' => ['required'],
+            'name' => ['required','max:300'],
             'plan_description' => ['max:255'],
         ];
         if (!isset($data['id'])) {
