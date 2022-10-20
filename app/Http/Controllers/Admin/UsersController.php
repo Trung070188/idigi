@@ -21,6 +21,7 @@ use Illuminate\Support\Facades\Validator;
 use App\Models\User;
 use Illuminate\Support\Str;
 use Maatwebsite\Excel\Facades\Excel;
+use mysql_xdevapi\Exception;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
@@ -744,9 +745,14 @@ class UsersController extends AdminBaseController
                     }
                 },
             ],
-          'phone'=>['min:10']
+
 //            'password' => '|max:191|confirmed',
         ];
+
+            if(@$data['phone'])
+            {
+                $rules['phone']=['min:10'];
+            }
         if (!isset($data['id'])) {
             if($data_role['auto_gen']==false)
             {

@@ -742,7 +742,7 @@ class PlansController extends AdminBaseController
                     $device->plan_id = $entry->id;
                     if($import['expire_date']!=null)
                     {
-                        $device->expire_date = Carbon::createFromFormat('d/m/Y', $import['expire_date'])->format('Y-m-d H:i:s');
+                        $device->expire_date = Carbon::createFromFormat('d/m/Y', $import['expire_date'])->format('Y-m-d');
                     }
                     if($import['expire_date']==null)
                     {
@@ -762,6 +762,8 @@ class PlansController extends AdminBaseController
 
     public function exportDevice(Request $req)
     {
+        ob_get_clean();
+
         $dataImport = $req->all();
         $data = json_decode($req->get('entry'),true);
 
@@ -822,14 +824,11 @@ class PlansController extends AdminBaseController
                             'device_name' => $import->device_name,
                             'secret_key' => $entry->secret_key,
                             'create_time' => Carbon::now()->timestamp,
-                            'expired' => strtotime(Carbon::createFromFormat('d/m/Y',$import->expire_date)->format('d-m-Y')),
+                            'expired' => strtotime(Carbon::createFromFormat('Y-m-d',$import->expire_date)->format('d-m-Y')),
                         ];
                     }
                     $dataPlanExport = [];
-
                     foreach ($payload as $pay) {
-
-
                         $jwt = JWT::encode($pay, env('SECRET_KEY'), 'HS256');
                         $dataPlanExport[] = [
                             'device_name' => $pay['device_name'],
