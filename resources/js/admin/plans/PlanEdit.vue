@@ -220,8 +220,12 @@
                                                 <div class="menu-item px-3">
                                                     <a class="menu-link px-3" @click="importDevice()">Import devices</a>
                                                 </div>
-                                                <div class="menu-item px-3">
+
+                                                <div class="menu-item px-3" v-if="data.length>0">
                                                     <a class="menu-link px-3" @click="exportDevice">Export device list</a>
+                                                </div>
+                                                <div class="menu-item px-3" v-else>
+                                                    <a class="menu-link px-3 isDisabled" @click="exportDevice" >Export device list</a>
                                                 </div>
                                             </div>
                                         </div>
