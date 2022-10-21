@@ -300,7 +300,7 @@
                                                         <a class="menu-link px-3 " @click="renameLessonPackage(tabLessonContent)" >Rename lesson package</a>
                                                     </div>
                                                     <div class="menu-item px-3" v-if="roleAuth=='Super Administrator' && dataZipLesson.status=='done' ||  roleAuth=='Super Administrator' &&dataZipLesson.status=='waitting'">
-                                                        <a class="menu-link px-3 text-danger "  @click="deletePackageLesson(tabLessonContent)" >Delete package lesson</a>
+                                                        <a class="menu-link px-3 text-danger "  @click="deletePackageLessonModal(tabLessonContent)" >Delete package lesson</a>
                                                     </div>
                                                 </div>
 
@@ -713,6 +713,7 @@
         <!-- END : MODAL DELETE LESSON PLAN -->
 
         <!-- BEGIN: MODAL ADD NAME PACKAGE LESSON -->
+
         <div class="modal fade" style="margin-right:50px " id="addNamePackageLesson" tabindex="-1" role="dialog"
              aria-labelledby="addNamePackageLesson"
              aria-hidden="true">
@@ -737,6 +738,34 @@
         </div>
 
         <!-- END :MODAL ADD NAME PACKAGE LESSON -->
+
+        <!--BEGIN: MODAL DELETE PACKAGE LESSON -->
+
+        <div class="modal fade" style="margin-right:50px;border:2px solid #333333  " id="delete" tabindex="-1" role="dialog"
+             aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered popup-main-1" role="document"
+                 style="max-width: 450px;">
+                <div class="modal-content box-shadow-main paymment-status" style="left:120px;text-align: center; padding: 20px 0px 55px;">
+                    <div class="close-popup" data-dismiss="modal"></div>
+                    <div class="swal2-icon swal2-warning swal2-icon-show">
+                        <div class="swal2-icon-content" style="margin: 0px 25px 0px ">!</div>
+                    </div>
+                    <div class="swal2-html-container">
+                        <p >Are you sure to delete this package lesson?</p>
+                    </div>
+                    <div class="swal2-actions">
+                        <button type="submit" id="kt_modal_new_target_submit1" class="swal2-confirm btn fw-bold btn-danger" @click="deletePackageLesson(deletePack)">
+                            <span class="indicator-label">Yes, delete!</span>
+                        </button>
+                        <button type="reset" id="kt_modal_new_target_cancel1" class="swal2-cancel btn fw-bold btn-active-light-primary" data-bs-dismiss="modal" style="margin: 0px 8px 0px">No, cancel</button>
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <!--END :MODAL DELETE PACKAGE LESSON -->
     </div>
 
 </template>
@@ -764,6 +793,7 @@
             };
 
             return {
+                deletePack:'',
                 idRenamePackageLesson:'',
                 packageLessonName:'',
                 valueValidateImportDevice:0,
@@ -850,6 +880,11 @@
             dueAtClear()
             {
                 this.entry.due_at='';
+            },
+            deletePackageLessonModal:function(deletePackage='')
+            {
+              $('#delete').modal('show');
+              this.deletePack=deletePackage;
             },
             addPackageLessonModal:function(addPackage='')
             {
@@ -1013,9 +1048,9 @@
 
                           }
             },
-            async deletePackageLesson(tabLessonContent)
+            async deletePackageLesson(deletePack)
             {
-                const res = await $post('/xadmin/plans/deletePackageLesson', {id: tabLessonContent,entry:this.entry});
+                const res = await $post('/xadmin/plans/deletePackageLesson', {id: deletePack,entry:this.entry});
                 if (res.code) {
                     toastr.error(res.message);
                 } else {
@@ -1038,7 +1073,7 @@
                             return self.lessonPackagePlans=data;
                         })
                     },0);
-
+                    $('#delete').modal('hide');
                 }
             },
             backIndex() {
