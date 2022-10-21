@@ -209,6 +209,7 @@ class PlansController extends AdminBaseController
                 }
             }
             $lessonPackagePlans[] = [
+                'name'=>$packageLesson->name,
                 'package_id' => $packageLesson->id,
                 'plan_id' => $packageLesson->plan_id,
                 'lessonIds' => $lessonIdArr,
@@ -1246,13 +1247,17 @@ class PlansController extends AdminBaseController
         if (!$req->isMethod('POST')) {
             return ['code' => 405, 'message' => 'Method not allow'];
         }
-
         $data = $req->get('entry');
-
         $rules = [
         ];
-
-        $v = Validator::make($data, $rules);
+        if($dataLesson['packageLessonName']==null)
+        {
+            $rules['packageLessonName']=['required'];
+        }
+        $message=[
+            'packageLessonName.required'=>'The package lesson name field is required.'
+            ];
+        $v = Validator::make($data, $rules,$message,$dataLesson);
 
         if ($v->fails()) {
             return [
@@ -1272,8 +1277,23 @@ class PlansController extends AdminBaseController
                     'message' => 'Không tìm thấy',
                 ];
             }
-          $package= PackageLesson::create(['plan_id' => $entry->id, 'status' => 'new']);
-            ZipPlanLesson::create(['plan_id'=>$entry->id,'package_id'=>$package->id]);
+            if($dataLesson['tabLessonContent'])
+            {
+                PackageLesson::updateOrCreate(
+                    [
+                        'id'=>$dataLesson['tabLessonContent']
+                    ],
+                    [
+                        'name'=>$dataLesson['packageLessonName']
+                    ]
+                );
+            }
+           else
+            {
+                $package= PackageLesson::create(['plan_id' => $entry->id, 'status' => 'new','name'=>$dataLesson['packageLessonName']]);
+                ZipPlanLesson::create(['plan_id'=>$entry->id,'package_id'=>$package->id]);
+            }
+
             return [
                 'code' => 0,
                 'message' => 'Đã cập nhật',
@@ -1453,6 +1473,7 @@ class PlansController extends AdminBaseController
                     }
                 }
                 $packageLesson[]=[
+                  'name'=>$packageLessons->name,
                   'id'=>$packageLessons->id,
                   'plan_id'=>$packageLessons->plan_id ,
                   'lesson_ids'=>$lessonIdArr

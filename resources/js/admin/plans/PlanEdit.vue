@@ -185,12 +185,11 @@
                                             <li v-for="(packageLesson,index) in lessonPackagePlans" class="nav-item" role="presentation">
                                                 <a :id="'kt_billing_1year_tab' +index" class="package-lesson-link nav-link fs-5 fw-bold me-3" :class="packageLesson.className"
                                                    data-bs-toggle="tab" role="tab" href="#kt_billing_year"
-                                                   @click="tabPackageLesson(packageLesson.package_id)">Lesson package
-                                                    {{index+1}}</a>
+                                                   @click="tabPackageLesson(packageLesson.package_id)">{{packageLesson.name}}</a>
                                             </li>
                                             <li v-if="roleAuth=='Super Administrator'">
                                                 <a class="btn btn-primary btn-active-primary btn-sm mt-2 ml-2"
-                                                   data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end" @click="addPackageLesson">Add package
+                                                   data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end" @click="addPackageLessonModal">Add package
                                                 </a>
                                             </li>
                                         </ul>
@@ -296,6 +295,9 @@
                                                     <div class="menu-item px-3" v-if="dataZipLesson.status=='waitting'">
                                                         <a v-if="checkZipPackage[0].lessonIds.length>0" class="menu-link px-3" @click="downloadLesson(tabLessonContent)">Zip package lesson</a>
                                                         <a v-else class="menu-link px-3 isDisabled" @click="downloadLesson(tabLessonContent)" >Zip package lesson</a>
+                                                    </div>
+                                                    <div class="menu-item px-3"  v-if="roleAuth=='Super Administrator'">
+                                                        <a class="menu-link px-3 " @click="renameLessonPackage(tabLessonContent)" >Rename lesson package</a>
                                                     </div>
                                                     <div class="menu-item px-3" v-if="roleAuth=='Super Administrator' && dataZipLesson.status=='done' ||  roleAuth=='Super Administrator' &&dataZipLesson.status=='waitting'">
                                                         <a class="menu-link px-3 text-danger "  @click="deletePackageLesson(tabLessonContent)" >Delete package lesson</a>
@@ -709,6 +711,32 @@
                 </div>
 
         <!-- END : MODAL DELETE LESSON PLAN -->
+
+        <!-- BEGIN: MODAL ADD NAME PACKAGE LESSON -->
+        <div class="modal fade" style="margin-right:50px " id="addNamePackageLesson" tabindex="-1" role="dialog"
+             aria-labelledby="addNamePackageLesson"
+             aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered popup-main-1" role="document"
+                 style="max-width: 500px;">
+                <div  class="modal-content box-shadow-main paymment-status" style="margin-right:20px; left:140px">
+                    <div class="close-popup" data-dismiss="modal"></div>
+                    <h3 style="text-align: center;" class="pt-7 fs-1 fw-bolder">Lesson package name</h3>
+                    <div class="px-10 py-5 text-left">
+                        <label>Lesson package <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control " placeholder="Enter the lesson package name" aria-label="" style="margin-bottom: 10px" aria-describedby="basic-addon1" v-model="packageLessonName">
+                        <error-label for="f_category_id" :errors="errors.packageLessonName"></error-label>
+                    </div>
+                    <div class="form-group d-flex justify-content-center">
+                        <button class="btn btn-primary ito-btn-add mr-3" data-dismiss="modal" @click="addPackageLesson(tabLessonContent)">
+                           Save
+                        </button>
+                        <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancel</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- END :MODAL ADD NAME PACKAGE LESSON -->
     </div>
 
 </template>
@@ -736,6 +764,8 @@
             };
 
             return {
+                idRenamePackageLesson:'',
+                packageLessonName:'',
                 valueValidateImportDevice:0,
                 sizeFile:'',
                 fileUpLoad:'',
@@ -820,6 +850,20 @@
             dueAtClear()
             {
                 this.entry.due_at='';
+            },
+            addPackageLessonModal:function(addPackage='')
+            {
+                $('#addNamePackageLesson').modal('show');
+                this.packageLessonName='';
+                this.tabLessonContent='';
+            },
+            renameLessonPackage:function(rename='')
+            {
+                $('#addNamePackageLesson').modal('show');
+                let self=this;
+                let pack= self.lessonPackagePlans.filter(item =>item.package_id==rename);
+                self.packageLessonName=pack[0].name;
+                console.log(self.packageLessonName);
             },
             deleteLessonModal:function(deleteIdLesson='')
             {
@@ -985,6 +1029,7 @@
                            // return self.lessonPackagePlans=dataPackage;
                            let data= dataPackage.map(res =>{
                                 return{
+                                    'name':res.name,
                                     'package_id':res.id,
                                     'plan_id':res.plan_id,
                                     'lessonIds':res.lesson_ids
@@ -1441,15 +1486,17 @@
             },
 
             // add packageLesson
-            async addPackageLesson() {
+            async addPackageLesson(tabLessonContent) {
                 this.isLoading = true;
                 const res = await $post('/xadmin/plans/addPackageLesson', {
+                    tabLessonContent:tabLessonContent,
+                   packageLessonName:this.packageLessonName,
                     entry: this.entry,
                     lessonIds: this.lessonIds
                 }, false);
                 this.isLoading = false;
                 if (res.code) {
-                    toastr.error(res.message);
+                    this.errors=res.errors;
                 } else {
                     this.errors = {};
                     toastr.success(res.message);
@@ -1461,7 +1508,7 @@
                    setTimeout(function ()
                     {
                         $.get('/xadmin/plans/dataPackage',function (res) {
-                       let dataPackage=   res.data.filter(item => item.plan_id==self.entry.id)
+                            let dataPackage=res.data.filter(item => item.plan_id==self.entry.id)
                             // self.lessonPackagePlans.forEach(function (e){
                             //     e.className = '';
                             // })
@@ -1471,6 +1518,7 @@
                           //  self.tabPackageLesson(self.tabLessonContent);
                             let data= dataPackage.map(rec =>{
                                 return{
+                                    'name':rec.name,
                                     'package_id':rec.id,
                                     'plan_id':rec.plan_id,
                                     'lessonIds':rec.lesson_ids
@@ -1482,7 +1530,9 @@
 
                         })
                     },0);
-
+                    $('#addNamePackageLesson').modal('hide');
+                    self.packageLessonName='';
+                    self.tabLessonContent='';
                     if (!this.entry.id) {
                         location.replace('/xadmin/plans/edit?id=' + this.entry.id);
                     }
