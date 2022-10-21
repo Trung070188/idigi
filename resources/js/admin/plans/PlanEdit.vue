@@ -1356,10 +1356,6 @@
                     this.errors = {};
                     toastr.success(res.message);
                     this.allLessonSelected=false;
-                    for (var key in this.filter) {
-                        this.filter[key] = '';
-                    }
-                    $router.setQuery({});
                     $('#kt_modal_invite').modal('hide');
                     let self =this;
 
@@ -1387,7 +1383,16 @@
                                 }
                             })
                         })
-                    },0);
+                    },1000);
+                       setTimeout(function () {
+                           for (var key in self.filter) {
+                               self.filter[key] = '';
+                           }
+                           $router.setQuery({});
+
+                       },0)
+
+
                 }
 
             },
