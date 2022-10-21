@@ -50,101 +50,101 @@ class SyncDataSec extends Command
     public function handle()
     {
 
-       /* //Đồng bộ file và inventory
-       \DB::connection('mysql3')->table('inventories')
-            //->where('id', '>',209)
-            ->chunkById(100, function ($inventories) {
-                foreach ($inventories as $inventory){
+        /* //Đồng bộ file và inventory
+        \DB::connection('mysql3')->table('inventories')
+             //->where('id', '>',209)
+             ->chunkById(100, function ($inventories) {
+                 foreach ($inventories as $inventory){
 
-                    $userCreate = User::where('username', $inventory->created_by)->first();
-                    $userUpdate = User::where('username', $inventory->last_modified_by)->first();
+                     $userCreate = User::where('username', $inventory->created_by)->first();
+                     $userUpdate = User::where('username', $inventory->last_modified_by)->first();
 
-                    $img = '';
-                    $physicalPath = '';
-                    $virtualPath = '';
-                    $fileImageId = NULL;
-                    $fileAssetId = NULL;
+                     $img = '';
+                     $physicalPath = '';
+                     $virtualPath = '';
+                     $fileImageId = NULL;
+                     $fileAssetId = NULL;
 
-                    if($inventory->image){
-                        $path = str_replace('\\', '/', $inventory->image);
-                        $paths = pathinfo($path);
+                     if($inventory->image){
+                         $path = str_replace('\\', '/', $inventory->image);
+                         $paths = pathinfo($path);
 
-                        $dir = public_path("files/attachments".$paths['dirname']);
+                         $dir = public_path("files/attachments".$paths['dirname']);
 
-                        if (!is_dir($dir)) {
-                            mkdir($dir, 0755, true);
-                        }
+                         if (!is_dir($dir)) {
+                             mkdir($dir, 0755, true);
+                         }
 
-                        try {
-                            $img = '/files/attachments'.$inventory->image;
-                            file_put_contents(public_path($img), file_get_contents(env('OLD_DOMAIN_SEC').$inventory->image));
-                            $fileImageId = $this->insertFile($img, 1);
+                         try {
+                             $img = '/files/attachments'.$inventory->image;
+                             file_put_contents(public_path($img), file_get_contents(env('OLD_DOMAIN_SEC').$inventory->image));
+                             $fileImageId = $this->insertFile($img, 1);
 
-                        }
-                        catch (\Exception $e) {
-                            echo $e->getMessage();
-                        }
+                         }
+                         catch (\Exception $e) {
+                             echo $e->getMessage();
+                         }
 
-                    }
-                    if($inventory->virtual_path){
-                        $path = str_replace('\\', '/', $inventory->virtual_path);
-                        $paths = pathinfo($path);
+                     }
+                     if($inventory->virtual_path){
+                         $path = str_replace('\\', '/', $inventory->virtual_path);
+                         $paths = pathinfo($path);
 
 
-                        $dir = public_path("files/attachments".$paths['dirname']);
+                         $dir = public_path("files/attachments".$paths['dirname']);
 
-                        if (!is_dir($dir)) {
-                            mkdir($dir, 0755, true);
-                        }
+                         if (!is_dir($dir)) {
+                             mkdir($dir, 0755, true);
+                         }
 
-                        try {
-                            $virtualPath = '/files/attachments'.$inventory->virtual_path;
-                            ini_set('memory_limit','2048M');
-                            file_put_contents(public_path($virtualPath), file_get_contents(env('OLD_DOMAIN_SEC').$inventory->virtual_path));
-                            $physicalPath = public_path($virtualPath);
-                            $fileAssetId = $this->insertFile($virtualPath, 0);
+                         try {
+                             $virtualPath = '/files/attachments'.$inventory->virtual_path;
+                             ini_set('memory_limit','2048M');
+                             file_put_contents(public_path($virtualPath), file_get_contents(env('OLD_DOMAIN_SEC').$inventory->virtual_path));
+                             $physicalPath = public_path($virtualPath);
+                             $fileAssetId = $this->insertFile($virtualPath, 0);
 
-                        }
-                        catch (\Exception $e) {
-                            echo $e->getMessage();
-                        }
+                         }
+                         catch (\Exception $e) {
+                             echo $e->getMessage();
+                         }
 
-                    }
+                     }
 
-                    $newInventory = [
-                        'physical_path' => $physicalPath,
-                        'virtual_path' => $virtualPath,
-                        'enabled' => $inventory->enabled,
-                        'image' => $img,
-                        'grade' => $inventory->grade,
-                        'name' => $inventory->name,
-                        'subject' => $inventory->subject,
-                        'type' => $inventory->type,
-                        'created_at' => $inventory->created_date,
-                        'updated_at' => $inventory->last_modified_date,
-                        'created_by' => @$userCreate->id,
-                        'updated_by' => @$userUpdate->id,
-                        'old_id' => $inventory->id,
-                        'rating' => $inventory->rating,
-                        'duration' => $inventory->duration,
-                        'link_webview' => $inventory->link_webview,
-                        'slideshows' => $inventory->slideshows,
-                        'tags' => $inventory->tags,
-                        'file_image_id' => $fileImageId,
-                        'file_asset_id' => $fileAssetId,
-                        'level' => 'sec',
-                    ];
+                     $newInventory = [
+                         'physical_path' => $physicalPath,
+                         'virtual_path' => $virtualPath,
+                         'enabled' => $inventory->enabled,
+                         'image' => $img,
+                         'grade' => $inventory->grade,
+                         'name' => $inventory->name,
+                         'subject' => $inventory->subject,
+                         'type' => $inventory->type,
+                         'created_at' => $inventory->created_date,
+                         'updated_at' => $inventory->last_modified_date,
+                         'created_by' => @$userCreate->id,
+                         'updated_by' => @$userUpdate->id,
+                         'old_id' => $inventory->id,
+                         'rating' => $inventory->rating,
+                         'duration' => $inventory->duration,
+                         'link_webview' => $inventory->link_webview,
+                         'slideshows' => $inventory->slideshows,
+                         'tags' => $inventory->tags,
+                         'file_image_id' => $fileImageId,
+                         'file_asset_id' => $fileAssetId,
+                         'level' => 'sec',
+                     ];
 
-                    Inventory::updateOrCreate([
-                        'old_id' => $inventory->id,
-                        'level' => 'sec',
-                    ], $newInventory);
+                     Inventory::updateOrCreate([
+                         'old_id' => $inventory->id,
+                         'level' => 'sec',
+                     ], $newInventory);
 
-                    echo 'Sync inventory: '.$inventory->id.PHP_EOL;
+                     echo 'Sync inventory: '.$inventory->id.PHP_EOL;
 
-                }
-            });
-        //Đồng bộ lesson*/
+                 }
+             });
+         //Đồng bộ lesson*/
         \DB::connection('mysql3')->table('lessons')
             ->chunkById(100, function ($lessons) {
                 foreach ($lessons as $lesson) {
@@ -231,15 +231,15 @@ class SyncDataSec extends Command
         \DB::connection('mysql3')->table('lessons')
             ->chunkById(100, function ($lessons) {
                 foreach ($lessons as $lesson){
-                   if($lesson->structure){
-                       $structure = json_decode($lesson->structure, true);
-                       if($structure){
-                           if(@$structure['sublesson']){
-                               $inventories= $structure['sublesson'];
-                               $newLesson = Lesson::where('old_id', $lesson->id)
-                                   ->where('level', 'sec')
-                                   ->first();
-                               foreach ($inventories as $inventory){
+                    if($lesson->structure){
+                        $structure = json_decode($lesson->structure, true);
+                        if($structure){
+                            if(@$structure['sublesson']){
+                                $inventories= $structure['sublesson'];
+                                $newLesson = Lesson::where('old_id', $lesson->id)
+                                    ->where('level', 'sec')
+                                    ->first();
+                                foreach ($inventories as $inventory){
                                     $newInventory = Inventory::where('old_id', $inventory['idSublesson'])
                                         ->where('level', 'sec')
                                         ->first();
@@ -254,11 +254,11 @@ class SyncDataSec extends Command
                                             'level' =>'sec'
                                         ]);
                                     }
-                               }
+                                }
 
-                           }
-                       }
-                   }
+                            }
+                        }
+                    }
 
                     echo 'Sync lesson inventory: '.$lesson->id.PHP_EOL;
                 }
