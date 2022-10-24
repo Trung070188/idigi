@@ -408,6 +408,7 @@
                     toastr.success(res.message);
                     this.planIds = [];
                     this.plan = [];
+                    this.allSelected=false;
 
                 }
                 $router.updateQuery({page: this.paginate.currentPage, _: Date.now()});
