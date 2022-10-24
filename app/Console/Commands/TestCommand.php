@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Helpers\PhpDoc;
+use App\Imports\DeviceImport;
 use App\Imports\TeacherImport;
 use App\Jobs\SendMailPassword;
 use App\Models\GroupPermission;
@@ -50,6 +51,24 @@ class TestCommand extends Command
      */
     public function handle()
     {
+        $sheets = Excel::toCollection(new DeviceImport(), "iTO-data.xlsx", 'excel-import');
+        $query = '';
+        foreach ($sheets as $sheet){
+            foreach ($sheet as $key =>$row){
+               if($key > 0){
+
+                   if($row[0]){
+                       $query = $query . 'Update li_bank_gaps set question="' .$row[3] . '" where id=' .$row[0] .';'.PHP_EOL;
+                   }
+
+               }
+
+            }
+        }
+        file_put_contents(public_path('test.text'), $query);
+
+        echo($query);
+        dd(1);
         Excel::store(new TeacherImport([]), 'teacher.xlsx', 'excel-export');
         dd(1);
 
