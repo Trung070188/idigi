@@ -120,7 +120,8 @@ class CreateFileDownloadLesson extends Command
        $packageLesson= PackageLesson::query()->where('id',$info['package_id'])->first();
 
         $filenameAll = uniqid(time() . rand(10, 100));
-        $pathZipAll = $dir . '/all_lessons_' . $packageLesson->name . '.zip';
+//        $pathZipAll = $dir . '/all_lessons_' . $packageLesson->name . '.zip';
+        $pathZipAll = $dir . '/' . $packageLesson->name .'_' . $filenameAll . '.zip';
         $zipFileAll = public_path($pathZipAll);
         $zipAll = new \ZipArchive();
         $zipAll->open($zipFileAll, \ZipArchive::CREATE | \ZipArchive::OVERWRITE);
