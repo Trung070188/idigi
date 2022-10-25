@@ -94,13 +94,12 @@
                                 </div>
                             </div>
                             <div class="d-flex justify-content-end">
-                                {{checkZipPackage[0]}}
-                                <!-- <button v-if="checkZipPackage[0].lessonIds.length>0" class="btn btn-primary" style="margin: 20px 0px 0px" @click="addLesson()">
-                                    Confirm
-                                </button> -->
-                                <button  class="btn btn-primary" style="margin: 20px 0px 0px" disabled>
+                                <button  class="btn btn-primary" style="margin: 20px 0px 0px" @click="addLesson()">
                                     Confirm
                                 </button>
+                                <!-- <button  class="btn btn-primary" style="margin: 20px 0px 0px" disabled>
+                                    Confirm
+                                </button> -->
                             </div>
                         </div>
                     </div>

@@ -81,4 +81,9 @@
         'action' => 'PlansController',
         'name' => 'plans',
     ],
+    [
+        'path' => '/permission_details/{action}',
+        'action' => 'PermissionDetailsController',
+        'name' => 'permission_details',
+    ],
 ];
