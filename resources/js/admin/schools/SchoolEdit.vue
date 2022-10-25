@@ -263,7 +263,7 @@
             const courses2 = $json.courses2;
             courses2.forEach(function (e) {
                 e.unit.forEach(function (e1) {
-                    e1.label = e1.unit_name;
+                    e1.label = 'Unit' + ' ' + e1.position +' : '+e1.unit_name;
                 })
 
             })
