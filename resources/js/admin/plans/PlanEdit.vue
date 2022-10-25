@@ -94,7 +94,11 @@
                                 </div>
                             </div>
                             <div class="d-flex justify-content-end">
-                                <button class="btn btn-primary" style="margin: 20px 0px 0px" @click="addLesson()">
+                                {{checkZipPackage[0]}}
+                                <!-- <button v-if="checkZipPackage[0].lessonIds.length>0" class="btn btn-primary" style="margin: 20px 0px 0px" @click="addLesson()">
+                                    Confirm
+                                </button> -->
+                                <button  class="btn btn-primary" style="margin: 20px 0px 0px" disabled>
                                     Confirm
                                 </button>
                             </div>
@@ -274,6 +278,7 @@
                                     </div>
                                     <!-- END: DEVICE LIST PLAN -->
                                     <!--BEGIN: PACKAGE LESSON PLAN -->
+                                 
 
                                         <div id="kt_billing_year" class="card-body p-0 tab-pane fade"  role="tabpanel" aria-labelledby="kt_billing_year" >
                                             <div class="d-flex justify-content-end mb-4" >
