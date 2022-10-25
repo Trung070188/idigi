@@ -247,7 +247,7 @@
             let unitTreeselect = !units ? null : units.map(rec => {
                 return {
                     'id': rec.id,
-                    'label': 'Unit' + ' ' + e1.position +' : '+e1.unit_name,
+                    'label': 'Unit' + ' ' + rec.position +' : '+rec.unit_name,
                 }
             })
 
