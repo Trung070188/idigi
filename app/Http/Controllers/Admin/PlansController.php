@@ -1010,6 +1010,8 @@ class PlansController extends AdminBaseController
                     $fullNameIt = $user->full_name;
                 }
             }
+           if($entry->due_at!=null)
+           {
             $data[] = [
                 'id' => $entry->id,
                 'name' => $entry->name,
@@ -1021,6 +1023,21 @@ class PlansController extends AdminBaseController
                 'expire_date' =>Carbon::parse($entry->expire_date)->format('d/m/Y'),
                 'due_at' =>Carbon::parse($entry->due_at)->format('d/m/Y'),
             ];
+           }
+           else{
+            $data[] = [
+                'id' => $entry->id,
+                'name' => $entry->name,
+                'created_by' => $fullName,
+                'assign_to' => $fullNameIt,
+                'created_at' => $entry->created_at,
+                'status' => $entry->status,
+                'lengthDevice' => $lengthDevice,
+                'expire_date' =>Carbon::parse($entry->expire_date)->format('d/m/Y'),
+                'due_at' =>$entry->due_at,
+            ];
+           }
+            
         }
         return [
             'code' => 0,
@@ -1254,10 +1271,18 @@ class PlansController extends AdminBaseController
         {
             $rules['packageLessonName']=['required'];
         }
+        
         $message=[
-            'packageLessonName.required'=>'The package lesson name field is required.'
+            'packageLessonName.required'=>'The package lesson name field is required.',
             ];
         $v = Validator::make($data, $rules,$message,$dataLesson);
+        $v->after(function ($validate) use ($dataLesson){
+               if(strlen($dataLesson['packageLessonName'])>50)
+                {
+                    $validate->errors()->add('packageLessonName','The package lessson name may not be greater than 50 characters.');
+                }
+                
+        });
 
         if ($v->fails()) {
             return [
@@ -1515,17 +1540,12 @@ class PlansController extends AdminBaseController
                ];
            }
             $payload=[];
-            // dd(strtotime('09-03-2018'));
-            // dd(strtotime('01-10-2022'));
             $devices= json_decode($dataAll['dataDevice'], true);
            foreach ($devices as $device)
            {
-            //    dd($device['expire_date']);
                $payload [] = [
-//                            'secret_key_plan' => $entry->secret_key,
                    'username' => $assignTo->username,
                    'full_name' => $assignTo->full_name,
-//                            'plan' => $apiPlan,
                    'user_id' => $assignTo->id,
                    'device_uid' => $device['device_uid'],
                    'device_name' => $device['device_name'],
@@ -1536,12 +1556,9 @@ class PlansController extends AdminBaseController
            }
             $dataDevicePlanExport = [];
             foreach ($payload as $pay) {
-//                $jwt = JWT::encode($pay, env('SECRET_KEY'), 'HS256');
                 $dataDevicePlanExport[] = [
                     'device_name' => $pay['device_name'],
-//                    'device_uid' => $pay['device_uid'],
                     'expire_date' => $pay['expired'],
-//                    'code' => $jwt
                 ];
             }
 
