@@ -2,14 +2,14 @@
     <div class="container-fluid" >
         <ActionBar type="index"
                    title="Permission Detail"/>
-       <div class="row">
+         <div class="row">
             <div class="col-lg-12">
                 <div class="card card-custom card-stretch gutter-b">
                     <div class="card-header border-0 pt-5">
                         <!--<div class="title">
                             <label>Roles</label>
                         </div>-->
-                        <button class="btn btn-primary button-create mb-3"><i class="bi bi-plus-lg"></i>Add feature</button>
+                        <button class="btn btn-primary button-create mb-3" ><i class="bi bi-plus-lg"></i>New Role</button>
                     </div>
                     <!--<hr>-->
                     <div class="card-header border-0 pt-2">
@@ -17,24 +17,21 @@
                             <tbody>
                             <tr>
                                 <td></td>
-                                <td  v-for="role in roles" >
+                                <td v-for="role in roles">
                                     <div class="text-center" style="cursor: pointer">
-                                        <span class="badge badge-warning fs-6 fw-bold" @click="showModalRole(role)" >{{role.role_name}} </span>
-                                        <span><i v-if="role.allow_deleted == 1" @click="remove(role)" class="fa fa-trash" style="margin-left:10px"></i></span>
+                                        <span class="badge badge-warning fs-6 fw-bold"  >{{role.role_name}}</span>
                                     </div>
                                 </td>
                             </tr>
                             </tbody>
-                            <tr >
+                            <tr v-for="permission in permissions" >
                                 <th scope="col">
-                                    <span ></span>
-                                    <span  class="d-block fw-bold ml-5 text-lowercase"><i class="bi bi-arrow-right-short mr-1"></i></span>
+                                    <span >{{permission.display_permission_detail}}</span>
+                                    <span v-for="permissionDetail in permission.permission_details" class="d-block fw-bold ml-5 text-lowercase"><i class="bi bi-arrow-right-short mr-1"></i>{{permissionDetail.name}}</span>
                                 </th>
-
                                 <td v-for="role in roles">
-
                                     <div class="form-check form-check-custom form-check-solid justify-content-center" >
-                                        <input  class="form-check-input h-20px w-20px"   type="checkbox"  value="" >
+                                        <input  class="form-check-input h-20px w-20px" type="checkbox"  value="" >
                                         <br>
                                     </div>
                                 </td>
@@ -66,6 +63,8 @@
         components: {ActionBar},
         data() {
             return {
+                permissions:[],
+                roles:[],
                 entries: [],
                 filter: {
                     keyword: $q.keyword || '',
@@ -94,10 +93,9 @@
             async load() {
                 let query = $router.getQuery();
                 const res  = await $get('/xadmin/permission_details/data', query);
-                this.paginate = res.paginate;
-                this.entries = res.data;
-                this.from = (this.paginate.currentPage-1)*(this.limit) + 1;
-                this.to = (this.paginate.currentPage-1)*(this.limit) + this.entries.length;
+               this.roles=res.data.roles;
+               this.permissions=res.data.permissions
+                console.log(this.entries);
             },
             async remove(entry) {
                 if (!confirm('Xóa bản ghi: ' + entry.id)) {

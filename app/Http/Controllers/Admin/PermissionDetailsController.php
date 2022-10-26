@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
-
+use App\Models\Permission;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -32,7 +32,7 @@ class PermissionDetailsController extends AdminBaseController
     */
     public function index() {
         $title = 'PermissionDetail';
-        $component = 'Permission_detailIndex';
+        $component = 'PermissionDetailIndex';
         return component($component, compact('title'));
     }
 
@@ -103,7 +103,13 @@ class PermissionDetailsController extends AdminBaseController
 
         $data = $req->get('entry');
 
-        $rules = [];
+        $rules = [
+    'display_name' => 'max:191',
+    'name' => 'max:191',
+    'code' => 'max:191',
+    'permision_id' => 'numeric',
+    'order' => 'numeric',
+];
 
         $v = Validator::make($data, $rules);
 
@@ -177,33 +183,41 @@ class PermissionDetailsController extends AdminBaseController
     * @return  array
     */
     public function data(Request $req) {
+
         $roles = Role::query()
-        ->with(['permissions'])
+        ->with(['permissionDetails'])
         ->where('role_name', '<>','Super Administrator')
         ->orderBy('id', 'ASC')->get();
-        $query = PermissionDetail::query()->orderBy('id', 'desc');
-
-        if ($req->keyword) {
-            //$query->where('title', 'LIKE', '%' . $req->keyword. '%');
-        }
-
-        $query->createdIn($req->created);
-
-
-        $entries = $query->paginate();
+        $permissions=Permission::with(['permissionDetails'])->whereNotNull('display_permission_detail')->get();
+       $data=[];
+       foreach($roles as $role)
+       {
+           $data[]=[
+                'role_name' => $role->role_name,
+                'id' => $role->id,
+                'role_description' => $role->role_description,
+                'allow_deleted' => $role->allow_deleted,
+           ];
+       }
 
         return [
-            'code' => 0,
-            'data' => $entries->items(),
-            'paginate' => [
-                'currentPage' => $entries->currentPage(),
-                'lastPage' => $entries->lastPage(),
-            ]
+           'code'=> 0,
+           'data'=>[
+               'roles'=>$data,
+               'permissions'=>$permissions,
+           ]
+
+             
         ];
     }
 
     public function export() {
                 $keys = [
+                            'display_name' => ['A', 'display_name'],
+                            'name' => ['B', 'name'],
+                            'code' => ['C', 'code'],
+                            'permision_id' => ['D', 'permision_id'],
+                            'order' => ['E', 'order'],
                             ];
 
         $query = PermissionDetail::query()->orderBy('id', 'desc');

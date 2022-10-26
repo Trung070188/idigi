@@ -25,7 +25,8 @@ class Permission extends BaseModel
         'description',
         'path',
         'code',
-        'group_permission_id'
+        'group_permission_id',
+        'display_permission_detail'
     ];
 
 
@@ -34,7 +35,10 @@ class Permission extends BaseModel
         return $this->belongsToMany(Role::class, 'role_has_permissions');
 
     }
-
+    public function permissionDetails()
+    {
+        return $this->hasMany(PermissionDetail::class,'permission_id');
+    }
     public function groupPermission(){
         return $this->belongsTo(GroupPermission::class, 'group_permission_id');
     }
