@@ -9,7 +9,7 @@
                         <!--<div class="title">
                             <label>Roles</label>
                         </div>-->
-                        <button class="btn btn-primary button-create mb-3" ><i class="bi bi-plus-lg"></i>New Role</button>
+                        <button class="btn btn-primary button-create mb-3" ><i class="bi bi-plus-lg"></i>Add feature</button>
                     </div>
                     <!--<hr>-->
                     <div class="card-header border-0 pt-2">
