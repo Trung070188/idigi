@@ -158,10 +158,6 @@
                                         </select>
                                         <error-label :errors="errors.idRoleIt"></error-label>
                                     </div>
-<<<<<<< HEAD
-=======
-
->>>>>>> 50892827faa6ed3f3dc99abf8674540e271207e2
                                 </div>
                                 <div class="row">
                                     <div class="form-group col-lg-4">
