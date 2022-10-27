@@ -161,7 +161,6 @@
                                         </select>
                                         <error-label :errors="errors.idRoleIt"></error-label>
                                     </div>
-
                                 </div>
                                 <div class="row">
                                     <div class="form-group col-lg-4">
@@ -277,7 +276,7 @@
                                     </div>
                                     <!-- END: DEVICE LIST PLAN -->
                                     <!--BEGIN: PACKAGE LESSON PLAN -->
-                                 
+
 
                                         <div id="kt_billing_year" class="card-body p-0 tab-pane fade"  role="tabpanel" aria-labelledby="kt_billing_year" >
                                             <div class="d-flex justify-content-end mb-4" >
@@ -938,7 +937,6 @@
                     }
                 }
 
-                //call lại bảng ZipPlanLesson
 
                setTimeout(function () {
                     $.get('/xadmin/plans/dataZipLessonPlan',function (res) {
