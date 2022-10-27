@@ -417,20 +417,10 @@ class UserDevicesController extends AdminBaseController
             if(!$expired){
                 $expired = Carbon::now()->addHours(-10);
             }
-//            $apiPlan=[];
-//            foreach ($plans as $plan)
-//            {
-//                $apiPlan[]=[
-//                    'id'=>$plan->id,
-//                    'name'=>$plan->name,
-//                    'secret_key'=>$plan->secret_key,
-//                ];
-//            }
             if($device){
                 $payload = [
                     'username'=>$user->username,
                     'full_name'=>$user->full_name,
-//                    'plan' => $apiPlan,
                     'user_id' => $user->id,
                     'device_uid' =>$device->device_uid,
                     'device_name' =>$device->device_name,

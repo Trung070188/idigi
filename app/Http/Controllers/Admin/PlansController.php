@@ -1594,7 +1594,36 @@ class PlansController extends AdminBaseController
     {
         return response()->download(public_path('sample/Import_device_on_PLAN_template.xlsx'));
     }
+    public function generateToken(Request $req)
+    {
+        
+        $device = UserDevice::where('id', $req->device_id)
+                ->where('status', 2)
+                ->first();
+        $user=User::query()->where('id',$device->user_id)->first();
+            if($device)
+        {
+            if($device){
+                $payload = [
+                    'username'=>$user->username,
+                    'full_name'=>$user->full_name,
+                    'user_id' => $user->id,
+                    'device_uid' =>$device->device_uid,
+                    'device_name' =>$device->device_name,
+                    'secret_key' =>$device->secret_key,
+                    'create_time' =>  Carbon::now()->timestamp,
+                    'expire_date'=>strtotime($device->expire_date)
+                ];
+                $jwt = JWT::encode($payload, env('SECRET_KEY'), 'HS256');
+                return ['status' => 1, 'token' =>  $jwt];
+            }
+            return  ['status' => 0, 'token' =>  'Error'];
 
-
+        }
+        
     }
+}
+
+
+    
 
