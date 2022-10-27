@@ -9,7 +9,7 @@ class PackageLesson extends Model
 {
     protected $table = 'package_lessons';
     protected $fillable = [
-        'total_lesson',
+        'name',
         'plan_id',
         'lesson_ids',
         'status',

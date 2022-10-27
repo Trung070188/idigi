@@ -209,6 +209,7 @@ class PlansController extends AdminBaseController
                 }
             }
             $lessonPackagePlans[] = [
+                'name'=>$packageLesson->name,
                 'package_id' => $packageLesson->id,
                 'plan_id' => $packageLesson->plan_id,
                 'lessonIds' => $lessonIdArr,
@@ -250,6 +251,18 @@ class PlansController extends AdminBaseController
             'message' => 'Đã xóa'
         ];
     }
+    public function removeAllPlan(Request $req)
+    {
+       $dataAll=$req->all();
+       Plan::whereIn('id',$dataAll['ids'])->delete();
+        PackageLesson::whereIn('plan_id',$dataAll['ids'])->delete();
+        ZipPlanLesson::whereIn('plan_id',$dataAll['ids'])->delete();
+        UserDevice::whereIn('plan_id',$dataAll['ids'])->delete();
+        return [
+            'code' => 0,
+            'message' => 'Đã xóa'
+        ];
+    }
 
     public function removePackageLesson(Request $req)
     {
@@ -280,7 +293,7 @@ class PlansController extends AdminBaseController
         $data = $req->get('entry');
         $current = Carbon::now()->format('Y/m/d');
         $rules = [
-            'name' => ['required'],
+            'name' => ['required','max:300'],
             'plan_description' => ['max:255'],
         ];
         if (!isset($data['id'])) {
@@ -318,10 +331,13 @@ class PlansController extends AdminBaseController
         {
             if(@$data['due_at'])
             {
-                if($data['expire_date']<$data['due_at'])
+                if(@$data['expire_date'])
                 {
-                    $validate->errors()->add('due_at','The due date must be a date before or equal to ' .Carbon::parse($data['expire_date'])->format('d/m/Y') .'.');
+                    if($data['expire_date']<$data['due_at'])
+                    {
+                        $validate->errors()->add('due_at','The due date must be a date before or equal to ' .Carbon::parse($data['expire_date'])->format('d/m/Y') .'.');
 
+                    }
                 }
             }
 
@@ -727,7 +743,7 @@ class PlansController extends AdminBaseController
                     $device->plan_id = $entry->id;
                     if($import['expire_date']!=null)
                     {
-                        $device->expire_date = Carbon::createFromFormat('d/m/Y', $import['expire_date'])->format('Y-m-d H:i:s');
+                        $device->expire_date = Carbon::createFromFormat('d/m/Y', $import['expire_date'])->format('Y-m-d');
                     }
                     if($import['expire_date']==null)
                     {
@@ -747,6 +763,8 @@ class PlansController extends AdminBaseController
 
     public function exportDevice(Request $req)
     {
+        ob_get_clean();
+
         $dataImport = $req->all();
         $data = json_decode($req->get('entry'),true);
 
@@ -807,14 +825,11 @@ class PlansController extends AdminBaseController
                             'device_name' => $import->device_name,
                             'secret_key' => $entry->secret_key,
                             'create_time' => Carbon::now()->timestamp,
-                            'expired' => strtotime(Carbon::createFromFormat('d/m/Y',$import->expire_date)->format('d-m-Y')),
+                            'expired' => strtotime(Carbon::createFromFormat('Y-m-d',$import->expire_date)->format('d-m-Y')),
                         ];
                     }
                     $dataPlanExport = [];
-
                     foreach ($payload as $pay) {
-
-
                         $jwt = JWT::encode($pay, env('SECRET_KEY'), 'HS256');
                         $dataPlanExport[] = [
                             'device_name' => $pay['device_name'],
@@ -995,6 +1010,8 @@ class PlansController extends AdminBaseController
                     $fullNameIt = $user->full_name;
                 }
             }
+           if($entry->due_at!=null)
+           {
             $data[] = [
                 'id' => $entry->id,
                 'name' => $entry->name,
@@ -1006,6 +1023,21 @@ class PlansController extends AdminBaseController
                 'expire_date' =>Carbon::parse($entry->expire_date)->format('d/m/Y'),
                 'due_at' =>Carbon::parse($entry->due_at)->format('d/m/Y'),
             ];
+           }
+           else{
+            $data[] = [
+                'id' => $entry->id,
+                'name' => $entry->name,
+                'created_by' => $fullName,
+                'assign_to' => $fullNameIt,
+                'created_at' => $entry->created_at,
+                'status' => $entry->status,
+                'lengthDevice' => $lengthDevice,
+                'expire_date' =>Carbon::parse($entry->expire_date)->format('d/m/Y'),
+                'due_at' =>$entry->due_at,
+            ];
+           }
+
         }
         return [
             'code' => 0,
@@ -1232,13 +1264,25 @@ class PlansController extends AdminBaseController
         if (!$req->isMethod('POST')) {
             return ['code' => 405, 'message' => 'Method not allow'];
         }
-
         $data = $req->get('entry');
-
         $rules = [
         ];
+        if($dataLesson['packageLessonName']==null)
+        {
+            $rules['packageLessonName']=['required'];
+        }
 
-        $v = Validator::make($data, $rules);
+        $message=[
+            'packageLessonName.required'=>'The package lesson name field is required.',
+            ];
+        $v = Validator::make($data, $rules,$message,$dataLesson);
+        $v->after(function ($validate) use ($dataLesson){
+               if(strlen($dataLesson['packageLessonName'])>50)
+                {
+                    $validate->errors()->add('packageLessonName','The package lessson name may not be greater than 50 characters.');
+                }
+
+        });
 
         if ($v->fails()) {
             return [
@@ -1258,8 +1302,23 @@ class PlansController extends AdminBaseController
                     'message' => 'Không tìm thấy',
                 ];
             }
-          $package= PackageLesson::create(['plan_id' => $entry->id, 'status' => 'new']);
-            ZipPlanLesson::create(['plan_id'=>$entry->id,'package_id'=>$package->id]);
+            if($dataLesson['tabLessonContent'])
+            {
+                PackageLesson::updateOrCreate(
+                    [
+                        'id'=>$dataLesson['tabLessonContent']
+                    ],
+                    [
+                        'name'=>$dataLesson['packageLessonName']
+                    ]
+                );
+            }
+           else
+            {
+                $package= PackageLesson::create(['plan_id' => $entry->id, 'status' => 'new','name'=>$dataLesson['packageLessonName']]);
+                ZipPlanLesson::create(['plan_id'=>$entry->id,'package_id'=>$package->id]);
+            }
+
             return [
                 'code' => 0,
                 'message' => 'Đã cập nhật',
@@ -1439,6 +1498,7 @@ class PlansController extends AdminBaseController
                     }
                 }
                 $packageLesson[]=[
+                  'name'=>$packageLessons->name,
                   'id'=>$packageLessons->id,
                   'plan_id'=>$packageLessons->plan_id ,
                   'lesson_ids'=>$lessonIdArr
@@ -1487,10 +1547,8 @@ class PlansController extends AdminBaseController
            {
             //    dd($device['expire_date']);
                $payload [] = [
-//                            'secret_key_plan' => $entry->secret_key,
                    'username' => $assignTo->username,
                    'full_name' => $assignTo->full_name,
-//                            'plan' => $apiPlan,
                    'user_id' => $assignTo->id,
                    'device_uid' => $device['device_uid'],
                    'device_name' => $device['device_name'],
@@ -1501,12 +1559,9 @@ class PlansController extends AdminBaseController
            }
             $dataDevicePlanExport = [];
             foreach ($payload as $pay) {
-//                $jwt = JWT::encode($pay, env('SECRET_KEY'), 'HS256');
                 $dataDevicePlanExport[] = [
                     'device_name' => $pay['device_name'],
-//                    'device_uid' => $pay['device_uid'],
                     'expire_date' => $pay['expired'],
-//                    'code' => $jwt
                 ];
             }
 

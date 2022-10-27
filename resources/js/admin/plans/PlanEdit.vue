@@ -158,7 +158,10 @@
                                         </select>
                                         <error-label :errors="errors.idRoleIt"></error-label>
                                     </div>
+<<<<<<< HEAD
+=======
 
+>>>>>>> 50892827faa6ed3f3dc99abf8674540e271207e2
                                 </div>
                                 <div class="row">
                                     <div class="form-group col-lg-4">
@@ -185,12 +188,11 @@
                                             <li v-for="(packageLesson,index) in lessonPackagePlans" class="nav-item" role="presentation">
                                                 <a :id="'kt_billing_1year_tab' +index" class="package-lesson-link nav-link fs-5 fw-bold me-3" :class="packageLesson.className"
                                                    data-bs-toggle="tab" role="tab" href="#kt_billing_year"
-                                                   @click="tabPackageLesson(packageLesson.package_id)">Lesson package
-                                                    {{index+1}}</a>
+                                                   @click="tabPackageLesson(packageLesson.package_id)">{{packageLesson.name}}</a>
                                             </li>
                                             <li v-if="roleAuth=='Super Administrator'">
                                                 <a class="btn btn-primary btn-active-primary btn-sm mt-2 ml-2"
-                                                   data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end" @click="addPackageLesson">Add package
+                                                   data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end" @click="addPackageLessonModal">Add package
                                                 </a>
                                             </li>
                                         </ul>
@@ -220,8 +222,12 @@
                                                 <div class="menu-item px-3">
                                                     <a class="menu-link px-3" @click="importDevice()">Import devices</a>
                                                 </div>
-                                                <div class="menu-item px-3">
+
+                                                <div class="menu-item px-3" v-if="data.length>0">
                                                     <a class="menu-link px-3" @click="exportDevice">Export device list</a>
+                                                </div>
+                                                <div class="menu-item px-3" v-else>
+                                                    <a class="menu-link px-3 isDisabled" @click="exportDevice" >Export device list</a>
                                                 </div>
                                             </div>
                                         </div>
@@ -292,9 +298,15 @@
                                                     <div class="menu-item px-3" v-if="dataZipLesson.status=='waitting'">
                                                         <a v-if="checkZipPackage[0].lessonIds.length>0" class="menu-link px-3" @click="downloadLesson(tabLessonContent)">Zip package lesson</a>
                                                         <a v-else class="menu-link px-3 isDisabled" @click="downloadLesson(tabLessonContent)" >Zip package lesson</a>
+<<<<<<< HEAD
+                                                    </div>
+                                                    <div class="menu-item px-3"  v-if="roleAuth=='Super Administrator'">
+                                                        <a class="menu-link px-3 " @click="renameLessonPackage(tabLessonContent)" >Rename lesson package</a>
+=======
+>>>>>>> 50892827faa6ed3f3dc99abf8674540e271207e2
                                                     </div>
                                                     <div class="menu-item px-3" v-if="roleAuth=='Super Administrator' && dataZipLesson.status=='done' ||  roleAuth=='Super Administrator' &&dataZipLesson.status=='waitting'">
-                                                        <a class="menu-link px-3 text-danger "  @click="deletePackageLesson(tabLessonContent)" >Delete package lesson</a>
+                                                        <a class="menu-link px-3 text-danger "  @click="deletePackageLessonModal(tabLessonContent)" >Delete package lesson</a>
                                                     </div>
                                                 </div>
 
@@ -705,6 +717,61 @@
                 </div>
 
         <!-- END : MODAL DELETE LESSON PLAN -->
+
+        <!-- BEGIN: MODAL ADD NAME PACKAGE LESSON -->
+
+        <div class="modal fade" style="margin-right:50px " id="addNamePackageLesson" tabindex="-1" role="dialog"
+             aria-labelledby="addNamePackageLesson"
+             aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered popup-main-1" role="document"
+                 style="max-width: 500px;">
+                <div  class="modal-content box-shadow-main paymment-status" style="margin-right:20px; left:140px">
+                    <div class="close-popup" data-dismiss="modal"></div>
+                    <h3 style="text-align: center;" class="pt-7 fs-1 fw-bolder">Lesson package name</h3>
+                    <div class="px-10 py-5 text-left">
+                        <label>Lesson package <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control " placeholder="Enter the lesson package name" aria-label="" style="margin-bottom: 10px" aria-describedby="basic-addon1" v-model="packageLessonName">
+                        <error-label for="f_category_id" :errors="errors.packageLessonName"></error-label>
+                    </div>
+                    <div class="form-group d-flex justify-content-center">
+                        <button class="btn btn-primary ito-btn-add mr-3" data-dismiss="modal" @click="addPackageLesson(tabLessonContent)">
+                           Save
+                        </button>
+                        <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancel</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- END :MODAL ADD NAME PACKAGE LESSON -->
+
+        <!--BEGIN: MODAL DELETE PACKAGE LESSON -->
+
+        <div class="modal fade" style="margin-right:50px;border:2px solid #333333  " id="delete" tabindex="-1" role="dialog"
+             aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered popup-main-1" role="document"
+                 style="max-width: 450px;">
+                <div class="modal-content box-shadow-main paymment-status" style="left:120px;text-align: center; padding: 20px 0px 55px;">
+                    <div class="close-popup" data-dismiss="modal"></div>
+                    <div class="swal2-icon swal2-warning swal2-icon-show">
+                        <div class="swal2-icon-content" style="margin: 0px 25px 0px ">!</div>
+                    </div>
+                    <div class="swal2-html-container">
+                        <p >Are you sure to delete this package lesson?</p>
+                    </div>
+                    <div class="swal2-actions">
+                        <button type="submit" id="kt_modal_new_target_submit1" class="swal2-confirm btn fw-bold btn-danger" @click="deletePackageLesson(deletePack)">
+                            <span class="indicator-label">Yes, delete!</span>
+                        </button>
+                        <button type="reset" id="kt_modal_new_target_cancel1" class="swal2-cancel btn fw-bold btn-active-light-primary" data-bs-dismiss="modal" style="margin: 0px 8px 0px">No, cancel</button>
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <!--END :MODAL DELETE PACKAGE LESSON -->
     </div>
 
 </template>
@@ -732,6 +799,9 @@
             };
 
             return {
+                deletePack:'',
+                idRenamePackageLesson:'',
+                packageLessonName:'',
                 valueValidateImportDevice:0,
                 sizeFile:'',
                 fileUpLoad:'',
@@ -817,6 +887,25 @@
             {
                 this.entry.due_at='';
             },
+            deletePackageLessonModal:function(deletePackage='')
+            {
+              $('#delete').modal('show');
+              this.deletePack=deletePackage;
+            },
+            addPackageLessonModal:function(addPackage='')
+            {
+                $('#addNamePackageLesson').modal('show');
+                this.packageLessonName='';
+                this.tabLessonContent='';
+            },
+            renameLessonPackage:function(rename='')
+            {
+                $('#addNamePackageLesson').modal('show');
+                let self=this;
+                let pack= self.lessonPackagePlans.filter(item =>item.package_id==rename);
+                self.packageLessonName=pack[0].name;
+                console.log(self.packageLessonName);
+            },
             deleteLessonModal:function(deleteIdLesson='')
             {
                 $('#deleteLesson').modal('show');
@@ -851,7 +940,6 @@
                     }
                 }
 
-                //call lại bảng ZipPlanLesson
 
                setTimeout(function () {
                     $.get('/xadmin/plans/dataZipLessonPlan',function (res) {
@@ -965,9 +1053,9 @@
 
                           }
             },
-            async deletePackageLesson(tabLessonContent)
+            async deletePackageLesson(deletePack)
             {
-                const res = await $post('/xadmin/plans/deletePackageLesson', {id: tabLessonContent,entry:this.entry});
+                const res = await $post('/xadmin/plans/deletePackageLesson', {id: deletePack,entry:this.entry});
                 if (res.code) {
                     toastr.error(res.message);
                 } else {
@@ -981,6 +1069,7 @@
                            // return self.lessonPackagePlans=dataPackage;
                            let data= dataPackage.map(res =>{
                                 return{
+                                    'name':res.name,
                                     'package_id':res.id,
                                     'plan_id':res.plan_id,
                                     'lessonIds':res.lesson_ids
@@ -989,7 +1078,7 @@
                             return self.lessonPackagePlans=data;
                         })
                     },0);
-
+                    $('#delete').modal('hide');
                 }
             },
             backIndex() {
@@ -1352,12 +1441,42 @@
                     this.errors = {};
                     toastr.success(res.message);
                     this.allLessonSelected=false;
-                    for (var key in this.filter) {
-                        this.filter[key] = '';
-                    }
-                    $router.setQuery({});
                     $('#kt_modal_invite').modal('hide');
                     let self =this;
+
+                    setTimeout(function ()
+                    {
+                        $.get('/xadmin/plans/dataPackage',function (res) {
+                            let dataPackage= res.data.filter(item => item.plan_id==self.entry.id)
+                            // return self.lessonPackagePlans=dataPackage;
+                            let data= dataPackage.map(res =>{
+                                return{
+                                    'package_id':res.id,
+                                    'plan_id':res.plan_id,
+                                    'lessonIds':res.lesson_ids
+                                }
+                            })
+                            self.lessonPackagePlans.forEach(function (e) {
+                                if(e.package_id==self.tabLessonContent)
+                                {
+                                    self.dataAddLessonPlan=[];
+                                   e.lessonIds.forEach(function (e1) {
+                                      let array=self.entries.filter(item => item.id==e1)
+                                      self.dataAddLessonPlan.push(array[0]);
+
+                                   })
+                                }
+                            })
+                        })
+                    },1000);
+                       setTimeout(function () {
+                           for (var key in self.filter) {
+                               self.filter[key] = '';
+                           }
+                           $router.setQuery({});
+
+                       },0)
+
 
                     setTimeout(function ()
                     {
@@ -1432,15 +1551,17 @@
             },
 
             // add packageLesson
-            async addPackageLesson() {
+            async addPackageLesson(tabLessonContent) {
                 this.isLoading = true;
                 const res = await $post('/xadmin/plans/addPackageLesson', {
+                    tabLessonContent:tabLessonContent,
+                   packageLessonName:this.packageLessonName,
                     entry: this.entry,
                     lessonIds: this.lessonIds
                 }, false);
                 this.isLoading = false;
                 if (res.code) {
-                    toastr.error(res.message);
+                    this.errors=res.errors;
                 } else {
                     this.errors = {};
                     toastr.success(res.message);
@@ -1452,7 +1573,7 @@
                    setTimeout(function ()
                     {
                         $.get('/xadmin/plans/dataPackage',function (res) {
-                       let dataPackage=   res.data.filter(item => item.plan_id==self.entry.id)
+                            let dataPackage=res.data.filter(item => item.plan_id==self.entry.id)
                             // self.lessonPackagePlans.forEach(function (e){
                             //     e.className = '';
                             // })
@@ -1462,6 +1583,7 @@
                           //  self.tabPackageLesson(self.tabLessonContent);
                             let data= dataPackage.map(rec =>{
                                 return{
+                                    'name':rec.name,
                                     'package_id':rec.id,
                                     'plan_id':rec.plan_id,
                                     'lessonIds':rec.lesson_ids
@@ -1473,7 +1595,9 @@
 
                         })
                     },0);
-
+                    $('#addNamePackageLesson').modal('hide');
+                    self.packageLessonName='';
+                    self.tabLessonContent='';
                     if (!this.entry.id) {
                         location.replace('/xadmin/plans/edit?id=' + this.entry.id);
                     }
