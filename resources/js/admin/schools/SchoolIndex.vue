@@ -79,6 +79,7 @@
                                         <i class="bi bi-plus-lg"></i>New School
                                     </button>
                                 </a>
+                                {{check}}
                             </div>
                             <div class="d-flex justify-content-end align-items-center d-none"
                                  data-kt-customer-table-toolbar="selected" v-if=" schoolIds!=''">
@@ -86,8 +87,12 @@
                                     <span class="me-2" data-kt-customer-table-select="selected_count"></span>{{
                                     schoolIds.length }} Selected
                                 </div>
-                                <button v-if="permissions['018']"  type="button" class="btn btn-danger"
+
+                                <button v-if="permissions['018'] && check==0"  type="button" class="btn btn-danger"
                                         data-kt-customer-table-select="delete_selected" @click="removeAll">Delete Selected
+                                </button>
+                                <button v-if="permissions['018'] && check==1"  type="button" class="btn btn-danger"
+                                        data-kt-customer-table-select="delete_selected" @click="modalDeleteSchool">Delete Selected
                                 </button>
                             </div>
 
@@ -274,6 +279,7 @@
                 }
             }
             return {
+                check:'',
                 permissions,
                schoolIds: [],
                 school: [],
@@ -390,6 +396,7 @@
                 } else {
                     this.schoolIds = [];
                     this.school = [];
+                    this.check='';
                 }
 
             },
@@ -411,21 +418,21 @@
             },
             async removeAll()
             {
-                if (!confirm('Xóa bản ghi: ' + JSON.stringify(this.schoolIds))) {
-                    return;
-                }
 
                 const res = await $post('/xadmin/schools/removeAll', {ids: this.schoolIds});
+                if(res.code==1)
+                {
+                    $('#deviceConfirm').modal('show');
+                }
 
-                if (res.code) {
-                    toastr.error(res.message);
-                } else {
+                 else {
                     toastr.success(res.message);
                     this.schoolIds = [];
                     this.school = [];
+                    $router.updateQuery({page: this.paginate.currentPage, _: Date.now()});
+
                 }
 
-                $router.updateQuery({page: this.paginate.currentPage, _: Date.now()});
 
             }
         }
