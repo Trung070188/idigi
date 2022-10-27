@@ -824,8 +824,8 @@ class PlansController extends AdminBaseController
                             'device_uid' => $import->device_uid,
                             'device_name' => $import->device_name,
                             'secret_key' => $entry->secret_key,
-                            'create_time' => Carbon::now()->timestamp,
-                            'expired' => strtotime(Carbon::createFromFormat('Y-m-d',$import->expire_date)->format('d-m-Y')),
+                            'create_time' => strtotime(Carbon::now()),
+                            'expired' => strtotime($import->expire_date),
                         ];
                     }
                     $dataPlanExport = [];
