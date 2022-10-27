@@ -13,6 +13,7 @@ use App\Models\LessonInventory;
 use App\Models\Product;
 use App\Models\Unit;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -52,7 +53,9 @@ class DeleteFileDownloadDaily extends Command
     public function handle()
     {
 
-        $logLessons = DownloadLessonFile::where('is_deleted_file', '<>', 1)->get();
+        $logLessons = DownloadLessonFile::where('is_deleted_file', '<>', 1)
+            ->where("created_at", "<", Carbon::now()->addHours(-24))
+            ->get();
 
 
         foreach ($logLessons as $logLesson){

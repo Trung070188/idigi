@@ -1,15 +1,15 @@
-
+<h3>FIle Teacher Import Error</h3>
+<br>
 <table class="table table-bordered" style="width: 100%">
     <thead>
     <tr>
-        <th>User Name</th>
-        <td>Full Name</td>
-        <td>Password</td>
-        <td>Phone</td>
-        <td>Email</td>
-        <td>Class</td>
-        <td>Error</td>
-
+        <th style="border: 1px solid black">User Name</th>
+        <th style="border: 1px solid black">Full Name</th>
+        <th style="border: 1px solid black">Password</th>
+        <th style="border: 1px solid black">Phone</th>
+        <th style="border: 1px solid black">Email</th>
+        <th style="border: 1px solid black">Class</th>
+        <th style="border: 1px solid black">Error</th>
     </tr>
     </thead>
 
@@ -17,13 +17,13 @@
     @foreach($data as $item)
     <tr>
 
-        <td>{{$item['username']}}</td>
-        <td>{{$item['full_name']}}</td>
-        <td>{{$item['password']}}</td>
-        <td>{{$item['phone']}}</td>
-        <td>{{$item['email']}}</td>
-        <td>{{$item['class']}}</td>
-        <td>@if(@$item['error'])
+        <td style="border: 1px solid black">{{$item['username']}}</td>
+        <td style="border: 1px solid black">{{$item['full_name']}}</td>
+        <td style="border: 1px solid black">{{$item['password']}}</td>
+        <td style="border: 1px solid black">{{$item['phone']}}</td>
+        <td style="border: 1px solid black">{{$item['email']}}</td>
+        <td style="border: 1px solid black">{{$item['class']}}</td>
+        <td style="border: 1px solid black">@if(@$item['error'])
         @foreach($item['error'] as $er)
             @foreach($er as $value)
             {{$value}}<br>
@@ -32,8 +32,6 @@
         @endforeach
         </td>
         @endif
-
-
     </tr>
     @endforeach
 

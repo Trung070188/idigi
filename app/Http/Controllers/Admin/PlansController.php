@@ -1540,9 +1540,12 @@ class PlansController extends AdminBaseController
                ];
            }
             $payload=[];
+            // dd(strtotime('09-03-2018'));
+            // dd(strtotime('01-10-2022'));
             $devices= json_decode($dataAll['dataDevice'], true);
            foreach ($devices as $device)
            {
+            //    dd($device['expire_date']);
                $payload [] = [
                    'username' => $assignTo->username,
                    'full_name' => $assignTo->full_name,

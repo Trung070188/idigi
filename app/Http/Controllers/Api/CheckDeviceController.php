@@ -75,12 +75,18 @@ class CheckDeviceController extends Controller
                 'results' => []
             ];
         }
+        $isOta = 0;
+
+        if($curApp->url_updated){
+            $isOta = 1;
+        }
 
         return [
             'code' => 0,
             'msg' => "Success",
             'results' => [
                 'latest_version' => $curApp->version,
+                'is_ota ' => $isOta,
                 'link_version' => $curApp->url_updated,
             ]
         ];

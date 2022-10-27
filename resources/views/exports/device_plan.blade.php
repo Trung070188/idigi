@@ -3,7 +3,6 @@
 <table class="table table-bordered" style="width: 100%">
     <thead>
     <tr>
-        <td>Status</td>
         <th>No</th>
         <th>Device name</th>
         <td>Register code</td>
@@ -15,7 +14,6 @@
     <tbody>
     @foreach($data as $key => $item)
         <tr>
-            <td><input type="checkbox" value="1"/></td>
             <td>{{$key+1}}</td>
             <td>{{$item['device_name']}}</td>
             <td>{{$item['device_uid']}}</td>

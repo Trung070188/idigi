@@ -158,6 +158,10 @@
                                         </select>
                                         <error-label :errors="errors.idRoleIt"></error-label>
                                     </div>
+<<<<<<< HEAD
+=======
+
+>>>>>>> 50892827faa6ed3f3dc99abf8674540e271207e2
                                 </div>
                                 <div class="row">
                                     <div class="form-group col-lg-4">
@@ -272,7 +276,6 @@
                                         <!--END : TABLE LIST DEVICE-->
                                     </div>
                                     <!-- END: DEVICE LIST PLAN -->
-
                                     <!--BEGIN: PACKAGE LESSON PLAN -->
 
                                         <div id="kt_billing_year" class="card-body p-0 tab-pane fade"  role="tabpanel" aria-labelledby="kt_billing_year" >
@@ -295,9 +298,12 @@
                                                     <div class="menu-item px-3" v-if="dataZipLesson.status=='waitting'">
                                                         <a v-if="checkZipPackage[0].lessonIds.length>0" class="menu-link px-3" @click="downloadLesson(tabLessonContent)">Zip package lesson</a>
                                                         <a v-else class="menu-link px-3 isDisabled" @click="downloadLesson(tabLessonContent)" >Zip package lesson</a>
+<<<<<<< HEAD
                                                     </div>
                                                     <div class="menu-item px-3"  v-if="roleAuth=='Super Administrator'">
                                                         <a class="menu-link px-3 " @click="renameLessonPackage(tabLessonContent)" >Rename lesson package</a>
+=======
+>>>>>>> 50892827faa6ed3f3dc99abf8674540e271207e2
                                                     </div>
                                                     <div class="menu-item px-3" v-if="roleAuth=='Super Administrator' && dataZipLesson.status=='done' ||  roleAuth=='Super Administrator' &&dataZipLesson.status=='waitting'">
                                                         <a class="menu-link px-3 text-danger "  @click="deletePackageLessonModal(tabLessonContent)" >Delete package lesson</a>
@@ -1472,6 +1478,31 @@
                        },0)
 
 
+                    setTimeout(function ()
+                    {
+                        $.get('/xadmin/plans/dataPackage',function (res) {
+                            let dataPackage= res.data.filter(item => item.plan_id==self.entry.id)
+                            // return self.lessonPackagePlans=dataPackage;
+                            let data= dataPackage.map(res =>{
+                                return{
+                                    'package_id':res.id,
+                                    'plan_id':res.plan_id,
+                                    'lessonIds':res.lesson_ids
+                                }
+                            })
+                            self.lessonPackagePlans.forEach(function (e) {
+                                if(e.package_id==self.tabLessonContent)
+                                {
+                                    self.dataAddLessonPlan=[];
+                                   e.lessonIds.forEach(function (e1) {
+                                      let array=self.entries.filter(item => item.id==e1)
+                                      self.dataAddLessonPlan.push(array[0]);
+
+                                   })
+                                }
+                            })
+                        })
+                    },0);
                 }
 
             },

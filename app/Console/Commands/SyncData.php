@@ -156,13 +156,14 @@ class SyncData extends Command
                                 ->where('level', 'pri')
                                 ->first();
                             $link = '';
-
+                            $fullLink = '';
                             if($inventory && @$inventory->virtual_path){
                                 $link = basename(public_path($inventory->virtual_path));
+                                $fullLink = url(@$inventory->virtual_path);
                             }
 
                             $oldStructure['sublesson'][$key1]['link'] = $link;
-                            $oldStructure['sublesson'][$key1]['full_link'] = url(@$inventory->virtual_path);
+                            $oldStructure['sublesson'][$key1]['full_link'] = $fullLink;
                         }
                     }
 
@@ -263,9 +264,14 @@ class SyncData extends Command
 
     protected function insertFile($path, $isImage = 0)
     {
+        $file = File::where("path", public_path($path))->first();
+
+        if(!$file){
+            $file = new File();
+        }
+
         $newFilePath = public_path($path);
         $info = pathinfo($path);
-        $file = new File();
         $file->type = \Illuminate\Support\Facades\File::type($newFilePath);
         $file->hash = sha1($newFilePath);
         $file->url = url($path);

@@ -21,7 +21,27 @@
                                                 placeholder="Enter the name of plan" >
                                         <error-label :errors="errors.name" for="f_school_name" ></error-label>
                                     </div>
-                                    <div v-if="authNameRole!='IT'" class="form-group col-lg-4">
+                                     <div class="form-group col-lg-4">
+                                        <label>Due date </label>
+                                        <Datepicker v-model="entry.due_at" readonly/>
+                                        <!-- <span v-if="entry.due_at!=''" class="svg-icon svg-icon-2 svg-icon-lg-1 me-0" @click="dueAtClear">
+                                            <svg type="button" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" style="float: right;margin: -32px 3px 0px;">
+                                            <rect opacity="0.5" x="6" y="17.3137" width="16" height="2" rx="1" transform="rotate(-45 6 17.3137)" fill="black" style="fill:red"/>
+                                                        <rect x="7.41422" y="6" width="16" height="2" rx="1" transform="rotate(45 7.41422 6)" fill="black" style="fill:red"/>
+                                            </svg>
+                                        </span> -->
+                                        <error-label :errors="errors.due_at" for="f_title" ></error-label>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group col-lg-8">
+                                        <label>Plan description</label>
+                                        <textarea   class="form-control"
+                                                placeholder="Enter the description" v-model="entry.plan_description">
+                                        </textarea>
+                                        <error-label for="f_school_name" :errors="errors.plan_description"></error-label>
+                                    </div>
+                                     <div v-if="authNameRole!='IT'" class="form-group col-lg-4">
                                         <label> Assign to IT <span class="text-danger">*</span></label>
                                         <select   class="form-control form-select" v-model="idRoleIt"
                                         >
@@ -29,29 +49,22 @@
                                         </select>
                                         <error-label :errors="errors.idRoleIt" ></error-label>
                                     </div>
-                                    <div v-if="authNameRole=='IT'" class="form-group col-lg-4">
+
+                                    <!-- <div v-if="authNameRole=='IT'" class="form-group col-lg-4">
                                         <label> Assign to IT <span class="text-danger">*</span></label>
                                         <input  v-model="roleIt.full_name"  class="form-control" disabled>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="form-group col-lg-8">
-                                        <label>Plan description  <span class="text-danger">*</span> </label>
-                                        <textarea   class="form-control"
-                                                placeholder="Enter the description" v-model="entry.plan_description">
-                                        </textarea>
-                                        <error-label for="f_school_name" :errors="errors.plan_description"></error-label>
-                                    </div>
-                                    <div class="form-group col-lg-4">
-                                        <label>Due date  <span class="text-danger">*</span></label>
-                                        <Datepicker v-model="entry.due_at"/>
-                                        <error-label :errors="errors.due_at" for="f_title" ></error-label>
-                                    </div>
+                                    </div> -->
                                 </div>
                                 <div class="row">
                                     <div class="form-group col-lg-4">
-                                        <label>Expire date  <span class="text-danger">*</span></label>
-                                        <Datepicker v-model="entry.expire_date"/>
+                                        <label>Plan expire date<span class="text-danger">*</span></label>
+                                        <Datepicker v-model="entry.expire_date" readonly/>
+                                        <!-- <span v-if="entry.expire_date!=''" class="svg-icon svg-icon-2 svg-icon-lg-1 me-0" @click="expireDateClear">
+                                            <svg type="button" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" style="float: right;margin: -32px 3px 0px;">
+                                            <rect opacity="0.5" x="6" y="17.3137" width="16" height="2" rx="1" transform="rotate(-45 6 17.3137)" fill="black" style="fill:red"/>
+                                                        <rect x="7.41422" y="6" width="16" height="2" rx="1" transform="rotate(45 7.41422 6)" fill="black" style="fill:red"/>
+                                            </svg>
+                                        </span> -->
                                         <error-label :errors="errors.expire_date" for="f_title" ></error-label>
                                     </div>
                                 </div>
@@ -106,6 +119,14 @@
             }
         },
         methods: {
+            expireDateClear()
+            {
+                this.entry.expire_date='';
+            },
+            dueAtClear()
+            {
+                this.entry.due_at='';
+            },
              modalDevice() {
                 $('#deviceConfirm').modal('show');
             },

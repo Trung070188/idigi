@@ -82,7 +82,7 @@
 
                             >
                                 <a :href="'/xadmin/allocation_contents/create'">
-                                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#kt_modal_add_customer" >
+                                    <button v-if="permissions['035']" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#kt_modal_add_customer" >
                                         <i class="bi bi-plus-lg"></i>New Allocation
                                     </button>
                                 </a>
@@ -137,10 +137,10 @@
                                     <div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-bold fs-7 w-125px py-4" data-kt-menu="true">
                                         <!--begin::Menu item-->
                                         <div class="menu-item px-3">
-                                            <a :href="'/xadmin/allocation_contents/edit?id='+entry.id" class="menu-link px-3">Edit</a>
+                                            <a v-if="permissions['036']" :href="'/xadmin/allocation_contents/edit?id='+entry.id" class="menu-link px-3">Edit</a>
                                         </div>
                                         <div class="menu-item px-3">
-                                            <a class="menu-link text-danger px-3"  @click="removeContent(entry.id)">Delete</a>
+                                            <a v-if="permissions['037']" class="menu-link text-danger px-3"  @click="removeContent(entry.id)">Delete</a>
                                         </div>
 
                                     </div>
@@ -182,7 +182,7 @@
 </template>
 
 <script>
-    import {$get, $post, getTimeRangeAll} from "../../utils";
+    import {$get, $post, clone, getTimeRangeAll} from "../../utils";
     import $router from '../../lib/SimpleRouter';
     import ActionBar from "../includes/ActionBar";
 
@@ -193,7 +193,9 @@
         name: "Allocation_contentIndex.vue",
         components: {ActionBar},
         data() {
+             const permissions = clone(window.$permissions)
             return {
+               permissions,
                 entry:'',
                 entries: [],
                 filter: {

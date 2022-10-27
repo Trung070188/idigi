@@ -50,7 +50,7 @@
                                 <input type="text" data-kt-filemanager-table-filter="search"
                                        class="form-control form-control-solid w-250px ps-15"
                                        @keydown.enter="doFilter($event)" v-model="filter.keyword"
-                                       placeholder="Search..." value=""/>
+                                       placeholder="Search plan name, IT name" value=""/>
                                 <span v-if="filter.keyword!==''" class="svg-icon svg-icon-2 svg-icon-lg-1 me-0" @click="filterClear">
                                             <svg type="button" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                                                  viewBox="0 0 24 24" fill="none" style="margin: 3px -25px 0px;">
@@ -61,24 +61,19 @@
                                             </svg>
                                         </span>
                             </div>
+                             <button type="button" style="margin-left: 10px" @click="isShowFilter = !isShowFilter" class="btn btn-light" v-if="isShowFilter">
+                                    <i style="margin-left: 5px" class="fas fa-times"></i>
+                                    Close Advanced Search
+                                </button>
+                                <button type="button" style="margin-left: 10px" @click="isShowFilter = !isShowFilter" class="btn btn-light" v-if="!isShowFilter">
+                                    <i class="bi bi-funnel"></i>
+                                    Advanced Search
+                                </button>
                         </div>
                         <div class="card-toolbar">
                             <div class="d-flex justify-content-end" data-kt-customer-table-toolbar="base"
                                 >
-
-<!--                                <button type="button"-->
-<!--                                        @click="isShowFilter = !isShowFilter"-->
-<!--                                        class="btn btn-primary" v-if="isShowFilter"> Close Advanced Search-->
-<!--                                    <i style="margin-left: 5px" class="fas fa-times"></i>-->
-
-<!--                                </button>-->
-<!--                                <button type="button"-->
-<!--                                        @click="isShowFilter = !isShowFilter"-->
-<!--                                        class="btn btn-primary" v-if="!isShowFilter"> Advanced Search-->
-<!--                                    <i class="fa fa-filter" v-if="!isShowFilter" aria-hidden="true"></i>-->
-<!--                                </button>-->
-
-                                <a :href="'/xadmin/plans/create'">
+                                <a :href="'/xadmin/plans/create'" v-if="permissions['039']">
                                     <button  class="btn btn-primary button-create" style="margin:0 0 0 15px">
                                         <i class="bi bi-clipboard-plus"></i>New Plan
                                     </button>
@@ -93,39 +88,79 @@
 <!--                                        data-kt-customer-table-select="delete_selected">Delete Selected-->
 <!--                                </button>-->
                             </div>
-
                         </div>
-<!--                        <form class="col-lg-12" v-if="isShowFilter">-->
-<!--                            <div class="row">-->
-<!--                                <div class="form-group col-lg-3">-->
-<!--                                    <label>School name </label>-->
-<!--                                    <input class="form-control" type="text" placeholder="Enter your school name"-->
-<!--                                          />-->
-
-<!--                                </div>-->
-<!--                                <div class="form-group col-lg-3">-->
-<!--                                    <label>Administrator name </label>-->
-<!--                                    <input class="form-control" type="text"-->
-<!--                                           placeholder="Enter the administrator name">-->
-
-<!--                                </div>-->
-<!--                                <div class="form-group col-lg-3">-->
-<!--                                    <label>Region/City </label>-->
-<!--                                    <input class="form-control" type="text" placeholder="Enter the region/city">-->
-
-<!--                                </div>-->
-
-<!--                            </div>-->
-
-<!--                            <div style="margin: auto 0">-->
-<!--                                <button type="button" class="btn btn-primary" @click="doFilter($event)">Search-->
-<!--                                </button>-->
-<!--                            </div>-->
-<!--                        </form>-->
+                       <form class="col-lg-12" v-if="isShowFilter">
+                           <div class="row">
+                                <div class="form-group col-lg-8">
+                                    <label>Plan name</label>
+                                    <input class="form-control" v-model="filter.name" @keydown.enter="doFilter('name', filter.full_name, $event)" type="text" placeholder="Enter the lesson name"/>
+                               </div>
+                                <div class="form-group col-lg-4">
+                                    <label >Due date</label>
+                                   <Datepicker v-model="filter.due_at" @keydown.enter="doFilter('due_at', filter.due_at, $event)" readonly />
+                                    <span v-if="filter.due_at!==''" class="svg-icon svg-icon-2 svg-icon-lg-1 me-0" @click="filterClear">
+                                            <svg type="button" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" style="float: right;margin: -32px 3px 0px;">
+                                            <rect opacity="0.5" x="6" y="17.3137" width="16" height="2" rx="1" transform="rotate(-45 6 17.3137)" fill="black" style="fill:red"/>
+                                                        <rect x="7.41422" y="6" width="16" height="2" rx="1" transform="rotate(45 7.41422 6)" fill="black" style="fill:red"/>
+                                            </svg>
+                                        </span>
+                                </div>
+                            </div>
+                            <div class="row">
+                               <div class="form-group col-lg-2">
+                                    <label>Create by</label>
+                                    <select class="form-control form-select" v-model="filter.created_by" required>
+                                        <option value="" disabled selected>search...</option>
+                                        <option value="0">All</option>
+                                        <option v-for="create in createBy" :value="create.id">{{create.full_name}}</option>
+                                    </select>
+                               </div>
+                               <div class="form-group col-lg-2">
+                                    <label>Assign to</label>
+                                    <select class="form-control form-select" v-model="filter.user_id" required>
+                                        <option value="" disabled selected>search...</option>
+                                        <option value="0">All</option>
+                                        <option v-for="assign in assignTo" :value="assign.id">{{assign.full_name}}</option>
+                                    </select>
+                               </div>
+                               <div class="form-group col-lg-2">
+                                    <label>Status</label>
+                                    <select class="form-control form-select" v-model="filter.status" required>
+                                         <option value="" disabled selected>Actions</option>
+                                        <option value="0">All</option>
+                                        <option value="Drafting ">Drafting </option>
+                                        <option value="packaging">Packaging</option>
+                                        <option value="waiting ">Waiting </option>
+                                        <option value="ready">Ready</option>
+                                    </select>
+                               </div>
+                               <div class="form-group col-lg-2">
+                                    <label>Deployed</label>
+                                    <select class="form-control form-select" required>
+                                        <option value="" disabled selected>Actions</option>
+                                        <option value="0">All</option>
+                                        <option value="Yes">Yes</option>
+                                        <option value="No">No</option>
+                                    </select>
+                               </div>
+                               <div class="form-group col-lg-4">
+                                    <label>Creation date</label>
+                                     <Daterangepicker v-model="filter.created" readonly></Daterangepicker>
+                                     <span v-if="filter.created!==''" class="svg-icon svg-icon-2 svg-icon-lg-1 me-0" @click="filterClear">
+                                            <svg type="button" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" style="float: right;margin: -32px 3px 0px;">
+                                            <rect opacity="0.5" x="6" y="17.3137" width="16" height="2" rx="1" transform="rotate(-45 6 17.3137)" fill="black" style="fill:red"/>
+                                                        <rect x="7.41422" y="6" width="16" height="2" rx="1" transform="rotate(45 7.41422 6)" fill="black" style="fill:red"/>
+                                            </svg>
+                                        </span>
+                               </div>
+                            </div>
+                            <div style="margin: auto 0">
+                                <button type="button" class="btn btn-primary" @click="doFilter($event)">Search
+                                </button>
+                            </div>
+                        </form>
                     </div>
                     <div class="tab-content">
-
-
                         <div class="d-flex flex-stack pt-4 pl-9 pr-9">
 
                             <div class="badge badge-lg badge-light-dark mb-15">
@@ -163,11 +198,11 @@
                                 <th class="">Created by</th>
                                 <th class="">Assign to</th>
                                 <th class="">Creation date</th>
-                                <th class="">Devices</th>
                                 <th class="">Due date</th>
+                                <th>Expire date</th>
                                 <th class="">Status</th>
                                 <th>Deployed</th>
-                                <th></th>
+                                <th>Action</th>
 
                             </tr>
                             </thead>
@@ -184,8 +219,8 @@
                                 <td class="">{{entry.created_by}}</td>
                                 <td class="" >{{entry.assign_to}}</td>
                                 <td class="" >{{d(entry.created_at)}}</td>
-                                <td>{{entry.lengthDevice.length}}</td>
-                                <td  class="" >{{d(entry.due_at)}}</td>
+                                <td  class="" >{{(entry.due_at)}}</td>
+                                <td>{{(entry.expire_date)}}</td>
                                 <td   class="">{{entry.status}}</td>
                                 <th class=""></th>
                                 <td class="">
@@ -201,10 +236,10 @@
                                     <div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-bold fs-7 w-125px py-4" data-kt-menu="true">
 
                                         <div class="menu-item px-3">
-                                            <a :href="'/xadmin/plans/edit?id='+entry.id" class="menu-link px-3">Edit</a>
+                                            <a v-if="permissions['040']" :href="'/xadmin/plans/edit?id='+entry.id" class="menu-link px-3">Edit</a>
                                         </div>
                                         <div class="menu-item px-3" >
-                                            <a class="menu-link text-danger px-3"  @click="removePlan(entry.id)" data-kt-subscriptions-table-filter="delete_row">Delete</a>
+                                            <a v-if="permissions['042']" class="menu-link text-danger px-3"  @click="removePlan(entry.id)" data-kt-subscriptions-table-filter="delete_row">Delete</a>
 
                                         </div>
                                     </div>
@@ -215,9 +250,6 @@
                         </table>
                         <div class="d-flex pl-9 pr-9 mb-8">
                             <div class="col-sm-12 col-md-5 d-flex align-items-center justify-content-center justify-content-md-start">
-                                <!--<div class="mr-2">
-                                    <label>Records per page:</label>
-                                </div>-->
                                 <div>
                                     <select class="form-select form-select-sm form-select-solid" v-model="limit" @change="changeLimit">
                                         <option value="25">25</option>
@@ -244,21 +276,29 @@
 </template>
 
 <script>
-    import {$get, $post, getTimeRangeAll} from "../../utils";
+    import {$get, $post, clone, getTimeRangeAll} from "../../utils";
     import $router from '../../lib/SimpleRouter';
     import ActionBar from "../includes/ActionBar";
+    import Daterangepicker from '../../components/Daterangepicker.vue';
 
     let created = getTimeRangeAll();
     const $q = $router.getQuery();
 
     export default {
         name: "PlansIndex.vue",
-        components: {ActionBar},
+        components: {ActionBar,Daterangepicker},
         data() {
+             const permissions = clone(window.$permissions)
             let isShowFilter = false;
             let filter = {
                 keyword: $q.keyword || '',
-                // created: $q.created || created,
+                name:$q.name || '',
+                status:$q.status || '',
+                user_id:$q.user_id || '',
+                created_by:$q.created_by || '',
+                created: $q.created || '',
+                due_at:$q.due_at || '',
+
             };
             for (var key in filter) {
                 if (filter[key] != '') {
@@ -271,6 +311,9 @@
                         title: 'Manage plans'
                     },
                 ],
+                permissions,
+                createBy:$json.createBy || [],
+                assignTo:$json.assignTo || [],
                 entry:'',
                 devices:[],
                 entries: [],
@@ -362,5 +405,17 @@
 </script>
 
 <style scoped>
+    select:required:invalid {
+        color: #adadad;
+    }
+
+    option[value=""][disabled] {
+        display: none;
+    }
+
+    option {
+        color: black;
+    }
+
 
 </style>
