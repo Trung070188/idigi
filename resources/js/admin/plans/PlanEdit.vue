@@ -1638,12 +1638,21 @@
              exportPlan()
             {
                 let packageIds = [];
-                this.lessonPackagePlans.forEach(function (e) {
-                    packageIds.push(e.lesson_ids);
-                })
-                window.location.href= '/xadmin/plans/exportPlan?entry=' + JSON.stringify(this.entry)+
-                '&packageLessonPlan=' + JSON.stringify(this.lessonPackagePlans)+
-                '&dataDevice=' + JSON.stringify(this.data);
+                if(this.lessonPackagePlans!=null)
+                {
+                    this.lessonPackagePlans.forEach(function (e) {
+                        packageIds.push(e.lesson_ids);
+                    })
+                    window.location.href= '/xadmin/plans/exportPlan?entry=' + JSON.stringify(this.entry)+
+                        '&packageLessonPlan=' + JSON.stringify(this.lessonPackagePlans)+
+                        '&dataDevice=' + JSON.stringify(this.data);
+                }
+                else {
+                    window.location.href= '/xadmin/plans/exportPlan?entry=' + JSON.stringify(this.entry)+
+                        '&packageLessonPlan=' + JSON.stringify(this.lessonPackagePlans)+
+                        '&dataDevice=' + JSON.stringify(this.data);
+                }
+
             },
 
             //download mẫu template excel add device

@@ -1527,36 +1527,43 @@ class PlansController extends AdminBaseController
             $assignTo=User::where('id',$entry->user_id)->first();
             $dataAll['packageLessonPlan'] = json_decode($dataAll['packageLessonPlan'], true);
 
+            if(@$dataAll['packageLessonPlan'])
+            {
+                foreach ( $dataAll['packageLessonPlan'] as $key => $packageLessonPlan)
+                {
+                    $index=$key+1;
 
-            foreach ( $dataAll['packageLessonPlan'] as $key => $packageLessonPlan)
-           {
-               $index=$key+1;
+                    $lessonsArr=Lesson::query()->whereIn('id',$packageLessonPlan['lessonIds'])->orderBy('name','ASC')->get();
+                    $lessons[]=[
+                        'package_name'=>'Package lesson' . ' ' .$index ,
+                        'plan_name'=>$entry->name,
+                        'assign_to'=>$assignTo->full_name,
+                        'due_at'=>Carbon::parse($entry->due_at)->format('d/m/Y'),
+                        'expire_date'=>Carbon::parse($entry->expire_date)->format('d/m/Y'),
+                        'lessons'=>$lessonsArr,
+                    ];
+                }
+            }
 
-               $lessonsArr=Lesson::query()->whereIn('id',$packageLessonPlan['lessonIds'])->orderBy('name','ASC')->get();
-               $lessons[]=[
-                   'package_name'=>'Package lesson' . ' ' .$index ,
-                 'plan_name'=>$entry->name,
-                 'assign_to'=>$assignTo->full_name,
-                 'due_at'=>Carbon::parse($entry->due_at)->format('d/m/Y'),
-                 'expire_date'=>Carbon::parse($entry->expire_date)->format('d/m/Y'),
-                   'lessons'=>$lessonsArr,
-               ];
-           }
             $payload=[];
             $devices= json_decode($dataAll['dataDevice'], true);
-           foreach ($devices as $device)
-           {
-               $payload [] = [
-                   'username' => $assignTo->username,
-                   'full_name' => $assignTo->full_name,
-                   'user_id' => $assignTo->id,
-                   'device_uid' => $device['device_uid'],
-                   'device_name' => $device['device_name'],
-                   'secret_key' => $entry->secret_key,
-                   'create_time' => Carbon::now()->timestamp,
-                   'expired' => $device['expire_date'],
-               ];
-           }
+            if(@$devices)
+            {
+                foreach ($devices as $device)
+                {
+                    $payload [] = [
+                        'username' => $assignTo->username,
+                        'full_name' => $assignTo->full_name,
+                        'user_id' => $assignTo->id,
+                        'device_uid' => $device['device_uid'],
+                        'device_name' => $device['device_name'],
+                        'secret_key' => $entry->secret_key,
+                        'create_time' => Carbon::now()->timestamp,
+                        'expired' => $device['expire_date'],
+                    ];
+                }
+            }
+
             $dataDevicePlanExport = [];
             foreach ($payload as $pay) {
                 $dataDevicePlanExport[] = [
