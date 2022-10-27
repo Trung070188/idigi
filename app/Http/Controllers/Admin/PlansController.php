@@ -815,6 +815,8 @@ class PlansController extends AdminBaseController
 //                        ];
 //                    }
                     if ($import->plan_id == $entry->id) {
+                        $expired = Carbon::createFromFormat('d/m/Y', $import->expire_date)->format('Y-m-d');
+
                         $payload [] = [
 //                            'secret_key_plan' => $entry->secret_key,
                             'username' => $user->username,
@@ -825,7 +827,8 @@ class PlansController extends AdminBaseController
                             'device_name' => $import->device_name,
                             'secret_key' => $entry->secret_key,
                             'create_time' => Carbon::now()->timestamp,
-                            'expired' => strtotime(Carbon::createFromFormat('Y-m-d',$import->expire_date)->format('d-m-Y')),
+                            'expired' => strtotime($expired),
+
                         ];
                     }
                     $dataPlanExport = [];
@@ -1037,7 +1040,7 @@ class PlansController extends AdminBaseController
                 'due_at' =>$entry->due_at,
             ];
            }
-            
+
         }
         return [
             'code' => 0,
@@ -1271,7 +1274,7 @@ class PlansController extends AdminBaseController
         {
             $rules['packageLessonName']=['required'];
         }
-        
+
         $message=[
             'packageLessonName.required'=>'The package lesson name field is required.',
             ];
@@ -1281,7 +1284,7 @@ class PlansController extends AdminBaseController
                 {
                     $validate->errors()->add('packageLessonName','The package lessson name may not be greater than 50 characters.');
                 }
-                
+
         });
 
         if ($v->fails()) {
