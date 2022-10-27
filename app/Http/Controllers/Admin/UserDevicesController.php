@@ -263,7 +263,10 @@ class UserDevicesController extends AdminBaseController
             $entry->device_uid=$decoded->device_uid;
         }catch (\Exception $e)
         {
-
+            return [
+                'code' => 2,
+                'message'=>'Register code is invalid'
+            ];
         }
 
         $entry->save();

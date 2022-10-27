@@ -489,6 +489,10 @@ class PlansController extends AdminBaseController
                 $decoded = JWT::decode($dataRole['deviceUid'], new Key(env('SECRET_KEY'), 'HS256'));
                 $device->device_uid = $decoded->device_uid;
             } catch (\Exception $e) {
+                return [
+                    'code' => 2,
+                    'message'=>'Register code is invalid'
+                ];
 
             }
             if ($dataRole['deviceExpireDate'] ==null)
