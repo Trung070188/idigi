@@ -294,12 +294,9 @@
                                                     <div class="menu-item px-3" v-if="dataZipLesson.status=='waitting'">
                                                         <a v-if="checkZipPackage[0].lessonIds.length>0" class="menu-link px-3" @click="downloadLesson(tabLessonContent)">Zip package lesson</a>
                                                         <a v-else class="menu-link px-3 isDisabled" @click="downloadLesson(tabLessonContent)" >Zip package lesson</a>
-<<<<<<< HEAD
                                                     </div>
                                                     <div class="menu-item px-3"  v-if="roleAuth=='Super Administrator'">
                                                         <a class="menu-link px-3 " @click="renameLessonPackage(tabLessonContent)" >Rename lesson package</a>
-=======
->>>>>>> 50892827faa6ed3f3dc99abf8674540e271207e2
                                                     </div>
                                                     <div class="menu-item px-3" v-if="roleAuth=='Super Administrator' && dataZipLesson.status=='done' ||  roleAuth=='Super Administrator' &&dataZipLesson.status=='waitting'">
                                                         <a class="menu-link px-3 text-danger "  @click="deletePackageLessonModal(tabLessonContent)" >Delete package lesson</a>
