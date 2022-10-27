@@ -815,6 +815,8 @@ class PlansController extends AdminBaseController
 //                        ];
 //                    }
                     if ($import->plan_id == $entry->id) {
+                        $expired = Carbon::createFromFormat('d/m/Y', $import->expire_date)->format('Y-m-d');
+
                         $payload [] = [
 //                            'secret_key_plan' => $entry->secret_key,
                             'username' => $user->username,
@@ -824,8 +826,9 @@ class PlansController extends AdminBaseController
                             'device_uid' => $import->device_uid,
                             'device_name' => $import->device_name,
                             'secret_key' => $entry->secret_key,
-                            'create_time' => strtotime(Carbon::now()),
-                            'expired' => strtotime($import->expire_date),
+                            'create_time' => Carbon::now()->timestamp,
+                            'expired' => strtotime($expired),
+
                         ];
                     }
                     $dataPlanExport = [];
@@ -1540,12 +1543,9 @@ class PlansController extends AdminBaseController
                ];
            }
             $payload=[];
-            // dd(strtotime('09-03-2018'));
-            // dd(strtotime('01-10-2022'));
             $devices= json_decode($dataAll['dataDevice'], true);
            foreach ($devices as $device)
            {
-            //    dd($device['expire_date']);
                $payload [] = [
                    'username' => $assignTo->username,
                    'full_name' => $assignTo->full_name,

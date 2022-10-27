@@ -72,21 +72,21 @@
                         </div>
                         <div class="card-toolbar">
                             <div class="d-flex justify-content-end" data-kt-customer-table-toolbar="base"
-                                >
-                                <a :href="'/xadmin/plans/create'" v-if="permissions['039']">
+                                v-if="planIds==''">
+                                <a :href="'/xadmin/plans/create'" >
                                     <button  class="btn btn-primary button-create" style="margin:0 0 0 15px">
                                         <i class="bi bi-clipboard-plus"></i>New Plan
                                     </button>
                                 </a>
                             </div>
                             <div class="d-flex justify-content-end align-items-center d-none"
-                                 data-kt-customer-table-toolbar="selected" >
+                                 data-kt-customer-table-toolbar="selected" v-if="planIds!='' && permissions['042']">
                                 <div class="fw-bolder me-5">
-                                    <span class="me-2" data-kt-customer-table-select="selected_count"></span>
+                                    <span class="me-2" data-kt-customer-table-select="selected_count">{{planIds.length}} Selected</span>
                                 </div>
-<!--                                <button   type="button" class="btn btn-danger"-->
-<!--                                        data-kt-customer-table-select="delete_selected">Delete Selected-->
-<!--                                </button>-->
+                                <button   type="button" class="btn btn-danger"
+                                        data-kt-customer-table-select="delete_selected" @click="removeAll">Delete Selected
+                                </button>
                             </div>
                         </div>
                        <form class="col-lg-12" v-if="isShowFilter">
@@ -189,7 +189,7 @@
                             <tr>
                                 <td width="25">
                                     <div class="form-check form-check-sm form-check-custom form-check-solid">
-                                        <input class="form-check-input" type="checkbox"
+                                        <input class="form-check-input" type="checkbox" v-model="allSelected" @change="selectAllPlan()"
                                               >
                                     </div>
                                 </td>
@@ -210,7 +210,7 @@
                             <tr v-for="(entry,index) in entries">
                                 <td class="">
                                     <div class="form-check form-check-sm form-check-custom form-check-solid">
-                                        <input class="form-check-input" type="checkbox"
+                                        <input class="form-check-input" type="checkbox" v-model="planIds" :value="entry.id" @change="updateCheckAllPlan"
                                             >
                                     </div>
                                 </td>
@@ -306,6 +306,9 @@
                 }
             }
             return {
+                planIds:[],
+                plan:[],
+                allSelected:false,
                 breadcrumbs: [
                     {
                         title: 'Manage plans'
@@ -344,6 +347,34 @@
                 }
 
             },
+            selectAllPlan()
+            {
+                if (this.allSelected) {
+                    const selected = this.entries.map(u => u.id);
+                    this.planIds = selected;
+                    this.plan = this.entries;
+                } else {
+                    this.planIds = [];
+                    this.plan = [];
+                }
+            },
+            updateCheckAllPlan()
+            {
+                this.plan = [];
+                if (this.planIds.length === this.entries.length) {
+                    this.allSelected = true;
+                } else {
+                    this.allSelected = false;
+                }
+                let self = this;
+                self.planIds.forEach(function(e) {
+                    self.entries.forEach(function(e1) {
+                        if (e1.id == e) {
+                            self.plan.push(e1);
+                        }
+                    });
+                });
+            },
             async load() {
                 let query = $router.getQuery();
                 const res  = await $get('/xadmin/plans/data', query);
@@ -367,6 +398,21 @@
                 }
 
                 $router.updateQuery({page: this.paginate.currentPage, _: Date.now()});
+            },
+            async removeAll()
+            {
+                const res = await $post('/xadmin/plans/removeAllPlan', {ids: this.planIds});
+                if (res.code) {
+                    toastr.error(res.message);
+                } else {
+                    toastr.success(res.message);
+                    this.planIds = [];
+                    this.plan = [];
+                    this.allSelected=false;
+
+                }
+                $router.updateQuery({page: this.paginate.currentPage, _: Date.now()});
+
             },
             filterClear() {
                 for (var key in this.filter) {

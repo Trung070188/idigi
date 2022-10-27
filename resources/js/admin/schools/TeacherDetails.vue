@@ -225,7 +225,7 @@
             console.log(course);
             !course ? null : course.forEach(function (e) {
                 e.total_unit.forEach(function (e1) {
-                    e1.label = e1.unit_name;
+                    e1.label = 'Unit' + ' ' + e1.position +' : '+e1.unit_name;
                 })
 
             })

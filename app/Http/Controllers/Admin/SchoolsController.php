@@ -897,11 +897,43 @@ class SchoolsController extends AdminBaseController
     public function removeAll(Request $req)
     {
         $ids = $req->ids;
-        School::whereIn('id', $ids)->delete();
-        return [
-            'code' => 0,
-            'message' => 'Đã xóa'
-        ];
+        $schools=School::query()->with(['users'])->whereIn('id',$ids)->get();
+        $data=[];
+        foreach ($schools as $school)
+        {
+
+            foreach ($school->users as $user)
+            {
+
+                foreach ($user->roles as $role)
+                {
+
+                    if($role->role_name=='Teacher' && $school->id==$user->school_id )
+                    {
+                        $data[]=$user;
+                    }
+                }
+            }
+        }
+       if($data==[])
+       {
+           $check=0;
+           School::whereIn('id', $ids)->delete();
+           return [
+               'code' => 0,
+               'check'=>$check,
+               'message' => 'Đã xóa'
+           ];
+       }
+       else{
+           $check=1;
+           return [
+               'code'=>1,
+               'check'=>$check,
+           ];
+       }
+
+
     }
 
     public function licenseExpired()
