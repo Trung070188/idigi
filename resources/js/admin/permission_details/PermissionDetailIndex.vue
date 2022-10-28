@@ -82,7 +82,6 @@
             }
         },
         mounted() {
-            alert('hello');
             $router.on('/', this.load).init();
         },
         methods: {
