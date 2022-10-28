@@ -1261,11 +1261,13 @@
                             let self=this;
                             setTimeout(function () {
                                 $.get('/xadmin/plans/dataDevice',function (res) {
-                                    console.log(res)
                                     let dataDevicePlan=res.data.filter(item => item.plan_id==self.entry.id)
                                     self.data=dataDevicePlan;
                                     $('#kt_modal_create_app').modal('hide');
                                     self.$refs.uploader.value = null;
+                                    setTimeout(function (){
+                                        KTMenu.createInstances();
+                                    }, 0)
                                     self.fileUpLoad='';
                                     self.valueValidateImportDevice=0;
                                     self.fileImport.length=0;
@@ -1452,9 +1454,11 @@
                     let self=this
                     setTimeout(function () {
                         $.get('/xadmin/plans/dataDevice',function (res) {
-                            console.log(res)
                             let dataDevicePlan=res.data.filter(item => item.plan_id==self.entry.id)
                             self.data=dataDevicePlan;
+                            setTimeout(function (){
+                                KTMenu.createInstances();
+                            }, 0)
                             $('#deviceConfirm').modal('hide');
                            self.deviceExpireDate='';
                            self.deviceName='';
