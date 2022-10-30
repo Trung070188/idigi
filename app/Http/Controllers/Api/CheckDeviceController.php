@@ -87,7 +87,7 @@ class CheckDeviceController extends Controller
             'msg' => "Success",
             'results' => [
                 'latest_version' => $curApp->version,
-                'is_ota ' => $isOta,
+                'is_ota' => $isOta,
                 'link_version' => $curApp->url,
             ]
             ];
@@ -99,7 +99,7 @@ class CheckDeviceController extends Controller
                 'msg' => "Success",
                 'results' => [
                     'latest_version' => $curApp->version,
-                    'is_ota ' => $isOta,
+                    'is_ota' => $isOta,
                     'link_version' => $curApp->url_updated,
                 ]
             ];
