@@ -15,11 +15,11 @@ use Illuminate\Support\Facades\Route;
 
 
 Route::get('/', function() {
-    return redirect('/xadmin/lessons/index');
+    return redirect('/xadmin/dashboard/index');
 })->name('home');
 
 Route::get('/xadmin', function() {
-    return redirect('/xadmin/lessons/index');
+    return redirect('/xadmin/dashboard/index');
 });
 
 

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Models\Permission;
+use App\Models\RoleHasPermissonDetail;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -192,14 +193,36 @@ class PermissionDetailsController extends AdminBaseController
        $data=[];
        foreach($roles as $role)
        {
+           $rolePermissionsDetail=[];
+           foreach ($permissions as $permission)
+           {
+              foreach ($permission->permissionDetails as $permissionDetail)
+              {
+                  $item =[
+                      'id'=>$permissionDetail->id,
+                      'permission'=>$permission->id,
+                      'value'=>0
+                  ];
+                  foreach ($role->permissionDetails as $_permissionDetail)
+                  {
+                      if($_permissionDetail->id==$permissionDetail->id)
+                      {
+                          $item['value']=1;
+                      }
+                  }
+                  $rolePermissionsDetail[]= $item;
+              }
+
+
+           }
            $data[]=[
                 'role_name' => $role->role_name,
                 'id' => $role->id,
                 'role_description' => $role->role_description,
                 'allow_deleted' => $role->allow_deleted,
+                'permission'=>$rolePermissionsDetail,
            ];
        }
-
         return [
            'code'=> 0,
            'data'=>[
@@ -207,7 +230,32 @@ class PermissionDetailsController extends AdminBaseController
                'permissions'=>$permissions,
            ]
 
-             
+
+        ];
+    }
+    public function changeDetailPermission(Request $req)
+    {
+        $roleId = $req->role_id;
+        $permissionId = $req->permission_detail_id;
+        $check = $req->check;
+       if($check==false)
+       {
+           RoleHasPermissonDetail::where('role_id',$roleId)->where('permission_detail_id',$permissionId)->delete();
+       }
+       else{
+           RoleHasPermissonDetail::updateOrCreate([
+               'role_id' => $roleId,
+               'permission_detail_id' => $permissionId
+           ],
+               ['role_id' => $roleId,
+                   'permission_detail_id' => $permissionId
+
+               ]);
+       }
+
+        return [
+            'code' => 0,
+            'message' => 'Đã cập nhật'
         ];
     }
 

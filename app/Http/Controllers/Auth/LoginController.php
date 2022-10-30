@@ -37,7 +37,7 @@ class LoginController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = '/xadmin/lessons/index';
+    protected $redirectTo = '/xadmin/dashboard/index';
 
     /**
      * Attempt to log the user into the application.
@@ -93,7 +93,7 @@ class LoginController extends Controller
         $usernameType = $this->findUsername();
 
         $user = User::where($usernameType, $request['login'])->first();
-        
+
 
         if($user){
             if($user->state==0)

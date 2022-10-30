@@ -265,7 +265,21 @@
                                                 <td>{{device.type}}</td>
                                                 <td>{{device.expire_date}}</td>
                                                 <td class="">
-                                                    <a v-if="roleAuth=='Super Administrator'" class="btn btn-active-danger btn-light-danger btn-sm" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end" @click="removeDeviceModal(device.id)">Delete</a>
+                                                    <a  class="btn btn-light btn-active-light-primary btn-sm" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">Actions
+                                                                        <span class="svg-icon svg-icon-5 m-0">
+                                                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                                                                <path d="M11.4343 12.7344L7.25 8.55005C6.83579 8.13583 6.16421 8.13584 5.75 8.55005C5.33579 8.96426 5.33579 9.63583 5.75 10.05L11.2929 15.5929C11.6834 15.9835 12.3166 15.9835 12.7071 15.5929L18.25 10.05C18.6642 9.63584 18.6642 8.96426 18.25 8.55005C17.8358 8.13584 17.1642 8.13584 16.75 8.55005L12.5657 12.7344C12.2533 13.0468 11.7467 13.0468 11.4343 12.7344Z" fill="black" />
+                                                                            </svg>
+                                                                        </span>
+                                                    </a>
+                                                    <div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-bold fs-7 w-180px py-4" data-kt-menu="true">
+                                                        <div class="menu-item px-3">
+                                                            <a  class="menu-link px-3" @click="modalConfirmationCode(device)">Get confirmation code</a>
+                                                        </div>
+                                                        <div class="menu-item px-3">
+                                                            <a v-if="roleAuth=='Super Administrator'" class="menu-link text-danger px-3" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end" @click="removeDeviceModal(device.id)">Delete</a>
+                                                        </div>
+                                                    </div>
                                                 </td>
                                             </tr>
                                             </tbody>
@@ -769,6 +783,31 @@
         </div>
 
         <!--END :MODAL DELETE PACKAGE LESSON -->
+
+        <!-- BEGIN:MODAL GET CONFIRMATION CODE -->
+         <div class="modal fade" id="editdeviceConfirm" tabindex="-1" role="dialog"
+             aria-labelledby="editdeviceConfirm"
+             aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered popup-main-1" role="document">
+                <div class="modal-content" style="margin-right:20px; left:140px">
+                    <div class="close-popup" data-dismiss="modal"></div>
+                    <h3 style="margin:20px auto;font-weight: 500;" class="popup-title success">  Get confirmation code</h3>
+                    <div class="content" style="margin: -10px 39px 14px">
+                        <label>Device Name</label>
+                        <input type="text" class="form-control " placeholder="Device name" aria-label=""
+                               style="margin-bottom: 10px" aria-describedby="basic-addon1" v-model="deviceGetCode.device_name"
+                               disabled>
+                        <div>
+                            <button  type="button" class="btn btn-primary" v-on:click="genToken"> Generate Key</button>
+                        </div>
+                        <div style="text-align:right"><button type="button" v-if="token" class="btn btn-primary" v-on:click="copyTextToken" title="Copy Token" style="padding: 5px 20px;margin:0px 7px 10px"> Copy</button></div>
+
+                        <div v-if="token" style="font-size: 14px; word-wrap: break-word;white-space: pre-wrap;word-break: normal;background-color: #f7f7f9;">{{token}}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--END:MODAL GET CONFIRMATION CODE -->
     </div>
 
 </template>
@@ -796,6 +835,8 @@
             };
 
             return {
+                deviceGetCode:[],
+                token:'',
                 deletePack:'',
                 idRenamePackageLesson:'',
                 packageLessonName:'',
@@ -872,6 +913,13 @@
         },
 
         methods: {
+            modalConfirmationCode:function(device=[])
+            {
+                $('#editdeviceConfirm').modal('show');
+                this.deviceGetCode=device;
+                console.log(this.deviceGetCode);
+
+            },
             deviceExpireDateClear()
             {
                 this.deviceExpireDate='';
@@ -1213,11 +1261,13 @@
                             let self=this;
                             setTimeout(function () {
                                 $.get('/xadmin/plans/dataDevice',function (res) {
-                                    console.log(res)
                                     let dataDevicePlan=res.data.filter(item => item.plan_id==self.entry.id)
                                     self.data=dataDevicePlan;
                                     $('#kt_modal_create_app').modal('hide');
                                     self.$refs.uploader.value = null;
+                                    setTimeout(function (){
+                                        KTMenu.createInstances();
+                                    }, 0)
                                     self.fileUpLoad='';
                                     self.valueValidateImportDevice=0;
                                     self.fileImport.length=0;
@@ -1404,9 +1454,11 @@
                     let self=this
                     setTimeout(function () {
                         $.get('/xadmin/plans/dataDevice',function (res) {
-                            console.log(res)
                             let dataDevicePlan=res.data.filter(item => item.plan_id==self.entry.id)
                             self.data=dataDevicePlan;
+                            setTimeout(function (){
+                                KTMenu.createInstances();
+                            }, 0)
                             $('#deviceConfirm').modal('hide');
                            self.deviceExpireDate='';
                            self.deviceName='';
@@ -1638,18 +1690,36 @@
              exportPlan()
             {
                 let packageIds = [];
-                this.lessonPackagePlans.forEach(function (e) {
-                    packageIds.push(e.lesson_ids);
-                })
-                window.location.href= '/xadmin/plans/exportPlan?entry=' + JSON.stringify(this.entry)+
-                '&packageLessonPlan=' + JSON.stringify(this.lessonPackagePlans)+
-                '&dataDevice=' + JSON.stringify(this.data);
+                if(this.lessonPackagePlans!=null)
+                {
+                    this.lessonPackagePlans.forEach(function (e) {
+                        packageIds.push(e.lesson_ids);
+                    })
+                    window.location.href= '/xadmin/plans/exportPlan?entry=' + JSON.stringify(this.entry)+
+                        '&packageLessonPlan=' + JSON.stringify(this.lessonPackagePlans)+
+                        '&dataDevice=' + JSON.stringify(this.data);
+                }
+                else {
+                    window.location.href= '/xadmin/plans/exportPlan?entry=' + JSON.stringify(this.entry)+
+                        '&packageLessonPlan=' + JSON.stringify(this.lessonPackagePlans)+
+                        '&dataDevice=' + JSON.stringify(this.data);
+                }
+
             },
 
             //download mẫu template excel add device
             downloadTemplate()
             {
                 window.location.href= '/xadmin/plans/downloadTemplate';
+            },
+
+            async genToken(){
+                const res  = await $post('/xadmin/plans/generateToken', {device_id: this.deviceGetCode.id});
+                this.token = res.token;
+            },
+            copyTextToken() {
+                navigator.clipboard.writeText(this.token);
+                this.token='';
             },
         }
     }
