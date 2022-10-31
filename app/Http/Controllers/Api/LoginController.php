@@ -77,23 +77,23 @@ To establish a new session, please contact us to renew your license.',
                         'msg' => 'Device Limit Exceeded! Please contact the administrator to deauthorize your old device.',
                     ];
                 }
-//                else {
-//                    if ($check == 0) {
-//                        $secret = (Str::random(10));
-//                        $deviceName = $request->device_name;
-//                        $deviceID = $request->device_unique;
-//
-//                        UserDevice::create([
-//                            'device_uid' => $request->device_unique,
-//                            'device_name' => $request->device_name,
-//                            'user_id' => $user->id,
-//                            'status' => 2,
-//                            'secret_key' => $secret
-//                        ]);
-//
-//                    }
-//
-//                }
+                else {
+                    if ($check == 0) {
+                        $secret = (Str::random(10));
+                        $deviceName = $request->device_name;
+                        $deviceID = $request->device_unique;
+
+                        UserDevice::create([
+                            'device_uid' => $request->device_unique,
+                            'device_name' => $request->device_name,
+                            'user_id' => $user->id,
+                            'status' => 2,
+                            'secret_key' => $secret
+                        ]);
+
+                    }
+
+                }
 
                 if($school){
                     $expired = $school->license_to;
