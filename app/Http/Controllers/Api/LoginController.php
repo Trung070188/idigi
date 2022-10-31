@@ -78,6 +78,7 @@ To establish a new session, please contact us to renew your license.',
                     ];
                 } else {
                     if ($check == 0) {
+                        dd($check);
                         $secret = (Str::random(10));
                         $deviceName = $request->device_name;
                         $deviceID = $request->device_unique;
