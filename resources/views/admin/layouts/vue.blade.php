@@ -21,14 +21,14 @@
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
 
-        <link href="/assets/js/daterangepicker/daterangepicker.css" rel="stylesheet" type="text/css" />
-        <link href="/assets/js/daterangepicker/daterangepicker.css" rel="stylesheet" type="text/css" />
-        <link href="/assets/plugins/ckeditor/plugins/codesnippet/lib/highlight/styles/default.css" rel="stylesheet"/>
-		<link href="/themes/admin/assets/plugins/global/plugins.bundle.css" rel="stylesheet" type="text/css" />
-		<link href="/themes/admin/assets/css/style.bundle.css" rel="stylesheet" type="text/css" />
-        <link href="/assets/plugins/ion-rangeslider/css/ion.rangeSlider.css" rel="stylesheet">
-        <link href="/assets/plugins/ion-rangeslider/css/ion.rangeSlider.skinFlat.css" rel="stylesheet">
-        <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet">
+        <link href="{{asset('/assets/js/daterangepicker/daterangepicker.css')}}" rel="stylesheet" type="text/css" />
+        <link href="{{asset('/assets/js/daterangepicker/daterangepicker.css')}}" rel="stylesheet" type="text/css" />
+        <link href= "{{asset('/assets/plugins/ckeditor/plugins/codesnippet/lib/highlight/styles/default.css')}}" rel="stylesheet"/>
+		<link href= "{{asset('/themes/admin/assets/plugins/global/plugins.bundle.css')}}" rel="stylesheet" type="text/css" />
+		<link href= "{{asset('/themes/admin/assets/css/style.bundle.css')}}" rel="stylesheet" type="text/css" />
+        <link href="{{asset('/assets/plugins/ion-rangeslider/css/ion.rangeSlider.css')}}" rel="stylesheet">
+        <link href= "{{asset('/assets/plugins/ion-rangeslider/css/ion.rangeSlider.skinFlat.css')}}" rel="stylesheet">
+        <link href="{{asset('https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css')}}" rel="stylesheet">
         <link href="{{ asset('/assets/css/viewer.min.css') }}" rel="stylesheet" type="text/css" />
         <link href="{{ asset('/assets/css/style.bundle.css') }}" rel="stylesheet" type="text/css" />
         <!--<link href="{{ asset('themes/admin/assets/css/style.bundle.css') }}" rel="stylesheet" type="text/css" />-->
@@ -241,23 +241,23 @@
         <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" ></script>
         <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.7/dist/umd/popper.min.js" ></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.min.js" ></script>
-		<script src="/themes/admin/assets/plugins/global/plugins.bundle.js"></script>
-		<script src="/themes/admin/assets/js/scripts.bundle.js"></script>
-		<script src="/themes/admin/assets/js/custom/widgets.js"></script>
-		<script src="/themes/admin/assets/js/custom/apps/chat/chat.js"></script>
-		<script src="/themes/admin/assets/js/custom/modals/create-app.js"></script>
-		<script src="/themes/admin/assets/js/custom/modals/upgrade-plan.js"></script>
-		<script src="/themes/admin/assets/js/custom/intro.js"></script>
-        <script src="/assets/js/moment.min.js"></script>
-        <script src="/assets/js/daterangepicker/daterangepicker.js"></script>
-        <script src="/assets/plugins/ckeditor/ckeditor.js"></script>
-        <script src="/assets/plugins/ckeditor/plugins/colorbutton/plugin.js"></script>
-        <script src="/assets/plugins/ckeditor/plugins/colordialog/plugin.js"></script>
-        <script src="/assets/plugins/ckeditor/plugins/codesnippet/lib/highlight/highlight.pack.js"></script>
-        <script src="/assets/plugins/ion-rangeslider/js/ion.rangeSlider.js"></script>
-        <script src="/assets/js/jquery-ui.js"></script>
+		<script src="{{asset('/themes/admin/assets/plugins/global/plugins.bundle.js')}}"></script>
+		<script src="{{asset('/themes/admin/assets/js/scripts.bundle.js')}}"></script>
+		<script src="{{asset('/themes/admin/assets/js/custom/widgets.js')}}"></script>
+		<script src="{{asset('/themes/admin/assets/js/custom/apps/chat/chat.js')}}"></script>
+		<script src="{{asset('/themes/admin/assets/js/custom/modals/create-app.js')}}"></script>
+		<script src="{{asset('/themes/admin/assets/js/custom/modals/upgrade-plan.js')}}"></script>
+		<script src="{{asset('/themes/admin/assets/js/custom/intro.js')}}"></script>
+        <script src="{{asset('/assets/js/moment.min.js')}}"></script>
+        <script src="{{asset('/assets/js/daterangepicker/daterangepicker.js')}}"></script>
+        <script src="{{asset('/assets/plugins/ckeditor/ckeditor.js')}}"></script>
+        <script src="{{asset('/assets/plugins/ckeditor/plugins/colorbutton/plugin.js')}}"></script>
+        <script src="{{asset('/assets/plugins/ckeditor/plugins/colordialog/plugin.js')}}"></script>
+        <script src="{{asset('/assets/plugins/ckeditor/plugins/codesnippet/lib/highlight/highlight.pack.js')}}"></script>
+        <script src="{{asset('/assets/plugins/ion-rangeslider/js/ion.rangeSlider.js')}}"></script>
+        <script src="{{asset('/assets/js/jquery-ui.js')}}"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
-        <script src="/assets/js/app.js"></script>
+        <script src="{{asset('/assets/js/app.js')}}"></script>
 
 	</body>
 </html>

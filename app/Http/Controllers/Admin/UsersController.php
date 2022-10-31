@@ -47,7 +47,13 @@ class UsersController extends AdminBaseController
      * @throw  NotFoundHttpException
      * @return  View
      */
-
+    public function  test (Request $req)
+    {
+        $component = 'test';
+        $jsonData = [
+        ];
+        return view('admin.layouts.vue', compact( 'component', 'jsonData'));
+    }
     public function index(Request $request)
     {
         $title = 'Users';
