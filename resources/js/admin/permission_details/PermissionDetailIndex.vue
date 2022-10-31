@@ -5,10 +5,7 @@
          <div class="row">
             <div class="col-lg-12">
                 <div class="card card-custom card-stretch gutter-b">
-                    <div class="card-header border-0 pt-5">
-                        <!--<div class="title">
-                            <label>Roles</label>
-                        </div>-->
+                    <div class="d-flex justify-content-end" style="margin-right: 28px;margin-top: 20px">
                         <button class="btn btn-primary button-create mb-3" ><i class="bi bi-plus-lg"></i>Add feature</button>
                     </div>
                     <!--<hr>-->
