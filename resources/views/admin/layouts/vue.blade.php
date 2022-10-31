@@ -235,9 +235,8 @@
 	<body id="kt_body" class="header-fixed header-tablet-and-mobile-fixed toolbar-enabled toolbar-fixed aside-enabled aside-fixed" style="--kt-toolbar-height:55px;--kt-toolbar-height-tablet-and-mobile:55px">
 
         <div id="root-app"></div>
-
 		<script>var hostUrl = "/";</script>
-
+        <script src="{{asset('/assets/js/app.js')}}"></script>
         <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" ></script>
         <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.7/dist/umd/popper.min.js" ></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.min.js" ></script>
@@ -257,7 +256,9 @@
         <script src="{{asset('/assets/plugins/ion-rangeslider/js/ion.rangeSlider.js')}}"></script>
         <script src="{{asset('/assets/js/jquery-ui.js')}}"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
-        <script src="{{asset('/assets/js/app.js')}}"></script>
+        <noscript>
+            <iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5FS8GGP" height="0" width="0" style="display:none;visibility:hidden"></iframe>
+        </noscript>
 
 	</body>
 </html>
