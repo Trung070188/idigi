@@ -129,6 +129,14 @@ To establish a new session, please contact us to renew your license.',
                 ];
             }
 
+            else
+            {
+                return [
+                    'code' => 1,
+                    'msg' => 'Username or password is incorrect',
+                ];
+            }
+
         }
 
         return [
