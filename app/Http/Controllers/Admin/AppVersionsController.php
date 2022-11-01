@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Helpers\PermissionField;
 use App\Models\DownloadAppLog;
 use Carbon\Carbon;
 use Illuminate\Contracts\View\View;
@@ -41,7 +42,14 @@ class AppVersionsController extends AdminBaseController
                 $roleName=$role->role_name;
             }
         }
+        $permissionDetail = new PermissionField();
+        $permissionFields = [
+            'app_download' => $permissionDetail->havePermission('app_download',$user),
+            'app_delete'=>$permissionDetail->havePermission('app_delete',$user),
+            'app_create_new'=>$permissionDetail->havePermission('app_create_new',$user),
+        ];
         $jsonData=[
+            'permissionFields'=>$permissionFields,
             'roleName'=>$roleName,
         ];
         return view('admin.layouts.vue', compact('title', 'component', 'jsonData'));

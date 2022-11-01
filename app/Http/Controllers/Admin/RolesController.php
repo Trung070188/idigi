@@ -3,12 +3,14 @@
 namespace App\Http\Controllers\Admin;
 
 
+use App\Helpers\PermissionField;
 use App\Models\GroupPermission;
 use App\Models\Permission;
 use App\Models\RoleHasPermission;
 use App\Models\UserRole;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use App\Models\Role;
@@ -39,7 +41,16 @@ class RolesController extends AdminBaseController
         $title = 'Role';
         $component = 'RoleIndex';
         $permissions = Permission::query()->orderBy('name')->get();
+        $user = Auth::user();
+        $permissionDetail = new PermissionField();
+        $permissionFields = [
+            'role_add_new' => $permissionDetail->havePermission('role_add_new',$user),
+            'role_name'=>$permissionDetail->havePermission('role_name',$user),
+            'role_description'=>$permissionDetail->havePermission('role_description',$user),
+            'role_set'=>$permissionDetail->havePermission('role_set',$user),
+        ];
         $jsonData = [
+            'permissionFields'=>$permissionFields,
             'permissions' => $permissions,
 //            'entry' => $entry,
         ];

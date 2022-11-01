@@ -213,37 +213,6 @@
                                     class="svg-icon svg-icon-2 svg-icon-lg-1 me-0"
 
                                 >
-                                    <!-- <svg
-                                        type="button"
-                                        xmlns="http://www.w3.org/2000/svg"
-                                        width="24"
-                                        height="24"
-                                        viewBox="0 0 24 24"
-                                        fill="none"
-                                        style="margin: 3px -25px 0px;"
-                                    >
-                                        <rect
-                                            opacity="0.5"
-                                            x="6"
-                                            y="17.3137"
-                                            width="16"
-                                            height="2"
-                                            rx="1"
-                                            transform="rotate(-45 6 17.3137)"
-                                            fill="black"
-                                            style="fill:red"
-                                        />
-                                        <rect
-                                            x="7.41422"
-                                            y="6"
-                                            width="16"
-                                            height="2"
-                                            rx="1"
-                                            transform="rotate(45 7.41422 6)"
-                                            fill="black"
-                                            style="fill:red"
-                                        />
-                                    </svg> -->
                                 </span>
 
 
@@ -311,10 +280,12 @@
                                     <div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-bold fs-7 w-125px py-4" data-kt-menu="true">
                                         <!--begin::Menu item-->
                                         <div class="menu-item px-3">
-                                            <a @click="saveEditName(entry)" class="menu-link px-3">Rename</a>
+                                            <a @click="saveEditName(entry)" v-if="permissionFields['device_rename']==true" class="menu-link px-3">Rename</a>
+                                            <a v-else class="menu-link px-3 isDisabled">Rename</a>
                                         </div>
                                         <div class="menu-item px-3">
-                                            <a @click="editModalDevice(entry.id,entry.device_name,entry.secret_key)" class="menu-link px-3">Get confirmation code</a>
+                                            <a @click="editModalDevice(entry.id,entry.device_name,entry.secret_key)" v-if="permissionFields['device_confirmation_code']==true" class="menu-link px-3">Get confirmation code</a>
+                                            <a v-else  class="menu-link px-3 isDisabled">Get confirmation code</a>
                                         </div>
                                         <!--end::Menu item-->
                                         <!--begin::Menu item-->
@@ -322,13 +293,13 @@
                                         <!--end::Menu item-->
                                         <!--begin::Menu item-->
                                         <div class="menu-item px-3" >
-                                            <a class="menu-link text-danger px-3" v-if="entry.roleName!='Teacher'" @click="removeDevice(entry.id)" data-kt-subscriptions-table-filter="delete_row">Delete</a>
-                                            <a class="menu-link text-danger px-3" v-if="entry.roleName=='Teacher' && entry.status==2 " @click="Sent(entry)" data-kt-subscriptions-table-filter="delete_row" >Delete</a>
+                                            <a class="menu-link text-danger px-3" v-if="entry.roleName!='Teacher' && permissionFields['device_delete']==true" @click="removeDevice(entry.id)" data-kt-subscriptions-table-filter="delete_row">Delete</a>
+                                            <a class="menu-link text-danger px-3 isDisabled" v-if="entry.roleName!='Teacher' && permissionFields['device_delete']==false" @click="removeDevice(entry.id)" data-kt-subscriptions-table-filter="delete_row">Delete</a>
+                                            <a class="menu-link text-danger px-3" v-if="entry.roleName=='Teacher' && entry.status==2 && permissionFields['device_delete']==true" @click="Sent(entry)" data-kt-subscriptions-table-filter="delete_row" >Delete</a>
+                                            <a class="menu-link text-danger px-3 isDisabled" v-if="entry.roleName=='Teacher' && entry.status==2 && permissionFields['device_delete']==false" @click="Sent(entry)" data-kt-subscriptions-table-filter="delete_row" >Delete</a>
 
                                         </div>
-                                        <div class="menu-item px-3"  >
-                                            <a v-if="entry.roleName=='Teacher' && entry.status==1"  data-kt-subscriptions-table-filter="delete_row" class="menu-link text-danger px-3" >Delete</a>
-                                        </div>
+
                                         <!--end::Menu item-->
                                     </div>
                                     <!--end::Menu-->
@@ -369,6 +340,7 @@
         data() {
             const permissions = clone(window.$permissions)
             return {
+                permissionFields:$json.permissionFields || [],
                 permissions,
                 roleName:$json.roleName,
                 device:'',
@@ -632,6 +604,13 @@
     }
     .menu.menu-sub{
         width: 200px !important;
+    }
+    .isDisabled {
+        color: currentColor;
+        cursor: not-allowed;
+        opacity: 0.5;
+        text-decoration: none;
+        pointer-events: none
     }
 
 

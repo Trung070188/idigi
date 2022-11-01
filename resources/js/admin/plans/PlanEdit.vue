@@ -126,15 +126,13 @@
                                 <div class="row">
                                     <div class="form-group col-lg-8">
                                         <label>Plan name <span class="text-danger">*</span></label>
-                                        <input v-if="roleAuth=='IT'" disabled v-model="entry.name" class="form-control" placeholder="Enter the name of plan">
-                                        <input v-if="roleAuth!='IT'" v-model="entry.name" class="form-control" placeholder="Enter the name of plan">
+                                        <input :disabled="permissionFields['plan_name']==false" v-model="entry.name" class="form-control" placeholder="Enter the name of plan">
                                         <error-label :errors="errors.name" for="f_school_name"></error-label>
                                     </div>
                                     <div class="form-group col-lg-4">
                                         <label>Due date </label>
-                                        <Datepicker v-if="roleAuth=='IT'" disabled v-model="entry.due_at" readonly/>
-                                         <Datepicker v-if="roleAuth!='IT'"  v-model="entry.due_at" readonly/>
-                                         <span v-if="entry.due_at!='' && roleAuth!='IT'" class="svg-icon svg-icon-2 svg-icon-lg-1 me-0" @click="dueAtClear">
+                                        <Datepicker :disabled="permissionFields['plan_due_date']==false" v-model="entry.due_at" readonly/>
+                                         <span :disabled="permissionFields['plan_due_date']==false" v-if="entry.due_at!=''" class="svg-icon svg-icon-2 svg-icon-lg-1 me-0" @click="dueAtClear">
                                             <svg type="button" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" style="float: right;margin: -32px 3px 0px;">
                                             <rect opacity="0.5" x="6" y="17.3137" width="16" height="2" rx="1" transform="rotate(-45 6 17.3137)" fill="black" style="fill:red"/>
                                                         <rect x="7.41422" y="6" width="16" height="2" rx="1" transform="rotate(45 7.41422 6)" fill="black" style="fill:red"/>
@@ -146,17 +144,14 @@
                                 <div class="row">
                                     <div class="form-group col-lg-8">
                                         <label>Plan description</label>
-                                        <textarea v-if="roleAuth=='IT'" disabled class="form-control"
-                                                  placeholder="Enter the description" v-model="entry.plan_description">
-                                        </textarea>
-                                        <textarea v-if="roleAuth!='IT'" class="form-control"
+                                        <textarea :disabled="permissionFields['plan_description']==false" class="form-control"
                                                   placeholder="Enter the description" v-model="entry.plan_description">
                                         </textarea>
                                         <error-label :errors="errors.plan_description"></error-label>
                                     </div>
                                      <div class="form-group col-lg-4">
                                         <label> Assign to IT <span class="text-danger">*</span></label>
-                                        <select disabled class="form-control form-select" v-model="idRoleIt">
+                                        <select :disabled="permissionFields['plan_assign_to_IT']==false" class="form-control form-select" v-model="idRoleIt">
                                             <option v-for="role in roleIt" :value="role.id">{{role.full_name}}</option>
                                         </select>
                                         <error-label :errors="errors.idRoleIt"></error-label>
@@ -165,9 +160,8 @@
                                 <div class="row">
                                     <div class="form-group col-lg-4">
                                         <label>Expire date <span class="text-danger">*</span></label>
-                                        <Datepicker v-if="roleAuth=='IT'" v-model="entry.expire_date" disabled  readonly/>
-                                        <Datepicker v-if="roleAuth!='IT'" v-model="entry.expire_date" readonly/>
-                                        <span v-if="entry.expire_date!='' && roleAuth!='IT'" class="svg-icon svg-icon-2 svg-icon-lg-1 me-0" @click="expireDateClear">
+                                        <Datepicker :disabled="permissionFields['plan_expire_date']==false" v-model="entry.expire_date" readonly/>
+                                        <span :disabled="permissionFields['plan_expire_date']==false" v-if="entry.expire_date!=''" class="svg-icon svg-icon-2 svg-icon-lg-1 me-0" @click="expireDateClear">
                                             <svg type="button" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" style="float: right;margin: -32px 3px 0px;">
                                             <rect opacity="0.5" x="6" y="17.3137" width="16" height="2" rx="1" transform="rotate(-45 6 17.3137)" fill="black" style="fill:red"/>
                                                         <rect x="7.41422" y="6" width="16" height="2" rx="1" transform="rotate(45 7.41422 6)" fill="black" style="fill:red"/>
@@ -189,8 +183,11 @@
                                                    data-bs-toggle="tab" role="tab" href="#kt_billing_year"
                                                    @click="tabPackageLesson(packageLesson.package_id)">{{packageLesson.name}}</a>
                                             </li>
-                                            <li v-if="roleAuth=='Super Administrator'">
-                                                <a class="btn btn-primary btn-active-primary btn-sm mt-2 ml-2"
+                                            <li >
+                                                <a v-if="permissionFields['plan_add_package']==false" class="btn btn-primary btn-active-primary btn-sm mt-2 ml-2 isDisabled"
+                                                   data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end" @click="addPackageLessonModal">Add package
+                                                </a>
+                                                <a v-else class="btn btn-primary btn-active-primary btn-sm mt-2 ml-2 "
                                                    data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end" @click="addPackageLessonModal">Add package
                                                 </a>
                                             </li>
@@ -205,7 +202,7 @@
                                     <!--BEGIN: LIST DEVICE PLAN-->
 
                                     <div id="kt_billing_months" class="card-body p-0 tab-pane fade show active" role="tabpanel" aria-labelledby="kt_billing_months">
-                                        <div class="d-flex justify-content-end mb-4" v-if="roleAuth=='Super Administrator'">
+                                        <div class="d-flex justify-content-end mb-4" >
                                             <a v-if="deviceIds!=''" class="btn btn-danger btn-sm mr-3" @click="removeDeviceAll" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">Remove device</a>
                                                 <a href="list.html#" class="btn btn-light btn-active-light-primary btn-sm" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">Actions
                                                     <span class="svg-icon svg-icon-5 m-0">
@@ -216,25 +213,23 @@
                                                 </a>
                                             <div class="menu menu-sub menu-sub-dropdown  menu-rounded menu-gray-600 menu-state-bg-light-primary fw-bold fs-7 py-4" data-kt-menu="true" style="width: 150px">
                                                 <div class="menu-item px-3">
-                                                    <a class="menu-link px-3" @click="addDevice()">Add a device</a>
+                                                    <a v-if="permissionFields['plan_add_device']==false" class="menu-link px-3 isDisabled"  @click="addDevice()">Add a device</a>
+                                                    <a v-else class="menu-link px-3" @click="addDevice()">Add a device</a>
                                                 </div>
                                                 <div class="menu-item px-3">
-                                                    <a class="menu-link px-3" @click="importDevice()">Import devices</a>
+                                                    <a v-if="permissionFields['plan_import_device']==false" class="menu-link px-3 isDisabled" @click="importDevice()">Import devices</a>
+                                                    <a class="menu-link px-3" @click="importDevice()" v-else>Import devices</a>
                                                 </div>
 
-                                                <div class="menu-item px-3" v-if="data.length>0">
-                                                    <a class="menu-link px-3" @click="exportDevice">Export device list</a>
+                                                <div class="menu-item px-3">
+                                                    <a class="menu-link px-3 isDisabled" @click="exportDevice" v-if="permissionFields['plan_export_device']==false">Export device list</a>
+                                                    <a class="menu-link px-3 " @click="exportDevice" v-if="data.length>0 && permissionFields['plan_export_device']==true" >Export device list</a>
+                                                    <a class="menu-link px-3 isDisabled" @click="exportDevice" v-if="data.length==0">Export device list</a>
+
                                                 </div>
-                                                <div class="menu-item px-3" v-else>
-                                                    <a class="menu-link px-3 isDisabled" @click="exportDevice" >Export device list</a>
-                                                </div>
+
                                             </div>
                                         </div>
-                                        <div class="d-flex justify-content-end mb-4" v-if="roleAuth=='IT'">
-                                            <a  class="btn btn-primary btn-sm" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end" @click="exportDevice">Export device
-                                            </a>
-                                        </div>
-
                                         <!-- BEGIN : TABLE LIST DEVICE-->
 
                                     <div class="mh-650px scroll-y me-n7 pe-7">
@@ -243,7 +238,7 @@
                                                 <tr>
                                                     <td width="25">
                                                         <div class="form-check form-check-sm form-check-custom form-check-solid">
-                                                            <input class="form-check-input" type="checkbox"  v-model="allDeviceSelected" @change="selectDeviceAll()">
+                                                            <input class="form-check-input" type="checkbox" :disabled="permissionFields['plan_delete_device']==false" v-model="allDeviceSelected" @change="selectDeviceAll()">
                                                         </div>
                                                     </td>
                                                     <td>No.</td>
@@ -257,7 +252,7 @@
                                             <tr v-for="(device,index) in data" >
                                                 <td class="">
                                                     <div class="form-check form-check-sm form-check-custom form-check-solid">
-                                                        <input class="form-check-input" type="checkbox" v-model="deviceIds" :value="device.id" @change="updateDeviceCheckAll">
+                                                        <input class="form-check-input" type="checkbox" :disabled="permissionFields['plan_delete_device']==false"  v-model="deviceIds" :value="device.id" @change="updateDeviceCheckAll">
                                                     </div>
                                                 </td>
                                                 <td>{{index+1}}</td>
@@ -277,7 +272,7 @@
                                                             <a  class="menu-link px-3" @click="modalConfirmationCode(device)">Get confirmation code</a>
                                                         </div>
                                                         <div class="menu-item px-3">
-                                                            <a v-if="roleAuth=='Super Administrator'" class="menu-link text-danger px-3" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end" @click="removeDeviceModal(device.id)">Delete</a>
+                                                            <a v-if="permissionFields['plan_delete_device']==false" class="menu-link text-danger px-3 isDisabled" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end" @click="removeDeviceModal(device.id)">Delete</a>
                                                         </div>
                                                     </div>
                                                 </td>
@@ -294,9 +289,11 @@
 
                                         <div id="kt_billing_year" class="card-body p-0 tab-pane fade"  role="tabpanel" aria-labelledby="kt_billing_year" >
                                             <div class="d-flex justify-content-end mb-4" >
-                                                <a v-if="viewLessonIds!='' && dataZipLesson.status=='waitting' && roleAuth=='Super Administrator'" class="btn btn-danger btn-sm mr-3" @click="deleteAllLesson" >Remove lesson</a>
+                                                <a v-if="viewLessonIds!='' && dataZipLesson.status=='waitting' && permissionFields['plan_remove_lesson']==true" class="btn btn-danger btn-sm mr-3" @click="deleteAllLesson" >Remove lesson</a>
+                                                <a v-if="viewLessonIds!='' && dataZipLesson.status=='waitting' && permissionFields['plan_remove_lesson']==false" class="btn btn-danger btn-sm mr-3 isDisabled" @click="deleteAllLesson" >Remove lesson</a>
                                              <a  v-if="dataZipLesson.status=='inprogress'"  class="mt-2 mr-5" style="color: rgb(230 180 0)"> Lesson list is packaging...</a>
-                                                <a  v-if="  dataZipLesson.status=='done'" :href="dataZipLesson.url" class="btn btn-primary btn-sm mr-3 "> Download package</a>
+                                                <a  v-if="  dataZipLesson.status=='done' && permissionFields['plan_download_package']==true" :href="dataZipLesson.url" class="btn btn-primary btn-sm mr-3 "> Download package</a>
+                                                <a  v-if="  dataZipLesson.status=='done' && permissionFields['plan_download_package']==false" :href="dataZipLesson.url" class="btn btn-primary btn-sm mr-3 isDisabled"> Download package</a>
                                                 <a v-if="dataZipLesson.status=='inprogress'" class="btn btn-light btn-active-light-primary btn-sm isDisabled" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end" >Actions
                                                     <span class="svg-icon svg-icon-5 m-0">
 															<svg xmlns="http://www.w3.org/2000/svg" width="24"
@@ -314,18 +311,23 @@
                                                     </span>
                                                 </a>
                                                 <div class="menu menu-sub menu-sub-dropdown  menu-rounded menu-gray-600 menu-state-bg-light-primary fw-bold fs-7 py-4" data-kt-menu="true" >
-                                                    <div class="menu-item px-3"  v-if="roleAuth=='Super Administrator' && dataZipLesson.status=='waitting'">
-                                                        <a class="menu-link px-3 " @click="addLessonPackage(tabLessonContent)" >Add lesson</a>
+                                                    <div class="menu-item px-3" >
+                                                        <a class="menu-link px-3 "  v-if="permissionFields['plan_add_lesson']==true && dataZipLesson.status=='waitting'" @click="addLessonPackage(tabLessonContent)" >Add lesson</a>
+                                                        <a class="menu-link px-3 isDisabled"  v-if="permissionFields['plan_add_lesson']==false && dataZipLesson.status=='waitting'" @click="addLessonPackage(tabLessonContent)" >Add lesson</a>
                                                     </div>
                                                     <div class="menu-item px-3" v-if="dataZipLesson.status=='waitting'">
                                                         <a v-if="checkZipPackage[0].lessonIds.length>0" class="menu-link px-3" @click="downloadLesson(tabLessonContent)">Zip package lesson</a>
                                                         <a v-else class="menu-link px-3 isDisabled" @click="downloadLesson(tabLessonContent)" >Zip package lesson</a>
                                                     </div>
-                                                    <div class="menu-item px-3"  v-if="roleAuth=='Super Administrator'">
-                                                        <a class="menu-link px-3 " @click="renameLessonPackage(tabLessonContent)" >Rename lesson package</a>
+                                                    <div class="menu-item px-3" >
+                                                        <a class="menu-link px-3 " v-if="permissionFields['plan_rename_lesson_package']==true" @click="renameLessonPackage(tabLessonContent)" >Rename lesson package</a>
+                                                        <a class="menu-link px-3 isDisabled" v-else @click="renameLessonPackage(tabLessonContent)" >Rename lesson package</a>
                                                     </div>
-                                                    <div class="menu-item px-3" v-if="roleAuth=='Super Administrator' && dataZipLesson.status=='done' ||  roleAuth=='Super Administrator' &&dataZipLesson.status=='waitting'">
+                                                    <div class="menu-item px-3" v-if="permissionFields['plan_delete_package']==true && dataZipLesson.status=='done' ||  permissionFields['plan_delete_package']==true &&dataZipLesson.status=='waitting'">
                                                         <a class="menu-link px-3 text-danger "  @click="deletePackageLessonModal(tabLessonContent)" >Delete package lesson</a>
+                                                    </div>
+                                                    <div class="menu-item px-3" v-if="permissionFields['plan_delete_package']==false && dataZipLesson.status=='done' ||  permissionFields['plan_delete_package']==false &&dataZipLesson.status=='waitting'">
+                                                        <a class="menu-link px-3 text-danger isDisabled"  @click="deletePackageLessonModal(tabLessonContent)" >Delete package lesson</a>
                                                     </div>
                                                 </div>
 
@@ -336,7 +338,7 @@
                                                         <tr >
                                                             <td width="25">
                                                                 <div class="form-check form-check-sm form-check-custom form-check-solid">
-                                                                    <input v-if="dataZipLesson.status=='waitting'" class="form-check-input" type="checkbox" v-model="allViewLessonSelected" @change="selectViewLessonAll(tabLessonContent)" >
+                                                                    <input v-if="dataZipLesson.status=='waitting'" :disabled="permissionFields['plan_remove_lesson']==false" class="form-check-input" type="checkbox" v-model="allViewLessonSelected" @change="selectViewLessonAll(tabLessonContent)" >
                                                                     <input v-if="dataZipLesson.status!='waitting'" disabled class="form-check-input" type="checkbox" v-model="allViewLessonSelected" @change="selectViewLessonAll(tabLessonContent)" >
                                                                 </div>
                                                             </td>
@@ -351,7 +353,7 @@
                                                         <tr v-for="(lesson,index) in dataAddLessonPlan" >
                                                             <td class="">
                                                                 <div class="form-check form-check-sm form-check-custom form-check-solid">
-                                                                    <input v-if="dataZipLesson.status=='waitting'" class="form-check-input" type="checkbox" v-model="viewLessonIds" :value="lesson.id" @change="updateViewLessonCheckAll()">
+                                                                    <input v-if="dataZipLesson.status=='waitting'" :disabled="permissionFields['plan_remove_lesson']==false" class="form-check-input" type="checkbox" v-model="viewLessonIds" :value="lesson.id" @change="updateViewLessonCheckAll()">
                                                                     <input v-if="dataZipLesson.status!='waitting'" disabled class="form-check-input" type="checkbox" v-model="viewLessonIds" :value="lesson.id" @change="updateViewLessonCheckAll()">
 
                                                                 </div>
@@ -361,7 +363,9 @@
                                                             <td>{{lesson.grade}}</td>
                                                             <td>{{lesson.subject}}</td>
                                                             <td class="">
-                                                                <a v-if="dataZipLesson.status=='waitting'" class="btn btn-active-danger btn-light-danger btn-sm" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end" @click="deleteLessonModal(lesson.id)">Delete</a>
+<!--                                                                <a v-if="dataZipLesson.status=='waitting' && permissionFields['plan_remove_lesson']==true"  class="btn btn-active-danger btn-light-danger btn-sm" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end" @click="deleteLessonModal(lesson.id)">Delete</a>-->
+<!--                                                                <a v-if="dataZipLesson.status=='waitting' && permissionFields['plan_remove_lesson']==false"  class="btn btn-active-danger btn-light-danger btn-sm isDisabled" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end" @click="deleteLessonModal(lesson.id)">Delete</a>-->
+                                                                <button v-if="dataZipLesson.status=='waitting'" :disabled="permissionFields['plan_remove_lesson']==false"  class="btn btn-active-danger btn-light-danger btn-sm"  @click="deleteLessonModal(lesson.id)">Delete</button>
                                                             </td>
                                                         </tr>
                                                     </tbody>
@@ -843,6 +847,7 @@
             };
 
             return {
+                permissionFields:$json.permissionFields || [],
                 deviceGetCode:[],
                 token:'',
                 deletePack:'',

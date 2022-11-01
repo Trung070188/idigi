@@ -73,7 +73,7 @@
                                 <div class="row">
                                     <div class="form-group col-lg-4">
                                         <label>School Name <span class="text-danger">*</span></label>
-                                        <input v-model="entry.label" class="form-control"
+                                        <input v-model="entry.label" class="form-control" :disabled="permissionFields['school_name']==false"
                                                placeholder="Nhập vào tên trường">
                                         <error-label for="f_school_name" :errors="errors.label"></error-label>
 
@@ -81,14 +81,14 @@
 
                                     <div class="form-group col-lg-4">
                                         <label>School Address <span class="text-danger">*</span></label>
-                                        <input v-model="entry.school_address" class="form-control"
+                                        <input v-model="entry.school_address" :disabled="permissionFields['school_address']==false" class="form-control"
                                                placeholder="Nhập vào địa chỉ của trường">
                                         <error-label :errors="errors.school_address"></error-label>
 
                                     </div>
                                     <div class="form-group col-lg-4">
                                         <label>School Email</label>
-                                        <input v-model="entry.school_email" class="form-control"
+                                        <input v-model="entry.school_email" :disabled="permissionFields['school_email']==false" class="form-control"
                                                placeholder="Nhập vào email của trường">
                                         <error-label :errors="errors.school_email"></error-label>
 
@@ -98,7 +98,7 @@
                                 <div class="row">
                                     <div class="form-group col-lg-4">
                                         <label>Phone number </label>
-                                        <input v-model="entry.school_phone" class="form-control noString "
+                                        <input v-model="entry.school_phone" :disabled="permissionFields['school_phone_number']==false" class="form-control noString "
                                                placeholder="Nhập vào số điện thoại của trường">
                                         <error-label for="f_school_name" :errors="errors.school_phone"></error-label>
 
@@ -106,14 +106,14 @@
 
                                     <div class="form-group col-lg-4">
                                         <label>No. of Device per user <span class="text-danger">*</span></label>
-                                        <input type="number" v-model="entry.devices_per_user" class="form-control"
+                                        <input type="number" v-model="entry.devices_per_user" :disabled="permissionFields['school_device']==false" class="form-control"
                                                placeholder="Nhập số lượng cho phép thiết bị của mỗi giáo viên">
                                         <error-label :errors="errors.devices_per_user"></error-label>
 
                                     </div>
                                     <div class="form-group col-lg-4">
                                         <label>No. of User <span class="text-danger">*</span></label>
-                                        <input type="number" v-model="entry.number_of_users" class="form-control"
+                                        <input type="number" v-model="entry.number_of_users" :disabled="permissionFields['school_user']==false" class="form-control"
                                                placeholder="Nhập số lượng giáo viên">
                                         <error-label :errors="errors.number_of_users"></error-label>
 
@@ -139,14 +139,14 @@
                                 <div class="row">
                                     <div class="form-group col-lg-8">
                                         <label>School description</label>
-                                        <textarea v-model="entry.school_description" rows="5" class="form-control"
+                                        <textarea v-model="entry.school_description" :disabled="permissionFields['school_description']==false" rows="5" class="form-control"
                                                   placeholder="Your text here..."></textarea>
                                         <error-label for="f_grade" :errors="errors.school_description"></error-label>
 
                                     </div>
                                     <div class="form-group col-lg-4">
                                         <label>Expired date/License <span class="text-danger">*</span></label>
-                                        <datepicker  v-model="entry.license_to" rows="5" class="form-control" ></datepicker>
+                                        <datepicker  v-model="entry.license_to" rows="5" class="form-control" :disabled="permissionFields['school_expire_date']==false"></datepicker>
                                         <error-label for="f_grade" :errors="errors.license_to"></error-label>
                                     </div>
                                 </div>
@@ -156,7 +156,7 @@
                                     <div class="form-group col-lg-8">
                                         <label>Content enrollment <span class="text-danger">*</span></label>
 
-                                        <select class="form-control form-select " required v-model="allocationContentSchool"
+                                        <select class="form-control form-select " required v-model="allocationContentSchool" :disabled="permissionFields['school_content']==false"
                                                 @change="changeAllocationContent() ">
 
                                             <option v-for="allocationContent in allocationContents"
@@ -166,8 +166,8 @@
 
                                     </div>
                                     <div class="col-lg-4">
-                                        <a :href="'/xadmin/allocation_contents/edit?id='+allocationContentSchool">
-                                            <button style="margin: 20px 0px 0px" class="btn btn-primary"><i class="bi bi-pencil-square mr-1"></i>Edit</button>
+                                        <a :href="'/xadmin/allocation_contents/edit?id='+allocationContentSchool" :disabled="permissionFields['school_content']==false">
+                                            <button style="margin: 20px 0px 0px" class="btn btn-primary" :disabled="permissionFields['school_content']==false"><i class="bi bi-pencil-square mr-1"></i>Edit</button>
                                         </a>
                                     </div>
                                 </div>
@@ -278,6 +278,7 @@
             })
 
             return {
+                permissionFields:$json.permissionFields || [],
                 teacher:$json.teacher,
                 courses: courseTreeselect,
                 units: unitTreeselect,

@@ -7,6 +7,7 @@ use App\Exports\DeviceErrorExport;
 use App\Exports\DevicePlanExport;
 use App\Exports\LessonPlanExport;
 use App\Exports\PlanExport;
+use App\Helpers\PermissionField;
 use App\Imports\DeviceImport;
 use App\Jobs\UpdateDownloadInventory;
 use App\Jobs\UpdateDownloadLessonFile;
@@ -215,8 +216,33 @@ class PlansController extends AdminBaseController
                 'lessonIds' => $lessonIdArr,
             ];
         }
+        $user = Auth::user();
+        $permissionDetail = new PermissionField();
+        $permissionFields = [
+            'plan_name' => $permissionDetail->havePermission('plan_name',$user),
+            'plan_due_date'=>$permissionDetail->havePermission('plan_due_date',$user),
+            'plan_description'=>$permissionDetail->havePermission('plan_description',$user),
+            'plan_assign_to_IT'=>$permissionDetail->havePermission('plan_assign_to_IT',$user),
+            'plan_expire_date'=>$permissionDetail->havePermission('plan_expire_date',$user),
+            'plan_add_device'=>$permissionDetail->havePermission('plan_add_device',$user),
+            'plan_delete_device'=>$permissionDetail->havePermission('plan_delete_device',$user),
+            'plan_export_device'=>$permissionDetail->havePermission('plan_export_device',$user),
+            'plan_add_package'=>$permissionDetail->havePermission('plan_add_package',$user),
+            'plan_delete_package'=>$permissionDetail->havePermission('plan_delete_package',$user),
+            'plan_export_plan'=>$permissionDetail->havePermission('plan_export_plan',$user),
+            'plan_delete_plan'=>$permissionDetail->havePermission('plan_delete_plan',$user),
+            'plan_import_device'=>$permissionDetail->havePermission('plan_import_device',$user),
+            'plan_remove_lesson'=>$permissionDetail->havePermission('plan_remove_lesson',$user),
+            'plan_download_package'=>$permissionDetail->havePermission('plan_download_package',$user),
+            'plan_add_lesson'=>$permissionDetail->havePermission('plan_add_lesson',$user),
+            'plan_zip_package_lesson'=>$permissionDetail->havePermission('plan_zip_package_lesson',$user),
+            'plan_delete_package_lesson'=>$permissionDetail->havePermission('plan_delete_package_lesson',$user),
+            'plan_rename_lesson_package'=>$permissionDetail->havePermission('plan_rename_lesson_package',$user),
 
+
+        ];
         $jsonData = [
+            'permissionFields'=>$permissionFields,
             'roleAuth' => $roleAuth,
             'lessonPackagePlans' => @$lessonPackagePlans,
             'idRoleIt' => $idRoleIt,
@@ -1600,7 +1626,7 @@ class PlansController extends AdminBaseController
     }
     public function generateToken(Request $req)
     {
-        
+
         $device = UserDevice::where('id', $req->device_id)
                 ->where('status', 2)
                 ->first();
@@ -1624,10 +1650,10 @@ class PlansController extends AdminBaseController
             return  ['status' => 0, 'token' =>  'Error'];
 
         }
-        
+
     }
 }
 
 
-    
+
 
