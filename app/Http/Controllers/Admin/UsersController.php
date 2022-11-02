@@ -1097,8 +1097,6 @@ class UsersController extends AdminBaseController
         }
         $entries = $query->paginate($limit);
         $users = $entries->items();
-
-
         return [
             'code' => 0,
             'data' => $users,
@@ -1256,7 +1254,6 @@ class UsersController extends AdminBaseController
                             'password' => 'required',
                             'phone' => 'required',
                             'email' => ['required', Rule::unique('users', 'email')],
-                            'class' => 'required',
                         ]);
 
                         if ($validator->fails()) {
