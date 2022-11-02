@@ -76,7 +76,8 @@ To establish a new session, please contact us to renew your license.',
                         'code' => 3,
                         'msg' => 'Device Limit Exceeded! Please contact the administrator to deauthorize your old device.',
                     ];
-                } else {
+                }
+                else {
                     if ($check == 0) {
                         $secret = (Str::random(10));
                         $deviceName = $request->device_name;
@@ -125,6 +126,14 @@ To establish a new session, please contact us to renew your license.',
                     'code' => 0,
                     'msg' => 'Success',
                     'access_token' => $jwt
+                ];
+            }
+
+            else
+            {
+                return [
+                    'code' => 1,
+                    'msg' => 'Username or password is incorrect',
                 ];
             }
 

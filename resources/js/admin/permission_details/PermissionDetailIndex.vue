@@ -29,9 +29,10 @@
                                     <span >{{permission.display_permission_detail}}</span>
                                     <span v-for="permissionDetail in permission.permission_details" class="d-block fw-bold ml-5 text-lowercase"><i class="bi bi-arrow-right-short mr-1"></i>{{permissionDetail.name}}</span>
                                 </th>
+
                                 <td v-for="role in roles">
-                                    <div class="form-check form-check-custom form-check-solid justify-content-center" >
-                                        <input  class="form-check-input h-20px w-20px" type="checkbox"  value="" >
+                                    <div class="form-check form-check-custom form-check-solid justify-content-center" v-for="permissionDetail in role.permission" v-if="permissionDetail.permission==permission.id">
+                                        <input @change="changePermissionDetail(role.id,permissionDetail.id,permissionDetail.value)"  class="form-check-input h-20px w-20px" type="checkbox"  v-model="permissionDetail.value" >
                                         <br>
                                     </div>
                                 </td>
@@ -94,8 +95,9 @@
                 let query = $router.getQuery();
                 const res  = await $get('/xadmin/permission_details/data', query);
                this.roles=res.data.roles;
-               this.permissions=res.data.permissions
-                console.log(this.entries);
+               this.permissions=res.data.permissions;
+                console.log(this.roles);
+                console.log(this.permissions);
             },
             async remove(entry) {
                 if (!confirm('Xóa bản ghi: ' + entry.id)) {
@@ -150,6 +152,15 @@
             },
             onPageChange(page) {
                 $router.updateQuery({page: page})
+            },
+          async  changePermissionDetail(roleId, permissionDetailId, check)
+            {
+                const res  = await $post('/xadmin/permission_details/changeDetailPermission', {
+                    'role_id' : roleId,
+                    'permission_detail_id' :permissionDetailId,
+                    'check' : check,
+                });
+                toastr.success(res.message);
             }
         }
     }
