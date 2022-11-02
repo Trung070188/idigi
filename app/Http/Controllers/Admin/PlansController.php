@@ -192,7 +192,7 @@ class PlansController extends AdminBaseController
                 'school_id' => $device->school_id,
                 'secret_key' => $device->secret_key,
                 'reason' => $device->reason,
-                'expire_date' => Carbon::parse($device->expire_date)->format('d/m/Y'),
+                'expire_date' => ($device->expire_date),
                 'created_at' => $device->created_at,
                 'updated_at' => $device->updated_at,
                 'roleName' => $roleName,
@@ -1600,7 +1600,7 @@ class PlansController extends AdminBaseController
     }
     public function generateToken(Request $req)
     {
-        
+
         $device = UserDevice::where('id', $req->device_id)
                 ->where('status', 2)
                 ->first();
@@ -1624,10 +1624,10 @@ class PlansController extends AdminBaseController
             return  ['status' => 0, 'token' =>  'Error'];
 
         }
-        
+
     }
 }
 
 
-    
+
 
