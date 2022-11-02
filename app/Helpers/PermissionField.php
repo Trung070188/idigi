@@ -10,42 +10,46 @@ use Illuminate\Support\Facades\Auth;
 
 class PermissionField
 {
-    public function havePermission($field, $user = NULL){
-
+    public function permission($user = NULL){
         if(!$user){
             $user = Auth::user();
         }
 
         $roles = $user->roles;
 
-        $isAdmin = 0;
         $roleIds = [];
         foreach ($roles as $role){
             $roleIds[] = $role->id;
+        }
+
+        $permissions = RoleHasPermissonDetail::whereIn('role_id', $roleIds)
+            ->with('permissionDetail')
+            ->get();
+
+        return $permissions;
+
+    }
+
+    public function havePermission($field, $permissions, $user){
+        if(!$user){
+            $user = Auth::user();
+        }
+
+        $roles = $user->roles;
+
+        foreach ($roles as $role){
             if($role->role_name == "Super Administrator"){
-                $isAdmin = 1;
+                return true;
             }
 
         }
 
-        if($isAdmin == 1){
-            return true;
-        }else{
-
-
-            $rolePermissionCount = RoleHasPermissonDetail::whereIn('role_id', $roleIds)
-                ->whereHas('permissionDetail',function($q) use ($field){
-                    $q->where('code',$field);
-                })
-                ->count();
-
-
-            if($rolePermissionCount > 0){
+        foreach ($permissions as $permission){
+            if(@$permission->permissionDetail->code == $field){
                 return true;
             }
         }
 
         return false;
-
     }
 }
