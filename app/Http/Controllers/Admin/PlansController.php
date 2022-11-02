@@ -815,7 +815,7 @@ class PlansController extends AdminBaseController
 //                        ];
 //                    }
                     if ($import->plan_id == $entry->id) {
-                        $expired = Carbon::createFromFormat('d/m/Y', $import->expire_date)->format('Y-m-d');
+                        $expired = Carbon::createFromFormat('Y-m-d', $import->expire_date)->format('Y-m-d');
 
                         $payload [] = [
 //                            'secret_key_plan' => $entry->secret_key,
