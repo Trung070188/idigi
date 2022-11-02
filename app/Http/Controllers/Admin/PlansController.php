@@ -218,26 +218,27 @@ class PlansController extends AdminBaseController
         }
         $user = Auth::user();
         $permissionDetail = new PermissionField();
+        $permissions = $permissionDetail->permission($user);
         $permissionFields = [
-            'plan_name' => $permissionDetail->havePermission('plan_name',$user),
-            'plan_due_date'=>$permissionDetail->havePermission('plan_due_date',$user),
-            'plan_description'=>$permissionDetail->havePermission('plan_description',$user),
-            'plan_assign_to_IT'=>$permissionDetail->havePermission('plan_assign_to_IT',$user),
-            'plan_expire_date'=>$permissionDetail->havePermission('plan_expire_date',$user),
-            'plan_add_device'=>$permissionDetail->havePermission('plan_add_device',$user),
-            'plan_delete_device'=>$permissionDetail->havePermission('plan_delete_device',$user),
-            'plan_export_device'=>$permissionDetail->havePermission('plan_export_device',$user),
-            'plan_add_package'=>$permissionDetail->havePermission('plan_add_package',$user),
-            'plan_delete_package'=>$permissionDetail->havePermission('plan_delete_package',$user),
-            'plan_export_plan'=>$permissionDetail->havePermission('plan_export_plan',$user),
-            'plan_delete_plan'=>$permissionDetail->havePermission('plan_delete_plan',$user),
-            'plan_import_device'=>$permissionDetail->havePermission('plan_import_device',$user),
-            'plan_remove_lesson'=>$permissionDetail->havePermission('plan_remove_lesson',$user),
-            'plan_download_package'=>$permissionDetail->havePermission('plan_download_package',$user),
-            'plan_add_lesson'=>$permissionDetail->havePermission('plan_add_lesson',$user),
-            'plan_zip_package_lesson'=>$permissionDetail->havePermission('plan_zip_package_lesson',$user),
-            'plan_delete_package_lesson'=>$permissionDetail->havePermission('plan_delete_package_lesson',$user),
-            'plan_rename_lesson_package'=>$permissionDetail->havePermission('plan_rename_lesson_package',$user),
+            'plan_name' => $permissionDetail->havePermission('plan_name',$permissions,$user),
+            'plan_due_date'=>$permissionDetail->havePermission('plan_due_date',$permissions,$user),
+            'plan_description'=>$permissionDetail->havePermission('plan_description',$permissions,$user),
+            'plan_assign_to_IT'=>$permissionDetail->havePermission('plan_assign_to_IT',$permissions,$user),
+            'plan_expire_date'=>$permissionDetail->havePermission('plan_expire_date',$permissions,$user),
+            'plan_add_device'=>$permissionDetail->havePermission('plan_add_device',$permissions,$user),
+            'plan_delete_device'=>$permissionDetail->havePermission('plan_delete_device',$permissions,$user),
+            'plan_export_device'=>$permissionDetail->havePermission('plan_export_device',$permissions,$user),
+            'plan_add_package'=>$permissionDetail->havePermission('plan_add_package',$permissions,$user),
+            'plan_delete_package'=>$permissionDetail->havePermission('plan_delete_package',$permissions,$user),
+            'plan_export_plan'=>$permissionDetail->havePermission('plan_export_plan',$permissions,$user),
+            'plan_delete_plan'=>$permissionDetail->havePermission('plan_delete_plan',$permissions,$user),
+            'plan_import_device'=>$permissionDetail->havePermission('plan_import_device',$permissions,$user),
+            'plan_remove_lesson'=>$permissionDetail->havePermission('plan_remove_lesson',$permissions,$user),
+            'plan_download_package'=>$permissionDetail->havePermission('plan_download_package',$permissions,$user),
+            'plan_add_lesson'=>$permissionDetail->havePermission('plan_add_lesson',$permissions,$user),
+            'plan_zip_package_lesson'=>$permissionDetail->havePermission('plan_zip_package_lesson',$permissions,$user),
+            'plan_delete_package_lesson'=>$permissionDetail->havePermission('plan_delete_package_lesson',$permissions,$user),
+            'plan_rename_lesson_package'=>$permissionDetail->havePermission('plan_rename_lesson_package',$permissions,$user),
 
 
         ];

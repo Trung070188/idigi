@@ -43,10 +43,11 @@ class AppVersionsController extends AdminBaseController
             }
         }
         $permissionDetail = new PermissionField();
+        $permissions = $permissionDetail->permission($user);
         $permissionFields = [
-            'app_download' => $permissionDetail->havePermission('app_download',$user),
-            'app_delete'=>$permissionDetail->havePermission('app_delete',$user),
-            'app_create_new'=>$permissionDetail->havePermission('app_create_new',$user),
+            'app_download' => $permissionDetail->havePermission('app_download',$permissions ,$user),
+            'app_delete'=>$permissionDetail->havePermission('app_delete',$permissions ,$user),
+            'app_create_new'=>$permissionDetail->havePermission('app_create_new',$permissions ,$user),
         ];
         $jsonData=[
             'permissionFields'=>$permissionFields,
