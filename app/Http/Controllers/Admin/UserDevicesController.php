@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers\Admin;
+use App\Helpers\PermissionField;
 use App\Models\Notification;
 use App\Models\Plan;
 use App\Models\School;
@@ -50,7 +51,15 @@ class UserDevicesController extends AdminBaseController
                 }
             }
         }
+        $user = Auth::user();
+        $permissionDetail = new PermissionField();
+        $permissionFields= [
+            'device_rename' => $permissionDetail->havePermission('device_rename',$user),
+            'device_confirmation_code'=>$permissionDetail->havePermission('device_confirmation_code',$user),
+            'device_delete'=>$permissionDetail->havePermission('device_delete',$user),
+        ];
         $jsonData = [
+            'permissionFields'=>$permissionFields,
             @'roleName'=>@$roleName,
             @'devicesPerUser' => @$devicesPerUser
         ];

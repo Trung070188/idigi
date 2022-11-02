@@ -3,10 +3,12 @@
 namespace App\Http\Controllers\Admin;
 
 
+use App\Helpers\PermissionField;
 use App\Models\UserCourseUnit;
 use App\Models\UserUnit;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use App\Models\AllocationContent;
@@ -143,7 +145,17 @@ class AllocationContentsController extends AdminBaseController
         /**
          * @var  AllocationContent $entry
          */
+        $user = Auth::user();
+        $permissionDetail = new PermissionField();
+        $permissionFields = [
+            'allocation_add_new' => $permissionDetail->havePermission('allocation_add_new',$user),
+            'allocation_delete'=>$permissionDetail->havePermission('allocation_delete',$user),
+            'allocation_title'=>$permissionDetail->havePermission('allocation_title',$user),
+            'allocation_course'=>$permissionDetail->havePermission('allocation_course',$user),
+            'allocation_unit'=>$permissionDetail->havePermission('allocation_unit',$user),
+        ];
         $jsonData=[
+            'permissionFields'=>$permissionFields,
             'totalSchoolArray'=>$totalSchoolArray,
             'totalCourseArray'=>$totalCourseArray,
             'entry'=>$entry,

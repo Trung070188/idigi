@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Exports\TeacherErrorExport;
+use App\Helpers\PermissionField;
 use App\Imports\TeacherImport;
 use App\Models\File;
 use App\Models\RequestRole;
@@ -213,7 +214,19 @@ class UsersController extends AdminBaseController
         $title = 'Edit';
         $component = 'UserEdit';
         $user = Auth::user();
+        $permissionDetail = new PermissionField();
+        $permissionFields = [
+            'user_username' => $permissionDetail->havePermission('user_username',$user),
+            'user_full_name'=>$permissionDetail->havePermission('user_full_name',$user),
+            'user_email'=>$permissionDetail->havePermission('user_email',$user),
+            'user_description'=>$permissionDetail->havePermission('user_description',$user),
+            'user_active'=>$permissionDetail->havePermission('user_active',$user),
+            'user_role'=>$permissionDetail->havePermission('user_role',$user),
+            'user_remove'=>$permissionDetail->havePermission('user_remove',$user)
+
+        ];
         $jsonData = [
+            'permissionFields'=>$permissionFields,
             'schools' => $schools,
             @'school' => $school,
             'entry' => $entry,
@@ -311,7 +324,19 @@ class UsersController extends AdminBaseController
         $title = 'Edit';
         $component = 'TeacherEdit';
         $user = Auth::user();
+        $permissionDetail = new PermissionField();
+        $permissionFields = [
+            'teacher_username' => $permissionDetail->havePermission('teacher_username',$user),
+            'teacher_email'=>$permissionDetail->havePermission('teacher_email',$user),
+            'teacher_phone'=>$permissionDetail->havePermission('teacher_phone',$user),
+            'teacher_class'=>$permissionDetail->havePermission('teacher_class',$user),
+            'teacher_school'=>$permissionDetail->havePermission('teacher_school',$user),
+            'teacher_description'=>$permissionDetail->havePermission('teacher_description',$user),
+            'teacher_import'=>$permissionDetail->havePermission('teacher_import',$user),
+
+        ];
         $jsonData = [
+            'permissionFields'=>$permissionFields,
             'allocationContentId'=>$allocationContentId,
             'entry' => $entry,
             @'user_device' => @$user_device,
@@ -384,7 +409,19 @@ class UsersController extends AdminBaseController
         $title = 'Edit';
         $component = 'TeacherDetails';
         $user = Auth::user();
+        $permissionDetail = new PermissionField();
+        $permissionFields = [
+            'teacher_username' => $permissionDetail->havePermission('teacher_username',$user),
+            'teacher_email'=>$permissionDetail->havePermission('teacher_email',$user),
+            'teacher_phone'=>$permissionDetail->havePermission('teacher_phone',$user),
+            'teacher_class'=>$permissionDetail->havePermission('teacher_class',$user),
+            'teacher_school'=>$permissionDetail->havePermission('teacher_school',$user),
+            'teacher_description'=>$permissionDetail->havePermission('teacher_description',$user),
+            'teacher_import'=>$permissionDetail->havePermission('teacher_import',$user),
+
+        ];
         $jsonData = [
+            'permissionFields'=>$permissionFields,
             'allocationContentId'=>$allocationContentId,
             'entry' => $entry,
             @'user_device' => @$user_device,
@@ -994,6 +1031,7 @@ class UsersController extends AdminBaseController
                     $roleNames[] = $role->role_name;
                 }
             }
+
             $data[] = [
                 'role' => implode(',', $roleNames),
                 'id' => $user->id,
@@ -1059,8 +1097,6 @@ class UsersController extends AdminBaseController
         }
         $entries = $query->paginate($limit);
         $users = $entries->items();
-
-
         return [
             'code' => 0,
             'data' => $users,
@@ -1218,7 +1254,6 @@ class UsersController extends AdminBaseController
                             'password' => 'required',
                             'phone' => 'required',
                             'email' => ['required', Rule::unique('users', 'email')],
-                            'class' => 'required',
                         ]);
 
                         if ($validator->fails()) {

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 
+use App\Helpers\PermissionField;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -87,18 +88,31 @@ class InventoriesController extends AdminBaseController
             $entry->file_asset_new = NULL;
         }
 
-
-
-       //dd($entry);
-
-
         /**
          * @var  Inventory $entry
          */
+        $user = Auth::user();
+        $permissionDetail = new PermissionField();
+        $permissionFields = [
+            'resource_name' => $permissionDetail->havePermission('resource_name',$user),
+            'resource_type'=>$permissionDetail->havePermission('resource_type',$user),
+            'resource_subject'=>$permissionDetail->havePermission('resource_subject',$user),
+            'resource_grade'=>$permissionDetail->havePermission('resource_grade',$user),
+            'resource_picture'=>$permissionDetail->havePermission('resource_picture',$user),
+            'resource_file_asset_bundle'=>$permissionDetail->havePermission('resource_file_asset_bundle',$user),
+            'resource_description'=>$permissionDetail->havePermission('resource_description',$user),
+            'resource_tags'=>$permissionDetail->havePermission('resource_tags',$user),
+            'resource_active'=>$permissionDetail->havePermission('resource_active',$user)
+
+        ];
 
         $title = 'Edit';
         $component = 'InventoryForm';
-        return component($component, compact('title', 'entry'));
+        $jsonData = [
+            'permissionFields'=>$permissionFields,
+            'entry' => $entry,
+        ];
+        return view('admin.layouts.vue', compact('title', 'component', 'jsonData'));
 
     }
 

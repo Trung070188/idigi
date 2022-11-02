@@ -59,48 +59,48 @@
                                 <div class="row">
                                     <div class="form-group  col-sm-4">
                                         <label>Username</label>
-                                        <input class="form-control" v-model="entry.username" disabled>
+                                        <input class="form-control" v-model="entry.username" :disabled="permissionFields['teacher_username']==false">
 
                                         <error-label for="f_category_id" :errors="errors.username"></error-label>
                                     </div>
                                     <div class="form-group  col-sm-4">
                                         <label>Teacher name </label>
-                                        <input class="form-control" v-model="entry.full_name">
+                                        <input class="form-control" v-model="entry.full_name" >
 
                                         <error-label for="f_category_id" :errors="errors.full_name"></error-label>
                                     </div>
                                     <div class="form-group  col-sm-4">
                                         <label>Email </label>
-                                        <input class="form-control" v-model="entry.email">
+                                        <input class="form-control" v-model="entry.email" :disabled="permissionFields['teacher_email']==false">
 
                                         <error-label for="f_category_id" :errors="errors.email"></error-label>
                                     </div>
                                      <div class="form-group  col-sm-4">
                                         <label>Phone number </label>
-                                        <input class="form-control noString" v-model="entry.phone">
+                                        <input class="form-control noString" v-model="entry.phone" :disabled="permissionFields['teacher_phone']==false">
                                         <error-label for="f_category_id" :errors="errors.phone"></error-label>
                                     </div>
                                      <div class="form-group  col-sm-4">
                                         <label>Class</label>
-                                        <input class="form-control" v-model="entry.class">
+                                        <input class="form-control" v-model="entry.class" :disabled="permissionFields['teacher_class']==false">
                                         <error-label for="f_category_id" :errors="errors.class"></error-label>
                                     </div>
                                     <div class="form-group  col-sm-4">
                                         <label>School</label>
-                                        <input class="form-control" v-model="schools.label" disabled>
+                                        <input class="form-control" v-model="schools.label" :disabled="permissionFields['teacher_school']==false" >
                                         <error-label for="f_category_id" :errors="errors.label"></error-label>
                                     </div>
                                     <div class="row">
                                     <div class="form-group col-sm-8">
                                         <label>Teacher description</label>
-                                        <textarea v-model="entry.description" rows="5" class="form-control"
+                                        <textarea v-model="entry.description" rows="5" class="form-control" :disabled="permissionFields['teacher_description']==false"
                                                   placeholder="Type the description here (200 characters)"></textarea>
                                         <error-label for="f_grade" :errors="errors.description"></error-label>
 
                                     </div>
                                 </div>
                                         <div class="form-group">
-                                    <input id="state" type="checkbox" v-model="entry.state">
+                                    <input id="state" type="checkbox" v-model="entry.state" >
                                     <label for="state" class="pl-2">Active</label>
                                     <error-label for="f_grade" :errors="errors.state"></error-label>
                                     </div>
@@ -304,6 +304,7 @@
                 user_device: $json.user_device || [],
                 allocationContentId:$json.allocationContentId,
                 schools:$json.schools || [],
+                permissionFields:$json.permissionFields || [],
                 courses:courseTreeselect,
                 isLoading: false,
                 errors: {}

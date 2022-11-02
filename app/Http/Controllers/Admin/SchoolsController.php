@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Helpers\PermissionField;
 use App\Models\AllocationContent;
 use App\Models\AllocationContentSchool;
 use App\Models\Course;
@@ -350,10 +351,25 @@ class SchoolsController extends AdminBaseController
          * @var  School $entry
          */
 
+        $user = Auth::user();
+        $permissionDetail = new PermissionField();
+        $permissionFields = [
+            'school_name' => $permissionDetail->havePermission('school_name',$user),
+            'school_address'=>$permissionDetail->havePermission('school_address',$user),
+            'school_email'=>$permissionDetail->havePermission('school_email',$user),
+            'school_phone_number'=>$permissionDetail->havePermission('school_phone_number',$user),
+            'school_device'=>$permissionDetail->havePermission('school_device',$user),
+            'school_user'=>$permissionDetail->havePermission('school_user',$user),
+            'school_expire_date'=>$permissionDetail->havePermission('school_expire_date',$user),
+            'school_description'=>$permissionDetail->havePermission('school_description',$user),
+            'school_content'=>$permissionDetail->havePermission('school_content',$user),
+
+        ];
         $title = 'Edit';
         $component = 'SchoolEdit';
         $entry->allocationContentId = $allocationContentId;
         $jsonData = [
+            'permissionFields'=>$permissionFields,
             'teacher'=>$lengthTeacher,
             'entry' => $entry,
             @'allocationContents' => @$newAllocationContents,
