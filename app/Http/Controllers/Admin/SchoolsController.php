@@ -353,16 +353,17 @@ class SchoolsController extends AdminBaseController
 
         $user = Auth::user();
         $permissionDetail = new PermissionField();
+        $permissions = $permissionDetail->permission($user);
         $permissionFields = [
-            'school_name' => $permissionDetail->havePermission('school_name',$user),
-            'school_address'=>$permissionDetail->havePermission('school_address',$user),
-            'school_email'=>$permissionDetail->havePermission('school_email',$user),
-            'school_phone_number'=>$permissionDetail->havePermission('school_phone_number',$user),
-            'school_device'=>$permissionDetail->havePermission('school_device',$user),
-            'school_user'=>$permissionDetail->havePermission('school_user',$user),
-            'school_expire_date'=>$permissionDetail->havePermission('school_expire_date',$user),
-            'school_description'=>$permissionDetail->havePermission('school_description',$user),
-            'school_content'=>$permissionDetail->havePermission('school_content',$user),
+            'school_name' => $permissionDetail->havePermission('school_name',$permissions,$user),
+            'school_address'=>$permissionDetail->havePermission('school_address',$permissions,$user),
+            'school_email'=>$permissionDetail->havePermission('school_email',$permissions,$user),
+            'school_phone_number'=>$permissionDetail->havePermission('school_phone_number',$permissions,$user),
+            'school_device'=>$permissionDetail->havePermission('school_device',$permissions,$user),
+            'school_user'=>$permissionDetail->havePermission('school_user',$permissions,$user),
+            'school_expire_date'=>$permissionDetail->havePermission('school_expire_date',$permissions,$user),
+            'school_description'=>$permissionDetail->havePermission('school_description',$permissions,$user),
+            'school_content'=>$permissionDetail->havePermission('school_content',$permissions,$user),
 
         ];
         $title = 'Edit';
