@@ -152,7 +152,7 @@
                         <!--begin::Body-->
                         <div class="card-body">
                             <!--begin::Chart-->
-                            <div class="mixed-widget-10-chart" data-kt-color="primary" style="height: 175px"></div>
+                            <div id="kt_charts_widget_1_chart" style="height: 350px"></div>
                             <!--end::Chart-->
                         </div>
                     </div>

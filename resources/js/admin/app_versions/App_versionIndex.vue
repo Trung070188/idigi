@@ -504,7 +504,7 @@
         data() {
             const permissions = clone(window.$permissions);
             return {
-                permissionFields:permissionFields || [],
+                permissionFields:$json.permissionFields || [],
                 entry: '',
                 roleName: $json.roleName,
                 release_note: '',

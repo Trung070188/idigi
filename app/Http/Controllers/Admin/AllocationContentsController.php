@@ -147,12 +147,13 @@ class AllocationContentsController extends AdminBaseController
          */
         $user = Auth::user();
         $permissionDetail = new PermissionField();
+        $permissions = $permissionDetail->permission($user);
         $permissionFields = [
-            'allocation_add_new' => $permissionDetail->havePermission('allocation_add_new',$user),
-            'allocation_delete'=>$permissionDetail->havePermission('allocation_delete',$user),
-            'allocation_title'=>$permissionDetail->havePermission('allocation_title',$user),
-            'allocation_course'=>$permissionDetail->havePermission('allocation_course',$user),
-            'allocation_unit'=>$permissionDetail->havePermission('allocation_unit',$user),
+            'allocation_add_new' => $permissionDetail->havePermission('allocation_add_new',$permissions,$user),
+            'allocation_delete'=>$permissionDetail->havePermission('allocation_delete',$permissions,$user),
+            'allocation_title'=>$permissionDetail->havePermission('allocation_title',$permissions,$user),
+            'allocation_course'=>$permissionDetail->havePermission('allocation_course',$permissions,$user),
+            'allocation_unit'=>$permissionDetail->havePermission('allocation_unit',$permissions,$user),
         ];
         $jsonData=[
             'permissionFields'=>$permissionFields,

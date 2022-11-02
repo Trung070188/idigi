@@ -43,11 +43,12 @@ class RolesController extends AdminBaseController
         $permissions = Permission::query()->orderBy('name')->get();
         $user = Auth::user();
         $permissionDetail = new PermissionField();
+        $permission = $permissionDetail->permission($user);
         $permissionFields = [
-            'role_add_new' => $permissionDetail->havePermission('role_add_new',$user),
-            'role_name'=>$permissionDetail->havePermission('role_name',$user),
-            'role_description'=>$permissionDetail->havePermission('role_description',$user),
-            'role_set'=>$permissionDetail->havePermission('role_set',$user),
+            'role_add_new' => $permissionDetail->havePermission('role_add_new',$permission,$user),
+            'role_name'=>$permissionDetail->havePermission('role_name',$permission,$user),
+            'role_description'=>$permissionDetail->havePermission('role_description',$permission,$user),
+            'role_set'=>$permissionDetail->havePermission('role_set',$permission,$user),
         ];
         $jsonData = [
             'permissionFields'=>$permissionFields,
