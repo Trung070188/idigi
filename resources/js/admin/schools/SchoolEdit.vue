@@ -165,9 +165,9 @@
                                         </select>
 
                                     </div>
-                                    <div class="col-lg-4">
-                                        <a :href="'/xadmin/allocation_contents/edit?id='+allocationContentSchool" :disabled="permissionFields['school_content']==false">
-                                            <button style="margin: 20px 0px 0px" class="btn btn-primary" :disabled="permissionFields['school_content']==false"><i class="bi bi-pencil-square mr-1"></i>Edit</button>
+                                    <div class="col-lg-4" v-if="permissions['036']">
+                                        <a :href="'/xadmin/allocation_contents/edit?id='+allocationContentSchool" >
+                                            <button style="margin: 20px 0px 0px" class="btn btn-primary" ><i class="bi bi-pencil-square mr-1"></i>Edit</button>
                                         </a>
                                     </div>
                                 </div>
@@ -230,7 +230,7 @@
 </template>
 
 <script>
-    import {$post} from "../../utils";
+    import {$post, clone} from "../../utils";
     import ActionBar from "../includes/ActionBar";
     import QSelect from "../../components/QSelect";
     import Datepicker from "../../components/Datepicker";
@@ -242,6 +242,7 @@
         name: "SchoolEdit.vue",
         components: {ActionBar, QSelect, Datepicker, Treeselect},
         data() {
+            const permissions = clone(window.$permissions)
             const units = $json.units;
 
             let unitTreeselect = !units ? null : units.map(rec => {
@@ -278,6 +279,7 @@
             })
 
             return {
+                permissions,
                 permissionFields:$json.permissionFields || [],
                 teacher:$json.teacher,
                 courses: courseTreeselect,
