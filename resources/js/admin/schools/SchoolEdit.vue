@@ -165,7 +165,10 @@
                                         </select>
 
                                     </div>
-                                    <div class="col-lg-4" v-if="permissions['036']">
+                                    <div class="col-lg-4" v-if="permissionFields['school_content']==false">
+                                            <button style="margin: 20px 0px 0px" class="btn btn-primary" disabled><i class="bi bi-pencil-square mr-1"></i>Edit</button>
+                                    </div>
+                                    <div class="col-lg-4" v-if="permissionFields['school_content']==true">
                                         <a :href="'/xadmin/allocation_contents/edit?id='+allocationContentSchool" >
                                             <button style="margin: 20px 0px 0px" class="btn btn-primary" ><i class="bi bi-pencil-square mr-1"></i>Edit</button>
                                         </a>
