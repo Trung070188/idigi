@@ -30,7 +30,7 @@ class PermissionField
 
     }
 
-    public function havePermission($field, $permissions, $user){
+    public function havePermission($field, $permissions, $user=NULL){
         if(!$user){
             $user = Auth::user();
         }
