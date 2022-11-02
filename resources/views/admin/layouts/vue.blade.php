@@ -256,6 +256,8 @@
         <script src="{{asset('/assets/plugins/ion-rangeslider/js/ion.rangeSlider.js')}}"></script>
         <script src="{{asset('/assets/js/jquery-ui.js')}}"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+        <script src="{{asset('/assets/js/datepicker.js')}}"></script>
+
         <noscript>
             <iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5FS8GGP" height="0" width="0" style="display:none;visibility:hidden"></iframe>
         </noscript>
