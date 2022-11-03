@@ -1558,6 +1558,7 @@ class PlansController extends AdminBaseController
             $assignTo=User::where('id',$entry->user_id)->first();
             $dataAll['packageLessonPlan'] = json_decode($dataAll['packageLessonPlan'], true);
 
+
             if(@$dataAll['packageLessonPlan'])
             {
                 foreach ( $dataAll['packageLessonPlan'] as $key => $packageLessonPlan)
@@ -1566,7 +1567,7 @@ class PlansController extends AdminBaseController
 
                     $lessonsArr=Lesson::query()->whereIn('id',$packageLessonPlan['lessonIds'])->orderBy('name','ASC')->get();
                     $lessons[]=[
-                        'package_name'=>'Package lesson' . ' ' .$index ,
+                        'package_name'=>$packageLessonPlan['name'],
                         'plan_name'=>$entry->name,
                         'assign_to'=>$assignTo->full_name,
                         'due_at'=>Carbon::parse($entry->due_at)->format('d/m/Y'),

@@ -114,7 +114,7 @@
                                         </div>
                                     </div>
                                     <div class=" form-group col-lg-4 " >
-                                        <label >Password<span class="text-danger">*</span></label>
+                                        <label >Password</label>
                                         <div class="d-flex align-items-center justify-content-start mt-2" >
                                             <input class="form-control "type="password" placeholder="Enter the password" v-model="password" >
                                             <error-label></error-label>

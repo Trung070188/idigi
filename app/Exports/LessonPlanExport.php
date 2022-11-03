@@ -27,6 +27,7 @@ class LessonPlanExport implements FromView,WithTitle,WithStyles,WithColumnWidths
 
     public function title(): string
     {
+
         return $this->data['package_name'];
     }
 
