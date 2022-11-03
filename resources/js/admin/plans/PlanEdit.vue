@@ -95,7 +95,7 @@
                                         <tr>
                                             <td width="25">
                                                 <div class="form-check form-check-sm form-check-custom form-check-solid">
-                                                    <input class="form-check-input" type="checkbox" v-model="allLessonSelected" @change="selectLessonAll()">
+                                                    <input class="form-check-input" type="checkbox" v-model="package.allLessonSelected" @change="selectLessonAll()">
                                                 </div>
                                             </td>
                                             <th class="">Name of lesson</th>
@@ -104,7 +104,8 @@
                                             <th></th>
                                         </tr>
                                         </thead>
-                                        <tbody  v-for="lessonPackagePlan in lessonPackagePlans" v-if="lessonPackagePlan.package_id==package">
+
+                                        <tbody  v-for="lessonPackagePlan in lessonPackagePlans" v-if="lessonPackagePlan.package_id==package.package">
                                         <tr v-for="lesson in entries" >
                                             <td class="">
                                                 <div class="form-check form-check-sm form-check-custom form-check-solid">
@@ -893,7 +894,7 @@
                 lessons: [],
                 viewPackage: this.viewPackage,
                 packagePlan: $json.packagePlan,
-                package: '',
+                package: [],
                 idListDevice: [],
                 nameSchool: $json.nameSchool || [],
                 schoolPlan: $json.schoolPlan || [],
@@ -902,7 +903,6 @@
                 exportDevicePlan: '',
                 lessonPackagePlans: $json.lessonPackagePlans,
                 data: $json.data || [],
-                allLessonSelected: false,
                 allDeviceSelected:false,
                 allViewLessonSelected:false,
                 filter: filter,
@@ -1058,7 +1058,12 @@
             },
             addLessonPackage: function (tabLessonContent = '') {
                 $('#kt_modal_invite').modal('show');
-                this.package = tabLessonContent;
+                this.package=
+                    {
+                        allLessonSelected:false,
+                        package:tabLessonContent
+                    };
+
             },
         // xoa lesson theo từng id
             async deleteLesson(deleteLessons) {
@@ -1360,12 +1365,15 @@
             },
 
             selectLessonAll() {
-                if (this.allLessonSelected)
+                if (this.package.allLessonSelected )
                 {
                     const selected=this.entries.map((u)=>u.id);
                     let self=this;
                     self.lessonPackagePlans.forEach(function (e){
-                        e.lessonIds=selected;
+                        if(self.package.package==e.package_id)
+                        {
+                            e.lessonIds=selected;
+                        }
                     })
                 }
                 else {
@@ -1383,9 +1391,9 @@
                 let self = this;
                 self.lessonPackagePlans.forEach(function (e) {
                     if (e.lessonIds.length == self.entries.length) {
-                        self.allLessonSelected = true;
+                        self.package.allLessonSelected = true;
                     } else {
-                        self.allLessonSelected = false;
+                        self.package.allLessonSelected = false;
                     }
 
                 })
@@ -1544,7 +1552,7 @@
                 } else {
                     this.errors = {};
                     toastr.success(res.message);
-                    this.allLessonSelected=false;
+                    this.package.allLessonSelected=false;
                     $('#kt_modal_invite').modal('hide');
                     let self =this;
 

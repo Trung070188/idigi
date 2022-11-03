@@ -917,13 +917,13 @@ class PlansController extends AdminBaseController
 
             if (@$dataLesson['lessonPackagePlans']) {
                 foreach ($dataLesson['lessonPackagePlans'] as $lesson) {
-                        if ($lesson['package_id'] == $dataLesson['package'])
+                        if ($lesson['package_id'] == $dataLesson['package']['package'])
                         {
                             if($lesson['lessonIds']!=[]){
                                 $stringLesson = implode(",", $lesson['lessonIds']);
                                 PackageLesson::updateorCreate(
                                     [
-                                        'id' => $dataLesson['package']
+                                        'id' => $dataLesson['package']['package']
                                     ],
                                     [
                                         'lesson_ids' => $stringLesson,
