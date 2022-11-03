@@ -137,10 +137,10 @@
                     allCourses:allCourses,
                     breadcrumbs: [
                         {
-                            title: 'Content management'
+                            title: 'Resource management'
                         },
                         {
-                            title: 'Content allocation',
+                            title: 'Resource allocation',
                             url:'/xadmin/allocation_contents/index'
 
                         },
