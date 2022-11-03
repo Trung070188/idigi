@@ -595,7 +595,7 @@
 <!--																			<i class="bi bi-x fs-3"></i>-->
 <!--																		</span>-->
                                                             <span class="dropzone-delete" data-dz-remove="">
-																			<i class="bi bi-x fs-1" @click="removeFileDevice"></i>
+																			<i style="font-size: 15px; color: red" class="bi bi-trash" @click="removeFileDevice"></i>
 																		</span>
                                                         </div>
                                                         <!--end::Toolbar-->
