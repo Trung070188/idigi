@@ -1,7 +1,7 @@
 <template>
     <div class="container-fluid">
         <ActionBar type="index"
-                   :breadcrumbs="breadcrumbs"  title = "User Manager - Users"/>
+                   :breadcrumbs="breadcrumbs"  title = "View user detail"/>
         <div class="row">
             <div class="col-lg-12">
                 <!--modal xoa device -->
@@ -205,8 +205,7 @@
                 types: [],
                 breadcrumbs: [
                     {
-                        title: 'Users & roles',
-                        url: '/xadmin/users/index',
+                        title: 'Account Management',
                     },
                     {
                         title: 'Manage users',

@@ -1,7 +1,7 @@
 <template>
     <div class="container-fluid">
         <ActionBar type="index"
-                   :breadcrumbs="breadcrumbs" title = "Teacher Details"/>
+                   :breadcrumbs="breadcrumbs" title = "Teacher details"/>
         <div class="modal fade" style="" id="delete" tabindex="-1" role="dialog" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered popup-main-1" role="document" style="max-width: 450px;">
                 <div class="modal-content box-shadow-main paymment-status" style="padding: 0px 0px 30px;">
@@ -280,10 +280,7 @@
                 currId:'',
                 breadcrumbs: [
                     {
-                        title:'School Management',
-                    },
-                    {
-                        title: ' Manage schools',
+                        title:'School management',
                         url: '/xadmin/schools/index',
                     },
                     {
@@ -291,7 +288,7 @@
                         url: '/xadmin/schools/edit?id='+$json.schoolId
                     },
                     {
-                        title: 'Teacher lists',
+                        title: 'Teacher management',
                         url: '/xadmin/schools/teacherList?id='+$json.schoolId
 
                     },

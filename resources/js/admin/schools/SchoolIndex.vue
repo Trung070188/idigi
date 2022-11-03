@@ -1,7 +1,7 @@
 <template>
     <div class="container-fluid">
         <ActionBar type="index"
-                   :breadcrumbs="breadcrumbs" title="School Management"/>
+                   :breadcrumbs="breadcrumbs" title="School management"/>
         <div class="row">
             <div class="col-lg-12">
                 <!-- modal xoa nhieu -->
@@ -306,10 +306,7 @@
                 allSelected: false,
                 breadcrumbs: [
                     {
-                        title: 'School Management'
-                    },
-                    {
-                        title: 'Manage schools'
+                        title: 'School management'
                     },
                 ],
                 entry:'',

@@ -293,12 +293,9 @@
                 courses2: courseTreeselect2,
                 breadcrumbs: [
                     {
-                        title: 'School Management',
-
-                    },
-                    {
-                        title: 'Manage schools',
+                        title: 'School management',
                         url: '/xadmin/schools/index',
+
                     },
                     {
                         title: $json.entry ? 'School details' : 'Create New school',

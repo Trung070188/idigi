@@ -1,7 +1,7 @@
 <template>
     <div class="container-fluid" >
         <ActionBar type="index"
-                   :breadcrumbs="breadcrumbs" title = "User Manager - Roles"/>
+                   :breadcrumbs="breadcrumbs" title = "Manage roles"/>
         <div class="row">
             <div class="col-lg-12">
                 <div class="card card-custom card-stretch gutter-b">
@@ -102,7 +102,7 @@
             return {
                 breadcrumbs: [
                     {
-                        title: 'Users & Roles'
+                        title: 'Account management'
                     },
                     {
                         title: 'Manage Roles'

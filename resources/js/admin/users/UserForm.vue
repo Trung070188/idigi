@@ -1,7 +1,7 @@
 <template>
     <div class="container-fluid">
         <ActionBar type="index"
-                   :breadcrumbs="breadcrumbs"  title = "Create New User"/>
+                   :breadcrumbs="breadcrumbs"  title = "Create new user"/>
 
         <div class="row">
             <div class="col-lg-12">
@@ -132,7 +132,7 @@
                 types: [],
                 breadcrumbs: [
                     {
-                        title: 'Users & roles',
+                        title: 'Account management',
                     },
                     {
                         title: 'Manage users',

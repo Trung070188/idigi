@@ -1,7 +1,7 @@
 <template>
     <div class="container-fluid">
         <ActionBar type="index"
-                   :breadcrumbs="breadcrumbs" title = "Device Management"/>
+                   :breadcrumbs="breadcrumbs" title = "My devices"/>
         <div class="modal fade" style="margin-right:50px " id="sentConfirm" tabindex="-1" role="dialog"
              aria-labelledby="sentConfirm"
              aria-hidden="true">
@@ -353,7 +353,7 @@
                 editDevice:"",
                 breadcrumbs: [
                     {
-                        title: 'User Device'
+                        title: 'My devices'
                     },
                 ],
                 idDevice:'',

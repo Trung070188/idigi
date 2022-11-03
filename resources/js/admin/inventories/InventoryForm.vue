@@ -136,7 +136,10 @@
                 ],
                 breadcrumbs: [
                     {
-                        title: 'Resource management',
+                        title: 'Content Management',
+                    },
+                    {
+                        title: 'Modules',
                         url: '/xadmin/inventories/index',
                     },
                     {

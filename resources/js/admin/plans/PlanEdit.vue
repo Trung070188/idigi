@@ -920,7 +920,7 @@
                 roleIt: $json.roleIt || [],
                 breadcrumbs: [
                     {
-                        title: 'Manage plans',
+                        title: 'Plan management',
                         url: '/xadmin/plans/index'
                     },
                     {
