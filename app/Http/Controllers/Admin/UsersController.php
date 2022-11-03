@@ -1166,12 +1166,44 @@ class UsersController extends AdminBaseController
     public function removeAll(Request $req)
     {
         $ids = $req->ids;
-        UserRole::whereIn('user_id', $ids)->delete();
-        User::whereIn('id', $ids)->delete();
-        return [
-            'code' => 0,
-            'message' => 'Đã xóa'
-        ];
+       $users= User::query()->orWhereHas('roles',function ($q)
+        {
+            $q->where('role_name','Super Administrator');
+
+        })->get();
+        $check=0;
+        foreach ($users as $user)
+        {
+            foreach ($ids as $id)
+            {
+
+                if($id==$user->id)
+                {
+                    $check=1;
+
+                }
+
+            }
+        }
+
+        if($check==0)
+        {
+            UserRole::whereIn('user_id', $ids)->delete();
+            User::whereIn('id', $ids)->delete();
+            return [
+                'code' => 0,
+                'message' => 'Đã xóa'
+            ];
+        }
+        else{
+            return  [
+              'code' => 1,
+            ];
+        }
+
+
+
+
     }
 
     public function validateImportTeacher(Request $req)
