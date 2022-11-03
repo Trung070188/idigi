@@ -3,6 +3,32 @@
         <ActionBar type="index"
                    :breadcrumbs="breadcrumbs" title="Plan details"/>
         <div class="row">
+            <!-- modal cancel package lesson -->
+
+            <div class="modal fade" style="margin-right:50px;border:2px solid #333333  " id="cancelModal" tabindex="-1" role="dialog"
+                 aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered popup-main-1" role="document"
+                     style="max-width: 450px;">
+                    <div class="modal-content box-shadow-main paymment-status" style="left:120px;text-align: center; padding: 20px 0px 55px;">
+                        <div class="close-popup" data-dismiss="modal"></div>
+                        <div class="swal2-icon swal2-warning swal2-icon-show">
+                            <div class="swal2-icon-content" style="margin: 0px 24.5px 0px ">!</div>
+                        </div>
+                        <div class="swal2-html-container">
+                            <p >Do you want to close ?</p>
+                        </div>
+                        <div class="swal2-actions">
+                            <button type="submit" id="kt_modal_new_target_submit2" class="swal2-confirm btn fw-bold btn-primary" @click="cancelModalYes">
+                                <span class="indicator-label">Yes</span>
+                            </button>
+                            <button type="reset" id="kt_modal_new_target_cancel2" class="swal2-cancel btn fw-bold btn-active-light-primary" @click="cancelModalNo" style="margin: 0px 8px 0px">No</button>
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            <!-- end modal cancel package lesson -->
 
             <!-- BEGIN: MODAL ADD LESSON PACKAGE PLAN -->
 
@@ -10,7 +36,7 @@
                 <div class="modal-dialog " style="width: 1000px">
                     <div class="modal-content" style="width: max-content;margin: 0px -150px 0px">
                         <div class="modal-header pb-0 border-0 justify-content-end">
-                            <div class="btn btn-sm btn-icon btn-active-color-primary" data-bs-dismiss="modal">
+                            <div class="btn btn-sm btn-icon btn-active-color-primary" @click="cancelModalLesson()">
                                 <span class="svg-icon svg-icon-1">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                                          viewBox="0 0 24 24" fill="none">
@@ -926,6 +952,22 @@
         },
 
         methods: {
+            cancelModalLesson()
+            {
+                $('#kt_modal_invite').modal('hide');
+
+                $('#cancelModal').modal('show');
+            },
+            cancelModalYes()
+            {
+                $('#kt_modal_invite').modal('hide');
+                $('#cancelModal').modal('hide');
+            },
+            cancelModalNo()
+            {
+                $('#cancelModal').modal('hide');
+                $('#kt_modal_invite').modal('show');
+            },
             modalConfirmationCode:function(device=[])
             {
                 $('#editdeviceConfirm').modal('show');
