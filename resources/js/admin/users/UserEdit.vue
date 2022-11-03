@@ -4,6 +4,32 @@
                    :breadcrumbs="breadcrumbs"  title = "User Manager - Users"/>
         <div class="row">
             <div class="col-lg-12">
+                <!--modal xoa device -->
+                <div class="modal fade" style="margin-right:50px;border:2px solid #333333  " id="delete1" tabindex="-1" role="dialog"
+                     aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered popup-main-1" role="document"
+                         style="max-width: 450px;">
+                        <div class="modal-content box-shadow-main paymment-status" style="left:120px;text-align: center; padding: 20px 0px 55px;">
+                            <div class="close-popup" data-dismiss="modal"></div>
+                            <div class="swal2-icon swal2-warning swal2-icon-show">
+                                <div class="swal2-icon-content" style="margin: 0px 25px 0px ">!</div>
+                            </div>
+                            <div class="swal2-html-container">
+                                <p >Are you sure to delete this device?</p>
+                            </div>
+                            <div class="swal2-actions">
+                                <button type="submit" id="kt_modal_new_target_submit1" class="swal2-confirm btn fw-bold btn-danger" @click="deleteDevice(deleteUserDevice)">
+                                    <span class="indicator-label">Yes, delete!</span>
+                                </button>
+                                <button type="reset" id="kt_modal_new_target_cancel1" class="swal2-cancel btn fw-bold btn-active-light-primary" data-bs-dismiss="modal" style="margin: 0px 8px 0px">No, cancel</button>
+
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                <!-- end modal xoa device -->
+
                 <div class="modal fade" style="margin-right:50px;border:2px solid #333333  " id="delete" tabindex="-1" role="dialog"
                      aria-hidden="true">
                     <div class="modal-dialog modal-dialog-centered popup-main-1" role="document"
@@ -59,25 +85,25 @@
                                         <input class="form-control" placeholder="Enter the email address" :disabled="permissionFields['user_email']==false" v-model="entry.email">
                                         <error-label for="f_category_id" :errors="errors.email"></error-label>
                                     </div>
-                                    <div v-if="entry.id==null" class="form-group  col-sm-4">
-                                        <label>Password <span class="text-danger">*</span></label>
-                                        <input :type="showPass ? 'text' : 'password'" class="form-control"
-                                               ref="password" v-model="entry.password">
-                                        <i @click="showPass = !showPass" class="fa fa-eye"></i>
-                                        <error-label for="f_category_id" :errors="errors.password"></error-label>
-                                    </div>
+<!--                                    <div v-if="entry.id==null" class="form-group  col-sm-4">-->
+<!--                                        <label>Password <span class="text-danger">*</span></label>-->
+<!--                                        <input :type="showPass ? 'text' : 'password'" class="form-control"-->
+<!--                                               ref="password" v-model="entry.password">-->
+<!--                                        <i @click="showPass = !showPass" class="fa fa-eye"></i>-->
+<!--                                        <error-label for="f_category_id" :errors="errors.password"></error-label>-->
+<!--                                    </div>-->
 
-                                    <div v-if="entry.id==null" class="form-group  col-sm-4">
-                                        <label>Confirm your password <span class="text-danger">*</span></label>
-                                        <input class="form-control" :type="showConfirm ? 'text' : 'password'"
-                                               v-model="entry.password_confirmation">
-                                        <i @click="showConfirm = !showConfirm" class="fa fa-eye"></i>
-                                        <error-label for="f_category_id"
-                                                     :errors="errors.password_confirmation"></error-label>
-                                    </div>
+<!--                                    <div v-if="entry.id==null" class="form-group  col-sm-4">-->
+<!--                                        <label>Confirm your password <span class="text-danger">*</span></label>-->
+<!--                                        <input class="form-control" :type="showConfirm ? 'text' : 'password'"-->
+<!--                                               v-model="entry.password_confirmation">-->
+<!--                                        <i @click="showConfirm = !showConfirm" class="fa fa-eye"></i>-->
+<!--                                        <error-label for="f_category_id"-->
+<!--                                                     :errors="errors.password_confirmation"></error-label>-->
+<!--                                    </div>-->
                                 </div>
-                                <div class="row py-3">
-                                    <div class="form-group col-sm-12">
+                                <div class="row py-3" >
+                                    <div class="form-group col-sm-8" >
                                         <label>Role <span class="text-danger">*</span></label>
                                         <div class="d-flex align-items-center justify-content-start mt-2">
                                             <div class="form-check form-check-custom form-check-solid mr-10" v-for="role in roles">
@@ -87,11 +113,13 @@
                                             <error-label for="f_grade" :errors="errors.name_role"></error-label>
                                         </div>
                                     </div>
-
-                                    <!--<div  class="form-group col-sm-2" v-for="role in roles">
-                                        <input type="radio" :id="role.id" v-model="name_role" :value="role.id">
-                                        <label :for="role.id">{{role.role_name}}</label>
-                                    </div>-->
+                                    <div class=" form-group col-lg-4 " >
+                                        <label >Password<span class="text-danger">*</span></label>
+                                        <div class="d-flex align-items-center justify-content-start mt-2" >
+                                            <input class="form-control "type="password" placeholder="Enter the password" v-model="password" >
+                                            <error-label></error-label>
+                                        </div>
+                                    </div>
                                 </div>
                                 <div class="row" v-if="name_role==2 || name_role==5">
                                     <div class="form-group col-sm-4 mb-7">
@@ -102,9 +130,13 @@
                                         <error-label for="f_grade" :errors="errors.school_id"></error-label>
                                     </div>
                                 </div>
+                                <div class="mt-1 mb-4">
+                                    <button type="reset" @click="save()" class="btn btn-primary mr-3" style="padding: 8.375px 13.75px"><i class="bi bi-save2 mr-1"></i>Save</button>
+                                    <button type="reset" @click="backIndex()" class="btn btn-light" style="padding: 8.375px 13.75px">Cancel</button>
+                                </div>
                                 <div class="row">
                                     <div class="form-group col-sm-12 mb-3">
-                                        <label>Description</label>
+                                        <label>User description</label>
                                         <textarea v-model="entry.description" rows="5" class="form-control" :disabled="permissionFields['user_description']==false"
                                                   placeholder="Type the description here (200 characters)"></textarea>
                                         <error-label for="f_grade" :errors="errors.description"></error-label>
@@ -119,12 +151,28 @@
                             </div>
                         </div>
                         <!--<hr style="margin: 0px 0px 16px;">-->
-                        <div class="mt-5">
-                            <button type="reset" @click="save()" class="btn btn-primary mr-3"><i class="bi bi-save2 mr-1"></i>Save</button>
-                            <button type="reset" @click="backIndex()" class="btn btn-light">Cancel</button>
-                        <label style="margin-left: 20px">Username and password will be sent to the user's email.
-                          </label>
-                        </div>
+                        <h3>Current resisted devices</h3>
+                        <table class="table table-row-bordered align-middle gy-4 gs-9">
+                            <thead class="border-bottom border-gray-200 fs-6 text-gray-600 fw-bolder bg-light bg-opacity-75">
+                            <tr>
+                                <th  class="">Device name</th>
+                                <th  class="">Device detail</th>
+                                <th  class="">registered date</th>
+                                <th  class=""></th>
+                                <th  class=""> </th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr v-for="device in userDevice">
+                                <td>{{device.device_name}}</td>
+                                <td>{{device.device_uid}}</td>
+                                <td>{{d(device.created_at)}}</td>
+                                <td v-if="device.delete_request!=null" class="status-request" v-text="device.delete_request"></td>
+                                <td v-else ></td>
+                                <td><i class="bi bi-trash " style="cursor: pointer" @click="deleteDeviceModal(device)"></i></td>
+                            </tr>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
 
@@ -149,6 +197,7 @@
             const permissions = clone(window.$permissions)
 
             return {
+                password:'',
                 changed: false,
                 permissions,
                 showConfirm: false,
@@ -178,8 +227,10 @@
                 role: $json.role || [],
                 title_role: $json.title_role || [],
                 permissionFields: $json.permissionFields || [],
+                userDevice :$json.userDevice || [],
                 isLoading: false,
-                errors: {}
+                errors: {},
+                deleteUserDevice:[],
             }
         },
         watch: {
@@ -201,6 +252,11 @@
         },
 
         methods: {
+            deleteDeviceModal:function(device=[])
+            {
+                $('#delete1').modal('show');
+                this.deleteUserDevice=device;
+            },
              removeUser:function(deleteUser='')
             {
                   $('#delete').modal('show');
@@ -215,7 +271,7 @@
             },
             async save() {
                 this.isLoading = true;
-                const res = await $post('/xadmin/users/save', {entry: this.entry, name_role: this.name_role}, false);
+                const res = await $post('/xadmin/users/save', {entry: this.entry, name_role: this.name_role,password:this.password}, false);
                 this.isLoading = false;
                 if (res.errors) {
                     this.errors = res.errors;
@@ -246,6 +302,21 @@
 
                 $router.updateQuery({page: this.paginate.currentPage, _: Date.now()});
             },
+            async deleteDevice (deleteUserDevice)
+            {
+                const res = await $post('/xadmin/users/deleteDevice', {id: deleteUserDevice.id});
+
+                if (res.code) {
+                    toastr.error(res.message);
+                } else {
+                    toastr.success(res.message);
+                    let self=this;
+                   self.userDevice=  self.userDevice.filter(item => item.id !=deleteUserDevice.id);
+                    $('#delete1').modal('hide');
+                   return self.userDevice;
+                }
+            }
+
         }
     }
 </script>
@@ -255,6 +326,14 @@
         position: absolute;
         top: 40%;
         right: 5%
+
+    }
+    .status-request{
+        padding: 0.5em 0.85em;
+        font-size: .85rem;
+        font-weight: 600;
+        border-radius: 0.475rem;
+        color:#ffc700;
 
     }
 

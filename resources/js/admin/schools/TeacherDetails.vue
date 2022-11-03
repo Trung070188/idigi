@@ -152,25 +152,18 @@
                                 <th>Device detail</th>
                                 <th>Registed date</th>
                                 <th></th>
+                                <th></th>
 
 
                             </tr>
                             </thead>
                             <tbody>
-                            <tr v-for="device in user_device" v-if="device.user_id===entry.id && device.status===2  ">
+                            <tr v-for="device in user_device" v-if="device.user_id===entry.id">
                                 <td v-text="device.device_name"></td>
                                 <td v-text="device.device_name"></td>
                                 <td v-text="d(device.created_at)"></td>
-                                <td>
-                                    <a @click="modalDevice(device)" href="javascript:;" class="btn-trash deleted"><i
-                                        class="fa fa-trash mr-1 deleted"></i></a>
-                                </td>
-                            </tr>
-                            <tr v-for="device in user_device" v-if=" device.user_id===entry.id && device.status===1 ">
-                                <td v-text="device.device_name"></td>
-                                <td v-text="device.device_name" ></td>
-                                <td v-text="d(device.created_at)"></td>
-                                <td style="color: #f1c40f">Deleting request</td>
+                                <td style="color: #f1c40f" v-if="device.delete_request!=null" v-text="device.delete_request"></td>
+                                <td v-else></td>
                                 <td>
                                     <a @click="modalDevice(device)" href="javascript:;" class="btn-trash deleted"><i
                                         class="fa fa-trash mr-1 deleted"></i></a>
@@ -189,10 +182,10 @@
                             </thead>
                             <tbody>
                             <tr v-for="device in user_device" v-if="device.user_id==entry.id">
-                                <td v-if="device.status==2" v-text="d(device.created_at)"></td>
-                                <td v-if="device.status==1" v-text="d(device.updated_at)"></td>
-                                <td v-if="device.status==2" >Register device</td>
-                                <td v-if="device.status==1" >Remove device</td>
+                                <td v-if="device.delete_request!=null"  v-text="d(device.updated_at)"></td>
+                                <td v-else v-text="d(device.created_at)"></td>
+                                <td v-if="device.delete_request!=null"  >Remove device</td>
+                                <td v-else >Register device</td>
                                 <td v-text="device.device_name"></td>
                             </tr>
                             </tbody>
