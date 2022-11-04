@@ -1262,6 +1262,7 @@ class PlansController extends AdminBaseController
     {
         $dataAll=$req->all();
         $stringLessonIds=implode(",",$dataAll['ids']);
+        dd($stringLessonIds);
         if($stringLessonIds!="")
         {
             PackageLesson::updateorCreate(

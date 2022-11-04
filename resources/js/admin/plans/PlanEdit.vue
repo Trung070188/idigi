@@ -382,7 +382,7 @@
                                                                 <div class="form-check form-check-sm form-check-custom form-check-solid">
                                                                     <input v-if="dataZipLesson.status=='waitting'" :disabled="permissionFields['plan_remove_lesson']==false" class="form-check-input" type="checkbox" v-model="viewLessonIds" :value="lesson.id" @change="updateViewLessonCheckAll()">
                                                                     <input v-if="dataZipLesson.status!='waitting'" disabled class="form-check-input" type="checkbox" v-model="viewLessonIds" :value="lesson.id" @change="updateViewLessonCheckAll()">
-
+                                                                    {{viewLessonIds}}
                                                                 </div>
                                                             </td>
                                                             <td>{{index+1}}</td>
@@ -902,6 +902,7 @@
                 schools: $json.schools || [],
                 exportDevicePlan: '',
                 lessonPackagePlans: $json.lessonPackagePlans,
+                dataTableLesson:[],
                 data: $json.data || [],
                 allDeviceSelected:false,
                 allViewLessonSelected:false,
@@ -1024,23 +1025,22 @@
                 self.checkZipPackage=[];
                 let dataPackage=self.lessonPackagePlans.filter(item =>item.package_id==tabPackage);
                self.checkZipPackage.push(dataPackage[0]);
-                for(const e of self.lessonPackagePlans)
-                {
-                    if(e.package_id==tabPackage)
+               setTimeout(function(){
+                   $.get('/xadmin/plans/dataPackage',function(res)
+                   {
+                    self.dataTableLesson=res.data.filter(item => item.id==tabPackage);
+                    self.dataAddLessonPlan=[];
+                    
+                    self.dataTableLesson[0].lesson_ids.forEach(function(e)
                     {
-                          self.dataAddLessonPlan=[];
-                        for(const e1 of e.lessonIds )
+                        let dataLesson=self.entries.filter(item => item.id==e)
+                        dataLesson.forEach(function(e2)
                         {
-                          let data= self.entries.filter(item =>item.id==e1) ;
-                          for(const e2 of data)
-                        {
-                             self.dataAddLessonPlan.push(e2);
-                        }
-                        }
-                    }
-                }
-
-
+                            self.dataAddLessonPlan.push(e2);
+                        })
+                    })
+                   })
+               },0)
                setTimeout(function () {
                     $.get('/xadmin/plans/dataZipLessonPlan',function (res) {
                         let array=res.data.filter(item => item.plan_id==self.entry.id);
@@ -1092,20 +1092,24 @@
             async deleteAllLesson()
             {
                         let self=this;
-                        self.abc=[];
+                        let abc=[];
                         // lấy Id của lesson cập nhật lại vào bảng package lesson
-                        let array=self.lessonPackagePlans.filter(item => item.package_id==self.tabLessonContent);
-                                self.viewLessonIds.forEach(function (e1) {
+                        self.dataTableLesson[0].lesson_ids.forEach(function(e)
+                        {
+                           
+                            
+                           abc=self.viewLessonIds.filter(item => item==e)
+                          return abc=abc;
+                        })
+                        console.log(abc);
 
-                                array[0].lessonIds= array[0].lessonIds.filter(item => item!==e1);
-                                })
-                                self.abc=array[0].lessonIds
-
-                          const res = await $post('/xadmin/plans/removeAllLesson', {
-                              ids:self.abc,
+               const res = await $post('/xadmin/plans/removeAllLesson', {
+                              ids:abc,
                               entry: self.entry,
                               viewPackage: self.tabLessonContent
                           });
+               
+                         
                           if (res.code) {
                               toastr.error(res.message);
                           } else {
@@ -1114,11 +1118,10 @@
                               self.allViewLessonSelected=false;
 
                                     //view lesson theo packagelesson khi delete all
-                                  self.lessonPackagePlans.forEach(function (e) {
+                                  
 
-                                      if(e.package_id==self.tabLessonContent)
-                                      {
-                                          if(e.lessonIds.length==0)
+                                     
+                                          if(self.dataTableLesson[0].lesson_ids.length==0)
                                           {
                                               self.dataAddLessonPlan=[];
                                           }
@@ -1135,26 +1138,26 @@
                                           })
                                       })
                                        self.dataAddLessonPlan=dataLesson;
-                                          }
-                                      }
-                                  })
+                                        }
+                                      
+                                  
 
                                 //call lại bảng PackageLesson
-                              setTimeout(function ()
-                              {
-                                  $.get('/xadmin/plans/dataPackage',function (res) {
+                            //   setTimeout(function ()
+                            //   {
+                            //       $.get('/xadmin/plans/dataPackage',function (res) {
 
-                                      let dataPackage= res.data.filter(item => item.plan_id==self.entry.id)
-                                      let data= dataPackage.map(res =>{
-                                          return{
-                                              'package_id':res.id,
-                                              'plan_id':res.plan_id,
-                                              'lessonIds':res.lesson_ids
-                                          }
-                                      })
-                                    return self.lessonPackagePlans=data;
-                                  })
-                              },0);
+                            //           let dataPackage= res.data.filter(item => item.plan_id==self.entry.id)
+                            //           let data= dataPackage.map(res =>{
+                            //               return{
+                            //                   'package_id':res.id,
+                            //                   'plan_id':res.plan_id,
+                            //                   'lessonIds':res.lesson_ids
+                            //               }
+                            //           })
+                            //         return self.lessonPackagePlans=data;
+                            //       })
+                            //   },0);
 
                           }
             },
