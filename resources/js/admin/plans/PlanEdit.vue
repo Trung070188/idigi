@@ -1089,15 +1089,28 @@
             async deleteLesson(deleteLessons) {
                 let self = this;
                let packageLesson= self.dataTableLesson.lesson_ids.filter(item => item !==deleteLessons)
+            
                 const res = await $post('/xadmin/plans/deleteLesson', {
                     packageLesson,
                     entry: self.entry,
                     viewPackage: self.tabLessonContent
                 });
+
                 if (res.code) {
                     toastr.error(res.message);
                 } else {
                     toastr.success(res.message);
+                    // code return lai o checkbox trong add lessonPackage khi xoa 1 lesson o tabLesson
+
+                    let datalessonPackagePlan=self.lessonPackagePlans.filter(item => item.package_id==self.tabLessonContent);
+                    datalessonPackagePlan=datalessonPackagePlan[0];
+                    let concat=(packageLesson.concat(datalessonPackagePlan.lessonIds));
+                    let dataUpdate=concat.filter((a,index)=> concat.indexOf(a)==concat.lastIndexOf(a));
+                    dataUpdate=dataUpdate[0];
+                    datalessonPackagePlan.lessonIds=datalessonPackagePlan.lessonIds.filter(item => item !=dataUpdate);
+
+                    // end 
+
                     self.dataAddLessonPlan= self.dataAddLessonPlan.filter(item => item.id !==deleteLessons);
                     $('#deleteLesson').modal('hide');
                     $.get('/xadmin/plans/dataPackage',function(res)
@@ -1129,6 +1142,8 @@
                         // lấy Id của lesson cập nhật lại vào bảng package lesson
                let concatArr=self.dataTableLesson.lesson_ids.concat(self.dataTableLesson.viewLesson)
                 let dupChars = concatArr.filter((c, index) => concatArr.indexOf(c) == concatArr.lastIndexOf(c));
+                
+
                const res = await $post('/xadmin/plans/removeAllLesson', {
                               ids:dupChars,
                               entry: self.entry,
@@ -1140,6 +1155,17 @@
                               toastr.error(res.message);
                           } else {
                               toastr.success(res.message);
+
+                              // code update checkbox trong modal addPackageLesson
+                                let distinctive = concatArr.filter((c, index) => concatArr.indexOf(c) != concatArr.lastIndexOf(c));
+                                distinctive=[...new Set(distinctive)];
+                                let datalessonPackagePlan=self.lessonPackagePlans.filter(item => item.package_id==self.tabLessonContent);
+                                datalessonPackagePlan=datalessonPackagePlan[0];
+                                let concat=datalessonPackagePlan.lessonIds.concat(distinctive);
+                                datalessonPackagePlan.lessonIds=concat.filter((a,index)=> concat.indexOf(a)==concat.lastIndexOf(a));
+                              //end
+
+
                               self.dataTableLesson.viewLesson=[];
                               self.allViewLessonSelected.allViewLessonSelected=false;
 
