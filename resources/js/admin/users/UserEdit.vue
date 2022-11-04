@@ -151,7 +151,7 @@
                             </div>
                         </div>
                         <!--<hr style="margin: 0px 0px 16px;">-->
-                        <h3>Current resisted devices</h3>
+                        <h3>Current registered devices</h3>
                         <table class="table table-row-bordered align-middle gy-4 gs-9">
                             <thead class="border-bottom border-gray-200 fs-6 text-gray-600 fw-bolder bg-light bg-opacity-75">
                             <tr>

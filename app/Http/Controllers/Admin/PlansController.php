@@ -1262,8 +1262,6 @@ class PlansController extends AdminBaseController
     {
         $dataAll=$req->all();
         $stringLessonIds=implode(",",$dataAll['ids']);
-        dd($stringLessonIds);
-        if($stringLessonIds!="")
         {
             PackageLesson::updateorCreate(
                 [
@@ -1275,17 +1273,17 @@ class PlansController extends AdminBaseController
                 ]
             );
         }
-       else{
-           PackageLesson::updateorCreate(
-               [
-                   'id' => $dataAll['viewPackage']
-               ],
-               [
-                   'lesson_ids' => NUll,
-                   'status'=>'new'
-               ]
-           );
-       }
+//       else{
+//           PackageLesson::updateorCreate(
+//               [
+//                   'id' => $dataAll['viewPackage']
+//               ],
+//               [
+//                   'lesson_ids' => NUll,
+//                   'status'=>'new'
+//               ]
+//           );
+//       }
         return [
             'code' => 0,
             'message' => 'Đã xóa',
@@ -1393,30 +1391,51 @@ class PlansController extends AdminBaseController
                     'message' => 'Không tìm thấy',
                 ];
             }
-            if (@$dataLesson['lessonPackagePlans']) {
-                ZipPlanLesson::where('package_id', $dataLesson['package'])->delete();
-                foreach ($dataLesson['lessonPackagePlans'] as $lesson) {
-                    if ($lesson['package_id'] == $dataLesson['package']) {
-                        $stringLesson = implode(",", $lesson['lessonIds']);
-                        $user = Auth::user();
-                      $zipFile= ZipPlanLesson::create(['user_id' => $dataLesson['idRoleIt'], 'plan_id' => $entry->id, 'lesson_ids' => $stringLesson, 'package_id' => $dataLesson['package'], 'status' => 'inprogress']);
-                        if($zipFile->status=='inprogress')
-                        {
-                            $entry->status='Packaging';
-                        }
-                        $entry->save();
-                        PackageLesson::updateOrCreate(
-                            [
-                                'id'=>$lesson['package_id']
-                            ],
-                            [
-                                'status'=>'done'
-                            ]
-                        );
-                    }
+            if(@$dataLesson['dataTableLesson'])
+            {
+                ZipPlanLesson::where('package_id',$dataLesson['package'])->delete();
+                $stringLesson = implode(",", $dataLesson['dataTableLesson']['lesson_ids']);
+                $zipFile= ZipPlanLesson::create(['user_id' => $dataLesson['idRoleIt'], 'plan_id' => $entry->id, 'lesson_ids' => $stringLesson, 'package_id' => $dataLesson['package'], 'status' => 'inprogress']);
+                if($zipFile->status=='inprogress')
+                {
+                    $entry->status='Packaging';
                 }
+                $entry->save();
+                PackageLesson::updateOrCreate(
+                    [
+                        'id'=>$dataLesson['dataTableLesson']['id']
+                    ],
+                    [
+                        'status'=>'done'
+                    ]
+                );
 
             }
+//            if (@$dataLesson['lessonPackagePlans']) {
+//                ZipPlanLesson::where('package_id', $dataLesson['package'])->delete();
+//                foreach ($dataLesson['lessonPackagePlans'] as $lesson) {
+//
+//                    if ($lesson['id'] == $dataLesson['package']) {
+//                        $stringLesson = implode(",", $lesson['lesson_ids']);
+//                        $user = Auth::user();
+//                      $zipFile= ZipPlanLesson::create(['user_id' => $dataLesson['idRoleIt'], 'plan_id' => $entry->id, 'lesson_ids' => $stringLesson, 'package_id' => $dataLesson['package'], 'status' => 'inprogress']);
+//                        if($zipFile->status=='inprogress')
+//                        {
+//                            $entry->status='Packaging';
+//                        }
+//                        $entry->save();
+//                        PackageLesson::updateOrCreate(
+//                            [
+//                                'id'=>$lesson['id']
+//                            ],
+//                            [
+//                                'status'=>'done'
+//                            ]
+//                        );
+//                    }
+//                }
+//
+//            }
             return [
                 'code' => 0,
                 'message' => 'Đã cập nhật',

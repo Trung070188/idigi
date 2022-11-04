@@ -300,6 +300,7 @@
                                                         </div>
                                                         <div class="menu-item px-3">
                                                             <a v-if="permissionFields['plan_delete_device']==false" class="menu-link text-danger px-3 isDisabled" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end" @click="removeDeviceModal(device.id)">Delete</a>
+                                                            <a v-else class="menu-link text-danger px-3 " data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end" @click="removeDeviceModal(device.id)">Delete</a>
                                                         </div>
                                                     </div>
                                                 </td>
@@ -316,8 +317,8 @@
 
                                         <div id="kt_billing_year" class="card-body p-0 tab-pane fade"  role="tabpanel" aria-labelledby="kt_billing_year" >
                                             <div class="d-flex justify-content-end mb-4" >
-                                                <a v-if="viewLessonIds!='' && dataZipLesson.status=='waitting' && permissionFields['plan_remove_lesson']==true" class="btn btn-danger btn-sm mr-3" @click="deleteAllLesson" >Remove lesson</a>
-                                                <a v-if="viewLessonIds!='' && dataZipLesson.status=='waitting' && permissionFields['plan_remove_lesson']==false" class="btn btn-danger btn-sm mr-3 isDisabled" @click="deleteAllLesson" >Remove lesson</a>
+                                                <a v-if="dataTableLesson.checkRemoveLesson==1 && dataZipLesson.status=='waitting' && permissionFields['plan_remove_lesson']==true" class="btn btn-danger btn-sm mr-3" @click="deleteAllLesson" >Remove lesson</a>
+                                                <a v-if="dataTableLesson.checkRemoveLesson==1 && dataZipLesson.status=='waitting' && permissionFields['plan_remove_lesson']==false" class="btn btn-danger btn-sm mr-3 isDisabled" @click="deleteAllLesson" >Remove lesson</a>
                                              <a  v-if="dataZipLesson.status=='inprogress'"  class="mt-2 mr-5" style="color: rgb(230 180 0)"> Lesson list is packaging...</a>
                                                 <a  v-if="  dataZipLesson.status=='done' && permissionFields['plan_download_package']==true" :href="dataZipLesson.url" class="btn btn-primary btn-sm mr-3 "> Download package</a>
                                                 <a  v-if="  dataZipLesson.status=='done' && permissionFields['plan_download_package']==false" :href="dataZipLesson.url" class="btn btn-primary btn-sm mr-3 isDisabled"> Download package</a>
@@ -365,8 +366,8 @@
                                                         <tr >
                                                             <td width="25">
                                                                 <div class="form-check form-check-sm form-check-custom form-check-solid">
-                                                                    <input v-if="dataZipLesson.status=='waitting'" :disabled="permissionFields['plan_remove_lesson']==false" class="form-check-input" type="checkbox" v-model="allViewLessonSelected" @change="selectViewLessonAll(tabLessonContent)" >
-                                                                    <input v-if="dataZipLesson.status!='waitting'" disabled class="form-check-input" type="checkbox" v-model="allViewLessonSelected" @change="selectViewLessonAll(tabLessonContent)" >
+                                                                    <input v-if="dataZipLesson.status=='waitting'" :disabled="permissionFields['plan_remove_lesson']==false" class="form-check-input" type="checkbox" v-model="allViewLessonSelected.allViewLessonSelected" @change="selectViewLessonAll(tabLessonContent)" >
+                                                                    <input v-if="dataZipLesson.status!='waitting'" disabled class="form-check-input" type="checkbox" v-model="allViewLessonSelected.allViewLessonSelected" @change="selectViewLessonAll(tabLessonContent)" >
                                                                 </div>
                                                             </td>
                                                             <td>No.</td>
@@ -376,13 +377,12 @@
                                                             <th class="">Actions</th>
                                                         </tr>
                                                     </thead>
-                                                    <tbody v-for="lessonPackagePlan in lessonPackagePlans" v-if="lessonPackagePlan.package_id==tabLessonContent">
+                                                    <tbody >
                                                         <tr v-for="(lesson,index) in dataAddLessonPlan" >
                                                             <td class="">
                                                                 <div class="form-check form-check-sm form-check-custom form-check-solid">
-                                                                    <input v-if="dataZipLesson.status=='waitting'" :disabled="permissionFields['plan_remove_lesson']==false" class="form-check-input" type="checkbox" v-model="viewLessonIds" :value="lesson.id" @change="updateViewLessonCheckAll()">
-                                                                    <input v-if="dataZipLesson.status!='waitting'" disabled class="form-check-input" type="checkbox" v-model="viewLessonIds" :value="lesson.id" @change="updateViewLessonCheckAll()">
-                                                                    {{viewLessonIds}}
+                                                                    <input v-if="dataZipLesson.status=='waitting'" :disabled="permissionFields['plan_remove_lesson']==false" class="form-check-input" type="checkbox" v-model="dataTableLesson.viewLesson" :value="lesson.id" @change="updateViewLessonCheckAll()">
+                                                                    <input v-if="dataZipLesson.status!='waitting'" disabled class="form-check-input" type="checkbox" v-model="dataTableLesson.viewLesson" :value="lesson.id" @change="updateViewLessonCheckAll()">
                                                                 </div>
                                                             </td>
                                                             <td>{{index+1}}</td>
@@ -905,7 +905,7 @@
                 dataTableLesson:[],
                 data: $json.data || [],
                 allDeviceSelected:false,
-                allViewLessonSelected:false,
+                allViewLessonSelected:[],
                 filter: filter,
                 entries: [],
                 doNotImport:0,
@@ -973,7 +973,6 @@
             {
                 $('#editdeviceConfirm').modal('show');
                 this.deviceGetCode=device;
-                console.log(this.deviceGetCode);
 
             },
             deviceExpireDateClear()
@@ -1025,13 +1024,34 @@
                 self.checkZipPackage=[];
                 let dataPackage=self.lessonPackagePlans.filter(item =>item.package_id==tabPackage);
                self.checkZipPackage.push(dataPackage[0]);
+
+               // code select lesson
+                this.allViewLessonSelected={
+                    'allViewLessonSelected':false,
+                    'tabPackage':tabPackage
+                }
+
                setTimeout(function(){
                    $.get('/xadmin/plans/dataPackage',function(res)
                    {
                     self.dataTableLesson=res.data.filter(item => item.id==tabPackage);
+                       let viewLesson=[];
+                       let checkRemoveLesson=0;
+                       self.dataTableLesson=self.dataTableLesson.map(abc => {
+
+                       return {
+                           'id':abc.id,
+                           'name':abc.name,
+                           'plan_id':abc.plan_id,
+                           'lesson_ids':abc.lesson_ids,
+                           'viewLesson':viewLesson,
+                           'checkRemoveLesson':checkRemoveLesson,
+                       }
+                    })
+                       self.dataTableLesson= self.dataTableLesson[0];
                     self.dataAddLessonPlan=[];
-                    
-                    self.dataTableLesson[0].lesson_ids.forEach(function(e)
+
+                    self.dataTableLesson.lesson_ids.forEach(function(e)
                     {
                         let dataLesson=self.entries.filter(item => item.id==e)
                         dataLesson.forEach(function(e2)
@@ -1068,66 +1088,69 @@
         // xoa lesson theo từng id
             async deleteLesson(deleteLessons) {
                 let self = this;
-                for (const e of self.lessonPackagePlans) {
-                    if (e.package_id == self.tabLessonContent) {
-                        let array = e.lessonIds.filter(item => item !== deleteLessons);
-                        e.lessonIds = array;
-                        let packageLesson = e.lessonIds
-                        const res = await $post('/xadmin/plans/deleteLesson', {
-                            packageLesson,
-                            entry: self.entry,
-                            viewPackage: self.tabLessonContent
-                        });
-                        if (res.code) {
-                            toastr.error(res.message);
-                        } else {
-                            toastr.success(res.message);
-                            self.dataAddLessonPlan= self.dataAddLessonPlan.filter(item => item.id !==deleteLessons);
-                            $('#deleteLesson').modal('hide');
-                        }
-                    }
+               let packageLesson= self.dataTableLesson.lesson_ids.filter(item => item !==deleteLessons)
+                const res = await $post('/xadmin/plans/deleteLesson', {
+                    packageLesson,
+                    entry: self.entry,
+                    viewPackage: self.tabLessonContent
+                });
+                if (res.code) {
+                    toastr.error(res.message);
+                } else {
+                    toastr.success(res.message);
+                    self.dataAddLessonPlan= self.dataAddLessonPlan.filter(item => item.id !==deleteLessons);
+                    $('#deleteLesson').modal('hide');
+                    $.get('/xadmin/plans/dataPackage',function(res)
+                    {
+                        self.dataTableLesson=res.data.filter(item => item.id==self.tabLessonContent);
+                        let viewLesson=[];
+                        let checkRemoveLesson=0;
+                        self.dataTableLesson=self.dataTableLesson.map(abc => {
+
+                            return {
+                                'id':abc.id,
+                                'name':abc.name,
+                                'plan_id':abc.plan_id,
+                                'lesson_ids':abc.lesson_ids,
+                                'viewLesson':viewLesson,
+                                'checkRemoveLesson':checkRemoveLesson,
+                            }
+                        })
+                        self.dataTableLesson= self.dataTableLesson[0];
+                    })
                 }
+
             },
             // dung select để xóa lesson view
             async deleteAllLesson()
             {
                         let self=this;
-                        let abc=[];
-                        // lấy Id của lesson cập nhật lại vào bảng package lesson
-                        self.dataTableLesson[0].lesson_ids.forEach(function(e)
-                        {
-                           
-                            
-                           abc=self.viewLessonIds.filter(item => item==e)
-                          return abc=abc;
-                        })
-                        console.log(abc);
 
+                        // lấy Id của lesson cập nhật lại vào bảng package lesson
+               let concatArr=self.dataTableLesson.lesson_ids.concat(self.dataTableLesson.viewLesson)
+                let dupChars = concatArr.filter((c, index) => concatArr.indexOf(c) == concatArr.lastIndexOf(c));
                const res = await $post('/xadmin/plans/removeAllLesson', {
-                              ids:abc,
+                              ids:dupChars,
                               entry: self.entry,
-                              viewPackage: self.tabLessonContent
+                              viewPackage:self.dataTableLesson.id
                           });
-               
-                         
+
+
                           if (res.code) {
                               toastr.error(res.message);
                           } else {
                               toastr.success(res.message);
-                              self.viewLessonIds=[];
-                              self.allViewLessonSelected=false;
+                              self.dataTableLesson.viewLesson=[];
+                              self.allViewLessonSelected.allViewLessonSelected=false;
 
                                     //view lesson theo packagelesson khi delete all
-                                  
-
-                                     
-                                          if(self.dataTableLesson[0].lesson_ids.length==0)
+                                          if(self.dataTableLesson.viewLesson.length==self.dataTableLesson.lesson_ids.length)
                                           {
                                               self.dataAddLessonPlan=[];
                                           }
                                           else {
                                       let dataLesson=[];
-                                      self.abc.forEach(function(e1)
+                                      dupChars.forEach(function(e1)
                                       {
                                           self.dataAddLessonPlan.forEach(function(e2)
                                           {
@@ -1139,25 +1162,27 @@
                                       })
                                        self.dataAddLessonPlan=dataLesson;
                                         }
-                                      
-                                  
+                                          self.dataTableLesson.checkRemoveLesson=0;
+                              $.get('/xadmin/plans/dataPackage',function(res)
+                              {
+                                  self.dataTableLesson=res.data.filter(item => item.id==self.tabLessonContent);
+                                  let viewLesson=[];
+                                  let checkRemoveLesson=0;
+                                  self.dataTableLesson=self.dataTableLesson.map(abc => {
 
-                                //call lại bảng PackageLesson
-                            //   setTimeout(function ()
-                            //   {
-                            //       $.get('/xadmin/plans/dataPackage',function (res) {
+                                      return {
+                                          'id':abc.id,
+                                          'name':abc.name,
+                                          'plan_id':abc.plan_id,
+                                          'lesson_ids':abc.lesson_ids,
+                                          'viewLesson':viewLesson,
+                                          'checkRemoveLesson':checkRemoveLesson,
+                                      }
+                                  })
+                                  self.dataTableLesson= self.dataTableLesson[0];
 
-                            //           let dataPackage= res.data.filter(item => item.plan_id==self.entry.id)
-                            //           let data= dataPackage.map(res =>{
-                            //               return{
-                            //                   'package_id':res.id,
-                            //                   'plan_id':res.plan_id,
-                            //                   'lessonIds':res.lesson_ids
-                            //               }
-                            //           })
-                            //         return self.lessonPackagePlans=data;
-                            //       })
-                            //   },0);
+                              })
+
 
                           }
             },
@@ -1411,33 +1436,50 @@
             selectViewLessonAll()
             {
 
-                if (this.allViewLessonSelected ) {
+                if (this.allViewLessonSelected.allViewLessonSelected ) {
                     const selected = this.dataAddLessonPlan.map((u) => u.id);
-                    this.viewLessonIds = selected;
+                    let self=this;
+                   self.dataTableLesson.checkRemoveLesson=1;
+                    if(self.allViewLessonSelected.tabPackage== self.dataTableLesson.id)
+                    {
+                        self.dataTableLesson.viewLesson=selected;
+                    }
                 }
 
                 else {
                     let self = this;
-                    self.viewLessonIds=[];
-                    self.lessons = [];
+                    self.dataTableLesson.checkRemoveLesson=0;
+                    if(self.allViewLessonSelected.tabPackage==self.dataTableLesson.id)
+                    {
+                        self.dataTableLesson.viewLesson=[];
+                    }
+
                 }
             },
             updateViewLessonCheckAll()
             {
-                if (this.viewLessonIds.length === this.dataAddLessonPlan.length ) {
-                    this.allViewLessonSelected = true;
-                } else {
-                    this.allViewLessonSelected = false;
+                let self = this;
+                if(self.dataTableLesson.viewLesson.length>0)
+                {
+                   self.dataTableLesson.checkRemoveLesson=1;
                 }
-                this.lessons=[];
-                let self=this;
-                self.lessonPackagePlans.forEach(function (e3) {
-                    self.entries.forEach(function (e4) {
-                        if (e4.id == e3) {
-                            self.lessons.push(e3);
-                        }
-                    })
-                })
+                else {
+                    self.dataTableLesson.checkRemoveLesson=0;
+                }
+                if (self.dataTableLesson.viewLesson.length=== self.dataAddLessonPlan.length ) {
+                    self.allViewLessonSelected.allViewLessonSelected = true;
+
+                } else {
+                    self.allViewLessonSelected.allViewLessonSelected = false;
+                }
+                // self.lessons=[];
+                // self.lessonPackagePlans.forEach(function (e3) {
+                //     self.entries.forEach(function (e4) {
+                //         if (e4.id == e3) {
+                //             self.lessons.push(e3);
+                //         }
+                //     })
+                // })
 
             },
 
@@ -1562,25 +1604,31 @@
                     setTimeout(function ()
                     {
                         $.get('/xadmin/plans/dataPackage',function (res) {
-                            let dataPackage= res.data.filter(item => item.plan_id==self.entry.id)
-                            // return self.lessonPackagePlans=dataPackage;
-                            let data= dataPackage.map(res =>{
-                                return{
-                                    'package_id':res.id,
-                                    'plan_id':res.plan_id,
-                                    'lessonIds':res.lesson_ids
+                            self.dataTableLesson= res.data.filter(item => item.id==self.tabLessonContent);
+
+                            let viewLesson=[];
+                            let checkRemoveLesson=0;
+                            self.dataTableLesson=self.dataTableLesson.map(abc => {
+
+                                return {
+                                    'id':abc.id,
+                                    'name':abc.name,
+                                    'plan_id':abc.plan_id,
+                                    'lesson_ids':abc.lesson_ids,
+                                    'viewLesson':viewLesson,
+                                    'checkRemoveLesson':checkRemoveLesson,
                                 }
                             })
-                            self.lessonPackagePlans.forEach(function (e) {
-                                if(e.package_id==self.tabLessonContent)
-                                {
-                                    self.dataAddLessonPlan=[];
-                                   e.lessonIds.forEach(function (e1) {
-                                      let array=self.entries.filter(item => item.id==e1)
-                                      self.dataAddLessonPlan.push(array[0]);
+                            self.dataTableLesson= self.dataTableLesson[0];
+                            self.dataAddLessonPlan=[];
 
-                                   })
-                                }
+                            self.dataTableLesson.lesson_ids.forEach(function(e)
+                            {
+                                let dataLesson=self.entries.filter(item => item.id==e)
+                                dataLesson.forEach(function(e2)
+                                {
+                                    self.dataAddLessonPlan.push(e2);
+                                })
                             })
                         })
                     },1000);
@@ -1699,7 +1747,7 @@
                 this.isLoading = true;
                 const res = await $post('/xadmin/plans/downloadLesson', {
                     entry: this.entry,
-                    lessonPackagePlans: this.lessonPackagePlans,
+                    dataTableLesson: this.dataTableLesson,
                     package: tabLessonContent,
                     idRoleIt: this.idRoleIt
                 }, false);
