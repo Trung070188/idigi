@@ -344,18 +344,18 @@
                                                         <a class="menu-link px-3 isDisabled"  v-if="permissionFields['plan_add_lesson']==false && dataZipLesson.status=='waitting'" @click="addLessonPackage(tabLessonContent)" >Add lesson</a>
                                                     </div>
                                                     <div class="menu-item px-3" v-if="dataZipLesson.status=='waitting'">
-                                                        <a v-if="checkZipPackage[0].lessonIds.length>0" class="menu-link px-3" @click="downloadLesson(tabLessonContent)">Zip package lesson</a>
-                                                        <a v-else class="menu-link px-3 isDisabled" @click="downloadLesson(tabLessonContent)" >Zip package lesson</a>
+                                                        <a v-if="checkZipPackage[0].lessonIds.length>0" class="menu-link px-3" @click="downloadLesson(tabLessonContent)">Zip lesson package</a>
+                                                        <a v-else class="menu-link px-3 isDisabled" @click="downloadLesson(tabLessonContent)" >Zip lesson package</a>
                                                     </div>
                                                     <div class="menu-item px-3" >
                                                         <a class="menu-link px-3 " v-if="permissionFields['plan_rename_lesson_package']==true" @click="renameLessonPackage(tabLessonContent)" >Rename lesson package</a>
                                                         <a class="menu-link px-3 isDisabled" v-else @click="renameLessonPackage(tabLessonContent)" >Rename lesson package</a>
                                                     </div>
                                                     <div class="menu-item px-3" v-if="permissionFields['plan_delete_package']==true && dataZipLesson.status=='done' ||  permissionFields['plan_delete_package']==true &&dataZipLesson.status=='waitting'">
-                                                        <a class="menu-link px-3 text-danger "  @click="deletePackageLessonModal(tabLessonContent)" >Delete package lesson</a>
+                                                        <a class="menu-link px-3 text-danger "  @click="deletePackageLessonModal(tabLessonContent)" >Delete lesson package</a>
                                                     </div>
                                                     <div class="menu-item px-3" v-if="permissionFields['plan_delete_package']==false && dataZipLesson.status=='done' ||  permissionFields['plan_delete_package']==false &&dataZipLesson.status=='waitting'">
-                                                        <a class="menu-link px-3 text-danger isDisabled"  @click="deletePackageLessonModal(tabLessonContent)" >Delete package lesson</a>
+                                                        <a class="menu-link px-3 text-danger isDisabled"  @click="deletePackageLessonModal(tabLessonContent)" >Delete lesson package</a>
                                                     </div>
                                                 </div>
 

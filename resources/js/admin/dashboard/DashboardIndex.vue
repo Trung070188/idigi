@@ -1,6 +1,9 @@
 <template>
 
+
     <div class="post d-flex flex-column-fluid" id="kt_post">
+         <ActionBar type="index"
+                   :breadcrumbs="breadcrumbs" title = "Dashboard"/>
         <!--begin::Container-->
         <div id="kt_content_container" class="container-xxl">
             <!--begin::Row-->
@@ -297,6 +300,11 @@
         data()
         {
             return {
+                breadcrumbs:[
+                    {
+                        title: 'Dashboard'
+                    },
+                ],
                 entries:[],
                 users:$json.users,
                 schools:$json.schools,
