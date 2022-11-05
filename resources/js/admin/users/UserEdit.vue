@@ -113,10 +113,10 @@
                                             <error-label for="f_grade" :errors="errors.name_role"></error-label>
                                         </div>
                                     </div>
-                                    <div class=" form-group col-lg-4 " >
+                                    <div class=" form-group col-lg-3 ">
                                         <label >Password</label>
                                         <div class="d-flex align-items-center justify-content-start mt-2" >
-                                            <input class="form-control "type="password" placeholder="Enter the password" v-model="password" >
+                                            <input class="form-control " type="password" placeholder="Enter the password" v-model="password" >
                                             <error-label></error-label>
                                         </div>
                                     </div>
@@ -129,10 +129,6 @@
                                         </select>
                                         <error-label for="f_grade" :errors="errors.school_id"></error-label>
                                     </div>
-                                </div>
-                                <div class="mt-1 mb-4">
-                                    <button type="reset" @click="save()" class="btn btn-primary mr-3" style="padding: 8.375px 13.75px"><i class="bi bi-save2 mr-1"></i>Save</button>
-                                    <button type="reset" @click="backIndex()" class="btn btn-light" style="padding: 8.375px 13.75px">Cancel</button>
                                 </div>
                                 <div class="row">
                                     <div class="form-group col-sm-12 mb-3">
@@ -147,6 +143,10 @@
                                     <input id="state" type="checkbox" v-model="entry.state" :disabled="permissionFields['user_active']==false" class="form-check-input h-20px w-20px">
                                     <label for="state" class="form-check-label fw-bold">Active</label>
                                     <error-label for="f_grade" :errors="errors.state"></error-label>
+                                </div>
+                                <div class="mt-1 mb-4">
+                                    <button type="reset" @click="save()" class="btn btn-primary mr-3" style="padding: 8.375px 13.75px"><i class="bi bi-save2 mr-1"></i>Save</button>
+                                    <button type="reset" @click="backIndex()" class="btn btn-light" style="padding: 8.375px 13.75px">Cancel</button>
                                 </div>
                             </div>
                         </div>
