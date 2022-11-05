@@ -717,9 +717,25 @@ class SchoolsController extends AdminBaseController
      */
     public function data(Request $req)
     {
-        $query = School::query()->with(['users'])->orderBy('id', 'ASC');
+        $user=Auth::user();
+        $schoolId=$user->school_id;
+        $check=0;
+        foreach($user->roles as $role)
+        {
+            if($role->role_name=='Super Administrator')
+            {
+                $check=1;
+            }
+        }
+        if($check==0)
+        {
+            $query = School::query()->where('id',$schoolId)->with(['users'])->orderBy('id', 'ASC');
 
+        }
+        else{
+            $query = School::query()->with(['users'])->orderBy('id', 'ASC');
 
+        }
         if ($req->keyword) {
             $query->where('label', 'LIKE', '%' . $req->keyword . '%');
         }
@@ -756,9 +772,9 @@ class SchoolsController extends AdminBaseController
                 if($userAdminSchool->school_id==$entry->id)
                 {
                     $nameSchoolAdmin=$userAdminSchool->full_name;
+                    
                 }
             }
-
             foreach ($entry->users as $user) {
                 foreach ($user->roles as $role) {
 
@@ -783,6 +799,8 @@ class SchoolsController extends AdminBaseController
                 'teacher' => $teacher,
 
             ];
+
+            
 
         }
         return [
