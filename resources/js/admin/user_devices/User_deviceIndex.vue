@@ -1,7 +1,7 @@
 <template>
     <div class="container-fluid">
         <ActionBar type="index"
-                   :breadcrumbs="breadcrumbs" title = "Device Management"/>
+                   :breadcrumbs="breadcrumbs" title = "My devices"/>
         <div class="modal fade" style="margin-right:50px " id="sentConfirm" tabindex="-1" role="dialog"
              aria-labelledby="sentConfirm"
              aria-hidden="true">
@@ -15,9 +15,9 @@
                         <p > Bạn có muốn gửi yêu cầu tới Admin không? </p>
                     </div>
                     <div  class="form-group d-flex justify-content-between" >
-                        <button  class="btn btn-light ito-btn-add" data-dismiss="modal" @click="Cancel()" style="margin-left: 110px">Cancel</button>
+                        <button  class="btn btn-light ito-btn-add"  data-dismiss="modal" @click="Cancel()" style="margin-left: 113px">Cancel</button>
 
-                        <button   class="btn btn-primary"  data-dismiss="modal"  style="margin-right: 150px" @click="save">
+                        <button   class="btn btn-primary"  data-dismiss="modal"  style="margin-right: 127px" @click="save">
                             Send request
                         </button>
                     </div>
@@ -263,9 +263,8 @@
                                     <td class="" v-text="entry.device_name" ></td>
                                     <td v-text="d(entry.created_at)" d></td>
                                     <td class="" >
-                                        <span class="status" v-if="entry.status==2">Active</span>
-                                        <span   class="status-request" v-if="entry.status==1 ">Delete request sent</span>
-
+                                        <span   class="status-request" v-if="entry.status==2 && entry.delete_request=='Deleting request'">Delete request sent</span>
+                                        <span class="status" v-else>Active</span>
                                     </td>
                                 <td class="">
                                     <a href="list.html#" class="btn btn-light btn-active-light-primary btn-sm" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">Actions
@@ -293,10 +292,10 @@
                                         <!--end::Menu item-->
                                         <!--begin::Menu item-->
                                         <div class="menu-item px-3" >
-                                            <a class="menu-link text-danger px-3" v-if="entry.roleName!='Teacher' && permissionFields['device_delete']==true" @click="removeDevice(entry.id)" data-kt-subscriptions-table-filter="delete_row">Delete</a>
-                                            <a class="menu-link text-danger px-3 isDisabled" v-if="entry.roleName!='Teacher' && permissionFields['device_delete']==false" @click="removeDevice(entry.id)" data-kt-subscriptions-table-filter="delete_row">Delete</a>
-                                            <a class="menu-link text-danger px-3" v-if="entry.roleName=='Teacher' && entry.status==2 && permissionFields['device_delete']==true" @click="Sent(entry)" data-kt-subscriptions-table-filter="delete_row" >Delete</a>
-                                            <a class="menu-link text-danger px-3 isDisabled" v-if="entry.roleName=='Teacher' && entry.status==2 && permissionFields['device_delete']==false" @click="Sent(entry)" data-kt-subscriptions-table-filter="delete_row" >Delete</a>
+                                            <a class="menu-link text-danger px-3" v-if="checkDeleteDeviceRequest==0 && permissionFields['device_delete']==true" @click="removeDevice(entry.id)" data-kt-subscriptions-table-filter="delete_row">Delete</a>
+                                            <a class="menu-link text-danger px-3 isDisabled" v-if="checkDeleteDeviceRequest==0 && permissionFields['device_delete']==false" @click="removeDevice(entry.id)" data-kt-subscriptions-table-filter="delete_row">Delete</a>
+                                            <a class="menu-link text-danger px-3" v-if="checkDeleteDeviceRequest==1 && entry.status==2 && permissionFields['device_delete']==true" @click="Sent(entry)" data-kt-subscriptions-table-filter="delete_row" >Delete</a>
+                                            <a class="menu-link text-danger px-3 isDisabled" v-if="checkDeleteDeviceRequest==1 && entry.status==2 && permissionFields['device_delete']==false" @click="Sent(entry)" data-kt-subscriptions-table-filter="delete_row" >Delete</a>
 
                                         </div>
 
@@ -342,6 +341,7 @@
             return {
                 permissionFields:$json.permissionFields || [],
                 permissions,
+                checkDeleteDeviceRequest:$json.checkDeleteDeviceRequest,
                 roleName:$json.roleName,
                 device:'',
                 curDevice:{},
@@ -353,7 +353,7 @@
                 editDevice:"",
                 breadcrumbs: [
                     {
-                        title: 'User Device'
+                        title: 'My devices'
                     },
                 ],
                 idDevice:'',

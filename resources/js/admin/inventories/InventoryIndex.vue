@@ -3,7 +3,7 @@
         <ActionBar
             type="index"
             :breadcrumbs="breadcrumbs"
-            title="Resource Management"
+            title="Modules"
         />
         <div class="row">
             <div class="col-lg-12">
@@ -582,7 +582,10 @@
                 isShowFilter: isShowFilter,
                 breadcrumbs: [
                     {
-                        title: "Resource management"
+                        title: "Content Management"
+                    },
+                    {
+                        title: "Modules"
                     }
                 ],
                 entries: [],

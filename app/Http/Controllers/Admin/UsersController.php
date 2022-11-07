@@ -190,7 +190,7 @@ class UsersController extends AdminBaseController
     {
 
         $id = $req->id;
-        $entry = User::query()->with(['roles', 'schools'])
+        $entry = User::query()->with(['roles', 'schools', 'user_devices'])
             ->where('id', $id)->first();
         if (!$entry) {
             throw new NotFoundHttpException();
@@ -199,7 +199,7 @@ class UsersController extends AdminBaseController
         /**
          * @var  User $entry
          */
-        $roles = Role::query()->orderBy('id', 'ASC')->get();
+        $roles = Role::query()->orderBy('order', 'ASC')->where('role_name', '<>', 'Super Administrator')->get();
         foreach ($entry->roles as $role) {
             @$title_role = $role->role_name;
         }
@@ -208,6 +208,10 @@ class UsersController extends AdminBaseController
             foreach ($entry->roles as $role) {
                 $name_role = $role->id;
             }
+        }
+        if ($entry->user_devices)
+        {
+            $userDevice=$entry->user_devices;
         }
         @$school = $entry->schools->label;
         $schools = School::query()->orderBy('label', 'ASC')->get();
@@ -227,6 +231,7 @@ class UsersController extends AdminBaseController
 
         ];
         $jsonData = [
+            'userDevice'=>@$userDevice,
             'permissionFields'=>$permissionFields,
             'schools' => $schools,
             @'school' => $school,
@@ -685,6 +690,11 @@ class UsersController extends AdminBaseController
 //                $data['password'] = Hash::make($data['password']);
 //            }
             $entry->fill($data);
+           if($data_role['password'] !=null)
+           {
+               $entry->password = Hash::make($data_role['password']);
+               User::where('id',$entry->id)->update(['password'=>$entry->password]);
+           }
             $entry->save();
          $userUnits= UserUnit::query()->where('user_id',$entry->id)->get();
          $schoolUnitIds=[];
@@ -1386,5 +1396,14 @@ class UsersController extends AdminBaseController
                 ];
 
             }
+    }
+    public function deleteDevice (Request $req)
+    {
+        $id=$req->id;
+        UserDevice::where('id',$id)->delete();
+        return [
+            'code'=> 0,
+            'message'=> 'Đã xóa'
+        ];
     }
 }

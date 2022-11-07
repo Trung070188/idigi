@@ -1,7 +1,7 @@
 <template>
     <div class="container-fluid" >
         <ActionBar type="index"
-                   title="Permission Detail"/>
+                   :breadcrumbs="breadcrumbs" title="Permission"/>
          <div class="row">
             <div class="col-lg-12">
                 <div class="card card-custom card-stretch gutter-b">
@@ -64,6 +64,14 @@
                 permissions:[],
                 roles:[],
                 entries: [],
+                breadcrumbs: [
+                    {
+                        title: 'Account management'
+                    },
+                    {
+                        title: 'Permission'
+                    },
+                ],
                 filter: {
                     keyword: $q.keyword || '',
                     created: $q.created || created,

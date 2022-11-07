@@ -917,13 +917,13 @@ class PlansController extends AdminBaseController
 
             if (@$dataLesson['lessonPackagePlans']) {
                 foreach ($dataLesson['lessonPackagePlans'] as $lesson) {
-                        if ($lesson['package_id'] == $dataLesson['package'])
+                        if ($lesson['package_id'] == $dataLesson['package']['package'])
                         {
                             if($lesson['lessonIds']!=[]){
                                 $stringLesson = implode(",", $lesson['lessonIds']);
                                 PackageLesson::updateorCreate(
                                     [
-                                        'id' => $dataLesson['package']
+                                        'id' => $dataLesson['package']['package']
                                     ],
                                     [
                                         'lesson_ids' => $stringLesson,
@@ -1262,7 +1262,6 @@ class PlansController extends AdminBaseController
     {
         $dataAll=$req->all();
         $stringLessonIds=implode(",",$dataAll['ids']);
-        if($stringLessonIds!="")
         {
             PackageLesson::updateorCreate(
                 [
@@ -1274,17 +1273,17 @@ class PlansController extends AdminBaseController
                 ]
             );
         }
-       else{
-           PackageLesson::updateorCreate(
-               [
-                   'id' => $dataAll['viewPackage']
-               ],
-               [
-                   'lesson_ids' => NUll,
-                   'status'=>'new'
-               ]
-           );
-       }
+//       else{
+//           PackageLesson::updateorCreate(
+//               [
+//                   'id' => $dataAll['viewPackage']
+//               ],
+//               [
+//                   'lesson_ids' => NUll,
+//                   'status'=>'new'
+//               ]
+//           );
+//       }
         return [
             'code' => 0,
             'message' => 'Đã xóa',
@@ -1392,30 +1391,51 @@ class PlansController extends AdminBaseController
                     'message' => 'Không tìm thấy',
                 ];
             }
-            if (@$dataLesson['lessonPackagePlans']) {
-                ZipPlanLesson::where('package_id', $dataLesson['package'])->delete();
-                foreach ($dataLesson['lessonPackagePlans'] as $lesson) {
-                    if ($lesson['package_id'] == $dataLesson['package']) {
-                        $stringLesson = implode(",", $lesson['lessonIds']);
-                        $user = Auth::user();
-                      $zipFile= ZipPlanLesson::create(['user_id' => $dataLesson['idRoleIt'], 'plan_id' => $entry->id, 'lesson_ids' => $stringLesson, 'package_id' => $dataLesson['package'], 'status' => 'inprogress']);
-                        if($zipFile->status=='inprogress')
-                        {
-                            $entry->status='Packaging';
-                        }
-                        $entry->save();
-                        PackageLesson::updateOrCreate(
-                            [
-                                'id'=>$lesson['package_id']
-                            ],
-                            [
-                                'status'=>'done'
-                            ]
-                        );
-                    }
+            if(@$dataLesson['dataTableLesson'])
+            {
+                ZipPlanLesson::where('package_id',$dataLesson['package'])->delete();
+                $stringLesson = implode(",", $dataLesson['dataTableLesson']['lesson_ids']);
+                $zipFile= ZipPlanLesson::create(['user_id' => $dataLesson['idRoleIt'], 'plan_id' => $entry->id, 'lesson_ids' => $stringLesson, 'package_id' => $dataLesson['package'], 'status' => 'inprogress']);
+                if($zipFile->status=='inprogress')
+                {
+                    $entry->status='Packaging';
                 }
+                $entry->save();
+                PackageLesson::updateOrCreate(
+                    [
+                        'id'=>$dataLesson['dataTableLesson']['id']
+                    ],
+                    [
+                        'status'=>'done'
+                    ]
+                );
 
             }
+//            if (@$dataLesson['lessonPackagePlans']) {
+//                ZipPlanLesson::where('package_id', $dataLesson['package'])->delete();
+//                foreach ($dataLesson['lessonPackagePlans'] as $lesson) {
+//
+//                    if ($lesson['id'] == $dataLesson['package']) {
+//                        $stringLesson = implode(",", $lesson['lesson_ids']);
+//                        $user = Auth::user();
+//                      $zipFile= ZipPlanLesson::create(['user_id' => $dataLesson['idRoleIt'], 'plan_id' => $entry->id, 'lesson_ids' => $stringLesson, 'package_id' => $dataLesson['package'], 'status' => 'inprogress']);
+//                        if($zipFile->status=='inprogress')
+//                        {
+//                            $entry->status='Packaging';
+//                        }
+//                        $entry->save();
+//                        PackageLesson::updateOrCreate(
+//                            [
+//                                'id'=>$lesson['id']
+//                            ],
+//                            [
+//                                'status'=>'done'
+//                            ]
+//                        );
+//                    }
+//                }
+//
+//            }
             return [
                 'code' => 0,
                 'message' => 'Đã cập nhật',
@@ -1558,6 +1578,7 @@ class PlansController extends AdminBaseController
             $assignTo=User::where('id',$entry->user_id)->first();
             $dataAll['packageLessonPlan'] = json_decode($dataAll['packageLessonPlan'], true);
 
+
             if(@$dataAll['packageLessonPlan'])
             {
                 foreach ( $dataAll['packageLessonPlan'] as $key => $packageLessonPlan)
@@ -1566,7 +1587,7 @@ class PlansController extends AdminBaseController
 
                     $lessonsArr=Lesson::query()->whereIn('id',$packageLessonPlan['lessonIds'])->orderBy('name','ASC')->get();
                     $lessons[]=[
-                        'package_name'=>'Package lesson' . ' ' .$index ,
+                        'package_name'=>$packageLessonPlan['name'],
                         'plan_name'=>$entry->name,
                         'assign_to'=>$assignTo->full_name,
                         'due_at'=>Carbon::parse($entry->due_at)->format('d/m/Y'),

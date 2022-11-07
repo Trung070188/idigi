@@ -5,6 +5,7 @@ use App\Helpers\PermissionField;
 use App\Models\Notification;
 use App\Models\Plan;
 use App\Models\School;
+use Faker\Core\Number;
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
 use Illuminate\Contracts\View\View;
@@ -43,6 +44,7 @@ class UserDevicesController extends AdminBaseController
         {
             foreach ($user->roles as $role)
             {
+                @$checkDeleteDeviceRequest=($role->check_delete_device_request);
                 $roleName=$role->role_name;
                 if($role->role_name=='School Admin'|| $role->role_name=='Teacher')
                 {
@@ -60,6 +62,7 @@ class UserDevicesController extends AdminBaseController
             'device_delete'=>$permissionDetail->havePermission('device_delete',$permissions,$user),
         ];
         $jsonData = [
+            'checkDeleteDeviceRequest'=>@$checkDeleteDeviceRequest,
             'permissionFields'=>$permissionFields,
             @'roleName'=>@$roleName,
             @'devicesPerUser' => @$devicesPerUser
@@ -159,7 +162,8 @@ class UserDevicesController extends AdminBaseController
                 ];
             }
             $entry->fill($data);
-            $entry->status=1;
+            $entry->delete_request='Deleting request';
+            $entry->save();
                     $data_device = new Notification();
                     $data_device->status='new';
                     $data_device->content=$entry->device_name;
@@ -168,9 +172,6 @@ class UserDevicesController extends AdminBaseController
                     $data_device->url=url("xadmin/users/editTeacher?id={$entry->user_id}");
                     $data_device->title='Yêu cầu xóa thiết bị';
             $data_device->save();
-            $entry->save();
-
-
             return [
                 'code' => 0,
                 'message' => 'Đã cập nhật',
@@ -340,6 +341,7 @@ class UserDevicesController extends AdminBaseController
                        'status'=>$device->status,
                        'secret_key'=>$device->secret_key,
                        'reason'=>$device->reason,
+                       'delete_request'=>$device->delete_request,
                        'created_at'=>$device->created_at,
                        'updated_at'=>$device->updated_at,
                        'roleName'=>$roleName,

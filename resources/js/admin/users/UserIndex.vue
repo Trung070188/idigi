@@ -1,7 +1,7 @@
 <template>
     <div class="container-fluid">
         <ActionBar type="index"
-                   :breadcrumbs="breadcrumbs"  title = "User Management"/>
+                   :breadcrumbs="breadcrumbs"  title = "Manage Users"/>
         <div class="row">
                         <!-- modal xoa nhieu user -->
             <div class="modal fade" style="margin-right:50px;border:2px solid #333333  " id="delete1" tabindex="-1" role="dialog"
@@ -369,7 +369,7 @@
                 isShowFilter: isShowFilter,
                 breadcrumbs: [
                     {
-                        title: 'Users & Roles'
+                        title: 'Account management'
                     },
                     {
                         title: 'Manage Users'

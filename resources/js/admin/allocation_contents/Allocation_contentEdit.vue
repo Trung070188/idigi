@@ -1,7 +1,7 @@
 <template>
     <div class="container-fluid">
         <ActionBar type="index"
-                   :breadcrumbs="breadcrumbs" title = "Allocation details"/>
+                   :breadcrumbs="breadcrumbs" title = "Allocation detail"/>
         <div class="row">
             <div class="col-lg-12">
                 <div class="card card-custom card-stretch gutter-b">
@@ -131,7 +131,7 @@
                 newTotalCourse:[],
                 breadcrumbs: [
                     {
-                        title: 'School Management'
+                        title: 'Resource management'
                     },
                     {
                         title: 'Resource allocation',
@@ -139,7 +139,7 @@
 
                     },
                     {
-                        title: 'Allocation details'
+                        title: 'Allocation detail'
                     },
                 ],
                 allCourses:allCourses,
