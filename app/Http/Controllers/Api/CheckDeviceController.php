@@ -83,43 +83,51 @@ class CheckDeviceController extends Controller
 
     public function checkVersion(Request  $request){
         $curApp = AppVersion::where('type',$request->os)
-            ->where('is_default', 1)->first();
-        if(!$curApp){
+            ->where("force_update", 1)
+            ->first();
+
+        $manualApp = AppVersion::where('type',$request->os)
+            ->where("is_default", 1)
+            ->first();
+
+        //Manual
+       /* if(!$manualApp){
             return [
                 'code' => 1,
-                'msg' => "Không tồn tại version",
+                'msg' => "Không tồn tại manual version ",
                 'results' => []
             ];
+        }*/
+        $isOtaManual = 0;
+        if(@$manualApp->url_updated){
+            $isOtaManual = 1;
+            $linkManual = @$manualApp->url_updated;
+        }else{
+            $linkManual = @$manualApp->url;
         }
+        //force update
         $isOta = 0;
 
-        if($curApp->url_updated){
+        if(@$curApp->url_updated){
             $isOta = 1;
+            $linkVersion = @$curApp->url_updated;
+        }else{
+            $linkVersion = @$curApp->url;
         }
-        if($isOta==0)
-        {
-            return [
+
+
+        return [
             'code' => 0,
             'msg' => "Success",
             'results' => [
-                'latest_version' => $curApp->version,
+                'latest_version' => @$curApp->version,
+                'link_version' => $linkVersion,
                 'is_ota' => $isOta,
-                'link_version' => $curApp->url,
+                'manual_version' => @$manualApp->version,
+                'link_manual' => $linkManual,
+                'is_ota_manual' => $isOtaManual,
             ]
-            ];
-        }
-        if($isOta=1)
-        {
-            return [
-                'code' => 0,
-                'msg' => "Success",
-                'results' => [
-                    'latest_version' => $curApp->version,
-                    'is_ota' => $isOta,
-                    'link_version' => $curApp->url_updated,
-                ]
-            ];
-        }
+        ];
 
 
     }
