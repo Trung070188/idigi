@@ -1089,7 +1089,7 @@
             async deleteLesson(deleteLessons) {
                 let self = this;
                let packageLesson= self.dataTableLesson.lesson_ids.filter(item => item !==deleteLessons)
-            
+
                 const res = await $post('/xadmin/plans/deleteLesson', {
                     packageLesson,
                     entry: self.entry,
@@ -1109,7 +1109,7 @@
                     dataUpdate=dataUpdate[0];
                     datalessonPackagePlan.lessonIds=datalessonPackagePlan.lessonIds.filter(item => item !=dataUpdate);
 
-                    // end 
+                    // end
 
                     self.dataAddLessonPlan= self.dataAddLessonPlan.filter(item => item.id !==deleteLessons);
                     $('#deleteLesson').modal('hide');
@@ -1142,7 +1142,7 @@
                         // lấy Id của lesson cập nhật lại vào bảng package lesson
                let concatArr=self.dataTableLesson.lesson_ids.concat(self.dataTableLesson.viewLesson)
                 let dupChars = concatArr.filter((c, index) => concatArr.indexOf(c) == concatArr.lastIndexOf(c));
-                
+
 
                const res = await $post('/xadmin/plans/removeAllLesson', {
                               ids:dupChars,
@@ -1424,9 +1424,12 @@
                     const selected=this.entries.map((u)=>u.id);
                     let self=this;
                     self.lessonPackagePlans.forEach(function (e){
+
                         if(self.package.package==e.package_id)
                         {
-                            e.lessonIds=selected;
+
+                            e.lessonIds=e.lessonIds.concat(selected);
+
                         }
                     })
                 }
