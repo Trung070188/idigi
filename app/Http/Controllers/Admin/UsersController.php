@@ -1286,7 +1286,6 @@ class UsersController extends AdminBaseController
                         $item['phone'] = $tea[3];
                         $item['email'] = $tea[4];
                         $item['class'] = $tea[5];
-
                         $validator = Validator::make($item, [
                             'username' => ['required', Rule::unique('users', 'username')],
                             'full_name' => ['required',
@@ -1311,16 +1310,56 @@ class UsersController extends AdminBaseController
                         }
                         $validations[] = $item;
 
+
                     }
                 }
             }
+            $checkDuplicate=[];
+            $error=[];
+            foreach ($validations as $validation)
+            {
+                if(in_array($validation['username'], $checkDuplicate)){
+                    $error[] = $validation['username'];
+                }
+                else{
+                    $checkDuplicate[]=$validation['username'];
+                }
+            }
+         if($error!=[])
+         {
+             $code=2;
+         }
+         if(count($validations)>$user->schools->number_of_users)
+         {
+             $code=2;
+         }
+
             $fileError = [];
             $fileImport=[];
             if ($code == 2) {
                 //export
-                foreach ($validations as $validation) {
-                    if (@$validation['error']) {
-                        $fileError[] = $validation;
+                foreach ($validations as $key=>$validation) {
+                    if($key>$user->schools->number_of_users)
+                    {
+                        $validation['error']=[
+                            'max_length'=>[
+                                'Trường được phép tối đa '. $user->schools->number_of_users .' user'
+                            ]
+                        ];
+                    }
+
+                    if (@$validation['error'] || $error!=[] && $error==[$validation['username']]) {
+                        {
+                            if($error!=[] && $error==[$validation['username']])
+                            {
+                                $validation['error']=[
+                                    'username'=>[
+                                        'The username has already been taken.'],
+                                ];
+                            }
+                            $fileError[] =$validation;
+
+                        }
                     }
                     else{
                         $fileImport[]=$validation;

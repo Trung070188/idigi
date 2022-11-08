@@ -49,7 +49,7 @@
                      <div  class="d-flex justify-content-end"
                     data-kt-customer-table-toolbar="base">
                         <button class="btn btn-danger button-create " @click="removeTeacher()" style="margin: 15px 25px 0px ">
-                            <i class="bi bi-person-dash mr-1"></i>Delete user
+                            <i class="bi bi-person-dash mr-1"></i>Delete teacher
                         </button>
                     </div>
                     <div class="card-body d-flex flex-column">
