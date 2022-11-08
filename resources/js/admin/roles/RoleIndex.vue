@@ -28,7 +28,7 @@
                             <tr v-for="groupPermission in groupPermissions">
                                 <th scope="col">
                                     <span v-text="groupPermission.name"></span>
-                                    <span v-for="permission in groupPermission.permissions" class="d-block fw-bold ml-5 text-lowercase"><i class="bi bi-arrow-right-short mr-1"></i>{{permission.name}}</span>
+                                    <span v-for="permission in groupPermission.permissions" class="d-block fw-bold ml-5 "><i class="bi bi-arrow-right-short mr-1"></i>{{permission.name}}</span>
                                 </th>
 
                                 <td v-for="role in roles">
