@@ -17,6 +17,7 @@ use Carbon\Carbon;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use App\Models\User;
@@ -1365,10 +1366,13 @@ class UsersController extends AdminBaseController
                         $fileImport[]=$validation;
                     }
                 }
+                $errorName = 'export_teacher_error_'. uniqid(time());
+                Cache::add($errorName, json_encode($fileError));
                 return [
                   'code'=> 2,
                   'fileImport' =>$fileImport,
                   'fileError'=>$fileError,
+                    'errorFileName'=>$errorName
                 ];
             } else {
                 $file = new File();
@@ -1393,8 +1397,9 @@ class UsersController extends AdminBaseController
     }
     public function exportErrorTeacher(Request $req)
     {
-        $dataAll=$req->all();
-        $fileError=json_decode($dataAll['fileError'],true);
+        $fileName=$req->fileError;
+        $fileError=json_decode(Cache::get($fileName),true);
+        Cache::forget($fileName);
         return Excel::download(new TeacherErrorExport($fileError), "File_import_teacher_error.xlsx");
     }
     public function downloadTemplate() : BinaryFileResponse

@@ -552,6 +552,7 @@
                 }
             }
             return {
+                errorName:[],
                 doNotImport:0,
                 fileError: [],
                 fileImport: [],
@@ -678,6 +679,7 @@
                         this.code = res.code;
                         this.fileError = res.fileError;
                         this.fileImport=res.fileImport;
+                        this.errorName=res.errorFileName;
                     }
                     if (res.code == 0) {
                         this.fileImport = res.fileImport;
@@ -721,7 +723,7 @@
                 },
                 exportErrorImportTeacher()
                 {
-                    window.location.href='/xadmin/users/exportErrorTeacher?fileError='+ JSON.stringify(this.fileError);
+                    window.location.href='/xadmin/users/exportErrorTeacher?fileError='+ this.errorName;
                     this.$refs.uploader.value = null;
                     this.fileUpLoad='';
                     this.fileImport.length=0;
