@@ -1344,7 +1344,7 @@ class UsersController extends AdminBaseController
                     {
                         $validation['error']=[
                             'max_length'=>[
-                                'Trường được phép tối đa '. $user->schools->number_of_users .' user'
+                                'Allowed to register up to '. $user->schools->number_of_users .' users'
                             ]
                         ];
                     }
