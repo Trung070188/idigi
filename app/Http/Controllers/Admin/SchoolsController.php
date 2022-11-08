@@ -364,6 +364,8 @@ class SchoolsController extends AdminBaseController
             'school_expire_date'=>$permissionDetail->havePermission('school_expire_date',$permissions,$user),
             'school_description'=>$permissionDetail->havePermission('school_description',$permissions,$user),
             'school_content'=>$permissionDetail->havePermission('school_content',$permissions,$user),
+            'school_delete'=>$permissionDetail->havePermission('school_delete',$permissions,$user),
+            'school_teacher_list'=>$permissionDetail->havePermission('school_teacher_list',$permissions,$user),
 
         ];
         $title = 'Edit';
@@ -772,7 +774,7 @@ class SchoolsController extends AdminBaseController
                 if($userAdminSchool->school_id==$entry->id)
                 {
                     $nameSchoolAdmin=$userAdminSchool->full_name;
-                    
+
                 }
             }
             foreach ($entry->users as $user) {
@@ -800,7 +802,7 @@ class SchoolsController extends AdminBaseController
 
             ];
 
-            
+
 
         }
         return [

@@ -66,7 +66,16 @@ class UsersController extends AdminBaseController
         $title = 'Teacher';
         $component = 'TeacherIndex';
         $roles = Role::query()->orderBy('role_name')->get();
+        $user=Auth::user();
+        $permissionDetail = new PermissionField();
+        $permissions = $permissionDetail->permission($user);
+        $permissionFields = [
+            'teacher_management_import' => $permissionDetail->havePermission('teacher_management_import',$permissions,$user),
+            'teacher_management_create_new'=>$permissionDetail->havePermission('teacher_management_create_new',$permissions,$user),
+        ];
+
         $jsonData = [
+            'permissionFields'=>$permissionFields,
             'roles' => $roles
         ];
         return view('admin.layouts.vue', compact('title', 'component', 'jsonData'));
@@ -165,6 +174,16 @@ class UsersController extends AdminBaseController
         } else {
             $license = null;
         }
+        $permissionDetail = new PermissionField();
+        $permissions = $permissionDetail->permission($user);
+        $permissionFields = [
+            'profile_full_name' => $permissionDetail->havePermission('profile_full_name',$permissions,$user),
+            'profile_email'=>$permissionDetail->havePermission('profile_email',$permissions,$user),
+            'profile_role'=>$permissionDetail->havePermission('profile_role',$permissions,$user),
+            'profile_set_password'=>$permissionDetail->havePermission('profile_set_password',$permissions,$user),
+            'profile_change_avatar'=>$permissionDetail->havePermission('profile_change_avatar',$permissions,$user),
+            'profile_user_name'=>$permissionDetail->havePermission('profile_user_name',$permissions,$user),
+        ];
 
 
         /**
@@ -173,6 +192,7 @@ class UsersController extends AdminBaseController
         $title = 'Profile Edit';
         $component = 'ProfileForm';
         $jsonData = [
+            'permissionFields'=>$permissionFields,
             'entry' => $entry,
             'role' => $role,
             'userDe' => $userDe,
@@ -228,7 +248,9 @@ class UsersController extends AdminBaseController
             'user_description'=>$permissionDetail->havePermission('user_description',$permissions,$user),
             'user_active'=>$permissionDetail->havePermission('user_active',$permissions,$user),
             'user_role'=>$permissionDetail->havePermission('user_role',$permissions,$user),
-            'user_remove'=>$permissionDetail->havePermission('user_remove',$permissions,$user)
+            'user_remove'=>$permissionDetail->havePermission('user_remove',$permissions,$user),
+            'user_password'=>$permissionDetail->havePermission('user_password',$permissions,$user),
+            'user_delete_device'=>$permissionDetail->havePermission('user_delete_device',$permissions,$user)
 
         ];
         $jsonData = [

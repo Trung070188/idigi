@@ -313,7 +313,7 @@
                 allSelected: false,
                 breadcrumbs: [
                     {
-                        title: 'Content management'
+                        title: 'Resource management'
                     },
                     {
                         title: 'Lessons'

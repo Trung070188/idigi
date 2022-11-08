@@ -95,8 +95,10 @@
                                     </div>
                                 </div>
                                 <div class="d-flex my-4">
-                                    <a href="#" class="btn btn-sm btn-primary me-3" @click="chooseFile()">Change Avatar</a>
-                                    <a href="#" class="btn btn-sm btn-primary me-3" @click="modalDevice()">Set Password</a>
+                                    <a v-if="permissionFields['profile_change_avatar']==true" href="#" class="btn btn-sm btn-primary me-3" @click="chooseFile()">Change Avatar</a>
+                                    <a v-else href="#" class="btn btn-sm btn-primary me-3 isDisabled">Change Avatar</a>
+                                    <a v-if="permissionFields['profile_set_password']==true" href="#" class="btn btn-sm btn-primary me-3" @click="modalDevice()">Set Password</a>
+                                    <a v-else href="#" class="btn btn-sm btn-primary me-3 isDisabled" >Set Password</a>
                                 </div>
 
                             </div>
@@ -142,7 +144,7 @@
                                 <label class="col-lg-2 col-form-label fw-bold fs-6">Fullname<span class="text-danger">*</span></label>
 
                                 <div class="col-lg-10 fv-row fv-plugins-icon-container">
-                                    <input type="text" name="full_name" class="form-control form-control-lg " placeholder="Enter the Fullname" v-model="entry.full_name" />
+                                    <input :disabled="permissionFields['profile_full_name']==false" type="text" name="full_name" class="form-control form-control-lg " placeholder="Enter the Fullname" v-model="entry.full_name" />
                                     <error-label for="f_role_description" :errors="errors.full_name" ></error-label>
                                 </div>
                             </div>
@@ -150,7 +152,7 @@
                                 <label class="col-lg-2 col-form-label fw-bold fs-6">Email</label>
 
                                 <div class="col-lg-10 fv-row fv-plugins-icon-container">
-                                    <input type="text" name="email" class="form-control form-control-lg " placeholder="Enter the email" v-model="entry.email" />
+                                    <input :disabled="permissionFields['profile_email']==false" type="text" name="email" class="form-control form-control-lg " placeholder="Enter the email" v-model="entry.email" />
                                     <error-label for="f_role_description" :errors="errors.email" ></error-label>
                                 </div>
                             </div>
@@ -158,7 +160,7 @@
                                 <label class="col-lg-2 col-form-label fw-bold fs-6">Username</label>
 
                                 <div class="col-lg-10 fv-row fv-plugins-icon-container">
-                                    <input type="text" name="username" class="form-control form-control-lg " placeholder="Enter the username" v-model="entry.username" disabled />
+                                    <input :disabled="permissionFields['profile_user_name']==false" type="text" name="username" class="form-control form-control-lg " placeholder="Enter the username" v-model="entry.username"  />
                                     <error-label for="f_role_description" :errors="errors.username" ></error-label>
                                 </div>
                             </div>
@@ -166,7 +168,7 @@
                                 <label class="col-lg-2 col-form-label fw-bold fs-6">Role</label>
 
                                 <div class="col-lg-10 fv-row fv-plugins-icon-container">
-                                    <input type="text" name="role" class="form-control form-control-lg " placeholder="Enter the role" v-model="role" disabled />
+                                    <input :disabled="permissionFields['profile_role']==false"  type="text" name="role" class="form-control form-control-lg " placeholder="Enter the role" v-model="role"  />
                                     <error-label for="f_role_description" :errors="errors.role" ></error-label>
                                 </div>
                             </div>
@@ -284,6 +286,7 @@
                 ],
                 entry: $json.entry || {},
                 role:$json.role || [],
+                permissionFields:$json.permissionFields || [],
                 userDe:$json.userDe ,
                 license:$json.license ,
                 isLoading: false,
@@ -434,6 +437,13 @@
         padding: 7px 15px 9px;
         gap: 6px;
 
+    }
+    .isDisabled {
+        color: currentColor;
+        cursor: not-allowed;
+        opacity: 0.5;
+        text-decoration: none;
+        pointer-events: none
     }
 
 

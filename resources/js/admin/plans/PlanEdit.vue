@@ -107,7 +107,7 @@
 
                                         <tbody  v-for="lessonPackagePlan in lessonPackagePlans" v-if="lessonPackagePlan.package_id==package.package">
                                         <tr v-for="lesson in entries" >
-                                            <td class="">
+                                            Lesson name                    <td class="">
                                                 <div class="form-check form-check-sm form-check-custom form-check-solid">
                                                     <input class="form-check-input" type="checkbox" v-model="lessonPackagePlan.lessonIds" :value="lesson.id"  @change="updateLessonAll()">
                                                 </div>
@@ -351,10 +351,10 @@
                                                         <a class="menu-link px-3 " v-if="permissionFields['plan_rename_lesson_package']==true" @click="renameLessonPackage(tabLessonContent)" >Rename lesson package</a>
                                                         <a class="menu-link px-3 isDisabled" v-else @click="renameLessonPackage(tabLessonContent)" >Rename lesson package</a>
                                                     </div>
-                                                    <div class="menu-item px-3" v-if="permissionFields['plan_delete_package']==true && dataZipLesson.status=='done' ||  permissionFields['plan_delete_package']==true &&dataZipLesson.status=='waitting'">
+                                                    <div class="menu-item px-3" v-if="permissionFields['plan_delete_lesson_package']==true && dataZipLesson.status=='done' ||  permissionFields['plan_delete_lesson_package']==true &&dataZipLesson.status=='waitting'">
                                                         <a class="menu-link px-3 text-danger "  @click="deletePackageLessonModal(tabLessonContent)" >Delete lesson package</a>
                                                     </div>
-                                                    <div class="menu-item px-3" v-if="permissionFields['plan_delete_package']==false && dataZipLesson.status=='done' ||  permissionFields['plan_delete_package']==false &&dataZipLesson.status=='waitting'">
+                                                    <div class="menu-item px-3" v-if="permissionFields['plan_delete_lesson_package']==false && dataZipLesson.status=='done' ||  permissionFields['plan_delete_lesson_package']==false &&dataZipLesson.status=='waitting'">
                                                         <a class="menu-link px-3 text-danger isDisabled"  @click="deletePackageLessonModal(tabLessonContent)" >Delete lesson package</a>
                                                     </div>
                                                 </div>

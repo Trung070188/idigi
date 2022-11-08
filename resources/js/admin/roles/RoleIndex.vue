@@ -105,7 +105,7 @@
                         title: 'Account management'
                     },
                     {
-                        title: 'Manage Roles'
+                        title: 'Manage roles'
                     },
                 ],
                 roles: [],

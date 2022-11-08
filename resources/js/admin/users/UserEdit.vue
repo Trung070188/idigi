@@ -116,7 +116,7 @@
                                     <div class=" form-group col-lg-3 ">
                                         <label >Password</label>
                                         <div class="d-flex align-items-center justify-content-start mt-2" >
-                                            <input class="form-control " type="password" placeholder="Enter the password" v-model="password" >
+                                            <input :disabled="permissionFields['user_password']==false" class="form-control " type="password" placeholder="Enter the password" v-model="password" >
                                             <error-label></error-label>
                                         </div>
                                     </div>
@@ -139,25 +139,25 @@
 
                                     </div>
                                 </div>
-                                <div class="form-check form-check-custom form-check-solid pb-5">
+                                <div class="form-check form-check-custom form-check-solid pb-5" style="margin-top: 6px">
                                     <input id="state" type="checkbox" v-model="entry.state" :disabled="permissionFields['user_active']==false" class="form-check-input h-20px w-20px">
                                     <label for="state" class="form-check-label fw-bold">Active</label>
                                     <error-label for="f_grade" :errors="errors.state"></error-label>
                                 </div>
-                                <div class="mt-1 mb-4">
+                                <div class="mt-2 mb-4">
                                     <button type="reset" @click="save()" class="btn btn-primary mr-3" style="padding: 8.375px 13.75px"><i class="bi bi-save2 mr-1"></i>Save</button>
                                     <button type="reset" @click="backIndex()" class="btn btn-light" style="padding: 8.375px 13.75px">Cancel</button>
                                 </div>
                             </div>
                         </div>
                         <!--<hr style="margin: 0px 0px 16px;">-->
-                        <h3>Current registered devices</h3>
+                        <h3 style="margin-top: 10px">Current registered devices</h3>
                         <table class="table table-row-bordered align-middle gy-4 gs-9">
                             <thead class="border-bottom border-gray-200 fs-6 text-gray-600 fw-bolder bg-light bg-opacity-75">
                             <tr>
                                 <th  class="">Device name</th>
                                 <th  class="">Device detail</th>
-                                <th  class="">registered date</th>
+                                <th  class="">Registered date</th>
                                 <th  class=""></th>
                                 <th  class=""> </th>
                             </tr>
@@ -169,7 +169,8 @@
                                 <td>{{d(device.created_at)}}</td>
                                 <td v-if="device.delete_request!=null" class="status-request" v-text="device.delete_request"></td>
                                 <td v-else ></td>
-                                <td><i class="bi bi-trash " style="cursor: pointer" @click="deleteDeviceModal(device)"></i></td>
+                                <td v-if="permissionFields['user_delete_device']==true"><i class="bi bi-trash "  style="cursor: pointer" @click="deleteDeviceModal(device)"></i></td>
+                                <td v-else></td>
                             </tr>
                             </tbody>
                         </table>

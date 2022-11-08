@@ -582,7 +582,7 @@
                 isShowFilter: isShowFilter,
                 breadcrumbs: [
                     {
-                        title: "Content Management"
+                        title: "Resource management"
                     },
                     {
                         title: "Modules"

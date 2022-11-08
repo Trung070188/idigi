@@ -1,7 +1,7 @@
 <template>
     <div class="container-fluid">
         <ActionBar type="index"
-                   :breadcrumbs="breadcrumbs"  title = "Manage Users"/>
+                   :breadcrumbs="breadcrumbs"  title = "Manage users"/>
         <div class="row">
                         <!-- modal xoa nhieu user -->
             <div class="modal fade" style="margin-right:50px;border:2px solid #333333  " id="delete1" tabindex="-1" role="dialog"
@@ -372,7 +372,7 @@
                         title: 'Account management'
                     },
                     {
-                        title: 'Manage Users'
+                        title: 'Manage users'
                     },
                 ],
                 roles: $json.roles || [],

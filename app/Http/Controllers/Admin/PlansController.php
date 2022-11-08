@@ -229,7 +229,7 @@ class PlansController extends AdminBaseController
             'plan_delete_device'=>$permissionDetail->havePermission('plan_delete_device',$permissions,$user),
             'plan_export_device'=>$permissionDetail->havePermission('plan_export_device',$permissions,$user),
             'plan_add_package'=>$permissionDetail->havePermission('plan_add_package',$permissions,$user),
-            'plan_delete_package'=>$permissionDetail->havePermission('plan_delete_package',$permissions,$user),
+            'plan_delete_lesson_package'=>$permissionDetail->havePermission('plan_delete_lesson_package',$permissions,$user),
             'plan_export_plan'=>$permissionDetail->havePermission('plan_export_plan',$permissions,$user),
             'plan_delete_plan'=>$permissionDetail->havePermission('plan_delete_plan',$permissions,$user),
             'plan_import_device'=>$permissionDetail->havePermission('plan_import_device',$permissions,$user),
@@ -237,7 +237,6 @@ class PlansController extends AdminBaseController
             'plan_download_package'=>$permissionDetail->havePermission('plan_download_package',$permissions,$user),
             'plan_add_lesson'=>$permissionDetail->havePermission('plan_add_lesson',$permissions,$user),
             'plan_zip_package_lesson'=>$permissionDetail->havePermission('plan_zip_package_lesson',$permissions,$user),
-            'plan_delete_package_lesson'=>$permissionDetail->havePermission('plan_delete_package_lesson',$permissions,$user),
             'plan_rename_lesson_package'=>$permissionDetail->havePermission('plan_rename_lesson_package',$permissions,$user),
 
 

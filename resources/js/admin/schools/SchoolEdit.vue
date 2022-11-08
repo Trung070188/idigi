@@ -50,15 +50,20 @@
                             <div
                                 class="d-flex justify-content-end"
                                 data-kt-customer-table-toolbar="base">
-                                <a :href="'/xadmin/schools/teacherList?id='+entry.id">
-                                    <button style="margin: 0px 8px 25px;" v-if="title=='Edit school'" class="btn btn-primary button-create ">
+                                <a :href="'/xadmin/schools/teacherList?id='+entry.id" v-if="permissionFields['school_teacher_list']==true">
+                                    <button style="margin: 0px 8px 25px;" v-if="title=='Edit school'"  class="btn btn-primary button-create ">
                                         <i class="bi bi-person-lines-fill mr-1"></i>Teacher list
                                     </button>
                                 </a>
-                                <button v-if="title=='Edit school' && teacher!=0" class="btn btn-danger button-create " @click="modalDeleteSchool()">
+                                <a v-else style="cursor: pointer">
+                                    <button style="margin: 0px 8px 25px;" v-if="title=='Edit school'" disabled class="btn btn-primary button-create ">
+                                        <i class="bi bi-person-lines-fill mr-1"></i>Teacher list
+                                    </button>
+                                </a>
+                                <button v-if="title=='Edit school' && teacher!=0" :disabled="permissionFields['school_delete']==false" class="btn btn-danger button-create " @click="modalDeleteSchool()">
                                     <i class="bi bi-trash mr-1"></i>Delete School
                                 </button>
-                                <button v-if="title=='Edit school' &&  teacher==0" class="btn btn-danger button-create " @click="modalDelete">
+                                <button v-if="title=='Edit school' &&  teacher==0" :disabled="permissionFields['school_delete']==false" class="btn btn-danger button-create " @click="modalDelete">
                                     <i class="bi bi-trash mr-1"></i>Delete School
                                 </button>
                             </div>
