@@ -17,5 +17,6 @@ class DownloadAppLog extends Model
         'device_uid',
         'app_id',
         'download_at',
+
     ];
 }
