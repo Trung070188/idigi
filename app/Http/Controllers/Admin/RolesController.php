@@ -3,12 +3,14 @@
 namespace App\Http\Controllers\Admin;
 
 
+use App\Helpers\PermissionField;
 use App\Models\GroupPermission;
 use App\Models\Permission;
 use App\Models\RoleHasPermission;
 use App\Models\UserRole;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use App\Models\Role;
@@ -39,7 +41,17 @@ class RolesController extends AdminBaseController
         $title = 'Role';
         $component = 'RoleIndex';
         $permissions = Permission::query()->orderBy('name')->get();
+        $user = Auth::user();
+        $permissionDetail = new PermissionField();
+        $permission = $permissionDetail->permission($user);
+        $permissionFields = [
+            'role_add_new' => $permissionDetail->havePermission('role_add_new',$permission,$user),
+            'role_name'=>$permissionDetail->havePermission('role_name',$permission,$user),
+            'role_description'=>$permissionDetail->havePermission('role_description',$permission,$user),
+            'role_set'=>$permissionDetail->havePermission('role_set',$permission,$user),
+        ];
         $jsonData = [
+            'permissionFields'=>$permissionFields,
             'permissions' => $permissions,
 //            'entry' => $entry,
         ];
@@ -101,12 +113,12 @@ class RolesController extends AdminBaseController
         RoleHasPermission::where('role_id', $id)->delete();
         UserRole::where('role_id', $id)->delete();
         $entry->delete();
-
         return [
             'code' => 0,
             'message' => 'Đã xóa',
-            'actionName'=>$entry->role_name,
-            'status'=>'deleted role'
+            'object'=>$entry->role_name,
+            'status'=>'deleted role',
+            'role'=>$this->roleName()
         ];
     }
 
@@ -114,6 +126,15 @@ class RolesController extends AdminBaseController
      * @uri  /xadmin/roles/save
      * @return  array
      */
+    public function roleName()
+    {
+        $auth=Auth::user();
+        foreach ($auth->roles as $role)
+        {
+            $roleName=$role->role_name;
+        }
+        return $roleName;
+    }
     public function save(Request $req)
     {
         if (!$req->isMethod('POST')) {
@@ -165,8 +186,9 @@ class RolesController extends AdminBaseController
                 'code' => 0,
                 'message' => 'Đã cập nhật',
                 'id' => $entry->id,
-                'status'=>'edited role',
-                'actionName'=>$entry->role_name,
+                'status'=>'Update role',
+                'object'=>$entry->role_name,
+                'role'=>$this->roleName(),
             ];
         } else {
             $entry = new Role();
@@ -178,7 +200,8 @@ class RolesController extends AdminBaseController
                 'message' => 'Đã thêm',
                 'id' => $entry->id,
                 'status'=>'created new role',
-                'actionName'=>$entry->role_name,
+                'object'=>$entry->role_name,
+                'role'=>$this->roleName(),
             ];
         }
     }

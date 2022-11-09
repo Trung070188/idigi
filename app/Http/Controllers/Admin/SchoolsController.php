@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Helpers\PermissionField;
 use App\Models\AllocationContent;
 use App\Models\AllocationContentSchool;
 use App\Models\Course;
@@ -350,10 +351,28 @@ class SchoolsController extends AdminBaseController
          * @var  School $entry
          */
 
+        $user = Auth::user();
+        $permissionDetail = new PermissionField();
+        $permissions = $permissionDetail->permission($user);
+        $permissionFields = [
+            'school_name' => $permissionDetail->havePermission('school_name',$permissions,$user),
+            'school_address'=>$permissionDetail->havePermission('school_address',$permissions,$user),
+            'school_email'=>$permissionDetail->havePermission('school_email',$permissions,$user),
+            'school_phone_number'=>$permissionDetail->havePermission('school_phone_number',$permissions,$user),
+            'school_device'=>$permissionDetail->havePermission('school_device',$permissions,$user),
+            'school_user'=>$permissionDetail->havePermission('school_user',$permissions,$user),
+            'school_expire_date'=>$permissionDetail->havePermission('school_expire_date',$permissions,$user),
+            'school_description'=>$permissionDetail->havePermission('school_description',$permissions,$user),
+            'school_content'=>$permissionDetail->havePermission('school_content',$permissions,$user),
+            'school_delete'=>$permissionDetail->havePermission('school_delete',$permissions,$user),
+            'school_teacher_list'=>$permissionDetail->havePermission('school_teacher_list',$permissions,$user),
+
+        ];
         $title = 'Edit';
         $component = 'SchoolEdit';
         $entry->allocationContentId = $allocationContentId;
         $jsonData = [
+            'permissionFields'=>$permissionFields,
             'teacher'=>$lengthTeacher,
             'entry' => $entry,
             @'allocationContents' => @$newAllocationContents,
@@ -372,6 +391,11 @@ class SchoolsController extends AdminBaseController
      */
     public function remove(Request $req)
     {
+        $user=Auth::user();
+        foreach ($user->roles as $role)
+        {
+            $roleName=$role->role_name;
+        }
         $id = $req->id;
         $entry = School::find($id);
 
@@ -384,8 +408,9 @@ class SchoolsController extends AdminBaseController
         return [
             'code' => 0,
             'message' => 'Đã xóa',
-            'actionName'=>$entry->label,
-            'status'=>'deleted school'
+            'object'=>$entry->label,
+            'role'=>$roleName,
+            'status'=>'Delete school'
         ];
     }
     public function removeLicense(Request $req)
@@ -425,6 +450,12 @@ class SchoolsController extends AdminBaseController
      */
     public function save(Request $req)
     {
+        $user=Auth::user();
+        foreach ($user->roles as $role)
+        {
+            $roleName=$role->role_name;
+        }
+
         $dataContent = $req->all();
         if (!$req->isMethod('POST')) {
             return ['code' => 405, 'message' => 'Method not allow'];
@@ -515,8 +546,9 @@ class SchoolsController extends AdminBaseController
                 'code' => 0,
                 'message' => 'Đã cập nhật',
                 'id' => $entry->id,
-                'actionName'=>$entry->label,
-                'status'=>'edited school',
+                'role'=>$roleName,
+                'object'=>$entry->label,
+                'status'=>'Update school',
             ];
         } else {
             $entry = new School();
@@ -537,13 +569,13 @@ class SchoolsController extends AdminBaseController
                     }
                 }
             }
-
             return [
                 'code' => 0,
                 'message' => 'Đã thêm',
                 'id' => $entry->id,
-                'actionName'=>$entry->label,
-                'status'=>'created new school'
+                'role'=>$roleName,
+                'object'=>$entry->label,
+                'status'=>'Create new school'
             ];
         }
     }
@@ -668,7 +700,7 @@ class SchoolsController extends AdminBaseController
             return [
                 'code' => 200,
                 'message' => 'Đã Lưu',
-                'actionName'=>$entry->label,
+                'object'=>$entry->label,
                 'status'=>'activated license'
 
             ];
@@ -680,7 +712,7 @@ class SchoolsController extends AdminBaseController
             return [
                 'code' => 200,
                 'message' => 'Đã Lưu',
-                'actionName'=>$entry->label,
+                'object'=>$entry->label,
                 'status'=>'deactivated license '
 
             ];
@@ -700,9 +732,25 @@ class SchoolsController extends AdminBaseController
      */
     public function data(Request $req)
     {
-        $query = School::query()->with(['users'])->orderBy('id', 'ASC');
+        $user=Auth::user();
+        $schoolId=$user->school_id;
+        $check=0;
+        foreach($user->roles as $role)
+        {
+            if($role->role_name=='Super Administrator')
+            {
+                $check=1;
+            }
+        }
+        if($check==0)
+        {
+            $query = School::query()->where('id',$schoolId)->with(['users'])->orderBy('id', 'ASC');
 
+        }
+        else{
+            $query = School::query()->with(['users'])->orderBy('id', 'ASC');
 
+        }
         if ($req->keyword) {
             $query->where('label', 'LIKE', '%' . $req->keyword . '%');
         }
@@ -739,9 +787,9 @@ class SchoolsController extends AdminBaseController
                 if($userAdminSchool->school_id==$entry->id)
                 {
                     $nameSchoolAdmin=$userAdminSchool->full_name;
+
                 }
             }
-
             foreach ($entry->users as $user) {
                 foreach ($user->roles as $role) {
 
@@ -766,6 +814,8 @@ class SchoolsController extends AdminBaseController
                 'teacher' => $teacher,
 
             ];
+
+
 
         }
         return [

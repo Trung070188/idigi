@@ -3,10 +3,12 @@
 namespace App\Http\Controllers\Admin;
 
 
+use App\Helpers\PermissionField;
 use App\Models\UserCourseUnit;
 use App\Models\UserUnit;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use App\Models\AllocationContent;
@@ -43,6 +45,15 @@ class AllocationContentsController extends AdminBaseController
         $title = 'AllocationContent';
         $component = 'Allocation_contentIndex';
         return component($component, compact('title'));
+    }
+    public function roleName()
+    {
+        $auth=Auth::user();
+        foreach ($auth->roles as $role)
+        {
+            $roleName=$role->role_name;
+        }
+        return $roleName;
     }
 
     /**
@@ -143,7 +154,18 @@ class AllocationContentsController extends AdminBaseController
         /**
          * @var  AllocationContent $entry
          */
+        $user = Auth::user();
+        $permissionDetail = new PermissionField();
+        $permissions = $permissionDetail->permission($user);
+        $permissionFields = [
+            'allocation_add_new' => $permissionDetail->havePermission('allocation_add_new',$permissions,$user),
+            'allocation_delete'=>$permissionDetail->havePermission('allocation_delete',$permissions,$user),
+            'allocation_title'=>$permissionDetail->havePermission('allocation_title',$permissions,$user),
+            'allocation_course'=>$permissionDetail->havePermission('allocation_course',$permissions,$user),
+            'allocation_unit'=>$permissionDetail->havePermission('allocation_unit',$permissions,$user),
+        ];
         $jsonData=[
+            'permissionFields'=>$permissionFields,
             'totalSchoolArray'=>$totalSchoolArray,
             'totalCourseArray'=>$totalCourseArray,
             'entry'=>$entry,
@@ -177,8 +199,9 @@ class AllocationContentsController extends AdminBaseController
         return [
             'code' => 0,
             'message' => 'Đã xóa',
-            'actionName'=>$entry->title,
-            'status'=>'deleted content allocation'
+            'object'=>$entry->title,
+            'status'=>'Delete content allocation',
+            'role'=>$this->roleName()
         ];
     }
 
@@ -377,8 +400,9 @@ class AllocationContentsController extends AdminBaseController
                 'code' => 0,
                 'message' => 'Đã cập nhật',
                 'id' => $entry->id,
-                'actionName'=>$entry->title,
-                'status'=>'edited content allocation'
+                'object'=>$entry->title,
+                'status'=>'Update content allocation',
+                'role'=>$this->roleName()
 
             ];
         } else {
@@ -418,8 +442,9 @@ class AllocationContentsController extends AdminBaseController
                 'code' => 0,
                 'message' => 'Đã thêm',
                 'id' => $entry->id,
-                'actionName'=>$entry->title,
-                'status'=>'created new content allocation'
+                'object'=>$entry->title,
+                'status'=>'Create new content allocation',
+                'role'=>$this->roleName()
             ];
         }
     }

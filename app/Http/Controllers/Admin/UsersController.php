@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Exports\TeacherErrorExport;
+use App\Helpers\PermissionField;
 use App\Imports\TeacherImport;
 use App\Models\File;
 use App\Models\RequestRole;
@@ -16,6 +17,7 @@ use Carbon\Carbon;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use App\Models\User;
@@ -70,7 +72,16 @@ class UsersController extends AdminBaseController
         $title = 'Teacher';
         $component = 'TeacherIndex';
         $roles = Role::query()->orderBy('role_name')->get();
+        $user=Auth::user();
+        $permissionDetail = new PermissionField();
+        $permissions = $permissionDetail->permission($user);
+        $permissionFields = [
+            'teacher_management_import' => $permissionDetail->havePermission('teacher_management_import',$permissions,$user),
+            'teacher_management_create_new'=>$permissionDetail->havePermission('teacher_management_create_new',$permissions,$user),
+        ];
+
         $jsonData = [
+            'permissionFields'=>$permissionFields,
             'roles' => $roles
         ];
         return view('admin.layouts.vue', compact('title', 'component', 'jsonData'));
@@ -169,6 +180,16 @@ class UsersController extends AdminBaseController
         } else {
             $license = null;
         }
+        $permissionDetail = new PermissionField();
+        $permissions = $permissionDetail->permission($user);
+        $permissionFields = [
+            'profile_full_name' => $permissionDetail->havePermission('profile_full_name',$permissions,$user),
+            'profile_email'=>$permissionDetail->havePermission('profile_email',$permissions,$user),
+            'profile_role'=>$permissionDetail->havePermission('profile_role',$permissions,$user),
+            'profile_set_password'=>$permissionDetail->havePermission('profile_set_password',$permissions,$user),
+            'profile_change_avatar'=>$permissionDetail->havePermission('profile_change_avatar',$permissions,$user),
+            'profile_user_name'=>$permissionDetail->havePermission('profile_user_name',$permissions,$user),
+        ];
 
 
         /**
@@ -177,6 +198,7 @@ class UsersController extends AdminBaseController
         $title = 'Profile Edit';
         $component = 'ProfileForm';
         $jsonData = [
+            'permissionFields'=>$permissionFields,
             'entry' => $entry,
             'role' => $role,
             'userDe' => $userDe,
@@ -195,7 +217,7 @@ class UsersController extends AdminBaseController
     {
 
         $id = $req->id;
-        $entry = User::query()->with(['roles', 'schools'])
+        $entry = User::query()->with(['roles', 'schools', 'user_devices'])
             ->where('id', $id)->first();
         if (!$entry) {
             throw new NotFoundHttpException();
@@ -204,7 +226,7 @@ class UsersController extends AdminBaseController
         /**
          * @var  User $entry
          */
-        $roles = Role::query()->orderBy('id', 'ASC')->get();
+        $roles = Role::query()->orderBy('order', 'ASC')->where('role_name', '<>', 'Super Administrator')->get();
         foreach ($entry->roles as $role) {
             @$title_role = $role->role_name;
         }
@@ -214,12 +236,32 @@ class UsersController extends AdminBaseController
                 $name_role = $role->id;
             }
         }
+        if ($entry->user_devices)
+        {
+            $userDevice=$entry->user_devices;
+        }
         @$school = $entry->schools->label;
         $schools = School::query()->orderBy('label', 'ASC')->get();
         $title = 'Edit';
         $component = 'UserEdit';
         $user = Auth::user();
+        $permissionDetail = new PermissionField();
+        $permissions = $permissionDetail->permission($user);
+        $permissionFields = [
+            'user_username' => $permissionDetail->havePermission('user_username',$permissions,$user),
+            'user_full_name'=>$permissionDetail->havePermission('user_full_name',$permissions,$user),
+            'user_email'=>$permissionDetail->havePermission('user_email',$permissions,$user),
+            'user_description'=>$permissionDetail->havePermission('user_description',$permissions,$user),
+            'user_active'=>$permissionDetail->havePermission('user_active',$permissions,$user),
+            'user_role'=>$permissionDetail->havePermission('user_role',$permissions,$user),
+            'user_remove'=>$permissionDetail->havePermission('user_remove',$permissions,$user),
+            'user_password'=>$permissionDetail->havePermission('user_password',$permissions,$user),
+            'user_delete_device'=>$permissionDetail->havePermission('user_delete_device',$permissions,$user)
+
+        ];
         $jsonData = [
+            'userDevice'=>@$userDevice,
+            'permissionFields'=>$permissionFields,
             'schools' => $schools,
             @'school' => $school,
             'entry' => $entry,
@@ -317,7 +359,20 @@ class UsersController extends AdminBaseController
         $title = 'Edit';
         $component = 'TeacherEdit';
         $user = Auth::user();
+        $permissionDetail = new PermissionField();
+        $permissions = $permissionDetail->permission($user);
+        $permissionFields = [
+            'teacher_username' => $permissionDetail->havePermission('teacher_username',$permissions,$user),
+            'teacher_email'=>$permissionDetail->havePermission('teacher_email',$permissions,$user),
+            'teacher_phone'=>$permissionDetail->havePermission('teacher_phone',$permissions,$user),
+            'teacher_class'=>$permissionDetail->havePermission('teacher_class',$permissions,$user),
+            'teacher_school'=>$permissionDetail->havePermission('teacher_school',$permissions,$user),
+            'teacher_description'=>$permissionDetail->havePermission('teacher_description',$permissions,$user),
+            'teacher_import'=>$permissionDetail->havePermission('teacher_import',$permissions,$user),
+
+        ];
         $jsonData = [
+            'permissionFields'=>$permissionFields,
             'allocationContentId'=>$allocationContentId,
             'entry' => $entry,
             @'user_device' => @$user_device,
@@ -390,7 +445,20 @@ class UsersController extends AdminBaseController
         $title = 'Edit';
         $component = 'TeacherDetails';
         $user = Auth::user();
+        $permissionDetail = new PermissionField();
+        $permissions = $permissionDetail->permission($user);
+        $permissionFields = [
+            'teacher_username' => $permissionDetail->havePermission('teacher_username',$permissions,$user),
+            'teacher_email'=>$permissionDetail->havePermission('teacher_email',$permissions,$user),
+            'teacher_phone'=>$permissionDetail->havePermission('teacher_phone',$permissions,$user),
+            'teacher_class'=>$permissionDetail->havePermission('teacher_class',$permissions,$user),
+            'teacher_school'=>$permissionDetail->havePermission('teacher_school',$permissions,$user),
+            'teacher_description'=>$permissionDetail->havePermission('teacher_description',$permissions,$user),
+            'teacher_import'=>$permissionDetail->havePermission('teacher_import',$permissions,$user),
+
+        ];
         $jsonData = [
+            'permissionFields'=>$permissionFields,
             'allocationContentId'=>$allocationContentId,
             'entry' => $entry,
             @'user_device' => @$user_device,
@@ -418,9 +486,17 @@ class UsersController extends AdminBaseController
             throw new NotFoundHttpException();
         }
         $entry->delete();
+        $auth=Auth::user();
+        foreach ($auth->roles as $role)
+        {
+            $roleName=$role->role_name;
+        }
         return [
             'code' => 0,
-            'message' => 'Đã xóa'
+            'message' => 'Đã xóa',
+            'object'=>$entry->username,
+            'status'=>'Delete user',
+            'role'=>$roleName
         ];
     }
 
@@ -570,6 +646,11 @@ class UsersController extends AdminBaseController
 
     public function save(Request $req)
     {
+        $auth=Auth::user();
+        foreach ($auth->roles as $role)
+        {
+            $roleName=$role->role_name;
+        }
         if (!$req->isMethod('POST')) {
             return ['code' => 405, 'message' => 'Method not allow'];
         }
@@ -651,6 +732,11 @@ class UsersController extends AdminBaseController
 //                $data['password'] = Hash::make($data['password']);
 //            }
             $entry->fill($data);
+           if($data_role['password'] !=null)
+           {
+               $entry->password = Hash::make($data_role['password']);
+               User::where('id',$entry->id)->update(['password'=>$entry->password]);
+           }
             $entry->save();
          $userUnits= UserUnit::query()->where('user_id',$entry->id)->get();
          $schoolUnitIds=[];
@@ -686,8 +772,12 @@ class UsersController extends AdminBaseController
                     ]
                 );
             }
+
             return [
                 'code' => 0,
+                'role'=>$roleName,
+                'object'=>$entry->username,
+                'status'=>'Update User',
                 'message' => 'Đã cập nhật',
                 'id' => $entry->id,
             ];
@@ -726,6 +816,9 @@ class UsersController extends AdminBaseController
 
             return [
                 'code' => 0,
+                'status'=>'Create new user',
+                'object'=>$entry->username,
+                'role'=>$roleName,
                 'message' => 'Đã thêm',
                 'id' => $entry->id,
             ];
@@ -884,6 +977,9 @@ class UsersController extends AdminBaseController
             return [
                 'code' => 0,
                 'message' => 'Đã cập nhật',
+                'object'=>$entry->username,
+                'status'=>'Update user',
+                'role'=>$roleName,
                 'id' => $entry->id,
             ];
         }
@@ -916,6 +1012,9 @@ class UsersController extends AdminBaseController
                 'code' => 0,
                 'message' => 'Đã thêm',
                 'id' => $entry->id,
+                'object'=>$entry->username,
+                'status'=>'Create new user',
+                'role'=>$roleName,
             ];
 
         }
@@ -1000,6 +1099,7 @@ class UsersController extends AdminBaseController
                     $roleNames[] = $role->role_name;
                 }
             }
+
             $data[] = [
                 'role' => implode(',', $roleNames),
                 'id' => $user->id,
@@ -1065,8 +1165,6 @@ class UsersController extends AdminBaseController
         }
         $entries = $query->paginate($limit);
         $users = $entries->items();
-
-
         return [
             'code' => 0,
             'data' => $users,
@@ -1133,12 +1231,44 @@ class UsersController extends AdminBaseController
     public function removeAll(Request $req)
     {
         $ids = $req->ids;
-        UserRole::whereIn('user_id', $ids)->delete();
-        User::whereIn('id', $ids)->delete();
-        return [
-            'code' => 0,
-            'message' => 'Đã xóa'
-        ];
+       $users= User::query()->orWhereHas('roles',function ($q)
+        {
+            $q->where('role_name','Super Administrator');
+
+        })->get();
+        $check=0;
+        foreach ($users as $user)
+        {
+            foreach ($ids as $id)
+            {
+
+                if($id==$user->id)
+                {
+                    $check=1;
+
+                }
+
+            }
+        }
+
+        if($check==0)
+        {
+            UserRole::whereIn('user_id', $ids)->delete();
+            User::whereIn('id', $ids)->delete();
+            return [
+                'code' => 0,
+                'message' => 'Đã xóa'
+            ];
+        }
+        else{
+            return  [
+              'code' => 1,
+            ];
+        }
+
+
+
+
     }
 
     public function validateImportTeacher(Request $req)
@@ -1211,7 +1341,6 @@ class UsersController extends AdminBaseController
                         $item['phone'] = $tea[3];
                         $item['email'] = $tea[4];
                         $item['class'] = $tea[5];
-
                         $validator = Validator::make($item, [
                             'username' => ['required', Rule::unique('users', 'username')],
                             'full_name' => ['required',
@@ -1224,7 +1353,6 @@ class UsersController extends AdminBaseController
                             'password' => 'required',
                             'phone' => 'required',
                             'email' => ['required', Rule::unique('users', 'email')],
-                            'class' => 'required',
                         ]);
 
                         if ($validator->fails()) {
@@ -1237,25 +1365,68 @@ class UsersController extends AdminBaseController
                         }
                         $validations[] = $item;
 
+
                     }
                 }
             }
+            $checkDuplicate=[];
+            $error=[];
+            foreach ($validations as $validation)
+            {
+                if(in_array($validation['username'], $checkDuplicate)){
+                    $error[] = $validation['username'];
+                }
+                else{
+                    $checkDuplicate[]=$validation['username'];
+                }
+            }
+         if($error!=[])
+         {
+             $code=2;
+         }
+         if(count($validations)>$user->schools->number_of_users)
+         {
+             $code=2;
+         }
+
             $fileError = [];
             $fileImport=[];
             if ($code == 2) {
                 //export
-                foreach ($validations as $validation) {
-                    if (@$validation['error']) {
-                        $fileError[] = $validation;
+                foreach ($validations as $key=>$validation) {
+                    if($key>$user->schools->number_of_users)
+                    {
+                        $validation['error']=[
+                            'max_length'=>[
+                                'Allowed to register up to '. $user->schools->number_of_users .' users'
+                            ]
+                        ];
+                    }
+
+                    if (@$validation['error'] || $error!=[] && $error==[$validation['username']]) {
+                        {
+                            if($error!=[] && $error==[$validation['username']])
+                            {
+                                $validation['error']=[
+                                    'username'=>[
+                                        'The username has already been taken.'],
+                                ];
+                            }
+                            $fileError[] =$validation;
+
+                        }
                     }
                     else{
                         $fileImport[]=$validation;
                     }
                 }
+                $errorName = 'export_teacher_error_'. uniqid(time());
+                Cache::add($errorName, json_encode($fileError));
                 return [
                   'code'=> 2,
                   'fileImport' =>$fileImport,
                   'fileError'=>$fileError,
+                    'errorFileName'=>$errorName
                 ];
             } else {
                 $file = new File();
@@ -1280,8 +1451,9 @@ class UsersController extends AdminBaseController
     }
     public function exportErrorTeacher(Request $req)
     {
-        $dataAll=$req->all();
-        $fileError=json_decode($dataAll['fileError'],true);
+        $fileName=$req->fileError;
+        $fileError=json_decode(Cache::get($fileName),true);
+        Cache::forget($fileName);
         return Excel::download(new TeacherErrorExport($fileError), "File_import_teacher_error.xlsx");
     }
     public function downloadTemplate() : BinaryFileResponse
@@ -1322,5 +1494,14 @@ class UsersController extends AdminBaseController
                 ];
 
             }
+    }
+    public function deleteDevice (Request $req)
+    {
+        $id=$req->id;
+        UserDevice::where('id',$id)->delete();
+        return [
+            'code'=> 0,
+            'message'=> 'Đã xóa'
+        ];
     }
 }

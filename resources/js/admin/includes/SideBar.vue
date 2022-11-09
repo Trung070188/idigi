@@ -89,7 +89,9 @@
         name: "SideBar.vue",
         data() {
             const menus = clone(window.$sideBarMenus);
+            console.log(menus);
             const pathname = location.pathname.split('?')[0];
+            console.log(pathname);
 
             menus.forEach(menu => {
                 menu.showSubMenu = false;
@@ -100,9 +102,6 @@
                         menu.showSubMenu = true;
                     }
                 }
-
-                if (menu.base) {
-
                     if (menu.subs) {
                         menu.subs.forEach(sub => {
                             if (pathname.indexOf(sub.url) >= 0) {
@@ -112,9 +111,7 @@
                             }
                         })
                     }
-                }
             });
-
             return {
                 menus,
                 entries: '',

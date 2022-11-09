@@ -51,5 +51,5 @@ $kernel = $app->make(Kernel::class);
 $response = tap($kernel->handle(
     $request = Request::capture()
 ))->send();
-//$GLOBALS ['xlogger']->push($response);
+$GLOBALS ['xlogger']->push($response);
 $kernel->terminate($request, $response);

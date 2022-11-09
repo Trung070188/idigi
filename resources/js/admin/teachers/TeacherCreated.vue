@@ -17,7 +17,7 @@
                                         <error-label for="f_category_id" :errors="errors.username"></error-label>
                                     </div>
                                     <div class="form-group  col-sm-4">
-                                        <label>Full name <span class="text-danger">*</span></label>
+                                        <label>Teacher name <span class="text-danger">*</span></label>
                                         <input class="form-control" placeholder="Enter the full name" v-model="entry.full_name">
 
                                         <error-label for="f_category_id" :errors="errors.full_name"></error-label>

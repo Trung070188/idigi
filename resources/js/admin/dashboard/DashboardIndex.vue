@@ -1,6 +1,9 @@
 <template>
 
+
     <div class="post d-flex flex-column-fluid" id="kt_post">
+         <ActionBar type="index"
+                   :breadcrumbs="breadcrumbs" title = "Dashboard"/>
         <!--begin::Container-->
         <div id="kt_content_container" class="container-xxl">
             <!--begin::Row-->
@@ -163,121 +166,58 @@
                     <div class="card card-xl-stretch mb-xl-8">
                         <!--begin::Header-->
                         <div class="card-header border-0">
-                            <h3 class="card-title fw-bolder text-dark">Activities</h3>
-
+                            <h3 class="card-title fw-bolder text-dark"></h3>
                         </div>
                         <!--end::Header-->
                         <!--begin::Body-->
                         <div class="card-body pt-2" >
                             <!--begin::Item-->
-                            <div class="d-flex align-items-center mb-8" v-for="entry in entries">
-
-                                <div class="flex-grow-1" >
-                                    <div  class="text-gray-800 text-hover-primary fw-bolder fs-6">{{entry.username}} {{entry.status}}  {{entry.actionName}} </div>
-                                </div>
-
-                            </div>
-
                         </div>
                         <!--end::Body-->
                     </div>
                     <!--end:List Widget 3-->
                 </div>
-
             </div>
 
-            <div class="row g-5 g-xl-8">
-                <div class="col-xl-8">
-                    <!--begin::Tables Widget 5-->
-                    <div class="card card-xxl-stretch mb-5 mb-xl-8">
-                        <!--begin::Header-->
-                        <div class="card-header border-0 pt-5">
-                            <h3 class="card-title align-items-start flex-column">
-                                <span class="card-label fw-bolder fs-3 mb-1">Licenses</span>
-                            </h3>
-
+            <div class="row g-5 g-xl-12">
+                <div class="col-xl-12">
+                    <div class="card card-xl-stretch mb-xl-12">
+                        <div class="card-header border-0">
+                            <h3 class="card-title fw-bolder text-dark">Activities</h3>
                         </div>
+                        <div class="mh-650px scroll-y me-n7 pe-7">
+                            <table class="table table-row-bordered align-middle gy-4 gs-9">
+                                <thead class="border-bottom border-gray-200 fs-6 text-gray-600 fw-bolder bg-light bg-opacity-75">
+                                <tr >
+                                    <th>No.</th>
+                                    <th class="">User name</th>
+                                    <th class="">Role</th>
+                                    <th class="">Description</th>
+                                    <th class="">Object</th>
+                                    <th>IP</th>
+                                    <th>Time</th>
+                                    <th></th>
 
-                        <div class="card-body py-3">
-                            <div class="tab-content">
-                                <!--begin::Tap pane-->
-                                    <!--begin::Table container-->
-                                    <div class="table-responsive">
-                                        <!--begin::Table-->
-                                        <table class="table table-row-gray-200  gs-0 gy-4">
-                                            <!--begin::Table head-->
-                                            <thead>
-                                            <tr class="border-0">
-                                                <th class="p-0 w-50px"></th>
-                                                <th class="p-0 min-w-150px"></th>
-                                                <th class="p-0 min-w-140px"></th>
-                                                <th class="p-0 min-w-110px"></th>
-                                                <th class="p-0 min-w-50px"></th>
-                                            </tr>
-                                            </thead>
-                                            <!--end::Table head-->
-                                            <!--begin::Table body-->
-                                            <tbody >
-                                            <tr v-for="license in licenseRemain">
-                                                <td>
-                                                    <div class="symbol symbol-45px me-2">
-																				<span class="symbol-label">
-                                                                                    <i class="bi bi-bank"></i>
-																				</span>
-                                                    </div>
-                                                </td>
-                                                <td>
-                                                    <a href="index.html#" class="text-dark fw-bolder text-hover-primary mb-1 fs-6">{{license.label}}</a>
-                                                    <span class="text-muted fw-bold d-block">{{license.dayEnd}} days remaining</span>
-                                                </td>
-                                                <td></td>
-
-                                                <td >
-
-                                                </td>
-                                                <td class="text-end">
-                                                    <a :href="license.url">
-                                                        <button class="btn btn-primary">Renew license</button>
-                                                    </a>
-
-                                                </td>
-                                            </tr>
-
-                                            </tbody>
-
-                                        </table>
-                                    </div>
-
-
-                            </div>
+                                </tr>
+                                </thead>
+                                <tbody >
+                                <tr v-for="(entry,index) in entries">
+                                    <td>{{index+1}}</td>
+                                    <td v-text="entry.username"></td>
+                                    <td v-text="entry.role"></td>
+                                    <td v-text="entry.status"></td>
+                                    <td v-text="entry.object"></td>
+                                    <td v-text="entry.ip"></td>
+                                    <td>{{d(entry.time)}}</td>
+                                    <td class="">
+                                        <button class="btn btn-active-danger btn-light-danger btn-sm" >Delete</button>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
                         </div>
-                        <!--end::Body-->
                     </div>
-                    <!--end::Tables Widget 5-->
                 </div>
-                <div class="col-xl-4">
-                    <!--begin::Mixed Widget 5-->
-                    <div class="card card-xxl-stretch mb-xl-8">
-                        <!--begin::Beader-->
-                        <div class="card-header border-0 py-5">
-                            <h3 class="card-title align-items-start flex-column">
-                                <span class="card-label fw-bolder fs-3 mb-1">New schools</span>
-                            </h3>
-                            <div class="card-toolbar">
-
-                                <div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-800 menu-state-bg-light-primary fw-bold w-200px py-3" data-kt-menu="true">
-
-                                </div>
-
-                            </div>
-                        </div>
-
-
-                        <!--end::Body-->
-                    </div>
-                    <!--end::Mixed Widget 5-->
-                </div>
-
             </div>
 
 
@@ -297,6 +237,11 @@
         data()
         {
             return {
+                breadcrumbs:[
+                    {
+                        title: 'Dashboard'
+                    },
+                ],
                 entries:[],
                 users:$json.users,
                 schools:$json.schools,

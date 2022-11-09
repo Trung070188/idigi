@@ -1,9 +1,35 @@
 <template>
     <div class="container-fluid">
         <ActionBar type="index"
-                   :breadcrumbs="breadcrumbs" title="School Management"/>
+                   :breadcrumbs="breadcrumbs" title="School management"/>
         <div class="row">
             <div class="col-lg-12">
+                <!-- modal xoa nhieu -->
+                <div class="modal fade" style="margin-right:50px;border:2px solid #333333  " id="delete1" tabindex="-1" role="dialog"
+                     aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered popup-main-1" role="document"
+                         style="max-width: 450px;">
+                        <div class="modal-content box-shadow-main paymment-status" style="left:120px;text-align: center; padding: 20px 0px 55px;">
+                            <div class="close-popup" data-dismiss="modal"></div>
+                            <div class="swal2-icon swal2-warning swal2-icon-show">
+                                <div class="swal2-icon-content" style="margin: 0px 25px 0px ">!</div>
+                            </div>
+                            <div class="swal2-html-container">
+                                <p >Are you sure to delete this school?</p>
+                            </div>
+                            <div class="swal2-actions">
+                                <button type="submit"  class="swal2-confirm btn fw-bold btn-danger" @click="removeAll">
+                                    <span class="indicator-label">Yes, delete!</span>
+                                </button>
+                                <button type="reset"  class="swal2-cancel btn fw-bold btn-active-light-primary" data-bs-dismiss="modal" style="margin: 0px 8px 0px">No, cancel</button>
+
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                <!-- end modal xoa nhieu -->
+
                 <div class="modal fade" style="margin-right:50px;border:2px solid #333333  " id="delete" tabindex="-1" role="dialog"
                      aria-hidden="true">
                     <div class="modal-dialog modal-dialog-centered popup-main-1" role="document"
@@ -79,7 +105,6 @@
                                         <i class="bi bi-plus-lg"></i>New School
                                     </button>
                                 </a>
-                                {{check}}
                             </div>
                             <div class="d-flex justify-content-end align-items-center d-none"
                                  data-kt-customer-table-toolbar="selected" v-if=" schoolIds!=''">
@@ -87,12 +112,8 @@
                                     <span class="me-2" data-kt-customer-table-select="selected_count"></span>{{
                                     schoolIds.length }} Selected
                                 </div>
-
-                                <button v-if="permissions['018'] && check==0"  type="button" class="btn btn-danger"
-                                        data-kt-customer-table-select="delete_selected" @click="removeAll">Delete Selected
-                                </button>
-                                <button v-if="permissions['018'] && check==1"  type="button" class="btn btn-danger"
-                                        data-kt-customer-table-select="delete_selected" @click="modalDeleteSchool">Delete Selected
+                                <button v-if="permissions['018']"  type="button" class="btn btn-danger"
+                                        data-kt-customer-table-select="delete_selected" @click="removeAllModal">Delete Selected
                                 </button>
                             </div>
 
@@ -279,17 +300,13 @@
                 }
             }
             return {
-                check:'',
                 permissions,
                schoolIds: [],
                 school: [],
                 allSelected: false,
                 breadcrumbs: [
                     {
-                        title: 'School Management'
-                    },
-                    {
-                        title: 'Manage schools'
+                        title: 'School management'
                     },
                 ],
                 entry:'',
@@ -317,6 +334,10 @@
             },
             modalDeleteSchool() {
                 $('#deviceConfirm').modal('show');
+            },
+            removeAllModal()
+            {
+                $('#delete1').modal('show');
             },
             edit: function (id, event) {
                 if (!$(event.target).hasClass('deleted')) {
@@ -396,9 +417,7 @@
                 } else {
                     this.schoolIds = [];
                     this.school = [];
-                    this.check='';
                 }
-
             },
             updateCheckAll() {
                 this.school = [];
@@ -422,13 +441,19 @@
                 const res = await $post('/xadmin/schools/removeAll', {ids: this.schoolIds});
                 if(res.code==1)
                 {
+                    $('#delete1').modal('hide');
                     $('#deviceConfirm').modal('show');
+                    this.schoolIds = [];
+                    this.school = [];
+                    this.allSelected = false;
                 }
 
                  else {
                     toastr.success(res.message);
                     this.schoolIds = [];
                     this.school = [];
+                    $('#delete1').modal('hide');
+                    this.allSelected = false;
                     $router.updateQuery({page: this.paginate.currentPage, _: Date.now()});
 
                 }

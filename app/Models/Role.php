@@ -13,7 +13,9 @@ class Role extends BaseModel
     protected $fillable = [
         'role_name',
         'role_description',
-        'allow_deleted'
+        'allow_deleted',
+        'check_delete_device_request'
+
     ];
 
 public function permissions(){

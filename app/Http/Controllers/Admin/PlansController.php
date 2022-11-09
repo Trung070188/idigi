@@ -7,6 +7,7 @@ use App\Exports\DeviceErrorExport;
 use App\Exports\DevicePlanExport;
 use App\Exports\LessonPlanExport;
 use App\Exports\PlanExport;
+use App\Helpers\PermissionField;
 use App\Imports\DeviceImport;
 use App\Jobs\UpdateDownloadInventory;
 use App\Jobs\UpdateDownloadLessonFile;
@@ -90,6 +91,16 @@ class PlansController extends AdminBaseController
             'assignTo'=>$assignTo,
         ];
         return view('admin.layouts.vue', compact('title', 'component', 'jsonData'));
+    }
+
+    public function roleName()
+    {
+        $auth=Auth::user();
+        foreach ($auth->roles as $role)
+        {
+            $roleName=$role->role_name;
+        }
+        return $roleName;
     }
 
     /**
@@ -192,7 +203,7 @@ class PlansController extends AdminBaseController
                 'school_id' => $device->school_id,
                 'secret_key' => $device->secret_key,
                 'reason' => $device->reason,
-                'expire_date' => Carbon::parse($device->expire_date)->format('d/m/Y'),
+                'expire_date' => ($device->expire_date),
                 'created_at' => $device->created_at,
                 'updated_at' => $device->updated_at,
                 'roleName' => $roleName,
@@ -215,8 +226,33 @@ class PlansController extends AdminBaseController
                 'lessonIds' => $lessonIdArr,
             ];
         }
+        $user = Auth::user();
+        $permissionDetail = new PermissionField();
+        $permissions = $permissionDetail->permission($user);
+        $permissionFields = [
+            'plan_name' => $permissionDetail->havePermission('plan_name',$permissions,$user),
+            'plan_due_date'=>$permissionDetail->havePermission('plan_due_date',$permissions,$user),
+            'plan_description'=>$permissionDetail->havePermission('plan_description',$permissions,$user),
+            'plan_assign_to_IT'=>$permissionDetail->havePermission('plan_assign_to_IT',$permissions,$user),
+            'plan_expire_date'=>$permissionDetail->havePermission('plan_expire_date',$permissions,$user),
+            'plan_add_device'=>$permissionDetail->havePermission('plan_add_device',$permissions,$user),
+            'plan_delete_device'=>$permissionDetail->havePermission('plan_delete_device',$permissions,$user),
+            'plan_export_device'=>$permissionDetail->havePermission('plan_export_device',$permissions,$user),
+            'plan_add_package'=>$permissionDetail->havePermission('plan_add_package',$permissions,$user),
+            'plan_delete_lesson_package'=>$permissionDetail->havePermission('plan_delete_lesson_package',$permissions,$user),
+            'plan_export_plan'=>$permissionDetail->havePermission('plan_export_plan',$permissions,$user),
+            'plan_delete_plan'=>$permissionDetail->havePermission('plan_delete_plan',$permissions,$user),
+            'plan_import_device'=>$permissionDetail->havePermission('plan_import_device',$permissions,$user),
+            'plan_remove_lesson'=>$permissionDetail->havePermission('plan_remove_lesson',$permissions,$user),
+            'plan_download_package'=>$permissionDetail->havePermission('plan_download_package',$permissions,$user),
+            'plan_add_lesson'=>$permissionDetail->havePermission('plan_add_lesson',$permissions,$user),
+            'plan_zip_package_lesson'=>$permissionDetail->havePermission('plan_zip_package_lesson',$permissions,$user),
+            'plan_rename_lesson_package'=>$permissionDetail->havePermission('plan_rename_lesson_package',$permissions,$user),
 
+
+        ];
         $jsonData = [
+            'permissionFields'=>$permissionFields,
             'roleAuth' => $roleAuth,
             'lessonPackagePlans' => @$lessonPackagePlans,
             'idRoleIt' => $idRoleIt,
@@ -248,7 +284,11 @@ class PlansController extends AdminBaseController
         UserDevice::where('plan_id',$entry->id)->delete();
         return [
             'code' => 0,
-            'message' => 'Đã xóa'
+            'message' => 'Đã xóa',
+            'object'=>$entry->name,
+            'status'=>'Delete plan',
+            'role'=>$this->roleName()
+
         ];
     }
     public function removeAllPlan(Request $req)
@@ -260,7 +300,7 @@ class PlansController extends AdminBaseController
         UserDevice::whereIn('plan_id',$dataAll['ids'])->delete();
         return [
             'code' => 0,
-            'message' => 'Đã xóa'
+            'message' => 'Đã xóa',
         ];
     }
 
@@ -373,7 +413,10 @@ class PlansController extends AdminBaseController
             return [
                 'code' => 0,
                 'message' => 'Đã cập nhật',
-                'id' => $entry->id
+                'id' => $entry->id,
+                'object'=>$entry->name,
+                'status'=>'Update plan',
+                'role'=>$this->roleName()
             ];
         } else {
 
@@ -396,7 +439,10 @@ class PlansController extends AdminBaseController
             return [
                 'code' => 0,
                 'message' => 'Đã thêm',
-                'id' => $entry->id
+                'id' => $entry->id,
+                'object'=>$entry->name,
+                'status'=>'Create new plan',
+                'role'=>$this->roleName()
             ];
         }
     }
@@ -512,6 +558,9 @@ class PlansController extends AdminBaseController
                 'code' => 0,
                 'message' => 'Đã cập nhật',
                 'id' => $entry->id,
+                'status'=>'Add device plan',
+                'role'=>$this->roleName(),
+                'object'=>$entry->device_name. ' Plan( '.$entry->name . ' )'
             ];
         }
     }
@@ -759,7 +808,7 @@ class PlansController extends AdminBaseController
             }
             return [
                 'code' => 0,
-                'message' => 'Đã cập nhật '
+                'message' => 'Đã cập nhật',
             ];
 
         }
@@ -819,7 +868,7 @@ class PlansController extends AdminBaseController
 //                        ];
 //                    }
                     if ($import->plan_id == $entry->id) {
-                        $expired = Carbon::createFromFormat('d/m/Y', $import->expire_date)->format('Y-m-d');
+                        $expired = Carbon::createFromFormat('Y-m-d', $import->expire_date)->format('Y-m-d');
 
                         $payload [] = [
 //                            'secret_key_plan' => $entry->secret_key,
@@ -890,13 +939,13 @@ class PlansController extends AdminBaseController
 
             if (@$dataLesson['lessonPackagePlans']) {
                 foreach ($dataLesson['lessonPackagePlans'] as $lesson) {
-                        if ($lesson['package_id'] == $dataLesson['package'])
+                        if ($lesson['package_id'] == $dataLesson['package']['package'])
                         {
                             if($lesson['lessonIds']!=[]){
                                 $stringLesson = implode(",", $lesson['lessonIds']);
-                                PackageLesson::updateorCreate(
+                              $package=  PackageLesson::updateorCreate(
                                     [
-                                        'id' => $dataLesson['package']
+                                        'id' => $dataLesson['package']['package']
                                     ],
                                     [
                                         'lesson_ids' => $stringLesson,
@@ -905,7 +954,11 @@ class PlansController extends AdminBaseController
                                 );
                                 return [
                                     'code'=>0,
-                                    'message'=>'Đã cập nhật'
+                                    'message'=>'Đã cập nhật',
+                                    'status'=>'Add lesson plan',
+                                    'object'=>$package->name.' plan ( '.$entry->name . ' )',
+                                    'role'=>$this->roleName()
+
                                 ];
                             }
                             else
@@ -1200,7 +1253,7 @@ class PlansController extends AdminBaseController
         $data = $req->all();
         $stringLesson = implode(",", $data['packageLesson']);
 
-        PackageLesson::updateorCreate(
+       $package= PackageLesson::updateorCreate(
             [
                 'id' => $data['viewPackage']
 
@@ -1227,7 +1280,10 @@ class PlansController extends AdminBaseController
         return [
             'code' => 0,
             'message' => 'Đã xóa',
-            'lesson' => $stringLesson
+            'lesson' => $stringLesson,
+            'object'=>$package->name,
+            'status'=>'Remove lesson plan',
+            'role'=>$this->roleName()
         ];
 
     }
@@ -1235,9 +1291,8 @@ class PlansController extends AdminBaseController
     {
         $dataAll=$req->all();
         $stringLessonIds=implode(",",$dataAll['ids']);
-        if($stringLessonIds!="")
         {
-            PackageLesson::updateorCreate(
+           $package= PackageLesson::updateorCreate(
                 [
                     'id' => $dataAll['viewPackage']
                 ],
@@ -1247,20 +1302,23 @@ class PlansController extends AdminBaseController
                 ]
             );
         }
-       else{
-           PackageLesson::updateorCreate(
-               [
-                   'id' => $dataAll['viewPackage']
-               ],
-               [
-                   'lesson_ids' => NUll,
-                   'status'=>'new'
-               ]
-           );
-       }
+//       else{
+//           PackageLesson::updateorCreate(
+//               [
+//                   'id' => $dataAll['viewPackage']
+//               ],
+//               [
+//                   'lesson_ids' => NUll,
+//                   'status'=>'new'
+//               ]
+//           );
+//       }
         return [
             'code' => 0,
             'message' => 'Đã xóa',
+            'object'=>$package->name,
+            'status'=>'Remove lesson plan',
+            'role'=>$this->roleName()
         ];
 
     }
@@ -1311,7 +1369,7 @@ class PlansController extends AdminBaseController
             }
             if($dataLesson['tabLessonContent'])
             {
-                PackageLesson::updateOrCreate(
+              $package=  PackageLesson::updateOrCreate(
                     [
                         'id'=>$dataLesson['tabLessonContent']
                     ],
@@ -1329,6 +1387,9 @@ class PlansController extends AdminBaseController
             return [
                 'code' => 0,
                 'message' => 'Đã cập nhật',
+                'status'=>'Add package plan',
+                'object'=>$package->name. ' plan ( '.$entry->name . ' )',
+                'role'=>$this->roleName()
             ];
         }
     }
@@ -1365,30 +1426,51 @@ class PlansController extends AdminBaseController
                     'message' => 'Không tìm thấy',
                 ];
             }
-            if (@$dataLesson['lessonPackagePlans']) {
-                ZipPlanLesson::where('package_id', $dataLesson['package'])->delete();
-                foreach ($dataLesson['lessonPackagePlans'] as $lesson) {
-                    if ($lesson['package_id'] == $dataLesson['package']) {
-                        $stringLesson = implode(",", $lesson['lessonIds']);
-                        $user = Auth::user();
-                      $zipFile= ZipPlanLesson::create(['user_id' => $dataLesson['idRoleIt'], 'plan_id' => $entry->id, 'lesson_ids' => $stringLesson, 'package_id' => $dataLesson['package'], 'status' => 'inprogress']);
-                        if($zipFile->status=='inprogress')
-                        {
-                            $entry->status='Packaging';
-                        }
-                        $entry->save();
-                        PackageLesson::updateOrCreate(
-                            [
-                                'id'=>$lesson['package_id']
-                            ],
-                            [
-                                'status'=>'done'
-                            ]
-                        );
-                    }
+            if(@$dataLesson['dataTableLesson'])
+            {
+                ZipPlanLesson::where('package_id',$dataLesson['package'])->delete();
+                $stringLesson = implode(",", $dataLesson['dataTableLesson']['lesson_ids']);
+                $zipFile= ZipPlanLesson::create(['user_id' => $dataLesson['idRoleIt'], 'plan_id' => $entry->id, 'lesson_ids' => $stringLesson, 'package_id' => $dataLesson['package'], 'status' => 'inprogress']);
+                if($zipFile->status=='inprogress')
+                {
+                    $entry->status='Packaging';
                 }
+                $entry->save();
+                PackageLesson::updateOrCreate(
+                    [
+                        'id'=>$dataLesson['dataTableLesson']['id']
+                    ],
+                    [
+                        'status'=>'done'
+                    ]
+                );
 
             }
+//            if (@$dataLesson['lessonPackagePlans']) {
+//                ZipPlanLesson::where('package_id', $dataLesson['package'])->delete();
+//                foreach ($dataLesson['lessonPackagePlans'] as $lesson) {
+//
+//                    if ($lesson['id'] == $dataLesson['package']) {
+//                        $stringLesson = implode(",", $lesson['lesson_ids']);
+//                        $user = Auth::user();
+//                      $zipFile= ZipPlanLesson::create(['user_id' => $dataLesson['idRoleIt'], 'plan_id' => $entry->id, 'lesson_ids' => $stringLesson, 'package_id' => $dataLesson['package'], 'status' => 'inprogress']);
+//                        if($zipFile->status=='inprogress')
+//                        {
+//                            $entry->status='Packaging';
+//                        }
+//                        $entry->save();
+//                        PackageLesson::updateOrCreate(
+//                            [
+//                                'id'=>$lesson['id']
+//                            ],
+//                            [
+//                                'status'=>'done'
+//                            ]
+//                        );
+//                    }
+//                }
+//
+//            }
             return [
                 'code' => 0,
                 'message' => 'Đã cập nhật',
@@ -1481,11 +1563,15 @@ class PlansController extends AdminBaseController
         $data = $req->get('entry');
         if (isset($data['id'])) {
             $entry = Plan::find($data['id']);
-            PackageLesson::Where('plan_id',$entry->id)->where('id',$dataAll['id'])->delete();
+          $package=  PackageLesson::Where('plan_id',$entry->id)->where('id',$dataAll['id'])->delete();
             ZipPlanLesson::where('plan_id',$entry->id)->where('package_id',$dataAll['id'])->delete();
             return [
                 'code' => 0,
                 'message' => 'Đã xóa',
+                'object'=>$package->name.' plan (' .$entry->name .' )' ,
+                'status'=>'Remove package plan',
+                'role'=>$this->roleName()
+
             ];
 
         }
@@ -1531,6 +1617,7 @@ class PlansController extends AdminBaseController
             $assignTo=User::where('id',$entry->user_id)->first();
             $dataAll['packageLessonPlan'] = json_decode($dataAll['packageLessonPlan'], true);
 
+
             if(@$dataAll['packageLessonPlan'])
             {
                 foreach ( $dataAll['packageLessonPlan'] as $key => $packageLessonPlan)
@@ -1539,7 +1626,7 @@ class PlansController extends AdminBaseController
 
                     $lessonsArr=Lesson::query()->whereIn('id',$packageLessonPlan['lessonIds'])->orderBy('name','ASC')->get();
                     $lessons[]=[
-                        'package_name'=>'Package lesson' . ' ' .$index ,
+                        'package_name'=>$packageLessonPlan['name'],
                         'plan_name'=>$entry->name,
                         'assign_to'=>$assignTo->full_name,
                         'due_at'=>Carbon::parse($entry->due_at)->format('d/m/Y'),
@@ -1600,7 +1687,7 @@ class PlansController extends AdminBaseController
     }
     public function generateToken(Request $req)
     {
-        
+
         $device = UserDevice::where('id', $req->device_id)
                 ->where('status', 2)
                 ->first();
@@ -1624,10 +1711,10 @@ class PlansController extends AdminBaseController
             return  ['status' => 0, 'token' =>  'Error'];
 
         }
-        
+
     }
 }
 
 
-    
+
 

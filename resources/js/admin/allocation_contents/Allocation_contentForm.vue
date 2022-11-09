@@ -137,7 +137,7 @@
                     allCourses:allCourses,
                     breadcrumbs: [
                         {
-                            title: 'School Management'
+                            title: 'Resource management'
                         },
                         {
                             title: 'Resource allocation',

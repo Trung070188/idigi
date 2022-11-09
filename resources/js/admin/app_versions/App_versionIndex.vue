@@ -1,7 +1,7 @@
 <template>
     <div class="container-fluid">
         <ActionBar type="index"
-                   :breadcrumbs="breadcrumbs" title="Application Settings"/>
+                   :breadcrumbs="breadcrumbs" title="Manage applications version"/>
         <div class="card card-custom card-stretch gutter-b" v-if="roleName=='Super Administrator'">
             <div class="modal fade" style="margin-right:50px;border:2px solid #333333  " id="delete" tabindex="-1"
                  role="dialog"
@@ -504,6 +504,7 @@
         data() {
             const permissions = clone(window.$permissions);
             return {
+                permissionFields:$json.permissionFields || [],
                 entry: '',
                 roleName: $json.roleName,
                 release_note: '',
@@ -529,7 +530,7 @@
                 curVersion: '',
                 breadcrumbs: [
                     {
-                        title: 'Download Application'
+                        title: 'Application management'
                     },
                 ],
             }

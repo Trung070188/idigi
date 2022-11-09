@@ -1,7 +1,7 @@
 <template>
     <div class="container-fluid">
         <ActionBar type="index"
-                   :breadcrumbs="breadcrumbs" :title="'Teacher List' + '-' + 'Trường'+ ' ' + entry.label" />
+                   :breadcrumbs="breadcrumbs" :title="'Teacher management' + '-' + 'Trường'+ ' ' + entry.label" />
         <div class="row">
             <div class="col-lg-12">
                 <div class="modal fade" style="margin-right:50px;border:2px solid #333333  " id="delete" tabindex="-1" role="dialog"
@@ -310,18 +310,16 @@
                 isShowFilter: isShowFilter,
                 breadcrumbs: [
                     {
-                      title:'School Management',
-                    },
-                    {
-                        title: ' Manage schools',
+                      title:'School management',
                         url: '/xadmin/schools/index',
                     },
+
                     {
                         title: 'School details',
                         url: '/xadmin/schools/edit?id='+$json.entry.id
                     },
                     {
-                        title: 'Teacher lists',
+                        title: 'Teacher management',
                     },
 
                 ],

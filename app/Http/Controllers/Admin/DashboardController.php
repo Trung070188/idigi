@@ -65,59 +65,55 @@ class DashboardController extends AdminBaseController
             ->orWhere('request_uri','=','/xadmin/schools/remove')
             ->orWhere('request_uri','=','/xadmin/users/save')
             ->orWhere('request_uri','=','/xadmin/users/remove')
+            ->orWhere('request_uri','/xadmin/users/saveTeacher')
             ->orWhere('request_uri','/xadmin/roles/save')
             ->orWhere('request_uri','=','/xadmin/roles/remove')
             ->orWhere('request_uri','/xadmin/allocation_contents/save')
             ->orWhere('request_uri','/xadmin/schools/saveLicense')
+            ->orWhere('request_uri','/xadmin/plans/remove')
+            ->orWhere('request_uri','/xadmin/plans/save')
+            ->orWhere('request_uri','/xadmin/plans/saveDevice')
+            ->orWhere('request_uri','/xadmin/plans/addPackageLesson')
+            ->orWhere('request_uri','/xadmin/plans/planLesson')
+            ->orWhere('request_uri','/xadmin/plans/removeAllLesson')
+            ->orWhere('request_uri','/xadmin/plans/deleteLesson')
+            ->orWhere('request_uri','/xadmin/plans/deletePackageLesson')
+            ->orWhere('request_uri','/xadmin/user_devices/save')
+            ->orWhere('request_uri','/xadmin/user_devices/remove')
             ->orderBy('id', 'ASC')->get();
-//
-//        if ($req->keyword) {
-//            $query->where('label', 'LIKE', '%' . $req->keyword . '%');
-//        }
-//
-//        if ($req->label) {
-//            $query->where('label', 'LIKE', '%' . $req->label . '%');
-//        }
-//
-//        $limit = 25;
-//
-//        if ($req->limit) {
-//            $limit = $req->limit;
-//        }
-//        $data = [];
-
         $xlogger = [];
         foreach ($xloggers as $entry) {
 
-                if($entry['request_uri']=='/xadmin/schools/save'
-                    || $entry['request_uri']=='/xadmin/roles/save'
-                    || $entry['request_uri']=='/xadmin/schools/toggleStatus'
-                    || $entry['request_uri']=='/xadmin/schools/remove'
-                    ||  $entry['request_uri']=='/xadmin/roles/remove'
-                    || $entry['request_uri']='/xadmin/allocation_contents/save'
-                    ||$entry['request_uri']='/xadmin/allocation_contents/remove'
+//                if($entry['request_uri']=='/xadmin/schools/save'
+//                    || $entry['request_uri']=='/xadmin/roles/save'
+//                    || $entry['request_uri']=='/xadmin/schools/toggleStatus'
+//                    || $entry['request_uri']=='/xadmin/schools/remove'
+//                    ||  $entry['request_uri']=='/xadmin/roles/remove'
+//                    || $entry['request_uri']='/xadmin/allocation_contents/save'
+//                    ||$entry['request_uri']='/xadmin/allocation_contents/remove'
+//
+//                )
 
-                )
-
-                {
                     $dataXlogger = json_decode($entry['response'], TRUE);
-                    $actionName = @$dataXlogger['actionName'];
-                    $entry['actionName'] = $actionName;
+                    $object = @$dataXlogger['object'];
+                    $entry['object'] = $object;
                     $entry['status'] = @$dataXlogger['status'];
-                }
+                    $entry['role']=$dataXlogger['role'];
 
                 if($dataXlogger['code']==0)
                 {
                     $xlogger[]=[
                         'username'=>$entry['username'],
-                        'actionName'=>@$entry['actionName'],
-                        'status'=>@$entry['status']
+                        'object'=>@$entry['object'],
+                        'status'=>@$entry['status'],
+                        'role'=>$entry['role'],
+                        'ip'=>$entry['ip'],
+                        'time'=>$entry['time']
                     ];
 
                 }
 
         }
-
         return [
             'code' => 0,
             'data' =>$xlogger,

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\AppVersion;
+use App\Models\School;
 use App\Models\User;
 use Firebase\JWT\JWT;
 use Illuminate\Http\Request;
@@ -23,37 +24,52 @@ class CheckDeviceController extends Controller
 
         $user = User::where('username', $request->username)
             ->orWhere('email', $request->username)
-            ->with(['user_devices'])
+            ->with(['user_devices','schools'])
             ->first();
 
         if($user){
-            $count = 0;
-            if($user->user_devices){
-                foreach ($user->user_devices as $device){
-                    $count ++ ;
 
-                    if($device->device_uid == $request->device_unique){
+            if($user->schools)
+            {
+                $countDevice=$user->schools->devices_per_user;
+                $count = 0;
+                if($user->user_devices){
+                    foreach ($user->user_devices as $device){
+                        $count ++ ;
+
+                        if($device->device_uid == $request->device_unique){
+                            return [
+                                'code' => 0,
+                                'msg' => 'Device Id đã tồn tại',
+
+                            ];
+                        }
+                    }
+                    if($count > $countDevice){
                         return [
-                            'code' => 0,
-                            'msg' => 'Device Id đã tồn tại',
+                            'code' => 2,
+                            'msg' => 'Đã đủ ' .$countDevice.' device',
+
+                        ];
+                    }else{
+                        return [
+                            'code' => 1,
+                            'msg' => 'Số device hiện tại là '.$count,
 
                         ];
                     }
                 }
-                if($count > 2){
-                    return [
-                        'code' => 2,
-                        'msg' => 'Đã đủ 3 device',
 
-                    ];
-                }else{
-                    return [
-                        'code' => 1,
-                        'msg' => 'Số device hiện tại là '.$count,
-
-                    ];
-                }
             }
+            else
+            {
+                return [
+                  'code'=> 0,
+                  'msg'=>'Bạn không phải là school admin or teacher. '
+                ];
+            }
+
+
 
 
         }
@@ -67,44 +83,52 @@ class CheckDeviceController extends Controller
 
     public function checkVersion(Request  $request){
         $curApp = AppVersion::where('type',$request->os)
-            ->where('is_default', 1)->first();
-        if(!$curApp){
+            ->where("force_update", 1)
+            ->first();
+
+        $manualApp = AppVersion::where('type',$request->os)
+            ->where("is_default", 1)
+            ->first();
+
+        //Manual
+       /* if(!$manualApp){
             return [
                 'code' => 1,
-                'msg' => "Không tồn tại version",
+                'msg' => "Không tồn tại manual version ",
                 'results' => []
             ];
+        }*/
+        $isOtaManual = 0;
+        if(@$manualApp->url_updated){
+            $isOtaManual = 1;
+            $linkManual = @$manualApp->url_updated;
+        }else{
+            $linkManual = @$manualApp->url;
         }
+        //force update
         $isOta = 0;
 
-        if($curApp->url_updated){
+        if(@$curApp->url_updated){
             $isOta = 1;
+            $linkVersion = @$curApp->url_updated;
+        }else{
+            $linkVersion = @$curApp->url;
         }
-        if($isOta==0)
-        {
-            return [
+
+
+        return [
             'code' => 0,
             'msg' => "Success",
             'results' => [
-                'latest_version' => $curApp->version,
+                'latest_version' => @$curApp->version,
+                'link_version' => $linkVersion,
                 'is_ota' => $isOta,
-                'link_version' => $curApp->url,
+                'manual_version' => @$manualApp->version,
+                'link_manual' => $linkManual,
+                'is_ota_manual' => $isOtaManual,
             ]
-            ];
-        }
-        if($isOta=1)
-        {
-            return [
-                'code' => 0,
-                'msg' => "Success",
-                'results' => [
-                    'latest_version' => $curApp->version,
-                    'is_ota' => $isOta,
-                    'link_version' => $curApp->url_updated,
-                ]
-            ];
-        }
+        ];
 
-    
+
     }
 }

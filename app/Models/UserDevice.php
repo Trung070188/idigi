@@ -17,6 +17,7 @@ class UserDevice extends BaseModel
         'type',
         'secret_key',
         'reason',
+        'delete_request',
         'key_collection_id',
         'expire_date',
         'created_at',

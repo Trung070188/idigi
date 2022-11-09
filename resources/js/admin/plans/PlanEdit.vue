@@ -3,6 +3,32 @@
         <ActionBar type="index"
                    :breadcrumbs="breadcrumbs" title="Plan details"/>
         <div class="row">
+            <!-- modal cancel package lesson -->
+
+            <div class="modal fade" style="margin-right:50px;border:2px solid #333333  " id="cancelModal" tabindex="-1" role="dialog"
+                 aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered popup-main-1" role="document"
+                     style="max-width: 450px;">
+                    <div class="modal-content box-shadow-main paymment-status" style="left:120px;text-align: center; padding: 20px 0px 55px;">
+                        <div class="close-popup" data-dismiss="modal"></div>
+                        <div class="swal2-icon swal2-warning swal2-icon-show">
+                            <div class="swal2-icon-content" style="margin: 0px 24.5px 0px ">!</div>
+                        </div>
+                        <div class="swal2-html-container">
+                            <p >Do you want to close ?</p>
+                        </div>
+                        <div class="swal2-actions">
+                            <button type="submit" id="kt_modal_new_target_submit2" class="swal2-confirm btn fw-bold btn-primary" @click="cancelModalYes">
+                                <span class="indicator-label">Yes</span>
+                            </button>
+                            <button type="reset" id="kt_modal_new_target_cancel2" class="swal2-cancel btn fw-bold btn-active-light-primary" @click="cancelModalNo" style="margin: 0px 8px 0px">No</button>
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            <!-- end modal cancel package lesson -->
 
             <!--BEGIN:modal test -->
 
@@ -724,7 +750,7 @@
                 <div class="modal-dialog " style="width: 1000px">
                     <div class="modal-content" style="width: max-content;margin: 0px -150px 0px">
                         <div class="modal-header pb-0 border-0 justify-content-end">
-                            <div class="btn btn-sm btn-icon btn-active-color-primary" data-bs-dismiss="modal">
+                            <div class="btn btn-sm btn-icon btn-active-color-primary" @click="cancelModalLesson()">
                                 <span class="svg-icon svg-icon-1">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                                          viewBox="0 0 24 24" fill="none">
@@ -783,7 +809,7 @@
                                         <tr>
                                             <td width="25">
                                                 <div class="form-check form-check-sm form-check-custom form-check-solid">
-                                                    <input class="form-check-input" type="checkbox" v-model="allLessonSelected" @change="selectLessonAll()">
+                                                    <input class="form-check-input" type="checkbox" v-model="package.allLessonSelected" @change="selectLessonAll()">
                                                 </div>
                                             </td>
                                             <th class="">Name of lesson</th>
@@ -792,7 +818,8 @@
                                             <th></th>
                                         </tr>
                                         </thead>
-                                        <tbody  v-for="lessonPackagePlan in lessonPackagePlans" v-if="lessonPackagePlan.package_id==package">
+
+                                        <tbody  v-for="lessonPackagePlan in lessonPackagePlans" v-if="lessonPackagePlan.package_id==package.package">
                                         <tr v-for="lesson in entries" >
                                             <td class="">
                                                 <div class="form-check form-check-sm form-check-custom form-check-solid">
@@ -840,15 +867,13 @@
                                 <div class="row">
                                     <div class="form-group col-lg-8">
                                         <label>Plan name <span class="text-danger">*</span></label>
-                                        <input v-if="roleAuth=='IT'" disabled v-model="entry.name" class="form-control" placeholder="Enter the name of plan">
-                                        <input v-if="roleAuth!='IT'" v-model="entry.name" class="form-control" placeholder="Enter the name of plan">
+                                        <input :disabled="permissionFields['plan_name']==false" v-model="entry.name" class="form-control" placeholder="Enter the name of plan">
                                         <error-label :errors="errors.name" for="f_school_name"></error-label>
                                     </div>
                                     <div class="form-group col-lg-4">
                                         <label>Due date </label>
-                                        <Datepicker v-if="roleAuth=='IT'" disabled v-model="entry.due_at" readonly/>
-                                         <Datepicker v-if="roleAuth!='IT'"  v-model="entry.due_at" readonly/>
-                                         <span v-if="entry.due_at!='' && roleAuth!='IT'" class="svg-icon svg-icon-2 svg-icon-lg-1 me-0" @click="dueAtClear">
+                                        <Datepicker :disabled="permissionFields['plan_due_date']==false" v-model="entry.due_at" readonly/>
+                                         <span :disabled="permissionFields['plan_due_date']==false" v-if="entry.due_at!=''" class="svg-icon svg-icon-2 svg-icon-lg-1 me-0" @click="dueAtClear">
                                             <svg type="button" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" style="float: right;margin: -32px 3px 0px;">
                                             <rect opacity="0.5" x="6" y="17.3137" width="16" height="2" rx="1" transform="rotate(-45 6 17.3137)" fill="black" style="fill:red"/>
                                                         <rect x="7.41422" y="6" width="16" height="2" rx="1" transform="rotate(45 7.41422 6)" fill="black" style="fill:red"/>
@@ -860,17 +885,14 @@
                                 <div class="row">
                                     <div class="form-group col-lg-8">
                                         <label>Plan description</label>
-                                        <textarea v-if="roleAuth=='IT'" disabled class="form-control"
-                                                  placeholder="Enter the description" v-model="entry.plan_description">
-                                        </textarea>
-                                        <textarea v-if="roleAuth!='IT'" class="form-control"
+                                        <textarea :disabled="permissionFields['plan_description']==false" class="form-control"
                                                   placeholder="Enter the description" v-model="entry.plan_description">
                                         </textarea>
                                         <error-label :errors="errors.plan_description"></error-label>
                                     </div>
                                      <div class="form-group col-lg-4">
                                         <label> Assign to IT <span class="text-danger">*</span></label>
-                                        <select disabled class="form-control form-select" v-model="idRoleIt">
+                                        <select :disabled="permissionFields['plan_assign_to_IT']==false" class="form-control form-select" v-model="idRoleIt">
                                             <option v-for="role in roleIt" :value="role.id">{{role.full_name}}</option>
                                         </select>
                                         <error-label :errors="errors.idRoleIt"></error-label>
@@ -879,9 +901,8 @@
                                 <div class="row">
                                     <div class="form-group col-lg-4">
                                         <label>Expire date <span class="text-danger">*</span></label>
-                                        <Datepicker v-if="roleAuth=='IT'" v-model="entry.expire_date" disabled  readonly/>
-                                        <Datepicker v-if="roleAuth!='IT'" v-model="entry.expire_date" readonly/>
-                                        <span v-if="entry.expire_date!='' && roleAuth!='IT'" class="svg-icon svg-icon-2 svg-icon-lg-1 me-0" @click="expireDateClear">
+                                        <Datepicker :disabled="permissionFields['plan_expire_date']==false" v-model="entry.expire_date" readonly/>
+                                        <span :disabled="permissionFields['plan_expire_date']==false" v-if="entry.expire_date!=''" class="svg-icon svg-icon-2 svg-icon-lg-1 me-0" @click="expireDateClear">
                                             <svg type="button" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" style="float: right;margin: -32px 3px 0px;">
                                             <rect opacity="0.5" x="6" y="17.3137" width="16" height="2" rx="1" transform="rotate(-45 6 17.3137)" fill="black" style="fill:red"/>
                                                         <rect x="7.41422" y="6" width="16" height="2" rx="1" transform="rotate(45 7.41422 6)" fill="black" style="fill:red"/>
@@ -903,8 +924,11 @@
                                                    data-bs-toggle="tab" role="tab" href="#kt_billing_year"
                                                    @click="tabPackageLesson(packageLesson.package_id)">{{packageLesson.name}}</a>
                                             </li>
-                                            <li v-if="roleAuth=='Super Administrator'">
-                                                <a class="btn btn-primary btn-active-primary btn-sm mt-2 ml-2"
+                                            <li >
+                                                <a v-if="permissionFields['plan_add_package']==false" class="btn btn-primary btn-active-primary btn-sm mt-2 ml-2 isDisabled"
+                                                   data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end" @click="addPackageLessonModal">Add package
+                                                </a>
+                                                <a v-else class="btn btn-primary btn-active-primary btn-sm mt-2 ml-2 "
                                                    data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end" @click="addPackageLessonModal">Add package
                                                 </a>
                                             </li>
@@ -919,7 +943,7 @@
                                     <!--BEGIN: LIST DEVICE PLAN-->
 
                                     <div id="kt_billing_months" class="card-body p-0 tab-pane fade show active" role="tabpanel" aria-labelledby="kt_billing_months">
-                                        <div class="d-flex justify-content-end mb-4" v-if="roleAuth=='Super Administrator'">
+                                        <div class="d-flex justify-content-end mb-4" >
                                             <a v-if="deviceIds!=''" class="btn btn-danger btn-sm mr-3" @click="removeDeviceAll" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">Remove device</a>
                                                 <a href="list.html#" class="btn btn-light btn-active-light-primary btn-sm" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">Actions
                                                     <span class="svg-icon svg-icon-5 m-0">
@@ -930,28 +954,26 @@
                                                 </a>
                                             <div class="menu menu-sub menu-sub-dropdown  menu-rounded menu-gray-600 menu-state-bg-light-primary fw-bold fs-7 py-4" data-kt-menu="true" style="width: 150px">
                                                 <div class="menu-item px-3">
-                                                    <a class="menu-link px-3" @click="addDevice()">Add a device</a>
+                                                    <a v-if="permissionFields['plan_add_device']==false" class="menu-link px-3 isDisabled"  @click="addDevice()">Add a device</a>
+                                                    <a v-else class="menu-link px-3" @click="addDevice()">Add a device</a>
                                                 </div>
 <!--                                                <div class="menu-item px-3">-->
 <!--                                                    <a class="menu-link px-3" @click="importDevice()">Import devices</a>-->
 <!--                                                </div> -->
                                                 <div class="menu-item px-3">
-                                                    <a class="menu-link px-3" data-bs-toggle="modal" data-bs-target="#kt_modal_create_app">Import devices</a>
+                                                    <a v-if="permissionFields['plan_import_device']==false" class="menu-link px-3 isDisabled" @click="importDevice()">Import devices</a>
+                                                    <a class="menu-link px-3" @click="importDevice()" v-else>Import devices</a>
                                                 </div>
 
-                                                <div class="menu-item px-3" v-if="data.length>0">
-                                                    <a class="menu-link px-3" @click="exportDevice">Export device list</a>
+                                                <div class="menu-item px-3">
+                                                    <a class="menu-link px-3 isDisabled" @click="exportDevice" v-if="permissionFields['plan_export_device']==false">Export device list</a>
+                                                    <a class="menu-link px-3 " @click="exportDevice" v-if="data.length>0 && permissionFields['plan_export_device']==true" >Export device list</a>
+                                                    <a class="menu-link px-3 isDisabled" @click="exportDevice" v-if="data.length==0">Export device list</a>
+
                                                 </div>
-                                                <div class="menu-item px-3" v-else>
-                                                    <a class="menu-link px-3 isDisabled" @click="exportDevice" >Export device list</a>
-                                                </div>
+
                                             </div>
                                         </div>
-                                        <div class="d-flex justify-content-end mb-4" v-if="roleAuth=='IT'">
-                                            <a  class="btn btn-primary btn-sm" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end" @click="exportDevice">Export device
-                                            </a>
-                                        </div>
-
                                         <!-- BEGIN : TABLE LIST DEVICE-->
 
                                     <div class="mh-650px scroll-y me-n7 pe-7">
@@ -960,7 +982,7 @@
                                                 <tr>
                                                     <td width="25">
                                                         <div class="form-check form-check-sm form-check-custom form-check-solid">
-                                                            <input class="form-check-input" type="checkbox"  v-model="allDeviceSelected" @change="selectDeviceAll()">
+                                                            <input class="form-check-input" type="checkbox" :disabled="permissionFields['plan_delete_device']==false" v-model="allDeviceSelected" @change="selectDeviceAll()">
                                                         </div>
                                                     </td>
                                                     <td>No.</td>
@@ -974,7 +996,7 @@
                                             <tr v-for="(device,index) in data" >
                                                 <td class="">
                                                     <div class="form-check form-check-sm form-check-custom form-check-solid">
-                                                        <input class="form-check-input" type="checkbox" v-model="deviceIds" :value="device.id" @change="updateDeviceCheckAll">
+                                                        <input class="form-check-input" type="checkbox" :disabled="permissionFields['plan_delete_device']==false"  v-model="deviceIds" :value="device.id" @change="updateDeviceCheckAll">
                                                     </div>
                                                 </td>
                                                 <td>{{index+1}}</td>
@@ -994,7 +1016,8 @@
                                                             <a  class="menu-link px-3" @click="modalConfirmationCode(device)">Get confirmation code</a>
                                                         </div>
                                                         <div class="menu-item px-3">
-                                                            <a v-if="roleAuth=='Super Administrator'" class="menu-link text-danger px-3" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end" @click="removeDeviceModal(device.id)">Delete</a>
+                                                            <a v-if="permissionFields['plan_delete_device']==false" class="menu-link text-danger px-3 isDisabled" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end" @click="removeDeviceModal(device.id)">Delete</a>
+                                                            <a v-else class="menu-link text-danger px-3 " data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end" @click="removeDeviceModal(device.id)">Delete</a>
                                                         </div>
                                                     </div>
                                                 </td>
@@ -1011,9 +1034,11 @@
 
                                         <div id="kt_billing_year" class="card-body p-0 tab-pane fade"  role="tabpanel" aria-labelledby="kt_billing_year" >
                                             <div class="d-flex justify-content-end mb-4" >
-                                                <a v-if="viewLessonIds!='' && dataZipLesson.status=='waitting' && roleAuth=='Super Administrator'" class="btn btn-danger btn-sm mr-3" @click="deleteAllLesson" >Remove lesson</a>
+                                                <a v-if="dataTableLesson.checkRemoveLesson==1 && dataZipLesson.status=='waitting' && permissionFields['plan_remove_lesson']==true" class="btn btn-danger btn-sm mr-3" @click="deleteAllLesson" >Remove lesson</a>
+                                                <a v-if="dataTableLesson.checkRemoveLesson==1 && dataZipLesson.status=='waitting' && permissionFields['plan_remove_lesson']==false" class="btn btn-danger btn-sm mr-3 isDisabled" @click="deleteAllLesson" >Remove lesson</a>
                                              <a  v-if="dataZipLesson.status=='inprogress'"  class="mt-2 mr-5" style="color: rgb(230 180 0)"> Lesson list is packaging...</a>
-                                                <a  v-if="  dataZipLesson.status=='done'" :href="dataZipLesson.url" class="btn btn-primary btn-sm mr-3 "> Download package</a>
+                                                <a  v-if="  dataZipLesson.status=='done' && permissionFields['plan_download_package']==true" :href="dataZipLesson.url" class="btn btn-primary btn-sm mr-3 "> Download package</a>
+                                                <a  v-if="  dataZipLesson.status=='done' && permissionFields['plan_download_package']==false" :href="dataZipLesson.url" class="btn btn-primary btn-sm mr-3 isDisabled"> Download package</a>
                                                 <a v-if="dataZipLesson.status=='inprogress'" class="btn btn-light btn-active-light-primary btn-sm isDisabled" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end" >Actions
                                                     <span class="svg-icon svg-icon-5 m-0">
 															<svg xmlns="http://www.w3.org/2000/svg" width="24"
@@ -1031,18 +1056,23 @@
                                                     </span>
                                                 </a>
                                                 <div class="menu menu-sub menu-sub-dropdown  menu-rounded menu-gray-600 menu-state-bg-light-primary fw-bold fs-7 py-4" data-kt-menu="true" >
-                                                    <div class="menu-item px-3"  v-if="roleAuth=='Super Administrator' && dataZipLesson.status=='waitting'">
-                                                        <a class="menu-link px-3 " @click="addLessonPackage(tabLessonContent)" >Add lesson</a>
+                                                    <div class="menu-item px-3" >
+                                                        <a class="menu-link px-3 "  v-if="permissionFields['plan_add_lesson']==true && dataZipLesson.status=='waitting'" @click="addLessonPackage(tabLessonContent)" >Add lesson</a>
+                                                        <a class="menu-link px-3 isDisabled"  v-if="permissionFields['plan_add_lesson']==false && dataZipLesson.status=='waitting'" @click="addLessonPackage(tabLessonContent)" >Add lesson</a>
                                                     </div>
                                                     <div class="menu-item px-3" v-if="dataZipLesson.status=='waitting'">
-                                                        <a v-if="checkZipPackage[0].lessonIds.length>0" class="menu-link px-3" @click="downloadLesson(tabLessonContent)">Zip package lesson</a>
-                                                        <a v-else class="menu-link px-3 isDisabled" @click="downloadLesson(tabLessonContent)" >Zip package lesson</a>
+                                                        <a v-if="checkZipPackage[0].lessonIds.length>0" class="menu-link px-3" @click="downloadLesson(tabLessonContent)">Zip lesson package</a>
+                                                        <a v-else class="menu-link px-3 isDisabled" @click="downloadLesson(tabLessonContent)" >Zip lesson package</a>
                                                     </div>
-                                                    <div class="menu-item px-3"  v-if="roleAuth=='Super Administrator'">
-                                                        <a class="menu-link px-3 " @click="renameLessonPackage(tabLessonContent)" >Rename lesson package</a>
+                                                    <div class="menu-item px-3" >
+                                                        <a class="menu-link px-3 " v-if="permissionFields['plan_rename_lesson_package']==true" @click="renameLessonPackage(tabLessonContent)" >Rename lesson package</a>
+                                                        <a class="menu-link px-3 isDisabled" v-else @click="renameLessonPackage(tabLessonContent)" >Rename lesson package</a>
                                                     </div>
-                                                    <div class="menu-item px-3" v-if="roleAuth=='Super Administrator' && dataZipLesson.status=='done' ||  roleAuth=='Super Administrator' &&dataZipLesson.status=='waitting'">
-                                                        <a class="menu-link px-3 text-danger "  @click="deletePackageLessonModal(tabLessonContent)" >Delete package lesson</a>
+                                                    <div class="menu-item px-3" v-if="permissionFields['plan_delete_lesson_package']==true && dataZipLesson.status=='done' ||  permissionFields['plan_delete_lesson_package']==true &&dataZipLesson.status=='waitting'">
+                                                        <a class="menu-link px-3 text-danger "  @click="deletePackageLessonModal(tabLessonContent)" >Delete lesson package</a>
+                                                    </div>
+                                                    <div class="menu-item px-3" v-if="permissionFields['plan_delete_lesson_package']==false && dataZipLesson.status=='done' ||  permissionFields['plan_delete_lesson_package']==false &&dataZipLesson.status=='waitting'">
+                                                        <a class="menu-link px-3 text-danger isDisabled"  @click="deletePackageLessonModal(tabLessonContent)" >Delete lesson package</a>
                                                     </div>
                                                 </div>
 
@@ -1053,8 +1083,8 @@
                                                         <tr >
                                                             <td width="25">
                                                                 <div class="form-check form-check-sm form-check-custom form-check-solid">
-                                                                    <input v-if="dataZipLesson.status=='waitting'" class="form-check-input" type="checkbox" v-model="allViewLessonSelected" @change="selectViewLessonAll(tabLessonContent)" >
-                                                                    <input v-if="dataZipLesson.status!='waitting'" disabled class="form-check-input" type="checkbox" v-model="allViewLessonSelected" @change="selectViewLessonAll(tabLessonContent)" >
+                                                                    <input v-if="dataZipLesson.status=='waitting'" :disabled="permissionFields['plan_remove_lesson']==false" class="form-check-input" type="checkbox" v-model="allViewLessonSelected.allViewLessonSelected" @change="selectViewLessonAll(tabLessonContent)" >
+                                                                    <input v-if="dataZipLesson.status!='waitting'" disabled class="form-check-input" type="checkbox" v-model="allViewLessonSelected.allViewLessonSelected" @change="selectViewLessonAll(tabLessonContent)" >
                                                                 </div>
                                                             </td>
                                                             <td>No.</td>
@@ -1064,13 +1094,12 @@
                                                             <th class="">Actions</th>
                                                         </tr>
                                                     </thead>
-                                                    <tbody v-for="lessonPackagePlan in lessonPackagePlans" v-if="lessonPackagePlan.package_id==tabLessonContent">
+                                                    <tbody >
                                                         <tr v-for="(lesson,index) in dataAddLessonPlan" >
                                                             <td class="">
                                                                 <div class="form-check form-check-sm form-check-custom form-check-solid">
-                                                                    <input v-if="dataZipLesson.status=='waitting'" class="form-check-input" type="checkbox" v-model="viewLessonIds" :value="lesson.id" @change="updateViewLessonCheckAll()">
-                                                                    <input v-if="dataZipLesson.status!='waitting'" disabled class="form-check-input" type="checkbox" v-model="viewLessonIds" :value="lesson.id" @change="updateViewLessonCheckAll()">
-
+                                                                    <input v-if="dataZipLesson.status=='waitting'" :disabled="permissionFields['plan_remove_lesson']==false" class="form-check-input" type="checkbox" v-model="dataTableLesson.viewLesson" :value="lesson.id" @change="updateViewLessonCheckAll()">
+                                                                    <input v-if="dataZipLesson.status!='waitting'" disabled class="form-check-input" type="checkbox" v-model="dataTableLesson.viewLesson" :value="lesson.id" @change="updateViewLessonCheckAll()">
                                                                 </div>
                                                             </td>
                                                             <td>{{index+1}}</td>
@@ -1078,7 +1107,9 @@
                                                             <td>{{lesson.grade}}</td>
                                                             <td>{{lesson.subject}}</td>
                                                             <td class="">
-                                                                <a v-if="dataZipLesson.status=='waitting'" class="btn btn-active-danger btn-light-danger btn-sm" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end" @click="deleteLessonModal(lesson.id)">Delete</a>
+<!--                                                                <a v-if="dataZipLesson.status=='waitting' && permissionFields['plan_remove_lesson']==true"  class="btn btn-active-danger btn-light-danger btn-sm" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end" @click="deleteLessonModal(lesson.id)">Delete</a>-->
+<!--                                                                <a v-if="dataZipLesson.status=='waitting' && permissionFields['plan_remove_lesson']==false"  class="btn btn-active-danger btn-light-danger btn-sm isDisabled" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end" @click="deleteLessonModal(lesson.id)">Delete</a>-->
+                                                                <button v-if="dataZipLesson.status=='waitting'" :disabled="permissionFields['plan_remove_lesson']==false"  class="btn btn-active-danger btn-light-danger btn-sm"  @click="deleteLessonModal(lesson.id)">Delete</button>
                                                             </td>
                                                         </tr>
                                                     </tbody>
@@ -1560,6 +1591,7 @@
             };
 
             return {
+                permissionFields:$json.permissionFields || [],
                 deviceGetCode:[],
                 token:'',
                 deletePack:'',
@@ -1579,7 +1611,7 @@
                 lessons: [],
                 viewPackage: this.viewPackage,
                 packagePlan: $json.packagePlan,
-                package: '',
+                package: [],
                 idListDevice: [],
                 nameSchool: $json.nameSchool || [],
                 schoolPlan: $json.schoolPlan || [],
@@ -1587,10 +1619,10 @@
                 schools: $json.schools || [],
                 exportDevicePlan: '',
                 lessonPackagePlans: $json.lessonPackagePlans,
+                dataTableLesson:[],
                 data: $json.data || [],
-                allLessonSelected: false,
                 allDeviceSelected:false,
-                allViewLessonSelected:false,
+                allViewLessonSelected:[],
                 filter: filter,
                 entries: [],
                 doNotImport:0,
@@ -1606,7 +1638,7 @@
                 roleIt: $json.roleIt || [],
                 breadcrumbs: [
                     {
-                        title: 'Manage plans',
+                        title: 'Plan management',
                         url: '/xadmin/plans/index'
                     },
                     {
@@ -1638,11 +1670,26 @@
         },
 
         methods: {
+            cancelModalLesson()
+            {
+                $('#kt_modal_invite').modal('hide');
+
+                $('#cancelModal').modal('show');
+            },
+            cancelModalYes()
+            {
+                $('#kt_modal_invite').modal('hide');
+                $('#cancelModal').modal('hide');
+            },
+            cancelModalNo()
+            {
+                $('#cancelModal').modal('hide');
+                $('#kt_modal_invite').modal('show');
+            },
             modalConfirmationCode:function(device=[])
             {
                 $('#editdeviceConfirm').modal('show');
                 this.deviceGetCode=device;
-                console.log(this.deviceGetCode);
 
             },
             deviceExpireDateClear()
@@ -1694,23 +1741,43 @@
                 self.checkZipPackage=[];
                 let dataPackage=self.lessonPackagePlans.filter(item =>item.package_id==tabPackage);
                self.checkZipPackage.push(dataPackage[0]);
-                for(const e of self.lessonPackagePlans)
-                {
-                    if(e.package_id==tabPackage)
-                    {
-                          self.dataAddLessonPlan=[];
-                        for(const e1 of e.lessonIds )
-                        {
-                          let data= self.entries.filter(item =>item.id==e1) ;
-                          for(const e2 of data)
-                        {
-                             self.dataAddLessonPlan.push(e2);
-                        }
-                        }
-                    }
+
+               // code select lesson
+                this.allViewLessonSelected={
+                    'allViewLessonSelected':false,
+                    'tabPackage':tabPackage
                 }
 
+               setTimeout(function(){
+                   $.get('/xadmin/plans/dataPackage',function(res)
+                   {
+                    self.dataTableLesson=res.data.filter(item => item.id==tabPackage);
+                       let viewLesson=[];
+                       let checkRemoveLesson=0;
+                       self.dataTableLesson=self.dataTableLesson.map(abc => {
 
+                       return {
+                           'id':abc.id,
+                           'name':abc.name,
+                           'plan_id':abc.plan_id,
+                           'lesson_ids':abc.lesson_ids,
+                           'viewLesson':viewLesson,
+                           'checkRemoveLesson':checkRemoveLesson,
+                       }
+                    })
+                       self.dataTableLesson= self.dataTableLesson[0];
+                    self.dataAddLessonPlan=[];
+
+                    self.dataTableLesson.lesson_ids.forEach(function(e)
+                    {
+                        let dataLesson=self.entries.filter(item => item.id==e)
+                        dataLesson.forEach(function(e2)
+                        {
+                            self.dataAddLessonPlan.push(e2);
+                        })
+                    })
+                   })
+               },0)
                setTimeout(function () {
                     $.get('/xadmin/plans/dataZipLessonPlan',function (res) {
                         let array=res.data.filter(item => item.plan_id==self.entry.id);
@@ -1728,68 +1795,105 @@
             },
             addLessonPackage: function (tabLessonContent = '') {
                 $('#kt_modal_invite').modal('show');
-                this.package = tabLessonContent;
+                this.package=
+                    {
+                        allLessonSelected:false,
+                        package:tabLessonContent
+                    };
+
             },
         // xoa lesson theo từng id
             async deleteLesson(deleteLessons) {
                 let self = this;
-                for (const e of self.lessonPackagePlans) {
-                    if (e.package_id == self.tabLessonContent) {
-                        let array = e.lessonIds.filter(item => item !== deleteLessons);
-                        e.lessonIds = array;
-                        let packageLesson = e.lessonIds
-                        const res = await $post('/xadmin/plans/deleteLesson', {
-                            packageLesson,
-                            entry: self.entry,
-                            viewPackage: self.tabLessonContent
-                        });
-                        if (res.code) {
-                            toastr.error(res.message);
-                        } else {
-                            toastr.success(res.message);
-                            self.dataAddLessonPlan= self.dataAddLessonPlan.filter(item => item.id !==deleteLessons);
-                            $('#deleteLesson').modal('hide');
-                        }
-                    }
+               let packageLesson= self.dataTableLesson.lesson_ids.filter(item => item !==deleteLessons)
+
+                const res = await $post('/xadmin/plans/deleteLesson', {
+                    packageLesson,
+                    entry: self.entry,
+                    viewPackage: self.tabLessonContent
+                });
+
+                if (res.code) {
+                    toastr.error(res.message);
+                } else {
+                    toastr.success(res.message);
+                    // code return lai o checkbox trong add lessonPackage khi xoa 1 lesson o tabLesson
+
+                    let datalessonPackagePlan=self.lessonPackagePlans.filter(item => item.package_id==self.tabLessonContent);
+                    datalessonPackagePlan=datalessonPackagePlan[0];
+                    let concat=(packageLesson.concat(datalessonPackagePlan.lessonIds));
+                    let dataUpdate=concat.filter((a,index)=> concat.indexOf(a)==concat.lastIndexOf(a));
+                    dataUpdate=dataUpdate[0];
+                    datalessonPackagePlan.lessonIds=datalessonPackagePlan.lessonIds.filter(item => item !=dataUpdate);
+
+                    // end
+
+                    self.dataAddLessonPlan= self.dataAddLessonPlan.filter(item => item.id !==deleteLessons);
+                    $('#deleteLesson').modal('hide');
+                    $.get('/xadmin/plans/dataPackage',function(res)
+                    {
+                        self.dataTableLesson=res.data.filter(item => item.id==self.tabLessonContent);
+                        let viewLesson=[];
+                        let checkRemoveLesson=0;
+                        self.dataTableLesson=self.dataTableLesson.map(abc => {
+
+                            return {
+                                'id':abc.id,
+                                'name':abc.name,
+                                'plan_id':abc.plan_id,
+                                'lesson_ids':abc.lesson_ids,
+                                'viewLesson':viewLesson,
+                                'checkRemoveLesson':checkRemoveLesson,
+                            }
+                        })
+                        self.dataTableLesson= self.dataTableLesson[0];
+                    })
                 }
+
             },
             // dung select để xóa lesson view
             async deleteAllLesson()
             {
                         let self=this;
-                        self.abc=[];
+
                         // lấy Id của lesson cập nhật lại vào bảng package lesson
-                        let array=self.lessonPackagePlans.filter(item => item.package_id==self.tabLessonContent);
-                                self.viewLessonIds.forEach(function (e1) {
+               let concatArr=self.dataTableLesson.lesson_ids.concat(self.dataTableLesson.viewLesson)
+                let dupChars = concatArr.filter((c, index) => concatArr.indexOf(c) == concatArr.lastIndexOf(c));
 
-                                array[0].lessonIds= array[0].lessonIds.filter(item => item!==e1);
-                                })
-                                self.abc=array[0].lessonIds
 
-                          const res = await $post('/xadmin/plans/removeAllLesson', {
-                              ids:self.abc,
+               const res = await $post('/xadmin/plans/removeAllLesson', {
+                              ids:dupChars,
                               entry: self.entry,
-                              viewPackage: self.tabLessonContent
+                              viewPackage:self.dataTableLesson.id
                           });
+
+
                           if (res.code) {
                               toastr.error(res.message);
                           } else {
                               toastr.success(res.message);
-                              self.viewLessonIds=[];
-                              self.allViewLessonSelected=false;
+
+                              // code update checkbox trong modal addPackageLesson
+                                let distinctive = concatArr.filter((c, index) => concatArr.indexOf(c) != concatArr.lastIndexOf(c));
+                                distinctive=[...new Set(distinctive)];
+                                let datalessonPackagePlan=self.lessonPackagePlans.filter(item => item.package_id==self.tabLessonContent);
+                                datalessonPackagePlan=datalessonPackagePlan[0];
+                                let concat=datalessonPackagePlan.lessonIds.concat(distinctive);
+                                datalessonPackagePlan.lessonIds=concat.filter((a,index)=> concat.indexOf(a)==concat.lastIndexOf(a));
+                              //end
+
+
+                              self.dataTableLesson.viewLesson=[];
+                              self.allViewLessonSelected.allViewLessonSelected=false;
 
                                     //view lesson theo packagelesson khi delete all
-                                  self.lessonPackagePlans.forEach(function (e) {
-
-                                      if(e.package_id==self.tabLessonContent)
-                                      {
-                                          if(e.lessonIds.length==0)
+                                          if(self.dataTableLesson.viewLesson.length==self.dataTableLesson.lesson_ids.length)
                                           {
                                               self.dataAddLessonPlan=[];
                                           }
                                           else {
                                       let dataLesson=[];
-                                      self.abc.forEach(function(e1)
+                                      dupChars.forEach(function(e1)
                                       {
                                           self.dataAddLessonPlan.forEach(function(e2)
                                           {
@@ -1800,26 +1904,28 @@
                                           })
                                       })
                                        self.dataAddLessonPlan=dataLesson;
-                                          }
+                                        }
+                                          self.dataTableLesson.checkRemoveLesson=0;
+                              $.get('/xadmin/plans/dataPackage',function(res)
+                              {
+                                  self.dataTableLesson=res.data.filter(item => item.id==self.tabLessonContent);
+                                  let viewLesson=[];
+                                  let checkRemoveLesson=0;
+                                  self.dataTableLesson=self.dataTableLesson.map(abc => {
+
+                                      return {
+                                          'id':abc.id,
+                                          'name':abc.name,
+                                          'plan_id':abc.plan_id,
+                                          'lesson_ids':abc.lesson_ids,
+                                          'viewLesson':viewLesson,
+                                          'checkRemoveLesson':checkRemoveLesson,
                                       }
                                   })
+                                  self.dataTableLesson= self.dataTableLesson[0];
 
-                                //call lại bảng PackageLesson
-                              setTimeout(function ()
-                              {
-                                  $.get('/xadmin/plans/dataPackage',function (res) {
+                              })
 
-                                      let dataPackage= res.data.filter(item => item.plan_id==self.entry.id)
-                                      let data= dataPackage.map(res =>{
-                                          return{
-                                              'package_id':res.id,
-                                              'plan_id':res.plan_id,
-                                              'lessonIds':res.lesson_ids
-                                          }
-                                      })
-                                    return self.lessonPackagePlans=data;
-                                  })
-                              },0);
 
                           }
             },
@@ -2030,12 +2136,18 @@
             },
 
             selectLessonAll() {
-                if (this.allLessonSelected)
+                if (this.package.allLessonSelected )
                 {
                     const selected=this.entries.map((u)=>u.id);
                     let self=this;
                     self.lessonPackagePlans.forEach(function (e){
-                        e.lessonIds=selected;
+
+                        if(self.package.package==e.package_id)
+                        {
+
+                            e.lessonIds=e.lessonIds.concat(selected);
+
+                        }
                     })
                 }
                 else {
@@ -2053,9 +2165,9 @@
                 let self = this;
                 self.lessonPackagePlans.forEach(function (e) {
                     if (e.lessonIds.length == self.entries.length) {
-                        self.allLessonSelected = true;
+                        self.package.allLessonSelected = true;
                     } else {
-                        self.allLessonSelected = false;
+                        self.package.allLessonSelected = false;
                     }
 
                 })
@@ -2070,33 +2182,50 @@
             selectViewLessonAll()
             {
 
-                if (this.allViewLessonSelected ) {
+                if (this.allViewLessonSelected.allViewLessonSelected ) {
                     const selected = this.dataAddLessonPlan.map((u) => u.id);
-                    this.viewLessonIds = selected;
+                    let self=this;
+                   self.dataTableLesson.checkRemoveLesson=1;
+                    if(self.allViewLessonSelected.tabPackage== self.dataTableLesson.id)
+                    {
+                        self.dataTableLesson.viewLesson=selected;
+                    }
                 }
 
                 else {
                     let self = this;
-                    self.viewLessonIds=[];
-                    self.lessons = [];
+                    self.dataTableLesson.checkRemoveLesson=0;
+                    if(self.allViewLessonSelected.tabPackage==self.dataTableLesson.id)
+                    {
+                        self.dataTableLesson.viewLesson=[];
+                    }
+
                 }
             },
             updateViewLessonCheckAll()
             {
-                if (this.viewLessonIds.length === this.dataAddLessonPlan.length ) {
-                    this.allViewLessonSelected = true;
-                } else {
-                    this.allViewLessonSelected = false;
+                let self = this;
+                if(self.dataTableLesson.viewLesson.length>0)
+                {
+                   self.dataTableLesson.checkRemoveLesson=1;
                 }
-                this.lessons=[];
-                let self=this;
-                self.lessonPackagePlans.forEach(function (e3) {
-                    self.entries.forEach(function (e4) {
-                        if (e4.id == e3) {
-                            self.lessons.push(e3);
-                        }
-                    })
-                })
+                else {
+                    self.dataTableLesson.checkRemoveLesson=0;
+                }
+                if (self.dataTableLesson.viewLesson.length=== self.dataAddLessonPlan.length ) {
+                    self.allViewLessonSelected.allViewLessonSelected = true;
+
+                } else {
+                    self.allViewLessonSelected.allViewLessonSelected = false;
+                }
+                // self.lessons=[];
+                // self.lessonPackagePlans.forEach(function (e3) {
+                //     self.entries.forEach(function (e4) {
+                //         if (e4.id == e3) {
+                //             self.lessons.push(e3);
+                //         }
+                //     })
+                // })
 
             },
 
@@ -2214,32 +2343,38 @@
                 } else {
                     this.errors = {};
                     toastr.success(res.message);
-                    this.allLessonSelected=false;
+                    this.package.allLessonSelected=false;
                     $('#kt_modal_invite').modal('hide');
                     let self =this;
 
                     setTimeout(function ()
                     {
                         $.get('/xadmin/plans/dataPackage',function (res) {
-                            let dataPackage= res.data.filter(item => item.plan_id==self.entry.id)
-                            // return self.lessonPackagePlans=dataPackage;
-                            let data= dataPackage.map(res =>{
-                                return{
-                                    'package_id':res.id,
-                                    'plan_id':res.plan_id,
-                                    'lessonIds':res.lesson_ids
+                            self.dataTableLesson= res.data.filter(item => item.id==self.tabLessonContent);
+
+                            let viewLesson=[];
+                            let checkRemoveLesson=0;
+                            self.dataTableLesson=self.dataTableLesson.map(abc => {
+
+                                return {
+                                    'id':abc.id,
+                                    'name':abc.name,
+                                    'plan_id':abc.plan_id,
+                                    'lesson_ids':abc.lesson_ids,
+                                    'viewLesson':viewLesson,
+                                    'checkRemoveLesson':checkRemoveLesson,
                                 }
                             })
-                            self.lessonPackagePlans.forEach(function (e) {
-                                if(e.package_id==self.tabLessonContent)
-                                {
-                                    self.dataAddLessonPlan=[];
-                                   e.lessonIds.forEach(function (e1) {
-                                      let array=self.entries.filter(item => item.id==e1)
-                                      self.dataAddLessonPlan.push(array[0]);
+                            self.dataTableLesson= self.dataTableLesson[0];
+                            self.dataAddLessonPlan=[];
 
-                                   })
-                                }
+                            self.dataTableLesson.lesson_ids.forEach(function(e)
+                            {
+                                let dataLesson=self.entries.filter(item => item.id==e)
+                                dataLesson.forEach(function(e2)
+                                {
+                                    self.dataAddLessonPlan.push(e2);
+                                })
                             })
                         })
                     },1000);
@@ -2358,7 +2493,7 @@
                 this.isLoading = true;
                 const res = await $post('/xadmin/plans/downloadLesson', {
                     entry: this.entry,
-                    lessonPackagePlans: this.lessonPackagePlans,
+                    dataTableLesson: this.dataTableLesson,
                     package: tabLessonContent,
                     idRoleIt: this.idRoleIt
                 }, false);

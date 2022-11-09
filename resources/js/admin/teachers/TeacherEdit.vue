@@ -49,7 +49,7 @@
                      <div  class="d-flex justify-content-end"
                     data-kt-customer-table-toolbar="base">
                         <button class="btn btn-danger button-create " @click="removeTeacher()" style="margin: 15px 25px 0px ">
-                            <i class="bi bi-person-dash mr-1"></i>Delete user
+                            <i class="bi bi-person-dash mr-1"></i>Delete teacher
                         </button>
                     </div>
                     <div class="card-body d-flex flex-column">
@@ -59,48 +59,48 @@
                                 <div class="row">
                                     <div class="form-group  col-sm-4">
                                         <label>Username</label>
-                                        <input class="form-control" v-model="entry.username" disabled>
+                                        <input class="form-control" v-model="entry.username" :disabled="permissionFields['teacher_username']==false">
 
                                         <error-label for="f_category_id" :errors="errors.username"></error-label>
                                     </div>
                                     <div class="form-group  col-sm-4">
                                         <label>Teacher name </label>
-                                        <input class="form-control" v-model="entry.full_name">
+                                        <input class="form-control" v-model="entry.full_name" >
 
                                         <error-label for="f_category_id" :errors="errors.full_name"></error-label>
                                     </div>
                                     <div class="form-group  col-sm-4">
                                         <label>Email </label>
-                                        <input class="form-control" v-model="entry.email">
+                                        <input class="form-control" v-model="entry.email" :disabled="permissionFields['teacher_email']==false">
 
                                         <error-label for="f_category_id" :errors="errors.email"></error-label>
                                     </div>
                                      <div class="form-group  col-sm-4">
                                         <label>Phone number </label>
-                                        <input class="form-control noString" v-model="entry.phone">
+                                        <input class="form-control noString" v-model="entry.phone" :disabled="permissionFields['teacher_phone']==false">
                                         <error-label for="f_category_id" :errors="errors.phone"></error-label>
                                     </div>
                                      <div class="form-group  col-sm-4">
                                         <label>Class</label>
-                                        <input class="form-control" v-model="entry.class">
+                                        <input class="form-control" v-model="entry.class" :disabled="permissionFields['teacher_class']==false">
                                         <error-label for="f_category_id" :errors="errors.class"></error-label>
                                     </div>
                                     <div class="form-group  col-sm-4">
                                         <label>School</label>
-                                        <input class="form-control" v-model="schools.label" disabled>
+                                        <input class="form-control" v-model="schools.label" :disabled="permissionFields['teacher_school']==false" >
                                         <error-label for="f_category_id" :errors="errors.label"></error-label>
                                     </div>
                                     <div class="row">
                                     <div class="form-group col-sm-8">
                                         <label>Teacher description</label>
-                                        <textarea v-model="entry.description" rows="5" class="form-control"
+                                        <textarea v-model="entry.description" rows="5" class="form-control" :disabled="permissionFields['teacher_description']==false"
                                                   placeholder="Type the description here (200 characters)"></textarea>
                                         <error-label for="f_grade" :errors="errors.description"></error-label>
 
                                     </div>
                                 </div>
                                         <div class="form-group">
-                                    <input id="state" type="checkbox" v-model="entry.state">
+                                    <input id="state" type="checkbox" v-model="entry.state" >
                                     <label for="state" class="pl-2">Active</label>
                                     <error-label for="f_grade" :errors="errors.state"></error-label>
                                     </div>
@@ -159,25 +159,16 @@
                             </tr>
                             </thead>
                             <tbody>
-                            <tr v-for="device in user_device" v-if="device.user_id===entry.id && device.status===2  ">
+                            <tr v-for="device in user_device" v-if="device.user_id===entry.id">
                                 <td v-text="device.device_name"></td>
                                 <td v-text="device.device_name"></td>
                                 <td v-text="d(device.created_at)"></td>
+                                <td style="color: #f1c40f" v-if="device.delete_request!=null" v-text="device.delete_request"></td>
+                                <td v-else></td>
                                 <td>
                                     <a @click="modalDevice(device)" href="javascript:;" class="btn-trash deleted"><i
                                         class="fa fa-trash mr-1 deleted"></i></a>
                                 </td>
-                            </tr>
-                            <tr v-for="device in user_device" v-if=" device.user_id===entry.id && device.status===1 ">
-                                <td v-text="device.device_name"></td>
-                                <td v-text="device.device_name" ></td>
-                                <td v-text="d(device.created_at)"></td>
-                                <td style="color: #f1c40f">Deleting request</td>
-                                <td>
-                                    <a @click="modalDevice(device)" href="javascript:;" class="btn-trash deleted"><i
-                                        class="fa fa-trash mr-1 deleted"></i></a>
-                                </td>
-
                             </tr>
                             </tbody>
                         </table>
@@ -192,10 +183,10 @@
                             </thead>
                             <tbody>
                             <tr v-for="device in user_device" v-if="device.user_id==entry.id">
-                                <td v-if="device.status==2" v-text="d(device.created_at)"></td>
-                                <td v-if="device.status==1" v-text="d(device.updated_at)"></td>
-                                <td v-if="device.status==2" >Register device</td>
-                                <td v-if="device.status==1" >Remove device</td>
+                                <td v-if="device.delete_request!=null"  v-text="d(device.updated_at)"></td>
+                                <td v-else v-text="d(device.created_at)"></td>
+                                <td v-if="device.delete_request!=null"  >Remove device</td>
+                                <td v-else >Register device</td>
                                 <td v-text="device.device_name"></td>
                             </tr>
                             </tbody>
@@ -304,6 +295,7 @@
                 user_device: $json.user_device || [],
                 allocationContentId:$json.allocationContentId,
                 schools:$json.schools || [],
+                permissionFields:$json.permissionFields || [],
                 courses:courseTreeselect,
                 isLoading: false,
                 errors: {}
