@@ -86,4 +86,9 @@
         'action' => 'PermissionDetailsController',
         'name' => 'permission_details',
     ],
+     [
+         'path' => '/dashboard/{action}',
+         'action' => 'DashboardController',
+         'name' => 'xlogger',
+     ],
 ];

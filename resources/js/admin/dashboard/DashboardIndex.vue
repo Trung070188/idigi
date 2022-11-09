@@ -210,7 +210,7 @@
                                     <td v-text="entry.ip"></td>
                                     <td>{{d(entry.time)}}</td>
                                     <td class="">
-                                        <button class="btn btn-active-danger btn-light-danger btn-sm" >Delete</button>
+                                        <button class="btn btn-active-danger btn-light-danger btn-sm" @click="remove(entry)">Delete</button>
                                     </td>
                                 </tr>
                                 </tbody>
@@ -230,7 +230,7 @@
 <script>
     import ActionBar from "../includes/ActionBar";
     import $router from "../../lib/SimpleRouter";
-    import {$get} from "../../utils";
+    import {$get, $post} from "../../utils";
     export default {
         name: "DashboardIndex",
         components: {ActionBar},
@@ -255,15 +255,26 @@
         },
         methods:
         {
+
             async load() {
             let query = $router.getQuery();
             const res = await $get('/xadmin/dashboard/data', query);
             this.entries = res.data;
-            console.log(this.entries);
-
-
-
         },
+
+            async remove(entry)
+            {
+                const res= await $post('/xadmin/dashboard/remove',{
+                    id:entry.id
+                })
+                if (res.code) {
+                    toastr.error(res.message);
+                } else {
+                    toastr.success(res.message);
+                    let self=this;
+                    self.entries=  self.entries.filter(item => item.id !=entry.id);
+                }
+            }
         },
     }
 </script>

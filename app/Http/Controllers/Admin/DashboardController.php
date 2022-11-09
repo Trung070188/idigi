@@ -103,6 +103,7 @@ class DashboardController extends AdminBaseController
                 if($dataXlogger['code']==0)
                 {
                     $xlogger[]=[
+                        'id'=>$entry->id,
                         'username'=>$entry['username'],
                         'object'=>@$entry['object'],
                         'status'=>@$entry['status'],
@@ -118,6 +119,15 @@ class DashboardController extends AdminBaseController
             'code' => 0,
             'data' =>$xlogger,
 
+        ];
+    }
+    public function remove(Request $req)
+    {
+        $id=$req->id;
+        Xlogger::where('id',$id)->delete();
+        return [
+          'code'=>0,
+          'message'=>'Đã xóa'
         ];
     }
 
