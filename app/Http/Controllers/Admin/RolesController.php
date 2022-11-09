@@ -113,12 +113,12 @@ class RolesController extends AdminBaseController
         RoleHasPermission::where('role_id', $id)->delete();
         UserRole::where('role_id', $id)->delete();
         $entry->delete();
-
         return [
             'code' => 0,
             'message' => 'Đã xóa',
-            'actionName'=>$entry->role_name,
-            'status'=>'deleted role'
+            'object'=>$entry->role_name,
+            'status'=>'deleted role',
+            'role'=>$this->roleName()
         ];
     }
 
@@ -126,6 +126,15 @@ class RolesController extends AdminBaseController
      * @uri  /xadmin/roles/save
      * @return  array
      */
+    public function roleName()
+    {
+        $auth=Auth::user();
+        foreach ($auth->roles as $role)
+        {
+            $roleName=$role->role_name;
+        }
+        return $roleName;
+    }
     public function save(Request $req)
     {
         if (!$req->isMethod('POST')) {
@@ -177,8 +186,9 @@ class RolesController extends AdminBaseController
                 'code' => 0,
                 'message' => 'Đã cập nhật',
                 'id' => $entry->id,
-                'status'=>'edited role',
-                'actionName'=>$entry->role_name,
+                'status'=>'Update role',
+                'object'=>$entry->role_name,
+                'role'=>$this->roleName(),
             ];
         } else {
             $entry = new Role();
@@ -190,7 +200,8 @@ class RolesController extends AdminBaseController
                 'message' => 'Đã thêm',
                 'id' => $entry->id,
                 'status'=>'created new role',
-                'actionName'=>$entry->role_name,
+                'object'=>$entry->role_name,
+                'role'=>$this->roleName(),
             ];
         }
     }

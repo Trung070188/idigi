@@ -107,7 +107,7 @@
 
                                         <tbody  v-for="lessonPackagePlan in lessonPackagePlans" v-if="lessonPackagePlan.package_id==package.package">
                                         <tr v-for="lesson in entries" >
-                                            Lesson name                    <td class="">
+                                            <td class="">
                                                 <div class="form-check form-check-sm form-check-custom form-check-solid">
                                                     <input class="form-check-input" type="checkbox" v-model="lessonPackagePlan.lessonIds" :value="lesson.id"  @change="updateLessonAll()">
                                                 </div>

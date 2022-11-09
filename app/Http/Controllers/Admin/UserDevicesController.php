@@ -122,7 +122,10 @@ class UserDevicesController extends AdminBaseController
 
         return [
             'code' => 0,
-            'message' => 'Đã xóa'
+            'message' => 'Đã xóa',
+            'object'=>$entry->device_name,
+            'status'=>'Remove device',
+            'role'=>$this->roleName()
         ];
     }
 
@@ -131,6 +134,15 @@ class UserDevicesController extends AdminBaseController
      * @return  array
      */
 
+    public function roleName()
+    {
+        $auth=Auth::user();
+        foreach ($auth->roles as $role)
+        {
+            $roleName=$role->role_name;
+        }
+        return $roleName;
+    }
     public function save(Request $req) {
 
         if (!$req->isMethod('POST')) {
@@ -176,6 +188,9 @@ class UserDevicesController extends AdminBaseController
                 'code' => 0,
                 'message' => 'Đã cập nhật',
                 'id' => $entry->id,
+                'object'=>$entry->device_name,
+                'status'=>'Update device',
+                'role'=>$this->roleName()
             ];
         }
         /**
@@ -196,6 +211,9 @@ class UserDevicesController extends AdminBaseController
                 'code' => 0,
                 'message' => 'Đã thêm',
                 'id' => $entry->id,
+                'object'=>$entry->device_name,
+                'status'=>'Add device',
+                'role'=>$this->roleName()
             ];
 
         }

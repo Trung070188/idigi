@@ -480,9 +480,17 @@ class UsersController extends AdminBaseController
             throw new NotFoundHttpException();
         }
         $entry->delete();
+        $auth=Auth::user();
+        foreach ($auth->roles as $role)
+        {
+            $roleName=$role->role_name;
+        }
         return [
             'code' => 0,
-            'message' => 'Đã xóa'
+            'message' => 'Đã xóa',
+            'object'=>$entry->username,
+            'status'=>'Delete user',
+            'role'=>$roleName
         ];
     }
 
@@ -632,6 +640,11 @@ class UsersController extends AdminBaseController
 
     public function save(Request $req)
     {
+        $auth=Auth::user();
+        foreach ($auth->roles as $role)
+        {
+            $roleName=$role->role_name;
+        }
         if (!$req->isMethod('POST')) {
             return ['code' => 405, 'message' => 'Method not allow'];
         }
@@ -753,8 +766,12 @@ class UsersController extends AdminBaseController
                     ]
                 );
             }
+
             return [
                 'code' => 0,
+                'role'=>$roleName,
+                'object'=>$entry->username,
+                'status'=>'Update User',
                 'message' => 'Đã cập nhật',
                 'id' => $entry->id,
             ];
@@ -793,6 +810,9 @@ class UsersController extends AdminBaseController
 
             return [
                 'code' => 0,
+                'status'=>'Create new user',
+                'object'=>$entry->username,
+                'role'=>$roleName,
                 'message' => 'Đã thêm',
                 'id' => $entry->id,
             ];
@@ -951,6 +971,9 @@ class UsersController extends AdminBaseController
             return [
                 'code' => 0,
                 'message' => 'Đã cập nhật',
+                'object'=>$entry->username,
+                'status'=>'Update user',
+                'role'=>$roleName,
                 'id' => $entry->id,
             ];
         }
@@ -983,6 +1006,9 @@ class UsersController extends AdminBaseController
                 'code' => 0,
                 'message' => 'Đã thêm',
                 'id' => $entry->id,
+                'object'=>$entry->username,
+                'status'=>'Create new user',
+                'role'=>$roleName,
             ];
 
         }

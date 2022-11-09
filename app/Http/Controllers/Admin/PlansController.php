@@ -93,6 +93,16 @@ class PlansController extends AdminBaseController
         return view('admin.layouts.vue', compact('title', 'component', 'jsonData'));
     }
 
+    public function roleName()
+    {
+        $auth=Auth::user();
+        foreach ($auth->roles as $role)
+        {
+            $roleName=$role->role_name;
+        }
+        return $roleName;
+    }
+
     /**
      * Create new entry
      * @uri  /xadmin/plans/create
@@ -274,7 +284,11 @@ class PlansController extends AdminBaseController
         UserDevice::where('plan_id',$entry->id)->delete();
         return [
             'code' => 0,
-            'message' => 'Đã xóa'
+            'message' => 'Đã xóa',
+            'object'=>$entry->name,
+            'status'=>'Delete plan',
+            'role'=>$this->roleName()
+
         ];
     }
     public function removeAllPlan(Request $req)
@@ -286,7 +300,7 @@ class PlansController extends AdminBaseController
         UserDevice::whereIn('plan_id',$dataAll['ids'])->delete();
         return [
             'code' => 0,
-            'message' => 'Đã xóa'
+            'message' => 'Đã xóa',
         ];
     }
 
@@ -399,7 +413,10 @@ class PlansController extends AdminBaseController
             return [
                 'code' => 0,
                 'message' => 'Đã cập nhật',
-                'id' => $entry->id
+                'id' => $entry->id,
+                'object'=>$entry->name,
+                'status'=>'Update plan',
+                'role'=>$this->roleName()
             ];
         } else {
 
@@ -422,7 +439,10 @@ class PlansController extends AdminBaseController
             return [
                 'code' => 0,
                 'message' => 'Đã thêm',
-                'id' => $entry->id
+                'id' => $entry->id,
+                'object'=>$entry->name,
+                'status'=>'Create new plan',
+                'role'=>$this->roleName()
             ];
         }
     }
@@ -538,6 +558,9 @@ class PlansController extends AdminBaseController
                 'code' => 0,
                 'message' => 'Đã cập nhật',
                 'id' => $entry->id,
+                'status'=>'Add device plan',
+                'role'=>$this->roleName(),
+                'object'=>$entry->device_name. ' Plan( '.$entry->name . ' )'
             ];
         }
     }
@@ -785,7 +808,7 @@ class PlansController extends AdminBaseController
             }
             return [
                 'code' => 0,
-                'message' => 'Đã cập nhật '
+                'message' => 'Đã cập nhật',
             ];
 
         }
@@ -920,7 +943,7 @@ class PlansController extends AdminBaseController
                         {
                             if($lesson['lessonIds']!=[]){
                                 $stringLesson = implode(",", $lesson['lessonIds']);
-                                PackageLesson::updateorCreate(
+                              $package=  PackageLesson::updateorCreate(
                                     [
                                         'id' => $dataLesson['package']['package']
                                     ],
@@ -931,7 +954,11 @@ class PlansController extends AdminBaseController
                                 );
                                 return [
                                     'code'=>0,
-                                    'message'=>'Đã cập nhật'
+                                    'message'=>'Đã cập nhật',
+                                    'status'=>'Add lesson plan',
+                                    'object'=>$package->name.' plan ( '.$entry->name . ' )',
+                                    'role'=>$this->roleName()
+
                                 ];
                             }
                             else
@@ -1226,7 +1253,7 @@ class PlansController extends AdminBaseController
         $data = $req->all();
         $stringLesson = implode(",", $data['packageLesson']);
 
-        PackageLesson::updateorCreate(
+       $package= PackageLesson::updateorCreate(
             [
                 'id' => $data['viewPackage']
 
@@ -1253,7 +1280,10 @@ class PlansController extends AdminBaseController
         return [
             'code' => 0,
             'message' => 'Đã xóa',
-            'lesson' => $stringLesson
+            'lesson' => $stringLesson,
+            'object'=>$package->name,
+            'status'=>'Remove lesson plan',
+            'role'=>$this->roleName()
         ];
 
     }
@@ -1262,7 +1292,7 @@ class PlansController extends AdminBaseController
         $dataAll=$req->all();
         $stringLessonIds=implode(",",$dataAll['ids']);
         {
-            PackageLesson::updateorCreate(
+           $package= PackageLesson::updateorCreate(
                 [
                     'id' => $dataAll['viewPackage']
                 ],
@@ -1286,6 +1316,9 @@ class PlansController extends AdminBaseController
         return [
             'code' => 0,
             'message' => 'Đã xóa',
+            'object'=>$package->name,
+            'status'=>'Remove lesson plan',
+            'role'=>$this->roleName()
         ];
 
     }
@@ -1336,7 +1369,7 @@ class PlansController extends AdminBaseController
             }
             if($dataLesson['tabLessonContent'])
             {
-                PackageLesson::updateOrCreate(
+              $package=  PackageLesson::updateOrCreate(
                     [
                         'id'=>$dataLesson['tabLessonContent']
                     ],
@@ -1354,6 +1387,9 @@ class PlansController extends AdminBaseController
             return [
                 'code' => 0,
                 'message' => 'Đã cập nhật',
+                'status'=>'Add package plan',
+                'object'=>$package->name. ' plan ( '.$entry->name . ' )',
+                'role'=>$this->roleName()
             ];
         }
     }
@@ -1527,11 +1563,15 @@ class PlansController extends AdminBaseController
         $data = $req->get('entry');
         if (isset($data['id'])) {
             $entry = Plan::find($data['id']);
-            PackageLesson::Where('plan_id',$entry->id)->where('id',$dataAll['id'])->delete();
+          $package=  PackageLesson::Where('plan_id',$entry->id)->where('id',$dataAll['id'])->delete();
             ZipPlanLesson::where('plan_id',$entry->id)->where('package_id',$dataAll['id'])->delete();
             return [
                 'code' => 0,
                 'message' => 'Đã xóa',
+                'object'=>$package->name.' plan (' .$entry->name .' )' ,
+                'status'=>'Remove package plan',
+                'role'=>$this->roleName()
+
             ];
 
         }

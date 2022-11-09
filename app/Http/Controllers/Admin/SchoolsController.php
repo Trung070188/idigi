@@ -391,6 +391,11 @@ class SchoolsController extends AdminBaseController
      */
     public function remove(Request $req)
     {
+        $user=Auth::user();
+        foreach ($user->roles as $role)
+        {
+            $roleName=$role->role_name;
+        }
         $id = $req->id;
         $entry = School::find($id);
 
@@ -403,8 +408,9 @@ class SchoolsController extends AdminBaseController
         return [
             'code' => 0,
             'message' => 'Đã xóa',
-            'actionName'=>$entry->label,
-            'status'=>'deleted school'
+            'object'=>$entry->label,
+            'role'=>$roleName,
+            'status'=>'Delete school'
         ];
     }
     public function removeLicense(Request $req)
@@ -444,6 +450,12 @@ class SchoolsController extends AdminBaseController
      */
     public function save(Request $req)
     {
+        $user=Auth::user();
+        foreach ($user->roles as $role)
+        {
+            $roleName=$role->role_name;
+        }
+
         $dataContent = $req->all();
         if (!$req->isMethod('POST')) {
             return ['code' => 405, 'message' => 'Method not allow'];
@@ -534,8 +546,9 @@ class SchoolsController extends AdminBaseController
                 'code' => 0,
                 'message' => 'Đã cập nhật',
                 'id' => $entry->id,
-                'actionName'=>$entry->label,
-                'status'=>'edited school',
+                'role'=>$roleName,
+                'object'=>$entry->label,
+                'status'=>'Update school',
             ];
         } else {
             $entry = new School();
@@ -556,13 +569,13 @@ class SchoolsController extends AdminBaseController
                     }
                 }
             }
-
             return [
                 'code' => 0,
                 'message' => 'Đã thêm',
                 'id' => $entry->id,
-                'actionName'=>$entry->label,
-                'status'=>'created new school'
+                'role'=>$roleName,
+                'object'=>$entry->label,
+                'status'=>'Create new school'
             ];
         }
     }
@@ -687,7 +700,7 @@ class SchoolsController extends AdminBaseController
             return [
                 'code' => 200,
                 'message' => 'Đã Lưu',
-                'actionName'=>$entry->label,
+                'object'=>$entry->label,
                 'status'=>'activated license'
 
             ];
@@ -699,7 +712,7 @@ class SchoolsController extends AdminBaseController
             return [
                 'code' => 200,
                 'message' => 'Đã Lưu',
-                'actionName'=>$entry->label,
+                'object'=>$entry->label,
                 'status'=>'deactivated license '
 
             ];

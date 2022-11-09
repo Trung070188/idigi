@@ -46,6 +46,15 @@ class AllocationContentsController extends AdminBaseController
         $component = 'Allocation_contentIndex';
         return component($component, compact('title'));
     }
+    public function roleName()
+    {
+        $auth=Auth::user();
+        foreach ($auth->roles as $role)
+        {
+            $roleName=$role->role_name;
+        }
+        return $roleName;
+    }
 
     /**
      * Create new entry
@@ -190,8 +199,9 @@ class AllocationContentsController extends AdminBaseController
         return [
             'code' => 0,
             'message' => 'Đã xóa',
-            'actionName'=>$entry->title,
-            'status'=>'deleted content allocation'
+            'object'=>$entry->title,
+            'status'=>'Delete content allocation',
+            'role'=>$this->roleName()
         ];
     }
 
@@ -390,8 +400,9 @@ class AllocationContentsController extends AdminBaseController
                 'code' => 0,
                 'message' => 'Đã cập nhật',
                 'id' => $entry->id,
-                'actionName'=>$entry->title,
-                'status'=>'edited content allocation'
+                'object'=>$entry->title,
+                'status'=>'Update content allocation',
+                'role'=>$this->roleName()
 
             ];
         } else {
@@ -431,8 +442,9 @@ class AllocationContentsController extends AdminBaseController
                 'code' => 0,
                 'message' => 'Đã thêm',
                 'id' => $entry->id,
-                'actionName'=>$entry->title,
-                'status'=>'created new content allocation'
+                'object'=>$entry->title,
+                'status'=>'Create new content allocation',
+                'role'=>$this->roleName()
             ];
         }
     }
