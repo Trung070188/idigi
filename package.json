@@ -31,6 +31,7 @@
         "toastr": "^2.1.4",
         "viewerjs": "^1.10.0",
         "vue": "^2.6.12",
+        "vue-google-charts": "^1.1.0",
         "vue-nprogress": "^0.2.0",
         "vuejs-loading-plugin": "^1.0.51"
     }
