@@ -7,8 +7,11 @@
 namespace App\Http\Controllers\Admin;
 
 
+use App\Console\Commands\DownloadLesson;
 use App\Http\Controllers\AppController;
 use App\Http\Controllers\Controller;
+use App\Models\DownloadAppLog;
+use App\Models\DownloadLessonLog;
 use App\Models\Lesson;
 use App\Models\School;
 use App\Models\User;
@@ -57,10 +60,49 @@ class DashboardController extends AdminBaseController
         ];
         return view('admin.layouts.vue', compact('title', 'component', 'jsonData'));
     }
+    public function date()
+    {
+      $year=(Carbon::now()->format('Y'));
+//        $year=2022;
+        $months=[1,2,3,4,5,6,7,8,9,10,11,12];
+        foreach ($months as $month)
+        {
+            $dates[] = \Carbon\Carbon::parse($year."-".$month."-01");
+
+        }
+       foreach ($dates as $date)
+       {
+               $arrDate[]=[
+//                   'date'=>$date->format('M'), // date => jan,feb,
+                    'date'=>$date->format('M'),
+                   'start'=>  $date->startOfMonth()->format('Y-m-d H:i:s'),
+                   'end'=>$date->endOfMonth()->format('Y-m-d H:i:s')
+               ];
+       }
+        return $arrDate;
+
+    }
 
     public function data(Request $req)
     {
+        foreach ($this->date() as $date)
+        {
+           $downloadLog[]=[
+               'downloadApp'=>DownloadAppLog::whereBetween('download_at',array($date['start'],$date['end']))->get(),
+               'downloadLesson'=> DownloadLessonLog::whereBetween('created_at',array($date['start'],$date['end']))->get(),
+               'month'=>$date['date']
+               ];
+        }
 
+        $dataChart[]=['Year', 'Download App', 'Download lesson'];
+        foreach ($downloadLog as $down)
+       {
+            $dataChart[]=[
+              $down['month'],
+                count($down['downloadApp']),
+                count($down['downloadLesson'])
+            ];
+        }
         $xloggers = Xlogger::query()->where('request_uri', '=', '/xadmin/schools/save')
             ->orWhere('request_uri','=','/xadmin/schools/remove')
             ->orWhere('request_uri','=','/xadmin/users/save')
@@ -118,6 +160,7 @@ class DashboardController extends AdminBaseController
         return [
             'code' => 0,
             'data' =>$xlogger,
+            'dataChart'=>$dataChart
 
         ];
     }
