@@ -155,11 +155,12 @@
                         <!--begin::Body-->
                         <div class="card-body">
                             <!--begin::Chart-->
-                            <div id="kt_charts_widget_1_chart" style="height: 350px"></div>
+                            <GoogleChart  :chart_data="dataChart"/>
+<!--                            <div id="kt_charts_widget_1_chart" style="height: 350px"></div>-->
                             <!--end::Chart-->
                         </div>
+                        <!--end::Body-->
                     </div>
-                    <!--end::Tables Widget 9-->
                 </div>
                 <div class="col-xl-4">
                     <!--begin::List Widget 3-->
@@ -231,9 +232,10 @@
     import ActionBar from "../includes/ActionBar";
     import $router from "../../lib/SimpleRouter";
     import {$get, $post} from "../../utils";
+    import GoogleChart from "../../components/google-chart/GoogleChart"
     export default {
         name: "DashboardIndex",
-        components: {ActionBar},
+        components: {ActionBar,GoogleChart},
         data()
         {
             return {
@@ -248,6 +250,7 @@
                 devices:$json.devices,
                 lessons:$json.lessons,
                 licenseRemain:$json.licenseRemain,
+                dataChart:[]
             }
         },
         mounted() {
@@ -260,6 +263,8 @@
             let query = $router.getQuery();
             const res = await $get('/xadmin/dashboard/data', query);
             this.entries = res.data;
+            this.dataChart=res.dataChart
+
         },
 
             async remove(entry)
