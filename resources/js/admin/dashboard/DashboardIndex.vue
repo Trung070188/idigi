@@ -54,12 +54,33 @@
                     <div class="card card-xl-stretch mb-xl-8">
                         <!--begin::Header-->
                         <div class="card-header border-0">
-                            <h3 class="card-title fw-bolder text-dark"></h3>
+                            <h3 class="card-title fw-bolder text-dark">Licenses</h3>
                         </div>
                         <!--end::Header-->
                         <!--begin::Body-->
                         <div class="card-body pt-2" >
-                            <!--begin::Item-->
+                            <div class="d-flex flex-stack mb-5" v-for="license in licenseRemain">
+                                <!--begin::Section-->
+                                <div class="d-flex align-items-center me-2">
+                                    <!--begin::Symbol-->
+                                    <div class="symbol symbol-50px me-3">
+                                        <div class="symbol-label bg-light">
+                                            <i class="bi bi-bank"></i>
+                                        </div>
+                                    </div>
+                                    <!--end::Symbol-->
+                                    <!--begin::Title-->
+                                    <div>
+                                        <a href="mixed.html#" class="fs-6 text-gray-800 text-hover-primary fw-bolder">{{license.label}}</a>
+                                        <div class="fs-7 text-muted fw-bold mt-1">{{license.dayEnd}} days remaining</div>
+                                    </div>
+                                    <!--end::Title-->
+                                </div>
+                                <!--end::Section-->
+                                <!--begin::Label-->
+                                <div class="badge  fw-bold py-4 px-3"><a :href="license.url"><button class="btn btn-primary">Renew</button></a></div>
+                                <!--end::Label-->
+                            </div>
                         </div>
                         <!--end::Body-->
                     </div>

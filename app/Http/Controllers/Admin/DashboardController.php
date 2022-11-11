@@ -47,7 +47,7 @@ class DashboardController extends AdminBaseController
             if ($today->diffInDays($license['license_to']) <= 15) {
                 $license['dayEnd'] = $today->diffInDays($license['license_to']);
                 $LicenseId = $license['id'];
-                $license['url'] = url("xadmin/schools/editLicense?id= $LicenseId");
+                $license['url'] = url("xadmin/schools/edit?id= $LicenseId");
                 $licenseRemain[] = $license;
             }
         }
