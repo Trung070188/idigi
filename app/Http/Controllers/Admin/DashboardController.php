@@ -94,7 +94,7 @@ class DashboardController extends AdminBaseController
                ];
         }
 
-        $dataChart[]=['Year', 'Download App', 'Download lesson'];
+        $dataChart[]=['Year', 'Download app','Download lesson'];
         foreach ($downloadLog as $down)
        {
             $dataChart[]=[
