@@ -46,7 +46,7 @@
             <div class="row gy-5 g-xl-8">
                 <div class="col-xl-8">
                     <div class="card card-xl-stretch mb-xl-8">
-                        <GoogleChart  :chart_data="dataChart"/>
+                        <GoogleChart  :chart_data="dataChart" />
                     </div>
                 </div>
                 <div class="col-xl-4">

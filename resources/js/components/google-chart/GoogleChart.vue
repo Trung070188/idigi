@@ -1,5 +1,5 @@
 <template>
-    <GChart :type="type" :data="chart_data" :options="options" v-if="chart_data"/>
+    <GChart :type="type" :data="chart_data" :options="options" v-if="chart_data" />
 </template>
 
 <script>
@@ -14,15 +14,16 @@
 
         },
         data() {
-            console.log(this.chart_data)
             let chartOptions = {
+                fontSize:17,
                 chart: {
                 },
-                width: 700,
-                height: 600,
+                width: 850,
+                height: 700,
             };
             return {
                 check:0,
+                style:[],
                 type: "ColumnChart",
                 data: [],
                 options: chartOptions,
