@@ -7,6 +7,7 @@ use App\Exports\DeviceErrorExport;
 use App\Exports\DevicePlanExport;
 use App\Exports\LessonPlanExport;
 use App\Exports\PlanExport;
+use App\Exports\TeacherErrorExport;
 use App\Helpers\PermissionField;
 use App\Imports\DeviceImport;
 use App\Jobs\UpdateDownloadInventory;
@@ -29,6 +30,7 @@ use Firebase\JWT\Key;
 use http\Env\Response;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
@@ -251,6 +253,8 @@ class PlansController extends AdminBaseController
 
 
         ];
+        $exportDeviceName='export_device_'. uniqid(time());
+        Cache::add($exportDeviceName,json_encode($data));
         $jsonData = [
             'permissionFields'=>$permissionFields,
             'roleAuth' => $roleAuth,
@@ -261,7 +265,8 @@ class PlansController extends AdminBaseController
             'data' => $data,
             'urls' => @$url,
             'packagePlan' => @$packagePlan,
-            'packageLessonPlan' => @$packageLessonPlan
+            'packageLessonPlan' => @$packageLessonPlan,
+            'exportDeviceName'=>$exportDeviceName
         ];
         return view('admin.layouts.vue', compact('title', 'component', 'jsonData'));
     }
@@ -719,7 +724,7 @@ class PlansController extends AdminBaseController
                             $fileImport[] = $validation;
                         }
                     }
-                    Excel::store(new DeviceErrorExport($fileError), "{$y}/{$m}/{$hash}.{$extension}", 'excel-export');
+//                    Excel::store(new DeviceErrorExport($fileError), "{$y}/{$m}/{$hash}.{$extension}", 'excel-export');
 
                     $file = new File();
                     $file->type = $file0['type'];
@@ -732,11 +737,14 @@ class PlansController extends AdminBaseController
                     $file->path = $newFilePath;
                     $file->extension = $extension;
                     $file->save();
+                    $errorDeviceName = 'export_device_plan_error_'. uniqid(time());
+                    Cache::add($errorDeviceName, json_encode($fileError));
                     return [
                         'code' => 2,
-                        'deviceError' => $fileError,
+                        'deviceError' =>$fileError,
                         'fileImport' => $fileImport,
-                        'fileError' => url("exports/{$y}/{$m}/{$hash}.{$extension}"),
+                        'errorDeviceName'=>$errorDeviceName
+//                        'fileError' => url("exports/{$y}/{$m}/{$hash}.{$extension}"),
 
                     ];
 
@@ -753,7 +761,13 @@ class PlansController extends AdminBaseController
 
         }
     }
-
+    public function exportDeviceError(Request $req)
+    {
+        $fileName=$req->deviceError;
+        $fileError=json_decode(Cache::get($fileName),true);
+        Cache::forget($fileName);
+        return Excel::download(new DeviceErrorExport($fileError), "File_import_device_error.xlsx");
+    }
     public function import(Request $req)
     {
         $dataImport = $req->all();
@@ -819,31 +833,12 @@ class PlansController extends AdminBaseController
         ob_get_clean();
 
         $dataImport = $req->all();
-        $data = json_decode($req->get('entry'),true);
-
-
         // if (!$req->isMethod('POST')) {
         //     return ['code' => 405, 'message' => 'Method not allow'];
         // }
 
 
-        $rules = [
-        ];
-        $v = Validator::make($data, $rules);
-
-        if ($v->fails()) {
-            return [
-                'code' => 2,
-                'errors' => $v->errors()
-            ];
-        }
-
-        /**
-         * @var  Plan $entry
-         */
-
-        if (isset($data['id'])) {
-            $entry = Plan::find($data['id']);
+            $entry = Plan::find(json_decode($dataImport['idPlan']));
             if (!$entry) {
                 return [
                     'code' => 3,
@@ -853,31 +848,22 @@ class PlansController extends AdminBaseController
             $exportDevice = [];
             $payload = [];
             $user = User::where('id', json_decode($dataImport['idRoleIt']))->first();
-            if (@json_decode($dataImport['dataDevice'])) {
-                foreach (json_decode($dataImport['dataDevice']) as $import) {
-                    if ($import->plan_id == $entry->id) {
+            $dataDevice = json_decode(Cache::get($dataImport['dataDevice']), true);
+
+            if ($dataDevice) {
+                foreach ($dataDevice as $import) {
+                    if ($import['plan_id'] == $entry->id) {
                         $exportDevice[] = $import;
                     }
-
-//                    $apiPlan = [];
-//                    {
-//                        $apiPlan[] = [
-//                            'id' => $entry->id,
-//                            'name' => $entry->name,
-//                            'secret_key' => $entry->secret_key,
-//                        ];
-//                    }
-                    if ($import->plan_id == $entry->id) {
-                        $expired = Carbon::createFromFormat('Y-m-d', $import->expire_date)->format('Y-m-d');
+                    if ($import['plan_id'] == $entry->id) {
+                        $expired = Carbon::createFromFormat('Y-m-d', $import['expire_date'])->format('Y-m-d');
 
                         $payload [] = [
-//                            'secret_key_plan' => $entry->secret_key,
                             'username' => $user->username,
                             'full_name' => $user->full_name,
-//                            'plan' => $apiPlan,
                             'user_id' => json_decode($dataImport['idRoleIt']),
-                            'device_uid' => $import->device_uid,
-                            'device_name' => $import->device_name,
+                            'device_uid' => $import['device_uid'],
+                            'device_name' => $import['device_name'],
                             'secret_key' => $entry->secret_key,
                             'create_time' => Carbon::now()->timestamp,
                             'expired' => strtotime($expired),
@@ -896,8 +882,8 @@ class PlansController extends AdminBaseController
                     }
                 }
             }
+
            return Excel::download(new DevicePlanExport($dataPlanExport), "Device_export_plan.xlsx");
-        }
 
     }
 
@@ -1662,7 +1648,6 @@ class PlansController extends AdminBaseController
                     'expire_date' => $pay['expired'],
                 ];
             }
-
        return   Excel::download(new PlanExport($lessons,$dataDevicePlanExport), "Kế_Hoạch_Plan.xlsx");
         }
 

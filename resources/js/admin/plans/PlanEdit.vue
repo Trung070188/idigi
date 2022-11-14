@@ -644,7 +644,7 @@
                                                 <div class="d-flex" v-if="deviceError.length>0">
                                                     <div class="text-end">
                                                         <div class="fs-7 text-muted">
-                                                        <a :href="validateFile" type="button" class="btn btn-primary">Export</a>
+                                                        <a @click="exportDeviceError" type="button" class="btn btn-primary">Export</a>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -944,6 +944,8 @@
                 improgress:'',
                 abc:'',
                 checkZipPackage:[],
+                errorDeviceName:'',
+                exportDeviceName:$json.exportDeviceName
 
             }
         },
@@ -1333,6 +1335,7 @@
                         });
                     if (res.code == 2) {
                         this.deviceError = res.deviceError;
+                        this.errorDeviceName=res.errorDeviceName;
                         this.code = res.code;
                         this.validateFile = res.fileError;
                         this.fileImport = res.fileImport;
@@ -1406,9 +1409,9 @@
 
             // export devive
             async exportDevice() {
-                window.location.href= '/xadmin/plans/exportDevice?entry=' + JSON.stringify(this.entry)+
+                window.location.href= '/xadmin/plans/exportDevice?idPlan=' +JSON.stringify(this.entry.id)+
                 '&idRoleIt=' + JSON.stringify(this.idRoleIt)+
-                '&dataDevice=' + JSON.stringify(this.data);
+                '&dataDevice=' + this.exportDeviceName;
             },
 
             changeLimit() {
@@ -1864,6 +1867,10 @@
                 navigator.clipboard.writeText(this.token);
                 this.token='';
             },
+            exportDeviceError()
+            {
+                window.location.href='/xadmin/plans/exportDeviceError?deviceError='+this.errorDeviceName;
+            }
         }
     }
 </script>
