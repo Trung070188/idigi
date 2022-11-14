@@ -103,7 +103,7 @@ class DashboardController extends AdminBaseController
                 count($down['downloadLesson'])
             ];
         }
-        $xloggers = Xlogger::query()->where('request_uri', '=', '/xadmin/schools/save')
+        $xloggers = Xlogger::query()->where('http_code',200)->where('request_uri', '=', '/xadmin/schools/save')
             ->orWhere('request_uri','=','/xadmin/schools/remove')
             ->orWhere('request_uri','=','/xadmin/users/save')
             ->orWhere('request_uri','=','/xadmin/users/remove')
