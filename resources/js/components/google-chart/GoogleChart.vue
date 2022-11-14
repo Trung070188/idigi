@@ -15,11 +15,11 @@
         },
         data() {
             let chartOptions = {
-                fontSize:17,
+                fontSize:15,
                 chart: {
                 },
-                width: 850,
-                height: 700,
+                width: 750,
+                height: 600,
             };
             return {
                 check:0,
