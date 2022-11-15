@@ -18,6 +18,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use App\Models\School;
 use App\Models\Unit;
+use Carbon\Carbon;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
@@ -462,13 +463,18 @@ class SchoolsController extends AdminBaseController
         }
 
         $data = $req->get('entry');
+        $current = Carbon::now()->format('Y/m/d');
+        $today = Carbon::now()->format('d/m/Y');
+
 
         $rules = [
             'label' => 'required|max:45',
             'school_address' => 'required|max:255',
             'number_of_users' => 'required|min:1',
             'devices_per_user' => 'required|min:1',
-            'license_to'=>'required'
+            'license_to'=>'required',
+            'license_to'=>'after_or_equal:' . $current
+
         ];
         if(@$data['school_email'])
         {
@@ -482,11 +488,14 @@ class SchoolsController extends AdminBaseController
                 'school_phone' => 'min:10',
             ];
         }
+        // $rules['license_to']='after:' .$today;
         $message=[
             'label.required'=>'The school name field is required.',
             'number_of_users.required'=>'The No. of User field is required.',
             'devices_per_user.required'=>'The No. of Device per user field is required.',
-            'license_to.required'=>'The Expired date/License is required.'
+            'license_to.required'=>'The Expired date/License is required.',
+            'license_to.after_or_equal'=>'The Expired date/License must be a date after or equal to ' .$today,
+
         ];
 
         $v = Validator::make($data, $rules,$message);
