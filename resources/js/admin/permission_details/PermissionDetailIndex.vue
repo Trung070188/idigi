@@ -165,6 +165,7 @@
                     'permission_detail_id' :permissionDetailId,
                     'check' : check,
                 });
+                toastr.options.timeOut=1000;
                 toastr.success(res.message);
             }
         }

@@ -140,7 +140,7 @@ class DashboardController extends AdminBaseController
                     $object = @$dataXlogger['object'];
                     $entry['object'] = $object;
                     $entry['status'] = @$dataXlogger['status'];
-                    $entry['role']=$dataXlogger['role'];
+                    $entry['role']=@$dataXlogger['role'];
 
                 if($dataXlogger['code']==0)
                 {
@@ -149,7 +149,7 @@ class DashboardController extends AdminBaseController
                         'username'=>$entry['username'],
                         'object'=>@$entry['object'],
                         'status'=>@$entry['status'],
-                        'role'=>$entry['role'],
+                        'role'=>@$entry['role'],
                         'ip'=>$entry['ip'],
                         'time'=>$entry['time']
                     ];
