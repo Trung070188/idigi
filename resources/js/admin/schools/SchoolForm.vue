@@ -120,14 +120,14 @@
                                            <option v-for="allocationConten in allocationContens" :value="allocationConten.id">{{allocationConten.title}}</option>
                                        </select>
                                     </div>
-                                       <table class="table table-row-bordered align-middle gy-4 gs-9 ml-3">
+                                       <table class="table table-row-bordered align-middle gy-4 gs-9 ml-3" v-if="allocationContenSchool!=null">
                             <thead class="border-bottom border-gray-200 fs-6 text-gray-600 fw-bolder bg-light bg-opacity-75">
                             <tr>
                                 <th class="">Course Name</th>
                                 <th>Unit</th>
                             </tr>
                             </thead>
-                            <tbody v-if="allocationContenSchool!=null" >
+                            <tbody  >
                             <tr v-for="course in courses" >
                                 <td  >
                                     {{course.label}}
@@ -202,10 +202,10 @@
                     },
 
                     {
-                        title: $json.entry ? 'School details' : 'Create New school',
+                        title: $json.entry ? 'School details' : 'Create new school',
                     },
                 ],
-                title: $json.entry ? 'Edit school' : 'Create New school',
+                title: $json.entry ? 'Edit school' : 'Create new school',
 
                 entry: $json.entry || {},
                 isLoading: false,

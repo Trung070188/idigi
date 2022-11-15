@@ -758,6 +758,9 @@ class SchoolsController extends AdminBaseController
         if ($req->label) {
             $query->where('label', 'LIKE', '%' . $req->label . '%');
         }
+        if ($req->school_address) {
+            $query->where('school_address', 'LIKE', '%' . $req->school_address . '%');
+        }
 
         $limit = 25;
 

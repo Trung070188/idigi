@@ -122,7 +122,7 @@
                             <div class="row">
                                 <div class="form-group col-lg-3">
                                     <label>School name </label>
-                                    <input class="form-control" type="text" placeholder="Enter your school name"
+                                    <input class="form-control" type="text" placeholder="Enter the school name"
                                            v-model="filter.label"/>
 
                                 </div>
@@ -133,8 +133,8 @@
 
                                 </div>
                                 <div class="form-group col-lg-3">
-                                    <label>Region/City </label>
-                                    <input class="form-control" type="text" placeholder="Enter the region/city">
+                                    <label >Region/City </label>
+                                    <input v-model="filter.school_address" class="form-control" type="text" placeholder="Enter the region/city">
 
                                 </div>
 
@@ -292,7 +292,8 @@
             let isShowFilter = false;
             let filter = {
                 keyword: $q.keyword || '',
-                label: $q.label || ''
+                label: $q.label || '',
+                school_address:$q.school_address || ''
             };
             for (var key in filter) {
                 if (filter[key] != '') {
