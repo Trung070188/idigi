@@ -482,8 +482,14 @@ class SchoolsController extends AdminBaseController
                 'school_phone' => 'min:10',
             ];
         }
+        $message=[
+            'label.required'=>'The school name field is required.',
+            'number_of_users.required'=>'The No. of User field is required.',
+            'devices_per_user.required'=>'The No. of Device per user field is required.',
+            'license_to.required'=>'The Expired date/License is required.'
+        ];
 
-        $v = Validator::make($data, $rules);
+        $v = Validator::make($data, $rules,$message);
 
         if ($v->fails()) {
             return [
