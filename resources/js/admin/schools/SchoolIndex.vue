@@ -74,9 +74,9 @@
                                             </span>
                                 <!--end::Svg Icon-->
                                 <input type="text" data-kt-filemanager-table-filter="search"
-                                       class="form-control form-control-solid w-250px ps-15"
+                                       class="form-control form-control-solid w-400px ps-15"
                                        @keydown.enter="doFilter($event)" v-model="filter.keyword"
-                                       placeholder="Search..." value=""/>
+                                       placeholder="Search ID, name, address, administrator name..." value=""/>
                                 <span v-if="filter.keyword!==''" class="svg-icon svg-icon-2 svg-icon-lg-1 me-0"
                                       @click="filterClear">
                                             <svg type="button" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
