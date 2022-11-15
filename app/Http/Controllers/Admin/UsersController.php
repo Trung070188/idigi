@@ -253,7 +253,13 @@ class UsersController extends AdminBaseController
             'user_delete_device'=>$permissionDetail->havePermission('user_delete_device',$permissions,$user)
 
         ];
+        if($entry->school_id)
+        {
+            $userSchool=explode(',',$entry->school_id);
+
+        }
         $jsonData = [
+            'userSchool'=>@$userSchool,
             'userDevice'=>@$userDevice,
             'permissionFields'=>$permissionFields,
             'schools' => $schools,
@@ -698,11 +704,11 @@ class UsersController extends AdminBaseController
                $rules['name_role']=['required'];
            }
         }
-        if ($data_role['name_role'] == 2 || $data_role['name_role'] == 5) {
-            $rules['school_id'] = ['required'];
-        }
+//        if ($data_role['name_role'] == 2 || $data_role['name_role'] == 5) {
+//            $rules['school_id'] = ['required'];
+//        }
         $customMessages = [
-            'school_id.required' => 'The school field is required.',
+//            'school_id.required' => 'The school field is required.',
             'name_role.required'=>'The role field is required.'
         ];
         $v = Validator::make($data, $rules, $customMessages,$data_role);
@@ -725,12 +731,14 @@ class UsersController extends AdminBaseController
 //            if ($data['password']) {
 //                $data['password'] = Hash::make($data['password']);
 //            }
+            $userSchools = implode(',', $data_role['userSchool']);
             $entry->fill($data);
            if($data_role['password'] !=null)
            {
                $entry->password = Hash::make($data_role['password']);
                User::where('id',$entry->id)->update(['password'=>$entry->password]);
            }
+            User::where('id',$entry->id)->update(['school_id'=>$userSchools]);
             $entry->save();
          $userUnits= UserUnit::query()->where('user_id',$entry->id)->get();
          $schoolUnitIds=[];

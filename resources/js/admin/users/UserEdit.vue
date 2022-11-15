@@ -124,10 +124,11 @@
                                 <div class="row" v-if="name_role==2 || name_role==5">
                                     <div class="form-group col-sm-4 mb-7">
                                         <label>School <span class="text-danger">*</span></label>
-                                        <select  class="form-control form-select" v-model="entry.school_id" required>
-                                            <option v-for="school in schools" :value="school.id" >{{school.label}}</option>
-                                        </select>
-                                        <error-label for="f_grade" :errors="errors.school_id"></error-label>
+<!--                                        <select  class="form-control form-select" v-model="entry.school_id" required>-->
+<!--                                            <option v-for="school in schools" :value="school.id" >{{school.label}}</option>-->
+<!--                                        </select>-->
+                                        <Treeselect :options="schools" :multiple="true" v-model="userSchool"/>
+<!--                                        <error-label for="f_grade" :errors="errors.school_id"></error-label>-->
                                     </div>
                                 </div>
                                 <div class="row">
@@ -190,14 +191,18 @@
     import ActionBar from "../includes/ActionBar";
     import SwitchButton from "../../components/SwitchButton";
     import _ from "lodash";
+    import Treeselect from '@riophae/vue-treeselect'
+    import '@riophae/vue-treeselect/dist/vue-treeselect.css'
+
 
     export default {
         name: "UsersForm.vue",
-        components: {ActionBar, SwitchButton},
+        components: {ActionBar, SwitchButton,Treeselect},
         data() {
             const permissions = clone(window.$permissions)
 
             return {
+                userSchool:$json.userSchool || [],
                 password:'',
                 changed: false,
                 permissions,
@@ -271,7 +276,7 @@
             },
             async save() {
                 this.isLoading = true;
-                const res = await $post('/xadmin/users/save', {entry: this.entry, name_role: this.name_role,password:this.password}, false);
+                const res = await $post('/xadmin/users/save', {entry: this.entry, name_role: this.name_role,password:this.password,userSchool:this.userSchool}, false);
                 this.isLoading = false;
                 if (res.errors) {
                     this.errors = res.errors;
