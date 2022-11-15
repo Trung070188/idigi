@@ -1396,14 +1396,12 @@ class UsersController extends AdminBaseController
             if ($code == 2) {
                 //export
                 foreach ($validations as $key=>$validation) {
-                    if($key>$user->schools->number_of_users)
-                    {
+
                         $validation['error']=[
                             'max_length'=>[
                                 'Allowed to register up to '. $user->schools->number_of_users .' users'
                             ]
                         ];
-                    }
 
                     if (@$validation['error'] || $error!=[] && $error==[$validation['username']]) {
                         {
