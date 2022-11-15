@@ -142,7 +142,7 @@ class DashboardController extends AdminBaseController
                     $entry['status'] = @$dataXlogger['status'];
                     $entry['role']=@$dataXlogger['role'];
 
-                if($dataXlogger['code']==0)
+                if(@$dataXlogger['code']==0)
                 {
                     $xlogger[]=[
                         'id'=>$entry->id,
