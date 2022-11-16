@@ -117,11 +117,22 @@
                 types: [],
                 breadcrumbs: [
                     {
-                        title: 'Teachers',
-                        url: '/xadmin/users/teacher',
+                      title:'School management',
+                        url: '/xadmin/schools/index',
+                    },
+
+                    {
+                        title: 'School details',
+                        url: '/xadmin/schools/edit?id='+$json.school.id
                     },
                     {
-                        title: $json.entry ? 'Edit User' : 'Create New Teacher',
+                        title: 'Teacher management',
+                        url: '/xadmin/schools/teacherList?id='+$json.school.id
+
+
+                    },
+                    {
+                        title: $json.entry ? 'Edit User' : 'Create new teacher',
                     },
                 ],
                 school:$json.school,
