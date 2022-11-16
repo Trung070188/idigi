@@ -4,6 +4,206 @@
                    :breadcrumbs="breadcrumbs" :title="'Teacher management' + '-' + 'Trường'+ ' ' + entry.label" />
         <div class="row">
             <div class="col-lg-12">
+                 <!-- BEGIN:MODAL IMPORT TEACHER -->
+                <div class="modal fade" id="kt_modal_create_app" tabindex="-1" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered mw-900px">
+                        <div class="modal-content">
+                            <div class="text-center mt-10">
+                                <h2>Import teachers</h2>
+                            </div>
+                            <div class="modal-body py-lg-10 px-lg-10">
+                                <div class="stepper stepper-pills stepper-column d-flex flex-column flex-xl-row flex-row-fluid"
+                                     id="kt_modal_create_app_stepper">
+                                    <div
+                                        class="d-flex justify-content-center justify-content-xl-start flex-row-auto w-100 w-xl-300px">
+                                        <div class="stepper-nav ps-lg-10">
+                                            <div class="stepper-item " data-kt-stepper-element="nav">
+                                                <div class="stepper-line w-40px"></div>
+                                                <div class="stepper-icon w-40px h-40px">
+                                                    <i class="stepper-check fas fa-check"></i>
+                                                    <span class="stepper-number">1</span>
+                                                </div>
+                                                <div class="stepper-label">
+                                                    <h3 class="stepper-title">Upload file</h3>
+                                                </div>
+                                            </div>
+                                            <div class="stepper-item" data-kt-stepper-element="nav">
+                                                <div class="stepper-line w-40px"></div>
+                                                <div class="stepper-icon w-40px h-40px">
+                                                    <i class="stepper-check fas fa-check"></i>
+                                                    <span class="stepper-number">2</span>
+                                                </div>
+                                                <div class="stepper-label">
+                                                    <h3 class="stepper-title">Validation</h3>
+                                                </div>
+                                            </div>
+                                            <div class="stepper-item" data-kt-stepper-element="nav">
+                                                <div class="stepper-line w-40px"></div>
+                                                <div class="stepper-icon w-40px h-40px">
+                                                    <i class="stepper-check fas fa-check"></i>
+                                                    <span class="stepper-number">3</span>
+                                                </div>
+                                                <div class="stepper-label">
+                                                    <h3 class="stepper-title">Import process</h3>
+                                                </div>
+                                            </div>
+                                            <div class="stepper-item" data-kt-stepper-element="nav">
+                                                <div class="stepper-line w-40px"></div>
+                                                <div class="stepper-icon w-40px h-40px">
+                                                    <i class="stepper-check fas fa-check"></i>
+                                                    <span class="stepper-number">4</span>
+                                                </div>
+                                                <div class="stepper-label">
+                                                    <h3 class="stepper-title">Completed</h3>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="flex-row-fluid py-lg-5 px-lg-15">
+                                        <form class="form" novalidate="novalidate" id="kt_modal_create_app_form">
+                                            <div class="current" data-kt-stepper-element="content">
+                                                <div class="w-100">
+                                                    <div class="fv-row mb-10">
+                                                        <div  class="dropzone dropzone-queue mb-2 ">
+                                                            <label v-if="valueValidateImportTeacher==0"  for="file-upload" class="btn btn-primary btn-active-primary btn-sm">
+                                                                Upload file
+                                                            </label>
+                                                            <label v-if="valueValidateImportTeacher!=0"  >
+                                                                Validation result
+                                                            </label>
+                                                            <input type="file" id="file-upload" ref="uploader" class="form-control-file" @change="importFileTeacher">
+                                                            <error-label></error-label>
+                                                            <div class="dropzone-items wm-200px"></div>
+
+                                                            <div class="dropzone-item p-5" v-if="fileUpLoad!=''">
+                                                                <!--begin::File-->
+                                                                <div class="dropzone-file">
+                                                                    <div class="dropzone-filename text-dark" title="some_image_file_name.jpg">
+                                                                        <span data-dz-name="">{{fileUpLoad}}</span>
+                                                                        <strong>(
+                                                                            <span data-dz-size="">{{sizeFile}}</span>)</strong>
+                                                                    </div>
+                                                                    <div class="dropzone-error mt-0" data-dz-errormessage=""></div>
+                                                                </div>
+                                                                <div class="dropzone-toolbar">
+																		<span class="dropzone-start">
+																			<i class="bi bi-play-fill fs-3" @click="validateImportTeacher"></i>
+																		</span>
+                                                                    <span class="dropzone-delete" data-dz-remove="">
+																			<i class="bi bi-x fs-1" @click="removeFileTeacher"></i>
+																		</span>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div v-if="valueValidateImportTeacher==0" class="dropzone-panel mb-4  ">
+                                                            <a class="btn btn-light btn-active-light-primary btn-sm" data-kt-menu-trigger="click" @click="downloadTemplate()" ><i class="bi bi-download mr-2"></i>Download template here</a>
+                                                        </div>
+
+                                                        <div v-if="valueValidateImportTeacher!=0" class="d-flex flex-stack py-5 border-bottom border-gray-300 border-bottom-dashed">
+                                                            <div class="d-flex align-items-center">
+                                                                <div class="ms-6">
+
+                                                                    <div class="fw-bold text-muted">{{fileImport.length}} new
+                                                                        record(s)
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="d-flex">
+                                                                <div class="text-end">
+                                                          	<span class="form-check form-check-custom form-check-solid">
+                                                                <input class="form-check-input" type="radio" name="category" value="0" v-model="doNotImport"/>
+                                                                <label style="margin: 0px 10px 0px">Import</label>
+                                                                <input class="form-check-input" type="radio"
+                                                                       name="category" value="1" v-model="doNotImport"/>
+                                                                <label style="margin: 0px 10px 0px"> Do not import </label>
+                                                            </span>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                    </div>
+
+                                                    <div v-if="valueValidateImportTeacher!=0"
+                                                         class="d-flex flex-stack py-5 border-bottom border-gray-300 border-bottom-dashed">
+                                                        <div class="d-flex align-items-center">
+                                                            <div class="ms-6">
+
+                                                                <div class="fw-bold text-muted">{{fileError.length}} error
+                                                                    record(s)
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="d-flex" v-if="fileError.length>0">
+                                                            <div class="text-end">
+                                                                <div class="fs-7 text-muted">
+                                                                    <button @click="exportErrorImportTeacher" type="button" class="btn btn-primary">Export</button>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+
+                                            <div class="d-flex flex-stack pt-10" v-if="valueValidateImportTeacher!=0">
+                                                <div class="me-2">
+                                                    <button type="button" class="btn btn-lg btn-light-primary me-3"
+                                                            data-kt-stepper-action="previous">
+                                                <span class="svg-icon svg-icon-3 me-1">
+												<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                                     viewBox="0 0 24 24" fill="none">
+													<rect opacity="0.5" x="6" y="11" width="13" height="2" rx="1"
+                                                          fill="black"/>
+													<path
+                                                        d="M8.56569 11.4343L12.75 7.25C13.1642 6.83579 13.1642 6.16421 12.75 5.75C12.3358 5.33579 11.6642 5.33579 11.25 5.75L5.70711 11.2929C5.31658 11.6834 5.31658 12.3166 5.70711 12.7071L11.25 18.25C11.6642 18.6642 12.3358 18.6642 12.75 18.25C13.1642 17.8358 13.1642 17.1642 12.75 16.75L8.56569 12.5657C8.25327 12.2533 8.25327 11.7467 8.56569 11.4343Z"
+                                                        fill="black"/>
+												</svg>
+											</span>
+                                                        Back
+                                                    </button>
+                                                </div>
+                                                <div>
+                                                    <button type="button" class="btn btn-lg btn-primary"
+                                                            data-kt-stepper-action="submit">
+												<span class="indicator-label">Submit
+												<span class="svg-icon svg-icon-3 ms-2 me-0">
+													<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                                         viewBox="0 0 24 24" fill="none">
+														<rect opacity="0.5" x="18" y="13" width="13" height="2" rx="1"
+                                                              transform="rotate(-180 18 13)" fill="black"/>
+														<path
+                                                            d="M15.4343 12.5657L11.25 16.75C10.8358 17.1642 10.8358 17.8358 11.25 18.25C11.6642 18.6642 12.3358 18.6642 12.75 18.25L18.2929 12.7071C18.6834 12.3166 18.6834 11.6834 18.2929 11.2929L12.75 5.75C12.3358 5.33579 11.6642 5.33579 11.25 5.75C10.8358 6.16421 10.8358 6.83579 11.25 7.25L15.4343 11.4343C15.7467 11.7467 15.7467 12.2533 15.4343 12.5657Z"
+                                                            fill="black"/>
+													</svg>
+												</span>
+                                                  </span>
+                                                        <span class="indicator-progress">Please wait...
+												<span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
+                                                    </button>
+                                                    <button type="button" class="btn btn-lg btn-primary"
+                                                            data-kt-stepper-action="next" @click="saveImport">Continue
+                                                        <span class="svg-icon svg-icon-3 ms-1 me-0">
+												<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                                     viewBox="0 0 24 24" fill="none">
+													<rect opacity="0.5" x="18" y="13" width="13" height="2" rx="1"
+                                                          transform="rotate(-180 18 13)" fill="black"/>
+													<path
+                                                        d="M15.4343 12.5657L11.25 16.75C10.8358 17.1642 10.8358 17.8358 11.25 18.25C11.6642 18.6642 12.3358 18.6642 12.75 18.25L18.2929 12.7071C18.6834 12.3166 18.6834 11.6834 18.2929 11.2929L12.75 5.75C12.3358 5.33579 11.6642 5.33579 11.25 5.75C10.8358 6.16421 10.8358 6.83579 11.25 7.25L15.4343 11.4343C15.7467 11.7467 15.7467 12.2533 15.4343 12.5657Z"
+                                                        fill="black"/>
+												</svg>
+											</span>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- END:MODAL IMPORT TEACHER -->
+
                 <div class="modal fade" style="margin-right:50px;border:2px solid #333333  " id="delete" tabindex="-1" role="dialog"
                      aria-hidden="true">
                     <div class="modal-dialog modal-dialog-centered popup-main-1" role="document"
@@ -63,18 +263,42 @@
                                 data-kt-customer-table-toolbar="base"
                                 v-if="teacherIds == ''"
                             >
-                                <button type="button" style="margin-left: 10px" @click="isShowFilter = !isShowFilter" class="btn btn-light" v-if="isShowFilter">
+                                <button type="button"  @click="isShowFilter = !isShowFilter" class="btn btn-light mr-2" v-if="isShowFilter">
                                     <i style="margin-left: 5px" class="fas fa-times"></i>
                                     Close Advanced Search
                                 </button>
-                                <button type="button" style="margin-left: 10px" @click="isShowFilter = !isShowFilter" class="btn btn-light" v-if="!isShowFilter">
+                                <button type="button"  @click="isShowFilter = !isShowFilter" class="btn btn-light mr-2" v-if="!isShowFilter">
                                     <i class="bi bi-funnel"></i>
                                     Advanced Search
                                 </button>
+                                <button  type="button" class="btn btn-primary mr-2" @click="importTeacher">
+                                        <span class="svg-icon svg-icon-2">
+													<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+														<path opacity="0.3" d="M10 4H21C21.6 4 22 4.4 22 5V7H10V4Z" fill="black" />
+														<path d="M10.4 3.60001L12 6H21C21.6 6 22 6.4 22 7V19C22 19.6 21.6 20 21 20H3C2.4 20 2 19.6 2 19V4C2 3.4 2.4 3 3 3H9.20001C9.70001 3 10.2 3.20001 10.4 3.60001ZM16 11.6L12.7 8.29999C12.3 7.89999 11.7 7.89999 11.3 8.29999L8 11.6H11V17C11 17.6 11.4 18 12 18C12.6 18 13 17.6 13 17V11.6H16Z" fill="black" />
+														<path opacity="0.3" d="M11 11.6V17C11 17.6 11.4 18 12 18C12.6 18 13 17.6 13 17V11.6H11Z" fill="black" />
+													</svg>
+												</span>
+                                        Import teacher </button>
+                                         <a :href="'/xadmin/users/create_teacher?schoolId='+JSON.stringify(entry.id)">
+                                          <button  type="button" class="btn btn-primary mr-2" >
+                                           
+                                        <span class="svg-icon svg-icon-2">
+													<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+														<path opacity="0.3" d="M10 4H21C21.6 4 22 4.4 22 5V7H10V4Z" fill="black" />
+														<path d="M10.4 3.60001L12 6H21C21.6 6 22 6.4 22 7V19C22 19.6 21.6 20 21 20H3C2.4 20 2 19.6 2 19V4C2 3.4 2.4 3 3 3H9.20001C9.70001 3 10.2 3.20001 10.4 3.60001ZM16 11.6L12.7 8.29999C12.3 7.89999 11.7 7.89999 11.3 8.29999L8 11.6H11V17C11 17.6 11.4 18 12 18C12.6 18 13 17.6 13 17V11.6H16Z" fill="black" />
+														<path opacity="0.3" d="M11 11.6V17C11 17.6 11.4 18 12 18C12.6 18 13 17.6 13 17V11.6H11Z" fill="black" />
+													</svg>
+												</span>
+                                        Create New </button>
+                                            </a>
+                                       
+
+
 
                             </div>
                         </div>
-                        <div
+                       <div
                             class="d-flex justify-content-end align-items-center d-none"
                             data-kt-customer-table-toolbar="selected"
                             v-if="teacherIds != ''"
@@ -300,6 +524,13 @@
                 }
             }
             return {
+                 errorName:[],
+                doNotImport:0,
+                fileError: [],
+                fileImport: [],
+                valueValidateImportTeacher: 0,
+                sizeFile: '',
+                fileUpLoad: '',
                 lengthDeviceTeacher:'',
                 idTeacher:'',
                 entries:[],
@@ -339,6 +570,9 @@
             $router.on('/', this.load).init();
         },
         methods: {
+             importTeacher() {
+                    $('#kt_modal_create_app').modal('show');
+                },
              removeTeacher:function(deleteTeacher='')
             {
                   $('#delete').modal('show');
@@ -348,7 +582,7 @@
 
                 let query = $router.getQuery();
                 this.$loading(true);
-                const res = await $get('/xadmin/schools/dataTeacher?id='+this.entry.id, query);
+                const res = await $get('/xadmin/schools/dataTeacher?id='+this.entry.id , query);
 
                 this.$loading(false);
                 setTimeout(function (){
@@ -360,6 +594,112 @@
                 this.from = (this.paginate.currentPage - 1) * (this.limit) + 1;
                 this.to = (this.paginate.currentPage - 1) * (this.limit) + this.entries.length;
             },
+            async importFileTeacher() {
+                    if (this.$refs.uploader.files) {
+                        let fileSize = (this.$refs.uploader.files[0].size.toString());
+                        if (fileSize.length < 7) {
+                            let size = `${Math.round(+fileSize / 1024).toFixed(2)}kb`
+                            this.sizeFile = size;
+                        } else {
+                            let size = `${(Math.round(+fileSize / 1024) / 1000).toFixed(2)}MB`
+                            this.sizeFile = size;
+                        }
+                        this.fileUpLoad = this.$refs.uploader.files[0].name
+                    }
+                },
+               async validateImportTeacher() {
+                    this.errors = {};
+                    this.valueValidateImportTeacher=1;
+                    const files = this.$refs.uploader.files;
+                    const formData = new FormData();
+                    formData.append('_token', window.$csrf);
+                    console.log(files);
+                    files.forEach(function(e,index)
+                    {
+                        formData.append(index,e);
+                    })
+                    // forEach(files, (v, k) => {
+                    //     formData.append(k, v);
+                    // });
+
+                    for (let i = 0; i < files.length; i++) {
+                        formData.append('file_' + i, files[i]);
+                        formData.append('school_id', this.entry.id);
+                    }
+
+                    $('#overlay').show();
+                    let res = await fetch('/xadmin/users/validateImportTeacher', {
+                        method: 'POST',
+                        body: formData
+                    })
+                        .then((response) => response.json())
+                        .catch((error) => {
+                            console.error('Error:', error);
+                        });
+                    if (res.code == 2) {
+                        this.code = res.code;
+                        this.fileError = res.fileError;
+                        this.fileImport=res.fileImport;
+                        this.errorName=res.errorFileName;
+                    }
+                    if (res.code == 0) {
+                        this.fileImport = res.fileImport;
+                    }
+                },
+                async saveImport()
+                {
+                    if (this.doNotImport ==0) {
+                        {
+                            this.$loading(true);
+                            const res = await $post('/xadmin/users/import', {
+                                fileImport: this.fileImport,
+                                school_id:this.entry.id,
+                            }, false);
+                            this.$loading(false);
+                            if (res.code) {
+                                toastr.error(res.message);
+                            } else {
+                                this.errors = {};
+                                toastr.success(res.message);
+                                let self=this;
+                                $('#kt_modal_create_app').modal('hide');
+                                self.$refs.uploader.value = null;
+                                self.fileUpLoad='';
+                                self.valueValidateImportTeacher=0;
+                                self.fileImport.length=0;
+                                self.fileError.length=0;
+                                return this.load();
+                            }
+                        }
+                    }
+                    if (this.doNotImport ==1) {
+                        $('#kt_modal_create_app').modal('hide');
+                        this.$refs.uploader.value = null;
+                        this.fileUpLoad='';
+                        this.valueValidateImportTeacher=0;
+                        this.fileImport.length=0;
+                        this.fileError.length=0;
+                        return this.load();
+                    }
+
+                },
+                exportErrorImportTeacher()
+                {
+                    window.location.href='/xadmin/users/exportErrorTeacher?fileError='+ this.errorName;
+                    this.$refs.uploader.value = null;
+                    this.fileUpLoad='';
+                    this.fileImport.length=0;
+                    this.fileError.length=0;
+                    this.valueValidateImportTeacher=0;
+                    $('#kt_modal_create_app').modal('hide');
+                },
+                removeFileTeacher() {
+                    if (this.$refs.uploader.files) {
+                        this.fileUpLoad = '';
+                        this.$refs.uploader.value = null;
+                        this.valueValidateImportTeacher = 0;
+                    }
+                },
             async remove() {
                 const res = await $post('/xadmin/users/remove', {id: this.idTeacher});
 
@@ -448,11 +788,18 @@
 
                 $router.updateQuery({page: this.paginate.currentPage, _: Date.now()});
 
-            }
+            },
+            downloadTemplate()
+                {
+                    window.location.href= '/xadmin/users/downloadTemplate';
+                },
         }
     }
 </script>
 
 <style scoped>
+ input[type="file"] {
+        display: none;
+    }
 
 </style>

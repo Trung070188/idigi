@@ -1313,6 +1313,7 @@
                     const formData = new FormData();
                     formData.append('_token', window.$csrf)
                     forEach(files, (v, k) => {
+                        console.log(k,v);
                         formData.append(k, v);
                     });
 

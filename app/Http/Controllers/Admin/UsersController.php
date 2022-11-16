@@ -102,12 +102,15 @@ class UsersController extends AdminBaseController
 
     public function create_teacher(Request $req)
     {
+        $data=$req->all();
         $component = 'TeacherCreated';
         $title = 'Create Teacher';
         $roles = Role::query()->orderBy('role_name')->get();
         $user = Auth::user();
-        $school = ($user->schools->label);
+        $school=School::query()->where('id',$data['schoolId'])->first();
+        $schoolName = $school->label;
         $jsonData = [
+            'schoolName'=>$schoolName,
             'school' => $school,
             'roles' => $roles
         ];
@@ -876,15 +879,15 @@ class UsersController extends AdminBaseController
         {
             $roleName=$role->role_name;
         }
-        if($roleName=='School Admin')
-        {
-            $schoolId = $user->Schools->id;
+        // if($roleName=='School Admin')
+        // {
+        //     $schoolId = $data_role['school']->id;
 
-        }
-        if($roleName!='School Admin')
-        {
-            $schoolId=$data_role['schoolId'];
-        }
+        // }
+        // if($roleName!='School Admin')
+        // {
+        //     $schoolId=$data_role['schoolId'];
+        // }
         if (isset($data['id'])) {
             $user = User::find($data['id']);
             if ($data['email']) {
@@ -941,7 +944,7 @@ class UsersController extends AdminBaseController
             }
             $entry->fill($data);
             $entry->save();
-            $schoolId = @$entry->schools->id;
+            $schoolId = $data['school']['id'];
 
             UserRole::where('user_id', $entry->id)->delete();
             if (@$data_role['name_role']) {
@@ -987,7 +990,7 @@ class UsersController extends AdminBaseController
         }
         else{
             $entry = new User();
-            $entry->school_id = $schoolId;
+            $entry->school_id =$data_role['school']['id'];
             if (@$data['password'] == null) {
                 $entry->password = Str::random(10);
                 $realPassword = $entry->password;
@@ -1275,6 +1278,7 @@ class UsersController extends AdminBaseController
 
     public function validateImportTeacher(Request $req)
     {
+        $data=$req->all();
         if (!$req->isMethod('POST')) {
             return ['code' => 405, 'message' => 'Method not allow'];
         }
@@ -1327,7 +1331,7 @@ class UsersController extends AdminBaseController
         $validations = [];
         $error = [];
         $user = Auth::user();
-        $school = $user->schools->id;
+        $school=School::query()->where('id',$data['school_id'])->first();
         $code = 0;
         foreach ($teacherLists as $teacherList) {
 
@@ -1386,7 +1390,7 @@ class UsersController extends AdminBaseController
          {
              $code=2;
          }
-         if(count($validations)>$user->schools->number_of_users)
+         if(count($validations)>$school->number_of_users)
          {
              $code=2;
          }
@@ -1399,7 +1403,7 @@ class UsersController extends AdminBaseController
 
                         $validation['error']=[
                             'max_length'=>[
-                                'Allowed to register up to '. $user->schools->number_of_users .' users'
+                                'Allowed to register up to '. $school->number_of_users .' users'
                             ]
                         ];
 
@@ -1428,7 +1432,8 @@ class UsersController extends AdminBaseController
                   'fileError'=>$fileError,
                     'errorFileName'=>$errorName
                 ];
-            } else {
+            }
+             else {
                 $file = new File();
                 $file->type = $file0['type'];
                 $file->hash = sha1($newFilePath);
@@ -1469,7 +1474,6 @@ class UsersController extends AdminBaseController
         }
             if ($dataImport['fileImport']!=[]) {
                 $user=Auth::user();
-                $school = $user->schools->id;
                 foreach ($dataImport['fileImport'] as $import) {
                     $user = new User();
                     $user->username = $import['username'];
@@ -1478,7 +1482,7 @@ class UsersController extends AdminBaseController
                     $user->email=$import['email'];
                     $user->class=$import['class'];
                     $user->password=Hash::make($import['password']);
-                    $user->school_id=$school;
+                    $user->school_id=$dataImport['school_id'];
                     $user->state =1;
                     $user->save();
                     UserRole::create(['user_id' => $user->id, 'role_id' => 5]);
