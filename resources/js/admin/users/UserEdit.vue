@@ -85,22 +85,20 @@
                                         <input class="form-control" placeholder="Enter the email address" :disabled="permissionFields['user_email']==false" v-model="entry.email">
                                         <error-label for="f_category_id" :errors="errors.email"></error-label>
                                     </div>
-<!--                                    <div v-if="entry.id==null" class="form-group  col-sm-4">-->
-<!--                                        <label>Password <span class="text-danger">*</span></label>-->
-<!--                                        <input :type="showPass ? 'text' : 'password'" class="form-control"-->
-<!--                                               ref="password" v-model="entry.password">-->
-<!--                                        <i @click="showPass = !showPass" class="fa fa-eye"></i>-->
-<!--                                        <error-label for="f_category_id" :errors="errors.password"></error-label>-->
-<!--                                    </div>-->
+                                   <div  class="form-group  col-sm-4">
+                                       <label>Password <span class="text-danger">*</span></label>
+                                       <input :type="showPass ? 'text' : 'password'" class="form-control"
+                                              ref="password" v-model="password" placeholder="Enter the password">
+                                       <error-label for="f_category_id" :errors="errors.password"></error-label>
+                                   </div>
 
-<!--                                    <div v-if="entry.id==null" class="form-group  col-sm-4">-->
-<!--                                        <label>Confirm your password <span class="text-danger">*</span></label>-->
-<!--                                        <input class="form-control" :type="showConfirm ? 'text' : 'password'"-->
-<!--                                               v-model="entry.password_confirmation">-->
-<!--                                        <i @click="showConfirm = !showConfirm" class="fa fa-eye"></i>-->
-<!--                                        <error-label for="f_category_id"-->
-<!--                                                     :errors="errors.password_confirmation"></error-label>-->
-<!--                                    </div>-->
+                                   <div  class="form-group  col-sm-4">
+                                       <label>Confirm your password <span class="text-danger">*</span></label>
+                                       <input class="form-control" :type="showConfirm ? 'text' : 'password'"
+                                               v-model="password_confirmation"  placeholder="Re-enter to confirm the password">
+                                       <error-label for="f_category_id"
+                                                     :errors="errors.password_confirmation"></error-label>
+                                   </div> 
                                 </div>
                                 <div class="row py-3" >
                                     <div class="form-group col-sm-8" >
@@ -113,13 +111,13 @@
                                             <error-label for="f_grade" :errors="errors.name_role"></error-label>
                                         </div>
                                     </div>
-                                    <div class=" form-group col-lg-3 ">
+                                    <!-- <div class=" form-group col-lg-3 ">
                                         <label >Password</label>
                                         <div class="d-flex align-items-center justify-content-start mt-2" >
                                             <input :disabled="permissionFields['user_password']==false" class="form-control " type="password" placeholder="Enter the password" v-model="password" >
                                             <error-label></error-label>
                                         </div>
-                                    </div>
+                                    </div> -->
                                 </div>
                                 <div class="row" v-if="name_role==2 || name_role==5">
                                     <div class="form-group col-sm-4 mb-7">
@@ -204,6 +202,7 @@
             return {
                 userSchool:$json.userSchool || [],
                 password:'',
+                password_confirmation:'',
                 changed: false,
                 permissions,
                 showConfirm: false,
@@ -276,7 +275,7 @@
             },
             async save() {
                 this.isLoading = true;
-                const res = await $post('/xadmin/users/save', {entry: this.entry, name_role: this.name_role,password:this.password,userSchool:this.userSchool}, false);
+                const res = await $post('/xadmin/users/save', {entry: this.entry, name_role: this.name_role,password:this.password,userSchool:this.userSchool,password_confirmation:this.password_confirmation}, false);
                 this.isLoading = false;
                 if (res.errors) {
                     this.errors = res.errors;

@@ -694,18 +694,12 @@ class UsersController extends AdminBaseController
         }
         if(!isset($data['id']))
         {
-            if($data_role['auto_gen']==false)
-            {
-                $rules['password']=['required'];
-            }
-            if(@$data['password'])
-            {
-                $rules['password_confirmation']=['required'];
-            }
+            
            if($data_role['name_role']==null)
            {
                $rules['name_role']=['required'];
            }
+
         }
 //        if ($data_role['name_role'] == 2 || $data_role['name_role'] == 5) {
 //            $rules['school_id'] = ['required'];
@@ -715,6 +709,21 @@ class UsersController extends AdminBaseController
             'name_role.required'=>'The role field is required.'
         ];
         $v = Validator::make($data, $rules, $customMessages,$data_role);
+        $v->after(function($validate ) use ($data_role,$data)
+        {
+            if(isset($data['id']) && $data_role['password']!=$data_role['password_confirmation'])
+            {
+                $validate->errors()->add('password_confirmation','The password and confirmation password do not match.');
+
+            }
+            if(!isset($data['id']) && $data['password']!=$data_role['password_confirmation'] && $data_role['auto_gen']==false)
+            {
+                $validate->errors()->add('password_confirmation','The password and confirmation password do not match.');
+
+            }
+            
+        });
+       
 
         if ($v->fails()) {
             return [

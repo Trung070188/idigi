@@ -175,7 +175,7 @@
                         <table class="table table-row-bordered align-middle gy-4 gs-9">
                             <thead class="border-bottom border-gray-200 fs-6 text-gray-600 fw-bolder bg-light bg-opacity-75">
                             <tr>
-                                <td width="25">
+                                <td width="25" v-if="permissions['018']">
                                     <div class="form-check form-check-sm form-check-custom form-check-solid">
                                         <input class="form-check-input" type="checkbox" v-model="allSelected"
                                                @change="selectAll()">
@@ -193,7 +193,7 @@
                             </thead>
                             <tbody>
                             <tr v-for="(entry,index) in entries">
-                                <td class="">
+                                <td class="" v-if="permissions['018']">
                                     <div class="form-check form-check-sm form-check-custom form-check-solid">
                                         <input class="form-check-input" type="checkbox" v-model="schoolIds"
                                                :value="entry.id" @change="updateCheckAll">
