@@ -1550,12 +1550,12 @@ class PlansController extends AdminBaseController
         $data = $req->get('entry');
         if (isset($data['id'])) {
             $entry = Plan::find($data['id']);
-          $package=  PackageLesson::Where('plan_id',$entry->id)->where('id',$dataAll['id'])->delete();
+           PackageLesson::Where('plan_id',$entry->id)->where('id',$dataAll['id'])->delete();
             ZipPlanLesson::where('plan_id',$entry->id)->where('package_id',$dataAll['id'])->delete();
             return [
                 'code' => 0,
                 'message' => 'Đã xóa',
-                'object'=>$package->name.' plan (' .$entry->name .' )' ,
+                'object'=>$entry->name,
                 'status'=>'Remove package plan',
                 'role'=>$this->roleName()
 
