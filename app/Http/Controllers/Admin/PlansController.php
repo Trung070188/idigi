@@ -1672,11 +1672,10 @@ class PlansController extends AdminBaseController
     }
     public function generateToken(Request $req)
     {
-
+       $plan=$req->entry;
         $device = UserDevice::where('id', $req->device_id)
                 ->where('status', 2)
                 ->first();
-                dd($device);
         $user=User::query()->where('id',$device->user_id)->first();
             if($device)
         {
@@ -1687,7 +1686,7 @@ class PlansController extends AdminBaseController
                     'user_id' => $user->id,
                     'device_uid' =>$device->device_uid,
                     'device_name' =>$device->device_name,
-                    'secret_key' =>$device->secret_key,
+                    'secret_key' =>$plan['secret_key'],
                     'create_time' =>  Carbon::now()->timestamp,
                     'expired'=>strtotime($device->expire_date)
                 ];

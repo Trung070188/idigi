@@ -470,23 +470,18 @@ class SchoolsController extends AdminBaseController
         $rules = [
             'label' => 'required|max:45',
             'school_address' => 'required|max:255',
-            'number_of_users' => 'required|min:1',
-            'devices_per_user' => 'required|min:1',
-            'license_to'=>'required',
-            'license_to'=>'after_or_equal:' . $current
+            'number_of_users' => 'required|min:1|number',
+            'devices_per_user' => 'required|min:1|number',
+            'license_to'=>'required|after_or_equal:'. $current,
 
         ];
         if(@$data['school_email'])
         {
-            $rules=[
-                'school_email' => 'email',
-            ];
+            $rules['school_email']=['email'];
         }
         if(@$data['school_phone'])
         {
-            $rules=[
-                'school_phone' => 'min:10',
-            ];
+            $rules['school_phone']=['min:10|number'];
         }
         // $rules['license_to']='after:' .$today;
         $message=[

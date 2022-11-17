@@ -64,14 +64,14 @@
 
                                     <div class="form-group col-lg-4">
                                         <label>No. of Device per user <span class="text-danger">*</span></label>
-                                        <input type="number" min="1" max="20" v-model="entry.devices_per_user" class="form-control"
+                                        <input type="number" min="1" max="200" v-model="entry.devices_per_user" class="form-control noString"
                                                 placeholder="Enter number of Device per User" >
                                         <error-label  :errors="errors.devices_per_user"></error-label>
 
                                     </div>
                                     <div class="form-group col-lg-4">
                                         <label>No. of User <span class="text-danger">*</span></label>
-                                        <input type="number" min="1" max="10000" v-model="entry.number_of_users"  class="form-control"
+                                        <input type="number" min="1" max="10000" v-model="entry.number_of_users"  class="form-control noString"
                                                 placeholder="Enter number of User" >
                                         <error-label  :errors="errors.number_of_users"></error-label>
 

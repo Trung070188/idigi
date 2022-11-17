@@ -1861,7 +1861,7 @@
             },
 
             async genToken(){
-                const res  = await $post('/xadmin/plans/generateToken', {device_id: this.deviceGetCode.id});
+                const res  = await $post('/xadmin/plans/generateToken', {device_id: this.deviceGetCode.id,entry:this.entry});
                 this.token = res.token;
             },
             copyTextToken() {
