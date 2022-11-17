@@ -106,7 +106,7 @@
                                     </div>
                                 </div>
                                 <hr style="margin-top:5px">
-                                <h4>Content enrollment</h4>
+                                <h4>Resource enrollment</h4>
                                 <div class="row">
 
                                     <div class="form-group col-sm-10"  @change="saveTeacherCourse()">

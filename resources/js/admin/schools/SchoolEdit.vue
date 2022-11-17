@@ -156,15 +156,15 @@
                                     </div>
                                 </div>
                                 <div class="form-check form-check-custom form-check-solid pb-5 ">
-                                    <input id="state" type="checkbox"  class="form-check-input h-20px w-20px" checked>
-                                    <label for="state" class="form-check-label fw-bold">Active school</label>
+                                    <input id="state" type="checkbox"  class="form-check-input h-20px w-20px" v-model="entry.active_school" checked>
+                                    <label for="state" class="form-check-label fw-bold" >Active school</label>
                                     <error-label for="f_grade" ></error-label>
                                 </div>
                             </div>
                             <div class="col-lg-12">
                             <div class="row">
                                     <div class="form-group col-lg-8">
-                                        <label>Content enrollment <span class="text-danger">*</span></label>
+                                        <label>Resources enrollment <span class="text-danger">*</span></label>
 
                                         <select class="form-control form-select " required v-model="allocationContentSchool" :disabled="permissionFields['school_content']==false"
                                                 @change="changeAllocationContent() ">
@@ -224,8 +224,8 @@
                                     </tbody>
                                 </table>
                                 <div class="form-check form-check-custom form-check-solid pb-5 ml-3">
-                                    <input id="state1" type="checkbox"  class="form-check-input h-20px w-20px" checked>
-                                    <label for="state1" class="form-check-label fw-bold">Active allocation</label>
+                                    <input id="state1" type="checkbox"  class="form-check-input h-20px w-20px" v-model="entry.active_allocation" checked>
+                                    <label for="state1" class="form-check-label fw-bold" >Active allocation</label>
                                     <error-label for="f_grade" ></error-label>
                                 </div>
 
