@@ -250,6 +250,7 @@ class PlansController extends AdminBaseController
             'plan_add_lesson'=>$permissionDetail->havePermission('plan_add_lesson',$permissions,$user),
             'plan_zip_package_lesson'=>$permissionDetail->havePermission('plan_zip_package_lesson',$permissions,$user),
             'plan_rename_lesson_package'=>$permissionDetail->havePermission('plan_rename_lesson_package',$permissions,$user),
+            'plan_device_get_confirm_code'=>$permissionDetail->havePermission('plan_device_get_confirm_code',$permissions,$user),
 
 
         ];
