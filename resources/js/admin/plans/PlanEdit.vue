@@ -159,7 +159,7 @@
                                     <div class="form-group col-lg-4">
                                         <label>Due date </label>
                                         <Datepicker :disabled="permissionFields['plan_due_date']==false" v-model="entry.due_at" readonly/>
-                                         <span :disabled="permissionFields['plan_due_date']==false" v-if="entry.due_at!=''" class="svg-icon svg-icon-2 svg-icon-lg-1 me-0" @click="dueAtClear">
+                                         <span  v-if="entry.due_at!='' && permissionFields['plan_due_date']==true" class="svg-icon svg-icon-2 svg-icon-lg-1 me-0" @click="dueAtClear">
                                             <svg type="button" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" style="float: right;margin: -32px 3px 0px;">
                                             <rect opacity="0.5" x="6" y="17.3137" width="16" height="2" rx="1" transform="rotate(-45 6 17.3137)" fill="black" style="fill:red"/>
                                                         <rect x="7.41422" y="6" width="16" height="2" rx="1" transform="rotate(45 7.41422 6)" fill="black" style="fill:red"/>
@@ -188,7 +188,7 @@
                                     <div class="form-group col-lg-4">
                                         <label>Expire date <span class="text-danger">*</span></label>
                                         <Datepicker :disabled="permissionFields['plan_expire_date']==false" v-model="entry.expire_date" readonly/>
-                                        <span :disabled="permissionFields['plan_expire_date']==false" v-if="entry.expire_date!=''" class="svg-icon svg-icon-2 svg-icon-lg-1 me-0" @click="expireDateClear">
+                                        <span v-if="entry.expire_date!='' && permissionFields['plan_expire_date']==true" class="svg-icon svg-icon-2 svg-icon-lg-1 me-0" @click="expireDateClear">
                                             <svg type="button" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" style="float: right;margin: -32px 3px 0px;">
                                             <rect opacity="0.5" x="6" y="17.3137" width="16" height="2" rx="1" transform="rotate(-45 6 17.3137)" fill="black" style="fill:red"/>
                                                         <rect x="7.41422" y="6" width="16" height="2" rx="1" transform="rotate(45 7.41422 6)" fill="black" style="fill:red"/>
@@ -345,8 +345,8 @@
                                                         <a class="menu-link px-3 isDisabled"  v-if="permissionFields['plan_add_lesson']==false && dataZipLesson.status=='waitting'" @click="addLessonPackage(tabLessonContent)" >Add lesson</a>
                                                     </div>
                                                     <div class="menu-item px-3" v-if="dataZipLesson.status=='waitting'">
-                                                        <a v-if="checkZipPackage[0].lessonIds.length>0" class="menu-link px-3" @click="downloadLesson(tabLessonContent)">Zip lesson package</a>
-                                                        <a v-else class="menu-link px-3 isDisabled" @click="downloadLesson(tabLessonContent)" >Zip lesson package</a>
+                                                        <a v-if="checkZipPackage[0].lessonIds.length>0 && permissionFields['plan_zip_package_lesson']==true" class="menu-link px-3" @click="downloadLesson(tabLessonContent)">Zip lesson package</a>
+                                                        <a v-else class="menu-link px-3 isDisabled">Zip lesson package</a>
                                                     </div>
                                                     <div class="menu-item px-3" >
                                                         <a class="menu-link px-3 " v-if="permissionFields['plan_rename_lesson_package']==true" @click="renameLessonPackage(tabLessonContent)" >Rename lesson package</a>
@@ -408,7 +408,7 @@
 
                     <div class="mt-3 mb-5" style="margin-left: 18px">
                         <button type="reset" @click="save()" class="btn btn-primary mr-2">Save plan</button>
-                        <button type="reset" class="btn btn-primary mr-2" @click="exportPlan"><i
+                        <button :disabled="permissionFields['plan_export_plan']==false" type="reset" class="btn btn-primary mr-2" @click="exportPlan"><i
                             class="bi bi-arrow-up-square-fill"></i>Export plan
                         </button>
                         <button type="reset" @click="backIndex()" class="btn btn-secondary"
