@@ -103,7 +103,7 @@
                                 </div>
                                     <div class="form-group col-lg-4">
                                         <label>Expired date/License <span class="text-danger">*</span></label>
-                                        <datepicker  v-model="entry.license_to" rows="5" class="form-control" ></datepicker>
+                                        <datepicker  v-model="entry.license_to" rows="5" class="form-control" readonly></datepicker>
                                         <error-label for="f_grade" :errors="errors.license_to"></error-label>
                                     </div>
                                 </div>

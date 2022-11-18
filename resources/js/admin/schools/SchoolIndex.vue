@@ -188,7 +188,7 @@
                                 <th class="">Teacher</th>
                                 <th class="">Devices per user</th>
                                 <th class="">License</th>
-                                <th></th>
+                                <th>Action</th>
                             </tr>
                             </thead>
                             <tbody>
