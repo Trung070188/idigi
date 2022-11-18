@@ -347,7 +347,7 @@ legend {
     .card.card-custom.card-stretch.gutter-b{
         width:1400px;
     }
-   
+
 }
 
 
@@ -2300,6 +2300,11 @@ pre code {
 
 .table th,
 .table td {
+    max-width: 100px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    cursor: pointer;
     padding: 0.75rem;
     /*vertical-align: top;*/
     border-top: 1px solid #EBEDF3;

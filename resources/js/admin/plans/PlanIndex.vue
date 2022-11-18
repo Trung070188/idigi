@@ -87,7 +87,11 @@
                                             </svg>
                                         </span>
                             </div>
-                             <button type="button" style="margin-left: 10px" @click="isShowFilter = !isShowFilter" class="btn btn-light" v-if="isShowFilter">
+                        </div>
+                        <div class="card-toolbar">
+                            <div class="d-flex justify-content-end" data-kt-customer-table-toolbar="base"
+                                v-if="planIds==''">
+                                <button type="button" style="margin-left: 10px" @click="isShowFilter = !isShowFilter" class="btn btn-light" v-if="isShowFilter">
                                     <i style="margin-left: 5px" class="fas fa-times"></i>
                                     Close Advanced Search
                                 </button>
@@ -95,10 +99,6 @@
                                     <i class="bi bi-funnel"></i>
                                     Advanced Search
                                 </button>
-                        </div>
-                        <div class="card-toolbar">
-                            <div class="d-flex justify-content-end" data-kt-customer-table-toolbar="base"
-                                v-if="planIds==''">
                                 <a :href="'/xadmin/plans/create'" >
                                     <button  class="btn btn-primary button-create" style="margin:0 0 0 15px">
                                         <i class="bi bi-clipboard-plus"></i>New Plan
@@ -240,8 +240,11 @@
                                             >
                                     </div>
                                 </td>
-                                <td class="" >{{index+1}}</td>
-                                <td class="" >{{entry.name}}</td>
+                                <td class="" >{{index+1}}
+                                </td>
+                                <td class="" data-bs-toggle="tooltip" :title="entry.name">
+                                    {{entry.name}}
+                                </td>
                                 <td class="">{{entry.created_by}}</td>
                                 <td class="" >{{entry.assign_to}}</td>
                                 <td class="" >{{d(entry.created_at)}}</td>
@@ -492,6 +495,29 @@
 
     option {
         color: black;
+    }
+    .tooltip {
+        position: relative;
+        display: inline-block;
+        border-bottom: 1px dotted black;
+    }
+
+    .tooltip .tooltiptext {
+        visibility: hidden;
+        width: 120px;
+        background-color: black;
+        color: #fff;
+        text-align: center;
+        border-radius: 6px;
+        padding: 5px 0;
+
+        /* Position the tooltip */
+        position: absolute;
+        z-index: 1;
+    }
+
+    .tooltip:hover .tooltiptext {
+        visibility: visible;
     }
 
 

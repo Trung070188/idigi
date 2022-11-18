@@ -875,6 +875,7 @@
             };
 
             return {
+                cacheLesson:$json.cacheLesson,
                 permissionFields:$json.permissionFields || [],
                 deviceGetCode:[],
                 token:'',
@@ -1665,7 +1666,10 @@
                                 })
                             })
                         })
+
+
                     },1000);
+
                        setTimeout(function () {
                            for (var key in self.filter) {
                                self.filter[key] = '';
@@ -1844,12 +1848,12 @@
                         packageIds.push(e.lesson_ids);
                     })
                     window.location.href= '/xadmin/plans/exportPlan?entry=' + JSON.stringify(this.entry)+
-                        '&packageLessonPlan=' + JSON.stringify(this.lessonPackagePlans)+
+                        '&packageLessonPlan=' + this.cacheLesson+
                         '&dataDevice=' + JSON.stringify(this.data);
                 }
                 else {
                     window.location.href= '/xadmin/plans/exportPlan?entry=' + JSON.stringify(this.entry)+
-                        '&packageLessonPlan=' + JSON.stringify(this.lessonPackagePlans)+
+                        '&packageLessonPlan=' + this.cacheLesson+
                         '&dataDevice=' + JSON.stringify(this.data);
                 }
 

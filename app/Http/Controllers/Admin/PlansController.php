@@ -228,6 +228,12 @@ class PlansController extends AdminBaseController
                 'lessonIds' => $lessonIdArr,
             ];
         }
+        if(@$lessonPackagePlans)
+        {
+            $cacheLesson='lesson_plan_'. uniqid(time());
+            Cache::add($cacheLesson,json_encode($lessonPackagePlans));
+
+        }
         $user = Auth::user();
         $permissionDetail = new PermissionField();
         $permissions = $permissionDetail->permission($user);
@@ -257,6 +263,7 @@ class PlansController extends AdminBaseController
         $exportDeviceName='export_device_'. uniqid(time());
         Cache::add($exportDeviceName,json_encode($data));
         $jsonData = [
+            'cacheLesson'=>@$cacheLesson,
             'permissionFields'=>$permissionFields,
             'roleAuth' => $roleAuth,
             'lessonPackagePlans' => @$lessonPackagePlans,
@@ -1594,6 +1601,7 @@ class PlansController extends AdminBaseController
 
         $dataAll=$req->all();
 
+
         $data = json_decode($req->get('entry'), true);
 
 
@@ -1602,9 +1610,7 @@ class PlansController extends AdminBaseController
             $entry = Plan::find($data['id']);
             $lessons=[];
             $assignTo=User::where('id',$entry->user_id)->first();
-            $dataAll['packageLessonPlan'] = json_decode($dataAll['packageLessonPlan'], true);
-
-
+            $dataAll['packageLessonPlan'] = json_decode(Cache::get($dataAll['packageLessonPlan']), true);
             if(@$dataAll['packageLessonPlan'])
             {
                 foreach ( $dataAll['packageLessonPlan'] as $key => $packageLessonPlan)
