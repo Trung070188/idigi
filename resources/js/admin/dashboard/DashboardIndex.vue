@@ -46,6 +46,14 @@
             <div class="row gy-5 g-xl-8">
                 <div class="col-xl-8">
                     <div class="card card-xl-stretch mb-xl-8">
+                        <div class="card-header border-0 pt-5 mt-0">
+                            <div>
+                                <i class="bi bi-arrow-left" style="cursor: pointer"  @click="subMonthYear()"></i>
+                                <span style="padding:8px 10px 5px 10px; color:#043B79; font-weight:800"> {{(select=='Month')?(cbMonth + '/'):('')}}{{cbYear}} </span>
+                                <i class="bi bi-arrow-right" style="cursor: pointer" @click="addMonthYear()"></i>
+                            </div>
+
+                        </div>
                         <GoogleChart  :chart_data="dataChart" />
                     </div>
                 </div>
@@ -147,6 +155,12 @@
         data()
         {
             return {
+                select:null,
+                cbYear: new Date().getFullYear(),
+                cbMonth: new Date().getMonth(),
+                labelsYear: ["Jan","Feb","Mar","Apr","May","Jun","Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+                labelsMonth:[],
+
                 breadcrumbs:[
                     {
                         title: 'Dashboard'
@@ -164,8 +178,52 @@
         mounted() {
             $router.on('/', this.load).init();
         },
+        watch:{
+            cbMonth:function(){
+                if (this.select != 'Year'){
+                    var dayOfMonth = new Date(this.cbYear, this.cbMonth, 0).getDate()
+                    this.labelsMonth=[]
+                    for(let i=1; i <= dayOfMonth; i++){
+                        this.labelsMonth.push(i.toString())
+                    }
+                }
+            }
+        },
         methods:
         {
+            changeCombo(){
+                if (this.select == 'Month'){
+                    this.cbYear = new Date().getFullYear()
+                    this.cbMonth= new Date().getMonth() + 1
+                }
+                else{
+                    this.cbYear = new Date().getFullYear()
+                }
+
+            },
+            addMonthYear(){
+                if (this.select == 'Month'){
+                    if (this.cbMonth + 1 > 12){
+                        this.cbMonth = 1;
+                        this.cbYear += 1;
+                    }
+                    else this.cbMonth += 1;
+                }else{
+                    this.cbYear += 1;
+
+                }
+            },
+            subMonthYear(){
+                if (this.select == 'Month'){
+                    if (this.cbMonth - 1 == 0){
+                        this.cbMonth = 12;
+                        this.cbYear -= 1;
+                    }
+                    else this.cbMonth -= 1;
+                }else{
+                    this.cbYear -= 1;
+                }
+            },
 
             async load() {
             let query = $router.getQuery();
