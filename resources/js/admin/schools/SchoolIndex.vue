@@ -186,7 +186,7 @@
                                 <th class="">Address</th>
                                 <th class="">Administrator name</th>
                                 <th class="">Teacher</th>
-                                <th class="">Devices Per User</th>
+                                <th class="">Devices per user</th>
                                 <th class="">License</th>
                                 <th></th>
                             </tr>
