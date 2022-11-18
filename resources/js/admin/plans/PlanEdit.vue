@@ -875,6 +875,7 @@
             };
 
             return {
+                cachePlan:$json.cachePlan,
                 cacheLesson:$json.cacheLesson,
                 permissionFields:$json.permissionFields || [],
                 deviceGetCode:[],
@@ -1847,14 +1848,14 @@
                     this.lessonPackagePlans.forEach(function (e) {
                         packageIds.push(e.lesson_ids);
                     })
-                    window.location.href= '/xadmin/plans/exportPlan?entry=' + JSON.stringify(this.entry)+
+                    window.location.href= '/xadmin/plans/exportPlan?entry=' +this.cachePlan+
                         '&packageLessonPlan=' + this.cacheLesson+
-                        '&dataDevice=' + JSON.stringify(this.data);
+                        '&dataDevice=' + this.exportDeviceName;
                 }
                 else {
                     window.location.href= '/xadmin/plans/exportPlan?entry=' + JSON.stringify(this.entry)+
                         '&packageLessonPlan=' + this.cacheLesson+
-                        '&dataDevice=' + JSON.stringify(this.data);
+                        '&dataDevice=' + this.exportDeviceName;
                 }
 
             },

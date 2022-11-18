@@ -234,6 +234,8 @@ class PlansController extends AdminBaseController
             Cache::add($cacheLesson,json_encode($lessonPackagePlans));
 
         }
+        $cachePlan='plan_' . uniqid(time());
+        Cache::add($cachePlan,json_encode($entry));
         $user = Auth::user();
         $permissionDetail = new PermissionField();
         $permissions = $permissionDetail->permission($user);
@@ -263,6 +265,7 @@ class PlansController extends AdminBaseController
         $exportDeviceName='export_device_'. uniqid(time());
         Cache::add($exportDeviceName,json_encode($data));
         $jsonData = [
+            'cachePlan'=>$cachePlan,
             'cacheLesson'=>@$cacheLesson,
             'permissionFields'=>$permissionFields,
             'roleAuth' => $roleAuth,
@@ -1600,16 +1603,10 @@ class PlansController extends AdminBaseController
     {
 
         $dataAll=$req->all();
-
-
-        $data = json_decode($req->get('entry'), true);
-
-
-
-        if (isset($data['id'])) {
-            $entry = Plan::find($data['id']);
+        {
+            $entry = json_decode(Cache::get($dataAll['entry']),true);
             $lessons=[];
-            $assignTo=User::where('id',$entry->user_id)->first();
+            $assignTo=User::where('id',$entry['user_id'])->first();
             $dataAll['packageLessonPlan'] = json_decode(Cache::get($dataAll['packageLessonPlan']), true);
             if(@$dataAll['packageLessonPlan'])
             {
@@ -1620,17 +1617,17 @@ class PlansController extends AdminBaseController
                     $lessonsArr=Lesson::query()->whereIn('id',$packageLessonPlan['lessonIds'])->orderBy('name','ASC')->get();
                     $lessons[]=[
                         'package_name'=>$packageLessonPlan['name'],
-                        'plan_name'=>$entry->name,
+                        'plan_name'=>$entry['name'],
                         'assign_to'=>$assignTo->full_name,
-                        'due_at'=>Carbon::parse($entry->due_at)->format('d/m/Y'),
-                        'expire_date'=>Carbon::parse($entry->expire_date)->format('d/m/Y'),
+                        'due_at'=>Carbon::parse($entry['due_at'])->format('d/m/Y'),
+                        'expire_date'=>Carbon::parse($entry['expire_date'])->format('d/m/Y'),
                         'lessons'=>$lessonsArr,
                     ];
                 }
             }
 
             $payload=[];
-            $devices= json_decode($dataAll['dataDevice'], true);
+            $devices= json_decode(Cache::get($dataAll['dataDevice']), true);
             if(@$devices)
             {
                 foreach ($devices as $device)
@@ -1641,7 +1638,7 @@ class PlansController extends AdminBaseController
                         'user_id' => $assignTo->id,
                         'device_uid' => $device['device_uid'],
                         'device_name' => $device['device_name'],
-                        'secret_key' => $entry->secret_key,
+                        'secret_key' => $entry['secret_key'],
                         'create_time' => Carbon::now()->timestamp,
                         'expired' => $device['expire_date'],
                     ];
