@@ -184,6 +184,11 @@
                                         </a>
                                     </div>
                                 </div>
+                                <div class="form-check form-check-custom form-check-solid pb-5">
+                                    <input id="state1" type="checkbox"  class="form-check-input h-20px w-20px" v-model="entry.active_allocation" checked>
+                                    <label for="state1" class="form-check-label fw-bold" >Active allocation</label>
+                                    <error-label for="f_grade" ></error-label>
+                                </div>
 
                                 <table class="table table-row-bordered align-middle gy-4 gs-9" v-if="courses!=null">
                                     <thead
@@ -223,13 +228,6 @@
                                     </tr>
                                     </tbody>
                                 </table>
-                                <div class="form-check form-check-custom form-check-solid pb-5 ml-3">
-                                    <input id="state1" type="checkbox"  class="form-check-input h-20px w-20px" v-model="entry.active_allocation" checked>
-                                    <label for="state1" class="form-check-label fw-bold" >Active allocation</label>
-                                    <error-label for="f_grade" ></error-label>
-                                </div>
-
-
                             </div>
                         </div>
                         <hr style="margin-top: 5px;">
@@ -408,6 +406,16 @@
 
     option {
         color: black;
+    }
+    .table th, .table td
+    {
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    /* white-space: nowrap; */
+    cursor: pointer;
+    padding: 0.75rem;
+    border-top: 1px solid #EBEDF3;
     }
 
 

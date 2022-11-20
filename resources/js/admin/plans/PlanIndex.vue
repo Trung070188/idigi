@@ -519,6 +519,18 @@
     .tooltip:hover .tooltiptext {
         visibility: visible;
     }
+   .table th, .table td
+   {
+    max-width: 150px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    cursor: pointer;
+    padding: 0.75rem;
+    vertical-align: top;
+    padding: 0.75rem;
+
+   }
 
 
 </style>

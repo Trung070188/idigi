@@ -2300,14 +2300,17 @@ pre code {
 
 .table th,
 .table td {
-    max-width: 100px;
+    /* max-width: 100px;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
     cursor: pointer;
     padding: 0.75rem;
     /*vertical-align: top;*/
+    padding: 0.75rem;
+    /*vertical-align: top;*/
     border-top: 1px solid #EBEDF3;
+
 }
 
 .table thead th {

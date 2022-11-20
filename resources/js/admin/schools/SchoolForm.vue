@@ -120,6 +120,11 @@
                                            <option v-for="allocationConten in allocationContens" :value="allocationConten.id">{{allocationConten.title}}</option>
                                        </select>
                                     </div>
+                                    <div class="form-check form-check-custom form-check-solid pb-5">
+                                <input id="state1" type="checkbox"  class="form-check-input h-20px w-20px" checked>
+                                <label for="state1" class="form-check-label fw-bold">Active allocation</label>
+                                <error-label for="f_grade" ></error-label>
+                            </div>
                                        <table class="table table-row-bordered align-middle gy-4 gs-9 ml-3" v-if="allocationContenSchool!=null">
                             <thead class="border-bottom border-gray-200 fs-6 text-gray-600 fw-bolder bg-light bg-opacity-75">
                             <tr>
@@ -138,11 +143,6 @@
                             </tr>
                             </tbody>
                         </table>
-                            </div>
-                            <div class="form-check form-check-custom form-check-solid pb-5 ml-3">
-                                <input id="state1" type="checkbox"  class="form-check-input h-20px w-20px" checked>
-                                <label for="state1" class="form-check-label fw-bold">Active allocation</label>
-                                <error-label for="f_grade" ></error-label>
                             </div>
                         </div>
                         <hr style="margin-top: 5px;">
@@ -289,5 +289,14 @@
 </script>
 
 <style scoped>
+  .table th, .table td
+    {
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    cursor: pointer;
+    padding: 0.75rem;
+    border-top: 1px solid #EBEDF3;
+    }
 
 </style>
