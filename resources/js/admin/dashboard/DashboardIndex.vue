@@ -123,7 +123,7 @@
                                     <td v-text="entry.username"></td>
                                     <td v-text="entry.role"></td>
                                     <td v-text="entry.status"></td>
-                                    <td v-text="entry.object"></td>
+                                    <td class="" data-bs-toggle="tooltip" :title="entry.object" v-text="entry.object"></td>
                                     <td v-text="entry.ip"></td>
                                     <td>{{d(entry.time)}}</td>
                                     <td class="">
@@ -251,5 +251,15 @@
 </script>
 
 <style scoped>
+    .table th, .table td
+    {
+        max-width: 150px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        cursor: pointer;
+        padding: 0.75rem;
+        vertical-align: top;
+    }
 
 </style>
