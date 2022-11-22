@@ -164,6 +164,7 @@
                     'check' : check,
                 });
                 toastr.options.timeOut=1000;
+                toastr.options.preventDuplicates = true;
                 toastr.success(res.message);
             }
         }
