@@ -228,7 +228,7 @@
                                 <th>Expire date</th>
                                 <th class="">Status</th>
                                 <th>Deployed</th>
-                                <th>Action</th>
+                                <th class="text-center">Action</th>
 
                             </tr>
                             </thead>
@@ -252,7 +252,7 @@
                                 <td>{{(entry.expire_date)}}</td>
                                 <td   class="">{{entry.status}}</td>
                                 <th class=""></th>
-                                <td class="">
+                                <td class="text-center">
                                     <a href="list.html#" class="btn btn-light btn-active-light-primary btn-sm" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">Actions
                                         <!--begin::Svg Icon | path: icons/duotune/arrows/arr072.svg-->
                                         <span class="svg-icon svg-icon-5 m-0">

@@ -181,14 +181,14 @@
                                                @change="selectAll()">
                                     </div>
                                 </td>
-                                <th class="">No.</th>
-                                <th class="">Name</th>
-                                <th class="">Address</th>
-                                <th class="">Administrator name</th>
-                                <th class="">Teacher</th>
-                                <th class="">Devices per user</th>
-                                <th class="">License</th>
-                                <th>Action</th>
+                                <th class="text-center">No.</th>
+                                <th class="text-center">Name</th>
+                                <th class="text-center">Address</th>
+                                <th class="text-center">Administrator name</th>
+                                <th class="text-center">Teacher</th>
+                                <th class="text-center">Devices per user</th>
+                                <th class="text-center">License</th>
+                                <th class="text-center">Action</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -199,14 +199,14 @@
                                                :value="entry.id" @change="updateCheckAll">
                                     </div>
                                 </td>
-                                <td class="" >{{index+1}}</td>
-                                <td class="" v-text="entry.label"></td>
-                                <td class="" v-text="entry.school_address"></td>
-                                <td>{{entry.nameSchoolAdmin}}</td>
-                                <td class="" v-text="entry.teacher.length"></td>
-                                <td class="" v-text="entry.devices_per_user"></td>
-                                <td  >{{d(entry.license_to)}}</td>
-                                <td class="">
+                                <td class="text-center">{{index+1}}</td>
+                                <td class="text-center" v-text="entry.label"></td>
+                                <td class="text-center" v-text="entry.school_address"></td>
+                                <td class="text-center">{{entry.nameSchoolAdmin}}</td>
+                                <td class="text-center" v-text="entry.teacher.length"></td>
+                                <td class="text-center" v-text="entry.devices_per_user"></td>
+                                <td  class="text-center">{{d(entry.license_to)}}</td>
+                                <td class="text-center">
                                     <a href="list.html#" class="btn btn-light btn-active-light-primary btn-sm" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">Actions
                                         <!--begin::Svg Icon | path: icons/duotune/arrows/arr072.svg-->
                                         <span class="svg-icon svg-icon-5 m-0">
