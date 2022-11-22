@@ -60,40 +60,86 @@ class DashboardController extends AdminBaseController
         ];
         return view('admin.layouts.vue', compact('title', 'component', 'jsonData'));
     }
-    public function date()
+    public function data(Request $req)
     {
-      $year=(Carbon::now()->format('Y'));
-//        $year=2022;
+       $dataAll=($req->all());
+        $requestUris=Xlogger::query()
+            ->where('request_uri', '=', '/xadmin/schools/save')
+            ->orwhere('request_uri', '=', '/xadmin/schools/remove')
+            ->orWhere('request_uri', '=', '/xadmin/users/save')
+            ->orWhere('request_uri', '=', '/xadmin/users/remove')
+            ->orWhere('request_uri', '/xadmin/users/saveTeacher')
+            ->orWhere('request_uri', '/xadmin/roles/save')
+            ->orWhere('request_uri', '=', '/xadmin/roles/remove')
+            ->orWhere('request_uri', '/xadmin/allocation_contents/save')
+            ->orWhere('request_uri', '/xadmin/schools/saveLicense')
+            ->orWhere('request_uri', '/xadmin/plans/remove')
+            ->orWhere('request_uri', '/xadmin/plans/save')
+            ->orWhere('request_uri', '/xadmin/plans/saveDevice')
+            ->orWhere('request_uri', '/xadmin/plans/addPackageLesson')
+            ->orWhere('request_uri', '/xadmin/plans/planLesson')
+            ->orWhere('request_uri', '/xadmin/plans/removeAllLesson')
+            ->orWhere('request_uri', '/xadmin/plans/deleteLesson')
+            ->orWhere('request_uri', '/xadmin/plans/deletePackageLesson')
+            ->orWhere('request_uri', '/xadmin/user_devices/save')
+            ->orWhere('request_uri', '/xadmin/user_devices/remove')->get();
+        $request_uri=[];
+        $time=[];
+        foreach ($requestUris as $requestUri)
+        {
+            $request_uri[]=$requestUri->request_uri;
+        }
+        $xloggers=Xlogger::where('http_code',200)->whereIn('request_uri',$request_uri)->orderBy('id','desc')->get();
+
+        $xlogger = [];
+        foreach ($xloggers as $entry) {
+            $dataXlogger = json_decode($entry['response'], TRUE);
+            $object = @$dataXlogger['object'];
+            $entry['object'] = $object;
+            $entry['status'] = @$dataXlogger['status'];
+            $entry['role']=@$dataXlogger['role'];
+
+            if(@$dataXlogger['code']==0)
+            {
+                $xlogger[]=[
+                    'id'=>$entry->id,
+                    'username'=>$entry['username'],
+                    'object'=>@$entry['object'],
+                    'status'=>@$entry['status'],
+                    'role'=>@$entry['role'],
+                    'ip'=>$entry['ip'],
+                    'time'=>$entry['time']
+                ];
+
+            }
+
+        }
+        $year =(int)$dataAll['year'];
         $months=[1,2,3,4,5,6,7,8,9,10,11,12];
         foreach ($months as $month)
         {
             $dates[] = \Carbon\Carbon::parse($year."-".$month."-01");
 
         }
-       foreach ($dates as $date)
-       {
-               $arrDate[]=[
+        foreach ($dates as $date)
+        {
+            $arrDate[]=[
 //                   'date'=>$date->format('M'), // date => jan,feb,
-                    'date'=>$date->format('M'),
-                   'start'=>  $date->startOfMonth()->format('Y-m-d H:i:s'),
-                   'end'=>$date->endOfMonth()->format('Y-m-d H:i:s')
-               ];
-       }
-        return $arrDate;
+                'date'=>$date->format('M'),
+                'start'=>  $date->startOfMonth()->format('Y-m-d H:i:s'),
+                'end'=>$date->endOfMonth()->format('Y-m-d H:i:s')
+            ];
+        }
 
-    }
-
-    public function data(Request $req)
-    {
-        foreach ($this->date() as $date)
+         foreach ($arrDate as $date)
         {
            $downloadLog[]=[
+
                'downloadApp'=>DownloadAppLog::whereBetween('download_at',array($date['start'],$date['end']))->get(),
                'downloadLesson'=> DownloadLessonLog::whereBetween('created_at',array($date['start'],$date['end']))->get(),
                'month'=>$date['date']
                ];
         }
-
         $dataChart[]=['Year', 'Download app','Download lesson'];
         foreach ($downloadLog as $down)
        {
@@ -103,60 +149,7 @@ class DashboardController extends AdminBaseController
                 count($down['downloadLesson'])
             ];
         }
-        $xloggers = Xlogger::query()->where('http_code',200)->where('request_uri', '=', '/xadmin/schools/save')
-            ->orWhere('request_uri','=','/xadmin/schools/remove')
-            ->orWhere('request_uri','=','/xadmin/users/save')
-            ->orWhere('request_uri','=','/xadmin/users/remove')
-            ->orWhere('request_uri','/xadmin/users/saveTeacher')
-            ->orWhere('request_uri','/xadmin/roles/save')
-            ->orWhere('request_uri','=','/xadmin/roles/remove')
-            ->orWhere('request_uri','/xadmin/allocation_contents/save')
-            ->orWhere('request_uri','/xadmin/schools/saveLicense')
-            ->orWhere('request_uri','/xadmin/plans/remove')
-            ->orWhere('request_uri','/xadmin/plans/save')
-            ->orWhere('request_uri','/xadmin/plans/saveDevice')
-            ->orWhere('request_uri','/xadmin/plans/addPackageLesson')
-            ->orWhere('request_uri','/xadmin/plans/planLesson')
-            ->orWhere('request_uri','/xadmin/plans/removeAllLesson')
-            ->orWhere('request_uri','/xadmin/plans/deleteLesson')
-            ->orWhere('request_uri','/xadmin/plans/deletePackageLesson')
-            ->orWhere('request_uri','/xadmin/user_devices/save')
-            ->orWhere('request_uri','/xadmin/user_devices/remove')
-            ->orderBy('id', 'ASC')->get();
-        $xlogger = [];
-        foreach ($xloggers as $entry) {
 
-//                if($entry['request_uri']=='/xadmin/schools/save'
-//                    || $entry['request_uri']=='/xadmin/roles/save'
-//                    || $entry['request_uri']=='/xadmin/schools/toggleStatus'
-//                    || $entry['request_uri']=='/xadmin/schools/remove'
-//                    ||  $entry['request_uri']=='/xadmin/roles/remove'
-//                    || $entry['request_uri']='/xadmin/allocation_contents/save'
-//                    ||$entry['request_uri']='/xadmin/allocation_contents/remove'
-//
-//                )
-
-                    $dataXlogger = json_decode($entry['response'], TRUE);
-                    $object = @$dataXlogger['object'];
-                    $entry['object'] = $object;
-                    $entry['status'] = @$dataXlogger['status'];
-                    $entry['role']=@$dataXlogger['role'];
-
-                if(@$dataXlogger['code']==0)
-                {
-                    $xlogger[]=[
-                        'id'=>$entry->id,
-                        'username'=>$entry['username'],
-                        'object'=>@$entry['object'],
-                        'status'=>@$entry['status'],
-                        'role'=>@$entry['role'],
-                        'ip'=>$entry['ip'],
-                        'time'=>$entry['time']
-                    ];
-
-                }
-
-        }
         return [
             'code' => 0,
             'data' =>$xlogger,

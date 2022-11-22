@@ -49,7 +49,7 @@
                         <div class="card-header border-0 pt-5 mt-0">
                             <div>
                                 <i class="bi bi-arrow-left" style="cursor: pointer"  @click="subMonthYear()"></i>
-                                <span style="padding:8px 10px 5px 10px; color:#043B79; font-weight:800"> {{(select=='Month')?(cbMonth + '/'):('')}}{{cbYear}} </span>
+                                <span style="padding:8px 10px 5px 10px; color:#043B79; font-weight:800" v-model="cbYear"> {{(select=='Month')?(cbMonth + '/'):('')}}{{cbYear}} </span>
                                 <i class="bi bi-arrow-right" style="cursor: pointer" @click="addMonthYear()"></i>
                             </div>
 
@@ -99,8 +99,13 @@
             <div class="row g-5 g-xl-12">
                 <div class="col-xl-12">
                     <div class="card card-xl-stretch mb-xl-12">
-                        <div class="card-header border-0">
-                            <h3 class="card-title fw-bolder text-dark">Activities</h3>
+                        <div class="card-header border-0 pt-5">
+                            <h3 class="card-title align-items-start flex-column">
+                                <span class="card-label fw-bolder fs-3 mb-1">Activities</span>
+                            </h3>
+                            <div class="card-toolbar">
+                                <Datepicker v-model="filter.created" @input="doFilter"/>
+                            </div>
                         </div>
                         <div class="mh-650px scroll-y me-n7 pe-7">
                             <table class="table table-row-bordered align-middle gy-4 gs-9">
@@ -147,14 +152,21 @@
 <script>
     import ActionBar from "../includes/ActionBar";
     import $router from "../../lib/SimpleRouter";
-    import {$get, $post} from "../../utils";
+    import {$get, $post, getTimeRangeAll} from "../../utils";
     import GoogleChart from "../../components/google-chart/GoogleChart"
+    let created = getTimeRangeAll();
+    const $q = $router.getQuery();
     export default {
+
         name: "DashboardIndex",
         components: {ActionBar,GoogleChart},
         data()
         {
+            let filter = {
+                created: $q.created || '',
+            };
             return {
+                filter: filter,
                 select:null,
                 cbYear: new Date().getFullYear(),
                 cbMonth: new Date().getMonth(),
@@ -191,6 +203,16 @@
         },
         methods:
         {
+            filterClear() {
+
+                for (var key in this.filter) {
+                    this.filter[key] = '';
+                }
+                $router.setQuery({});
+            },
+            doFilter() {
+                $router.setQuery(this.filter)
+            },
             changeCombo(){
                 if (this.select == 'Month'){
                     this.cbYear = new Date().getFullYear()
@@ -212,6 +234,7 @@
                     this.cbYear += 1;
 
                 }
+                this.load();
             },
             subMonthYear(){
                 if (this.select == 'Month'){
@@ -223,13 +246,13 @@
                 }else{
                     this.cbYear -= 1;
                 }
+                this.load();
             },
-
             async load() {
             let query = $router.getQuery();
-            const res = await $get('/xadmin/dashboard/data', query);
+            const res = await $get('/xadmin/dashboard/data?year='+this.cbYear, query);
             this.entries = res.data;
-            this.dataChart=res.dataChart
+            this.dataChart=res.dataChart;
 
         },
 
