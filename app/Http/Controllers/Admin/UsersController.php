@@ -694,7 +694,7 @@ class UsersController extends AdminBaseController
         }
         if(!isset($data['id']))
         {
-            
+
            if($data_role['name_role']==null)
            {
                $rules['name_role']=['required'];
@@ -721,9 +721,9 @@ class UsersController extends AdminBaseController
                 $validate->errors()->add('password_confirmation','The password and confirmation password do not match.');
 
             }
-            
+
         });
-       
+
 
         if ($v->fails()) {
             return [
@@ -1515,6 +1515,15 @@ class UsersController extends AdminBaseController
         return [
             'code'=> 0,
             'message'=> 'Đã xóa'
+        ];
+    }
+    public function refuseDevice(Request $req)
+    {
+        $id=$req->id;
+        UserDevice::where('id',$id)->update(['delete_request'=>Null]);
+        return [
+            'code'=>0,
+            'message'=>'Đã cập nhật'
         ];
     }
 }
