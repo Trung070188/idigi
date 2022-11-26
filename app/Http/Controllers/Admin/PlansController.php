@@ -1343,6 +1343,17 @@ class PlansController extends AdminBaseController
                 {
                     $validate->errors()->add('packageLessonName','The package lessson name may not be greater than 50 characters.');
                 }
+                if($dataLesson['entry']['id'])
+                {
+                    foreach($dataLesson['entry']['package_lessons'] as $packageLesson)
+                    {
+                        if($dataLesson['packageLessonName']==$packageLesson['name'])
+                        {
+                            $validate->errors()->add('packageLessonName','The package lesson has already been taken.');
+                        }
+                    }
+                }
+               
 
         });
 
@@ -1700,6 +1711,15 @@ class PlansController extends AdminBaseController
             return  ['status' => 0, 'token' =>  'Error'];
 
         }
+
+    }
+    public function getPlan(Request $req)
+    {
+        $id=$req->id;
+        $getPlan = Plan::with(['package_lessons'])->find($id);
+        return [
+            'data'=>$getPlan,
+        ];
 
     }
 }

@@ -956,7 +956,6 @@
         mounted() {
             $router.on('/', this.load).init();
         },
-
         methods: {
             cancelModalLesson()
             {
@@ -1240,6 +1239,10 @@
                                 }
                             })
                             return self.lessonPackagePlans=data;
+                        })
+                        $.get('/xadmin/plans/getPlan?id='+self.entry.id,function(res)
+                        {
+                            self.entry=res.data;
                         })
                     },0);
                     $('#delete').modal('hide');
@@ -1732,7 +1735,7 @@
                 this.isLoading = true;
                 const res = await $post('/xadmin/plans/addPackageLesson', {
                     tabLessonContent:tabLessonContent,
-                   packageLessonName:this.packageLessonName,
+                     packageLessonName:this.packageLessonName,
                     entry: this.entry,
                     lessonIds: this.lessonIds
                 }, false);
@@ -1770,6 +1773,10 @@
                             // self.lessonPackagePlans.className='active';
                             return self.tabLessonContent=data[data.length-1].package_id
 
+                        })
+                        $.get('/xadmin/plans/getPlan?id='+self.entry.id,function(res)
+                        {
+                            self.entry=res.data;
                         })
                     },0);
                     $('#addNamePackageLesson').modal('hide');
