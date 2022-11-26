@@ -361,6 +361,14 @@
                                                 </div>
 
                                             </div>
+                                           <div class="d-flex flex-stack pt-4 pl-9 pr-9">
+
+                            <div class="badge badge-lg badge-light-dark mb-15" style="margin-top:-65px;margin-left:-30px">
+                                <div class="d-flex align-items-center flex-wrap">
+                                   {{dataAddLessonPlan.length}} lesson
+                                </div>
+                            </div>
+                        </div>
                                             <div class="mh-650px scroll-y me-n7 pe-7">
                                                 <table class="table table-row-bordered align-middle gy-4 gs-9">
                                                     <thead class="border-bottom border-gray-200 fs-6 text-gray-600 fw-bolder bg-light bg-opacity-75">
