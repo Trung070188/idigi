@@ -45,7 +45,7 @@
 
                                     </div>
                                     <div class="form-group col-lg-4">
-                                        <label>School Email </label>
+                                        <label>School Email<span class="text-danger">*</span></label>
                                         <input  v-model="entry.school_email"  class="form-control"
                                                 placeholder="Enter the email prefix" >
                                         <error-label  :errors="errors.school_email"></error-label>
@@ -115,12 +115,12 @@
                             </div>
                              <div class="row">
                                     <div class="form-group col-lg-8">
-                                        <label>Resource Allocation </label>
+                                        <label>Resource Allocation</label>
                                        <select class="form-control form-select" v-model="allocationContenSchool" required @change="changeAllocationContent()">
                                            <option v-for="allocationConten in allocationContens" :value="allocationConten.id">{{allocationConten.title}}</option>
                                        </select>
                                     </div>
-                                    <div class="form-check form-check-custom form-check-solid pb-5">
+                                    <div class="form-check form-check-custom form-check-solid pb-5 ml-3">
                                 <input id="state1" type="checkbox"  class="form-check-input h-20px w-20px" checked>
                                 <label for="state1" class="form-check-label fw-bold">Active allocation</label>
                                 <error-label for="f_grade" ></error-label>

@@ -92,7 +92,7 @@
 
                                     </div>
                                     <div class="form-group col-lg-4">
-                                        <label>School Email</label>
+                                        <label>School Email<span class="text-danger">*</span></label>
                                         <input v-model="entry.school_email" :disabled="permissionFields['school_email']==false" class="form-control"
                                                placeholder="Enter the email prefix">
                                         <error-label :errors="errors.school_email"></error-label>
@@ -164,7 +164,7 @@
                             <div class="col-lg-12">
                             <div class="row">
                                     <div class="form-group col-lg-8">
-                                        <label>Resources enrollment <span class="text-danger">*</span></label>
+                                        <label>Resource Allocation<span class="text-danger">*</span></label>
 
                                         <select class="form-control form-select " required v-model="allocationContentSchool" :disabled="permissionFields['school_content']==false"
                                                 @change="changeAllocationContent() ">
