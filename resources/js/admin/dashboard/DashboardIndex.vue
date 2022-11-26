@@ -66,7 +66,7 @@
                         </div>
                         <!--end::Header-->
                         <!--begin::Body-->
-                        <div class="card-body pt-2" >
+                        <div class="card-body pt-2 mh-600px scroll-y me-n7 pe-7" >
                             <div class="d-flex flex-stack mb-5" v-for="license in licenseRemain">
                                 <!--begin::Section-->
                                 <div class="d-flex align-items-center me-2">
