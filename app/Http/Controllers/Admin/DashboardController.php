@@ -105,7 +105,7 @@ class DashboardController extends AdminBaseController
         foreach ($xloggers as $entry) {
             $dataXlogger = json_decode($entry['response'], TRUE);
             $object = @$dataXlogger['object'];
-            $entry['object'] = $object;
+            $entry['object'] =@ $object;
             $entry['status'] = @$dataXlogger['status'];
             $entry['role']=@$dataXlogger['role'];
 
