@@ -162,10 +162,13 @@
         components: {ActionBar,GoogleChart},
         data()
         {
+            let today=new Date();
+            let date=today.getDate()+'-'+(today.getMonth()+1)+'-'+today.getFullYear();
             let filter = {
-                created: $q.created || '',
+                created: $q.created || '' ,
             };
             return {
+                created:'',
                 filter: filter,
                 select:null,
                 cbYear: new Date().getFullYear(),
@@ -250,7 +253,9 @@
             },
             async load() {
             let query = $router.getQuery();
-            const res = await $get('/xadmin/dashboard/data?year='+this.cbYear, query);
+                let today=new Date();
+                let create=today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
+            const res = await $get('/xadmin/dashboard/data?year='+this.cbYear+'&created='+create, query);
             this.entries = res.data;
             this.dataChart=res.dataChart;
 

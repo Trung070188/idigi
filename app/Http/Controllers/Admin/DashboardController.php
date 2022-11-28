@@ -84,12 +84,22 @@ class DashboardController extends AdminBaseController
             ->orWhere('request_uri', '/xadmin/user_devices/save')
             ->orWhere('request_uri', '/xadmin/user_devices/remove')->get();
         $request_uri=[];
-        $time=[];
         foreach ($requestUris as $requestUri)
         {
             $request_uri[]=$requestUri->request_uri;
         }
-        $xloggers=Xlogger::where('http_code',200)->whereIn('request_uri',$request_uri)->orderBy('id','desc')->get();
+      $xlogerDay=[];
+        $timeXlogs=Xlogger::where('http_code',200)->whereIn('request_uri',$request_uri)->orderBy('id','desc')->get();
+        foreach ($timeXlogs as $timeXlog)
+        {
+
+            $time=Carbon::createFromFormat('Y-m-d H:i:s',$timeXlog->time )->format('Y-m-d');
+            if($time==$req->created)
+            {
+                $xlogerDay[]=$timeXlog->id;
+            }
+        }
+        $xloggers=Xlogger::where('http_code',200)->whereIn('id',$xlogerDay)->whereIn('request_uri',$request_uri)->orderBy('id','desc')->get();
 
         $xlogger = [];
         foreach ($xloggers as $entry) {
