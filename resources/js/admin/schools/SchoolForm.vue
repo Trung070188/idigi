@@ -17,7 +17,7 @@
                                      </button>
                                  </a>
                                  <button v-if="title=='Edit school'" class="btn btn-danger button-create " @click="remove(entry)">
-                                     Delete User <i class="fas fa-trash"></i>
+                                     Delete user <i class="fas fa-trash"></i>
                                  </button>
                              </div>
                          </div>
@@ -30,7 +30,7 @@
                                 <input v-model="entry.id" type="hidden" name="id" value="">
                                 <div class="row">
                                      <div class="form-group col-lg-4">
-                                        <label>School Name <span class="text-danger">*</span></label>
+                                        <label>School name <span class="text-danger">*</span></label>
                                         <input  v-model="entry.label"  class="form-control "
                                                placeholder="Enter the school name" >
                                         <error-label for="f_school_name" :errors="errors.label"></error-label>
@@ -38,14 +38,14 @@
                                     </div>
 
                                     <div class="form-group col-lg-4">
-                                        <label>School Address <span class="text-danger">*</span></label>
+                                        <label>School address <span class="text-danger">*</span></label>
                                         <input  v-model="entry.school_address" class="form-control"
                                                placeholder="Enter the school address">
                                         <error-label  :errors="errors.school_address"></error-label>
 
                                     </div>
                                     <div class="form-group col-lg-4">
-                                        <label>School Email<span class="text-danger">*</span></label>
+                                        <label>School email</label>
                                         <input  v-model="entry.school_email"  class="form-control"
                                                 placeholder="Enter the email prefix" >
                                         <error-label  :errors="errors.school_email"></error-label>
@@ -115,7 +115,7 @@
                             </div>
                              <div class="row">
                                     <div class="form-group col-lg-8">
-                                        <label>Resource Allocation</label>
+                                        <label>Resource allocation</label>
                                        <select class="form-control form-select" v-model="allocationContenSchool" required @change="changeAllocationContent()">
                                            <option v-for="allocationConten in allocationContens" :value="allocationConten.id">{{allocationConten.title}}</option>
                                        </select>
@@ -128,7 +128,7 @@
                                        <table class="table table-row-bordered align-middle gy-4 gs-9 ml-3" v-if="allocationContenSchool!=null">
                             <thead class="border-bottom border-gray-200 fs-6 text-gray-600 fw-bolder bg-light bg-opacity-75">
                             <tr>
-                                <th class="">Course Name</th>
+                                <th class="">Course name</th>
                                 <th>Unit</th>
                             </tr>
                             </thead>

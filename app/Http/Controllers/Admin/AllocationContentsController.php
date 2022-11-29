@@ -222,12 +222,21 @@ class AllocationContentsController extends AdminBaseController
         ];
         if(!isset($data['id']))
         {
-            $rules['title']=['required' ,'unique:allocation_contents,title'];
+            $rules['title']=['required' ,'unique:allocation_contents,title', function ($attribute, $value, $fail) {
+                if (preg_match('/[\'\/~`\!@#\$%\^&\*\(\)\-\+=\{\}\[\]\|;:"\<\>,\?\\\]/', $value)) {
+                    return $fail(__(' The :attribute no special characters'));
+                }
+            }];
         }
         if(isset($data['id']))
         {
-            $rules['title'] = ['required', Rule::unique('allocation_contents')->ignore($data['id']),];
+            $rules['title'] = ['required', Rule::unique('allocation_contents')->ignore($data['id']), function ($attribute, $value, $fail) {
+                if (preg_match('/[\'\/~`\!@#\$%\^&\*\(\)\-\+=\{\}\[\]\|;:"\<\>,\?\\\]/', $value)) {
+                    return $fail(__(' The :attribute no special characters'));
+                }
+            }];
         }
+
         if($dataContent['total_course']==[])
         {
 

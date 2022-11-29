@@ -61,10 +61,10 @@
                                     </button>
                                 </a>
                                 <button v-if="title=='Edit school' && teacher!=0" :disabled="permissionFields['school_delete']==false" class="btn btn-danger button-create " @click="modalDeleteSchool()">
-                                    <i class="bi bi-trash mr-1"></i>Delete School
+                                    <i class="bi bi-trash mr-1"></i>Delete school
                                 </button>
                                 <button v-if="title=='Edit school' &&  teacher==0" :disabled="permissionFields['school_delete']==false" class="btn btn-danger button-create " @click="modalDelete">
-                                    <i class="bi bi-trash mr-1"></i>Delete School
+                                    <i class="bi bi-trash mr-1"></i>Delete school
                                 </button>
                             </div>
                         </div>
@@ -77,7 +77,7 @@
                                 <input v-model="entry.id" type="hidden" name="id" value="">
                                 <div class="row">
                                     <div class="form-group col-lg-4">
-                                        <label>School Name <span class="text-danger">*</span></label>
+                                        <label>School name <span class="text-danger">*</span></label>
                                         <input v-model="entry.label" class="form-control" :disabled="permissionFields['school_name']==false"
                                                placeholder="Enter the school name">
                                         <error-label for="f_school_name" :errors="errors.label"></error-label>
@@ -85,14 +85,14 @@
                                     </div>
 
                                     <div class="form-group col-lg-4">
-                                        <label>School Address <span class="text-danger">*</span></label>
+                                        <label>School address <span class="text-danger">*</span></label>
                                         <input v-model="entry.school_address" :disabled="permissionFields['school_address']==false" class="form-control"
                                                placeholder="Enter the school address">
                                         <error-label :errors="errors.school_address"></error-label>
 
                                     </div>
                                     <div class="form-group col-lg-4">
-                                        <label>School Email<span class="text-danger">*</span></label>
+                                        <label>School email</label>
                                         <input v-model="entry.school_email" :disabled="permissionFields['school_email']==false" class="form-control"
                                                placeholder="Enter the email prefix">
                                         <error-label :errors="errors.school_email"></error-label>
@@ -164,7 +164,7 @@
                             <div class="col-lg-12">
                             <div class="row">
                                     <div class="form-group col-lg-8">
-                                        <label>Resource Allocation<span class="text-danger">*</span></label>
+                                        <label>Resource allocation<span class="text-danger">*</span></label>
 
                                         <select class="form-control form-select " required v-model="allocationContentSchool" :disabled="permissionFields['school_content']==false"
                                                 @change="changeAllocationContent() ">
@@ -194,7 +194,7 @@
                                     <thead
                                         class="border-bottom border-gray-200 fs-6 text-gray-600 fw-bolder bg-light bg-opacity-75">
                                     <tr>
-                                        <th class="">Course Name</th>
+                                        <th class="">Course name</th>
                                         <th>Unit</th>
                                     </tr>
                                     </thead>
@@ -213,7 +213,7 @@
                                     <thead
                                         class="border-bottom border-gray-200 fs-6 text-gray-600 fw-bolder bg-light bg-opacity-75">
                                     <tr>
-                                        <th class="">Course Name</th>
+                                        <th class="">Course name</th>
                                         <th>Unit</th>
                                     </tr>
                                     </thead>

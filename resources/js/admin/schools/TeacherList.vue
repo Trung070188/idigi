@@ -282,7 +282,7 @@
                                         Import teacher </button>
                                          <a :href="'/xadmin/users/create_teacher?schoolId='+JSON.stringify(entry.id)">
                                           <button  type="button" class="btn btn-primary mr-2" >
-                                           
+
                                         <span class="svg-icon svg-icon-2">
 													<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
 														<path opacity="0.3" d="M10 4H21C21.6 4 22 4.4 22 5V7H10V4Z" fill="black" />
@@ -292,7 +292,7 @@
 												</span>
                                         Create New </button>
                                             </a>
-                                       
+
 
 
 
@@ -410,6 +410,7 @@
                                 <th class="">ID</th>
                                 <th class="">Teacher name</th>
                                 <th class="">Teacher email</th>
+                                <th>Teacher phone number</th>
                                 <th class="">Registed devices</th>
                                 <th class="">Creation Date</th>
                                 <th class="">Status</th>
@@ -435,6 +436,7 @@
                                 <td class="" v-text="entry.id"></td>
                                 <td class="" v-text="entry.full_name"></td>
                                 <td class="" v-text="entry.email"></td>
+                                <td v-text="entry.phone"></td>
                                 <td class="">{{entry.user_devices.length}} / {{lengthDeviceTeacher}}</td>
                                 <td class="" v-text=" d(entry.created_at)"></td>
                                 <td class="" v-text="entry.state===0 ? 'No' : 'Yes'"></td>
