@@ -953,8 +953,7 @@ class UsersController extends AdminBaseController
             }
             $entry->fill($data);
             $entry->save();
-            $schoolId = $data['school']['id'];
-
+            $schoolId = $data['school_id'];
             UserRole::where('user_id', $entry->id)->delete();
             if (@$data_role['name_role']) {
                 UserRole::updateOrCreate([

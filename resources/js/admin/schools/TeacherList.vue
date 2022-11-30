@@ -439,7 +439,7 @@
                                 <td v-text="entry.phone"></td>
                                 <td class="">{{entry.user_devices.length}} / {{lengthDeviceTeacher}}</td>
                                 <td class="" v-text=" d(entry.created_at)"></td>
-                                <td class="" v-text="entry.state===0 ? 'No' : 'Yes'"></td>
+                                <td class="" v-text="entry.state===0 ? 'Deactive' : 'Activate'"></td>
                                 <td class="">
                                     <a href="list.html#" class="btn btn-light btn-active-light-primary btn-sm" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">Actions
                                         <!--begin::Svg Icon | path: icons/duotune/arrows/arr072.svg-->
@@ -503,10 +503,6 @@
 
     let created = getTimeRangeAll();
     const $q = $router.getQuery();
-
-    console.log($q);
-
-
     export default {
         name: "TeacherList.vue",
         components: {ActionBar, SwitchButton},

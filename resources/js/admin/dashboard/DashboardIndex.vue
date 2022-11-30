@@ -118,7 +118,6 @@
                                     <th class="">Object</th>
                                     <th>IP</th>
                                     <th>Time</th>
-                                    <th></th>
 
                                 </tr>
                                 </thead>
@@ -131,9 +130,9 @@
                                     <td class="" data-bs-toggle="tooltip" :title="entry.object" v-text="entry.object"></td>
                                     <td v-text="entry.ip"></td>
                                     <td>{{d(entry.time)}}</td>
-                                    <td class="">
-                                        <button class="btn btn-active-danger btn-light-danger btn-sm" @click="remove(entry)">Delete</button>
-                                    </td>
+<!--                                    <td class="">-->
+<!--                                        <button class="btn btn-active-danger btn-light-danger btn-sm" @click="remove(entry)">Delete</button>-->
+<!--                                    </td>-->
                                 </tr>
                                 </tbody>
                             </table>
