@@ -87,7 +87,11 @@
                                             </svg>
                                         </span>
                             </div>
-                             <button type="button" style="margin-left: 10px" @click="isShowFilter = !isShowFilter" class="btn btn-light" v-if="isShowFilter">
+                        </div>
+                        <div class="card-toolbar">
+                            <div class="d-flex justify-content-end" data-kt-customer-table-toolbar="base"
+                                v-if="planIds==''">
+                                <button type="button" style="margin-left: 10px" @click="isShowFilter = !isShowFilter" class="btn btn-light" v-if="isShowFilter">
                                     <i style="margin-left: 5px" class="fas fa-times"></i>
                                     Close Advanced Search
                                 </button>
@@ -95,10 +99,6 @@
                                     <i class="bi bi-funnel"></i>
                                     Advanced Search
                                 </button>
-                        </div>
-                        <div class="card-toolbar">
-                            <div class="d-flex justify-content-end" data-kt-customer-table-toolbar="base"
-                                v-if="planIds==''">
                                 <a :href="'/xadmin/plans/create'" >
                                     <button  class="btn btn-primary button-create" style="margin:0 0 0 15px">
                                         <i class="bi bi-clipboard-plus"></i>New Plan
@@ -228,7 +228,7 @@
                                 <th>Expire date</th>
                                 <th class="">Status</th>
                                 <th>Deployed</th>
-                                <th>Action</th>
+                                <th class="text-center">Action</th>
 
                             </tr>
                             </thead>
@@ -240,8 +240,11 @@
                                             >
                                     </div>
                                 </td>
-                                <td class="" >{{index+1}}</td>
-                                <td class="" >{{entry.name}}</td>
+                                <td class="" >{{index+1}}
+                                </td>
+                                <td class="" data-bs-toggle="tooltip" :title="entry.name">
+                                    {{entry.name}}
+                                </td>
                                 <td class="">{{entry.created_by}}</td>
                                 <td class="" >{{entry.assign_to}}</td>
                                 <td class="" >{{d(entry.created_at)}}</td>
@@ -249,7 +252,7 @@
                                 <td>{{(entry.expire_date)}}</td>
                                 <td   class="">{{entry.status}}</td>
                                 <th class=""></th>
-                                <td class="">
+                                <td class="text-center">
                                     <a href="list.html#" class="btn btn-light btn-active-light-primary btn-sm" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">Actions
                                         <!--begin::Svg Icon | path: icons/duotune/arrows/arr072.svg-->
                                         <span class="svg-icon svg-icon-5 m-0">
@@ -493,6 +496,18 @@
     option {
         color: black;
     }
+   .table th, .table td
+   {
+    max-width: 150px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    cursor: pointer;
+    padding: 0.75rem;
+    vertical-align: top;
+    padding: 0.75rem;
+
+   }
 
 
 </style>

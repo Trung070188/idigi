@@ -74,9 +74,9 @@
                                             </span>
                                 <!--end::Svg Icon-->
                                 <input type="text" data-kt-filemanager-table-filter="search"
-                                       class="form-control form-control-solid w-250px ps-15"
+                                       class="form-control form-control-solid w-400px ps-15"
                                        @keydown.enter="doFilter($event)" v-model="filter.keyword"
-                                       placeholder="Search..." value=""/>
+                                       placeholder="Search ID, name, address, administrator name..." value=""/>
                                 <span v-if="filter.keyword!==''" class="svg-icon svg-icon-2 svg-icon-lg-1 me-0"
                                       @click="filterClear">
                                             <svg type="button" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
@@ -122,7 +122,7 @@
                             <div class="row">
                                 <div class="form-group col-lg-3">
                                     <label>School name </label>
-                                    <input class="form-control" type="text" placeholder="Enter your school name"
+                                    <input class="form-control" type="text" placeholder="Enter the school name"
                                            v-model="filter.label"/>
 
                                 </div>
@@ -133,8 +133,8 @@
 
                                 </div>
                                 <div class="form-group col-lg-3">
-                                    <label>Region/City </label>
-                                    <input class="form-control" type="text" placeholder="Enter the region/city">
+                                    <label >Region/City </label>
+                                    <input v-model="filter.school_address" class="form-control" type="text" placeholder="Enter the region/city">
 
                                 </div>
 
@@ -175,38 +175,38 @@
                         <table class="table table-row-bordered align-middle gy-4 gs-9">
                             <thead class="border-bottom border-gray-200 fs-6 text-gray-600 fw-bolder bg-light bg-opacity-75">
                             <tr>
-                                <td width="25">
+                                <td width="25" v-if="permissions['018']">
                                     <div class="form-check form-check-sm form-check-custom form-check-solid">
                                         <input class="form-check-input" type="checkbox" v-model="allSelected"
                                                @change="selectAll()">
                                     </div>
                                 </td>
-                                <th class="">No.</th>
-                                <th class="">Name</th>
-                                <th class="">Address</th>
-                                <th class="">Administrator name</th>
-                                <th class="">Teacher</th>
-                                <th class="">Devices Per User</th>
-                                <th class="">License</th>
-                                <th></th>
+                                <th class="text-center">No.</th>
+                                <th class="text-center">Name</th>
+                                <th class="text-center">Address</th>
+                                <th class="text-center">Administrator name</th>
+                                <th class="text-center">Teacher</th>
+                                <th class="text-center">Devices per user</th>
+                                <th class="text-center">License</th>
+                                <th class="text-center">Action</th>
                             </tr>
                             </thead>
                             <tbody>
                             <tr v-for="(entry,index) in entries">
-                                <td class="">
+                                <td class="" v-if="permissions['018']">
                                     <div class="form-check form-check-sm form-check-custom form-check-solid">
                                         <input class="form-check-input" type="checkbox" v-model="schoolIds"
                                                :value="entry.id" @change="updateCheckAll">
                                     </div>
                                 </td>
-                                <td class="" >{{index+1}}</td>
-                                <td class="" v-text="entry.label"></td>
-                                <td class="" v-text="entry.school_address"></td>
-                                <td>{{entry.nameSchoolAdmin}}</td>
-                                <td class="" v-text="entry.teacher.length"></td>
-                                <td class="" v-text="entry.devices_per_user"></td>
-                                <td  >{{d(entry.license_to)}}</td>
-                                <td class="">
+                                <td class="text-center">{{index+1}}</td>
+                                <td class="text-center" v-text="entry.label"></td>
+                                <td class="text-center" v-text="entry.school_address"></td>
+                                <td class="text-center">{{entry.nameSchoolAdmin}}</td>
+                                <td class="text-center" v-text="entry.teacher.length"></td>
+                                <td class="text-center" v-text="entry.devices_per_user"></td>
+                                <td  class="text-center">{{d(entry.license_to)}}</td>
+                                <td class="text-center">
                                     <a href="list.html#" class="btn btn-light btn-active-light-primary btn-sm" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">Actions
                                         <!--begin::Svg Icon | path: icons/duotune/arrows/arr072.svg-->
                                         <span class="svg-icon svg-icon-5 m-0">
@@ -292,7 +292,8 @@
             let isShowFilter = false;
             let filter = {
                 keyword: $q.keyword || '',
-                label: $q.label || ''
+                label: $q.label || '',
+                school_address:$q.school_address || ''
             };
             for (var key in filter) {
                 if (filter[key] != '') {

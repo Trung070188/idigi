@@ -45,9 +45,9 @@
                                     <div v-if="entry.id==null" class="form-group col-sm-4 mb-3">
                                         <label>Confirm password <span class="text-danger">*</span></label>
                                         <input v-if="auto_gen==true" disabled class="form-control" :type="showConfirm ? 'text' : 'password'"  placeholder="Re-enter to confirm the password"
-                                               v-model="entry.password_confirmation">
+                                               v-model="password_confirmation">
                                         <input v-if="auto_gen==false"  class="form-control" :type="showConfirm ? 'text' : 'password'"  placeholder="Re-enter to confirm the password"
-                                               v-model="entry.password_confirmation">
+                                               v-model="password_confirmation">
 <!--                                        <i @click="showConfirm = !showConfirm" class="fa fa-eye"></i>-->
                                         <error-label for="f_category_id" :errors="errors.password_confirmation"></error-label>
                                     </div>
@@ -123,6 +123,7 @@
         data() {
 
             return {
+                password_confirmation:'',
                 changed: false,
                 user_school:'',
                 name_role:'',
@@ -182,7 +183,7 @@
                 console.log(this.role);
 
                 this.isLoading = true;
-                const res = await $post('/xadmin/users/save', {entry: this.entry, name_role: this.name_role,user_school:this.user_school,auto_gen: this.auto_gen}, false);
+                const res = await $post('/xadmin/users/save', {entry: this.entry, name_role: this.name_role,user_school:this.user_school,auto_gen: this.auto_gen,password_confirmation:this.password_confirmation}, false);
 
                 this.isLoading = false;
                 if (res.errors) {

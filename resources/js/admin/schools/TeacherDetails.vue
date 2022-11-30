@@ -35,10 +35,11 @@
                         <p>Are you sure to delete the device "{{deviceTeacher.device_name}}"?</p>
                     </div>
                     <div class="swal2-actions">
+                        <button type="reset" id="kt_modal_new_target_cancel1" class="swal2-cancel btn fw-bold btn-active-light-primary" data-bs-dismiss="modal" style="margin: 0px 8px 0px" @click="refuse(deviceTeacher)">Refuse</button>
+
                         <button type="submit" class="swal2-confirm btn fw-bold btn-danger" @click="remove_device(deviceTeacher)">
                             <span class="indicator-label">Yes, delete!</span>
                         </button>
-                        <button type="reset" id="kt_modal_new_target_cancel" class="swal2-cancel btn fw-bold btn-active-light-primary" data-bs-dismiss="modal" style="margin: 0px 8px 0px">No, cancel</button>
                     </div>
                 </div>
             </div>
@@ -106,7 +107,7 @@
                                     </div>
                                 </div>
                                 <hr style="margin-top:5px">
-                                <h4>Content enrollment</h4>
+                                <h4>Resource enrollment</h4>
                                 <div class="row">
 
                                     <div class="form-group col-sm-10"  @change="saveTeacherCourse()">
@@ -369,6 +370,19 @@
                 window.location.reload();
 
                 $router.updateQuery({ _: Date.now()});
+
+            },
+            async refuse(deviceTeacher)
+            {
+                const res=await $post('/xadmin/users/refuseDevice',{id:deviceTeacher.id});
+                if(res.code)
+                {
+                    toastr.error(res.message);
+                }
+                else {
+                    toastr.success(res.message);
+                }
+                window.location.reload();
 
             },
 

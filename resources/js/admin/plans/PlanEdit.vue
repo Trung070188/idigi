@@ -159,7 +159,7 @@
                                     <div class="form-group col-lg-4">
                                         <label>Due date </label>
                                         <Datepicker :disabled="permissionFields['plan_due_date']==false" v-model="entry.due_at" readonly/>
-                                         <span :disabled="permissionFields['plan_due_date']==false" v-if="entry.due_at!=''" class="svg-icon svg-icon-2 svg-icon-lg-1 me-0" @click="dueAtClear">
+                                         <span  v-if="entry.due_at!='' && permissionFields['plan_due_date']==true" class="svg-icon svg-icon-2 svg-icon-lg-1 me-0" @click="dueAtClear">
                                             <svg type="button" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" style="float: right;margin: -32px 3px 0px;">
                                             <rect opacity="0.5" x="6" y="17.3137" width="16" height="2" rx="1" transform="rotate(-45 6 17.3137)" fill="black" style="fill:red"/>
                                                         <rect x="7.41422" y="6" width="16" height="2" rx="1" transform="rotate(45 7.41422 6)" fill="black" style="fill:red"/>
@@ -188,7 +188,7 @@
                                     <div class="form-group col-lg-4">
                                         <label>Expire date <span class="text-danger">*</span></label>
                                         <Datepicker :disabled="permissionFields['plan_expire_date']==false" v-model="entry.expire_date" readonly/>
-                                        <span :disabled="permissionFields['plan_expire_date']==false" v-if="entry.expire_date!=''" class="svg-icon svg-icon-2 svg-icon-lg-1 me-0" @click="expireDateClear">
+                                        <span v-if="entry.expire_date!='' && permissionFields['plan_expire_date']==true" class="svg-icon svg-icon-2 svg-icon-lg-1 me-0" @click="expireDateClear">
                                             <svg type="button" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" style="float: right;margin: -32px 3px 0px;">
                                             <rect opacity="0.5" x="6" y="17.3137" width="16" height="2" rx="1" transform="rotate(-45 6 17.3137)" fill="black" style="fill:red"/>
                                                         <rect x="7.41422" y="6" width="16" height="2" rx="1" transform="rotate(45 7.41422 6)" fill="black" style="fill:red"/>
@@ -296,7 +296,8 @@
                                                     </a>
                                                     <div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-bold fs-7 w-180px py-4" data-kt-menu="true">
                                                         <div class="menu-item px-3">
-                                                            <a  class="menu-link px-3" @click="modalConfirmationCode(device)">Get confirmation code</a>
+                                                            <a v-if="permissionFields['plan_device_get_confirm_code']==false"   class="menu-link px-3 isDisabled">Get confirmation code</a>
+                                                            <a v-else class="menu-link px-3" @click="modalConfirmationCode(device)">Get confirmation code</a>
                                                         </div>
                                                         <div class="menu-item px-3">
                                                             <a v-if="permissionFields['plan_delete_device']==false" class="menu-link text-danger px-3 isDisabled" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end" @click="removeDeviceModal(device.id)">Delete</a>
@@ -344,8 +345,8 @@
                                                         <a class="menu-link px-3 isDisabled"  v-if="permissionFields['plan_add_lesson']==false && dataZipLesson.status=='waitting'" @click="addLessonPackage(tabLessonContent)" >Add lesson</a>
                                                     </div>
                                                     <div class="menu-item px-3" v-if="dataZipLesson.status=='waitting'">
-                                                        <a v-if="checkZipPackage[0].lessonIds.length>0" class="menu-link px-3" @click="downloadLesson(tabLessonContent)">Zip lesson package</a>
-                                                        <a v-else class="menu-link px-3 isDisabled" @click="downloadLesson(tabLessonContent)" >Zip lesson package</a>
+                                                        <a v-if="checkZipPackage[0].lessonIds.length>0 && permissionFields['plan_zip_package_lesson']==true" class="menu-link px-3" @click="downloadLesson(tabLessonContent)">Zip lesson package</a>
+                                                        <a v-else class="menu-link px-3 isDisabled">Zip lesson package</a>
                                                     </div>
                                                     <div class="menu-item px-3" >
                                                         <a class="menu-link px-3 " v-if="permissionFields['plan_rename_lesson_package']==true" @click="renameLessonPackage(tabLessonContent)" >Rename lesson package</a>
@@ -360,6 +361,14 @@
                                                 </div>
 
                                             </div>
+                                           <div class="d-flex flex-stack pt-4 pl-9 pr-9">
+
+                            <div class="badge badge-lg badge-light-dark mb-15" style="margin-top:-65px;margin-left:-30px">
+                                <div class="d-flex align-items-center flex-wrap">
+                                   {{dataAddLessonPlan.length}} lesson
+                                </div>
+                            </div>
+                        </div>
                                             <div class="mh-650px scroll-y me-n7 pe-7">
                                                 <table class="table table-row-bordered align-middle gy-4 gs-9">
                                                     <thead class="border-bottom border-gray-200 fs-6 text-gray-600 fw-bolder bg-light bg-opacity-75">
@@ -407,7 +416,7 @@
 
                     <div class="mt-3 mb-5" style="margin-left: 18px">
                         <button type="reset" @click="save()" class="btn btn-primary mr-2">Save plan</button>
-                        <button type="reset" class="btn btn-primary mr-2" @click="exportPlan"><i
+                        <button :disabled="permissionFields['plan_export_plan']==false" type="reset" class="btn btn-primary mr-2" @click="exportPlan"><i
                             class="bi bi-arrow-up-square-fill"></i>Export plan
                         </button>
                         <button type="reset" @click="backIndex()" class="btn btn-secondary"
@@ -644,7 +653,7 @@
                                                 <div class="d-flex" v-if="deviceError.length>0">
                                                     <div class="text-end">
                                                         <div class="fs-7 text-muted">
-                                                        <a :href="validateFile" type="button" class="btn btn-primary">Export</a>
+                                                        <a @click="exportDeviceError" type="button" class="btn btn-primary">Export</a>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -874,6 +883,8 @@
             };
 
             return {
+                cachePlan:$json.cachePlan,
+                cacheLesson:$json.cacheLesson,
                 permissionFields:$json.permissionFields || [],
                 deviceGetCode:[],
                 token:'',
@@ -944,6 +955,8 @@
                 improgress:'',
                 abc:'',
                 checkZipPackage:[],
+                errorDeviceName:'',
+                exportDeviceName:$json.exportDeviceName
 
             }
         },
@@ -951,7 +964,6 @@
         mounted() {
             $router.on('/', this.load).init();
         },
-
         methods: {
             cancelModalLesson()
             {
@@ -1236,6 +1248,10 @@
                             })
                             return self.lessonPackagePlans=data;
                         })
+                        $.get('/xadmin/plans/getPlan?id='+self.entry.id,function(res)
+                        {
+                            self.entry=res.data;
+                        })
                     },0);
                     $('#delete').modal('hide');
                 }
@@ -1311,6 +1327,7 @@
                     const formData = new FormData();
                     formData.append('_token', window.$csrf)
                     forEach(files, (v, k) => {
+                        console.log(k,v);
                         formData.append(k, v);
                     });
 
@@ -1333,6 +1350,7 @@
                         });
                     if (res.code == 2) {
                         this.deviceError = res.deviceError;
+                        this.errorDeviceName=res.errorDeviceName;
                         this.code = res.code;
                         this.validateFile = res.fileError;
                         this.fileImport = res.fileImport;
@@ -1406,9 +1424,9 @@
 
             // export devive
             async exportDevice() {
-                window.location.href= '/xadmin/plans/exportDevice?entry=' + JSON.stringify(this.entry)+
+                window.location.href= '/xadmin/plans/exportDevice?idPlan=' +JSON.stringify(this.entry.id)+
                 '&idRoleIt=' + JSON.stringify(this.idRoleIt)+
-                '&dataDevice=' + JSON.stringify(this.data);
+                '&dataDevice=' + this.exportDeviceName;
             },
 
             changeLimit() {
@@ -1660,7 +1678,10 @@
                                 })
                             })
                         })
+
+
                     },1000);
+
                        setTimeout(function () {
                            for (var key in self.filter) {
                                self.filter[key] = '';
@@ -1722,7 +1743,7 @@
                 this.isLoading = true;
                 const res = await $post('/xadmin/plans/addPackageLesson', {
                     tabLessonContent:tabLessonContent,
-                   packageLessonName:this.packageLessonName,
+                     packageLessonName:this.packageLessonName,
                     entry: this.entry,
                     lessonIds: this.lessonIds
                 }, false);
@@ -1760,6 +1781,10 @@
                             // self.lessonPackagePlans.className='active';
                             return self.tabLessonContent=data[data.length-1].package_id
 
+                        })
+                        $.get('/xadmin/plans/getPlan?id='+self.entry.id,function(res)
+                        {
+                            self.entry=res.data;
                         })
                     },0);
                     $('#addNamePackageLesson').modal('hide');
@@ -1838,14 +1863,14 @@
                     this.lessonPackagePlans.forEach(function (e) {
                         packageIds.push(e.lesson_ids);
                     })
-                    window.location.href= '/xadmin/plans/exportPlan?entry=' + JSON.stringify(this.entry)+
-                        '&packageLessonPlan=' + JSON.stringify(this.lessonPackagePlans)+
-                        '&dataDevice=' + JSON.stringify(this.data);
+                    window.location.href= '/xadmin/plans/exportPlan?entry=' +this.cachePlan+
+                        '&packageLessonPlan=' + this.cacheLesson+
+                        '&dataDevice=' + this.exportDeviceName;
                 }
                 else {
                     window.location.href= '/xadmin/plans/exportPlan?entry=' + JSON.stringify(this.entry)+
-                        '&packageLessonPlan=' + JSON.stringify(this.lessonPackagePlans)+
-                        '&dataDevice=' + JSON.stringify(this.data);
+                        '&packageLessonPlan=' + this.cacheLesson+
+                        '&dataDevice=' + this.exportDeviceName;
                 }
 
             },
@@ -1857,13 +1882,17 @@
             },
 
             async genToken(){
-                const res  = await $post('/xadmin/plans/generateToken', {device_id: this.deviceGetCode.id});
+                const res  = await $post('/xadmin/plans/generateToken', {device_id: this.deviceGetCode.id,entry:this.entry});
                 this.token = res.token;
             },
             copyTextToken() {
                 navigator.clipboard.writeText(this.token);
                 this.token='';
             },
+            exportDeviceError()
+            {
+                window.location.href='/xadmin/plans/exportDeviceError?deviceError='+this.errorDeviceName;
+            }
         }
     }
 </script>

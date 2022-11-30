@@ -18,6 +18,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use App\Models\School;
 use App\Models\Unit;
+use Carbon\Carbon;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
@@ -462,28 +463,37 @@ class SchoolsController extends AdminBaseController
         }
 
         $data = $req->get('entry');
+        $current = Carbon::now()->format('Y/m/d');
+        $today = Carbon::now()->format('d/m/Y');
+
 
         $rules = [
             'label' => 'required|max:45',
             'school_address' => 'required|max:255',
-            'number_of_users' => 'required|min:1',
-            'devices_per_user' => 'required|min:1',
-            'license_to'=>'required'
+            'number_of_users' => 'required|min:1|integer',
+            'devices_per_user' => 'required|min:1|integer',
+            'license_to'=>'required|after_or_equal:'. $current,
+
         ];
         if(@$data['school_email'])
         {
-            $rules=[
-                'school_email' => 'email',
-            ];
+            $rules['school_email']=['email'];
         }
         if(@$data['school_phone'])
         {
-            $rules=[
-                'school_phone' => 'min:10',
-            ];
+            $rules['school_phone']=['min:10|number'];
         }
+        // $rules['license_to']='after:' .$today;
+        $message=[
+            'label.required'=>'The school name field is required.',
+            'number_of_users.required'=>'The No. of User field is required.',
+            'devices_per_user.required'=>'The No. of Device per user field is required.',
+            'license_to.required'=>'The Expired date/License is required.',
+            'license_to.after_or_equal'=>'The Expired date/License must be a date after or equal to ' .$today,
 
-        $v = Validator::make($data, $rules);
+        ];
+
+        $v = Validator::make($data, $rules,$message);
 
         if ($v->fails()) {
             return [
@@ -733,7 +743,15 @@ class SchoolsController extends AdminBaseController
     public function data(Request $req)
     {
         $user=Auth::user();
-        $schoolId=$user->school_id;
+        $schoolAdmins=explode(',',$user->school_id);
+        $schoolIdArrs=[];
+        foreach ($schoolAdmins as $schoolAdmin)
+        {
+            if($schoolAdmin)
+            {
+                $schoolIdArrs[]=(int)$schoolAdmin;
+            }
+        }
         $check=0;
         foreach($user->roles as $role)
         {
@@ -744,7 +762,7 @@ class SchoolsController extends AdminBaseController
         }
         if($check==0)
         {
-            $query = School::query()->where('id',$schoolId)->with(['users'])->orderBy('id', 'ASC');
+            $query = School::query()->whereIn('id',$schoolIdArrs)->with(['users'])->orderBy('id', 'ASC');
 
         }
         else{
@@ -758,6 +776,9 @@ class SchoolsController extends AdminBaseController
         if ($req->label) {
             $query->where('label', 'LIKE', '%' . $req->label . '%');
         }
+        if ($req->school_address) {
+            $query->where('school_address', 'LIKE', '%' . $req->school_address . '%');
+        }
 
         $limit = 25;
 
@@ -767,35 +788,68 @@ class SchoolsController extends AdminBaseController
         $data = [];
         $entries = $query->paginate($limit);
         $users=User::query()->with(['roles'])->whereNotNull('school_id')->orderBy('id','ASC')->get();
-        $userAdminSchools=[];
-        foreach($users as $user)
-        {
-            foreach($user->roles as $role)
-            {
-               if($role->role_name=='School Admin')
-               {
-                   $userAdminSchools[]=$user;
-               }
-            }
-        }
-        foreach ($entries as $entry) {
-            $teacher = [];
-            $nameSchoolAdmin='';
 
-            foreach($userAdminSchools as $userAdminSchool )
+
+        $userAdminSchools=[];
+//        foreach($users as $user)
+//        {
+//            foreach($user->roles as $role)
+//            {
+//               if($role->role_name=='School Admin')
+//               {
+//                   $userAdminSchools[]=$user;
+//               }
+//            }
+//        }
+
+//        foreach($userAdminSchools as $userAdminSchool )
+//        {
+//            $schools=explode(',',$userAdminSchool->school_id);
+//
+//            foreach ($schools as $school)
+//            {
+//                if ($school) {
+//                    $schoolIdArr[] = (int)$school;
+//                }
+//            }
+//
+//        }
+        foreach ($entries as $entry) {
+
+
+            $nameSchoolAdmin=[];
+            foreach ($users as $user)
             {
-                if($userAdminSchool->school_id==$entry->id)
+                $userSchools=explode(',',$user->school_id);
+                $arrUserSchools=[];
+                foreach ($userSchools as $userSchool)
                 {
-                    $nameSchoolAdmin=$userAdminSchool->full_name;
+                    $arrUserSchools[]=(int)$userSchool;
+                }
+
+
+                foreach ($user->roles as $role)
+                {
+                    foreach ($arrUserSchools as $arrUserSchool)
+                    {
+                        if($role->role_name=='School Admin' && $arrUserSchool==$entry->id)
+                        {
+                            $nameSchoolAdmin[]=$user->full_name;
+                        }
+                    }
+
 
                 }
             }
+            $teacher = [];
+
             foreach ($entry->users as $user) {
                 foreach ($user->roles as $role) {
 
                     if ($role->role_name == 'Teacher') {
                         $teacher[] = $user;
                     }
+
                 }
 
             }
@@ -807,7 +861,7 @@ class SchoolsController extends AdminBaseController
                 'school_phone' => $entry->school_phone,
                 'number_of_users' => $entry->number_of_users,
                 'devices_per_user' => $entry->devices_per_user,
-                'nameSchoolAdmin'=>$nameSchoolAdmin,
+                'nameSchoolAdmin'=>implode(' , ',$nameSchoolAdmin),
 //                'license_info'=>$entry->license_info,
                'license_to'=>$entry->license_to,
                 'license_state' => $entry->license_state,

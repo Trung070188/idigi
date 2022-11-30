@@ -26,15 +26,13 @@
                                     <span >{{permission.display_permission_detail}}</span>
                                     <span v-for="permissionDetail in permission.permission_details" class="d-block fw-bold ml-5"><i class="bi bi-arrow-right-short mr-1"></i>{{permissionDetail.name}}</span>
                                 </th>
-
-                                <td v-for="role in roles">
+                                <th v-for="role in roles">
                                     <div class="form-check form-check-custom form-check-solid justify-content-center" v-for="permissionDetail in role.permission" v-if="permissionDetail.permission==permission.id">
                                         <input @change="changePermissionDetail(role.id,permissionDetail.id,permissionDetail.value)"  class="form-check-input h-20px w-20px" type="checkbox"  v-model="permissionDetail.value" >
                                         <br>
                                     </div>
-                                </td>
+                                </th>
                             </tr>
-
                         </table>
                     </div>
 
@@ -165,6 +163,8 @@
                     'permission_detail_id' :permissionDetailId,
                     'check' : check,
                 });
+                toastr.options.timeOut=1000;
+                toastr.options.preventDuplicates = true;
                 toastr.success(res.message);
             }
         }

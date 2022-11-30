@@ -20,6 +20,7 @@ use App\Models\School;
 use App\Models\SchoolCourse;
 use App\Models\SchoolCourseUnit;
 use App\Models\Unit;
+use Illuminate\Validation\Rule;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
@@ -218,12 +219,24 @@ class AllocationContentsController extends AdminBaseController
         $dataContent=$req->all();
 
         $rules = [
-            'title' => 'required',
-            // 'total_school' => 'max:1000',
-            // 'total_course' => 'max:1000',
-            // 'total_unit' => 'max:1000',
-            // 'status' => 'numeric',
         ];
+        if(!isset($data['id']))
+        {
+            $rules['title']=['required' ,'unique:allocation_contents,title', function ($attribute, $value, $fail) {
+                if (preg_match('/[\'\/~`\!@#\$%\^&\*\(\)\-\+=\{\}\[\]\|;:"\<\>,\?\\\]/', $value)) {
+                    return $fail(__(' The :attribute no special characters'));
+                }
+            }];
+        }
+        if(isset($data['id']))
+        {
+            $rules['title'] = ['required', Rule::unique('allocation_contents')->ignore($data['id']), function ($attribute, $value, $fail) {
+                if (preg_match('/[\'\/~`\!@#\$%\^&\*\(\)\-\+=\{\}\[\]\|;:"\<\>,\?\\\]/', $value)) {
+                    return $fail(__(' The :attribute no special characters'));
+                }
+            }];
+        }
+
         if($dataContent['total_course']==[])
         {
 
@@ -281,31 +294,26 @@ class AllocationContentsController extends AdminBaseController
 
             $entry->fill($data);
             $entry->save();
-            AllocationContentSchool::where('allocation_content_id',$entry->id)->delete();
-            if(@$dataContent['total_school'])
-            {
-                foreach($dataContent['total_school'] as $schoolId)
-                {
-
-                    $contentSchools=AllocationContentSchool::query()->orderBy('allocation_content_id','desc')->get();
-                    foreach ( $contentSchools as  $contentSchool)
-                    {
-                        if($contentSchool->school_id==$schoolId)
-                        {
-                            return [
-                                'code' => 3,
-                                'message' =>'Trường đã xuất hiện trong content khác',
-                            ];
-                        }
-                    }
-                    AllocationContentSchool::create(['school_id'=>$schoolId,'allocation_content_id'=>$entry->id]);
-
-
-
-                }
-
-            }
-
+//            AllocationContentSchool::where('allocation_content_id',$entry->id)->delete();
+//            if(@$dataContent['total_school'])
+//            {
+//                foreach($dataContent['total_school'] as $schoolId)
+//                {
+//
+//                    $contentSchools=AllocationContentSchool::query()->orderBy('allocation_content_id','desc')->get();
+//                    foreach ( $contentSchools as  $contentSchool)
+//                    {
+//                        if($contentSchool->school_id==$schoolId)
+//                        {
+//                            return [
+//                                'code' => 3,
+//                                'message' =>'Trường đã xuất hiện trong content khác',
+//                            ];
+//                        }
+//                    }
+//                    AllocationContentSchool::create(['school_id'=>$schoolId,'allocation_content_id'=>$entry->id]);
+//                }
+//            }
             AllocationContentCourse::where('allocation_content_id',$entry->id)->delete();
 
 
@@ -313,8 +321,6 @@ class AllocationContentsController extends AdminBaseController
 
             if(@$dataContent['total_course'])
             {
-
-
                 foreach($dataContent['total_course'] as $courseId)
                 {
                     AllocationContentCourse::create(['course_id'=>$courseId,'allocation_content_id'=>$entry->id]);

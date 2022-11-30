@@ -294,29 +294,27 @@ class AppVersionsController extends AdminBaseController
             ]
         ];
     }
-    public function downloadApp(Request $req)
+    public function downloadApp(Request $req, $id)
     {
-        $appVersion=AppVersion::where('is_default','=',1)->first();
+        $appVersion=AppVersion::where('id','=',$id)->first();
         $appId=$appVersion->id;
         $user=Auth::user();
-        foreach ($user->user_devices as $device)
-        {
-            $device_uid=$device->device_uid;
-        }
+//        foreach ($user->user_devices as $device)
+//        {
+//            $device_uid=$device->device_uid;
+//        }
+
         $downloadAppLog=new DownloadAppLog();
         $downloadAppLog->user_id=$user->id;
         $downloadAppLog->user_agent=$req->userAgent();
         $downloadAppLog->ip_address=$req->getClientIp();
         $downloadAppLog->app_id=$appId;
-        $downloadAppLog->device_uid=$device_uid;
+//        $downloadAppLog->device_uid=$device_uid;
         $downloadAppLog->download_at=Carbon::now();
         $downloadAppLog->save();
 
 
-        return[
-            'code'=>0,
-            'url'=>$appVersion->url
-        ];
+        return redirect($appVersion->url);
         }
 
     public function setDefaultVersion(Request  $req){

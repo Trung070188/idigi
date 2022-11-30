@@ -39,7 +39,7 @@
                                     </div>
                                     <div class="form-group  col-sm-4">
                                         <label>School<span class="text-danger">*</span></label>
-                                        <input class="form-control" v-model="school" disabled>
+                                        <input class="form-control" v-model="schoolName" disabled>
                                     </div>
                                 </div>
                                 <div class="row">
@@ -117,14 +117,26 @@
                 types: [],
                 breadcrumbs: [
                     {
-                        title: 'Teachers',
-                        url: '/xadmin/users/teacher',
+                      title:'School management',
+                        url: '/xadmin/schools/index',
+                    },
+
+                    {
+                        title: 'School details',
+                        url: '/xadmin/schools/edit?id='+$json.school.id
                     },
                     {
-                        title: $json.entry ? 'Edit User' : 'Create New Teacher',
+                        title: 'Teacher management',
+                        url: '/xadmin/schools/teacherList?id='+$json.school.id
+
+
+                    },
+                    {
+                        title: $json.entry ? 'Edit User' : 'Create new teacher',
                     },
                 ],
                 school:$json.school,
+                schoolName:$json.schoolName,
                 entry: $json.entry || {
                     roles: []
                 },
@@ -159,7 +171,7 @@
             },
             async save() {
                 this.isLoading = true;
-                const res = await $post('/xadmin/users/saveTeacher', {entry: this.entry, roles: this.roles,auto_gen:this.auto_gen}, false);
+                const res = await $post('/xadmin/users/saveTeacher', {entry: this.entry, roles: this.roles,auto_gen:this.auto_gen,school:this.school}, false);
                 this.isLoading = false;
                 if (res.errors) {
                     this.errors = res.errors;
@@ -170,10 +182,10 @@
                 } else {
                     this.errors = {};
                     toastr.success(res.message);
-                    location.replace('/xadmin/users/teacher');
+                    location.replace('/xadmin/schools/teacherList?id='+this.school.id);
 
                     if (!this.entry.id) {
-                    location.replace('/xadmin/users/teacher');
+                    location.replace('/xadmin/schools/teacherList?id='+this.school.id);
                     }
                 }
             }

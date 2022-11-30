@@ -67,6 +67,13 @@
                                                         <rect x="7.41422" y="6" width="16" height="2" rx="1" transform="rotate(45 7.41422 6)" fill="black" style="fill:red" />
                                             </svg>
                                         </span>
+                                            <select v-if="roleName=='School Admin'" class="form-control form-select w-250px ps-15 ml-5" v-model="schoolLesson" @change="checkSchool" >
+                                                <option value="null">All school</option>
+                                                <option v-for="school in schools" :value="school.id" >{{school.label}}</option>
+                                            </select>
+                                    </div>
+                                    <div style="margin-left: 15px">
+                                        <button type="button" class="btn btn-primary" @click="doFilter($event)">Search</button>
                                     </div>
 
                                 </div>
@@ -147,11 +154,16 @@
 
                                         </div>
                                     </div>
-                                    <div style="margin: auto 0">
-                                        <button type="button" class="btn btn-primary" @click="doFilter($event)">Search</button>
-                                    </div>
                                 </form>
+
                             </div>
+<!--                    <div class="row">-->
+<!--                        <div class="d-flex align-items-center position-absolute my-1 col-lg-12 ml-10">-->
+<!--                            <select class="form-control col-lg-2"><option>1</option></select>-->
+<!--                        </div>-->
+
+<!--                    </div>-->
+
 
 
                     <!--<div class="card-body d-flex flex-column">-->
@@ -297,7 +309,7 @@
                 name:$q.name||'',
                 subject: $q.subject || '',
                 grade: $q.grade || '',
-                enabled: $q.enabled || ''
+                enabled: $q.enabled || '',
             };
             for (var key in filter) {
                 if (filter[key] != '') {
@@ -305,6 +317,10 @@
                 }
             }
             return {
+                roleName:'',
+                idSchool:null,
+                schoolLesson:null,
+                schools:[],
                 permissions,
                 device: '',
                 devices: [],
@@ -341,6 +357,12 @@
             });
         },
         methods: {
+            checkSchool()
+            {
+                   this.idSchool=this.schoolLesson;
+
+              this.load()
+            },
             openModalEntry(entry) {
                 this.isConfirm = 1;
                 this.lessons = [entry];
@@ -407,13 +429,16 @@
             async load() {
                 let query = $router.getQuery();
                 this.$loading(true);
-                const res = await $get('/xadmin/lessons/data', query);
+                const res = await $get('/xadmin/lessons/data?schoolLesson='+this.idSchool, query);
                 this.$loading(false);
                 setTimeout(function (){
                     KTMenu.createInstances();
                 }, 0)
                 this.paginate = res.paginate;
-                this.entries = res.data;
+                // this.entries=res.data;
+                this.entries = [...(new Set(res.data))];
+                this.schools=res.schools;
+                this.roleName=res.roleName;
                 this.from = (this.paginate.currentPage - 1) * (this.limit) + 1;
                 this.to = (this.paginate.currentPage - 1) * (this.limit) + this.entries.length;
             },
@@ -492,5 +517,6 @@
     option {
         color: black;
     }
+
 
 </style>
