@@ -8,6 +8,7 @@ use App\Models\School;
 use Faker\Core\Number;
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
+use http\Client\Response;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
@@ -268,7 +269,6 @@ class UserDevicesController extends AdminBaseController
         ];
 
         $v = Validator::make($data, $rules);
-
         if ($v->fails()) {
             return [
                 'code' => 2,
@@ -293,9 +293,12 @@ class UserDevicesController extends AdminBaseController
         }catch (\Exception $e)
         {
             return [
-                'code' => 2,
-                'message'=>'Register code is invalid'
+                'code'=>2,
+                'errors'=>[
+                    'device_uid'=>['Register code is invalid.']
+                ]
             ];
+
         }
 
         $entry->save();

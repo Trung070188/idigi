@@ -552,9 +552,12 @@ class PlansController extends AdminBaseController
                 $device->device_uid = $decoded->device_uid;
             } catch (\Exception $e) {
                 return [
-                    'code' => 2,
-                    'message'=>'Register code is invalid'
+                    'code'=>2,
+                    'errors'=>[
+                        'device_uid'=>['Register code is invalid.']
+                    ]
                 ];
+
 
             }
             if ($dataRole['deviceExpireDate'] ==null)
@@ -1353,7 +1356,7 @@ class PlansController extends AdminBaseController
                         }
                     }
                 }
-               
+
 
         });
 
