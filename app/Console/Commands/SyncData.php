@@ -188,7 +188,7 @@ class SyncData extends Command
 
                     $unitData = [
                         'course_id' => $course->id,
-                        'unit_name' => @$oldStructure['UnitName']
+                        'unit_name' => trim(@$oldStructure['UnitName'])
                     ];
 
                     $unit = Unit::updateOrCreate($unitData, $unitData);
