@@ -359,8 +359,11 @@
                                 </div>
                                 <div class="form-group col-lg-3">
                                     <label>Active</label>
-                                    <div>
+                                    <div style="position: relative">
                                         <switch-button v-model="filter.state"></switch-button>
+
+                                        <div style="position: absolute;margin: -30px 60px 0px" v-if="filter.state==0">No</div>
+                                        <div style="position: absolute;margin: -30px 60px 0px" v-else>Yes</div>
                                     </div>
 
                                 </div>
@@ -410,6 +413,7 @@
                                 <th class="">ID</th>
                                 <th class="">Teacher name</th>
                                 <th class="">Teacher email</th>
+                                <th>Class</th>
                                 <th>Teacher phone number</th>
                                 <th class="">Registed devices</th>
                                 <th class="">Creation Date</th>
@@ -435,7 +439,8 @@
                                 </td>
                                 <td class="" v-text="entry.id"></td>
                                 <td class="" v-text="entry.full_name"></td>
-                                <td class="" v-text="entry.email"></td>
+                                <td class="" v-text="entry.email" data-bs-toggle="tooltip" :title="entry.email"></td>
+                                <td v-text="entry.class"></td>
                                 <td v-text="entry.phone"></td>
                                 <td class="">{{entry.user_devices.length}} / {{lengthDeviceTeacher}}</td>
                                 <td class="" v-text=" d(entry.created_at)"></td>
@@ -799,5 +804,16 @@
  input[type="file"] {
         display: none;
     }
+ .table th, .table td
+ {
+     max-width: 150px;
+     overflow: hidden;
+     text-overflow: ellipsis;
+     white-space: nowrap;
+     cursor: pointer;
+     padding: 0.75rem;
+     vertical-align: top;
+ }
+
 
 </style>
