@@ -1365,8 +1365,7 @@ class UsersController extends AdminBaseController
                                 },
                             ],
                             'password' => 'required',
-                            'phone' => 'required',
-                            'email' => ['required', Rule::unique('users', 'email')],
+                            'email' => [Rule::unique('users', 'email')],
                         ]);
 
                         if ($validator->fails()) {
