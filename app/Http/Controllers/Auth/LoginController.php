@@ -105,7 +105,7 @@ class LoginController extends Controller
             }
             if($user->roles){
                 foreach ($user->roles as $role){
-                    if($role->role_name == "Teacher" || $role->role_name == "School Admin"){
+                    if($role->role_name == "Teacher"){
 
                             $school = School::where('id', $user->school_id)->first();
                             if($school!=null)
