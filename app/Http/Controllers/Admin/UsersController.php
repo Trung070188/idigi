@@ -1364,18 +1364,36 @@ class UsersController extends AdminBaseController
                         $item['phone'] = $tea[3];
                         $item['email'] = $tea[4];
                         $item['class'] = $tea[5];
-                        $validator = Validator::make($item, [
-                            'username' => ['required', Rule::unique('users', 'username')],
-                            'full_name' => ['required',
-                                function ($attribute, $value, $fail) {
-                                    if (preg_match('/[0-9]/', $value)) {
-                                        return $fail(__(' The :attribute not a number'));
-                                    }
-                                },
-                            ],
-                            'password' => 'required',
-                            'email' => [Rule::unique('users', 'email')],
-                        ]);
+                        if($item['email']==null)
+                        {
+                            $validator = Validator::make($item, [
+                                'username' => ['required', Rule::unique('users', 'username')],
+                                'full_name' => ['required',
+                                    function ($attribute, $value, $fail) {
+                                        if (preg_match('/[0-9]/', $value)) {
+                                            return $fail(__(' The :attribute not a number'));
+                                        }
+                                    },
+                                ],
+                                'password' => 'required',
+                            ]);
+                        }
+                        else
+                        {
+                            $validator = Validator::make($item, [
+                                'username' => ['required', Rule::unique('users', 'username')],
+                                'full_name' => ['required',
+                                    function ($attribute, $value, $fail) {
+                                        if (preg_match('/[0-9]/', $value)) {
+                                            return $fail(__(' The :attribute not a number'));
+                                        }
+                                    },
+                                ],
+                                'password' => 'required',
+                                'email' => [Rule::unique('users', 'email')],
+                            ]);
+                        }
+
 
                         if ($validator->fails()) {
                             $item['error'] = $validator->errors()->messages();
@@ -1410,13 +1428,11 @@ class UsersController extends AdminBaseController
          {
              $code=2;
          }
-
             $fileError = [];
             $fileImport=[];
             if ($code == 2) {
                 //export
                 foreach ($validations as $key=>$validation) {
-
                         $validation['error']=[
                             'max_length'=>[
                                 'Allowed to register up to '. $school->number_of_users .' users'
