@@ -28,49 +28,61 @@ class CheckDeviceController extends Controller
             ->first();
 
         if($user){
-
-            if($user->schools)
+            if($user->roles)
             {
-                $countDevice=$user->schools->devices_per_user;
-                $count = 0;
-                if($user->user_devices){
-                    foreach ($user->user_devices as $device){
-                        $count ++ ;
+                foreach ($user->roles as $role)
+                {
+                    $roleName=$role->role_name;
+                }
+            }
+            if($roleName=='Teacher')
+            {
+                if($user->schools)
+                {
+                    $countDevice=$user->schools->devices_per_user;
+                    $count = 0;
+                    if($user->user_devices){
+                        foreach ($user->user_devices as $device){
+                            $count ++ ;
 
-                        if($device->device_uid == $request->device_unique){
+                            if($device->device_uid == $request->device_unique){
+                                return [
+                                    'code' => 0,
+                                    'msg' => 'Device Id đã tồn tại',
+
+                                ];
+                            }
+                        }
+                        if($count > $countDevice){
                             return [
-                                'code' => 0,
-                                'msg' => 'Device Id đã tồn tại',
+                                'code' => 2,
+                                'msg' => 'Đã đủ ' .$countDevice.' device',
+
+                            ];
+                        }else{
+                            return [
+                                'code' => 1,
+                                'msg' => 'Số device hiện tại là '.$count,
 
                             ];
                         }
                     }
-                    if($count > $countDevice){
-                        return [
-                            'code' => 2,
-                            'msg' => 'Đã đủ ' .$countDevice.' device',
 
-                        ];
-                    }else{
-                        return [
-                            'code' => 1,
-                            'msg' => 'Số device hiện tại là '.$count,
-
-                        ];
-                    }
                 }
-
+                else
+                {
+                    return [
+                        'code'=> 0,
+                        'msg'=>'Bạn không phải là teacher. '
+                    ];
+                }
             }
-            else
-            {
+            else{
                 return [
-                  'code'=> 0,
-                  'msg'=>'Bạn không phải là school admin or teacher. '
+                  'code'=>0,
+                  'msg'=>'Bạn không phải là teacher.'
                 ];
             }
-
-
-
 
         }
 
