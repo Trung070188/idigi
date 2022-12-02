@@ -92,7 +92,7 @@ class UsersController extends AdminBaseController
         $component = 'UserForm';
         $title = 'Create users';
         $schools = School::query()->orderBy('id')->get();
-        $roles = Role::query()->orderBy('id', 'ASC')->get();
+        $roles = Role::query()->orderBy('id', 'ASC')->where('role_name','<>','Super Administrator')->get();
         $jsonData = [
             'roles' => $roles,
             'schools' => $schools,
@@ -743,14 +743,18 @@ class UsersController extends AdminBaseController
 //            if ($data['password']) {
 //                $data['password'] = Hash::make($data['password']);
 //            }
-            $userSchools = implode(',', $data_role['userSchool']);
+            if(@$data_role['userSchool'])
+            {
+                $userSchools = implode(',', $data_role['userSchool']);
+                User::where('id',$entry->id)->update(['school_id'=>$userSchools]);
+            }
             $entry->fill($data);
            if($data_role['password'] !=null)
            {
                $entry->password = Hash::make($data_role['password']);
                User::where('id',$entry->id)->update(['password'=>$entry->password]);
            }
-            User::where('id',$entry->id)->update(['school_id'=>$userSchools]);
+
             $entry->save();
          $userUnits= UserUnit::query()->where('user_id',$entry->id)->get();
          $schoolUnitIds=[];
@@ -809,6 +813,11 @@ class UsersController extends AdminBaseController
             }
             $entry->fill($data);
             $entry->save();
+            if(@$data_role['userSchool'])
+            {
+                $userSchools = implode(',', $data_role['userSchool']);
+                User::where('id',$entry->id)->update(['school_id'=>$userSchools]);
+            }
             if ($entry->email) {
                 $content = [
                     'full_name' => $entry->full_name,

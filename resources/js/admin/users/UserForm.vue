@@ -68,7 +68,13 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="row" v-if="name_role==2||name_role==5">
+                                <div class="row" v-if="name_role==2">
+                                    <div class="form-group col-sm-4 mb-7">
+                                        <label>School <span class="text-danger">*</span></label>
+                                        <Treeselect :options="schools" :multiple="true" v-model="userSchool"/>
+                                    </div>
+                                </div>
+                                <div class="row" v-if="name_role==5">
                                     <div class="form-group col-sm-4">
                                         <label>School <span class="text-danger">*</span></label>
                                         <select required  class="form-control form-select"  v-model="entry.school_id" >
@@ -116,13 +122,17 @@
     import ActionBar from "../includes/ActionBar";
     import SwitchButton from "../../components/SwitchButton";
     import _ from "lodash";
+    import Treeselect from '@riophae/vue-treeselect';
+    import '@riophae/vue-treeselect/dist/vue-treeselect.css';
+
 
     export default {
         name: "UsersForm.vue",
-        components: {ActionBar, SwitchButton},
+        components: {ActionBar, SwitchButton,Treeselect},
         data() {
 
             return {
+                userSchool:[],
                 password_confirmation:'',
                 changed: false,
                 user_school:'',
@@ -183,7 +193,7 @@
                 console.log(this.role);
 
                 this.isLoading = true;
-                const res = await $post('/xadmin/users/save', {entry: this.entry, name_role: this.name_role,user_school:this.user_school,auto_gen: this.auto_gen,password_confirmation:this.password_confirmation}, false);
+                const res = await $post('/xadmin/users/save', {entry: this.entry, name_role: this.name_role,user_school:this.user_school,auto_gen: this.auto_gen,password_confirmation:this.password_confirmation,userSchool:this.userSchool}, false);
 
                 this.isLoading = false;
                 if (res.errors) {

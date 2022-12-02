@@ -98,7 +98,7 @@
                                                v-model="password_confirmation"  placeholder="Re-enter to confirm the password">
                                        <error-label for="f_category_id"
                                                      :errors="errors.password_confirmation"></error-label>
-                                   </div> 
+                                   </div>
                                 </div>
                                 <div class="row py-3" >
                                     <div class="form-group col-sm-8" >
@@ -119,7 +119,7 @@
                                         </div>
                                     </div> -->
                                 </div>
-                                <div class="row" v-if="name_role==2 || name_role==5">
+                                <div class="row" v-if="name_role==2">
                                     <div class="form-group col-sm-4 mb-7">
                                         <label>School <span class="text-danger">*</span></label>
 <!--                                        <select  class="form-control form-select" v-model="entry.school_id" required>-->
@@ -127,6 +127,16 @@
 <!--                                        </select>-->
                                         <Treeselect :options="schools" :multiple="true" v-model="userSchool"/>
 <!--                                        <error-label for="f_grade" :errors="errors.school_id"></error-label>-->
+                                    </div>
+                                </div>
+                                <div class="row" v-if="name_role==5">
+                                    <div class="form-group col-sm-4">
+                                        <label>School <span class="text-danger">*</span></label>
+                                        <select required  class="form-control form-select"  v-model="entry.school_id" >
+                                            <option  :value="null" disabled selected >Choose role</option>
+                                            <option v-for="school in schools" :value="school.id">{{school.label}}</option>
+                                        </select>
+                                        <error-label for="f_grade" :errors="errors.school_id"></error-label>
                                     </div>
                                 </div>
                                 <div class="row">
