@@ -701,6 +701,9 @@
                         this.fileUpLoad = '';
                         this.$refs.uploader.value = null;
                         this.valueValidateImportTeacher = 0;
+                        this.fileImport.length=0;
+                        this.fileError.length=0;
+
                     }
                 },
             async remove() {

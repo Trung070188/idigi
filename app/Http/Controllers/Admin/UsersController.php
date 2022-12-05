@@ -1162,6 +1162,7 @@ class UsersController extends AdminBaseController
             ->orderBy('id', 'ASC');
         if ($req->keyword) {
             $query->where('username', 'LIKE', '%' . $req->keyword . '%');
+            $query->orWhere('full_name', 'LIKE', '%' . $req->keyword . '%');
         }
         $query->whereHas('roles', function ($q) use ($req) {
             $q->where('role_name', 'Teacher');
@@ -1349,6 +1350,9 @@ class UsersController extends AdminBaseController
         $error = [];
         $user = Auth::user();
         $school=School::query()->where('id',$data['school_id'])->first();
+        $lengthUserSchool=User::where('school_id',$school->id)->whereHas('roles',function ($q){
+            $q->where('role_name','=','Teacher');
+        })->count();
         $code = 0;
         foreach ($teacherLists as $teacherList) {
 
@@ -1411,6 +1415,7 @@ class UsersController extends AdminBaseController
             }
             $checkDuplicate=[];
             $error=[];
+            $check=0;
             foreach ($validations as $validation)
             {
                 if(in_array($validation['username'], $checkDuplicate)){
@@ -1424,21 +1429,25 @@ class UsersController extends AdminBaseController
          {
              $code=2;
          }
-         if(count($validations)>$school->number_of_users)
+         if(count($validations)>($school->number_of_users-$lengthUserSchool))
          {
              $code=2;
+             $check=1;
+
          }
             $fileError = [];
             $fileImport=[];
             if ($code == 2) {
                 //export
                 foreach ($validations as $key=>$validation) {
-                        $validation['error']=[
-                            'max_length'=>[
-                                'Allowed to register up to '. $school->number_of_users .' users'
-                            ]
-                        ];
-
+                        if($check==1)
+                        {
+                            $validation['error']=[
+                                'max_length'=>[
+                                    'Allowed to register up to '. $school->number_of_users .' users'
+                                ]
+                            ];
+                        }
                     if (@$validation['error'] || $error!=[] && $error==[$validation['username']]) {
                         {
                             if($error!=[] && $error==[$validation['username']])
