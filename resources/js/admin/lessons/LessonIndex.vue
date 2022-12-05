@@ -32,12 +32,12 @@
                     </div>
                     <div class="modal-footer" style="justify-content: center">
                         <button type="button" class="btn btn-primary"
-                                @click="downloadLesson" :disabled="lessons.length == 0 || !device || isConfirm == 0"> Download for Windows  <i class="bi bi-windows"></i>
+                                @click="downloadLesson" :disabled="lessons.length == 0 || !device || isConfirm == 0"> Download <i class="bi bi-download mb-1 ml-1"></i>
                         </button>
-                        <button type="button" class="btn btn-primary"  @click="downloadLesson" :disabled="lessons.length == 0 || !device || isConfirm == 0"
-                              >
-                            Download for MacOS <i style="margin:-3px 0px 0px" class="bi bi-apple"></i>
-                        </button>
+<!--                        <button type="button" class="btn btn-primary"  @click="downloadLesson" :disabled="lessons.length == 0 || !device || isConfirm == 0"-->
+<!--                              >-->
+<!--                            Download for MacOS <i style="margin:-3px 0px 0px" class="bi bi-apple"></i>-->
+<!--                        </button>-->
                     </div>
                 </div>
             </div>
@@ -92,9 +92,9 @@
                                      <div class="d-flex justify-content-end align-items-center d-none" data-kt-customer-table-toolbar="selected" v-if="permissions['011'] && lessonIds!=''">
                                          <span v-if="lessons.length>3" style="color:#f1416c;margin: 0px 10px 0px ">Chỉ được chọn tối đa 3 lesson để tải xuống</span>
 												<div class="fw-bolder me-5" v-if="lessons.length<=3">
-												<span class="me-2" data-kt-customer-table-select="selected_count"></span>{{ lessonIds.length }} Selected</div>
+												<span class="me-2" data-kt-customer-table-select="selected_count"></span>{{ lessonIds.length }} lesson</div>
 
-												<button @click="openModal()" :disabled="lessons.length>3" type="button" class="btn btn-danger" data-kt-customer-table-select="delete_selected">Download Selected</button>
+												<button @click="openModal()" :disabled="lessons.length>3" type="button" class="btn btn-danger" data-kt-customer-table-select="delete_selected">Download lesson</button>
 
 											</div>
 
