@@ -422,8 +422,10 @@
                             </tr>
                             </thead>
                             <tbody >
-
-                            <tr v-for="entry in entries">
+                            <tr v-if="entries.length==0">
+                                <td valign="top" colspan="10" class="text-center">No results found. Try different keywords or remove search filters.</td>
+                            </tr>
+                            <tr v-if="entries!==0" v-for="entry in entries">
                                 <td class="">
                                     <div
                                         class="form-check form-check-sm form-check-custom form-check-solid"
