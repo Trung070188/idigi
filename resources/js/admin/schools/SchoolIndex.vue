@@ -128,7 +128,7 @@
                                 </div>
                                 <div class="form-group col-lg-3">
                                     <label>Administrator name </label>
-                                    <input class="form-control" type="text"
+                                    <input class="form-control" type="text" v-model="filter.role_name"
                                            placeholder="Enter the administrator name">
 
                                 </div>
@@ -296,7 +296,8 @@
             let filter = {
                 keyword: $q.keyword || '',
                 label: $q.label || '',
-                school_address:$q.school_address || ''
+                school_address:$q.school_address || '',
+                role_name:$q.role_name || ''
             };
             for (var key in filter) {
                 if (filter[key] != '') {

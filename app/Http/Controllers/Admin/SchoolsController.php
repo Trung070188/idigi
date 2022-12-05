@@ -166,6 +166,7 @@ class SchoolsController extends AdminBaseController
             ->orderBy('id', 'ASC');
         if ($req->keyword) {
             $query->where('username', 'LIKE', '%' . $req->keyword . '%');
+            $query->orWhere('full_name', 'LIKE', '%' . $req->keyword . '%');
         }
         $query->whereHas('roles', function ($q) use ($req) {
             $q->where('role_name', 'Teacher');
@@ -173,13 +174,13 @@ class SchoolsController extends AdminBaseController
         });
 
         if ($req->username) {
-            $query->where('username', 'LIKE', '%' . $req->username);
+            $query->where('username', 'LIKE', '%' . $req->username . '%');
         }
         if ($req->full_name) {
-            $query->where('full_name', 'LIKE' . $req->full_name);
+            $query->where('full_name', 'LIKE' . $req->full_name . '%');
         }
         if ($req->email) {
-            $query->where('email', 'LIKE', '%' . $req->email);
+            $query->where('email', 'LIKE', '%' . $req->email . '%');
         }
         if ($req->state != '') {
             $query->where('state', 'LIKE', '%' . $req->state);
@@ -763,12 +764,21 @@ class SchoolsController extends AdminBaseController
         if($check==0)
         {
             $query = School::query()->whereIn('id',$schoolIdArrs)->with(['users'])->orderBy('id', 'ASC');
+            
 
         }
         else{
             $query = School::query()->with(['users'])->orderBy('id', 'ASC');
+          
 
         }
+        $query->whereHas('users',function($q) use ($req)
+        {
+            if($req->role_name)
+            {
+                $q->where('full_name', 'LIKE', '%' . $req->role_name . '%');
+            }
+        });
         if ($req->keyword) {
             $query->where('label', 'LIKE', '%' . $req->keyword . '%');
         }
