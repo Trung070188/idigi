@@ -1658,16 +1658,16 @@
                                 }
                             })
                             self.dataTableLesson= self.dataTableLesson[0];
-                            self.dataAddLessonPlan=[];
+                            // self.dataAddLessonPlan=[];
 
-                            self.dataTableLesson.lesson_ids.forEach(function(e)
-                            {
-                                let dataLesson=self.entries.filter(item => item.id==e)
-                                dataLesson.forEach(function(e2)
-                                {
-                                    self.dataAddLessonPlan.push(e2);
-                                })
-                            })
+                            // self.dataTableLesson.lesson_ids.forEach(function(e)
+                            // {
+                            //     let dataLesson=self.entries.filter(item => item.id==e)
+                            //     dataLesson.forEach(function(e2)
+                            //     {
+                            //         self.dataAddLessonPlan.push(e2);
+                            //     })
+                            // })
                         })
 
 
@@ -1680,6 +1680,7 @@
                            $router.setQuery({});
 
                        },0)
+                       this.load();
 
 
                 }
@@ -1726,6 +1727,7 @@
                 this.$loading(false);
                 this.entries = res.data;
                 this.dataAddLessonPlan=res.dataAddLessonPlan;
+                console.log(this.dataAddLessonPlan.length);
             },
             onPageChange(page) {
                 $router.updateQuery({page: page})
