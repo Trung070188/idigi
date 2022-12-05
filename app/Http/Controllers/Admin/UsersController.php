@@ -1371,9 +1371,12 @@ class UsersController extends AdminBaseController
                         if($item['email']==null)
                         {
                             $validator = Validator::make($item, [
-                                'username' => ['required', Rule::unique('users', 'username')],
+                                'username' => ['required','min:6', Rule::unique('users', 'username')],
                                 'full_name' => ['required',
                                     function ($attribute, $value, $fail) {
+                                        if (preg_match('/[\'\/~`\!@#\$%\^&\*\(\)\-\+=\{\}\[\]\|;:"\<\>,\?\\\]/', $value)) {
+                                            return $fail(__(' The :attribute no special characters'));
+                                        }
                                         if (preg_match('/[0-9]/', $value)) {
                                             return $fail(__(' The :attribute not a number'));
                                         }

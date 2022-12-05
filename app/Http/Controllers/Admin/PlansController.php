@@ -1112,88 +1112,108 @@ class PlansController extends AdminBaseController
 
     public function dataLesson(Request $req)
     {
-        $user = Auth::user();
-        $unitIds = [];
-        $schoolId = $user->school_id;
-        $isSuperAdmin = 0;
-        $isLesson = 0;
-
-
-        foreach ($user->roles as $role) {
-            if ($role->role_name == 'Teacher') {
-                if ($user->user_units) {
-                    foreach ($user->user_units as $unit) {
-                        $unitIds[] = $unit->unit_id;
-                    }
-                }
+        if($req->packageLessonId)
+        {
+            $packageLesson=PackageLesson::where('id',$req->packageLessonId)->first();
+            $lesson_ids=explode(',',$packageLesson->lesson_ids);
+           $lessons=Lesson::query()->whereNotIn('id',$lesson_ids);
+           $dataAddLessonPlan=Lesson::query()->whereIn('id',$lesson_ids)->get();
+            if ($req->keyword) {
+                $lessons->where('name', 'LIKE', '%' . $req->keyword . '%');
+            }
+            if ($req->name) {
+                $lessons->where('name', $req->name);
+            }
+            if ($req->subject) {
+                $lessons->where('subject', $req->subject);
 
             }
-            if ($role->role_name == 'School Admin') {
-                $contents = AllocationContentSchool::where('school_id', $schoolId)
-                    ->with(['allocation_content', 'allocation_content.units'])
-                    ->get();
-                foreach ($contents as $content) {
-                    if (@$content->allocation_content->units) {
-                        foreach ($content->allocation_content->units as $unit) {
-                            $unitIds[] = $unit->id;
-                        }
 
-                    }
-                }
+            if ($req->grade) {
+                $lessons->where('grade', $req->grade);
             }
 
-            if ($role->role_name == 'Super Administrator') {
-                $isSuperAdmin = 1;
+            if ($req->enabled != '') {
+                $lessons->where('enabled', $req->enabled);
+            }
+            $limit = $lessons->count();
+
+            if ($req->limit) {
+                $limit = $req->limit;
             }
 
+            $entries = $lessons->paginate($limit);
+            return [
+                'code' => 0,
+                'dataAddLessonPlan'=>$dataAddLessonPlan,
+                'data' => $entries->items(),
+            ];
         }
+        else{
+            $lessons=Lesson::query()->orderBy('name','ASC')->get();
 
-        $query = Lesson::query()->orderBy('name', 'ASC');
-
-
-//        $query->whereHas('planLesson', function ($q) use ($req) {
-//            $q->where('lesson_id','=',);
+                   return [
+                       'code' => 0,
+                       'data' => $lessons,
+                   ];
+        }
+//        $user = Auth::user();
+//        $unitIds = [];
+//        $schoolId = $user->school_id;
+//        $isSuperAdmin = 0;
+//        $isLesson = 0;
 //
-//        });
-
-        if ($req->keyword) {
-            $query->where('name', 'LIKE', '%' . $req->keyword . '%');
-        }
-        if ($req->name) {
-            $query->where('name', $req->name);
-        }
-        if ($req->subject) {
-            $query->where('subject', $req->subject);
-
-        }
-
-        if ($req->grade) {
-            $query->where('grade', $req->grade);
-        }
-
-        if ($req->enabled != '') {
-            $query->where('enabled', $req->enabled);
-        }
-
-//        $query->createdIn($req->created);
-
-     $limit = $query->count();
-
-        if ($req->limit) {
-            $limit = $req->limit;
-        }
-
-        $entries = $query->paginate($limit);
-
-        return [
-            'code' => 0,
-            'data' => $entries->items(),
-//            'paginate' => [
-//                'currentPage' => $entries->currentPage(),
-//                'lastPage' => $entries->lastPage(),
-//                'totalRecord' => $query->count(),
-//            ]
-        ];
+//
+//        foreach ($user->roles as $role) {
+//            if ($role->role_name == 'Teacher') {
+//                if ($user->user_units) {
+//                    foreach ($user->user_units as $unit) {
+//                        $unitIds[] = $unit->unit_id;
+//                    }
+//                }
+//
+//            }
+//            if ($role->role_name == 'School Admin') {
+//                $contents = AllocationContentSchool::where('school_id', $schoolId)
+//                    ->with(['allocation_content', 'allocation_content.units'])
+//                    ->get();
+//                foreach ($contents as $content) {
+//                    if (@$content->allocation_content->units) {
+//                        foreach ($content->allocation_content->units as $unit) {
+//                            $unitIds[] = $unit->id;
+//                        }
+//
+//                    }
+//                }
+//            }
+//
+//            if ($role->role_name == 'Super Administrator') {
+//                $isSuperAdmin = 1;
+//            }
+//
+//        }
+//
+//        $query = Lesson::query()->orderBy('name', 'ASC');
+//
+//
+////        $query->whereHas('planLesson', function ($q) use ($req) {
+////            $q->where('lesson_id','=',);
+////
+////        });
+//
+//
+//
+////        $query->createdIn($req->created);
+//
+//        return [
+//            'code' => 0,
+//            'data' => $entries->items(),
+////            'paginate' => [
+////                'currentPage' => $entries->currentPage(),
+////                'lastPage' => $entries->lastPage(),
+////                'totalRecord' => $query->count(),
+////            ]
+//        ];
     }
 
 

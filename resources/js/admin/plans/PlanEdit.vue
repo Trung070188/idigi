@@ -1032,6 +1032,7 @@
             tabPackageLesson: function (tabPackage = '') {
                 $('#kt_billing_year').show();
                 this.tabLessonContent = tabPackage;
+                this.load();
                 let self = this;
                 self.checkZipPackage=[];
                 let dataPackage=self.lessonPackagePlans.filter(item =>item.package_id==tabPackage);
@@ -1061,16 +1062,6 @@
                        }
                     })
                        self.dataTableLesson= self.dataTableLesson[0];
-                    self.dataAddLessonPlan=[];
-
-                    self.dataTableLesson.lesson_ids.forEach(function(e)
-                    {
-                        let dataLesson=self.entries.filter(item => item.id==e)
-                        dataLesson.forEach(function(e2)
-                        {
-                            self.dataAddLessonPlan.push(e2);
-                        })
-                    })
                    })
                },0)
                setTimeout(function () {
@@ -1730,9 +1721,11 @@
                 setTimeout(function (){
                     KTMenu.createInstances();
                 }, 0)
-                const res = await $get('/xadmin/plans/dataLesson', query);
+                console.log(this.tabLessonContent);
+                const res = await $get('/xadmin/plans/dataLesson?idPlan='+this.entry.id + '&packageLessonId='+this.tabLessonContent, query);
                 this.$loading(false);
                 this.entries = res.data;
+                this.dataAddLessonPlan=res.dataAddLessonPlan;
             },
             onPageChange(page) {
                 $router.updateQuery({page: page})
