@@ -1,7 +1,7 @@
 <template>
     <div class="container-fluid">
         <ActionBar type="index"
-                   :breadcrumbs="breadcrumbs" title="Plan Management"/>
+                   :breadcrumbs="breadcrumbs" title="Manage plans"/>
         <div class="row">
             <div class="col-lg-12">
                 <!-- BEGIN:MODAL DELETE ALL PLAN -->
@@ -337,7 +337,7 @@
                 allSelected:false,
                 breadcrumbs: [
                     {
-                        title: 'Manage plans'
+                        title: 'Plan management'
                     },
                 ],
                 permissions,

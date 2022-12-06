@@ -1,7 +1,7 @@
 <template>
     <div class="container-fluid">
         <ActionBar type="index"
-                   :breadcrumbs="breadcrumbs"  title = "User Manager - Users"/>
+                   :breadcrumbs="breadcrumbs"  title = "View user detail"/>
         <div class="row">
             <div class="col-lg-12">
                 <div class="modal fade" style="margin-right:50px;border:2px solid #333333  " id="delete" tabindex="-1" role="dialog"
@@ -31,7 +31,7 @@
                      <div class="card-header border-0 pt-6" style="margin:0px 0px -35px">
                          <div class="card-title"></div>
                          <div class="card-toolbar">
-                             <button v-if="permissions['003'] && auth.id!=entry.id" class="btn btn-danger" @click="removeUser">
+                             <button v-if="permissions['003'] && auth.id!=entry.id" :disabled="permissionFields['user_remove']==false" class="btn btn-danger" @click="removeUser">
                                  <i class="bi bi-person-dash mr-1"></i>Delete user
                              </button>
                          </div>
@@ -44,19 +44,19 @@
                                 <div class="row">
                                     <div class="form-group col-sm-4">
                                         <label>Username <span class="text-danger">*</span></label>
-                                        <input class="form-control form-control-solid nospace" placeholder="Enter the username" v-model="entry.username" disabled>
+                                        <input class="form-control  nospace" :disabled="permissionFields['user_username']==false" placeholder="Enter the username" v-model="entry.username" >
 
-                                        <error-label for="f_category_id" :errors="errors.username"></error-label>
+                                        <error-label for="f_category_id" :errors="errors.username" ></error-label>
                                     </div>
                                     <div class="form-group col-sm-4">
                                         <label>Full name <span class="text-danger">*</span></label>
-                                        <input class="form-control" placeholder="Enter the full name" v-model="entry.full_name">
+                                        <input class="form-control" placeholder="Enter the full name" :disabled="permissionFields['user_full_name']==false" v-model="entry.full_name">
 
                                         <error-label for="f_category_id" :errors="errors.full_name"></error-label>
                                     </div>
                                     <div class="form-group  col-sm-4">
                                         <label>Email</label>
-                                        <input class="form-control" placeholder="Enter the email address" v-model="entry.email">
+                                        <input class="form-control" placeholder="Enter the email address" :disabled="permissionFields['user_email']==false" v-model="entry.email">
                                         <error-label for="f_category_id" :errors="errors.email"></error-label>
                                     </div>
                                     <div v-if="entry.id==null" class="form-group  col-sm-4">
@@ -76,12 +76,12 @@
                                                      :errors="errors.password_confirmation"></error-label>
                                     </div>
                                 </div>
-                                <div class="row py-3">
-                                    <div class="form-group col-sm-12">
+                                <div class="row py-3" >
+                                    <div class="form-group col-sm-8" >
                                         <label>Role <span class="text-danger">*</span></label>
                                         <div class="d-flex align-items-center justify-content-start mt-2">
                                             <div class="form-check form-check-custom form-check-solid mr-10" v-for="role in roles">
-                                                <input class="form-check-input mr-2" type="radio" :id="role.id" v-model="name_role" :value="role.id">
+                                                <input :disabled="permissionFields['user_role']==false"  class="form-check-input mr-2" type="radio" :id="role.id" v-model="name_role" :value="role.id">
                                                 <span :for="role.id">{{role.role_name}}</span>
                                             </div>
                                             <error-label for="f_grade" :errors="errors.name_role"></error-label>
@@ -104,15 +104,15 @@
                                 </div>
                                 <div class="row">
                                     <div class="form-group col-sm-12 mb-3">
-                                        <label>Description</label>
-                                        <textarea v-model="entry.description" rows="5" class="form-control"
+                                        <label>User description</label>
+                                        <textarea v-model="entry.description" rows="5" class="form-control" :disabled="permissionFields['user_description']==false"
                                                   placeholder="Type the description here (200 characters)"></textarea>
                                         <error-label for="f_grade" :errors="errors.description"></error-label>
 
                                     </div>
                                 </div>
-                                <div class="form-check form-check-custom form-check-solid pb-5">
-                                    <input id="state" type="checkbox" v-model="entry.state" class="form-check-input h-20px w-20px">
+                                <div class="form-check form-check-custom form-check-solid pb-5" style="margin-top: 6px">
+                                    <input id="state" type="checkbox" v-model="entry.state" :disabled="permissionFields['user_active']==false" class="form-check-input h-20px w-20px">
                                     <label for="state" class="form-check-label fw-bold">Active</label>
                                     <error-label for="f_grade" :errors="errors.state"></error-label>
                                 </div>
@@ -156,8 +156,7 @@
                 types: [],
                 breadcrumbs: [
                     {
-                        title: 'Users & roles',
-                        url: '/xadmin/users/index',
+                        title: 'Account Management',
                     },
                     {
                         title: 'Manage users',
@@ -177,6 +176,7 @@
                 roles: $json.roles || [],
                 role: $json.role || [],
                 title_role: $json.title_role || [],
+                permissionFields: $json.permissionFields || [],
                 isLoading: false,
                 errors: {}
             }

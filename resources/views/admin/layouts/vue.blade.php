@@ -107,7 +107,13 @@
                 ];
 
                 //menu
-                $groupPermissions = \App\Models\GroupPermission::with(['permissions.roles', 'permissions', 'childs'])
+                $groupPermissions = \App\Models\GroupPermission::with([
+                    'permissions.roles',
+                    'permissions',
+                    'childs',
+                    'childs.permissions',
+                    'childs.permissions.roles',
+                ])
                     ->where('parent_id', NULL)
                     ->orderBy('order', 'ASC')
                     ->get();
@@ -176,11 +182,28 @@
                                 ];
 
                                 foreach ($groupPermission->childs as $child) {
-                                    $menu['subs'][] = [
-                                        "name" => $child->name,
-                                        "icon" => $child->icon,
-                                        'url' => $child->path,
-                                    ];
+                                    $checkPermission = 0;
+                                    if($child->permissions){
+                                        foreach ($child->permissions as $permission){
+                                            if($permission->roles){
+                                                foreach ($permission->roles as $role){
+                                                    foreach ($roles as $_role){
+                                                        if($role->id == $_role->id){
+                                                            $checkPermission = 1;
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+
+                                    if($checkPermission == 1){
+                                        $menu['subs'][] = [
+                                            "name" => $child->name,
+                                            "icon" => $child->icon,
+                                            'url' => $child->path,
+                                        ];
+                                    }
                                 }
                             }else{
                                 $menu = [

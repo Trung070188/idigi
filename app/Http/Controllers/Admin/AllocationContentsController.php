@@ -3,10 +3,12 @@
 namespace App\Http\Controllers\Admin;
 
 
+use App\Helpers\PermissionField;
 use App\Models\UserCourseUnit;
 use App\Models\UserUnit;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use App\Models\AllocationContent;
@@ -18,6 +20,7 @@ use App\Models\School;
 use App\Models\SchoolCourse;
 use App\Models\SchoolCourseUnit;
 use App\Models\Unit;
+use Illuminate\Validation\Rule;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
@@ -143,7 +146,18 @@ class AllocationContentsController extends AdminBaseController
         /**
          * @var  AllocationContent $entry
          */
+        $user = Auth::user();
+        $permissionDetail = new PermissionField();
+        $permissions = $permissionDetail->permission($user);
+        $permissionFields = [
+            'allocation_add_new' => $permissionDetail->havePermission('allocation_add_new',$permissions,$user),
+            'allocation_delete'=>$permissionDetail->havePermission('allocation_delete',$permissions,$user),
+            'allocation_title'=>$permissionDetail->havePermission('allocation_title',$permissions,$user),
+            'allocation_course'=>$permissionDetail->havePermission('allocation_course',$permissions,$user),
+            'allocation_unit'=>$permissionDetail->havePermission('allocation_unit',$permissions,$user),
+        ];
         $jsonData=[
+            'permissionFields'=>$permissionFields,
             'totalSchoolArray'=>$totalSchoolArray,
             'totalCourseArray'=>$totalCourseArray,
             'entry'=>$entry,
