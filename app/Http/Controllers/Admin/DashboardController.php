@@ -116,16 +116,20 @@ class DashboardController extends AdminBaseController
         foreach ($logAuths as $logAuth)
         {
             $user=User::with(['roles'])->where('id',$logAuth->user_id)->first();
-            foreach($user->roles as $role)
+            if(@$user->roles)
             {
-                $roleName=$role->role_name;
+                foreach($user->roles as $role)
+                {
+                    $roleName=$role->role_name;
+                }
             }
+
            $logAu[]=[
                'id'=>$logAuth['id'],
                'username'=>$user['username'],
                'object'=>'',
                'status'=>'Login',
-               'role'=>$roleName,
+               'role'=>@$roleName,
                'ip'=>$logAuth['ip_address'],
                'time'=>$logAuth['login_at']
 
