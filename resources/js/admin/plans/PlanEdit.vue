@@ -1016,7 +1016,6 @@
                 let self=this;
                 let pack= self.lessonPackagePlans.filter(item =>item.package_id==rename);
                 self.packageLessonName=pack[0].name;
-                console.log(self.packageLessonName);
             },
             deleteLessonModal:function(deleteIdLesson='')
             {
@@ -1283,7 +1282,6 @@
 
             // validate device khi import
             async importFileDevice() {
-                console.log(this.$refs.uploader.files)
                 if (this.$refs.uploader.files) {
                    let fileSize=(this.$refs.uploader.files[0].size.toString());
                     if(fileSize.length < 7)
@@ -1318,7 +1316,6 @@
                     const formData = new FormData();
                     formData.append('_token', window.$csrf)
                     forEach(files, (v, k) => {
-                        console.log(k,v);
                         formData.append(k, v);
                     });
 
@@ -1722,12 +1719,10 @@
                 setTimeout(function (){
                     KTMenu.createInstances();
                 }, 0)
-                console.log(this.tabLessonContent);
                 const res = await $get('/xadmin/plans/dataLesson?idPlan='+this.entry.id + '&packageLessonId='+this.tabLessonContent, query);
                 this.$loading(false);
                 this.entries = res.data;
                 this.dataAddLessonPlan=res.dataAddLessonPlan;
-                console.log(this.dataAddLessonPlan.length);
             },
             onPageChange(page) {
                 $router.updateQuery({page: page})
