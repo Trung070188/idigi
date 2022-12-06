@@ -1,7 +1,7 @@
 <template>
     <div class="container-fluid" >
         <ActionBar type="index"
-                   :breadcrumbs="breadcrumbs" title = "Resource Allocation"/>
+                   :breadcrumbs="breadcrumbs" title = "Resource allocation"/>
          <div class="row">
             <div class="col-lg-12">
                 <div class="modal fade" style="margin-right:50px;border:2px solid #333333  " id="delete" tabindex="-1" role="dialog"
@@ -204,7 +204,7 @@
                 },
                 breadcrumbs: [
                     {
-                        title: 'School Management'
+                        title: 'Resource management'
                     },
                     {
                         title: 'Resource allocation'

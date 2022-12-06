@@ -7,6 +7,8 @@ use App\Exports\DeviceErrorExport;
 use App\Exports\DevicePlanExport;
 use App\Exports\LessonPlanExport;
 use App\Exports\PlanExport;
+use App\Exports\TeacherErrorExport;
+use App\Helpers\PermissionField;
 use App\Imports\DeviceImport;
 use App\Jobs\UpdateDownloadInventory;
 use App\Jobs\UpdateDownloadLessonFile;
@@ -215,8 +217,35 @@ class PlansController extends AdminBaseController
                 'lessonIds' => $lessonIdArr,
             ];
         }
+        $user = Auth::user();
+        $permissionDetail = new PermissionField();
+        $permissions = $permissionDetail->permission($user);
+        $permissionFields = [
+            'plan_name' => $permissionDetail->havePermission('plan_name',$permissions,$user),
+            'plan_due_date'=>$permissionDetail->havePermission('plan_due_date',$permissions,$user),
+            'plan_description'=>$permissionDetail->havePermission('plan_description',$permissions,$user),
+            'plan_assign_to_IT'=>$permissionDetail->havePermission('plan_assign_to_IT',$permissions,$user),
+            'plan_expire_date'=>$permissionDetail->havePermission('plan_expire_date',$permissions,$user),
+            'plan_add_device'=>$permissionDetail->havePermission('plan_add_device',$permissions,$user),
+            'plan_delete_device'=>$permissionDetail->havePermission('plan_delete_device',$permissions,$user),
+            'plan_export_device'=>$permissionDetail->havePermission('plan_export_device',$permissions,$user),
+            'plan_add_package'=>$permissionDetail->havePermission('plan_add_package',$permissions,$user),
+            'plan_delete_lesson_package'=>$permissionDetail->havePermission('plan_delete_lesson_package',$permissions,$user),
+            'plan_export_plan'=>$permissionDetail->havePermission('plan_export_plan',$permissions,$user),
+            'plan_delete_plan'=>$permissionDetail->havePermission('plan_delete_plan',$permissions,$user),
+            'plan_import_device'=>$permissionDetail->havePermission('plan_import_device',$permissions,$user),
+            'plan_remove_lesson'=>$permissionDetail->havePermission('plan_remove_lesson',$permissions,$user),
+            'plan_download_package'=>$permissionDetail->havePermission('plan_download_package',$permissions,$user),
+            'plan_add_lesson'=>$permissionDetail->havePermission('plan_add_lesson',$permissions,$user),
+            'plan_zip_package_lesson'=>$permissionDetail->havePermission('plan_zip_package_lesson',$permissions,$user),
+            'plan_rename_lesson_package'=>$permissionDetail->havePermission('plan_rename_lesson_package',$permissions,$user),
+            'plan_device_get_confirm_code'=>$permissionDetail->havePermission('plan_device_get_confirm_code',$permissions,$user),
+
+
+        ];
 
         $jsonData = [
+            'permissionFields'=>$permissionFields,
             'roleAuth' => $roleAuth,
             'lessonPackagePlans' => @$lessonPackagePlans,
             'idRoleIt' => $idRoleIt,
@@ -225,7 +254,7 @@ class PlansController extends AdminBaseController
             'data' => $data,
             'urls' => @$url,
             'packagePlan' => @$packagePlan,
-            'packageLessonPlan' => @$packageLessonPlan
+            'packageLessonPlan' => @$packageLessonPlan,
         ];
         return view('admin.layouts.vue', compact('title', 'component', 'jsonData'));
     }

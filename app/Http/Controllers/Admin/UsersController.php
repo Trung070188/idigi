@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Exports\TeacherErrorExport;
+use App\Helpers\PermissionField;
 use App\Imports\TeacherImport;
 use App\Models\File;
 use App\Models\RequestRole;
@@ -16,6 +17,7 @@ use Carbon\Carbon;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use App\Models\User;
@@ -163,6 +165,16 @@ class UsersController extends AdminBaseController
         } else {
             $license = null;
         }
+        $permissionDetail = new PermissionField();
+        $permissions = $permissionDetail->permission($user);
+        $permissionFields = [
+            'profile_full_name' => $permissionDetail->havePermission('profile_full_name',$permissions,$user),
+            'profile_email'=>$permissionDetail->havePermission('profile_email',$permissions,$user),
+            'profile_role'=>$permissionDetail->havePermission('profile_role',$permissions,$user),
+            'profile_set_password'=>$permissionDetail->havePermission('profile_set_password',$permissions,$user),
+            'profile_change_avatar'=>$permissionDetail->havePermission('profile_change_avatar',$permissions,$user),
+            'profile_user_name'=>$permissionDetail->havePermission('profile_user_name',$permissions,$user),
+        ];
 
 
         /**
@@ -171,6 +183,7 @@ class UsersController extends AdminBaseController
         $title = 'Profile Edit';
         $component = 'ProfileForm';
         $jsonData = [
+            'permissionFields'=>$permissionFields,
             'entry' => $entry,
             'role' => $role,
             'userDe' => $userDe,
@@ -189,7 +202,7 @@ class UsersController extends AdminBaseController
     {
 
         $id = $req->id;
-        $entry = User::query()->with(['roles', 'schools'])
+        $entry = User::query()->with(['roles', 'schools', 'user_devices'])
             ->where('id', $id)->first();
         if (!$entry) {
             throw new NotFoundHttpException();
@@ -198,7 +211,7 @@ class UsersController extends AdminBaseController
         /**
          * @var  User $entry
          */
-        $roles = Role::query()->orderBy('id', 'ASC')->get();
+        $roles = Role::query()->orderBy('order', 'ASC')->where('role_name', '<>', 'Super Administrator')->get();
         foreach ($entry->roles as $role) {
             @$title_role = $role->role_name;
         }
@@ -208,12 +221,38 @@ class UsersController extends AdminBaseController
                 $name_role = $role->id;
             }
         }
+        if ($entry->user_devices)
+        {
+            $userDevice=$entry->user_devices;
+        }
         @$school = $entry->schools->label;
         $schools = School::query()->orderBy('label', 'ASC')->get();
         $title = 'Edit';
         $component = 'UserEdit';
         $user = Auth::user();
+        $permissionDetail = new PermissionField();
+        $permissions = $permissionDetail->permission($user);
+        $permissionFields = [
+            'user_username' => $permissionDetail->havePermission('user_username',$permissions,$user),
+            'user_full_name'=>$permissionDetail->havePermission('user_full_name',$permissions,$user),
+            'user_email'=>$permissionDetail->havePermission('user_email',$permissions,$user),
+            'user_description'=>$permissionDetail->havePermission('user_description',$permissions,$user),
+            'user_active'=>$permissionDetail->havePermission('user_active',$permissions,$user),
+            'user_role'=>$permissionDetail->havePermission('user_role',$permissions,$user),
+            'user_remove'=>$permissionDetail->havePermission('user_remove',$permissions,$user),
+            'user_password'=>$permissionDetail->havePermission('user_password',$permissions,$user),
+            'user_delete_device'=>$permissionDetail->havePermission('user_delete_device',$permissions,$user)
+
+        ];
+        if($entry->school_id)
+        {
+            $userSchool=explode(',',$entry->school_id);
+
+        }
         $jsonData = [
+            'userSchool'=>@$userSchool,
+            'userDevice'=>@$userDevice,
+            'permissionFields'=>$permissionFields,
             'schools' => $schools,
             @'school' => $school,
             'entry' => $entry,
@@ -311,7 +350,20 @@ class UsersController extends AdminBaseController
         $title = 'Edit';
         $component = 'TeacherEdit';
         $user = Auth::user();
+        $permissionDetail = new PermissionField();
+        $permissions = $permissionDetail->permission($user);
+        $permissionFields = [
+            'teacher_username' => $permissionDetail->havePermission('teacher_username',$permissions,$user),
+            'teacher_email'=>$permissionDetail->havePermission('teacher_email',$permissions,$user),
+            'teacher_phone'=>$permissionDetail->havePermission('teacher_phone',$permissions,$user),
+            'teacher_class'=>$permissionDetail->havePermission('teacher_class',$permissions,$user),
+            'teacher_school'=>$permissionDetail->havePermission('teacher_school',$permissions,$user),
+            'teacher_description'=>$permissionDetail->havePermission('teacher_description',$permissions,$user),
+            'teacher_import'=>$permissionDetail->havePermission('teacher_import',$permissions,$user),
+
+        ];
         $jsonData = [
+            'permissionFields'=>$permissionFields,
             'allocationContentId'=>$allocationContentId,
             'entry' => $entry,
             @'user_device' => @$user_device,
@@ -384,7 +436,20 @@ class UsersController extends AdminBaseController
         $title = 'Edit';
         $component = 'TeacherDetails';
         $user = Auth::user();
+        $permissionDetail = new PermissionField();
+        $permissions = $permissionDetail->permission($user);
+        $permissionFields = [
+            'teacher_username' => $permissionDetail->havePermission('teacher_username',$permissions,$user),
+            'teacher_email'=>$permissionDetail->havePermission('teacher_email',$permissions,$user),
+            'teacher_phone'=>$permissionDetail->havePermission('teacher_phone',$permissions,$user),
+            'teacher_class'=>$permissionDetail->havePermission('teacher_class',$permissions,$user),
+            'teacher_school'=>$permissionDetail->havePermission('teacher_school',$permissions,$user),
+            'teacher_description'=>$permissionDetail->havePermission('teacher_description',$permissions,$user),
+            'teacher_import'=>$permissionDetail->havePermission('teacher_import',$permissions,$user),
+
+        ];
         $jsonData = [
+            'permissionFields'=>$permissionFields,
             'allocationContentId'=>$allocationContentId,
             'entry' => $entry,
             @'user_device' => @$user_device,

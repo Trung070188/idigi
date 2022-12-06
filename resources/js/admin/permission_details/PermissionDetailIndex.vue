@@ -1,16 +1,13 @@
 <template>
     <div class="container-fluid" >
         <ActionBar type="index"
-                   title="Permission Detail"/>
+                   :breadcrumbs="breadcrumbs" title="Permission"/>
          <div class="row">
             <div class="col-lg-12">
                 <div class="card card-custom card-stretch gutter-b">
-                    <div class="card-header border-0 pt-5">
-                        <!--<div class="title">
-                            <label>Roles</label>
-                        </div>-->
-                        <button class="btn btn-primary button-create mb-3" ><i class="bi bi-plus-lg"></i>Add feature</button>
-                    </div>
+<!--                    <div class="d-flex justify-content-end" style="margin-right: 28px;margin-top: 20px">-->
+<!--                        <button class="btn btn-primary button-create mb-3" ><i class="bi bi-plus-lg"></i>Add feature</button>-->
+<!--                    </div>-->
                     <!--<hr>-->
                     <div class="card-header border-0 pt-2">
                         <table class="table bg-white table-bordered">
@@ -27,17 +24,15 @@
                             <tr v-for="permission in permissions" >
                                 <th scope="col">
                                     <span >{{permission.display_permission_detail}}</span>
-                                    <span v-for="permissionDetail in permission.permission_details" class="d-block fw-bold ml-5 text-lowercase"><i class="bi bi-arrow-right-short mr-1"></i>{{permissionDetail.name}}</span>
+                                    <span v-for="permissionDetail in permission.permission_details" class="d-block fw-bold ml-5"><i class="bi bi-arrow-right-short mr-1"></i>{{permissionDetail.name}}</span>
                                 </th>
-
-                                <td v-for="role in roles">
+                                <th v-for="role in roles">
                                     <div class="form-check form-check-custom form-check-solid justify-content-center" v-for="permissionDetail in role.permission" v-if="permissionDetail.permission==permission.id">
                                         <input @change="changePermissionDetail(role.id,permissionDetail.id,permissionDetail.value)"  class="form-check-input h-20px w-20px" type="checkbox"  v-model="permissionDetail.value" >
                                         <br>
                                     </div>
-                                </td>
+                                </th>
                             </tr>
-
                         </table>
                     </div>
 
@@ -67,6 +62,14 @@
                 permissions:[],
                 roles:[],
                 entries: [],
+                breadcrumbs: [
+                    {
+                        title: 'Account management'
+                    },
+                    {
+                        title: 'Permission'
+                    },
+                ],
                 filter: {
                     keyword: $q.keyword || '',
                     created: $q.created || created,
@@ -160,6 +163,8 @@
                     'permission_detail_id' :permissionDetailId,
                     'check' : check,
                 });
+                toastr.options.timeOut=1000;
+                toastr.options.preventDuplicates = true;
                 toastr.success(res.message);
             }
         }

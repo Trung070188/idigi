@@ -2,7 +2,7 @@
     <div class="container-fluid">
 
         <ActionBar type="index"
-                   :breadcrumbs="breadcrumbs" title = "Lesson Management"/>
+                   :breadcrumbs="breadcrumbs" title = "Lessons"/>
                       <div class="modal" id="download-lesson" tabindex="-1">
             <div id="overlay">
                 <div class="la-3x text">
@@ -312,6 +312,9 @@
                 lessons: [],
                 allSelected: false,
                 breadcrumbs: [
+                    {
+                        title: 'Resource management'
+                    },
                     {
                         title: 'Lessons'
                     },

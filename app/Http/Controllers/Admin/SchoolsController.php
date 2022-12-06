@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Helpers\PermissionField;
 use App\Models\AllocationContent;
 use App\Models\AllocationContentSchool;
 use App\Models\Course;
@@ -17,6 +18,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use App\Models\School;
 use App\Models\Unit;
+use Carbon\Carbon;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
@@ -350,10 +352,28 @@ class SchoolsController extends AdminBaseController
          * @var  School $entry
          */
 
+        $user = Auth::user();
+        $permissionDetail = new PermissionField();
+        $permissions = $permissionDetail->permission($user);
+        $permissionFields = [
+            'school_name' => $permissionDetail->havePermission('school_name',$permissions,$user),
+            'school_address'=>$permissionDetail->havePermission('school_address',$permissions,$user),
+            'school_email'=>$permissionDetail->havePermission('school_email',$permissions,$user),
+            'school_phone_number'=>$permissionDetail->havePermission('school_phone_number',$permissions,$user),
+            'school_device'=>$permissionDetail->havePermission('school_device',$permissions,$user),
+            'school_user'=>$permissionDetail->havePermission('school_user',$permissions,$user),
+            'school_expire_date'=>$permissionDetail->havePermission('school_expire_date',$permissions,$user),
+            'school_description'=>$permissionDetail->havePermission('school_description',$permissions,$user),
+            'school_content'=>$permissionDetail->havePermission('school_content',$permissions,$user),
+            'school_delete'=>$permissionDetail->havePermission('school_delete',$permissions,$user),
+            'school_teacher_list'=>$permissionDetail->havePermission('school_teacher_list',$permissions,$user),
+
+        ];
         $title = 'Edit';
         $component = 'SchoolEdit';
         $entry->allocationContentId = $allocationContentId;
         $jsonData = [
+            'permissionFields'=>$permissionFields,
             'teacher'=>$lengthTeacher,
             'entry' => $entry,
             @'allocationContents' => @$newAllocationContents,
