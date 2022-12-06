@@ -473,7 +473,7 @@ class SchoolsController extends AdminBaseController
             'school_address' => 'required|max:255',
             'number_of_users' => 'required|min:1|integer',
             'devices_per_user' => 'required|min:1|integer',
-//            'license_to'=>'required|after_or_equal:'. $current,
+            'license_to'=>'required|after_or_equal:'. $current,
 
         ];
         if(@$data['school_email'])
@@ -490,7 +490,7 @@ class SchoolsController extends AdminBaseController
             'number_of_users.required'=>'The No. of User field is required.',
             'devices_per_user.required'=>'The No. of Device per user field is required.',
             'license_to.required'=>'The Expired date/License is required.',
-//            'license_to.after_or_equal'=>'The Expired date/License must be a date after or equal to ' .$today,
+            'license_to.after_or_equal'=>'The Expired date/License must be a date after or equal to ' .$today,
 
         ];
 

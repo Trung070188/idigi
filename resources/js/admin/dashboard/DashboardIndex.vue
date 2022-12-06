@@ -167,6 +167,7 @@
                 created: $q.created || '' ,
             };
             return {
+                logAuth:[],
                 created:'',
                 filter: filter,
                 select:null,
@@ -254,9 +255,14 @@
             async load() {
             let query = $router.getQuery();
                 let today=new Date();
-                let create=today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
+                let create=today.getFullYear()+'-'+String(today.getMonth() + 1).padStart(2, '0')+'-'+String(today.getDate()).padStart(2, '0');
+                console.log(create);
             const res = await $get('/xadmin/dashboard/data?year='+this.cbYear+'&created='+create, query);
             this.entries = res.data;
+            this.logAuth=res.logAu;
+            this.entries=this.entries.concat(this.logAuth);
+            console.log(this.entries);
+
             this.dataChart=res.dataChart;
 
         },

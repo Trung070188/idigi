@@ -10,6 +10,7 @@ namespace App\Http\Controllers\Admin;
 use App\Console\Commands\DownloadLesson;
 use App\Http\Controllers\AppController;
 use App\Http\Controllers\Controller;
+use App\Models\AuthenticationLog;
 use App\Models\DownloadAppLog;
 use App\Models\DownloadLessonLog;
 use App\Models\Lesson;
@@ -83,6 +84,17 @@ class DashboardController extends AdminBaseController
             ->orWhere('request_uri', '/xadmin/plans/deletePackageLesson')
             ->orWhere('request_uri', '/xadmin/user_devices/save')
             ->orWhere('request_uri', '/xadmin/user_devices/remove')->get();
+        $logAuthentications=AuthenticationLog::query()->orderBy('id','desc')->get();
+        $xlogerLogin=[];
+        foreach ($logAuthentications as $authentication)
+        {
+            $time=Carbon::createFromFormat('Y-m-d H:i:s',$authentication->login_at )->format('Y-m-d');
+            if($time==$req->created)
+            {
+                $xlogerLogin[]=$authentication->id;
+            }
+        }
+        $logAuths=AuthenticationLog::whereIn('id',$xlogerLogin)->get();
         $request_uri=[];
         foreach ($requestUris as $requestUri)
         {
@@ -100,30 +112,52 @@ class DashboardController extends AdminBaseController
             }
         }
         $xloggers=Xlogger::where('http_code',200)->whereIn('id',$xlogerDay)->whereIn('request_uri',$request_uri)->orderBy('id','desc')->get();
+        $logAu=[];
+        foreach ($logAuths as $logAuth)
+        {
+            $user=User::with(['roles'])->where('id',$logAuth->user_id)->first();
+            foreach($user->roles as $role)
+            {
+                $roleName=$role->role_name;
+            }
+           $logAu[]=[
+               'id'=>$logAuth['id'],
+               'username'=>$user['username'],
+               'object'=>'',
+               'status'=>'Login',
+               'role'=>$roleName,
+               'ip'=>$logAuth['ip_address'],
+               'time'=>$logAuth['login_at']
+
+
+           ];
+        }
 
         $xlogger = [];
         foreach ($xloggers as $entry) {
-            $dataXlogger = json_decode($entry['response'], TRUE);
-            $object = @$dataXlogger['object'];
-            $entry['object'] =@ $object;
-            $entry['status'] = @$dataXlogger['status'];
-            $entry['role']=@$dataXlogger['role'];
 
-            if(@$dataXlogger['code']==0)
-            {
-                $xlogger[]=[
-                    'id'=>$entry->id,
-                    'username'=>$entry['username'],
-                    'object'=>@$entry['object'],
-                    'status'=>@$entry['status'],
-                    'role'=>@$entry['role'],
-                    'ip'=>$entry['ip'],
-                    'time'=>$entry['time']
-                ];
 
+                $dataXlogger = json_decode($entry['response'], TRUE);
+                $object = @$dataXlogger['object'];
+                $entry['object'] =@ $object;
+                $entry['status'] = @$dataXlogger['status'];
+                $entry['role']=@$dataXlogger['role'];
+
+                if(@$dataXlogger['code']==0)
+                {
+                    $xlogger[]=[
+                        'id'=>$entry->id,
+                        'username'=>$entry['username'],
+                        'object'=>@$entry['object'],
+                        'status'=>@$entry['status'],
+                        'role'=>@$entry['role'],
+                        'ip'=>$entry['ip'] ,
+                        'time'=>$entry['time']
+                    ];
+
+                }
             }
 
-        }
         $year =(int)$dataAll['year'];
         $months=[1,2,3,4,5,6,7,8,9,10,11,12];
         foreach ($months as $month)
@@ -159,10 +193,10 @@ class DashboardController extends AdminBaseController
                 count($down['downloadLesson'])
             ];
         }
-
         return [
             'code' => 0,
             'data' =>$xlogger,
+            'logAu'=>$logAu,
             'dataChart'=>$dataChart
 
         ];
