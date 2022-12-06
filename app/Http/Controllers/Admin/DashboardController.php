@@ -126,7 +126,7 @@ class DashboardController extends AdminBaseController
 
            $logAu[]=[
                'id'=>$logAuth['id'],
-               'username'=>$user['username'],
+               'username'=>@$user['username'],
                'object'=>'',
                'status'=>'Login',
                'role'=>@$roleName,
