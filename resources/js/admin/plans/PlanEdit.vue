@@ -706,8 +706,8 @@
                                                     <!--end::Input group-->
                                                     <!--begin::Input group-->
                                                     <div class="fv-row">
-                                                    <label v-if="doNotImport==0">{{fileImport.length}} imported</label>
-                                                        <label v-if="doNotImport==1">{{deviceError.length}} do not imported</label>
+                                                    <label v-if="doNotImport==0">{{fileImport.length}} new record(s) imported</label>
+                                                        <label v-if="doNotImport==1">{{deviceError.length}} new record(s) do not imported</label>
                                                     </div>
                                                     <!--end::Input group-->
                                                 </div>
