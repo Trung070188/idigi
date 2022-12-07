@@ -479,6 +479,7 @@
                         <error-label for="f_category_id" :errors="errors.deviceName"></error-label>
                         <input type="text" class="form-control " placeholder="Enter the register code" aria-label="" aria-describedby="basic-addon1" v-model="deviceUid">
                         <error-label for="f_category_id" :errors="errors.deviceUid"></error-label>
+                        <error-label for="f_category_id" :errors="errors.device_uid"></error-label>
                     </div>
                     <div class="form-group d-flex justify-content-center">
                         <!--                        <button  class="btn btn-danger ito-btn-small" data-dismiss="modal" @click="save()">Add now</button>-->
