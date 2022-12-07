@@ -327,9 +327,9 @@
                             <div class="row">
                                 <div class="form-group col-lg-3">
                                     <label>Teacher name </label>
-                                    <input @keydown.enter="doFilter('username', filter.username, $event)"
+                                    <input @keydown.enter="doFilter('full_name', filter.full_name, $event)"
                                            class="form-control" placeholder="Enter the teacher’s name"
-                                           v-model="filter.username"/>
+                                           v-model="filter.full_name"/>
 
                                 </div>
                                 <div class="form-group col-lg-3">

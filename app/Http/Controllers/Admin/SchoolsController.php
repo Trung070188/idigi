@@ -172,12 +172,8 @@ class SchoolsController extends AdminBaseController
             $q->where('role_name', 'Teacher');
 
         });
-
-        if ($req->username) {
-            $query->where('username', 'LIKE', '%' . $req->username . '%');
-        }
         if ($req->full_name) {
-            $query->where('full_name', 'LIKE' . $req->full_name . '%');
+            $query->where('full_name', 'LIKE' ,'%' . $req->full_name . '%');
         }
         if ($req->email) {
             $query->where('email', 'LIKE', '%' . $req->email . '%');
