@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Helpers\PermissionField;
 use App\Models\DownloadAppLog;
 use Carbon\Carbon;
 use Illuminate\Contracts\View\View;
@@ -41,7 +42,15 @@ class AppVersionsController extends AdminBaseController
                 $roleName=$role->role_name;
             }
         }
+        $permissionDetail = new PermissionField();
+        $permissions = $permissionDetail->permission($user);
+        $permissionFields = [
+            'app_download' => $permissionDetail->havePermission('app_download',$permissions ,$user),
+            'app_delete'=>$permissionDetail->havePermission('app_delete',$permissions ,$user),
+            'app_create_new'=>$permissionDetail->havePermission('app_create_new',$permissions ,$user),
+        ];
         $jsonData=[
+            'permissionFields'=>$permissionFields,
             'roleName'=>$roleName,
         ];
         return view('admin.layouts.vue', compact('title', 'component', 'jsonData'));
@@ -285,29 +294,27 @@ class AppVersionsController extends AdminBaseController
             ]
         ];
     }
-    public function downloadApp(Request $req)
+    public function downloadApp(Request $req, $id)
     {
-        $appVersion=AppVersion::where('is_default','=',1)->first();
+        $appVersion=AppVersion::where('id','=',$id)->first();
         $appId=$appVersion->id;
         $user=Auth::user();
-        foreach ($user->user_devices as $device)
-        {
-            $device_uid=$device->device_uid;
-        }
+//        foreach ($user->user_devices as $device)
+//        {
+//            $device_uid=$device->device_uid;
+//        }
+
         $downloadAppLog=new DownloadAppLog();
         $downloadAppLog->user_id=$user->id;
         $downloadAppLog->user_agent=$req->userAgent();
         $downloadAppLog->ip_address=$req->getClientIp();
         $downloadAppLog->app_id=$appId;
-        $downloadAppLog->device_uid=$device_uid;
+//        $downloadAppLog->device_uid=$device_uid;
         $downloadAppLog->download_at=Carbon::now();
         $downloadAppLog->save();
 
 
-        return[
-            'code'=>0,
-            'url'=>$appVersion->url
-        ];
+        return redirect($appVersion->url);
         }
 
     public function setDefaultVersion(Request  $req){

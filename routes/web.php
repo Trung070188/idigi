@@ -15,11 +15,11 @@ use Illuminate\Support\Facades\Route;
 
 
 Route::get('/', function() {
-    return redirect('/xadmin/lessons/index');
+    return redirect('/xadmin/dashboard/index');
 })->name('home');
 
 Route::get('/xadmin', function() {
-    return redirect('/xadmin/lessons/index');
+    return redirect('/xadmin/dashboard/index');
 });
 
 
@@ -47,8 +47,8 @@ Route::middleware(['auth','CheckLicense','checkActiveUser' ])->namespace('Admin'
 
 });
 
-Route::middleware(['auth','CheckLicense','checkActiveUser'])->namespace('Teacher')->prefix('xadmin')->group(function (){
-    Route::get('/app_versions/downloadApp','AppVersionsController@downloadApp');
+Route::middleware(['auth','CheckLicense','checkActiveUser'])->namespace('Admin')->prefix('xadmin')->group(function (){
+    Route::get('/app_versions/downloadApp/{id}','AppVersionsController@downloadApp');
 });
 
 Route::group(['prefix' => 'xadmin'], function(){

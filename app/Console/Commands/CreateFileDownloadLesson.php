@@ -13,6 +13,7 @@ use App\Models\Inventory;
 use App\Models\Lesson;
 use App\Models\LessonInventory;
 use App\Models\Notification;
+use App\Models\PackageLesson;
 use App\Models\Plan;
 use App\Models\Product;
 use App\Models\Unit;
@@ -69,6 +70,7 @@ class CreateFileDownloadLesson extends Command
             // $planLesson->status= 'inprogress';
             $planLesson->save();
             $info = [
+                'package_id'=>$planLesson->package_id,
                 'user_id' => $planLesson->user_id,
                 'ip_address' => NULL,
                 'user_agent' => NULL,
@@ -115,10 +117,11 @@ class CreateFileDownloadLesson extends Command
 
         $lessons = Lesson::whereIn('id', $info['lesson_ids'])
             ->with(['inventories'])->get();
-
+       $packageLesson= PackageLesson::query()->where('id',$info['package_id'])->first();
 
         $filenameAll = uniqid(time() . rand(10, 100));
-        $pathZipAll = $dir . '/all_lessons_' . $filenameAll . '.zip';
+//        $pathZipAll = $dir . '/all_lessons_' . $packageLesson->name . '.zip';
+        $pathZipAll = $dir . '/' . $packageLesson->name .'_' . $filenameAll . '.zip';
         $zipFileAll = public_path($pathZipAll);
         $zipAll = new \ZipArchive();
         $zipAll->open($zipFileAll, \ZipArchive::CREATE | \ZipArchive::OVERWRITE);

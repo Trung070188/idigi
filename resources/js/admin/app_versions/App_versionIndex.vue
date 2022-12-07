@@ -1,7 +1,7 @@
 <template>
     <div class="container-fluid">
         <ActionBar type="index"
-                   :breadcrumbs="breadcrumbs" title="Application Settings"/>
+                   :breadcrumbs="breadcrumbs" title="Manage applications version"/>
         <div class="card card-custom card-stretch gutter-b" v-if="roleName=='Super Administrator'">
             <div class="modal fade" style="margin-right:50px;border:2px solid #333333  " id="delete" tabindex="-1"
                  role="dialog"
@@ -109,7 +109,7 @@
                                 <div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-bold fs-7 w-auto py-4" data-kt-menu="true">
                                     <!--begin::Menu item-->
                                     <div class="menu-item px-3">
-                                        <a :href="entry.url" class="menu-link px-3">Download</a>
+                                        <a :href="'/xadmin/app_versions/downloadApp/'+ entry.id" class="menu-link px-3">Download</a>
                                     </div>
                                     <div class="menu-item px-3">
                                         <a v-if="entry.is_default==0" class="menu-link px-3"
@@ -504,6 +504,7 @@
         data() {
             const permissions = clone(window.$permissions);
             return {
+                permissionFields:$json.permissionFields || [],
                 entry: '',
                 roleName: $json.roleName,
                 release_note: '',
@@ -529,7 +530,7 @@
                 curVersion: '',
                 breadcrumbs: [
                     {
-                        title: 'Download Application'
+                        title: 'Application management'
                     },
                 ],
             }

@@ -36,6 +36,7 @@ import PlanIndex from "./admin/plans/PlanIndex";
 import PlanForm from "./admin/plans/PlanForm";
 import PlanEdit from "./admin/plans/PlanEdit";
 import UserDeactive from "./admin/users/UserDeactive";
+import PermissionDetailIndex from "./admin/permission_details/PermissionDetailIndex.vue";
 export default {
     DashboardIndex,
     UserIndex,
@@ -74,7 +75,6 @@ export default {
     PlanIndex,
     PlanForm,
     PlanEdit,
-    UserDeactive
-
-
+    UserDeactive,
+    PermissionDetailIndex
 }

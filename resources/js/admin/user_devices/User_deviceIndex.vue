@@ -1,7 +1,7 @@
 <template>
     <div class="container-fluid">
         <ActionBar type="index"
-                   :breadcrumbs="breadcrumbs" title = "Device Management"/>
+                   :breadcrumbs="breadcrumbs" title = "My devices"/>
         <div class="modal fade" style="margin-right:50px " id="sentConfirm" tabindex="-1" role="dialog"
              aria-labelledby="sentConfirm"
              aria-hidden="true">
@@ -294,9 +294,8 @@
                                     <td class="" v-text="entry.device_name" ></td>
                                     <td v-text="d(entry.created_at)" d></td>
                                     <td class="" >
-                                        <span class="status" v-if="entry.status==2">Active</span>
-                                        <span   class="status-request" v-if="entry.status==1 ">Delete request sent</span>
-
+                                        <span   class="status-request" v-if="entry.status==2 && entry.delete_request=='Deleting request'">Delete request sent</span>
+                                        <span class="status" v-else>Active</span>
                                     </td>
                                 <td class="">
                                     <a href="list.html#" class="btn btn-light btn-active-light-primary btn-sm" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">Actions
@@ -311,10 +310,12 @@
                                     <div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-bold fs-7 w-125px py-4" data-kt-menu="true">
                                         <!--begin::Menu item-->
                                         <div class="menu-item px-3">
-                                            <a @click="saveEditName(entry)" class="menu-link px-3">Rename</a>
+                                            <a @click="saveEditName(entry)" v-if="permissionFields['device_rename']==true" class="menu-link px-3">Rename</a>
+                                            <a v-else class="menu-link px-3 isDisabled">Rename</a>
                                         </div>
                                         <div class="menu-item px-3">
-                                            <a @click="editModalDevice(entry.id,entry.device_name,entry.secret_key)" class="menu-link px-3">Get confirmation code</a>
+                                            <a @click="editModalDevice(entry.id,entry.device_name,entry.secret_key)" v-if="permissionFields['device_confirmation_code']==true" class="menu-link px-3">Get confirmation code</a>
+                                            <a v-else  class="menu-link px-3 isDisabled">Get confirmation code</a>
                                         </div>
                                         <!--end::Menu item-->
                                         <!--begin::Menu item-->
@@ -322,13 +323,13 @@
                                         <!--end::Menu item-->
                                         <!--begin::Menu item-->
                                         <div class="menu-item px-3" >
-                                            <a class="menu-link text-danger px-3" v-if="entry.roleName!='Teacher'" @click="removeDevice(entry.id)" data-kt-subscriptions-table-filter="delete_row">Delete</a>
-                                            <a class="menu-link text-danger px-3" v-if="entry.roleName=='Teacher' && entry.status==2 " @click="Sent(entry)" data-kt-subscriptions-table-filter="delete_row" >Delete</a>
+                                            <a class="menu-link text-danger px-3" v-if="checkDeleteDeviceRequest==0 && permissionFields['device_delete']==true" @click="removeDevice(entry.id)" data-kt-subscriptions-table-filter="delete_row">Delete</a>
+                                            <a class="menu-link text-danger px-3 isDisabled" v-if="checkDeleteDeviceRequest==0 && permissionFields['device_delete']==false" @click="removeDevice(entry.id)" data-kt-subscriptions-table-filter="delete_row">Delete</a>
+                                            <a class="menu-link text-danger px-3" v-if="checkDeleteDeviceRequest==1 && entry.status==2 && permissionFields['device_delete']==true" @click="Sent(entry)" data-kt-subscriptions-table-filter="delete_row" >Delete</a>
+                                            <a class="menu-link text-danger px-3 isDisabled" v-if="checkDeleteDeviceRequest==1 && entry.status==2 && permissionFields['device_delete']==false" @click="Sent(entry)" data-kt-subscriptions-table-filter="delete_row" >Delete</a>
 
                                         </div>
-                                        <div class="menu-item px-3"  >
-                                            <a v-if="entry.roleName=='Teacher' && entry.status==1"  data-kt-subscriptions-table-filter="delete_row" class="menu-link text-danger px-3" >Delete</a>
-                                        </div>
+
                                         <!--end::Menu item-->
                                     </div>
                                     <!--end::Menu-->
@@ -369,7 +370,9 @@
         data() {
             const permissions = clone(window.$permissions)
             return {
+                permissionFields:$json.permissionFields || [],
                 permissions,
+                checkDeleteDeviceRequest:$json.checkDeleteDeviceRequest,
                 roleName:$json.roleName,
                 device:'',
                 curDevice:{},
@@ -381,7 +384,7 @@
                 editDevice:"",
                 breadcrumbs: [
                     {
-                        title: 'User Device'
+                        title: 'My devices'
                     },
                 ],
                 idDevice:'',

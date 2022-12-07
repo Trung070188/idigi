@@ -23,37 +23,52 @@ class CheckDeviceController extends Controller
 
         $user = User::where('username', $request->username)
             ->orWhere('email', $request->username)
-            ->with(['user_devices'])
+            ->with(['user_devices','schools'])
             ->first();
 
         if($user){
-            $count = 0;
-            if($user->user_devices){
-                foreach ($user->user_devices as $device){
-                    $count ++ ;
 
-                    if($device->device_uid == $request->device_unique){
+            if($user->schools)
+            {
+                $countDevice=$user->schools->devices_per_user;
+                $count = 0;
+                if($user->user_devices){
+                    foreach ($user->user_devices as $device){
+                        $count ++ ;
+
+                        if($device->device_uid == $request->device_unique){
+                            return [
+                                'code' => 0,
+                                'msg' => 'Device Id đã tồn tại',
+
+                            ];
+                        }
+                    }
+                    if($count > $countDevice){
                         return [
-                            'code' => 0,
-                            'msg' => 'Device Id đã tồn tại',
+                            'code' => 2,
+                            'msg' => 'Đã đủ ' .$countDevice.' device',
+
+                        ];
+                    }else{
+                        return [
+                            'code' => 1,
+                            'msg' => 'Số device hiện tại là '.$count,
 
                         ];
                     }
                 }
-                if($count > 2){
-                    return [
-                        'code' => 2,
-                        'msg' => 'Đã đủ 3 device',
 
-                    ];
-                }else{
-                    return [
-                        'code' => 1,
-                        'msg' => 'Số device hiện tại là '.$count,
-
-                    ];
-                }
             }
+            else
+            {
+                return [
+                  'code'=> 0,
+                  'msg'=>'Bạn không phải là school admin or teacher. '
+                ];
+            }
+
+
 
 
         }
@@ -80,15 +95,31 @@ class CheckDeviceController extends Controller
         if($curApp->url_updated){
             $isOta = 1;
         }
-
-        return [
+        if($isOta==0)
+        {
+            return [
             'code' => 0,
             'msg' => "Success",
             'results' => [
                 'latest_version' => $curApp->version,
-                'is_ota ' => $isOta,
-                'link_version' => $curApp->url_updated,
+                'is_ota' => $isOta,
+                'link_version' => $curApp->url,
             ]
-        ];
+            ];
+        }
+        if($isOta=1)
+        {
+            return [
+                'code' => 0,
+                'msg' => "Success",
+                'results' => [
+                    'latest_version' => $curApp->version,
+                    'is_ota' => $isOta,
+                    'link_version' => $curApp->url_updated,
+                ]
+            ];
+        }
+
+
     }
 }

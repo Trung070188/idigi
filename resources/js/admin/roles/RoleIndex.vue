@@ -1,7 +1,7 @@
 <template>
     <div class="container-fluid" >
         <ActionBar type="index"
-                   :breadcrumbs="breadcrumbs" title = "User Manager - Roles"/>
+                   :breadcrumbs="breadcrumbs" title = "Manage roles"/>
         <div class="row">
             <div class="col-lg-12">
                 <div class="card card-custom card-stretch gutter-b">
@@ -9,7 +9,7 @@
                         <!--<div class="title">
                             <label>Roles</label>
                         </div>-->
-                        <button class="btn btn-primary button-create mb-3" @click="showModalRole()"><i class="bi bi-plus-lg"></i>New Role</button>
+                        <button :disabled="permissionFields['role_add_new']==false" class="btn btn-primary button-create mb-3" @click="showModalRole()"><i class="bi bi-plus-lg"></i>New Role</button>
                     </div>
                     <!--<hr>-->
                     <div class="card-header border-0 pt-2">
@@ -19,7 +19,7 @@
                                 <td></td>
                                 <td  v-for="role in roles" >
                                     <div class="text-center" style="cursor: pointer">
-                                        <span class="badge badge-warning fs-6 fw-bold" @click="showModalRole(role)" >{{role.role_name}} </span>
+                                        <span  class="badge badge-warning fs-6 fw-bold" @click="showModalRole(role)" >{{role.role_name}} </span>
                                         <span><i v-if="role.allow_deleted == 1" @click="remove(role)" class="fa fa-trash" style="margin-left:10px"></i></span>
                                     </div>
                                 </td>
@@ -28,13 +28,13 @@
                             <tr v-for="groupPermission in groupPermissions">
                                 <th scope="col">
                                     <span v-text="groupPermission.name"></span>
-                                    <span v-for="permission in groupPermission.permissions" class="d-block fw-bold ml-5 text-lowercase"><i class="bi bi-arrow-right-short mr-1"></i>{{permission.name}}</span>
+                                    <span v-for="permission in groupPermission.permissions" class="d-block fw-bold ml-5 "><i class="bi bi-arrow-right-short mr-1"></i>{{permission.name}}</span>
                                 </th>
 
                                 <td v-for="role in roles">
 
                                     <div class="form-check form-check-custom form-check-solid justify-content-center" v-for="permission in role.permissions" v-if="permission.group_permission==groupPermission.id">
-                                        <input @change="changeRolePermission(role.id,permission.id,permission.value)" class="form-check-input h-20px w-20px" v-model="permission.value"   type="checkbox"  value="" >
+                                        <input :disabled="permissionFields['role_set']==false" @change="changeRolePermission(role.id,permission.id,permission.value)" class="form-check-input h-20px w-20px" v-model="permission.value"   type="checkbox"  value="" >
                                         <br>
                                     </div>
                                 </td>
@@ -102,16 +102,17 @@
             return {
                 breadcrumbs: [
                     {
-                        title: 'Users & Roles'
+                        title: 'Account management'
                     },
                     {
-                        title: 'Manage Roles'
+                        title: 'Manage roles'
                     },
                 ],
                 roles: [],
                 curRole: {},
                 errors: {},
                 groupPermissions: [],
+                permissionFields:$json.permissionFields || []
 
             }
         },

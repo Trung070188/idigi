@@ -1,7 +1,7 @@
 <template>
     <div class="container-fluid">
         <ActionBar type="index"
-                   :breadcrumbs="breadcrumbs" title = "Teacher Details"/>
+                   :breadcrumbs="breadcrumbs" title = "Teacher details"/>
         <div class="modal fade" style="" id="delete" tabindex="-1" role="dialog" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered popup-main-1" role="document" style="max-width: 450px;">
                 <div class="modal-content box-shadow-main paymment-status" style="padding: 0px 0px 30px;">
@@ -106,7 +106,7 @@
                                     </div>
                                 </div>
                                 <hr style="margin-top:5px">
-                                <h4>Content enrollment</h4>
+                                <h4>Resource enrollment</h4>
                                 <div class="row">
 
                                     <div class="form-group col-sm-10"  @change="saveTeacherCourse()">
@@ -152,25 +152,18 @@
                                 <th>Device detail</th>
                                 <th>Registed date</th>
                                 <th></th>
+                                <th></th>
 
 
                             </tr>
                             </thead>
                             <tbody>
-                            <tr v-for="device in user_device" v-if="device.user_id===entry.id && device.status===2  ">
+                            <tr v-for="device in user_device" v-if="device.user_id===entry.id">
                                 <td v-text="device.device_name"></td>
                                 <td v-text="device.device_name"></td>
                                 <td v-text="d(device.created_at)"></td>
-                                <td>
-                                    <a @click="modalDevice(device)" href="javascript:;" class="btn-trash deleted"><i
-                                        class="fa fa-trash mr-1 deleted"></i></a>
-                                </td>
-                            </tr>
-                            <tr v-for="device in user_device" v-if=" device.user_id===entry.id && device.status===1 ">
-                                <td v-text="device.device_name"></td>
-                                <td v-text="device.device_name" ></td>
-                                <td v-text="d(device.created_at)"></td>
-                                <td style="color: #f1c40f">Deleting request</td>
+                                <td style="color: #f1c40f" v-if="device.delete_request!=null" v-text="device.delete_request"></td>
+                                <td v-else></td>
                                 <td>
                                     <a @click="modalDevice(device)" href="javascript:;" class="btn-trash deleted"><i
                                         class="fa fa-trash mr-1 deleted"></i></a>
@@ -189,10 +182,10 @@
                             </thead>
                             <tbody>
                             <tr v-for="device in user_device" v-if="device.user_id==entry.id">
-                                <td v-if="device.status==2" v-text="d(device.created_at)"></td>
-                                <td v-if="device.status==1" v-text="d(device.updated_at)"></td>
-                                <td v-if="device.status==2" >Register device</td>
-                                <td v-if="device.status==1" >Remove device</td>
+                                <td v-if="device.delete_request!=null"  v-text="d(device.updated_at)"></td>
+                                <td v-else v-text="d(device.created_at)"></td>
+                                <td v-if="device.delete_request!=null"  >Remove device</td>
+                                <td v-else >Register device</td>
                                 <td v-text="device.device_name"></td>
                             </tr>
                             </tbody>
@@ -225,7 +218,7 @@
             console.log(course);
             !course ? null : course.forEach(function (e) {
                 e.total_unit.forEach(function (e1) {
-                    e1.label = e1.unit_name;
+                    e1.label = 'Unit' + ' ' + e1.position +' : '+e1.unit_name;
                 })
 
             })
@@ -287,10 +280,7 @@
                 currId:'',
                 breadcrumbs: [
                     {
-                        title:'School Management',
-                    },
-                    {
-                        title: ' Manage schools',
+                        title:'School management',
                         url: '/xadmin/schools/index',
                     },
                     {
@@ -298,7 +288,7 @@
                         url: '/xadmin/schools/edit?id='+$json.schoolId
                     },
                     {
-                        title: 'Teacher lists',
+                        title: 'Teacher management',
                         url: '/xadmin/schools/teacherList?id='+$json.schoolId
 
                     },

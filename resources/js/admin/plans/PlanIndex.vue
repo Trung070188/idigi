@@ -1,9 +1,35 @@
 <template>
     <div class="container-fluid">
         <ActionBar type="index"
-                   :breadcrumbs="breadcrumbs" title="Plan Management"/>
+                   :breadcrumbs="breadcrumbs" title="Manage plans"/>
         <div class="row">
             <div class="col-lg-12">
+                <!-- BEGIN:MODAL DELETE ALL PLAN -->
+                <div class="modal fade" style="margin-right:50px;border:2px solid #333333  " id="delete1" tabindex="-1" role="dialog"
+                     aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered popup-main-1" role="document"
+                         style="max-width: 450px;">
+                        <div class="modal-content box-shadow-main paymment-status" style="left:120px;text-align: center; padding: 20px 0px 55px;">
+                            <div class="close-popup" data-dismiss="modal"></div>
+                            <div class="swal2-icon swal2-warning swal2-icon-show">
+                                <div class="swal2-icon-content" style="margin: 0px 24.5px 0px ">!</div>
+                            </div>
+                            <div class="swal2-html-container">
+                                <p >Are you sure to delete this plan?</p>
+                            </div>
+                            <div class="swal2-actions">
+                                <button type="submit" id="kt_modal_new_target_submit1" class="swal2-confirm btn fw-bold btn-danger" @click="removeAll">
+                                    <span class="indicator-label">Yes, delete!</span>
+                                </button>
+                                <button type="reset" id="kt_modal_new_target_cancel1" class="swal2-cancel btn fw-bold btn-active-light-primary" data-bs-dismiss="modal" style="margin: 0px 8px 0px">No, cancel</button>
+
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                <!-- END:MODAL DELETE ALL PLAN -->
+
                 <div class="modal fade" style="margin-right:50px;border:2px solid #333333  " id="delete" tabindex="-1" role="dialog"
                      aria-hidden="true">
                     <div class="modal-dialog modal-dialog-centered popup-main-1" role="document"
@@ -72,21 +98,21 @@
                         </div>
                         <div class="card-toolbar">
                             <div class="d-flex justify-content-end" data-kt-customer-table-toolbar="base"
-                                >
-                                <a :href="'/xadmin/plans/create'" v-if="permissions['039']">
+                                v-if="planIds==''">
+                                <a :href="'/xadmin/plans/create'" >
                                     <button  class="btn btn-primary button-create" style="margin:0 0 0 15px">
                                         <i class="bi bi-clipboard-plus"></i>New Plan
                                     </button>
                                 </a>
                             </div>
                             <div class="d-flex justify-content-end align-items-center d-none"
-                                 data-kt-customer-table-toolbar="selected" >
+                                 data-kt-customer-table-toolbar="selected" v-if="planIds!='' && permissions['042']">
                                 <div class="fw-bolder me-5">
-                                    <span class="me-2" data-kt-customer-table-select="selected_count"></span>
+                                    <span class="me-2" data-kt-customer-table-select="selected_count">{{planIds.length}} Selected</span>
                                 </div>
-<!--                                <button   type="button" class="btn btn-danger"-->
-<!--                                        data-kt-customer-table-select="delete_selected">Delete Selected-->
-<!--                                </button>-->
+                                <button   type="button" class="btn btn-danger"
+                                        data-kt-customer-table-select="delete_selected" @click="removeAllModal">Delete Selected
+                                </button>
                             </div>
                         </div>
                        <form class="col-lg-12" v-if="isShowFilter">
@@ -189,7 +215,7 @@
                             <tr>
                                 <td width="25">
                                     <div class="form-check form-check-sm form-check-custom form-check-solid">
-                                        <input class="form-check-input" type="checkbox"
+                                        <input class="form-check-input" type="checkbox" v-model="allSelected" @change="selectAllPlan()"
                                               >
                                     </div>
                                 </td>
@@ -210,7 +236,7 @@
                             <tr v-for="(entry,index) in entries">
                                 <td class="">
                                     <div class="form-check form-check-sm form-check-custom form-check-solid">
-                                        <input class="form-check-input" type="checkbox"
+                                        <input class="form-check-input" type="checkbox" v-model="planIds" :value="entry.id" @change="updateCheckAllPlan"
                                             >
                                     </div>
                                 </td>
@@ -306,9 +332,12 @@
                 }
             }
             return {
+                planIds:[],
+                plan:[],
+                allSelected:false,
                 breadcrumbs: [
                     {
-                        title: 'Manage plans'
+                        title: 'Plan management'
                     },
                 ],
                 permissions,
@@ -333,6 +362,10 @@
             $router.on('/', this.load).init();
         },
         methods: {
+            removeAllModal()
+            {
+                $('#delete1').modal('show');
+            },
             removePlan:function(deletePlan='')
             {
                   $('#delete').modal('show');
@@ -343,6 +376,34 @@
                     window.location.href='/xadmin/plans/edit?id='+ id;
                 }
 
+            },
+            selectAllPlan()
+            {
+                if (this.allSelected) {
+                    const selected = this.entries.map(u => u.id);
+                    this.planIds = selected;
+                    this.plan = this.entries;
+                } else {
+                    this.planIds = [];
+                    this.plan = [];
+                }
+            },
+            updateCheckAllPlan()
+            {
+                this.plan = [];
+                if (this.planIds.length === this.entries.length) {
+                    this.allSelected = true;
+                } else {
+                    this.allSelected = false;
+                }
+                let self = this;
+                self.planIds.forEach(function(e) {
+                    self.entries.forEach(function(e1) {
+                        if (e1.id == e) {
+                            self.plan.push(e1);
+                        }
+                    });
+                });
             },
             async load() {
                 let query = $router.getQuery();
@@ -367,6 +428,22 @@
                 }
 
                 $router.updateQuery({page: this.paginate.currentPage, _: Date.now()});
+            },
+            async removeAll()
+            {
+                const res = await $post('/xadmin/plans/removeAllPlan', {ids: this.planIds});
+                if (res.code) {
+                    toastr.error(res.message);
+                } else {
+                    toastr.success(res.message);
+                    this.planIds = [];
+                    this.plan = [];
+                    $('#delete1').modal('hide');
+                    this.allSelected=false;
+
+                }
+                $router.updateQuery({page: this.paginate.currentPage, _: Date.now()});
+
             },
             filterClear() {
                 for (var key in this.filter) {

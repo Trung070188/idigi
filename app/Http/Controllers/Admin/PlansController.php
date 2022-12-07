@@ -7,6 +7,8 @@ use App\Exports\DeviceErrorExport;
 use App\Exports\DevicePlanExport;
 use App\Exports\LessonPlanExport;
 use App\Exports\PlanExport;
+use App\Exports\TeacherErrorExport;
+use App\Helpers\PermissionField;
 use App\Imports\DeviceImport;
 use App\Jobs\UpdateDownloadInventory;
 use App\Jobs\UpdateDownloadLessonFile;
@@ -192,7 +194,7 @@ class PlansController extends AdminBaseController
                 'school_id' => $device->school_id,
                 'secret_key' => $device->secret_key,
                 'reason' => $device->reason,
-                'expire_date' => Carbon::parse($device->expire_date)->format('d/m/Y'),
+                'expire_date' => ($device->expire_date),
                 'created_at' => $device->created_at,
                 'updated_at' => $device->updated_at,
                 'roleName' => $roleName,
@@ -215,8 +217,35 @@ class PlansController extends AdminBaseController
                 'lessonIds' => $lessonIdArr,
             ];
         }
+        $user = Auth::user();
+        $permissionDetail = new PermissionField();
+        $permissions = $permissionDetail->permission($user);
+        $permissionFields = [
+            'plan_name' => $permissionDetail->havePermission('plan_name',$permissions,$user),
+            'plan_due_date'=>$permissionDetail->havePermission('plan_due_date',$permissions,$user),
+            'plan_description'=>$permissionDetail->havePermission('plan_description',$permissions,$user),
+            'plan_assign_to_IT'=>$permissionDetail->havePermission('plan_assign_to_IT',$permissions,$user),
+            'plan_expire_date'=>$permissionDetail->havePermission('plan_expire_date',$permissions,$user),
+            'plan_add_device'=>$permissionDetail->havePermission('plan_add_device',$permissions,$user),
+            'plan_delete_device'=>$permissionDetail->havePermission('plan_delete_device',$permissions,$user),
+            'plan_export_device'=>$permissionDetail->havePermission('plan_export_device',$permissions,$user),
+            'plan_add_package'=>$permissionDetail->havePermission('plan_add_package',$permissions,$user),
+            'plan_delete_lesson_package'=>$permissionDetail->havePermission('plan_delete_lesson_package',$permissions,$user),
+            'plan_export_plan'=>$permissionDetail->havePermission('plan_export_plan',$permissions,$user),
+            'plan_delete_plan'=>$permissionDetail->havePermission('plan_delete_plan',$permissions,$user),
+            'plan_import_device'=>$permissionDetail->havePermission('plan_import_device',$permissions,$user),
+            'plan_remove_lesson'=>$permissionDetail->havePermission('plan_remove_lesson',$permissions,$user),
+            'plan_download_package'=>$permissionDetail->havePermission('plan_download_package',$permissions,$user),
+            'plan_add_lesson'=>$permissionDetail->havePermission('plan_add_lesson',$permissions,$user),
+            'plan_zip_package_lesson'=>$permissionDetail->havePermission('plan_zip_package_lesson',$permissions,$user),
+            'plan_rename_lesson_package'=>$permissionDetail->havePermission('plan_rename_lesson_package',$permissions,$user),
+            'plan_device_get_confirm_code'=>$permissionDetail->havePermission('plan_device_get_confirm_code',$permissions,$user),
+
+
+        ];
 
         $jsonData = [
+            'permissionFields'=>$permissionFields,
             'roleAuth' => $roleAuth,
             'lessonPackagePlans' => @$lessonPackagePlans,
             'idRoleIt' => $idRoleIt,
@@ -225,7 +254,7 @@ class PlansController extends AdminBaseController
             'data' => $data,
             'urls' => @$url,
             'packagePlan' => @$packagePlan,
-            'packageLessonPlan' => @$packageLessonPlan
+            'packageLessonPlan' => @$packageLessonPlan,
         ];
         return view('admin.layouts.vue', compact('title', 'component', 'jsonData'));
     }
@@ -489,6 +518,10 @@ class PlansController extends AdminBaseController
                 $decoded = JWT::decode($dataRole['deviceUid'], new Key(env('SECRET_KEY'), 'HS256'));
                 $device->device_uid = $decoded->device_uid;
             } catch (\Exception $e) {
+                return [
+                    'code' => 2,
+                    'message'=>'Register code is invalid'
+                ];
 
             }
             if ($dataRole['deviceExpireDate'] ==null)
@@ -815,6 +848,8 @@ class PlansController extends AdminBaseController
 //                        ];
 //                    }
                     if ($import->plan_id == $entry->id) {
+                        $expired = Carbon::createFromFormat('Y-m-d', $import->expire_date)->format('Y-m-d');
+
                         $payload [] = [
 //                            'secret_key_plan' => $entry->secret_key,
                             'username' => $user->username,
@@ -824,8 +859,9 @@ class PlansController extends AdminBaseController
                             'device_uid' => $import->device_uid,
                             'device_name' => $import->device_name,
                             'secret_key' => $entry->secret_key,
-                            'create_time' => strtotime(Carbon::now()),
-                            'expired' => strtotime($import->expire_date),
+                            'create_time' => Carbon::now()->timestamp,
+                            'expired' => strtotime($expired),
+
                         ];
                     }
                     $dataPlanExport = [];
@@ -1524,39 +1560,43 @@ class PlansController extends AdminBaseController
             $assignTo=User::where('id',$entry->user_id)->first();
             $dataAll['packageLessonPlan'] = json_decode($dataAll['packageLessonPlan'], true);
 
+            if(@$dataAll['packageLessonPlan'])
+            {
+                foreach ( $dataAll['packageLessonPlan'] as $key => $packageLessonPlan)
+                {
+                    $index=$key+1;
 
-            foreach ( $dataAll['packageLessonPlan'] as $key => $packageLessonPlan)
-           {
-               $index=$key+1;
+                    $lessonsArr=Lesson::query()->whereIn('id',$packageLessonPlan['lessonIds'])->orderBy('name','ASC')->get();
+                    $lessons[]=[
+                        'package_name'=>'Package lesson' . ' ' .$index ,
+                        'plan_name'=>$entry->name,
+                        'assign_to'=>$assignTo->full_name,
+                        'due_at'=>Carbon::parse($entry->due_at)->format('d/m/Y'),
+                        'expire_date'=>Carbon::parse($entry->expire_date)->format('d/m/Y'),
+                        'lessons'=>$lessonsArr,
+                    ];
+                }
+            }
 
-               $lessonsArr=Lesson::query()->whereIn('id',$packageLessonPlan['lessonIds'])->orderBy('name','ASC')->get();
-               $lessons[]=[
-                   'package_name'=>'Package lesson' . ' ' .$index ,
-                 'plan_name'=>$entry->name,
-                 'assign_to'=>$assignTo->full_name,
-                 'due_at'=>Carbon::parse($entry->due_at)->format('d/m/Y'),
-                 'expire_date'=>Carbon::parse($entry->expire_date)->format('d/m/Y'),
-                   'lessons'=>$lessonsArr,
-               ];
-           }
             $payload=[];
-            // dd(strtotime('09-03-2018'));
-            // dd(strtotime('01-10-2022'));
             $devices= json_decode($dataAll['dataDevice'], true);
-           foreach ($devices as $device)
-           {
-            //    dd($device['expire_date']);
-               $payload [] = [
-                   'username' => $assignTo->username,
-                   'full_name' => $assignTo->full_name,
-                   'user_id' => $assignTo->id,
-                   'device_uid' => $device['device_uid'],
-                   'device_name' => $device['device_name'],
-                   'secret_key' => $entry->secret_key,
-                   'create_time' => Carbon::now()->timestamp,
-                   'expired' => $device['expire_date'],
-               ];
-           }
+            if(@$devices)
+            {
+                foreach ($devices as $device)
+                {
+                    $payload [] = [
+                        'username' => $assignTo->username,
+                        'full_name' => $assignTo->full_name,
+                        'user_id' => $assignTo->id,
+                        'device_uid' => $device['device_uid'],
+                        'device_name' => $device['device_name'],
+                        'secret_key' => $entry->secret_key,
+                        'create_time' => Carbon::now()->timestamp,
+                        'expired' => $device['expire_date'],
+                    ];
+                }
+            }
+
             $dataDevicePlanExport = [];
             foreach ($payload as $pay) {
                 $dataDevicePlanExport[] = [
@@ -1587,7 +1627,36 @@ class PlansController extends AdminBaseController
     {
         return response()->download(public_path('sample/Import_device_on_PLAN_template.xlsx'));
     }
+    public function generateToken(Request $req)
+    {
+       $plan=$req->entry;
+        $device = UserDevice::where('id', $req->device_id)
+                ->where('status', 2)
+                ->first();
+        $user=User::query()->where('id',$device->user_id)->first();
+            if($device)
+        {
+            if($device){
+                $payload = [
+                    'username'=>$user->username,
+                    'full_name'=>$user->full_name,
+                    'user_id' => $user->id,
+                    'device_uid' =>$device->device_uid,
+                    'device_name' =>$device->device_name,
+                    'secret_key' =>$plan['secret_key'],
+                    'create_time' =>  Carbon::now()->timestamp,
+                    'expired'=>strtotime($device->expire_date)
+                ];
+                $jwt = JWT::encode($payload, env('SECRET_KEY'), 'HS256');
+                return ['status' => 1, 'token' =>  $jwt];
+            }
+            return  ['status' => 0, 'token' =>  'Error'];
 
+        }
 
     }
+}
+
+
+
 

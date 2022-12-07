@@ -16,14 +16,14 @@
 
                                 <div class="form-group">
                                     <label>Name <span class="text-danger">*</span></label>
-                                    <input  v-model="entry.name"  class="form-control" placeholder="Enter the inventories name" >
+                                    <input  v-model="entry.name"  class="form-control" :disabled="permissionFields['resource_name']==false" placeholder="Enter the inventories name" >
                                     <error-label for="f_grade" :errors="errors.name"></error-label>
 
                                 </div>
                                 <div class="row">
                                     <div class="form-group col-lg-4">
                                         <label>Type <span class="text-danger">*</span></label>
-                                        <select class="form-control" v-model="entry.type">
+                                        <select class="form-control" v-model="entry.type" :disabled="permissionFields['resource_type']==false">
                                             <option value="Vocabulary">Vocabulary</option>
                                             <option value="Summary">Summary</option>
                                             <option value="Lecture">Lecture</option>
@@ -34,7 +34,7 @@
                                     </div>
                                     <div class="form-group col-lg-4">
                                         <label>Subject <span class="text-danger">*</span></label>
-                                        <select class="form-control" v-model="entry.subject">
+                                        <select class="form-control" v-model="entry.subject" :disabled="permissionFields['resource_subject']==false">
 
                                             <option value="math">Maths</option>
                                             <option value="science ">Science </option>
@@ -43,7 +43,7 @@
                                     </div>
                                     <div class="form-group col-lg-4">
                                         <label>Grade <span class="text-danger">*</span></label>
-                                        <select class="form-control" v-model="entry.grade">
+                                        <select class="form-control" v-model="entry.grade" :disabled="permissionFields['resource_grade']==false">
 
                                             <option value="1">1</option>
                                             <option value="2">2</option>
@@ -60,34 +60,41 @@
                                 </div>
                                 <div class="form-group">
                                     <label>Description</label>
-                                    <textarea  v-model="entry.description" rows="5" class="form-control" placeholder="Your text here"></textarea>
+                                    <textarea  v-model="entry.description" rows="5" class="form-control" :disabled="permissionFields['resource_description']==false" placeholder="Your text here"></textarea>
                                     <error-label for="f_grade" :errors="errors.description"></error-label>
 
                                 </div>
                                 <div class="form-group">
                                     <label>Tags</label>
-                                    <input  v-model="entry.tags"  class="form-control" placeholder="Enter the tags name" >
+                                    <input  v-model="entry.tags"  class="form-control" :disabled="permissionFields['resource_tags']==false" placeholder="Enter the tags name" >
                                     <error-label for="f_grade" :errors="errors.tags"></error-label>
 
                                 </div>
 
                                 <div class="form-check form-check-custom form-check-solid me-10 pb-5">
-                                    <input id="enabled" type="checkbox" class="form-check-input h-20px w-20px" v-model="entry.enabled">
+                                    <input id="enabled" type="checkbox" class="form-check-input h-20px w-20px" v-model="entry.enabled" :disabled="permissionFields['resource_active']==false">
                                     <label for="enabled" class="form-check-label fw-bold">Active</label>
                                     <error-label for="f_grade" :errors="errors.enabled"></error-label>
                                 </div>
                             </div>
 
                             <div class="col-lg-3 col-sm-12">
-                                <div class="form-group mb-3">
+                                <div class="form-group mb-3" v-if="permissionFields['resource_picture']==false">
                                     <label>Chọn ảnh</label>
-                                    <file-manager-input v-model="entry.file_image_new"  :hide-preview="true"></file-manager-input>
+                                </div>
+                                <div class="form-group mb-3" v-else>
+                                    <label>Chọn ảnh</label>
+                                    <file-manager-input v-model="entry.file_image_new" :disabled="permissionFields['resource_picture']==false"  :hide-preview="true"></file-manager-input>
                                     <error-label for="f_title" :errors="errors.file_image_new"></error-label>
 
                                 </div>
-                                <div class="form-group mb-3">
+                                <div class="form-group mb-3" v-if="permissionFields['resource_file_asset_bundle']==false">
                                     <label>File asset bundle</label>
-                                    <file-manager-input v-model="entry.file_asset_new"></file-manager-input>
+
+                                </div>
+                                <div class="form-group mb-3" v-else>
+                                    <label>File asset bundle</label>
+                                    <file-manager-input v-model="entry.file_asset_new" ></file-manager-input>
                                     <error-label for="f_title" :errors="errors.file_asset_new"></error-label>
 
                                 </div>
@@ -122,7 +129,6 @@
         name: "InventoriesForm.vue",
         components: {ActionBar,SwitchButton,FileManagerInput},
         data() {
-            console.log($json.entry);
             return {
 
                 types: [
@@ -131,6 +137,9 @@
                 breadcrumbs: [
                     {
                         title: 'Resource management',
+                    },
+                    {
+                        title: 'Modules',
                         url: '/xadmin/inventories/index',
                     },
                     {
@@ -139,6 +148,7 @@
                 ],
                 title: $json.entry ?  'Resource detail' : 'Create new resource',
                 entry: $json.entry || {},
+                permissionFields:$json.permissionFields || [],
                 isLoading: false,
                 errors: {}
             }

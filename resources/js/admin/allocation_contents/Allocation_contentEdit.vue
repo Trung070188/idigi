@@ -1,7 +1,7 @@
 <template>
     <div class="container-fluid">
         <ActionBar type="index"
-                   :breadcrumbs="breadcrumbs" title = "Allocation details"/>
+                   :breadcrumbs="breadcrumbs" title = "Allocation detail"/>
         <div class="row">
             <div class="col-lg-12">
                 <div class="card card-custom card-stretch gutter-b">
@@ -11,19 +11,13 @@
                                 <input v-model="entry.id" type="hidden" name="id" value="">
                                     <div class="form-group">
                                         <label>Title <span class="text-danger">*</span></label>
-                                        <input id="f_title" v-model="entry.title" name="name" class="form-control"
+                                        <input id="f_title" :disabled="permissionFields['allocation_title']==false" v-model="entry.title" name="name" class="form-control"
                                                placeholder="title" >
                                         <error-label for="f_title" :errors="errors.title"></error-label>
                                     </div>
-<!--                                    <div class="form-group">-->
-<!--                                        <label>Total School</label>-->
-<!--                                        <treeselect :options="schools" :multiple="true" v-model="total_school" />-->
-<!--                                        <error-label for="f_total_school" :errors="errors.total_school"></error-label>-->
-
-<!--                                    </div>-->
-                                                                    <div class="form-group">
+                                        <div class="form-group">
                                         <label>Course <span class="text-danger">*</span></label>
-                                        <treeselect :options="allCourses" :multiple="true" @deselect="deleteCourse" v-model="total_course" @input="selectTotalCourse"/>
+                                        <treeselect :options="allCourses" :multiple="true" @deselect="deleteCourse" v-model="total_course" @input="selectTotalCourse" :disabled="permissionFields['allocation_course']==false"/>
                                         <error-label for="f_total_course" :errors="errors.total_course"></error-label>
                                     </div>
 
@@ -42,7 +36,7 @@
                                     {{course.label}}
                                 </td>
                                 <td >
-                                <treeselect :options="course.units" :multiple="true"  v-model="course.total_unit" @input="selectTotalUnit(course)" />
+                                <treeselect :options="course.units" :multiple="true"  v-model="course.total_unit" @input="selectTotalUnit(course)" :disabled="permissionFields['allocation_unit']==false" />
                                     </td>
                             </tr>
                             </tbody>
@@ -80,7 +74,7 @@
             const course=$json.courses;
             course.forEach(function (e) {
                 e.unit.forEach(function (e1) {
-                    e1.label = e1.unit_name;    
+                    e1.label = 'Unit' + ' ' + e1.position +' : '+e1.unit_name;
                 })
 
             })
@@ -137,7 +131,7 @@
                 newTotalCourse:[],
                 breadcrumbs: [
                     {
-                        title: 'School Management'
+                        title: 'Resource management'
                     },
                     {
                         title: 'Resource allocation',
@@ -145,7 +139,7 @@
 
                     },
                     {
-                        title: 'Allocation details'
+                        title: 'Allocation detail'
                     },
                 ],
                 allCourses:allCourses,
@@ -154,6 +148,7 @@
                 total_course:$json.totalCourseArray ||{},
                 entry: $json.entry || {},
                 schools:$json.schools ||{},
+                permissionFields:$json.permissionFields || [],
                 courses:courseTreeselect,
                 units:unitTreeselect,
                 isLoading: false,
@@ -170,7 +165,7 @@
                   if(e.id==course.id)
                   {
                       console.log(e.units);
-                      
+
                       if(e.units.length>0 && e.total_unit[0]=='all')
                       {
                           e.childrens=e.units.map(res =>{
