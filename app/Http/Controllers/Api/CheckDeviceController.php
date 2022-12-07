@@ -79,8 +79,8 @@ class CheckDeviceController extends Controller
             }
             else{
                 return [
-                  'code'=>0,
-                  'msg'=>'Bạn không phải là teacher.'
+                    'code'=>0,
+                    'msg'=>'Bạn không phải là teacher.'
                 ];
             }
 
@@ -103,13 +103,13 @@ class CheckDeviceController extends Controller
             ->first();
 
         //Manual
-       /* if(!$manualApp){
-            return [
-                'code' => 1,
-                'msg' => "Không tồn tại manual version ",
-                'results' => []
-            ];
-        }*/
+        /* if(!$manualApp){
+             return [
+                 'code' => 1,
+                 'msg' => "Không tồn tại manual version ",
+                 'results' => []
+             ];
+         }*/
         $isOtaManual = 0;
         if(@$manualApp->url_updated){
             $isOtaManual = 1;
