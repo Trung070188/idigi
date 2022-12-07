@@ -412,7 +412,7 @@
                 } else {
                     toastr.success(res.message);
                 }
-                location.replace('/xadmin/users/teacher');
+                location.replace('/xadmin/schools/teacherList?id='+this.schoolId);
                 $router.updateQuery({page: this.paginate.currentPage, _: Date.now()});
             },
         }
