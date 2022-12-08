@@ -322,7 +322,13 @@
                                 Delete Selected
                             </button>
                         </div>
-
+                        <form class="col-lg-12" v-if="!isShowFilter">
+                            <div class="row">
+                                <div style="margin:7px 3px 0px">
+                                    <button type="button" class="btn btn-primary" @click="doFilter()">Search</button>
+                                </div>
+                            </div>
+                        </form>
                         <form class="col-lg-12" v-if="isShowFilter">
                             <div class="row">
                                 <div class="form-group col-lg-3">

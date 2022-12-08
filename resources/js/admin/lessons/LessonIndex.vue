@@ -72,9 +72,6 @@
                                                 <option v-for="school in schools" :value="school.id" >{{school.label}}</option>
                                             </select>
                                     </div>
-                                    <div style="margin-left: 15px">
-                                        <button type="button" class="btn btn-primary" @click="doFilter($event)">Search</button>
-                                    </div>
 
                                 </div>
                                  <div class="card-toolbar">
@@ -97,11 +94,16 @@
 												<button @click="openModal()" :disabled="lessons.length>3" type="button" class="btn btn-danger" data-kt-customer-table-select="delete_selected">Download lesson</button>
 
 											</div>
+                                 </div>
+                      <form class="col-lg-12" v-if="!isShowFilter">
+                          <div class="row">
+                              <div style="margin:7px 3px 0px">
+                                  <button type="button" class="btn btn-primary" @click="doFilter()">Search</button>
+                              </div>
+                          </div>
+                      </form>
 
-                                </div>
-
-
-                                <form class="col-lg-12" v-if="isShowFilter">
+                        <form class="col-lg-12" v-if="isShowFilter">
                                     <div class="row">
                                         <div class="form-group col-lg-3">
                                             <label>Name </label>
@@ -152,6 +154,9 @@
                                                 <switch-button v-model="filter.enabled"></switch-button>
                                             </div>
 
+                                        </div>
+                                        <div style="margin: auto 0">
+                                            <button type="button" class="btn btn-primary" @click="doFilter()">Search</button>
                                         </div>
                                     </div>
                                 </form>
