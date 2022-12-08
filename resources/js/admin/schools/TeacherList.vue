@@ -817,7 +817,7 @@
     }
  .table th, .table td
  {
-     max-width: 150px;
+     max-width: 200px;
      overflow: hidden;
      text-overflow: ellipsis;
      white-space: nowrap;
