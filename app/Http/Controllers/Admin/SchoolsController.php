@@ -478,7 +478,7 @@ class SchoolsController extends AdminBaseController
         }
         if(@$data['school_phone'])
         {
-            $rules['school_phone']=['min:10|number'];
+            $rules['school_phone']=['min:10','number'];
         }
         // $rules['license_to']='after:' .$today;
         $message=[
@@ -777,15 +777,8 @@ class SchoolsController extends AdminBaseController
              }
 
                 $query = School::query()->with(['users'])->whereIn('id',$schoolIdA)->orderBy('id', 'ASC');
-
             }
-
-
         }
-        $query->whereHas('users',function($q) use ($req)
-        {
-
-        });
         if ($req->keyword) {
             $query->where('label', 'LIKE', '%' . $req->keyword . '%');
         }

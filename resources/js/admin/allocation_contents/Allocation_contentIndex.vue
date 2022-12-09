@@ -90,6 +90,13 @@
                             </div>
 
                         </div>
+                        <form class="col-lg-12" >
+                            <div class="row">
+                                <div style="margin:7px 3px 0px">
+                                    <button type="button" class="btn btn-primary" @click="doFilter()">Search</button>
+                                </div>
+                            </div>
+                        </form>
                     </div>
                     <div class="tab-content">
                         <div class="d-flex flex-stack pt-4 pl-9 pr-9">
