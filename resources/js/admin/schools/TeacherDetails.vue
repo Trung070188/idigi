@@ -107,10 +107,9 @@
                                     </div>
                                 </div>
                                 <hr style="margin-top:5px">
-                                <h4>Resource enrollment</h4>
+                                <h4>Resource allocation</h4>
                                 <div class="row">
-
-                                    <div class="form-group col-sm-10"  @change="saveTeacherCourse()">
+                                    <div class="form-group col-sm-10">
                                         <label>Course</label>
                                         <treeselect :options="allCourses" :multiple="true" @deselect="deleteCourse" v-model="courseTeachers" @input="selectTotalCourse" />
                                         <error-label  for="f_grade" :errors="errors.courseTeachers"></error-label>
@@ -137,6 +136,12 @@
 
                                     </div>
                                 </div>
+                                <div class="form-check form-check-custom form-check-solid ml-3 pb-5">
+                                    <input id="state1" type="checkbox" v-model="active_allocation" class="form-check-input h-20px w-20px" @change="activeAllocation">
+                                    <label for="state1" class="form-check-label fw-bold">Active allocation</label>
+                                    <error-label for="f_grade" :errors="active_allocation"></error-label>
+                                </div>
+
                             </div>
                         </div>
                         <hr style="margin-top: 10px">
@@ -270,6 +275,7 @@
                 }
             })
             return {
+                active_allocation:$json.active_allocation,
                 deviceTeacher:[],
                 allCourses:allCourses,
                 nameRole:5,
@@ -371,6 +377,17 @@
 
                 $router.updateQuery({ _: Date.now()});
 
+            },
+            async activeAllocation()
+            {
+              const res=await $post('/xadmin/users/activeAllocation',{active_allocation:this.active_allocation,id:this.entry.id})
+                if(res.code)
+                {
+                    toastr.errors(res.message)
+                }
+                else {
+                    toastr.success(res.message)
+                }
             },
             async refuse(deviceTeacher)
             {

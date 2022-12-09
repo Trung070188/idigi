@@ -221,64 +221,70 @@ class LessonsController extends AdminBaseController
     {
         $user = Auth::user();
 
-        $schoolIds=explode(',',$user->school_id);
-        $schoolIdArr=[];
+        $schoolIds = explode(',', $user->school_id);
+        $schoolIdArr = [];
 
-        foreach ($schoolIds as $schoolId)
-        {
-            $schoolIdArr[]=(int)$schoolId;
+        foreach ($schoolIds as $schoolId) {
+            $schoolIdArr[] = (int)$schoolId;
         }
-        $schools=School::whereIn('id',$schoolIdArr)->get();
+        $schools = School::whereIn('id', $schoolIdArr)->get();
         $unitIds = [];
         $isSuperAdmin = 0;
-        $roleName="";
-        foreach ($user->roles as $role) {
-            $roleName=$role->role_name;
-            if ($role->role_name == 'Teacher') {
-                if ($user->user_units) {
-                    foreach ($user->user_units as $unit) {
-                        $unitIds[] = $unit->unit_id;
-                    }
-                }
+        $roleName = "";
 
-            }
-            if($req->schoolLesson!=='null')
-            {
-                if ($role->role_name == 'School Admin') {
-                    $contents = AllocationContentSchool::where('school_id', $req->schoolLesson)
-                        ->with(['allocation_content', 'allocation_content.units'])
-                        ->get();
-                    foreach ($contents as $content) {
-                        if (@$content->allocation_content->units) {
-                            foreach ($content->allocation_content->units as $unit) {
-                                $unitIds[] = $unit->id;
+            foreach ($user->roles as $role) {
+                $roleName=$role->role_name;
+                if ($role->role_name == 'Teacher') {
+                    if($user->active_allocation==1)
+                    {
+                        if ($user->user_units) {
+                            foreach ($user->user_units as $unit) {
+                                $unitIds[] = $unit->unit_id;
                             }
-
                         }
                     }
                 }
-            }
-            else{
-                if ($role->role_name == 'School Admin') {
-                    $contents = AllocationContentSchool::WhereIn('school_id',$schoolIdArr)
-                        ->with(['allocation_content', 'allocation_content.units'])
-                        ->get();
-                    foreach ($contents as $content) {
-                        if (@$content->allocation_content->units) {
-                            foreach ($content->allocation_content->units as $unit) {
-                                $unitIds[] = $unit->id;
-                            }
+                if($req->schoolLesson!=='null')
+                {
+                    if ($role->role_name == 'School Admin') {
+                        $school=School::where('id',$req->schoolLesson)->first();
+                        if($school->active_allocation==1)
+                        {
+                            $contents = AllocationContentSchool::where('school_id', $req->schoolLesson)
+                                ->with(['allocation_content', 'allocation_content.units'])
+                                ->get();
+                            foreach ($contents as $content) {
+                                if (@$content->allocation_content->units) {
+                                    foreach ($content->allocation_content->units as $unit) {
+                                        $unitIds[] = $unit->id;
+                                    }
 
+                                }
+                            }
                         }
                     }
                 }
-            }
+                else{
+                    if ($role->role_name == 'School Admin') {
+                        $contents = AllocationContentSchool::WhereIn('school_id',$schoolIdArr)
+                            ->with(['allocation_content', 'allocation_content.units'])
+                            ->get();
+                        foreach ($contents as $content) {
+                            if (@$content->allocation_content->units) {
+                                foreach ($content->allocation_content->units as $unit) {
+                                    $unitIds[] = $unit->id;
+                                }
 
+                            }
+                        }
+                    }
+                }
 
-            if ($role->role_name == 'Super Administrator') {
-                $isSuperAdmin = 1;
+                if ($role->role_name == 'Super Administrator') {
+                    $isSuperAdmin = 1;
+                }
+
             }
-        }
 
         $query = Lesson::query()->with(['user_units'])
             ->orderBy('id', 'ASC');

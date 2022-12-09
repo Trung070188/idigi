@@ -393,8 +393,8 @@ class UsersController extends AdminBaseController
         $id = $req->id;
         $entry = User::query()->with('schools', 'user_devices', 'user_cousers', 'user_units', 'units', 'cousers')
             ->where('id', $id)->first();
-
-        $userCousers = ($entry->user_cousers);
+        $active_allocation=$entry->active_allocation;
+        $userCousers = (@$entry->user_cousers);
         $schools = @$entry->schools;
         $allocationContentId=@$schools->allocation_school->allocation_content_id;
         $schoolId=@$entry->schools->id;
@@ -402,7 +402,6 @@ class UsersController extends AdminBaseController
         $schoolUnits = $schools->school_course_units;
         $course_unit = $schools->units;
         $userUnits = $entry->user_units;
-
 
         if (@$schoolCousers) {
             $courseTeachers = [];
@@ -448,6 +447,10 @@ class UsersController extends AdminBaseController
         $title = 'Edit';
         $component = 'TeacherDetails';
         $user = Auth::user();
+        foreach ($user->roles as $role)
+        {
+            $roleName=$role->role_name;
+        }
         $permissionDetail = new PermissionField();
         $permissions = $permissionDetail->permission($user);
         $permissionFields = [
@@ -461,6 +464,8 @@ class UsersController extends AdminBaseController
 
         ];
         $jsonData = [
+            'roleName'=>$roleName,
+            'active_allocation'=>$active_allocation,
             'permissionFields'=>$permissionFields,
             'allocationContentId'=>$allocationContentId,
             'entry' => $entry,
@@ -918,29 +923,33 @@ class UsersController extends AdminBaseController
             if ($data['email']) {
                 $rules['email'] = ['email', Rule::unique('users')->ignore($user->id),];
             }
-            if (@$data_role['courseTeachers']==[]) {
-                $rules['courseTeachers'] = ['required'];
-            }
-
-            if (@$data_role['courseTeachers']==[]) {
-                $rules['courseTeachers'] = ['required'];
-            }
-            if(@$data_role['courseTeachers'])
+            if($user['active_allocation']==1)
             {
-                foreach($data_role['courseTeachers'] as $courseTeacher)
+                if (@$data_role['courseTeachers']==[]) {
+                    $rules['courseTeachers'] = ['required'];
+                }
+
+                if (@$data_role['courseTeachers']==[]) {
+                    $rules['courseTeachers'] = ['required'];
+                }
+                if(@$data_role['courseTeachers'])
                 {
-                    foreach ($data_role['unit'] as $unit)
+                    foreach($data_role['courseTeachers'] as $courseTeacher)
                     {
-                        if($unit['id']==$courseTeacher)
+                        foreach ($data_role['unit'] as $unit)
                         {
-                            if(!$unit['courseTea'])
+                            if($unit['id']==$courseTeacher)
                             {
-                                $rules['courseTea'] = ['required'];
+                                if(!$unit['courseTea'])
+                                {
+                                    $rules['courseTea'] = ['required'];
+                                }
                             }
                         }
                     }
                 }
             }
+
         }
 
 
@@ -1564,6 +1573,15 @@ class UsersController extends AdminBaseController
         $id=$req->id;
         UserDevice::where('id',$id)->update(['delete_request'=>Null]);
         return [
+            'code'=>0,
+            'message'=>'Đã cập nhật'
+        ];
+    }
+    public function activeAllocation(Request $req)
+    {
+        $id=$req->id;
+        User::where('id',$id)->update(['active_allocation'=>$req->active_allocation]);
+        return[
             'code'=>0,
             'message'=>'Đã cập nhật'
         ];

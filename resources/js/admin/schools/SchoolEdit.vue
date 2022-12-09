@@ -161,8 +161,8 @@
                                     <error-label for="f_grade" ></error-label>
                                 </div>
                             </div>
-                            <div class="col-lg-12">
-                            <div class="row">
+                            <div class="col-lg-12" >
+                                <div class="row" >
                                     <div class="form-group col-lg-8">
                                         <label>Resource allocation<span class="text-danger">*</span></label>
 
@@ -184,8 +184,8 @@
                                         </a>
                                     </div>
                                 </div>
-                                <div class="form-check form-check-custom form-check-solid pb-5">
-                                    <input id="state1" type="checkbox"  class="form-check-input h-20px w-20px" v-model="entry.active_allocation" checked>
+                                <div class="form-check form-check-custom form-check-solid pb-5" v-if="roleName=='Super Administrator'">
+                                    <input id="state1" type="checkbox"  class="form-check-input h-20px w-20px" v-model="active_allocation" @change="activeAllocation" checked>
                                     <label for="state1" class="form-check-label fw-bold" >Active allocation</label>
                                     <error-label for="f_grade" ></error-label>
                                 </div>
@@ -228,6 +228,14 @@
                                     </tr>
                                     </tbody>
                                 </table>
+                            </div>
+                            <div class="col-lg-12" v-if="roleName=='School Admin' && entry.active_allocation==0">
+                                <div class="row">
+                                    <div class="row" >
+                                            <label>Resource allocation<span class="text-danger">*</span></label>
+                                            <h3 style="text-align: center; font-weight: bold;font-size: 15px">Resource allocation has been deactivated by Super admin {{entry.full_name_active_content}} </h3>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                         <hr style="margin-top: 5px;">
@@ -295,6 +303,8 @@
             })
 
             return {
+                active_allocation:$json.active_allocation,
+                roleName:$json.roleName,
                 permissions,
                 permissionFields:$json.permissionFields || [],
                 teacher:$json.teacher,
@@ -394,6 +404,17 @@
 
 
                 $router.updateQuery({page: this.paginate.currentPage, _: Date.now()});
+            },
+            async activeAllocation()
+            {
+                const res=await $post('/xadmin/schools/activeAllocation',{active_allocation:this.active_allocation,id:this.entry.id})
+                if(res.code)
+                {
+                    toastr.errors(res.message)
+                }
+                else {
+                    toastr.success(res.message)
+                }
             },
         }
     }

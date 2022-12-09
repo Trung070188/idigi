@@ -231,6 +231,7 @@ class SchoolsController extends AdminBaseController
         $entry = School::with(['allocation_contents', 'school_courses', 'school_course_units', 'allocation_school','users'])->where('id', $id)->first();
         $allocationContents = AllocationContent::query()->with(['course_unit', 'courses','units'])->orderBy('id', 'desc')->get()->toArray();
         $lengthTeacher=0;
+        $active_allocation=$entry->active_allocation;
         if(@$entry->users)
         {
             $teacher=[];
@@ -350,6 +351,10 @@ class SchoolsController extends AdminBaseController
          */
 
         $user = Auth::user();
+        foreach ($user->roles as $role)
+        {
+            $roleName=$role->role_name;
+        }
         $permissionDetail = new PermissionField();
         $permissions = $permissionDetail->permission($user);
         $permissionFields = [
@@ -370,6 +375,8 @@ class SchoolsController extends AdminBaseController
         $component = 'SchoolEdit';
         $entry->allocationContentId = $allocationContentId;
         $jsonData = [
+            'active_allocation'=>$active_allocation,
+            'roleName'=>@$roleName,
             'permissionFields'=>$permissionFields,
             'teacher'=>$lengthTeacher,
             'entry' => $entry,
@@ -510,7 +517,6 @@ class SchoolsController extends AdminBaseController
                     'message' => 'Không tìm thấy',
                 ];
             }
-
             $entry->fill($data);
             $entry->save();
             AllocationContentSchool::where('school_id', $entry->id)->delete();
@@ -1059,5 +1065,30 @@ class SchoolsController extends AdminBaseController
 
         ];
         return view('admin.layouts.vue', compact('title', 'component', 'jsonData'));
+    }
+    public function activeAllocation(Request $req)
+    {
+        $auth=Auth::user();
+        $id=$req->id;
+        School::where('id',$id)->update(['active_allocation'=>$req->active_allocation,'full_name_active_content'=>$auth->full_name]);
+        $schoolIds=User::query()->where('school_id',$id)->get();
+        $userSchool=[];
+        foreach ($schoolIds as $schoolId)
+        {
+            $userSchool[]=$schoolId->id;
+        }
+        if($req->active_allocation==true)
+        {
+            User::query()->WhereIn('id',$userSchool)->update(['active_allocation'=>1]);
+
+        }
+        else{
+            User::query()->WhereIn('id',$userSchool)->update(['active_allocation'=>0]);
+
+        }
+        return [
+          'code'=>0,
+          'message'=>'Đã cập nhật'
+        ];
     }
 }
