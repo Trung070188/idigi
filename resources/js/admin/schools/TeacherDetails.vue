@@ -91,15 +91,6 @@
                                         <input class="form-control form-control-solid" v-model="schools.label" disabled>
                                         <error-label for="f_category_id" :errors="errors.label"></error-label>
                                     </div>
-                                <div class="row">
-                                    <div class="form-group col-sm-8">
-                                        <label>Teacher description</label>
-                                        <textarea v-model="entry.description" rows="5" class="form-control"
-                                                  placeholder="Type the description here (200 characters)"></textarea>
-                                        <error-label for="f_grade" :errors="errors.description"></error-label>
-
-                                    </div>
-                                </div>
                                     <div class="form-check form-check-custom form-check-solid ml-3 pb-5">
                                         <input id="state" type="checkbox" v-model="entry.state" class="form-check-input h-20px w-20px">
                                         <label for="state" class="form-check-label fw-bold">Active</label>
@@ -110,7 +101,7 @@
                                 <h4>Resource allocation</h4>
                                 <div class="row">
                                     <div class="form-group col-sm-10">
-                                        <label>Course</label>
+                                        <label>Course<span class="text-danger">*</span></label>
                                         <treeselect :options="allCourses" :multiple="true" @deselect="deleteCourse" v-model="courseTeachers" @input="selectTotalCourse" />
                                         <error-label  for="f_grade" :errors="errors.courseTeachers"></error-label>
 
@@ -118,7 +109,7 @@
                                             <thead class="border-bottom border-gray-200 fs-6 text-gray-600 fw-bolder bg-light bg-opacity-75">
                                             <tr>
                                                 <th class="">Course Name</th>
-                                                <th>Unit</th>
+                                                <th>Unit <span class="text-danger">*</span></th>
                                             </tr>
                                             </thead>
                                             <tbody v-for="courseTeacher in courseTeachers" >

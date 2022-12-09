@@ -161,7 +161,7 @@
                                     <error-label for="f_grade" ></error-label>
                                 </div>
                             </div>
-                            <div class="col-lg-12" >
+                            <div class="col-lg-12" v-if="roleName=='School Admin' && entry.active_allocation==1 || roleName=='Super Administrator'" >
                                 <div class="row" >
                                     <div class="form-group col-lg-8">
                                         <label>Resource allocation<span class="text-danger">*</span></label>

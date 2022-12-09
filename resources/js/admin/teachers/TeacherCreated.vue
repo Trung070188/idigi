@@ -1,7 +1,7 @@
 <template>
     <div class="container-fluid">
         <ActionBar type="index"
-                   :breadcrumbs="breadcrumbs" title = "Create New Teacher"/>
+                   :breadcrumbs="breadcrumbs" title = "Create new teacher"/>
         <div class="row">
             <div class="col-lg-12">
                 <div class="card card-custom card-stretch gutter-b">
@@ -67,15 +67,6 @@
                                 <div class="form-group  col-sm-8">
                                     <input  type="checkbox" v-model="auto_gen">
                                     <label>Auto password</label>
-                                </div>
-                                <div class="row">
-                                    <div class="form-group col-sm-8">
-                                        <label>Description</label>
-                                        <textarea v-model="entry.description" rows="5" class="form-control"
-                                                  placeholder="Your text here"></textarea>
-                                        <error-label for="f_grade" :errors="errors.description"></error-label>
-
-                                    </div>
                                 </div>
                                 <div class="form-group">
                                     <input id="state" type="checkbox" v-model="entry.state" checked>
