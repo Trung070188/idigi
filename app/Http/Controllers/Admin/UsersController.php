@@ -438,7 +438,6 @@ class UsersController extends AdminBaseController
         if (!$entry) {
             throw new NotFoundHttpException();
         }
-        $user_device = $entry->user_devices;
         $schools = ($entry->schools);
         /**
          * @var  User $entry
@@ -469,7 +468,6 @@ class UsersController extends AdminBaseController
             'permissionFields'=>$permissionFields,
             'allocationContentId'=>$allocationContentId,
             'entry' => $entry,
-            @'user_device' => @$user_device,
             @'schools' => @$schools,
             @'courseTeachers' => @$courseTeachers,
             @'schoolCousers' => @$schoolCousers,
@@ -512,10 +510,10 @@ class UsersController extends AdminBaseController
     {
         $id = $req->id;
         $entry = UserDevice::find($id);
+        UserDevice::where('id',$id)->update(['deleted_at'=>Carbon::now()]);
         if (!$entry) {
             throw new NotFoundHttpException();
         }
-        $entry->delete();
         return [
             'code' => 0,
             'message' => 'Đã xóa'
@@ -1584,6 +1582,17 @@ class UsersController extends AdminBaseController
         return[
             'code'=>0,
             'message'=>'Đã cập nhật'
+        ];
+    }
+    public function deviveTeacher(Request $req)
+    {
+        $id=$req->id;
+        $devices=UserDevice::where('user_id',$id)->whereNull('deleted_at')->get();
+        $deviceLog=UserDevice::where('user_id',$id)->orderBy('created_at','desc')->get();
+        return [
+          'data'=>$devices,
+            'deviceLog'=>$deviceLog
+
         ];
     }
 }

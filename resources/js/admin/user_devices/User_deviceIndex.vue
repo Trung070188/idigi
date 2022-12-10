@@ -296,34 +296,19 @@
                                             <a class="menu-link text-danger px-3 isDisabled" v-if="checkDeleteDeviceRequest==0 && permissionFields['device_delete']==false" @click="removeDevice(entry.id)" data-kt-subscriptions-table-filter="delete_row">Delete</a>
                                             <a class="menu-link text-danger px-3" v-if="checkDeleteDeviceRequest==1 && entry.status==2 && permissionFields['device_delete']==true" @click="Sent(entry)" data-kt-subscriptions-table-filter="delete_row" >Delete</a>
                                             <a class="menu-link text-danger px-3 isDisabled" v-if="checkDeleteDeviceRequest==1 && entry.status==2 && permissionFields['device_delete']==false" @click="Sent(entry)" data-kt-subscriptions-table-filter="delete_row" >Delete</a>
-
                                         </div>
-
                                         <!--end::Menu item-->
                                     </div>
                                     <!--end::Menu-->
                                 </td>
-
-
                             </tr>
-
                             </tbody>
                         </table>
-
                     </div>
-
-
-
-
                 </div>
             </div>
-
         </div>
     </div>
-
-
-
-
 </template>
 
 <script>
@@ -419,7 +404,6 @@
                 }, 0)
                 this.paginate = res.paginate;
                 this.entries = res.data;
-                console.log(this.entries)
             },
             async remove() {
                 const res = await $post('/xadmin/user_devices/remove', {id:this.idDevice});

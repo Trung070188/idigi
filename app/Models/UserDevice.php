@@ -21,7 +21,8 @@ class UserDevice extends BaseModel
         'key_collection_id',
         'expire_date',
         'created_at',
-        'updated_at'
+        'updated_at',
+        'deleted_at'
     ];
     public function users()
     {

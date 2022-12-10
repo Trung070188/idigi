@@ -114,13 +114,10 @@ class UserDevicesController extends AdminBaseController
     public function remove(Request $req) {
         $id = $req->id;
         $entry = UserDevice::find($id);
-
+        UserDevice::where('id',$id)->update(['deleted_at'=>Carbon::now()]);
         if (!$entry) {
             throw new NotFoundHttpException();
         }
-
-        $entry->delete();
-
         return [
             'code' => 0,
             'message' => 'Đã xóa',
@@ -342,7 +339,7 @@ class UserDevicesController extends AdminBaseController
      * @return  array
      */
     public function data(Request $req) {
-       $devices=UserDevice::query()->with(['users'])->where('plan_id','=',NULL)->orderBy('created_at','ASC')->get();
+       $devices=UserDevice::query()->with(['users'])->where('plan_id','=',NULL)->whereNull('deleted_at')->orderBy('created_at','ASC')->get();
        $data=[];
        foreach ($devices as $device)
        {

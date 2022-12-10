@@ -93,7 +93,7 @@
                                     </div>
                                     <div class="form-check form-check-custom form-check-solid ml-3 pb-5">
                                         <input id="state" type="checkbox" v-model="entry.state" class="form-check-input h-20px w-20px">
-                                        <label for="state" class="form-check-label fw-bold">Active</label>
+                                        <label for="state" class="form-check-label fw-bold">Active teacher</label>
                                         <error-label for="f_grade" :errors="errors.state"></error-label>
                                     </div>
                                 </div>
@@ -142,9 +142,10 @@
                         </div>
                         <hr style="margin-top: 10px">
                         <h4>Current registed devices</h4>
-                        <table class=" table  table-head-custom table-head-bg table-vertical-center">
-                            <thead>
+                        <table class="table table-row-bordered align-middle gy-4 gs-9">
+                            <thead  class="border-bottom border-gray-200 fs-6 text-gray-600 fw-bolder bg-light bg-opacity-75">
                             <tr>
+                                <th>No.</th>
                                 <th>Device name</th>
                                 <th>Device detail</th>
                                 <th>Registed date</th>
@@ -155,7 +156,8 @@
                             </tr>
                             </thead>
                             <tbody>
-                            <tr v-for="device in user_device" v-if="device.user_id===entry.id">
+                            <tr v-for="(device,index) in userDevices" >
+                                <td >{{index+1}}</td>
                                 <td v-text="device.device_name"></td>
                                 <td v-text="device.device_name"></td>
                                 <td v-text="d(device.created_at)"></td>
@@ -169,8 +171,8 @@
                             </tbody>
                         </table>
                         <h4>Devices activities</h4>
-                        <table  class=" table  table-head-custom table-head-bg table-vertical-center">
-                            <thead>
+                        <table  class="table table-row-bordered align-middle gy-4 gs-9">
+                            <thead  class="border-bottom border-gray-200 fs-6 text-gray-600 fw-bolder bg-light bg-opacity-75">
                             <tr>
                                 <th>Date</th>
                                 <th>Action</th>
@@ -178,10 +180,10 @@
                             </tr>
                             </thead>
                             <tbody>
-                            <tr v-for="device in user_device" v-if="device.user_id==entry.id">
-                                <td v-if="device.delete_request!=null"  v-text="d(device.updated_at)"></td>
+                            <tr v-for="device in deviceLog" >
+                                <td v-if="device.delete_request!=null"  v-text="d(device.deleted_at)"></td>
                                 <td v-else v-text="d(device.created_at)"></td>
-                                <td v-if="device.delete_request!=null"  >Remove device</td>
+                                <td v-if="device.deleted_at!=null" >Remove device</td>
                                 <td v-else >Register device</td>
                                 <td v-text="device.device_name"></td>
                             </tr>
@@ -198,7 +200,7 @@
 </template>
 
 <script>
-    import {$post, forEach} from "../../utils";
+    import {$get, $post, forEach} from "../../utils";
 
     import ActionBar from "../includes/ActionBar";
     import SwitchButton from "../../components/SwitchButton";
@@ -266,6 +268,7 @@
                 }
             })
             return {
+                deviceLog:[],
                 active_allocation:$json.active_allocation,
                 deviceTeacher:[],
                 allCourses:allCourses,
@@ -297,7 +300,7 @@
                 entry: $json.entry || {
                     roles: []
                 },
-                user_device: $json.user_device || [],
+                userDevices: [],
                 allocationContentId:$json.allocationContentId,
                 schools:$json.schools || [],
                 courses:courseTreeselect,
@@ -306,6 +309,8 @@
             }
         },
         mounted() {
+            $router.on('/', this.load).init();
+
             $('.noString').keypress(function (e) {
                 if (e.keyCode < 48 || e.keyCode > 57) {
                     e.preventDefault();
@@ -313,6 +318,18 @@
             })
         },
         methods: {
+            async load() {
+
+                let query = $router.getQuery();
+                this.$loading(true);
+                const res  = await $get('/xadmin/users/deviveTeacher?id='+this.entry.id, query);
+                this.$loading(false);
+                setTimeout(function (){
+                    KTMenu.createInstances();
+                }, 0)
+                this.userDevices = res.data;
+                this.deviceLog=res.deviceLog
+            },
            selectTotalUnit(course)
             {
               let self=this;
