@@ -485,7 +485,7 @@ class SchoolsController extends AdminBaseController
         }
         if(@$data['school_phone'])
         {
-            $rules['school_phone']=['min:10','number'];
+            $rules['school_phone']=['min:10','numeric'];
         }
         // $rules['license_to']='after:' .$today;
         $message=[

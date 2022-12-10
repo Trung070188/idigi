@@ -202,7 +202,7 @@
                             <tr v-if="entries.length==0">
                                 <td valign="top" colspan="10" class="text-center">No results found. Try different keywords or remove search filters.</td>
                             </tr>
-                            <tr  v-if="entries.length!==0" v-for="(entry,index) in entries">
+                            <tr  v-if="entries.length!==0" v-for="(entry,index) in entries" >
                                 <td class="" v-if="permissions['018']">
                                     <div class="form-check form-check-sm form-check-custom form-check-solid">
                                         <input class="form-check-input" type="checkbox" v-model="schoolIds"
@@ -210,12 +210,12 @@
                                     </div>
                                 </td>
                                 <td class="text-center">{{index+1}}</td>
-                                <td class="text-center" v-text="entry.label"></td>
-                                <td class="text-center" v-text="entry.school_address"></td>
-                                <td class="text-center">{{entry.nameSchoolAdmin}}</td>
-                                <td class="text-center" v-text="entry.teacher.length"></td>
-                                <td class="text-center" v-text="entry.devices_per_user"></td>
-                                <td  class="text-center">{{d(entry.license_to)}}</td>
+                                <td class="text-center" v-text="entry.label" @click="edit(entry)"></td>
+                                <td class="text-center" v-text="entry.school_address" @click="edit(entry)"></td>
+                                <td class="text-center" @click="edit(entry)">{{entry.nameSchoolAdmin}}</td>
+                                <td class="text-center" v-text="entry.teacher.length" @click="edit(entry)"></td>
+                                <td class="text-center" v-text="entry.devices_per_user" @click="edit(entry)"></td>
+                                <td  class="text-center" @click="edit(entry)">{{d(entry.license_to)}}</td>
                                 <td class="text-center">
                                     <a href="list.html#" class="btn btn-light btn-active-light-primary btn-sm" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">Actions
                                         <!--begin::Svg Icon | path: icons/duotune/arrows/arr072.svg-->
@@ -351,11 +351,9 @@
             {
                 $('#delete1').modal('show');
             },
-            edit: function (id, event) {
-                if (!$(event.target).hasClass('deleted')) {
-                    window.location.href = '/xadmin/schools/edit?id=' + id;
-                }
-
+            edit(entry)
+            {
+                    window.location.href = '/xadmin/schools/edit?id='+entry.id;
             },
             async load() {
                 let query = $router.getQuery();
@@ -477,5 +475,8 @@
 </script>
 
 <style scoped>
+    td {
+        cursor: pointer;
+    }
 
 </style>
