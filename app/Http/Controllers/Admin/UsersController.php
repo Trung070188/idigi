@@ -13,6 +13,7 @@ use App\Models\UserCourseUnit;
 use App\Models\UserDevice;
 use App\Models\UserRole;
 use App\Models\UserUnit;
+use App\Models\Xlogger;
 use Carbon\Carbon;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
@@ -508,6 +509,11 @@ class UsersController extends AdminBaseController
 
     public function removeDevice(Request $req)
     {
+        $auth=Auth::user();
+        foreach ($auth->roles as $role)
+        {
+            $roleName=$role->role_name;
+        }
         $id = $req->id;
         $entry = UserDevice::find($id);
         UserDevice::where('id',$id)->update(['deleted_at'=>Carbon::now()]);
@@ -516,7 +522,10 @@ class UsersController extends AdminBaseController
         }
         return [
             'code' => 0,
-            'message' => 'Đã xóa'
+            'message' => 'Đã xóa',
+            'object'=>$entry->device_name,
+            'status'=>'Approve remove device',
+            'role'=>$roleName
         ];
     }
 
@@ -1568,11 +1577,19 @@ class UsersController extends AdminBaseController
     }
     public function refuseDevice(Request $req)
     {
+        $user = Auth::user();
+        foreach ($user->roles as $role)
+        {
+            $roleName=$role->role_name;
+        }
         $id=$req->id;
-        UserDevice::where('id',$id)->update(['delete_request'=>Null]);
+      $device=  UserDevice::where('id',$id)->update(['delete_request'=>Null]);
         return [
             'code'=>0,
-            'message'=>'Đã cập nhật'
+            'message'=>'Đã cập nhật',
+            'object'=>$device['device_name'],
+            'status'=>'Refuse remove device',
+            'role'=>$roleName
         ];
     }
     public function activeAllocation(Request $req)
@@ -1584,14 +1601,35 @@ class UsersController extends AdminBaseController
             'message'=>'Đã cập nhật'
         ];
     }
-    public function deviveTeacher(Request $req)
+    public function deviceTeacher(Request $req)
     {
         $id=$req->id;
+        $user=User::where('id',$id)->first();
+        $school=School::where('id',$user->school_id)->first();
         $devices=UserDevice::where('user_id',$id)->whereNull('deleted_at')->get();
-        $deviceLog=UserDevice::where('user_id',$id)->orderBy('created_at','desc')->get();
+//        $deviceLog=UserDevice::where('user_id',$id)->orderBy('created_at','desc')->get();
+        $requestUris=Xlogger::query()
+            ->where('request_uri','/xadmin/user_devices/savesend')
+            ->orWhere('request_uri','/xadmin/users/removeDevice')->get();
+        $request_uri=[];
+        foreach ($requestUris as $requestUri)
+        {
+            $request_uri[]=$requestUri->request_uri;
+        }
+        $deviceLogs=Xlogger::query()->whereIn('request_uri',$request_uri)->where('http_method','POST')->where('http_code',200)->orderBy('time','desc')->get();
+        $dataDeviceLog=[];
+        foreach ($deviceLogs as $deviceLog)
+        {
+            $dataLog=json_decode($deviceLog['response'],TRUE);
+            $dataDeviceLog[]=[
+              'dataLog'=>$dataLog,
+                'time'=>$deviceLog['time']
+            ];
+        }
         return [
           'data'=>$devices,
-            'deviceLog'=>$deviceLog
+            'deviceLog'=>$dataDeviceLog,
+            'school'=>$school
 
         ];
     }

@@ -83,6 +83,9 @@ class DashboardController extends AdminBaseController
             ->orWhere('request_uri', '/xadmin/plans/deleteLesson')
             ->orWhere('request_uri', '/xadmin/plans/deletePackageLesson')
             ->orWhere('request_uri', '/xadmin/user_devices/save')
+            ->orwhere('request_uri','/xadmin/user_devices/savesend')
+            ->orWhere('request_uri','/xadmin/users/removeDevice')
+            ->orWhere('request_uri','/xadmin/users/refuseDevice')
             ->orWhere('request_uri', '/xadmin/user_devices/remove')->get();
         $logAuthentications=AuthenticationLog::query()->orderBy('id','desc')->get();
         $xlogerLogin=[];

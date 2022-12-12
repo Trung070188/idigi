@@ -187,7 +187,7 @@ class UserDevicesController extends AdminBaseController
                 'message' => 'Đã cập nhật',
                 'id' => $entry->id,
                 'object'=>$entry->device_name,
-                'status'=>'Update device',
+                'status'=>'Request remove device',
                 'role'=>$this->roleName()
             ];
         }
@@ -302,6 +302,9 @@ class UserDevicesController extends AdminBaseController
         return [
             'code' => 0,
             'message' => 'Đã thêm',
+            'object'=>$entry->device_name,
+            'status'=>'Register device',
+            'role'=>$this->roleName(),
             'id' => $entry->id
         ];
     }

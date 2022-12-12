@@ -99,7 +99,15 @@
                                 </div>
                                 <hr style="margin-top:5px">
                                 <h4>Resource allocation</h4>
-                                <div class="row">
+                                <div class="col-lg-12" v-if="entry.active_allocation==0 && school.active_allocation==0">
+                                    <div class="row">
+                                        <div class="row" >
+                                            <label>Resource allocation<span class="text-danger">*</span></label>
+                                            <h3 style="text-align: center; font-weight: bold;font-size: 15px">Resource allocation has been deactivated by Super admin </h3>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row" v-if=" school.active_allocation==1" >
                                     <div class="form-group col-sm-10">
                                         <label>Course<span class="text-danger">*</span></label>
                                         <treeselect :options="allCourses" :multiple="true" @deselect="deleteCourse" v-model="courseTeachers" @input="selectTotalCourse" />
@@ -127,7 +135,7 @@
 
                                     </div>
                                 </div>
-                                <div class="form-check form-check-custom form-check-solid ml-3 pb-5">
+                                <div class="form-check form-check-custom form-check-solid ml-3 pb-5" v-if="school.active_allocation==1">
                                     <input id="state1" type="checkbox" v-model="active_allocation" class="form-check-input h-20px w-20px" @change="activeAllocation">
                                     <label for="state1" class="form-check-label fw-bold">Active allocation</label>
                                     <error-label for="f_grade" :errors="active_allocation"></error-label>
@@ -181,11 +189,10 @@
                             </thead>
                             <tbody>
                             <tr v-for="device in deviceLog" >
-                                <td v-if="device.delete_request!=null"  v-text="d(device.deleted_at)"></td>
-                                <td v-else v-text="d(device.created_at)"></td>
-                                <td v-if="device.deleted_at!=null" >Remove device</td>
-                                <td v-else >Register device</td>
-                                <td v-text="device.device_name"></td>
+                                <td v-text="d(device.time)"></td>
+                                <td v-if="device.dataLog.status=='Register device'">Register device</td>
+                                <td v-if="device.dataLog.status=='Approve remove device'">Remove device</td>
+                                <td v-text="device.dataLog.object"></td>
                             </tr>
                             </tbody>
                         </table>
@@ -268,13 +275,13 @@
                 }
             })
             return {
+                school:{},
                 deviceLog:[],
                 active_allocation:$json.active_allocation,
                 deviceTeacher:[],
                 allCourses:allCourses,
                 nameRole:5,
                 courseTeachers:$json.courseTeachers || {},
-                schoolId:$json.schoolId,
                 showConfirm: false,
                 showPass: false,
                 types: [],
@@ -319,15 +326,15 @@
         },
         methods: {
             async load() {
-
                 let query = $router.getQuery();
                 this.$loading(true);
-                const res  = await $get('/xadmin/users/deviveTeacher?id='+this.entry.id, query);
+                const res  = await $get('/xadmin/users/deviceTeacher?id='+this.entry.id, query);
                 this.$loading(false);
                 setTimeout(function (){
                     KTMenu.createInstances();
                 }, 0)
                 this.userDevices = res.data;
+                this.school=res.school
                 this.deviceLog=res.deviceLog
             },
            selectTotalUnit(course)
@@ -437,7 +444,7 @@
                 } else {
                     toastr.success(res.message);
                 }
-                location.replace('/xadmin/schools/teacherList?id='+this.schoolId);
+                location.replace('/xadmin/schools/teacherList?id='+this.school.id);
                 $router.updateQuery({page: this.paginate.currentPage, _: Date.now()});
             },
         }
