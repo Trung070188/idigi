@@ -225,7 +225,7 @@
                             </thead>
                             <tbody>
                             <tr v-if="user.active_allocation==0">
-                                <td valign="top" colspan="10" class="text-center" style="font-size: 15px;font-weight: bold">Resource allocation has been deactivated {{user.full_name_active_content}}.</td>
+                                <td valign="top" colspan="10" class="text-center" style="font-size: 15px;font-weight: bold">Resource allocation has been deactivated by {{user.full_name_active_content}}.</td>
 
                             </tr>
 

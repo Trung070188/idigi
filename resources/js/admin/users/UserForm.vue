@@ -13,31 +13,31 @@
                                 <div class="row">
                                     <div v-if="errors!==''"  class="form-group col-sm-4">
                                         <label>Username <span class="text-danger">*</span></label>
-                                        <input class="form-control nospace" placeholder="Enter the username" v-model="entry.username">
+                                        <input class="form-control nospace" placeholder="Enter the username" v-model="entry.username" @input="disableSave(entry)">
                                         <error-label  for="f_category_id" :errors="errors.username"></error-label>
                                     </div>
                                     <div v-if="errors==''" class="form-group col-sm-4">
                                         <label>Username <span class="text-danger">*</span></label>
-                                        <input class="form-control nospace" placeholder="Enter the username" v-model="entry.username">
+                                        <input class="form-control nospace" placeholder="Enter the username" v-model="entry.username" @input="disableSave(entry)">
                                     </div>
 
                                     <div class="form-group col-sm-4">
                                         <label>Full name <span class="text-danger">*</span></label>
-                                        <input class="form-control" placeholder="Enter the full name" v-model="entry.full_name">
+                                        <input class="form-control" placeholder="Enter the full name" v-model="entry.full_name" @input="disableSave(entry)">
 
                                         <error-label for="f_category_id" :errors="errors.full_name"></error-label>
                                     </div>
                                     <div class="form-group col-sm-4">
                                         <label>Email </label>
-                                        <input class="form-control" placeholder="Enter the email address" v-model="entry.email">
+                                        <input class="form-control" placeholder="Enter the email address" v-model="entry.email" @input="disableSave(entry)">
                                         <error-label for="f_category_id" :errors="errors.email"></error-label>
                                     </div>
                                     <div v-if="entry.id==null" class="form-group col-sm-4 mb-3">
                                         <label>Password <span class="text-danger">*</span></label>
                                         <input v-if="auto_gen==true" disabled :type="showPass ? 'text' : 'password'" class="form-control"  placeholder="Enter the password"
-                                               ref="password" v-model="entry.password">
+                                               ref="password" v-model="entry.password" @input="disableSave(entry)">
                                         <input v-if="auto_gen==false"  :type="showPass ? 'text' : 'password'" class="form-control"  placeholder="Enter the password"
-                                               ref="password" v-model="entry.password">
+                                               ref="password" v-model="entry.password" @input="disableSave(entry)">
 <!--                                        <i @click="showPass = !showPass" class="fa fa-eye"></i>-->
                                         <error-label for="f_category_id" :errors="errors.password"></error-label>
                                     </div>
@@ -77,7 +77,7 @@
                                 <div class="row" v-if="name_role==5">
                                     <div class="form-group col-sm-4">
                                         <label>School <span class="text-danger">*</span></label>
-                                        <select required  class="form-control form-select"  v-model="entry.school_id" >
+                                        <select required  class="form-control form-select"  v-model="entry.school_id" @input="disableSave(entry)">
                                             <option  :value="null" disabled selected >Choose role</option>
                                             <option v-for="school in schools" :value="school.id">{{school.label}}</option>
                                         </select>
@@ -88,13 +88,13 @@
                                     <div class="form-group col-sm-12 mb-5">
                                         <label>Description</label>
                                         <textarea v-model="entry.description" rows="5" class="form-control"
-                                                  placeholder="Type the description here (200 characters)"></textarea>
+                                                  placeholder="Type the description here (200 characters)" @input="disableSave(entry)"></textarea>
                                         <error-label for="f_grade" :errors="errors.description"></error-label>
 
                                     </div>
                                 </div>
                                 <div class="form-check form-check-custom form-check-solid pb-5">
-                                    <input id="state" type="checkbox" v-model="entry.state" class="form-check-input h-20px w-20px" checked>
+                                    <input id="state" type="checkbox" v-model="entry.state" class="form-check-input h-20px w-20px" @input="disableSave(entry)" checked>
                                     <label for="state" class="form-check-label fw-bold">Active</label>
                                     <error-label for="f_grade" :errors="errors.state"></error-label>
                                 </div>
@@ -102,7 +102,7 @@
                         </div>
                         <!--<hr style="margin: 0px 0px 16px;">-->
                         <div class="mt-5">
-                            <button type="reset" @click="save()"  class="btn btn-primary mr-3"><i class="bi bi-send mr-1"></i>Submit</button>
+                            <button type="reset" @click="save()"  class="btn btn-primary mr-3" :disabled="disableSave(entry)"><i class="bi bi-send mr-1"></i>Submit</button>
                             <button type="reset" @click="backIndex()" class="btn btn-light">Cancel</button>
                             <label class="fw-bold ml-4">Username and password will be sent to the user's email.</label>
                         </div>
@@ -153,8 +153,15 @@
                         title: $json.entry ? 'Edit User' : 'Create new user',
                     },
                 ],
-                entry: $json.entry || {
-                    role: []
+                entry:{
+                    'username':'',
+                    'full_name':'',
+                    'email':'',
+                    'password':'',
+                    'description':'',
+                    'state':'',
+                    'school_id':''
+
                 },
                 roles: $json.roles || [],
                 schools:$json.schools|| [],
@@ -162,17 +169,8 @@
                 errors: {}
             }
         },
-        watch: {
-            // entry: {
-            //     handler(value){
-            //         if(value) {
-            //             this.changed = !_.isEqual(value, this.actual);
-            //         }
-            //     },
-            //     deep: true,
-            // }
-        },
         mounted() {
+
             $('.nospace').keypress(function (e) {
                 if (e.keyCode == 32 ) {
                     e.preventDefault();
@@ -181,10 +179,17 @@
         },
 
         methods: {
-            // checkbox_roles()
-            // {
-            //     this.entry=this.roles;
-            // },
+            disableSave(entry)
+            {
+               if(entry.username.length>0 || entry.full_name.length>0 || entry.email.length>0 || entry.description.length>0 || entry.state.length>0 || entry.password.length>0)
+               {
+                   return false;
+               }
+               else  {
+                   return true;
+               }
+            },
+
             backIndex() {
 
                 window.location.href = '/xadmin/users/index';
