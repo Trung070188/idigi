@@ -326,6 +326,7 @@ class LessonsController extends AdminBaseController
 
         return [
             'code' => 0,
+            'user'=>$user,
             'data' => $entries->items(),
             'schools'=>$schools,
             'roleName'=>$roleName,

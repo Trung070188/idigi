@@ -1079,11 +1079,11 @@ class SchoolsController extends AdminBaseController
         }
         if($req->active_allocation==true)
         {
-            User::query()->WhereIn('id',$userSchool)->update(['active_allocation'=>1]);
+            User::query()->WhereIn('id',$userSchool)->update(['active_allocation'=>1,'full_name_active_content'=>$auth->full_name]);
 
         }
         else{
-            User::query()->WhereIn('id',$userSchool)->update(['active_allocation'=>0]);
+            User::query()->WhereIn('id',$userSchool)->update(['active_allocation'=>0,'full_name_active_content'=>$auth->full_name]);
 
         }
         return [

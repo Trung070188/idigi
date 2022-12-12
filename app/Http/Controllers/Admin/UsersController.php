@@ -1595,7 +1595,8 @@ class UsersController extends AdminBaseController
     public function activeAllocation(Request $req)
     {
         $id=$req->id;
-        User::where('id',$id)->update(['active_allocation'=>$req->active_allocation]);
+        $auth=Auth::user();
+        User::where('id',$id)->update(['active_allocation'=>$req->active_allocation,'full_name_active_content'=>$auth->full_name]);
         return[
             'code'=>0,
             'message'=>'Đã cập nhật'

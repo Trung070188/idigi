@@ -224,7 +224,17 @@
                             </tr>
                             </thead>
                             <tbody>
-                            <tr  v-for="entry in entries">
+                            <tr v-if="user.active_allocation==0">
+                                <td valign="top" colspan="10" class="text-center" style="font-size: 15px;font-weight: bold">Resource allocation has been deactivated {{user.full_name_active_content}}.</td>
+
+                            </tr>
+
+                            <tr v-if="user.active_allocation==1 && entries.length==0">
+                                <td valign="top" colspan="10" class="text-center">No results found. Try different keywords or remove search filters.</td>
+
+                            </tr>
+
+                            <tr  v-for="entry in entries" v-if="user.active_allocation==1 && entries.length>0">
                                 <td class="">
                                     <div class="form-check form-check-sm form-check-custom form-check-solid">
                                         <input class="form-check-input" type="checkbox" v-model="lessonIds" :value="entry.id" @change="updateCheckAll">
@@ -322,6 +332,7 @@
                 }
             }
             return {
+                user:{},
                 roleName:'',
                 idSchool:null,
                 schoolLesson:null,
@@ -444,6 +455,7 @@
                 this.entries = [...(new Set(res.data))];
                 this.schools=res.schools;
                 this.roleName=res.roleName;
+                this.user=res.user;
                 this.from = (this.paginate.currentPage - 1) * (this.limit) + 1;
                 this.to = (this.paginate.currentPage - 1) * (this.limit) + this.entries.length;
             },
