@@ -1098,7 +1098,10 @@ class UsersController extends AdminBaseController
     public function data(Request $req)
     {
         $query = User::query()
-            ->with(['roles', 'fileImage'])
+            ->with(['roles', 'fileImage'])->whereHas('roles',function ($q)
+            {
+                $q->where('role_name','<>','Super Administrator');
+            })
             ->orderBy('id', 'ASC');
         $last_updated = User::query()->orderBy('updated_at', 'desc')->first()->updated_at;
         $roles = Role::with(['users'])->orderBy('role_name', 'ASC')->get();
