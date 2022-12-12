@@ -3,6 +3,32 @@
         <ActionBar type="index"
                    :breadcrumbs="breadcrumbs" title="Plan details"/>
         <div class="row">
+            <!-- modal cancel package lesson -->
+
+            <div class="modal fade" style="margin-right:50px;border:2px solid #333333  " id="cancelModal" tabindex="-1" role="dialog"
+                 aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered popup-main-1" role="document"
+                     style="max-width: 450px;">
+                    <div class="modal-content box-shadow-main paymment-status" style="left:120px;text-align: center; padding: 20px 0px 55px;">
+                        <div class="close-popup" data-dismiss="modal"></div>
+                        <div class="swal2-icon swal2-warning swal2-icon-show">
+                            <div class="swal2-icon-content" style="margin: 0px 24.5px 0px ">!</div>
+                        </div>
+                        <div class="swal2-html-container">
+                            <p >Do you want to close ?</p>
+                        </div>
+                        <div class="swal2-actions">
+                            <button type="submit" id="kt_modal_new_target_submit2" class="swal2-confirm btn fw-bold btn-primary" @click="cancelModalYes">
+                                <span class="indicator-label">Yes</span>
+                            </button>
+                            <button type="reset" id="kt_modal_new_target_cancel2" class="swal2-cancel btn fw-bold btn-active-light-primary" @click="cancelModalNo" style="margin: 0px 8px 0px">No</button>
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            <!-- end modal cancel package lesson -->
 
             <!-- BEGIN: MODAL ADD LESSON PACKAGE PLAN -->
 
@@ -10,7 +36,7 @@
                 <div class="modal-dialog " style="width: 1000px">
                     <div class="modal-content" style="width: max-content;margin: 0px -150px 0px">
                         <div class="modal-header pb-0 border-0 justify-content-end">
-                            <div class="btn btn-sm btn-icon btn-active-color-primary" data-bs-dismiss="modal">
+                            <div class="btn btn-sm btn-icon btn-active-color-primary" @click="cancelModalLesson()">
                                 <span class="svg-icon svg-icon-1">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                                          viewBox="0 0 24 24" fill="none">
@@ -69,7 +95,7 @@
                                         <tr>
                                             <td width="25">
                                                 <div class="form-check form-check-sm form-check-custom form-check-solid">
-                                                    <input class="form-check-input" type="checkbox" v-model="allLessonSelected" @change="selectLessonAll()">
+                                                    <input class="form-check-input" type="checkbox" v-model="package.allLessonSelected" @change="selectLessonAll()">
                                                 </div>
                                             </td>
                                             <th class="">Name of lesson</th>
@@ -78,7 +104,8 @@
                                             <th></th>
                                         </tr>
                                         </thead>
-                                        <tbody  v-for="lessonPackagePlan in lessonPackagePlans" v-if="lessonPackagePlan.package_id==package">
+
+                                        <tbody  v-for="lessonPackagePlan in lessonPackagePlans" v-if="lessonPackagePlan.package_id==package.package">
                                         <tr v-for="lesson in entries" >
                                             <td class="">
                                                 <div class="form-check form-check-sm form-check-custom form-check-solid">
@@ -126,15 +153,13 @@
                                 <div class="row">
                                     <div class="form-group col-lg-8">
                                         <label>Plan name <span class="text-danger">*</span></label>
-                                        <input v-if="roleAuth=='IT'" disabled v-model="entry.name" class="form-control" placeholder="Enter the name of plan">
-                                        <input v-if="roleAuth!='IT'" v-model="entry.name" class="form-control" placeholder="Enter the name of plan">
+                                        <input :disabled="permissionFields['plan_name']==false" v-model="entry.name" class="form-control" placeholder="Enter the name of plan">
                                         <error-label :errors="errors.name" for="f_school_name"></error-label>
                                     </div>
                                     <div class="form-group col-lg-4">
                                         <label>Due date </label>
-                                        <Datepicker v-if="roleAuth=='IT'" disabled v-model="entry.due_at" readonly/>
-                                         <Datepicker v-if="roleAuth!='IT'"  v-model="entry.due_at" readonly/>
-                                         <span v-if="entry.due_at!='' && roleAuth!='IT'" class="svg-icon svg-icon-2 svg-icon-lg-1 me-0" @click="dueAtClear">
+                                        <Datepicker :disabled="permissionFields['plan_due_date']==false" v-model="entry.due_at" readonly/>
+                                         <span  v-if="entry.due_at!='' && permissionFields['plan_due_date']==true" class="svg-icon svg-icon-2 svg-icon-lg-1 me-0" @click="dueAtClear">
                                             <svg type="button" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" style="float: right;margin: -32px 3px 0px;">
                                             <rect opacity="0.5" x="6" y="17.3137" width="16" height="2" rx="1" transform="rotate(-45 6 17.3137)" fill="black" style="fill:red"/>
                                                         <rect x="7.41422" y="6" width="16" height="2" rx="1" transform="rotate(45 7.41422 6)" fill="black" style="fill:red"/>
@@ -146,17 +171,14 @@
                                 <div class="row">
                                     <div class="form-group col-lg-8">
                                         <label>Plan description</label>
-                                        <textarea v-if="roleAuth=='IT'" disabled class="form-control"
-                                                  placeholder="Enter the description" v-model="entry.plan_description">
-                                        </textarea>
-                                        <textarea v-if="roleAuth!='IT'" class="form-control"
+                                        <textarea :disabled="permissionFields['plan_description']==false" class="form-control"
                                                   placeholder="Enter the description" v-model="entry.plan_description">
                                         </textarea>
                                         <error-label :errors="errors.plan_description"></error-label>
                                     </div>
                                      <div class="form-group col-lg-4">
                                         <label> Assign to IT <span class="text-danger">*</span></label>
-                                        <select disabled class="form-control form-select" v-model="idRoleIt">
+                                        <select :disabled="permissionFields['plan_assign_to_IT']==false" class="form-control form-select" v-model="idRoleIt">
                                             <option v-for="role in roleIt" :value="role.id">{{role.full_name}}</option>
                                         </select>
                                         <error-label :errors="errors.idRoleIt"></error-label>
@@ -165,9 +187,8 @@
                                 <div class="row">
                                     <div class="form-group col-lg-4">
                                         <label>Expire date <span class="text-danger">*</span></label>
-                                        <Datepicker v-if="roleAuth=='IT'" v-model="entry.expire_date" disabled  readonly/>
-                                        <Datepicker v-if="roleAuth!='IT'" v-model="entry.expire_date" readonly/>
-                                        <span v-if="entry.expire_date!='' && roleAuth!='IT'" class="svg-icon svg-icon-2 svg-icon-lg-1 me-0" @click="expireDateClear">
+                                        <Datepicker :disabled="permissionFields['plan_expire_date']==false" v-model="entry.expire_date" readonly/>
+                                        <span v-if="entry.expire_date!='' && permissionFields['plan_expire_date']==true" class="svg-icon svg-icon-2 svg-icon-lg-1 me-0" @click="expireDateClear">
                                             <svg type="button" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" style="float: right;margin: -32px 3px 0px;">
                                             <rect opacity="0.5" x="6" y="17.3137" width="16" height="2" rx="1" transform="rotate(-45 6 17.3137)" fill="black" style="fill:red"/>
                                                         <rect x="7.41422" y="6" width="16" height="2" rx="1" transform="rotate(45 7.41422 6)" fill="black" style="fill:red"/>
@@ -189,8 +210,11 @@
                                                    data-bs-toggle="tab" role="tab" href="#kt_billing_year"
                                                    @click="tabPackageLesson(packageLesson.package_id)">{{packageLesson.name}}</a>
                                             </li>
-                                            <li v-if="roleAuth=='Super Administrator'">
-                                                <a class="btn btn-primary btn-active-primary btn-sm mt-2 ml-2"
+                                            <li >
+                                                <a v-if="permissionFields['plan_add_package']==false" class="btn btn-primary btn-active-primary btn-sm mt-2 ml-2 isDisabled"
+                                                   data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end" @click="addPackageLessonModal">Add package
+                                                </a>
+                                                <a v-else class="btn btn-primary btn-active-primary btn-sm mt-2 ml-2 "
                                                    data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end" @click="addPackageLessonModal">Add package
                                                 </a>
                                             </li>
@@ -205,7 +229,7 @@
                                     <!--BEGIN: LIST DEVICE PLAN-->
 
                                     <div id="kt_billing_months" class="card-body p-0 tab-pane fade show active" role="tabpanel" aria-labelledby="kt_billing_months">
-                                        <div class="d-flex justify-content-end mb-4" v-if="roleAuth=='Super Administrator'">
+                                        <div class="d-flex justify-content-end mb-4" >
                                             <a v-if="deviceIds!=''" class="btn btn-danger btn-sm mr-3" @click="removeDeviceAll" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">Remove device</a>
                                                 <a href="list.html#" class="btn btn-light btn-active-light-primary btn-sm" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">Actions
                                                     <span class="svg-icon svg-icon-5 m-0">
@@ -216,25 +240,23 @@
                                                 </a>
                                             <div class="menu menu-sub menu-sub-dropdown  menu-rounded menu-gray-600 menu-state-bg-light-primary fw-bold fs-7 py-4" data-kt-menu="true" style="width: 150px">
                                                 <div class="menu-item px-3">
-                                                    <a class="menu-link px-3" @click="addDevice()">Add a device</a>
+                                                    <a v-if="permissionFields['plan_add_device']==false" class="menu-link px-3 isDisabled"  @click="addDevice()">Add a device</a>
+                                                    <a v-else class="menu-link px-3" @click="addDevice()">Add a device</a>
                                                 </div>
                                                 <div class="menu-item px-3">
-                                                    <a class="menu-link px-3" @click="importDevice()">Import devices</a>
+                                                    <a v-if="permissionFields['plan_import_device']==false" class="menu-link px-3 isDisabled" @click="importDevice()">Import devices</a>
+                                                    <a class="menu-link px-3" @click="importDevice()" v-else>Import devices</a>
                                                 </div>
 
-                                                <div class="menu-item px-3" v-if="data.length>0">
-                                                    <a class="menu-link px-3" @click="exportDevice">Export device list</a>
+                                                <div class="menu-item px-3">
+                                                    <a class="menu-link px-3 isDisabled" @click="exportDevice" v-if="permissionFields['plan_export_device']==false">Export device list</a>
+                                                    <a class="menu-link px-3 " @click="exportDevice" v-if="data.length>0 && permissionFields['plan_export_device']==true" >Export device list</a>
+                                                    <a class="menu-link px-3 isDisabled" @click="exportDevice" v-if="data.length==0">Export device list</a>
+
                                                 </div>
-                                                <div class="menu-item px-3" v-else>
-                                                    <a class="menu-link px-3 isDisabled" @click="exportDevice" >Export device list</a>
-                                                </div>
+
                                             </div>
                                         </div>
-                                        <div class="d-flex justify-content-end mb-4" v-if="roleAuth=='IT'">
-                                            <a  class="btn btn-primary btn-sm" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end" @click="exportDevice">Export device
-                                            </a>
-                                        </div>
-
                                         <!-- BEGIN : TABLE LIST DEVICE-->
 
                                     <div class="mh-650px scroll-y me-n7 pe-7">
@@ -243,7 +265,7 @@
                                                 <tr>
                                                     <td width="25">
                                                         <div class="form-check form-check-sm form-check-custom form-check-solid">
-                                                            <input class="form-check-input" type="checkbox"  v-model="allDeviceSelected" @change="selectDeviceAll()">
+                                                            <input class="form-check-input" type="checkbox" :disabled="permissionFields['plan_delete_device']==false" v-model="allDeviceSelected" @change="selectDeviceAll()">
                                                         </div>
                                                     </td>
                                                     <td>No.</td>
@@ -257,7 +279,7 @@
                                             <tr v-for="(device,index) in data" >
                                                 <td class="">
                                                     <div class="form-check form-check-sm form-check-custom form-check-solid">
-                                                        <input class="form-check-input" type="checkbox" v-model="deviceIds" :value="device.id" @change="updateDeviceCheckAll">
+                                                        <input class="form-check-input" type="checkbox" :disabled="permissionFields['plan_delete_device']==false"  v-model="deviceIds" :value="device.id" @change="updateDeviceCheckAll">
                                                     </div>
                                                 </td>
                                                 <td>{{index+1}}</td>
@@ -274,10 +296,12 @@
                                                     </a>
                                                     <div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-bold fs-7 w-180px py-4" data-kt-menu="true">
                                                         <div class="menu-item px-3">
-                                                            <a  class="menu-link px-3" @click="modalConfirmationCode(device)">Get confirmation code</a>
+                                                            <a v-if="permissionFields['plan_device_get_confirm_code']==false"   class="menu-link px-3 isDisabled">Get confirmation code</a>
+                                                            <a v-else class="menu-link px-3" @click="modalConfirmationCode(device)">Get confirmation code</a>
                                                         </div>
                                                         <div class="menu-item px-3">
-                                                            <a v-if="roleAuth=='Super Administrator'" class="menu-link text-danger px-3" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end" @click="removeDeviceModal(device.id)">Delete</a>
+                                                            <a v-if="permissionFields['plan_delete_device']==false" class="menu-link text-danger px-3 isDisabled" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end" @click="removeDeviceModal(device.id)">Delete</a>
+                                                            <a v-else class="menu-link text-danger px-3 " data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end" @click="removeDeviceModal(device.id)">Delete</a>
                                                         </div>
                                                     </div>
                                                 </td>
@@ -294,10 +318,20 @@
 
                                         <div id="kt_billing_year" class="card-body p-0 tab-pane fade"  role="tabpanel" aria-labelledby="kt_billing_year" >
                                             <div class="d-flex justify-content-end mb-4" >
-                                                <a v-if="viewLessonIds!='' && dataZipLesson.status=='waitting' && roleAuth=='Super Administrator'" class="btn btn-danger btn-sm mr-3" @click="deleteAllLesson" >Remove lesson</a>
+                                                <a v-if="dataTableLesson.checkRemoveLesson==1 && dataZipLesson.status=='waitting' && permissionFields['plan_remove_lesson']==true" class="btn btn-danger btn-sm mr-3" @click="deleteAllLesson" >Remove lesson</a>
+                                                <a v-if="dataTableLesson.checkRemoveLesson==1 && dataZipLesson.status=='waitting' && permissionFields['plan_remove_lesson']==false" class="btn btn-danger btn-sm mr-3 isDisabled" @click="deleteAllLesson" >Remove lesson</a>
                                              <a  v-if="dataZipLesson.status=='inprogress'"  class="mt-2 mr-5" style="color: rgb(230 180 0)"> Lesson list is packaging...</a>
-                                                <a  v-if="  dataZipLesson.status=='done'" :href="dataZipLesson.url" class="btn btn-primary btn-sm mr-3 "> Download package</a>
-                                                <a class="btn btn-light btn-active-light-primary btn-sm " data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end" >Actions
+                                                <a  v-if="  dataZipLesson.status=='done' && permissionFields['plan_download_package']==true" :href="dataZipLesson.url" class="btn btn-primary btn-sm mr-3 "> Download package</a>
+                                                <a  v-if="  dataZipLesson.status=='done' && permissionFields['plan_download_package']==false" :href="dataZipLesson.url" class="btn btn-primary btn-sm mr-3 isDisabled"> Download package</a>
+                                                <a v-if="dataZipLesson.status=='inprogress'" class="btn btn-light btn-active-light-primary btn-sm isDisabled" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end" >Actions
+                                                    <span class="svg-icon svg-icon-5 m-0">
+															<svg xmlns="http://www.w3.org/2000/svg" width="24"
+                                                                 height="24" viewBox="0 0 24 24" fill="none">
+																<path d="M11.4343 12.7344L7.25 8.55005C6.83579 8.13583 6.16421 8.13584 5.75 8.55005C5.33579 8.96426 5.33579 9.63583 5.75 10.05L11.2929 15.5929C11.6834 15.9835 12.3166 15.9835 12.7071 15.5929L18.25 10.05C18.6642 9.63584 18.6642 8.96426 18.25 8.55005C17.8358 8.13584 17.1642 8.13584 16.75 8.55005L12.5657 12.7344C12.2533 13.0468 11.7467 13.0468 11.4343 12.7344Z" fill="black"/>
+															</svg>
+                                                    </span>
+                                                </a>
+                                                <a v-else class="btn btn-light btn-active-light-primary btn-sm " data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end" >Actions
                                                     <span class="svg-icon svg-icon-5 m-0">
 															<svg xmlns="http://www.w3.org/2000/svg" width="24"
                                                                  height="24" viewBox="0 0 24 24" fill="none">
@@ -306,30 +340,43 @@
                                                     </span>
                                                 </a>
                                                 <div class="menu menu-sub menu-sub-dropdown  menu-rounded menu-gray-600 menu-state-bg-light-primary fw-bold fs-7 py-4" data-kt-menu="true" >
-                                                    <div class="menu-item px-3"  v-if="roleAuth=='Super Administrator' && dataZipLesson.status=='waitting'">
-                                                        <a class="menu-link px-3 " @click="addLessonPackage(tabLessonContent)" >Add lesson</a>
+                                                    <div class="menu-item px-3" >
+                                                        <a class="menu-link px-3 "  v-if="permissionFields['plan_add_lesson']==true && dataZipLesson.status=='waitting'" @click="addLessonPackage(tabLessonContent)" >Add lesson</a>
+                                                        <a class="menu-link px-3 isDisabled"  v-if="permissionFields['plan_add_lesson']==false && dataZipLesson.status=='waitting'" @click="addLessonPackage(tabLessonContent)" >Add lesson</a>
                                                     </div>
                                                     <div class="menu-item px-3" v-if="dataZipLesson.status=='waitting'">
-                                                        <a v-if="checkZipPackage[0].lessonIds.length>0" class="menu-link px-3" @click="downloadLesson(tabLessonContent)">Zip package lesson</a>
-                                                        <a v-else class="menu-link px-3 isDisabled" @click="downloadLesson(tabLessonContent)" >Zip package lesson</a>
+                                                        <a v-if="checkZipPackage[0].lessonIds.length>0 && permissionFields['plan_zip_package_lesson']==true" class="menu-link px-3" @click="downloadLesson(tabLessonContent)">Zip lesson package</a>
+                                                        <a v-else class="menu-link px-3 isDisabled">Zip lesson package</a>
                                                     </div>
-                                                    <div class="menu-item px-3"  v-if="roleAuth=='Super Administrator'">
-                                                        <a class="menu-link px-3 " @click="renameLessonPackage(tabLessonContent)" >Rename lesson package</a>
+                                                    <div class="menu-item px-3" >
+                                                        <a class="menu-link px-3 " v-if="permissionFields['plan_rename_lesson_package']==true" @click="renameLessonPackage(tabLessonContent)" >Rename lesson package</a>
+                                                        <a class="menu-link px-3 isDisabled" v-else @click="renameLessonPackage(tabLessonContent)" >Rename lesson package</a>
                                                     </div>
-                                                    <div class="menu-item px-3" v-if="roleAuth=='Super Administrator' && dataZipLesson.status=='done' ||  roleAuth=='Super Administrator' &&dataZipLesson.status=='waitting'">
-                                                        <a class="menu-link px-3 text-danger "  @click="deletePackageLessonModal(tabLessonContent)" >Delete package lesson</a>
+                                                    <div class="menu-item px-3" v-if="permissionFields['plan_delete_lesson_package']==true && dataZipLesson.status=='done' ||  permissionFields['plan_delete_lesson_package']==true &&dataZipLesson.status=='waitting'">
+                                                        <a class="menu-link px-3 text-danger "  @click="deletePackageLessonModal(tabLessonContent)" >Delete lesson package</a>
+                                                    </div>
+                                                    <div class="menu-item px-3" v-if="permissionFields['plan_delete_lesson_package']==false && dataZipLesson.status=='done' ||  permissionFields['plan_delete_lesson_package']==false &&dataZipLesson.status=='waitting'">
+                                                        <a class="menu-link px-3 text-danger isDisabled"  @click="deletePackageLessonModal(tabLessonContent)" >Delete lesson package</a>
                                                     </div>
                                                 </div>
 
                                             </div>
+                                           <div class="d-flex flex-stack pt-4 pl-9 pr-9">
+
+                            <div class="badge badge-lg badge-light-dark mb-15" style="margin-top:-65px;margin-left:-30px">
+                                <div class="d-flex align-items-center flex-wrap">
+                                   {{dataAddLessonPlan.length}} lesson
+                                </div>
+                            </div>
+                        </div>
                                             <div class="mh-650px scroll-y me-n7 pe-7">
                                                 <table class="table table-row-bordered align-middle gy-4 gs-9">
                                                     <thead class="border-bottom border-gray-200 fs-6 text-gray-600 fw-bolder bg-light bg-opacity-75">
                                                         <tr >
                                                             <td width="25">
                                                                 <div class="form-check form-check-sm form-check-custom form-check-solid">
-                                                                    <input v-if="dataZipLesson.status=='waitting'" class="form-check-input" type="checkbox" v-model="allViewLessonSelected" @change="selectViewLessonAll(tabLessonContent)" >
-                                                                    <input v-if="dataZipLesson.status!='waitting'" disabled class="form-check-input" type="checkbox" v-model="allViewLessonSelected" @change="selectViewLessonAll(tabLessonContent)" >
+                                                                    <input v-if="dataZipLesson.status=='waitting'" :disabled="permissionFields['plan_remove_lesson']==false" class="form-check-input" type="checkbox" v-model="allViewLessonSelected.allViewLessonSelected" @change="selectViewLessonAll(tabLessonContent)" >
+                                                                    <input v-if="dataZipLesson.status!='waitting'" disabled class="form-check-input" type="checkbox" v-model="allViewLessonSelected.allViewLessonSelected" @change="selectViewLessonAll(tabLessonContent)" >
                                                                 </div>
                                                             </td>
                                                             <td>No.</td>
@@ -339,13 +386,12 @@
                                                             <th class="">Actions</th>
                                                         </tr>
                                                     </thead>
-                                                    <tbody v-for="lessonPackagePlan in lessonPackagePlans" v-if="lessonPackagePlan.package_id==tabLessonContent">
+                                                    <tbody >
                                                         <tr v-for="(lesson,index) in dataAddLessonPlan" >
                                                             <td class="">
                                                                 <div class="form-check form-check-sm form-check-custom form-check-solid">
-                                                                    <input v-if="dataZipLesson.status=='waitting'" class="form-check-input" type="checkbox" v-model="viewLessonIds" :value="lesson.id" @change="updateViewLessonCheckAll()">
-                                                                    <input v-if="dataZipLesson.status!='waitting'" disabled class="form-check-input" type="checkbox" v-model="viewLessonIds" :value="lesson.id" @change="updateViewLessonCheckAll()">
-
+                                                                    <input v-if="dataZipLesson.status=='waitting'" :disabled="permissionFields['plan_remove_lesson']==false" class="form-check-input" type="checkbox" v-model="dataTableLesson.viewLesson" :value="lesson.id" @change="updateViewLessonCheckAll()">
+                                                                    <input v-if="dataZipLesson.status!='waitting'" disabled class="form-check-input" type="checkbox" v-model="dataTableLesson.viewLesson" :value="lesson.id" @change="updateViewLessonCheckAll()">
                                                                 </div>
                                                             </td>
                                                             <td>{{index+1}}</td>
@@ -353,7 +399,9 @@
                                                             <td>{{lesson.grade}}</td>
                                                             <td>{{lesson.subject}}</td>
                                                             <td class="">
-                                                                <a v-if="dataZipLesson.status=='waitting'" class="btn btn-active-danger btn-light-danger btn-sm" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end" @click="deleteLessonModal(lesson.id)">Delete</a>
+<!--                                                                <a v-if="dataZipLesson.status=='waitting' && permissionFields['plan_remove_lesson']==true"  class="btn btn-active-danger btn-light-danger btn-sm" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end" @click="deleteLessonModal(lesson.id)">Delete</a>-->
+<!--                                                                <a v-if="dataZipLesson.status=='waitting' && permissionFields['plan_remove_lesson']==false"  class="btn btn-active-danger btn-light-danger btn-sm isDisabled" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end" @click="deleteLessonModal(lesson.id)">Delete</a>-->
+                                                                <button v-if="dataZipLesson.status=='waitting'" :disabled="permissionFields['plan_remove_lesson']==false"  class="btn btn-active-danger btn-light-danger btn-sm"  @click="deleteLessonModal(lesson.id)">Delete</button>
                                                             </td>
                                                         </tr>
                                                     </tbody>
@@ -368,7 +416,7 @@
 
                     <div class="mt-3 mb-5" style="margin-left: 18px">
                         <button type="reset" @click="save()" class="btn btn-primary mr-2">Save plan</button>
-                        <button type="reset" class="btn btn-primary mr-2" @click="exportPlan"><i
+                        <button :disabled="permissionFields['plan_export_plan']==false" type="reset" class="btn btn-primary mr-2" @click="exportPlan"><i
                             class="bi bi-arrow-up-square-fill"></i>Export plan
                         </button>
                         <button type="reset" @click="backIndex()" class="btn btn-secondary"
@@ -431,6 +479,7 @@
                         <error-label for="f_category_id" :errors="errors.deviceName"></error-label>
                         <input type="text" class="form-control " placeholder="Enter the register code" aria-label="" aria-describedby="basic-addon1" v-model="deviceUid">
                         <error-label for="f_category_id" :errors="errors.deviceUid"></error-label>
+                        <error-label for="f_category_id" :errors="errors.device_uid"></error-label>
                     </div>
                     <div class="form-group d-flex justify-content-center">
                         <!--                        <button  class="btn btn-danger ito-btn-small" data-dismiss="modal" @click="save()">Add now</button>-->
@@ -446,230 +495,279 @@
         <!-- end: modal add device-->
 
         <!-- BEGIN: MODAL IMPPORT DEVICE -->
-        <div class="modal fade" id="kt_modal_create_app" tabindex="-1" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered mw-900px">
-                <div class="modal-content">
-                           <div class="text-center mt-10">
-                               <h2>Import devices</h2>
-                           </div>
-<!--                            <span class="svg-icon svg-icon-1">-->
-<!--								<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"-->
-<!--                                     fill="none">-->
-<!--									<rect opacity="0.5" x="6" y="17.3137" width="16" height="2" rx="1"-->
-<!--                                          transform="rotate(-45 6 17.3137)" fill="black"/>-->
-<!--									<rect x="7.41422" y="6" width="16" height="2" rx="1"-->
-<!--                                          transform="rotate(45 7.41422 6)" fill="black"/>-->
-<!--								</svg>-->
-<!--							</span>-->
-<!--                        </div>-->
 
-
-                    <div class="modal-body py-lg-10 px-lg-10">
-                        <div class="stepper stepper-pills stepper-column d-flex flex-column flex-xl-row flex-row-fluid"
-                             id="kt_modal_create_app_stepper">
-                            <div
-                                class="d-flex justify-content-center justify-content-xl-start flex-row-auto w-100 w-xl-300px">
-                                <div class="stepper-nav ps-lg-10">
-                                    <div class="stepper-item " data-kt-stepper-element="nav">
-                                        <div class="stepper-line w-40px"></div>
-                                        <div class="stepper-icon w-40px h-40px">
-                                            <i class="stepper-check fas fa-check"></i>
-                                            <span class="stepper-number">1</span>
-                                        </div>
-                                        <div class="stepper-label">
-                                            <h3 class="stepper-title">Upload file</h3>
-                                        </div>
-                                    </div>
-                                    <div class="stepper-item" data-kt-stepper-element="nav">
-                                        <div class="stepper-line w-40px"></div>
-                                        <div class="stepper-icon w-40px h-40px">
-                                            <i class="stepper-check fas fa-check"></i>
-                                            <span class="stepper-number">2</span>
-                                        </div>
-                                        <div class="stepper-label">
-                                            <h3 class="stepper-title">Validation</h3>
-                                        </div>
-                                    </div>
-                                    <div class="stepper-item" data-kt-stepper-element="nav">
-                                        <div class="stepper-line w-40px"></div>
-                                        <div class="stepper-icon w-40px h-40px">
-                                            <i class="stepper-check fas fa-check"></i>
-                                            <span class="stepper-number">3</span>
-                                        </div>
-                                        <div class="stepper-label">
-                                            <h3 class="stepper-title">Import process</h3>
-                                        </div>
-                                    </div>
-                                    <div class="stepper-item" data-kt-stepper-element="nav">
-                                        <div class="stepper-line w-40px"></div>
-                                        <div class="stepper-icon w-40px h-40px">
-                                            <i class="stepper-check fas fa-check"></i>
-                                            <span class="stepper-number">4</span>
-                                        </div>
-                                        <div class="stepper-label">
-                                            <h3 class="stepper-title">Completed</h3>
-                                        </div>
-                                    </div>
+        <div class="post d-flex flex-column-fluid" id="kt_post">
+            <div id="kt_content_container" class="container-xxl">
+                <div class="modal fade" id="kt_modal_create_app" tabindex="-1" aria-hidden="true">
+                    <!--begin::Modal dialog-->
+                    <div class="modal-dialog modal-dialog-centered mw-900px">
+                        <!--begin::Modal content-->
+                        <div class="modal-content">
+                            <!--begin::Modal header-->
+                            <div class="modal-header">
+                                <!--begin::Modal title-->
+                                <h2>Import device</h2>
+                                <!--end::Modal title-->
+                                <!--begin::Close-->
+                                <div class="btn btn-sm btn-icon btn-active-color-primary" data-bs-dismiss="modal">
+                                    <!--begin::Svg Icon | path: icons/duotune/arrows/arr061.svg-->
+                                    <span class="svg-icon svg-icon-1">
+														<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+															<rect opacity="0.5" x="6" y="17.3137" width="16" height="2" rx="1" transform="rotate(-45 6 17.3137)" fill="black" />
+															<rect x="7.41422" y="6" width="16" height="2" rx="1" transform="rotate(45 7.41422 6)" fill="black" />
+														</svg>
+													</span>
+                                    <!--end::Svg Icon-->
                                 </div>
+                                <!--end::Close-->
                             </div>
-                            <div class="flex-row-fluid py-lg-5 px-lg-15">
-                                <form class="form" novalidate="novalidate" id="kt_modal_create_app_form">
-                                    <div class="current" data-kt-stepper-element="content">
-                                        <div class="w-100">
-                                            <div class="fv-row mb-10">
-                                                <div  class="dropzone dropzone-queue mb-2 ">
-                                                    <label v-if="valueValidateImportDevice==0"  for="file-upload" class="btn btn-primary btn-active-primary btn-sm">
-                                                        Upload file
-                                                    </label>
-                                                    <label v-if="valueValidateImportDevice==0">Click to select file (*.xls, *.xlsx). Max file size is 5Mb</label>
-                                                    <label v-if="valueValidateImportDevice!=0"  >
-                                                        Validation result
-                                                    </label>
-<!--                                                    <button for="file-upload" class="btn btn-primary" > Upload file</button>-->
-                                                    <input type="file" id="file-upload" ref="uploader" class="form-control-file" @change="importFileDevice">
-                                                    <error-label></error-label>
-                                                    <div class="dropzone-items wm-200px"></div>
-
-                                                    <div class="dropzone-item p-5" v-if="fileUpLoad!=''">
-                                                        <!--begin::File-->
-                                                        <div class="dropzone-file">
-                                                            <div class="dropzone-filename text-dark" title="some_image_file_name.jpg">
-                                                                <span data-dz-name="">{{fileUpLoad}}</span>
-                                                                <strong>(
-                                                                    <span data-dz-size="">{{sizeFile}}</span>)</strong>
-                                                            </div>
-                                                            <div class="dropzone-error mt-0" data-dz-errormessage=""></div>
-                                                        </div>
-                                                        <!--end::File-->
-                                                        <!--begin::Progress-->
-<!--                                                        <div class="dropzone-progress">-->
-<!--                                                            <div class="progress bg-light-primary">-->
-<!--                                                                <div class="progress-bar bg-primary" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" data-dz-uploadprogress=""></div>-->
-<!--                                                            </div>-->
-<!--                                                        </div>-->
-                                                        <!--end::Progress-->
-                                                        <!--begin::Toolbar-->
-                                                        <div class="dropzone-toolbar">
-																		<span class="dropzone-start">
-																			<i class="bi bi-play-fill fs-3" @click="saveValidateImportDevice"></i>
-																		</span>
-<!--                                                            <span class="dropzone-cancel" data-dz-remove="" style="display: none;">-->
-<!--																			<i class="bi bi-x fs-3"></i>-->
-<!--																		</span>-->
-                                                            <span class="dropzone-delete" data-dz-remove="">
-																			<i class="bi bi-x fs-1" @click="removeFileDevice"></i>
-																		</span>
-                                                        </div>
-                                                        <!--end::Toolbar-->
-                                                    </div>
+                            <!--end::Modal header-->
+                            <!--begin::Modal body-->
+                            <div class="modal-body py-lg-10 px-lg-10">
+                                <!--begin::Stepper-->
+                                <div class="stepper stepper-pills stepper-column d-flex flex-column flex-xl-row flex-row-fluid" id="kt_modal_create_app_stepper">
+                                    <!--begin::Aside-->
+                                    <div class="d-flex justify-content-center justify-content-xl-start flex-row-auto w-100 w-xl-300px">
+                                        <!--begin::Nav-->
+                                        <div class="stepper-nav ps-lg-10">
+                                            <!--begin::Step 1-->
+                                            <div class="stepper-item current" data-kt-stepper-element="nav">
+                                                <!--begin::Line-->
+                                                <div class="stepper-line w-40px"></div>
+                                                <!--end::Line-->
+                                                <!--begin::Icon-->
+                                                <div class="stepper-icon w-40px h-40px">
+                                                    <i class="stepper-check fas fa-check"></i>
+                                                    <span class="stepper-number">1</span>
                                                 </div>
-                                                <div v-if="valueValidateImportDevice==0" class="dropzone-panel mb-4  ">
-                                                   <a class="btn btn-light btn-active-light-primary btn-sm" data-kt-menu-trigger="click" @click="downloadTemplate()" ><i class="bi bi-download mr-2"></i>Download template here</a>
-
+                                                <!--end::Icon-->
+                                                <!--begin::Label-->
+                                                <div class="stepper-label">
+                                                    <h3 class="stepper-title">Upload file</h3>
                                                 </div>
-
-                                                <div v-if="valueValidateImportDevice!=0" class="d-flex flex-stack py-5 border-bottom border-gray-300 border-bottom-dashed">
-                                                    <div class="d-flex align-items-center">
-                                                        <div class="ms-6">
-
-                                                            <div class="fw-bold text-muted">{{fileImport.length}} new
-                                                                record(s)
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="d-flex">
-                                                        <div class="text-end">
-                                                          	<span class="form-check form-check-custom form-check-solid">
-                                                                <input class="form-check-input" type="radio" name="category" value="0" v-model="doNotImport"/>
-                                                                <label style="margin: 0px 10px 0px">Import</label>
-                                                                <input class="form-check-input" type="radio"
-                                                                       name="category" value="1" v-model="doNotImport"/>
-                                                                <label style="margin: 0px 10px 0px"> Do not import </label>
-                                                            </span>
-                                                        </div>
-                                                    </div>
-                                                </div>
-
+                                                <!--end::Label-->
                                             </div>
-
-                                            <div v-if="valueValidateImportDevice!=0"
-                                                class="d-flex flex-stack py-5 border-bottom border-gray-300 border-bottom-dashed">
-                                                <div class="d-flex align-items-center">
-                                                    <div class="ms-6">
-
-                                                        <div class="fw-bold text-muted">{{deviceError.length}} error
-                                                            record(s)
-                                                        </div>
-                                                    </div>
+                                            <!--end::Step 1-->
+                                            <!--begin::Step 2-->
+                                            <div class="stepper-item" data-kt-stepper-element="nav">
+                                                <!--begin::Line-->
+                                                <div class="stepper-line w-40px"></div>
+                                                <!--end::Line-->
+                                                <!--begin::Icon-->
+                                                <div class="stepper-icon w-40px h-40px">
+                                                    <i class="stepper-check fas fa-check"></i>
+                                                    <span class="stepper-number">2</span>
                                                 </div>
-                                                <div class="d-flex" v-if="deviceError.length>0">
-                                                    <div class="text-end">
-                                                        <div class="fs-7 text-muted">
-                                                        <a :href="validateFile" type="button" class="btn btn-primary">Export</a>
-                                                        </div>
-                                                    </div>
+                                                <!--begin::Icon-->
+                                                <!--begin::Label-->
+                                                <div class="stepper-label">
+                                                    <h3 class="stepper-title">Validation</h3>
+                                                </div>
+                                                <!--begin::Label-->
+                                            </div>
+                                            <!--end::Step 2-->
+                                            <!--begin::Step 3-->
+                                            <div class="stepper-item" data-kt-stepper-element="nav">
+                                                <!--begin::Line-->
+                                                <div class="stepper-line w-40px"></div>
+                                                <!--end::Line-->
+                                                <!--begin::Icon-->
+                                                <div class="stepper-icon w-40px h-40px">
+                                                    <i class="stepper-check fas fa-check"></i>
+                                                    <span class="stepper-number">3</span>
+                                                </div>
+                                                <!--end::Icon-->
+                                                <!--begin::Label-->
+                                                <div class="stepper-label">
+                                                    <h3 class="stepper-title">Completed</h3>
                                                 </div>
                                             </div>
                                         </div>
-
+                                        <!--end::Nav-->
                                     </div>
+                                    <!--begin::Aside-->
+                                    <!--begin::Content-->
+                                    <div class="flex-row-fluid py-lg-5 px-lg-15">
+                                        <!--begin::Form-->
+                                        <form class="form" novalidate="novalidate" id="kt_modal_create_app_form">
+                                            <!--begin::Step 1-->
+                                            <div class="current" data-kt-stepper-element="content">
+                                                <div class="w-100">
+                                                    <!--begin::Input group-->
+                                                    <div class="fv-row mb-10">
+                                                        <div  class="dropzone dropzone-queue mb-2 ">
+                                                            <label   for="file-upload" class="btn btn-primary btn-active-primary btn-sm">
+                                                                Upload file
+                                                            </label>
+                                                            <label >Click to select file (*.xls, *.xlsx). Max file size is 5Mb</label>
+                                                            <!--                                                    <button for="file-upload" class="btn btn-primary" > Upload file</button>-->
+                                                            <input type="file" id="file-upload" ref="uploader" class="form-control-file" @change="importFileDevice">
+                                                            <error-label></error-label>
+                                                            <div class="dropzone-items wm-200px"></div>
 
-                                    <div class="d-flex flex-stack pt-10" v-if="valueValidateImportDevice!=0">
-                                        <div class="me-2">
-                                            <button type="button" class="btn btn-lg btn-light-primary me-3"
-                                                    data-kt-stepper-action="previous">
-                                                <span class="svg-icon svg-icon-3 me-1">
-												<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                                     viewBox="0 0 24 24" fill="none">
-													<rect opacity="0.5" x="6" y="11" width="13" height="2" rx="1"
-                                                          fill="black"/>
-													<path
-                                                        d="M8.56569 11.4343L12.75 7.25C13.1642 6.83579 13.1642 6.16421 12.75 5.75C12.3358 5.33579 11.6642 5.33579 11.25 5.75L5.70711 11.2929C5.31658 11.6834 5.31658 12.3166 5.70711 12.7071L11.25 18.25C11.6642 18.6642 12.3358 18.6642 12.75 18.25C13.1642 17.8358 13.1642 17.1642 12.75 16.75L8.56569 12.5657C8.25327 12.2533 8.25327 11.7467 8.56569 11.4343Z"
-                                                        fill="black"/>
-												</svg>
-											</span>
-                                                Back
-                                            </button>
-                                        </div>
-                                        <div>
-                                            <button type="button" class="btn btn-lg btn-primary"
-                                                    data-kt-stepper-action="submit">
-												<span class="indicator-label">Submit
-												<span class="svg-icon svg-icon-3 ms-2 me-0">
-													<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                                         viewBox="0 0 24 24" fill="none">
-														<rect opacity="0.5" x="18" y="13" width="13" height="2" rx="1"
-                                                              transform="rotate(-180 18 13)" fill="black"/>
-														<path
-                                                            d="M15.4343 12.5657L11.25 16.75C10.8358 17.1642 10.8358 17.8358 11.25 18.25C11.6642 18.6642 12.3358 18.6642 12.75 18.25L18.2929 12.7071C18.6834 12.3166 18.6834 11.6834 18.2929 11.2929L12.75 5.75C12.3358 5.33579 11.6642 5.33579 11.25 5.75C10.8358 6.16421 10.8358 6.83579 11.25 7.25L15.4343 11.4343C15.7467 11.7467 15.7467 12.2533 15.4343 12.5657Z"
-                                                            fill="black"/>
-													</svg>
-												</span>
-                                                  </span>
-                                                <span class="indicator-progress">Please wait...
-												<span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
-                                            </button>
-                                            <button type="button" class="btn btn-lg btn-primary"
-                                                    data-kt-stepper-action="next" @click="saveImport">Continue
-                                                <span class="svg-icon svg-icon-3 ms-1 me-0">
-												<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                                     viewBox="0 0 24 24" fill="none">
-													<rect opacity="0.5" x="18" y="13" width="13" height="2" rx="1"
-                                                          transform="rotate(-180 18 13)" fill="black"/>
-													<path
-                                                        d="M15.4343 12.5657L11.25 16.75C10.8358 17.1642 10.8358 17.8358 11.25 18.25C11.6642 18.6642 12.3358 18.6642 12.75 18.25L18.2929 12.7071C18.6834 12.3166 18.6834 11.6834 18.2929 11.2929L12.75 5.75C12.3358 5.33579 11.6642 5.33579 11.25 5.75C10.8358 6.16421 10.8358 6.83579 11.25 7.25L15.4343 11.4343C15.7467 11.7467 15.7467 12.2533 15.4343 12.5657Z"
-                                                        fill="black"/>
-												</svg>
-											</span>
-                                            </button>
-                                        </div>
+                                                            <div class="dropzone-item p-5" v-if="fileUpLoad!=''">
+                                                                <!--begin::File-->
+                                                                <div class="dropzone-file">
+                                                                    <div class="dropzone-filename text-dark" title="some_image_file_name.jpg">
+                                                                        <span data-dz-name="">{{fileUpLoad}}</span>
+                                                                        <strong>(
+                                                                            <span data-dz-size="">{{sizeFile}}</span>)</strong>
+                                                                    </div>
+                                                                    <div class="dropzone-error mt-0" data-dz-errormessage=""></div>
+                                                                </div>
+                                                                <!--end::File-->
+                                                                <!--begin::Progress-->
+                                                                <!--                                                        <div class="dropzone-progress">-->
+                                                                <!--                                                            <div class="progress bg-light-primary">-->
+                                                                <!--                                                                <div class="progress-bar bg-primary" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" data-dz-uploadprogress=""></div>-->
+                                                                <!--                                                            </div>-->
+                                                                <!--                                                        </div>-->
+                                                                <!--end::Progress-->
+                                                                <!--begin::Toolbar-->
+                                                                <div class="dropzone-toolbar">
+                                                                    <span class="dropzone-delete" data-dz-remove="">
+																			<i style="font-size: 15px; color: red" class="bi bi-trash" @click="removeFileDevice"></i>
+																		</span>
+                                                                </div>
+                                                                <!--end::Toolbar-->
+                                                            </div>
+                                                        </div>
+                                                        <div v-if="valueValidateImportDevice==0" class="dropzone-panel mb-4  ">
+                                                            <a class="btn btn-light btn-active-light-primary btn-sm" data-kt-menu-trigger="click" @click="downloadTemplate()" ><i class="bi bi-download mr-2"></i>Download template here</a>
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <!--end::Step 1-->
+                                            <!--begin::Step 2-->
+                                            <div data-kt-stepper-element="content">
+                                                <div class="w-100">
+                                                    <!--begin::Input group-->
+                                                    <div class="fv-row">
+                                                        <!--begin::Label-->
+                                                        <label class="d-flex align-items-center fs-5 fw-bold mb-4">
+                                                            <span class="required">Validation result</span>
+                                                            <i class="fas fa-exclamation-circle ms-2 fs-7" data-bs-toggle="tooltip" title="validation result"></i>
+                                                        </label>
+                                                    </div>
+                                                    <div v-if="valueValidateImportDevice!=0" class="d-flex flex-stack py-5 border-bottom border-gray-300 border-bottom-dashed">
+                                                        <div class="d-flex align-items-center">
+                                                            <div class="ms-6">
+
+                                                                <div class="fw-bold text-muted">{{fileImport.length}} new
+                                                                    record(s)
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="d-flex">
+                                                            <div class="text-end">
+                                                                <span class="form-check form-check-custom form-check-solid">
+                                                                    <input class="form-check-input" type="radio" name="category" value="0" v-model="doNotImport"/>
+                                                                    <label style="margin: 0px 10px 0px">Import</label>
+                                                                    <input class="form-check-input" type="radio"
+                                                                           name="category" value="1" v-model="doNotImport"/>
+                                                                    <label style="margin: 0px 10px 0px"> Do not import </label>
+                                                                </span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div v-if="valueValidateImportDevice!=0"
+                                                         class="d-flex flex-stack py-5 border-bottom border-gray-300 border-bottom-dashed">
+                                                        <div class="d-flex align-items-center">
+                                                            <div class="ms-6">
+
+                                                                <div class="fw-bold text-muted">{{deviceError.length}} error
+                                                                    record(s)
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="d-flex" v-if="deviceError.length>0">
+                                                            <div class="text-end">
+                                                                <div class="fs-7 text-muted">
+                                                                    <a @click="exportDeviceError" type="button" class="btn btn-primary">Export</a>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <!--end::Input group-->
+                                                </div>
+                                            </div>
+                                            <!--end::Step 2-->
+                                            <!--begin::Step 3-->
+                                            <div data-kt-stepper-element="content">
+                                                <div class="w-100">
+                                                    <!--begin::Input group-->
+                                                    <div class="fv-row mb-10">
+                                                        <!--begin::Label-->
+                                                        <label class="required fs-5 fw-bold mb-2"  v-if="doNotImport==1"  >Imported unsuccessful!</label>
+                                                        <label class="required fs-5 fw-bold mb-2" v-if="doNotImport==0">Imported successful!</label>
+                                                    </div>
+                                                    <!--end::Input group-->
+                                                    <!--begin::Input group-->
+                                                    <div class="fv-row">
+                                                    <label v-if="doNotImport==0">{{fileImport.length}} new record(s) imported</label>
+                                                        <label v-if="doNotImport==1">{{deviceError.length}} new record(s) do not imported</label>
+                                                    </div>
+                                                    <!--end::Input group-->
+                                                </div>
+                                            </div>
+                                            <div class="d-flex flex-stack pt-10">
+                                                <!--begin::Wrapper-->
+                                                <div class="me-2">
+                                                    <button type="button" class="btn btn-lg btn-light-primary me-3" data-kt-stepper-action="previous">
+                                                        <!--begin::Svg Icon | path: icons/duotune/arrows/arr063.svg-->
+                                                        <span class="svg-icon svg-icon-3 me-1">
+																		<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+																			<rect opacity="0.5" x="6" y="11" width="13" height="2" rx="1" fill="black" />
+																			<path d="M8.56569 11.4343L12.75 7.25C13.1642 6.83579 13.1642 6.16421 12.75 5.75C12.3358 5.33579 11.6642 5.33579 11.25 5.75L5.70711 11.2929C5.31658 11.6834 5.31658 12.3166 5.70711 12.7071L11.25 18.25C11.6642 18.6642 12.3358 18.6642 12.75 18.25C13.1642 17.8358 13.1642 17.1642 12.75 16.75L8.56569 12.5657C8.25327 12.2533 8.25327 11.7467 8.56569 11.4343Z" fill="black" />
+																		</svg>
+																	</span>
+                                                        <!--end::Svg Icon-->Back</button>
+                                                </div>
+                                                <!--end::Wrapper-->
+                                                <!--begin::Wrapper-->
+                                                <div>
+                                                    <button type="button" class="btn btn-lg btn-primary" data-kt-stepper-action="submit" @click="saveImport()">
+																		<span class="indicator-label">Submit
+                                                                            <!--begin::Svg Icon | path: icons/duotune/arrows/arr064.svg-->
+																		<span class="svg-icon svg-icon-3 ms-2 me-0">
+																			<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+																				<rect opacity="0.5" x="18" y="13" width="13" height="2" rx="1" transform="rotate(-180 18 13)" fill="black" />
+																				<path d="M15.4343 12.5657L11.25 16.75C10.8358 17.1642 10.8358 17.8358 11.25 18.25C11.6642 18.6642 12.3358 18.6642 12.75 18.25L18.2929 12.7071C18.6834 12.3166 18.6834 11.6834 18.2929 11.2929L12.75 5.75C12.3358 5.33579 11.6642 5.33579 11.25 5.75C10.8358 6.16421 10.8358 6.83579 11.25 7.25L15.4343 11.4343C15.7467 11.7467 15.7467 12.2533 15.4343 12.5657Z" fill="black" />
+																			</svg>
+																		</span>
+                                                                          </span>
+                                                    </button>
+                                                    <button type="button" class="btn btn-lg btn-primary" data-kt-stepper-action="next" @click="continueImportDevice()" :disabled="disableContinue==false">Continue
+                                                        <!--begin::Svg Icon | path: icons/duotune/arrows/arr064.svg-->
+                                                        <span class="svg-icon svg-icon-3 ms-1 me-0">
+																		<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+																			<rect opacity="0.5" x="18" y="13" width="13" height="2" rx="1" transform="rotate(-180 18 13)" fill="black" />
+																			<path d="M15.4343 12.5657L11.25 16.75C10.8358 17.1642 10.8358 17.8358 11.25 18.25C11.6642 18.6642 12.3358 18.6642 12.75 18.25L18.2929 12.7071C18.6834 12.3166 18.6834 11.6834 18.2929 11.2929L12.75 5.75C12.3358 5.33579 11.6642 5.33579 11.25 5.75C10.8358 6.16421 10.8358 6.83579 11.25 7.25L15.4343 11.4343C15.7467 11.7467 15.7467 12.2533 15.4343 12.5657Z" fill="black" />
+																		</svg>
+																	</span>
+                                                        <!--end::Svg Icon--></button>
+                                                </div>
+                                                <!--end::Wrapper-->
+                                            </div>
+                                            <!--end::Actions-->
+                                        </form>
+                                        <!--end::Form-->
                                     </div>
-                                </form>
+                                    <!--end::Content-->
+                                </div>
+                                <!--end::Stepper-->
                             </div>
+                            <!--end::Modal body-->
                         </div>
+                        <!--end::Modal content-->
                     </div>
+                    <!--end::Modal dialog-->
                 </div>
+                <!--end::Modal - Create App-->
             </div>
+            <!--end::Container-->
         </div>
 
         <!-- END : MOADAL IMPORT DEVIVE -->
@@ -835,6 +933,10 @@
             };
 
             return {
+                disableContinue:false,
+                cachePlan:$json.cachePlan,
+                cacheLesson:$json.cacheLesson,
+                permissionFields:$json.permissionFields || [],
                 deviceGetCode:[],
                 token:'',
                 deletePack:'',
@@ -854,7 +956,7 @@
                 lessons: [],
                 viewPackage: this.viewPackage,
                 packagePlan: $json.packagePlan,
-                package: '',
+                package: [],
                 idListDevice: [],
                 nameSchool: $json.nameSchool || [],
                 schoolPlan: $json.schoolPlan || [],
@@ -862,10 +964,10 @@
                 schools: $json.schools || [],
                 exportDevicePlan: '',
                 lessonPackagePlans: $json.lessonPackagePlans,
+                dataTableLesson:[],
                 data: $json.data || [],
-                allLessonSelected: false,
                 allDeviceSelected:false,
-                allViewLessonSelected:false,
+                allViewLessonSelected:[],
                 filter: filter,
                 entries: [],
                 doNotImport:0,
@@ -881,7 +983,7 @@
                 roleIt: $json.roleIt || [],
                 breadcrumbs: [
                     {
-                        title: 'Manage plans',
+                        title: 'Plan management',
                         url: '/xadmin/plans/index'
                     },
                     {
@@ -904,6 +1006,8 @@
                 improgress:'',
                 abc:'',
                 checkZipPackage:[],
+                errorDeviceName:'',
+                exportDeviceName:$json.exportDeviceName
 
             }
         },
@@ -911,13 +1015,27 @@
         mounted() {
             $router.on('/', this.load).init();
         },
-
         methods: {
+            cancelModalLesson()
+            {
+                $('#kt_modal_invite').modal('hide');
+
+                $('#cancelModal').modal('show');
+            },
+            cancelModalYes()
+            {
+                $('#kt_modal_invite').modal('hide');
+                $('#cancelModal').modal('hide');
+            },
+            cancelModalNo()
+            {
+                $('#cancelModal').modal('hide');
+                $('#kt_modal_invite').modal('show');
+            },
             modalConfirmationCode:function(device=[])
             {
                 $('#editdeviceConfirm').modal('show');
                 this.deviceGetCode=device;
-                console.log(this.deviceGetCode);
 
             },
             deviceExpireDateClear()
@@ -949,7 +1067,6 @@
                 let self=this;
                 let pack= self.lessonPackagePlans.filter(item =>item.package_id==rename);
                 self.packageLessonName=pack[0].name;
-                console.log(self.packageLessonName);
             },
             deleteLessonModal:function(deleteIdLesson='')
             {
@@ -965,27 +1082,38 @@
             tabPackageLesson: function (tabPackage = '') {
                 $('#kt_billing_year').show();
                 this.tabLessonContent = tabPackage;
+                this.load();
                 let self = this;
                 self.checkZipPackage=[];
                 let dataPackage=self.lessonPackagePlans.filter(item =>item.package_id==tabPackage);
                self.checkZipPackage.push(dataPackage[0]);
-                for(const e of self.lessonPackagePlans)
-                {
-                    if(e.package_id==tabPackage)
-                    {
-                          self.dataAddLessonPlan=[];
-                        for(const e1 of e.lessonIds )
-                        {
-                          let data= self.entries.filter(item =>item.id==e1) ;
-                          for(const e2 of data)
-                        {
-                             self.dataAddLessonPlan.push(e2);
-                        }
-                        }
-                    }
+
+               // code select lesson
+                this.allViewLessonSelected={
+                    'allViewLessonSelected':false,
+                    'tabPackage':tabPackage
                 }
 
+               setTimeout(function(){
+                   $.get('/xadmin/plans/dataPackage',function(res)
+                   {
+                    self.dataTableLesson=res.data.filter(item => item.id==tabPackage);
+                       let viewLesson=[];
+                       let checkRemoveLesson=0;
+                       self.dataTableLesson=self.dataTableLesson.map(abc => {
 
+                       return {
+                           'id':abc.id,
+                           'name':abc.name,
+                           'plan_id':abc.plan_id,
+                           'lesson_ids':abc.lesson_ids,
+                           'viewLesson':viewLesson,
+                           'checkRemoveLesson':checkRemoveLesson,
+                       }
+                    })
+                       self.dataTableLesson= self.dataTableLesson[0];
+                   })
+               },0)
                setTimeout(function () {
                     $.get('/xadmin/plans/dataZipLessonPlan',function (res) {
                         let array=res.data.filter(item => item.plan_id==self.entry.id);
@@ -1003,68 +1131,108 @@
             },
             addLessonPackage: function (tabLessonContent = '') {
                 $('#kt_modal_invite').modal('show');
-                this.package = tabLessonContent;
+                this.package=
+                    {
+                        allLessonSelected:false,
+                        package:tabLessonContent
+                    };
+
+            },
+            continueImportDevice()
+            {
             },
         // xoa lesson theo từng id
             async deleteLesson(deleteLessons) {
                 let self = this;
-                for (const e of self.lessonPackagePlans) {
-                    if (e.package_id == self.tabLessonContent) {
-                        let array = e.lessonIds.filter(item => item !== deleteLessons);
-                        e.lessonIds = array;
-                        let packageLesson = e.lessonIds
-                        const res = await $post('/xadmin/plans/deleteLesson', {
-                            packageLesson,
-                            entry: self.entry,
-                            viewPackage: self.tabLessonContent
-                        });
-                        if (res.code) {
-                            toastr.error(res.message);
-                        } else {
-                            toastr.success(res.message);
-                            self.dataAddLessonPlan= self.dataAddLessonPlan.filter(item => item.id !==deleteLessons);
-                            $('#deleteLesson').modal('hide');
-                        }
-                    }
+               let packageLesson= self.dataTableLesson.lesson_ids.filter(item => item !==deleteLessons)
+
+                const res = await $post('/xadmin/plans/deleteLesson', {
+                    packageLesson,
+                    entry: self.entry,
+                    viewPackage: self.tabLessonContent
+                });
+
+                if (res.code) {
+                    toastr.error(res.message);
+                } else {
+                    toastr.success(res.message);
+                    // code return lai o checkbox trong add lessonPackage khi xoa 1 lesson o tabLesson
+
+                    let datalessonPackagePlan=self.lessonPackagePlans.filter(item => item.package_id==self.tabLessonContent);
+                    datalessonPackagePlan=datalessonPackagePlan[0];
+                    let concat=(packageLesson.concat(datalessonPackagePlan.lessonIds));
+                    let dataUpdate=concat.filter((a,index)=> concat.indexOf(a)==concat.lastIndexOf(a));
+                    dataUpdate=dataUpdate[0];
+                    datalessonPackagePlan.lessonIds=datalessonPackagePlan.lessonIds.filter(item => item !=dataUpdate);
+
+                    // end
+
+                    self.dataAddLessonPlan= self.dataAddLessonPlan.filter(item => item.id !==deleteLessons);
+                    $('#deleteLesson').modal('hide');
+                    $.get('/xadmin/plans/dataPackage',function(res)
+                    {
+                        self.dataTableLesson=res.data.filter(item => item.id==self.tabLessonContent);
+                        let viewLesson=[];
+                        let checkRemoveLesson=0;
+                        self.dataTableLesson=self.dataTableLesson.map(abc => {
+
+                            return {
+                                'id':abc.id,
+                                'name':abc.name,
+                                'plan_id':abc.plan_id,
+                                'lesson_ids':abc.lesson_ids,
+                                'viewLesson':viewLesson,
+                                'checkRemoveLesson':checkRemoveLesson,
+                            }
+                        })
+                        self.dataTableLesson= self.dataTableLesson[0];
+                    })
                 }
+
             },
             // dung select để xóa lesson view
             async deleteAllLesson()
             {
                         let self=this;
-                        self.abc=[];
+
                         // lấy Id của lesson cập nhật lại vào bảng package lesson
-                        let array=self.lessonPackagePlans.filter(item => item.package_id==self.tabLessonContent);
-                                self.viewLessonIds.forEach(function (e1) {
+               let concatArr=self.dataTableLesson.lesson_ids.concat(self.dataTableLesson.viewLesson)
+                let dupChars = concatArr.filter((c, index) => concatArr.indexOf(c) == concatArr.lastIndexOf(c));
 
-                                array[0].lessonIds= array[0].lessonIds.filter(item => item!==e1);
-                                })
-                                self.abc=array[0].lessonIds
 
-                          const res = await $post('/xadmin/plans/removeAllLesson', {
-                              ids:self.abc,
+               const res = await $post('/xadmin/plans/removeAllLesson', {
+                              ids:dupChars,
                               entry: self.entry,
-                              viewPackage: self.tabLessonContent
+                              viewPackage:self.dataTableLesson.id
                           });
+
+
                           if (res.code) {
                               toastr.error(res.message);
                           } else {
                               toastr.success(res.message);
-                              self.viewLessonIds=[];
-                              self.allViewLessonSelected=false;
+
+                              // code update checkbox trong modal addPackageLesson
+                                let distinctive = concatArr.filter((c, index) => concatArr.indexOf(c) != concatArr.lastIndexOf(c));
+                                distinctive=[...new Set(distinctive)];
+                                let datalessonPackagePlan=self.lessonPackagePlans.filter(item => item.package_id==self.tabLessonContent);
+                                datalessonPackagePlan=datalessonPackagePlan[0];
+                                let concat=datalessonPackagePlan.lessonIds.concat(distinctive);
+                                datalessonPackagePlan.lessonIds=concat.filter((a,index)=> concat.indexOf(a)==concat.lastIndexOf(a));
+                              //end
+
+
+                              self.dataTableLesson.viewLesson=[];
+                              self.allViewLessonSelected.allViewLessonSelected=false;
 
                                     //view lesson theo packagelesson khi delete all
-                                  self.lessonPackagePlans.forEach(function (e) {
-
-                                      if(e.package_id==self.tabLessonContent)
-                                      {
-                                          if(e.lessonIds.length==0)
+                                          if(self.dataTableLesson.viewLesson.length==self.dataTableLesson.lesson_ids.length)
                                           {
                                               self.dataAddLessonPlan=[];
                                           }
                                           else {
                                       let dataLesson=[];
-                                      self.abc.forEach(function(e1)
+                                      dupChars.forEach(function(e1)
                                       {
                                           self.dataAddLessonPlan.forEach(function(e2)
                                           {
@@ -1075,26 +1243,28 @@
                                           })
                                       })
                                        self.dataAddLessonPlan=dataLesson;
-                                          }
+                                        }
+                                          self.dataTableLesson.checkRemoveLesson=0;
+                              $.get('/xadmin/plans/dataPackage',function(res)
+                              {
+                                  self.dataTableLesson=res.data.filter(item => item.id==self.tabLessonContent);
+                                  let viewLesson=[];
+                                  let checkRemoveLesson=0;
+                                  self.dataTableLesson=self.dataTableLesson.map(abc => {
+
+                                      return {
+                                          'id':abc.id,
+                                          'name':abc.name,
+                                          'plan_id':abc.plan_id,
+                                          'lesson_ids':abc.lesson_ids,
+                                          'viewLesson':viewLesson,
+                                          'checkRemoveLesson':checkRemoveLesson,
                                       }
                                   })
+                                  self.dataTableLesson= self.dataTableLesson[0];
 
-                                //call lại bảng PackageLesson
-                              setTimeout(function ()
-                              {
-                                  $.get('/xadmin/plans/dataPackage',function (res) {
+                              })
 
-                                      let dataPackage= res.data.filter(item => item.plan_id==self.entry.id)
-                                      let data= dataPackage.map(res =>{
-                                          return{
-                                              'package_id':res.id,
-                                              'plan_id':res.plan_id,
-                                              'lessonIds':res.lesson_ids
-                                          }
-                                      })
-                                    return self.lessonPackagePlans=data;
-                                  })
-                              },0);
 
                           }
             },
@@ -1121,6 +1291,10 @@
                                 }
                             })
                             return self.lessonPackagePlans=data;
+                        })
+                        $.get('/xadmin/plans/getPlan?id='+self.entry.id,function(res)
+                        {
+                            self.entry=res.data;
                         })
                     },0);
                     $('#delete').modal('hide');
@@ -1162,7 +1336,6 @@
 
             // validate device khi import
             async importFileDevice() {
-                console.log(this.$refs.uploader.files)
                 if (this.$refs.uploader.files) {
                    let fileSize=(this.$refs.uploader.files[0].size.toString());
                     if(fileSize.length < 7)
@@ -1177,6 +1350,8 @@
 
                     this.fileUpLoad=this.$refs.uploader.files[0].name
                     const files = this.$refs.uploader.files;
+                    this.disableContinue=true;
+                    this.saveValidateImportDevice();
                 }
             },
             removeFileDevice(){
@@ -1185,6 +1360,7 @@
                 this.fileUpLoad='';
                 this.$refs.uploader.value = null;
                 this.valueValidateImportDevice=0;
+                this.disableContinue=false;
 
             }
 
@@ -1219,6 +1395,7 @@
                         });
                     if (res.code == 2) {
                         this.deviceError = res.deviceError;
+                        this.errorDeviceName=res.errorDeviceName;
                         this.code = res.code;
                         this.validateFile = res.fileError;
                         this.fileImport = res.fileImport;
@@ -1272,6 +1449,7 @@
                                     self.valueValidateImportDevice=0;
                                     self.fileImport.length=0;
                                     self.deviceError.length=0;
+                                    location.reload();
 
 
                                 })
@@ -1287,14 +1465,15 @@
                     self.valueValidateImportDevice=0;
                     self.fileImport.length=0;
                     self.deviceError.length=0;
+                    location.reload();
                 }
             },
 
             // export devive
             async exportDevice() {
-                window.location.href= '/xadmin/plans/exportDevice?entry=' + JSON.stringify(this.entry)+
+                window.location.href= '/xadmin/plans/exportDevice?idPlan=' +JSON.stringify(this.entry.id)+
                 '&idRoleIt=' + JSON.stringify(this.idRoleIt)+
-                '&dataDevice=' + JSON.stringify(this.data);
+                '&dataDevice=' + this.exportDeviceName;
             },
 
             changeLimit() {
@@ -1305,12 +1484,18 @@
             },
 
             selectLessonAll() {
-                if (this.allLessonSelected)
+                if (this.package.allLessonSelected )
                 {
                     const selected=this.entries.map((u)=>u.id);
                     let self=this;
                     self.lessonPackagePlans.forEach(function (e){
-                        e.lessonIds=selected;
+
+                        if(self.package.package==e.package_id)
+                        {
+
+                            e.lessonIds=e.lessonIds.concat(selected);
+
+                        }
                     })
                 }
                 else {
@@ -1328,9 +1513,9 @@
                 let self = this;
                 self.lessonPackagePlans.forEach(function (e) {
                     if (e.lessonIds.length == self.entries.length) {
-                        self.allLessonSelected = true;
+                        self.package.allLessonSelected = true;
                     } else {
-                        self.allLessonSelected = false;
+                        self.package.allLessonSelected = false;
                     }
 
                 })
@@ -1345,33 +1530,50 @@
             selectViewLessonAll()
             {
 
-                if (this.allViewLessonSelected ) {
+                if (this.allViewLessonSelected.allViewLessonSelected ) {
                     const selected = this.dataAddLessonPlan.map((u) => u.id);
-                    this.viewLessonIds = selected;
+                    let self=this;
+                   self.dataTableLesson.checkRemoveLesson=1;
+                    if(self.allViewLessonSelected.tabPackage== self.dataTableLesson.id)
+                    {
+                        self.dataTableLesson.viewLesson=selected;
+                    }
                 }
 
                 else {
                     let self = this;
-                    self.viewLessonIds=[];
-                    self.lessons = [];
+                    self.dataTableLesson.checkRemoveLesson=0;
+                    if(self.allViewLessonSelected.tabPackage==self.dataTableLesson.id)
+                    {
+                        self.dataTableLesson.viewLesson=[];
+                    }
+
                 }
             },
             updateViewLessonCheckAll()
             {
-                if (this.viewLessonIds.length === this.dataAddLessonPlan.length ) {
-                    this.allViewLessonSelected = true;
-                } else {
-                    this.allViewLessonSelected = false;
+                let self = this;
+                if(self.dataTableLesson.viewLesson.length>0)
+                {
+                   self.dataTableLesson.checkRemoveLesson=1;
                 }
-                this.lessons=[];
-                let self=this;
-                self.lessonPackagePlans.forEach(function (e3) {
-                    self.entries.forEach(function (e4) {
-                        if (e4.id == e3) {
-                            self.lessons.push(e3);
-                        }
-                    })
-                })
+                else {
+                    self.dataTableLesson.checkRemoveLesson=0;
+                }
+                if (self.dataTableLesson.viewLesson.length=== self.dataAddLessonPlan.length ) {
+                    self.allViewLessonSelected.allViewLessonSelected = true;
+
+                } else {
+                    self.allViewLessonSelected.allViewLessonSelected = false;
+                }
+                // self.lessons=[];
+                // self.lessonPackagePlans.forEach(function (e3) {
+                //     self.entries.forEach(function (e4) {
+                //         if (e4.id == e3) {
+                //             self.lessons.push(e3);
+                //         }
+                //     })
+                // })
 
             },
 
@@ -1489,35 +1691,44 @@
                 } else {
                     this.errors = {};
                     toastr.success(res.message);
-                    this.allLessonSelected=false;
+                    this.package.allLessonSelected=false;
                     $('#kt_modal_invite').modal('hide');
                     let self =this;
 
                     setTimeout(function ()
                     {
                         $.get('/xadmin/plans/dataPackage',function (res) {
-                            let dataPackage= res.data.filter(item => item.plan_id==self.entry.id)
-                            // return self.lessonPackagePlans=dataPackage;
-                            let data= dataPackage.map(res =>{
-                                return{
-                                    'package_id':res.id,
-                                    'plan_id':res.plan_id,
-                                    'lessonIds':res.lesson_ids
-                                }
-                            })
-                            self.lessonPackagePlans.forEach(function (e) {
-                                if(e.package_id==self.tabLessonContent)
-                                {
-                                    self.dataAddLessonPlan=[];
-                                   e.lessonIds.forEach(function (e1) {
-                                      let array=self.entries.filter(item => item.id==e1)
-                                      self.dataAddLessonPlan.push(array[0]);
+                            self.dataTableLesson= res.data.filter(item => item.id==self.tabLessonContent);
 
-                                   })
+                            let viewLesson=[];
+                            let checkRemoveLesson=0;
+                            self.dataTableLesson=self.dataTableLesson.map(abc => {
+
+                                return {
+                                    'id':abc.id,
+                                    'name':abc.name,
+                                    'plan_id':abc.plan_id,
+                                    'lesson_ids':abc.lesson_ids,
+                                    'viewLesson':viewLesson,
+                                    'checkRemoveLesson':checkRemoveLesson,
                                 }
                             })
+                            self.dataTableLesson= self.dataTableLesson[0];
+                            // self.dataAddLessonPlan=[];
+
+                            // self.dataTableLesson.lesson_ids.forEach(function(e)
+                            // {
+                            //     let dataLesson=self.entries.filter(item => item.id==e)
+                            //     dataLesson.forEach(function(e2)
+                            //     {
+                            //         self.dataAddLessonPlan.push(e2);
+                            //     })
+                            // })
                         })
+
+
                     },1000);
+
                        setTimeout(function () {
                            for (var key in self.filter) {
                                self.filter[key] = '';
@@ -1525,6 +1736,7 @@
                            $router.setQuery({});
 
                        },0)
+                       this.load();
 
 
                 }
@@ -1566,9 +1778,10 @@
                 setTimeout(function (){
                     KTMenu.createInstances();
                 }, 0)
-                const res = await $get('/xadmin/plans/dataLesson', query);
+                const res = await $get('/xadmin/plans/dataLesson?idPlan='+this.entry.id + '&packageLessonId='+this.tabLessonContent, query);
                 this.$loading(false);
                 this.entries = res.data;
+                this.dataAddLessonPlan=res.dataAddLessonPlan;
             },
             onPageChange(page) {
                 $router.updateQuery({page: page})
@@ -1579,7 +1792,7 @@
                 this.isLoading = true;
                 const res = await $post('/xadmin/plans/addPackageLesson', {
                     tabLessonContent:tabLessonContent,
-                   packageLessonName:this.packageLessonName,
+                     packageLessonName:this.packageLessonName,
                     entry: this.entry,
                     lessonIds: this.lessonIds
                 }, false);
@@ -1618,6 +1831,10 @@
                             return self.tabLessonContent=data[data.length-1].package_id
 
                         })
+                        $.get('/xadmin/plans/getPlan?id='+self.entry.id,function(res)
+                        {
+                            self.entry=res.data;
+                        })
                     },0);
                     $('#addNamePackageLesson').modal('hide');
                     self.packageLessonName='';
@@ -1633,7 +1850,7 @@
                 this.isLoading = true;
                 const res = await $post('/xadmin/plans/downloadLesson', {
                     entry: this.entry,
-                    lessonPackagePlans: this.lessonPackagePlans,
+                    dataTableLesson: this.dataTableLesson,
                     package: tabLessonContent,
                     idRoleIt: this.idRoleIt
                 }, false);
@@ -1695,14 +1912,14 @@
                     this.lessonPackagePlans.forEach(function (e) {
                         packageIds.push(e.lesson_ids);
                     })
-                    window.location.href= '/xadmin/plans/exportPlan?entry=' + JSON.stringify(this.entry)+
-                        '&packageLessonPlan=' + JSON.stringify(this.lessonPackagePlans)+
-                        '&dataDevice=' + JSON.stringify(this.data);
+                    window.location.href= '/xadmin/plans/exportPlan?entry=' +this.cachePlan+
+                        '&packageLessonPlan=' + this.cacheLesson+
+                        '&dataDevice=' + this.exportDeviceName;
                 }
                 else {
                     window.location.href= '/xadmin/plans/exportPlan?entry=' + JSON.stringify(this.entry)+
-                        '&packageLessonPlan=' + JSON.stringify(this.lessonPackagePlans)+
-                        '&dataDevice=' + JSON.stringify(this.data);
+                        '&packageLessonPlan=' + this.cacheLesson+
+                        '&dataDevice=' + this.exportDeviceName;
                 }
 
             },
@@ -1721,6 +1938,10 @@
                 navigator.clipboard.writeText(this.token);
                 this.token='';
             },
+            exportDeviceError()
+            {
+                window.location.href='/xadmin/plans/exportDeviceError?deviceError='+this.errorDeviceName;
+            }
         }
     }
 </script>
