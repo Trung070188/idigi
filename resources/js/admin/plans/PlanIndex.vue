@@ -250,7 +250,7 @@
                                             >
                                     </div>
                                 </td>
-                                <td class="" >{{(index+1)+(from+1)}}
+                                <td class="" >{{((index+1)+(from+1))-2}}
                                 </td>
                                 <td class="" data-bs-toggle="tooltip" :title="entry.name">
                                     {{entry.name}}
