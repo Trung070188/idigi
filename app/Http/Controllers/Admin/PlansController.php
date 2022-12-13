@@ -1687,6 +1687,43 @@ class PlansController extends AdminBaseController
         ];
 
     }
+    public function editDevice(Request $req)
+    {
+        $current = Carbon::now()->format('Y-m-d');
+        $plan=Plan::query()->where('id',$req->plan['id'])->first();
+      if($current>$req->device['expire_date'] || $plan['expire_date'] < $req->device['expire_date'] )
+      {
+          if($current>$req->device['expire_date'])
+          {
+              return [
+                  'code'=>2,
+                  'errors'=>[
+                      'edit_device_date'=>['The expire date must be a date after or equal to '.$current]
+                  ],
+                  'message'=>'Errors'
+              ];
+          }
+          if($plan['expire_date'] < $req->device['expire_date'])
+          {
+              return [
+                  'code'=>2,
+                  'errors'=>[
+                      'edit_device_date'=>['The expire date must be a date before or equal to '.$plan['expire_date']]
+                  ],
+                  'message'=>'Errors'
+              ];
+          }
+
+      }
+
+       else {
+            UserDevice::query()->where('id',$req->device['id'])->update(['device_name'=>$req->device['device_name'],'expire_date'=>$req->device['expire_date'],'type'=>$req->device['type']]);
+            return [
+                'code'=>0,
+                'message'=>'Đã cập nhật'
+            ];
+        }
+    }
 }
 
 

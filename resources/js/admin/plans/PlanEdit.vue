@@ -296,6 +296,10 @@
                                                     </a>
                                                     <div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-bold fs-7 w-180px py-4" data-kt-menu="true">
                                                         <div class="menu-item px-3">
+                                                            <a v-if="permissionFields['plan_device_get_confirm_code']==false"   class="menu-link px-3 isDisabled">Edit</a>
+                                                            <a v-else class="menu-link px-3" @click="modalEditDevice(device)">Edit</a>
+                                                        </div>
+                                                        <div class="menu-item px-3">
                                                             <a v-if="permissionFields['plan_device_get_confirm_code']==false"   class="menu-link px-3 isDisabled">Get confirmation code</a>
                                                             <a v-else class="menu-link px-3" @click="modalConfirmationCode(device)">Get confirmation code</a>
                                                         </div>
@@ -493,6 +497,38 @@
         </div>
 
         <!-- end: modal add device-->
+
+        <!-- begin :modal edit device -->
+        <div class="modal fade" style="margin-right:50px " id="deviceConfirm1" tabindex="-1" role="dialog"
+             aria-labelledby="deviceConfirm"
+             aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered popup-main-1" role="document"
+                 style="max-width: 500px;">
+                <div class="modal-content box-shadow-main paymment-status" style="margin-right:20px; left:140px">
+                    <div class="close-popup" data-dismiss="modal"></div>
+                    <label style="text-align: center;" class="pt-7 fs-1 ">Edit device information </label>
+                    <div class="px-10 py-5 text-left">
+                        <label style="margin-bottom: 0px">Device name</label>
+                        <input type="text" class="form-control " placeholder="Enter the device name" aria-label="" style="margin-bottom: 10px" aria-describedby="basic-addon1" v-model="dataDeviceEdit.device_name">
+                        <error-label for="f_category_id" :errors="errors.device_name"></error-label>
+                        <span>OS</span>
+                       <select class="form-control " style="margin: 0px 0px 15px" v-model="dataDeviceEdit.type">
+                           <option value="Windows">Windows</option>
+                           <option value="MacOs">MacOs</option>
+                       </select>
+                        <span>Expire date</span>
+                        <datepicker readonly  class="form-control " v-model="dataDeviceEdit.expire_date"></datepicker>
+                        <error-label for="f_category_id" :errors="errors.edit_device_date"></error-label>
+                    </div>
+                    <div class="form-group d-flex justify-content-center">
+                        <!--                        <button  class="btn btn-danger ito-btn-small" data-dismiss="modal" @click="save()">Add now</button>-->
+                        <button class="btn btn-primary ito-btn-add mr-3" data-dismiss="modal" @click="saveEditDevice(dataDeviceEdit)">Save
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- end :modal edit device -->
 
         <!-- BEGIN: MODAL IMPPORT DEVICE -->
 
@@ -933,6 +969,7 @@
             };
 
             return {
+                dataDeviceEdit:[],
                 disableContinue:false,
                 cachePlan:$json.cachePlan,
                 cacheLesson:$json.cacheLesson,
@@ -1042,6 +1079,10 @@
             {
                 this.deviceExpireDate='';
             },
+            EditDeviceExpireDateClear(dataDeviceEdit)
+            {
+                dataDeviceEdit.expire_date='';
+            },
             expireDateClear()
             {
                 this.entry.expire_date='';
@@ -1060,6 +1101,16 @@
                 $('#addNamePackageLesson').modal('show');
                 this.packageLessonName='';
                 this.tabLessonContent='';
+            },
+            modalEditDevice:function(device={})
+            {
+                $('#deviceConfirm1').modal('show');
+                this.dataDeviceEdit=device;
+                console.log(this.entry);
+                console.log(this.dataDeviceEdit);
+
+
+
             },
             renameLessonPackage:function(rename='')
             {
@@ -1941,6 +1992,19 @@
             exportDeviceError()
             {
                 window.location.href='/xadmin/plans/exportDeviceError?deviceError='+this.errorDeviceName;
+            },
+            async saveEditDevice(saveEditDevice)
+            {
+                const res=await $post('/xadmin/plans/editDevice',{device:saveEditDevice,plan:this.entry})
+
+                if (res.code) {
+                    toastr.error(res.message);
+                    this.errors=res.errors;
+                } else {
+                    toastr.success(res.message);
+                    $('#deviceConfirm1').modal('hide');
+
+                }
             }
         }
     }
