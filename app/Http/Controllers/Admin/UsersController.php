@@ -1097,6 +1097,10 @@ class UsersController extends AdminBaseController
      */
     public function data(Request $req)
     {
+        $userCount=User::orderBy('id','desc')->whereHas('roles',function ($q)
+        {
+            $q->where('role_name','<>','Super Administrator');
+        })->count();
         $query = User::query()
             ->with(['roles', 'fileImage'])->whereHas('roles',function ($q)
             {
@@ -1166,7 +1170,8 @@ class UsersController extends AdminBaseController
             'code' => 0,
             'data' => [
                 'data' => $data,
-                'last_updated' => $last_updated
+                'last_updated' => $last_updated,
+                'userCount'=>$userCount
             ],
             'paginate' => [
                 'currentPage' => $entries->currentPage(),

@@ -210,7 +210,7 @@
                                     </span>
 
                                     <div
-                                        v-text=" from +'-'+ to +' of '+ paginate.totalRecord"
+                                        v-text=" from +'-'+ to +' of '+ countPlan"
                                         v-if="entries.length > 0"></div>
 
                                 </div>
@@ -250,7 +250,7 @@
                                             >
                                     </div>
                                 </td>
-                                <td class="" >{{index+1}}
+                                <td class="" >{{(index+1)+(from+1)}}
                                 </td>
                                 <td class="" data-bs-toggle="tooltip" :title="entry.name">
                                     {{entry.name}}
@@ -345,6 +345,7 @@
                 }
             }
             return {
+                countPlan:'',
                 planIds:[],
                 plan:[],
                 allSelected:false,
@@ -426,7 +427,7 @@
                 }, 0)
                 this.paginate = res.paginate;
                 this.entries = res.data;
-                console.log(this.entries);
+                this.countPlan=res.countPlan;
                 this.from = (this.paginate.currentPage-1)*(this.limit) + 1;
                 this.to = (this.paginate.currentPage-1)*(this.limit) + this.entries.length;
             },

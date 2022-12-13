@@ -219,6 +219,7 @@ class LessonsController extends AdminBaseController
      */
     public function data(Request $req)
     {
+        $countLesson=Lesson::query()->orderBy('id','desc')->count();
         $user = Auth::user();
 
         $schoolIds = explode(',', $user->school_id);
@@ -330,6 +331,7 @@ class LessonsController extends AdminBaseController
             'data' => $entries->items(),
             'schools'=>$schools,
             'roleName'=>$roleName,
+            'countLesson'=>$countLesson,
             'paginate' => [
                 'currentPage' => $entries->currentPage(),
                 'lastPage' => $entries->lastPage(),

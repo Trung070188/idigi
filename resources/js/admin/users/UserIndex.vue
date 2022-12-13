@@ -227,9 +227,7 @@
                                         </svg>
                                     </span>
 
-                                   <div v-text=" from +'-'+ to +' of '+ paginate.totalRecord " v-if="entries.length > 0"></div>
-
-
+                                   <div v-text=" from +'-'+ to +' of '+ userCount " v-if="entries.length > 0"></div>
 
                                </div>
                            </div>
@@ -274,7 +272,7 @@
                                             />
                                         </div>
                                     </td>
-                                <td>{{index+1}}</td>
+                                <td>{{(index+1)+(from-1)}}</td>
                                 <td  class="" v-text="entry.username"></td>
                                 <td  class="" v-text="entry.full_name"></td>
                                 <td  class="" v-text="entry.email"></td>
@@ -368,6 +366,7 @@
             //     }
             // }
             return {
+            userCount:'',
             user: [],
             userIds: [],
             allSelected: false,
@@ -431,6 +430,7 @@
                 this.paginate = res.paginate;
                 this.entries = res.data.data;
                 this.last_updated = res.data.last_updated;
+                this.userCount=res.data.userCount;
                 this.from = (this.paginate.currentPage - 1) * (this.limit) + 1;
                 this.to = (this.paginate.currentPage - 1) * (this.limit) + this.entries.length;
             },

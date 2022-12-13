@@ -186,7 +186,7 @@
                                         </svg>
                                     </span>
 
-                                    <div v-text=" from +'-'+ to +' of '+ paginate.totalRecord" v-if="entries.length > 0"></div>
+                                    <div v-text=" from +'-'+ to +' of '+ countLesson" v-if="entries.length > 0"></div>
 
                                     <template v-if="lessonIds.length > 0">
                                         <!-- <span class="svg-icon svg-icon-2x svg-icon-primary mx-1">
@@ -234,13 +234,13 @@
 
                             </tr>
 
-                            <tr  v-for="entry in entries" v-if="user.active_allocation==1 && entries.length>0">
+                            <tr  v-for="(entry,index) in entries" v-if="user.active_allocation==1 && entries.length>0">
                                 <td class="">
                                     <div class="form-check form-check-sm form-check-custom form-check-solid">
                                         <input class="form-check-input" type="checkbox" v-model="lessonIds" :value="entry.id" @change="updateCheckAll">
                                     </div>
                                 </td>
-                                <td class="" v-text="entry.id"></td>
+                                <td >{{((index+1)+(from+1))-2}}</td>
                                 <td v-text="entry.name"></td>
                                 <td class="" v-text="entry.grade"></td>
                                 <td class="" v-text="entry.subject"></td>
@@ -332,6 +332,7 @@
                 }
             }
             return {
+                countLesson:'',
                 user:{},
                 roleName:'',
                 idSchool:null,
@@ -456,6 +457,7 @@
                 this.schools=res.schools;
                 this.roleName=res.roleName;
                 this.user=res.user;
+                this.countLesson=res.countLesson;
                 this.from = (this.paginate.currentPage - 1) * (this.limit) + 1;
                 this.to = (this.paginate.currentPage - 1) * (this.limit) + this.entries.length;
             },

@@ -1008,6 +1008,7 @@ class PlansController extends AdminBaseController
      */
     public function data(Request $req)
     {
+        $countPlan=Plan::query()->orderBy('id','desc')->count();
         $user = Auth::user();
         foreach ($user->roles as $role) {
             $roleName = $role->role_name;
@@ -1102,6 +1103,7 @@ class PlansController extends AdminBaseController
         return [
             'code' => 0,
             'data' => $data,
+            'countPlan'=>$countPlan,
             'paginate' => [
                 'currentPage' => $entries->currentPage(),
                 'lastPage' => $entries->lastPage(),
