@@ -110,7 +110,7 @@
                                         </svg>
                                     </span>
 
-                                        <div v-text="from +'-'+ to +' of '+ paginate.totalRecord" v-if="entries.length > 0"></div>
+                                        <div v-text="from +'-'+ to +' of '+ countContent" v-if="entries.length > 0"></div>
 
                                 </div>
                             </div>
@@ -202,6 +202,7 @@
         data() {
              const permissions = clone(window.$permissions)
             return {
+                countContent:'',
                permissions,
                 entry:'',
                 entries: [],
@@ -243,9 +244,8 @@
                  const res  = await $get('/xadmin/allocation_contents/data', query);
                  this.$loading(false);
                  this.paginate = res.paginate;
-                 console.log(this.paginate);
                 this.entries = res.data;
-                 console.log(this.entries);
+                this.countContent=res.countContent;
                  setTimeout(function (){
                     KTMenu.createInstances();
                 }, 0)

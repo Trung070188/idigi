@@ -395,7 +395,7 @@
                                         </svg>
                                     </span>
 
-                                    <div v-text=" from +' to '+ to +' of '+ paginate.totalRecord " v-if="entries.length > 0"></div>
+                                    <div v-text=" from +' to '+ to +' of '+ countTeacher " v-if="entries.length > 0"></div>
 
                                 </div>
                             </div>
@@ -416,7 +416,7 @@
                                         />
                                     </div>
                                 </td>
-                                <th class="">ID</th>
+                                <th class="">No.</th>
                                 <th class="">Teacher name</th>
                                 <th class="">Teacher email</th>
                                 <th>Class</th>
@@ -431,7 +431,7 @@
                             <tr v-if="entries.length==0">
                                 <td valign="top" colspan="10" class="text-center">No results found. Try different keywords or remove search filters.</td>
                             </tr>
-                            <tr v-if="entries!==0" v-for="entry in entries">
+                            <tr v-if="entries!==0" v-for="(entry,index) in entries">
                                 <td class="">
                                     <div
                                         class="form-check form-check-sm form-check-custom form-check-solid"
@@ -445,7 +445,7 @@
                                         />
                                     </div>
                                 </td>
-                                <td class="" v-text="entry.id"></td>
+                                <td >{{index+from}}</td>
                                 <td class="" v-text="entry.full_name"></td>
                                 <td class="" v-text="entry.email" data-bs-toggle="tooltip" :title="entry.email"></td>
                                 <td v-text="entry.class"></td>
@@ -535,6 +535,7 @@
                 }
             }
             return {
+                countTeacher:'',
                  errorName:[],
                 doNotImport:0,
                 fileError: [],
@@ -601,6 +602,7 @@
                 }, 0)
                 this.entries = res.data;
                 this.paginate = res.paginate;
+                this.countTeacher=res.countTeacher
                 this.lengthDeviceTeacher=res.lengthDeviceTeacher;
                 this.from = (this.paginate.currentPage - 1) * (this.limit) + 1;
                 this.to = (this.paginate.currentPage - 1) * (this.limit) + this.entries.length;

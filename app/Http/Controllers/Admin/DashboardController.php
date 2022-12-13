@@ -34,19 +34,18 @@ class DashboardController extends AdminBaseController
         $devices = UserDevice::query()->orderBy('id', 'desc')->count();
         $schools = School::query()->orderBy('id', 'desc')->count();
         $lessons = Lesson::query()->orderBy('id', 'desc')->count();
-
-
-
-//        $dt      = Carbon::create(2022, 8, 20, 0);
         $today = Carbon::now();
-
-//        ($today->diffInDays($dt));
-        $licenses = School::query()->whereNotNull('license_to')->orderBy('id', 'ASC')->get()->toArray();
+        $licenses = School::query()->whereNotNull('license_to')->orderBy('id', 'ASC')->get();
         $licenseRemain = [];
-
         foreach ($licenses as $license) {
-            if ($today->diffInDays($license['license_to']) <= 15) {
-                $license['dayEnd'] = $today->diffInDays($license['license_to']);
+            if (($today->diffInDays($license->license_to)+1) <= 15 || ($today>$license->license_to)==true) {
+                if( ($today>$license->license_to)==true)
+                {
+                    $license['dayEnd']=0;
+                }
+               else{
+                   $license['dayEnd'] = $today->diffInDays($license['license_to'])+1;
+               }
                 $LicenseId = $license['id'];
                 $license['url'] = url("xadmin/schools/edit?id= $LicenseId");
                 $licenseRemain[] = $license;

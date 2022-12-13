@@ -245,6 +245,7 @@ class InventoriesController extends AdminBaseController
      */
     public function data(Request $req)
     {
+        $countInventory=Inventory::query()->orderBy('id','desc')->count();
         $query = Inventory::query();
         if ($req->order && $req->sortBy) {
             $query = $query->orderBy($req->order, $req->sortBy);
@@ -282,6 +283,7 @@ class InventoriesController extends AdminBaseController
 
 
         return [
+            'countInventory'=>$countInventory,
             'code' => 0,
             'data' => $entries->items(),
             'paginate' => [

@@ -485,6 +485,7 @@ class AllocationContentsController extends AdminBaseController
      * @return  array
      */
     public function data(Request $req) {
+        $countContent=AllocationContent::query()->orderBy('id','desc')->count();
         $query = AllocationContent::query()->with(['courses','units','schools'])->orderBy('id', 'desc');
 
         if ($req->keyword) {
@@ -501,6 +502,7 @@ class AllocationContentsController extends AdminBaseController
         return [
             'code' => 0,
             'data' => $entries->items(),
+            'countContent'=>$countContent,
             'paginate' => [
                 'currentPage' => $entries->currentPage(),
                 'lastPage' => $entries->lastPage(),

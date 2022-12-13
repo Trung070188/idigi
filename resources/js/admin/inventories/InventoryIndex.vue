@@ -347,7 +347,7 @@
                                                 '-' +
                                                 to +
                                                 ' of ' +
-                                                paginate.totalRecord
+                                               countInventory
                                         "
                                         v-if="entries.length > 0"
                                     ></div>
@@ -422,7 +422,7 @@
                                         />
                                     </div>
                                 </td>
-                                <td>{{ index + 1 }}</td>
+                                <td>{{ index +from}}</td>
                                 <td v-text="entry.name"></td>
                                 <td class="" v-text="entry.grade"></td>
                                 <td class="" v-text="entry.type"></td>
@@ -579,6 +579,7 @@
                 }
             }
             return {
+                countInventory:'',
                 entry: '',
                 inventory: [],
                 inventoryIds: [],
@@ -638,6 +639,7 @@
                 }, 0);
                 this.paginate = res.paginate;
                 this.entries = res.data;
+                this.countInventory=res.countInventory;
                 this.last_updated = res.last_updated;
                 this.from = (this.paginate.currentPage - 1) * this.limit + 1;
                 this.to =

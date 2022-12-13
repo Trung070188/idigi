@@ -1183,6 +1183,10 @@ class UsersController extends AdminBaseController
 
     public function dataTeacher(Request $req)
     {
+        $countTeacher=User::query()->whereHas('roles',function ($q)
+        {
+            $q->where('role_name','Teacher');
+        })->count();
         $user = Auth::user();
         $school_id = $user->schools->id;
         $lengthUserSchool=$user->schools->number_of_users;
@@ -1220,6 +1224,7 @@ class UsersController extends AdminBaseController
         $entries = $query->paginate($limit);
         $users = $entries->items();
         return [
+            'countTeacher'=>$countTeacher,
             'code' => 0,
             'data' => $users,
             'devicePerUser'=>$devicePerUser,
