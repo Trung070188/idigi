@@ -37,7 +37,7 @@ class Permission extends BaseModel
     }
     public function permissionDetails()
     {
-        return $this->hasMany(PermissionDetail::class,'permission_id')->orderBy('order','ASC');
+        return $this->hasMany(PermissionDetail::class,'permission_id')->orderBy('order','desc');
     }
     public function groupPermission(){
         return $this->belongsTo(GroupPermission::class, 'group_permission_id');
