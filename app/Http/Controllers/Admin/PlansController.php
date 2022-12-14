@@ -662,6 +662,12 @@ class PlansController extends AdminBaseController
                                     $item['device_uid'] = $decoded->device_uid;
                                 }
                                 catch (\Exception $e) {
+                                    $code=2;
+                                    $item['error']=[
+                                    'device_uid'=>[
+                                        'Register code is invalid'
+                                    ]
+                                  ];
                                 }
                             }
                             else{
