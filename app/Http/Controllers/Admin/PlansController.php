@@ -205,7 +205,7 @@ class PlansController extends AdminBaseController
                 'school_id' => $device->school_id,
                 'secret_key' => $device->secret_key,
                 'reason' => $device->reason,
-                'expire_date' => ($device->expire_date),
+                'expire_date' => $device->expire_date,
                 'created_at' => $device->created_at,
                 'updated_at' => $device->updated_at,
                 'roleName' => $roleName,
@@ -1691,8 +1691,18 @@ class PlansController extends AdminBaseController
     {
         $current = Carbon::now()->format('Y-m-d');
         $plan=Plan::query()->where('id',$req->plan['id'])->first();
-      if($current>$req->device['expire_date'] || $plan['expire_date'] < $req->device['expire_date'] )
+      if($current>$req->device['expire_date'] || $plan['expire_date'] < $req->device['expire_date'] || $req->device['device_name']==null ||  $req->device['expire_date']==null  )
       {
+          if($req->device['device_name']==null)
+          {
+              return [
+                  'code'=>2,
+                  'errors'=>[
+                      'device_name'=>['The device name is required ']
+                  ],
+                  'message'=>'Errors'
+              ];
+          }
           if($current>$req->device['expire_date'])
           {
               return [

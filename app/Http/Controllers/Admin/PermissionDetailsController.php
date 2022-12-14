@@ -201,7 +201,8 @@ class PermissionDetailsController extends AdminBaseController
                   $item =[
                       'id'=>$permissionDetail->id,
                       'permission'=>$permission->id,
-                      'value'=>0
+                      'value'=>0,
+                      'is_admin'=>$permissionDetail->is_admin
                   ];
                   foreach ($role->permissionDetails as $_permissionDetail)
                   {

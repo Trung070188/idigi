@@ -22,6 +22,7 @@ class PermissionDetail extends BaseModel
     'code',
     'permission_id',
     'order',
+    'is_admin'
 ];
 
 }

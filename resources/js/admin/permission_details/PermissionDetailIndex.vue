@@ -28,7 +28,7 @@
                                 </th>
                                 <th v-for="role in roles">
                                     <div class="form-check form-check-custom form-check-solid justify-content-center" v-for="permissionDetail in role.permission" v-if="permissionDetail.permission==permission.id">
-                                        <input @change="changePermissionDetail(role.id,permissionDetail.id,permissionDetail.value)"  class="form-check-input h-20px w-20px" type="checkbox"  v-model="permissionDetail.value" >
+                                        <input :disabled="disable(permissionDetail)" @change="changePermissionDetail(role.id,permissionDetail.id,permissionDetail.value)"  class="form-check-input h-20px w-20px" type="checkbox"  v-model="permissionDetail.value" >
                                         <br>
                                     </div>
                                 </th>
@@ -88,6 +88,16 @@
             $router.on('/', this.load).init();
         },
         methods: {
+            disable(permissionDetail)
+            {
+             if(permissionDetail.is_admin=='Yes')
+             {
+                 return true;
+             }
+             else {
+                 return false;
+             }
+            },
             edit: function (id, event){
                 if (!$(event.target).hasClass('deleted')){
                     window.location.href='/xadmin/permission_details/edit?id='+ id;
