@@ -28,7 +28,7 @@
                                 </th>
                                 <th v-for="role in roles">
                                     <div class="form-check form-check-custom form-check-solid justify-content-center" v-for="permissionDetail in role.permission" v-if="permissionDetail.permission==permission.id">
-                                        <input :disabled="disable(permissionDetail)" @change="changePermissionDetail(role.id,permissionDetail.id,permissionDetail.value)"  class="form-check-input h-20px w-20px" type="checkbox"  v-model="permissionDetail.value" >
+                                        <input :disabled="disable(permissionDetail)" @change="changePermissionDetail(role.id,permissionDetail.id,permissionDetail.value)"  class="form-check-input h-20px w-20px" :style="{backgroundColor: activeColor}" type="checkbox"  v-model="permissionDetail.value" >
                                         <br>
                                     </div>
                                 </th>
@@ -59,6 +59,7 @@
         components: {ActionBar},
         data() {
             return {
+                activeColor:'',
                 permissions:[],
                 roles:[],
                 entries: [],
@@ -92,9 +93,11 @@
             {
              if(permissionDetail.is_admin=='Yes')
              {
+                 this.activeColor='#5e6278'
                  return true;
              }
              else {
+                 this.activeColor='#EEF0F8;'
                  return false;
              }
             },
