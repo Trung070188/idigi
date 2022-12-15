@@ -125,7 +125,7 @@
                                         <!--                                        <select  class="form-control form-select" v-model="entry.school_id" required>-->
                                         <!--                                            <option v-for="school in schools" :value="school.id" >{{school.label}}</option>-->
                                         <!--                                        </select>-->
-                                        <Treeselect :options="schools" :multiple="true" v-model="userSchool"/>
+                                        <Treeselect :options="schools" :multiple="true" v-model="userSchool" placeholder="Choose school"/>
                                         <!--                                        <error-label for="f_grade" :errors="errors.school_id"></error-label>-->
                                     </div>
                                 </div>
@@ -133,7 +133,7 @@
                                     <div class="form-group col-sm-4">
                                         <label>School <span class="text-danger">*</span></label>
                                         <select required  class="form-control form-select"  v-model="entry.school_id" >
-                                            <option  :value="null" disabled selected >Choose role</option>
+                                            <option value="" disabled selected>Choose role</option>
                                             <option v-for="school in schools" :value="school.id">{{school.label}}</option>
                                         </select>
                                         <error-label for="f_grade" :errors="errors.school_id"></error-label>

@@ -68,9 +68,9 @@
                                     <input  type="checkbox" v-model="auto_gen">
                                     <label>Auto password</label>
                                 </div>
-                                <div class="form-group">
-                                    <input id="state" type="checkbox" v-model="entry.state" checked>
-                                    <label for="state" class="pl-2">Active</label>
+                                <div class="form-check form-check-custom form-check-solid pb-5">
+                                    <input id="state" type="checkbox" v-model="entry.state" class="form-check-input h-20px w-20px"  checked>
+                                    <label for="state" class="form-check-label fw-bold">Active</label>
                                     <error-label for="f_grade" :errors="errors.state"></error-label>
                                 </div>
                             </div>

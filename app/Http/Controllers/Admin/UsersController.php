@@ -93,7 +93,7 @@ class UsersController extends AdminBaseController
         $component = 'UserForm';
         $title = 'Create users';
         $schools = School::query()->orderBy('id')->get();
-        $roles = Role::query()->orderBy('id', 'ASC')->where('role_name','<>','Super Administrator')->get();
+        $roles = Role::query()->orderBy('order', 'ASC')->where('role_name','<>','Super Administrator')->get();
         $jsonData = [
             'roles' => $roles,
             'schools' => $schools,
@@ -686,7 +686,11 @@ class UsersController extends AdminBaseController
             ],
         ];
         if (!isset($data['id'])) {
-            $rules['username'] = ['required', 'min:6', 'unique:users,username', function ($attribute, $value, $fail) {
+           if($data_role['auto_gen']==false)
+           {
+               $rules['password']=['required'];
+           }
+            $rules['username'] = ['required', 'min:8', 'unique:users,username', function ($attribute, $value, $fail) {
                 if (preg_match('/[\'\/~`\!@#\$%\^&\*\(\)\-\+=\{\}\[\]\|;:"\<\>,\?\\\]/', $value)) {
                     return $fail(__(' The :attribute no special characters'));
                 }

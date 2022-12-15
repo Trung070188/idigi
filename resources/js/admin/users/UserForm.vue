@@ -71,14 +71,14 @@
                                 <div class="row" v-if="name_role==2">
                                     <div class="form-group col-sm-4 mb-7">
                                         <label>School <span class="text-danger">*</span></label>
-                                        <Treeselect :options="schools" :multiple="true" v-model="userSchool"/>
+                                        <Treeselect :options="schools" :multiple="true" v-model="userSchool" placeholder="Choose school"/>
                                     </div>
                                 </div>
                                 <div class="row" v-if="name_role==5">
                                     <div class="form-group col-sm-4">
                                         <label>School <span class="text-danger">*</span></label>
                                         <select required  class="form-control form-select"  v-model="entry.school_id" @input="disableSave(entry)">
-                                            <option  :value="null" disabled selected >Choose role</option>
+                                            <option value="" disabled selected>Choose role</option>
                                             <option v-for="school in schools" :value="school.id">{{school.label}}</option>
                                         </select>
                                         <error-label for="f_grade" :errors="errors.school_id"></error-label>
@@ -86,7 +86,7 @@
                                 </div>
                                 <div class="row">
                                     <div class="form-group col-sm-12 mb-5">
-                                        <label>Description</label>
+                                        <label>User description</label>
                                         <textarea v-model="entry.description" rows="5" class="form-control"
                                                   placeholder="Type the description here (200 characters)" @input="disableSave(entry)"></textarea>
                                         <error-label for="f_grade" :errors="errors.description"></error-label>
@@ -94,7 +94,7 @@
                                     </div>
                                 </div>
                                 <div class="form-check form-check-custom form-check-solid pb-5">
-                                    <input id="state" type="checkbox" v-model="entry.state" class="form-check-input h-20px w-20px" @input="disableSave(entry)" checked>
+                                    <input id="state" type="checkbox" v-model="entry.state" class="form-check-input h-20px w-20px" checked>
                                     <label for="state" class="form-check-label fw-bold">Active</label>
                                     <error-label for="f_grade" :errors="errors.state"></error-label>
                                 </div>
@@ -159,7 +159,7 @@
                     'email':'',
                     'password':'',
                     'description':'',
-                    'state':'',
+                    'state':true,
                     'school_id':''
 
                 },
@@ -181,7 +181,7 @@
         methods: {
             disableSave(entry)
             {
-               if(entry.username.length>0 || entry.full_name.length>0 || entry.email.length>0 || entry.description.length>0 || entry.state.length>0 || entry.password.length>0)
+               if(entry.username.length>0 || entry.full_name.length>0 || entry.email.length>0 || entry.description.length>0 || entry.password.length>0)
                {
                    return false;
                }
