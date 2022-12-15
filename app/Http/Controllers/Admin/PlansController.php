@@ -707,8 +707,8 @@ class PlansController extends AdminBaseController
                             if($item['expire_date']==null)
                             {
                                 $validator = Validator::make($item, [
-                                    'device_name' => ['required'],
-                                    'device_uid' => ['required'],
+                                    'device_name' => 'required',
+                                    'device_uid' =>'required',
                                     'type' => 'required',
                                 ]);
                                 $validator->after(function ($validate) use ($item,$planId){
@@ -739,27 +739,41 @@ class PlansController extends AdminBaseController
                 $checkDuplicateDeviceName=[];
                 $checkDuplicateUid=[];
                 $check=0;
+
                 foreach ($validations as $validation)
                 {
-                    if(in_array($validation['device_name'], $checkDuplicateDeviceName)){
-                        $code=2;
-                        $check=1;
-                        $errorDeviceName[] = $validation['device_name'];
+                    if(@$validation['error'])
+                    {
+                        $errorDeviceName[]=[];
                     }
-                    else{
-                        $checkDuplicateDeviceName[]=$validation['device_name'];
-                    }
+                   else{
+                       if(in_array($validation['device_name'], $checkDuplicateDeviceName)){
+                           $code=2;
+                           $check=1;
+                           $errorDeviceName[] = $validation['device_name'];
+                       }
+                       else{
+                           $checkDuplicateDeviceName[]=$validation['device_name'];
+                       }
+                   }
                 }
                 foreach ($validations as $validation)
                 {
-                    if(in_array($validation['device_uid'], $checkDuplicateUid)){
-                        $code=2;
-                        $check=0;
-                        $errorDeviceUid[] = $validation['device_uid'];
+                    if(@$validation['error'])
+                    {
+                        $errorDeviceUid[]=[];
                     }
                     else{
-                        $checkDuplicateUid[]=$validation['device_uid'];
+                        if(in_array($validation['device_uid'], $checkDuplicateUid)){
+                            $code=2;
+                            $check=0;
+                            $errorDeviceUid[] = $validation['device_uid'];
+                        }
+                        else{
+                            $checkDuplicateUid[]=$validation['device_uid'];
+                        }
                     }
+
                 }
                 $fileError = [];
                 $fileImport = [];
@@ -767,29 +781,33 @@ class PlansController extends AdminBaseController
                 if ($code == 2) {
                     //export
                     foreach ($validations as $validation) {
-                        foreach ($errorDeviceName as $err)
-                        {
-                            if($validation['device_name']==$err && $check==1)
+                            foreach ($errorDeviceName as $err)
                             {
-                                $validation['error']=[
-                                  'device_name'=>[
-                                      'The device name has already been taken'
-                                  ]
-                                ];
+
+                                if($err!==[]&&$validation['device_name']==$err && $check==1)
+                                {
+                                    $validation['error']=[
+                                        'device_name'=>[
+                                            'The device name have duplication'
+                                        ]
+                                    ];
+                                }
+
                             }
 
-                        }
-                        foreach ($errorDeviceUid as $err)
-                        {
-                            if($validation['device_uid']==$err && $check==0)
+
+                            foreach ($errorDeviceUid as $err)
                             {
-                                $validation['error']=[
-                                    'device_uid'=>[
-                                        'The device uid has already been taken'
-                                    ]
-                                ];
+                                if($err!==[]&&$validation['device_uid']==$err && $check==0)
+                                {
+                                    $validation['error']=[
+                                        'device_uid'=>[
+                                            'The device uid have duplication'
+                                        ]
+                                    ];
+                                }
                             }
-                        }
+
                         if (@$validation['error']) {
                             $fileError[] = [
                                 'device_name' => $validation['device_name'],
