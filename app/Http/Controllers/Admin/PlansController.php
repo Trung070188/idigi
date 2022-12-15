@@ -416,8 +416,17 @@ class PlansController extends AdminBaseController
                     'message' => 'Không tìm thấy',
                 ];
             }
-
+            $devices=UserDevice::where('plan_id',$data['id'])->get();
+            $deviceUpdate=[];
+            foreach ($devices as $device)
+            {
+                if($device->expire_date==$entry->expire_date)
+                {
+                    $deviceUpdate[]=$device->id;
+                }
+            }
             $entry->fill($data);
+            UserDevice::whereIn('id',$deviceUpdate)->update(['expire_date'=>$data['expire_date']]);
             $entry->save();
             SchoolPlan::where('plan_id', $entry->id)->delete();
             if (@$dataRole['schoolPlan']) {
