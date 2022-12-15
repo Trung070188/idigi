@@ -255,8 +255,13 @@ class UsersController extends AdminBaseController
         ];
         if($entry->school_id)
         {
-            $userSchool=explode(',',$entry->school_id);
+            $userSchoolArr=explode(',',$entry->school_id);
 
+        }
+        $userSchool=[];
+        foreach ($userSchoolArr as $us)
+        {
+            $userSchool[]=(int)($us);
         }
         $jsonData = [
             'userSchool'=>@$userSchool,
