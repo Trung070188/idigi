@@ -234,10 +234,6 @@ class UsersController extends AdminBaseController
                 $name_role = $role->id;
             }
         }
-        if ($entry->user_devices)
-        {
-            $userDevice=$entry->user_devices;
-        }
         @$school = $entry->schools->label;
         $schools = School::query()->orderBy('label', 'ASC')->get();
         $title = 'Edit';
@@ -264,7 +260,6 @@ class UsersController extends AdminBaseController
         }
         $jsonData = [
             'userSchool'=>@$userSchool,
-            'userDevice'=>@$userDevice,
             'permissionFields'=>$permissionFields,
             'schools' => $schools,
             @'school' => $school,
@@ -686,7 +681,10 @@ class UsersController extends AdminBaseController
             ],
         ];
         if (!isset($data['id'])) {
-           if($data_role['auto_gen']==false)
+            if($data_role['name_role']==5 || $data_role['name_role']==2){
+                $rules['school_id']=['required'];
+            }
+                if($data_role['auto_gen']==false)
            {
                $rules['password']=['required'];
            }
@@ -695,12 +693,12 @@ class UsersController extends AdminBaseController
                     return $fail(__(' The :attribute no special characters'));
                 }
             },];
-            // $rules['email'] = ['email','unique:users,email',];
-
-//            $rules['password'] = 'required|max:191|confirmed';
         }
         if (isset($data['id'])) {
             $user = User::find($data['id']);
+            if( $data_role['name_role']==5){
+                $rules['school_id']=['required'];
+            }
             if ($data['email']) {
                 $rules['email'] = ['email', Rule::unique('users')->ignore($user->id),];
 
@@ -730,6 +728,11 @@ class UsersController extends AdminBaseController
             if(isset($data['id']) && $data_role['password']!=$data_role['password_confirmation'])
             {
                 $validate->errors()->add('password_confirmation','The password and confirmation password do not match.');
+
+            }
+            if($data_role['name_role']==2 && isset($data['id']) && $data_role['userSchool']==[])
+            {
+                $validate->errors()->add('userSchool','The school id field is required.');
 
             }
             if(!isset($data['id']) && $data['password']!=$data_role['password_confirmation'] && $data_role['auto_gen']==false)
@@ -795,6 +798,16 @@ class UsersController extends AdminBaseController
             $schoolId = @$entry->schools->id;
 
             UserRole::where('user_id', $entry->id)->delete();
+            if($data_role['name_role']!==2)
+            {
+                User::where('id',$entry->id)->update(['school_id'=>NULL]);
+
+            }
+            if($data_role['name_role']==5)
+            {
+                User::where('id',$entry->id)->update(['school_id'=>$data['school_id']]);
+
+            }
             if (@$data_role['name_role']) {
                 UserRole::updateOrCreate([
                     'user_id' => $entry->id,
@@ -1658,6 +1671,13 @@ class UsersController extends AdminBaseController
             'deviceLog'=>$dataDeviceLog,
             'school'=>$school
 
+        ];
+    }
+    public function dataUserDetail(Request $req)
+    {
+        $devices=UserDevice::where('user_id',$req->id)->whereNull('plan_id')->get();
+        return [
+          'devices'=>$devices
         ];
     }
 }

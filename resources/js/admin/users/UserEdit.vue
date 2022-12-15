@@ -126,7 +126,7 @@
                                         <!--                                            <option v-for="school in schools" :value="school.id" >{{school.label}}</option>-->
                                         <!--                                        </select>-->
                                         <Treeselect :options="schools" :multiple="true" v-model="userSchool" placeholder="Choose school"/>
-                                        <!--                                        <error-label for="f_grade" :errors="errors.school_id"></error-label>-->
+                                    <error-label for="f_grade" :errors="errors.userSchool"></error-label>
                                     </div>
                                 </div>
                                 <div class="row" v-if="name_role==5">
@@ -194,13 +194,14 @@
 </template>
 
 <script>
-    import {$post, clone} from "../../utils";
+    import {$get, $post, clone} from "../../utils";
 
     import ActionBar from "../includes/ActionBar";
     import SwitchButton from "../../components/SwitchButton";
     import _ from "lodash";
     import Treeselect from '@riophae/vue-treeselect'
     import '@riophae/vue-treeselect/dist/vue-treeselect.css'
+    import $router from "../../lib/SimpleRouter";
 
 
     export default {
@@ -241,21 +242,11 @@
                 role: $json.role || [],
                 title_role: $json.title_role || [],
                 permissionFields: $json.permissionFields || [],
-                userDevice :$json.userDevice || [],
+                userDevice :[],
                 isLoading: false,
                 errors: {},
                 deleteUserDevice:[],
             }
-        },
-        watch: {
-            // entry: {
-            //     handler(value){
-            //         if(value) {
-            //             this.changed = !_.isEqual(value, this.actual);
-            //         }
-            //     },
-            //     deep: true,
-            // }
         },
         mounted() {
             $('.nospace').keypress(function (e) {
@@ -263,9 +254,22 @@
                     e.preventDefault();
                 }
             })
+            $router.on('/', this.load).init();
+
         },
 
         methods: {
+            async load() {
+
+                let query = $router.getQuery();
+                this.$loading(true);
+                const res = await $get('/xadmin/users/dataUserDetail?id='+this.entry.id, query);
+                this.$loading(false);
+                this.userDevice=res.devices;
+                setTimeout(function (){
+                    KTMenu.createInstances();
+                }, 0)
+            },
             deleteDeviceModal:function(device=[])
             {
                 $('#delete1').modal('show');
@@ -349,6 +353,17 @@
         border-radius: 0.475rem;
         color:#ffc700;
 
+    }
+    select:required:invalid {
+        color: #adadad;
+    }
+
+    option[value=""][disabled] {
+        display: none;
+    }
+
+    option {
+        color: black;
     }
 
 </style>

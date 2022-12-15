@@ -72,6 +72,7 @@
                                     <div class="form-group col-sm-4 mb-7">
                                         <label>School <span class="text-danger">*</span></label>
                                         <Treeselect :options="schools" :multiple="true" v-model="userSchool" placeholder="Choose school"/>
+                                        <error-label for="f_grade" :errors="errors.school_id"></error-label>
                                     </div>
                                 </div>
                                 <div class="row" v-if="name_role==5">
