@@ -1113,14 +1113,23 @@ class UsersController extends AdminBaseController
             ->orderBy('id', 'ASC');
         $last_updated = User::query()->orderBy('updated_at', 'desc')->first()->updated_at;
         $roles = Role::with(['users'])->orderBy('role_name', 'ASC')->get();
+        $users=User::query()->whereHas('roles',function ($q)
+        {
+           $q->where('role_name','Super Administrator');
+        });
+        $users=$users->get();
+        $idSuper=[];
+        foreach ($users as $user)
+        {
+            $idSuper[]=$user->id;
+        }
         if ($req->keyword) {
-            $query->where('username', 'LIKE', '%' . $req->keyword . '%')
-                ->orWhere('email', 'LIKE', '%' . $req->keyword . '%')
-                ->orWhere('id', 'LIKE', '%' . $req->keyword . '%')
-                ->orWhere('state', 'LIKE', '%' . $req->keyword . '%')
+            $query->whereNotIn('id',$idSuper)->where('username', 'LIKE', '%' . $req->keyword . '%')
+                ->orWhere('email', 'LIKE', '%' . $req->keyword . '%')->whereNotIn('id',$idSuper)
+                ->orWhere('state', 'LIKE', '%' . $req->keyword . '%')->whereNotIn('id',$idSuper)
                 ->orwhereHas('roles', function ($q) use ($req) {
                     $q->where('role_name', 'LIKE', '%' . $req->keyword);
-                });
+                })->whereNotIn('id',$idSuper);
         }
         if ($req->role) {
             $query->whereHas('roles', function ($q) use ($req) {
