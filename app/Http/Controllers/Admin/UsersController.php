@@ -259,10 +259,14 @@ class UsersController extends AdminBaseController
 
         }
         $userSchool=[];
-        foreach ($userSchoolArr as $us)
+        if(@$userSchoolArr)
         {
-            $userSchool[]=(int)($us);
+            foreach ($userSchoolArr as $us)
+            {
+                $userSchool[]=(int)($us);
+            }
         }
+
         $jsonData = [
             'userSchool'=>@$userSchool,
             'permissionFields'=>$permissionFields,
