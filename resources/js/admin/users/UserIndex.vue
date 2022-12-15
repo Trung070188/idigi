@@ -154,6 +154,7 @@
                                                     class="form-control form-select" v-model="filter.role">
                                                 <option value="" disabled selected>Choose role</option>
                                                 <option value="0">All</option>
+                                                {{roles}}
                                                 <option v-for="role in roles " :value="role.role_name">{{role.role_name}}</option>
                                             </select>
                                         </div>

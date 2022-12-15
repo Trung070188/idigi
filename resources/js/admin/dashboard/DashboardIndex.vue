@@ -79,7 +79,7 @@
                                     <!--end::Symbol-->
                                     <!--begin::Title-->
                                     <div>
-                                        <a href="mixed.html#" class="fs-6 text-gray-800 text-hover-primary fw-bolder">{{license.label}}</a>
+                                        <a :href="license.url" class="fs-6 text-gray-800 text-hover-primary fw-bolder">{{license.label}}</a>
                                         <div class="fs-7 text-muted fw-bold mt-1">{{license.dayEnd}} days remaining</div>
                                     </div>
                                     <!--end::Title-->
@@ -104,7 +104,7 @@
                                 <span class="card-label fw-bolder fs-3 mb-1">Activity</span>
                             </h3>
                             <div class="card-toolbar">
-                                <Datepicker v-model="filter.created" @input="doFilter"/>
+                                <Datepicker v-model="filter.created" @input="doFilter" readonly/>
                             </div>
                         </div>
                         <div class="mh-650px scroll-y me-n7 pe-7">

@@ -55,7 +55,7 @@ class UsersController extends AdminBaseController
     {
         $title = 'Users';
         $component = 'UserIndex';
-        $roles = Role::query()->orderBy('role_name')->get();
+        $roles = Role::query()->orderBy('role_name')->where('role_name','<>','Super Administrator')->get();
         $jsonData = [
             'roles' => $roles
         ];
