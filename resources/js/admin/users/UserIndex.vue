@@ -1,31 +1,57 @@
 <template>
     <div class="container-fluid">
         <ActionBar type="index"
-                   :breadcrumbs="breadcrumbs"  title = "User Management"/>
+                   :breadcrumbs="breadcrumbs"  title = "Manage users"/>
         <div class="row">
-            <div class="modal fade" style="margin-right:50px;border:2px solid #333333  " id="delete" tabindex="-1" role="dialog"
-                     aria-hidden="true">
-                    <div class="modal-dialog modal-dialog-centered popup-main-1" role="document"
-                         style="max-width: 450px;">
-                        <div class="modal-content box-shadow-main paymment-status" style="left:120px;text-align: center; padding: 20px 0px 55px;">
-                            <div class="close-popup" data-dismiss="modal"></div>
-                            <div class="swal2-icon swal2-warning swal2-icon-show">
-                                <div class="swal2-icon-content" style="margin: 0px 24.5px 0px ">!</div>
-                            </div>
-                            <div class="swal2-html-container">
-                                <p >Are you sure to delete this user?</p>
-                            </div>
-                            <div class="swal2-actions">
-                                <button type="submit" id="kt_modal_new_target_submit" class="swal2-confirm btn fw-bold btn-danger" @click="remove(entry)">
-                                    <span class="indicator-label">Yes, delete!</span>
-                                </button>
-                                <button type="reset" id="kt_modal_new_target_cancel" class="swal2-cancel btn fw-bold btn-active-light-primary" data-bs-dismiss="modal" style="margin: 0px 8px 0px">No, cancel</button>
-
-                            </div>
+                        <!-- modal xoa nhieu user -->
+            <div class="modal fade" style="margin-right:50px;border:2px solid #333333  " id="delete1" tabindex="-1" role="dialog"
+                 aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered popup-main-1" role="document"
+                     style="max-width: 450px;">
+                    <div class="modal-content box-shadow-main paymment-status" style="left:120px;text-align: center; padding: 20px 0px 55px;">
+                        <div class="close-popup" data-dismiss="modal"></div>
+                        <div class="swal2-icon swal2-warning swal2-icon-show">
+                            <div class="swal2-icon-content" style="margin: 0px 24.5px 0px ">!</div>
+                        </div>
+                        <div class="swal2-html-container">
+                            <p >Are you sure to delete this user?</p>
+                        </div>
+                        <div class="swal2-actions">
+                            <button type="submit" id="kt_modal_new_target_submit1" class="swal2-confirm btn fw-bold btn-danger" @click="removeAll">
+                                <span class="indicator-label">Yes, delete!</span>
+                            </button>
+                            <button type="reset" id="kt_modal_new_target_cancel1" class="swal2-cancel btn fw-bold btn-active-light-primary" data-bs-dismiss="modal" style="margin: 0px 8px 0px">No, cancel</button>
 
                         </div>
+
                     </div>
                 </div>
+            </div>
+            <!-- end modal xoa nhieu user -->
+
+                            <div class="modal fade" style="margin-right:50px;border:2px solid #333333  " id="delete" tabindex="-1" role="dialog"
+                                     aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog-centered popup-main-1" role="document"
+                                         style="max-width: 450px;">
+                                        <div class="modal-content box-shadow-main paymment-status" style="left:120px;text-align: center; padding: 20px 0px 55px;">
+                                            <div class="close-popup" data-dismiss="modal"></div>
+                                            <div class="swal2-icon swal2-warning swal2-icon-show">
+                                                <div class="swal2-icon-content" style="margin: 0px 24.5px 0px ">!</div>
+                                            </div>
+                                            <div class="swal2-html-container">
+                                                <p >Are you sure to delete this user?</p>
+                                            </div>
+                                            <div class="swal2-actions">
+                                                <button type="submit" id="kt_modal_new_target_submit" class="swal2-confirm btn fw-bold btn-danger" @click="remove(entry)">
+                                                    <span class="indicator-label">Yes, delete!</span>
+                                                </button>
+                                                <button type="reset" id="kt_modal_new_target_cancel" class="swal2-cancel btn fw-bold btn-active-light-primary" data-bs-dismiss="modal" style="margin: 0px 8px 0px">No, cancel</button>
+
+                                            </div>
+
+                                        </div>
+                                    </div>
+                            </div>
                             <div class="col-lg-12">
                                 <div class="card card-custom card-stretch gutter-b">
 
@@ -91,7 +117,7 @@
                             </div>
                             <button
 
-                                @click="removeAll"
+                                @click="removeAllModal"
                                 type="button"
                                 class="btn btn-danger"
                                 data-kt-customer-table-select="delete_selected"
@@ -99,6 +125,13 @@
                                 Delete Selected
                             </button>
                         </div>
+                                        <form class="col-lg-12" v-if="!isShowFilter">
+                                            <div class="row">
+                                                <div style="margin:7px 3px 0px">
+                                                    <button type="button" class="btn btn-primary" @click="doFilter()">Search</button>
+                                                </div>
+                                            </div>
+                                        </form>
 
                                 <form class="col-lg-12" v-if="isShowFilter">
                                     <div class="row">
@@ -153,8 +186,8 @@
                     </div>
 
 
-                    <div class="modal fade" style="margin-right:50px;border:2px solid #333333  " id="deviceConfirm" tabindex="-1" role="dialog"
-                         aria-labelledby="deviceConfirm"
+                    <div class="modal fade" style="margin-right:50px;border:2px solid #333333  " id="deleteSuperAdmin" tabindex="-1" role="dialog"
+                         aria-labelledby="deleteSuperAdmin"
                          aria-hidden="true">
                         <div class="modal-dialog modal-dialog-centered popup-main-1" role="document"
                              style="max-width: 500px;">
@@ -194,9 +227,7 @@
                                         </svg>
                                     </span>
 
-                                   <div v-text=" from +'-'+ to +' of '+ paginate.totalRecord " v-if="entries.length > 0"></div>
-
-
+                                   <div v-text=" from +'-'+ to +' of '+ userCount " v-if="entries.length > 0"></div>
 
                                </div>
                            </div>
@@ -241,7 +272,7 @@
                                             />
                                         </div>
                                     </td>
-                                <td>{{index+1}}</td>
+                                <td>{{(index+1)+(from-1)}}</td>
                                 <td  class="" v-text="entry.username"></td>
                                 <td  class="" v-text="entry.full_name"></td>
                                 <td  class="" v-text="entry.email"></td>
@@ -335,6 +366,7 @@
             //     }
             // }
             return {
+            userCount:'',
             user: [],
             userIds: [],
             allSelected: false,
@@ -343,10 +375,10 @@
                 isShowFilter: isShowFilter,
                 breadcrumbs: [
                     {
-                        title: 'Users & Roles'
+                        title: 'Account management'
                     },
                     {
-                        title: 'Manage Users'
+                        title: 'Manage users'
                     },
                 ],
                 roles: $json.roles || [],
@@ -367,13 +399,17 @@
             $router.on('/', this.load).init();
         },
         methods: {
+            removeAllModal()
+            {
+                $('#delete1').modal('show');
+            },
             removeUser:function(deleteUser='')
             {
                   $('#delete').modal('show');
                   this.entry=deleteUser;
             },
             modalDevice() {
-                $('#deviceConfirm').modal('show');
+                $('#deleteSuperAdmin').modal('show');
             },
 
             // edit: function (id, event){
@@ -394,6 +430,7 @@
                 this.paginate = res.paginate;
                 this.entries = res.data.data;
                 this.last_updated = res.data.last_updated;
+                this.userCount=res.data.userCount;
                 this.from = (this.paginate.currentPage - 1) * (this.limit) + 1;
                 this.to = (this.paginate.currentPage - 1) * (this.limit) + this.entries.length;
             },
@@ -472,21 +509,25 @@
         },
          async removeAll()
             {
-                if (!confirm('Xóa bản ghi: ' + JSON.stringify(this.userIds))) {
-                    return;
-                }
-
                 const res = await $post('/xadmin/users/removeAll', {ids: this.userIds});
 
-                if (res.code) {
-                    toastr.error(res.message);
-                } else {
+                if (res.code==1) {
+                    $('#delete1').modal('hide');
+                    $('#deleteSuperAdmin').modal('show');
+                    this.userIds = [];
+                    this.user = [];
+                    this.allSelected = false;
+
+                }
+                else {
                     toastr.success(res.message);
                     this.userIds = [];
                     this.user = [];
+                    this.allSelected = false;
+                    $('#delete1').modal('hide');
+                    $router.updateQuery({page: this.paginate.currentPage, _: Date.now()});
                 }
 
-                $router.updateQuery({page: this.paginate.currentPage, _: Date.now()});
 
             }
         }

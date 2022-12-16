@@ -54,7 +54,7 @@ class UsersController extends AdminBaseController
     {
         $title = 'Users';
         $component = 'UserIndex';
-        $roles = Role::query()->orderBy('role_name')->get();
+        $roles = Role::query()->orderBy('role_name')->where('role_name','<>','Super Administrator')->get();
         $jsonData = [
             'roles' => $roles
         ];
@@ -629,6 +629,11 @@ class UsersController extends AdminBaseController
 
     public function save(Request $req)
     {
+        $auth=Auth::user();
+        foreach ($auth->roles as $role)
+        {
+            $roleName=$role->role_name;
+        }
         if (!$req->isMethod('POST')) {
             return ['code' => 405, 'message' => 'Method not allow'];
         }
@@ -649,14 +654,18 @@ class UsersController extends AdminBaseController
             ],
         ];
         if (!isset($data['id'])) {
-            $rules['username'] = ['required', 'min:6', 'unique:users,username', function ($attribute, $value, $fail) {
+            if($data_role['name_role']==5 || $data_role['name_role']==2){
+                $rules['school_id']=['required'];
+            }
+                if($data_role['auto_gen']==false)
+           {
+               $rules['password']=['required'];
+           }
+            $rules['username'] = ['required', 'min:8', 'unique:users,username', function ($attribute, $value, $fail) {
                 if (preg_match('/[\'\/~`\!@#\$%\^&\*\(\)\-\+=\{\}\[\]\|;:"\<\>,\?\\\]/', $value)) {
                     return $fail(__(' The :attribute no special characters'));
                 }
             },];
-            // $rules['email'] = ['email','unique:users,email',];
-
-//            $rules['password'] = 'required|max:191|confirmed';
         }
         if (isset($data['id'])) {
             $user = User::find($data['id']);
@@ -669,27 +678,30 @@ class UsersController extends AdminBaseController
         }
         if(!isset($data['id']))
         {
-            if($data_role['auto_gen']==false)
-            {
-                $rules['password']=['required'];
-            }
-            if(@$data['password'])
-            {
-                $rules['password_confirmation']=['required'];
-            }
+
            if($data_role['name_role']==null)
            {
                $rules['name_role']=['required'];
            }
+
         }
-        if ($data_role['name_role'] == 2 || $data_role['name_role'] == 5) {
-            $rules['school_id'] = ['required'];
-        }
+//        if ($data_role['name_role'] == 2 || $data_role['name_role'] == 5) {
+//            $rules['school_id'] = ['required'];
+//        }
         $customMessages = [
             'school_id.required' => 'The school field is required.',
             'name_role.required'=>'The role field is required.'
         ];
         $v = Validator::make($data, $rules, $customMessages,$data_role);
+        $v->after(function($validate ) use ($data_role,$data)
+        {
+            if(isset($data['id']) && $data_role['password']!=$data_role['password_confirmation'])
+            {
+                $validate->errors()->add('password_confirmation','The password and confirmation password do not match.');
+
+            }
+        });
+
 
         if ($v->fails()) {
             return [
@@ -710,6 +722,12 @@ class UsersController extends AdminBaseController
 //                $data['password'] = Hash::make($data['password']);
 //            }
             $entry->fill($data);
+           if($data_role['password'] !=null)
+           {
+               $entry->password = Hash::make($data_role['password']);
+               User::where('id',$entry->id)->update(['password'=>$entry->password]);
+           }
+
             $entry->save();
          $userUnits= UserUnit::query()->where('user_id',$entry->id)->get();
          $schoolUnitIds=[];
@@ -745,6 +763,7 @@ class UsersController extends AdminBaseController
                     ]
                 );
             }
+
             return [
                 'code' => 0,
                 'message' => 'Đã cập nhật',
@@ -1012,19 +1031,35 @@ class UsersController extends AdminBaseController
      */
     public function data(Request $req)
     {
+        $userCount=User::orderBy('id','desc')->whereHas('roles',function ($q)
+        {
+            $q->where('role_name','<>','Super Administrator');
+        })->count();
         $query = User::query()
-            ->with(['roles', 'fileImage'])
+            ->with(['roles', 'fileImage'])->whereHas('roles',function ($q)
+            {
+                $q->where('role_name','<>','Super Administrator');
+            })
             ->orderBy('id', 'ASC');
         $last_updated = User::query()->orderBy('updated_at', 'desc')->first()->updated_at;
         $roles = Role::with(['users'])->orderBy('role_name', 'ASC')->get();
+        $users=User::query()->whereHas('roles',function ($q)
+        {
+           $q->where('role_name','Super Administrator');
+        });
+        $users=$users->get();
+        $idSuper=[];
+        foreach ($users as $user)
+        {
+            $idSuper[]=$user->id;
+        }
         if ($req->keyword) {
-            $query->where('username', 'LIKE', '%' . $req->keyword . '%')
-                ->orWhere('email', 'LIKE', '%' . $req->keyword . '%')
-                ->orWhere('id', 'LIKE', '%' . $req->keyword . '%')
-                ->orWhere('state', 'LIKE', '%' . $req->keyword . '%')
+            $query->whereNotIn('id',$idSuper)->where('username', 'LIKE', '%' . $req->keyword . '%')
+                ->orWhere('email', 'LIKE', '%' . $req->keyword . '%')->whereNotIn('id',$idSuper)
+                ->orWhere('state', 'LIKE', '%' . $req->keyword . '%')->whereNotIn('id',$idSuper)
                 ->orwhereHas('roles', function ($q) use ($req) {
                     $q->where('role_name', 'LIKE', '%' . $req->keyword);
-                });
+                })->whereNotIn('id',$idSuper);
         }
         if ($req->role) {
             $query->whereHas('roles', function ($q) use ($req) {
@@ -1059,6 +1094,7 @@ class UsersController extends AdminBaseController
                     $roleNames[] = $role->role_name;
                 }
             }
+
             $data[] = [
                 'role' => implode(',', $roleNames),
                 'id' => $user->id,
@@ -1077,7 +1113,8 @@ class UsersController extends AdminBaseController
             'code' => 0,
             'data' => [
                 'data' => $data,
-                'last_updated' => $last_updated
+                'last_updated' => $last_updated,
+                'userCount'=>$userCount
             ],
             'paginate' => [
                 'currentPage' => $entries->currentPage(),
@@ -1381,5 +1418,80 @@ class UsersController extends AdminBaseController
                 ];
 
             }
+    }
+    public function deleteDevice (Request $req)
+    {
+        $id=$req->id;
+        UserDevice::where('id',$id)->delete();
+        return [
+            'code'=> 0,
+            'message'=> 'Đã xóa'
+        ];
+    }
+    public function refuseDevice(Request $req)
+    {
+        $user = Auth::user();
+        foreach ($user->roles as $role)
+        {
+            $roleName=$role->role_name;
+        }
+        $id=$req->id;
+      $device=  UserDevice::where('id',$id)->update(['delete_request'=>Null]);
+        return [
+            'code'=>0,
+            'message'=>'Đã cập nhật',
+            'object'=>$device['device_name'],
+            'status'=>'Refuse remove device',
+            'role'=>$roleName
+        ];
+    }
+    public function activeAllocation(Request $req)
+    {
+        $id=$req->id;
+        $auth=Auth::user();
+        User::where('id',$id)->update(['active_allocation'=>$req->active_allocation,'full_name_active_content'=>$auth->full_name]);
+        return[
+            'code'=>0,
+            'message'=>'Đã cập nhật'
+        ];
+    }
+    public function deviceTeacher(Request $req)
+    {
+        $id=$req->id;
+        $user=User::where('id',$id)->first();
+        $school=School::where('id',$user->school_id)->first();
+        $devices=UserDevice::where('user_id',$id)->whereNull('deleted_at')->get();
+//        $deviceLog=UserDevice::where('user_id',$id)->orderBy('created_at','desc')->get();
+        $requestUris=Xlogger::query()
+            ->where('request_uri','/xadmin/user_devices/savesend')
+            ->orWhere('request_uri','/xadmin/users/removeDevice')->get();
+        $request_uri=[];
+        foreach ($requestUris as $requestUri)
+        {
+            $request_uri[]=$requestUri->request_uri;
+        }
+        $deviceLogs=Xlogger::query()->whereIn('request_uri',$request_uri)->where('http_method','POST')->where('http_code',200)->orderBy('time','desc')->get();
+        $dataDeviceLog=[];
+        foreach ($deviceLogs as $deviceLog)
+        {
+            $dataLog=json_decode($deviceLog['response'],TRUE);
+            $dataDeviceLog[]=[
+              'dataLog'=>$dataLog,
+                'time'=>$deviceLog['time']
+            ];
+        }
+        return [
+          'data'=>$devices,
+            'deviceLog'=>$dataDeviceLog,
+            'school'=>$school
+
+        ];
+    }
+    public function dataUserDetail(Request $req)
+    {
+        $devices=UserDevice::where('user_id',$req->id)->whereNull('plan_id')->get();
+        return [
+          'devices'=>$devices
+        ];
     }
 }
