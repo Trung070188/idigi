@@ -528,7 +528,7 @@
                            <option value="MacOs">MacOs</option>
                        </select>
                         <span>Expire date</span>
-                        <testDate readonly   class="form-control "  v-model="dataDeviceEdit.expired" ></testDate>
+                        <Datepicker readonly   class="form-control "  v-model="dataDeviceEdit.expired" ></Datepicker>
                         <error-label for="f_category_id" :errors="errors.edit_device_date"></error-label>
                     </div>
                     <div class="form-group d-flex justify-content-center">
@@ -2081,8 +2081,4 @@
 input[type="file"] {
     display: none;
 }
-    #trung{
-        display: none;
-    }
-
 </style>
