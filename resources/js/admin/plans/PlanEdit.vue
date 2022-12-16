@@ -505,19 +505,30 @@
             <div class="modal-dialog modal-dialog-centered popup-main-1" role="document"
                  style="max-width: 500px;">
                 <div class="modal-content box-shadow-main paymment-status" style="margin-right:20px; left:140px">
-                    <div class="close-popup" data-dismiss="modal"></div>
-                    <label style="text-align: center;" class="pt-7 fs-1 ">Edit device information </label>
+
+                        <div class="btn btn-sm btn-icon btn-active-color-primary " data-bs-dismiss="modal" style="margin-left: 440px;cursor: pointer" >
+                                <span class="svg-icon svg-icon-1">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                         viewBox="0 0 24 24" fill="none">
+                                        <rect opacity="0.5" x="6" y="17.3137" width="16" height="2"
+                                              rx="1" transform="rotate(-45 6 17.3137)"
+                                              fill="black"/>
+                                        <rect x="7.41422" y="6" width="16" height="2" rx="1" transform="rotate(45 7.41422 6)" fill="black"/>
+                                    </svg>
+                                </span>
+                        </div>
+                    <label style="text-align: center; margin-top: -20px" class="pt-7 fs-1 ">Edit device information </label>
                     <div class="px-10 py-5 text-left">
                         <label style="margin-bottom: 0px">Device name</label>
-                        <input type="text" class="form-control " placeholder="Enter the device name" aria-label="" style="margin-bottom: 10px" aria-describedby="basic-addon1" v-model="dataDeviceEdit.device_name">
-                        <error-label for="f_category_id" :errors="errors.device_name"></error-label>
+                        <input type="text" class="form-control " placeholder="Enter the device name" aria-label="" style="margin-bottom: 10px" aria-describedby="basic-addon1" v-model="dataDeviceEdit.name">
+                        <error-label for="f_category_id" :errors="errors.edit_name_device"></error-label>
                         <span>OS</span>
-                       <select class="form-control " style="margin: 0px 0px 15px" v-model="dataDeviceEdit.type">
+                       <select class="form-control " style="margin: 0px 0px 15px" v-model="dataDeviceEdit.os">
                            <option value="Windows">Windows</option>
                            <option value="MacOs">MacOs</option>
                        </select>
                         <span>Expire date</span>
-                        <datepicker readonly  class="form-control " v-model="dataDeviceEdit.expire_date"></datepicker>
+                        <testDate readonly   class="form-control "  v-model="dataDeviceEdit.expired" ></testDate>
                         <error-label for="f_category_id" :errors="errors.edit_device_date"></error-label>
                     </div>
                     <div class="form-group d-flex justify-content-center">
@@ -1106,8 +1117,13 @@
             {
                 $('#deviceConfirm1').modal('show');
                 this.dataDeviceEdit=device;
-                console.log(this.entry);
-                console.log(this.dataDeviceEdit);
+              return   this.dataDeviceEdit = {
+                   'name' : device.device_name,
+                    'id' :device.id,
+                    'uid':device.device_uid,
+                    'os':device.type,
+                    'expired':device.expire_date
+                }
 
 
 
@@ -1488,9 +1504,8 @@
                             toastr.success(res.message);
                             let self=this;
                             setTimeout(function () {
-                                $.get('/xadmin/plans/dataDevice',function (res) {
-                                    let dataDevicePlan=res.data.filter(item => item.plan_id==self.entry.id)
-                                    self.data=dataDevicePlan;
+                                $.get('/xadmin/plans/dataDevice?plan_id='+self.entry.id,function (res) {
+                                    self.data=res.data;
                                     $('#kt_modal_create_app').modal('hide');
                                     self.$refs.uploader.value = null;
                                     setTimeout(function (){
@@ -1706,9 +1721,8 @@
                     toastr.success(res.message);
                     let self=this
                     setTimeout(function () {
-                        $.get('/xadmin/plans/dataDevice',function (res) {
-                            let dataDevicePlan=res.data.filter(item => item.plan_id==self.entry.id)
-                            self.data=dataDevicePlan;
+                        $.get('/xadmin/plans/dataDevice?plan_id='+self.entry.id,function (res) {
+                            self.data=res.data;
                             setTimeout(function (){
                                 KTMenu.createInstances();
                             }, 0)
@@ -1993,16 +2007,27 @@
             {
                 window.location.href='/xadmin/plans/exportDeviceError?deviceError='+this.errorDeviceName;
             },
-            async saveEditDevice(saveEditDevice)
+            async saveEditDevice(dataDeviceEdit)
             {
-                const res=await $post('/xadmin/plans/editDevice',{device:saveEditDevice,plan:this.entry})
+                const res=await $post('/xadmin/plans/editDevice',{device:dataDeviceEdit,plan:this.entry})
 
                 if (res.code) {
                     toastr.error(res.message);
                     this.errors=res.errors;
                 } else {
                     toastr.success(res.message);
-                    $('#deviceConfirm1').modal('hide');
+                    let self=this;
+                    setTimeout(function () {
+                        $.get('/xadmin/plans/dataDevice?plan_id='+self.entry.id,function (res) {
+                            self.data=res.data;
+                            setTimeout(function (){
+                                KTMenu.createInstances();
+                            }, 0)
+                        })
+                        $('#deviceConfirm1').modal('hide');
+
+
+                    },0)
 
                 }
             }
@@ -2056,5 +2081,8 @@
 input[type="file"] {
     display: none;
 }
+    #trung{
+        display: none;
+    }
 
 </style>

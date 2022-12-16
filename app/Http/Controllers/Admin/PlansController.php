@@ -1724,7 +1724,7 @@ class PlansController extends AdminBaseController
     }
     public function dataDevice(Request $req)
     {
-        $dataDevice=UserDevice::query()->whereNotNull('plan_id')->get();
+        $dataDevice=UserDevice::query()->where('plan_id',$req->plan_id)->get();
         return[
             'data'=>$dataDevice
         ];
@@ -1774,19 +1774,19 @@ class PlansController extends AdminBaseController
     {
         $current = Carbon::now()->format('Y-m-d');
         $plan=Plan::query()->where('id',$req->plan['id'])->first();
-      if($current>$req->device['expire_date'] || $plan['expire_date'] < $req->device['expire_date'] || $req->device['device_name']==null ||  $req->device['expire_date']==null  )
+      if($current>$req->device['expired'] || $plan['expire_date'] < $req->device['expired'] || $req->device['name']==null ||  $req->device['expired']==null  )
       {
-          if($req->device['device_name']==null)
+          if($req->device['name']==null)
           {
               return [
                   'code'=>2,
                   'errors'=>[
-                      'device_name'=>['The device name is required ']
+                      'edit_name_device'=>['The device name is required ']
                   ],
                   'message'=>'Errors'
               ];
           }
-          if($current>$req->device['expire_date'])
+          if($current>$req->device['expired'])
           {
               return [
                   'code'=>2,
@@ -1796,7 +1796,7 @@ class PlansController extends AdminBaseController
                   'message'=>'Errors'
               ];
           }
-          if($plan['expire_date'] < $req->device['expire_date'])
+          if($plan['expired'] < $req->device['expired'])
           {
               return [
                   'code'=>2,
@@ -1810,7 +1810,7 @@ class PlansController extends AdminBaseController
       }
 
        else {
-            UserDevice::query()->where('id',$req->device['id'])->update(['device_name'=>$req->device['device_name'],'expire_date'=>$req->device['expire_date'],'type'=>$req->device['type']]);
+            UserDevice::query()->where('id',$req->device['id'])->update(['device_name'=>$req->device['name'],'expire_date'=>$req->device['expired'],'type'=>$req->device['os']]);
             return [
                 'code'=>0,
                 'message'=>'Đã cập nhật'
