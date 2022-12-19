@@ -504,10 +504,10 @@
              aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered popup-main-1" role="document"
                  style="max-width: 500px;">
-                <div class="modal-content box-shadow-main paymment-status" style="margin-right:20px; left:140px">
+                <div class="modal-content box-shadow-main paymment-status" style="margin-right:20px; left:140px;" >
 
-                        <div class="btn btn-sm btn-icon btn-active-color-primary " data-bs-dismiss="modal" style="margin-left: 440px;cursor: pointer" >
-                                <span class="svg-icon svg-icon-1">
+                        <div class="btn btn-sm btn-icon btn-active-color-primary " data-bs-dismiss="modal" style="margin-left: 440px;cursor: pointer;width: 50px;height: 50px" >
+                                <span class="svg-icon svg-icon-1" data-bs-dismiss="modal">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                                          viewBox="0 0 24 24" fill="none">
                                         <rect opacity="0.5" x="6" y="17.3137" width="16" height="2"
