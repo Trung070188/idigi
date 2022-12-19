@@ -113,26 +113,16 @@
                                         <treeselect :options="allCourses" :multiple="true" @deselect="deleteCourse" v-model="courseTeachers" @input="selectTotalCourse" />
                                         <error-label  for="f_grade" :errors="errors.courseTeachers"></error-label>
 
-                                        <table class="table table-row-bordered align-middle gy-4 gs-9" style="margin:25px 0px 0px">
-                                            <thead class="border-bottom border-gray-200 fs-6 text-gray-600 fw-bolder bg-light bg-opacity-75">
-                                            <tr>
-                                                <th class="">Course Name</th>
-                                                <th>Unit <span class="text-danger">*</span></th>
-                                            </tr>
-                                            </thead>
-                                            <tbody v-for="courseTeacher in courseTeachers" >
-                                            <tr v-for="course in courses" v-if="courseTeacher==course.id" >
-                                                <td  >
-                                                    {{course.label}}
-                                                </td>
-                                                <td  >
-                                                    <treeselect :options="course.total_unit" :multiple="true" v-model="course.courseTea" @input="selectTotalUnit(course)"/>
-                                                    <error-label  :errors="errors.courseTea"></error-label>
-                                                </td>
-                                            </tr>
-                                            </tbody>
-                                        </table>
-
+                                        <div class="container" style="display: grid;grid-template-columns: 15% 85%; margin: 16px -25px 0px" v-if="courseTeachers.length>0">
+                                            <div >Course name</div>
+                                            <div >Unit <span class="text-danger">*</span></div>
+                                        </div>
+                                        <div class="container" style="display: grid;grid-template-columns: 15% 85%; margin: 16px -25px 0px" v-for="courseTeacher in courseTeachers">
+                                            <div v-for="course in courses" v-if="courseTeacher==course.id" > {{course.label}}</div>
+                                            <div v-for="course in courses" v-if="courseTeacher==course.id" >
+                                                <treeselect :options="course.total_unit" :multiple="true" v-model="course.courseTea" @input="selectTotalUnit(course)" :style="{ minWidth: minWidth + 'px' }"/>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="form-check form-check-custom form-check-solid ml-3 pb-5" v-if="school.active_allocation==1">
@@ -275,6 +265,7 @@
                 }
             })
             return {
+                minWidth: 940,
                 school:{},
                 deviceLog:[],
                 active_allocation:$json.active_allocation,
