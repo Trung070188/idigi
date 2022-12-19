@@ -162,8 +162,7 @@
                                 <td style="color: #f1c40f" v-if="device.delete_request!=null" v-text="device.delete_request"></td>
                                 <td v-else></td>
                                 <td>
-                                    <a @click="modalDevice(device)" href="javascript:;" class="btn-trash deleted"><i
-                                        class="fa fa-trash mr-1 deleted"></i></a>
+                                    <a @click="modalDevice(device)" href="javascript:;" class="btn-trash deleted"><i class="bi bi-trash"></i></a>
                                 </td>
                             </tr>
                             </tbody>
