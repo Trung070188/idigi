@@ -1793,7 +1793,6 @@ class PlansController extends AdminBaseController
                   'errors'=>[
                       'edit_device_date'=>['The expire date must be a date after or equal to '.$current]
                   ],
-                  'message'=>'Errors'
               ];
           }
           if($plan['expired'] < $req->device['expired'])
@@ -1803,7 +1802,6 @@ class PlansController extends AdminBaseController
                   'errors'=>[
                       'edit_device_date'=>['The expire date must be a date before or equal to '.$plan['expire_date']]
                   ],
-                  'message'=>'Errors'
               ];
           }
 
