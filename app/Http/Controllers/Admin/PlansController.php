@@ -1783,7 +1783,6 @@ class PlansController extends AdminBaseController
                   'errors'=>[
                       'edit_name_device'=>['The device name is required ']
                   ],
-                  'message'=>'Errors'
               ];
           }
           if($current>$req->device['expired'])

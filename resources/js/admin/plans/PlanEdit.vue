@@ -2011,10 +2011,8 @@
                 const res=await $post('/xadmin/plans/editDevice',{device:dataDeviceEdit,plan:this.entry})
 
                 if (res.code) {
-                    toastr.error(res.message);
                     this.errors=res.errors;
                 } else {
-                    toastr.success(res.message);
                     let self=this;
                     setTimeout(function () {
                         $.get('/xadmin/plans/dataDevice?plan_id='+self.entry.id,function (res) {
