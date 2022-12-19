@@ -56,17 +56,19 @@
             }
         },
         watch: {
-           value: function () {
+           value: function (newValue) {
                 if (!this.value) {
                     this.$el.value = '';
+                } else {
+                    this.value=newValue;
+                    const format = 'DD/MM/YYYY';
+                    var value =   this.value ? moment( this.value) : moment();
+                    this.$el.value =value.format(format);
                 }
            }
         },
         mounted: function () {
             var self = this;
-
-
-
             var value =   this.value ? moment( this.value) : moment();
             const format = 'DD/MM/YYYY';
 
@@ -74,8 +76,6 @@
             if (this.mindate === 'now') {
                 minDate = moment();
             }
-
-
             $( this.$el).daterangepicker({
                 singleDatePicker: true,
                 autoUpdateInput: false,
@@ -85,7 +85,6 @@
                 timePicker: this.timepicker || false,
                 timePicker24Hour: true,
                 //minDate
-
             },  (start, end) => {
                 this.$emit('input', start.format('YYYY-MM-DD'));
                 this.$el.value = start.format(format);
@@ -100,7 +99,6 @@
             if (this.value) {
                 this.$el.value = value.format(format);
             }
-
         },
     }
 </script>

@@ -528,6 +528,7 @@
                            <option value="MacOs">MacOs</option>
                        </select>
                         <span>Expire date</span>
+
                         <Datepicker readonly   class="form-control "  v-model="dataDeviceEdit.expired" ></Datepicker>
                         <error-label for="f_category_id" :errors="errors.edit_device_date"></error-label>
                     </div>
@@ -746,15 +747,12 @@
                                                 <div class="w-100">
                                                     <!--begin::Input group-->
                                                     <div class="fv-row mb-10">
-                                                        <!--begin::Label-->
-                                                        <label class="required fs-5 fw-bold mb-2"  v-if="doNotImport==1"  >Imported unsuccessful!</label>
-                                                        <label class="required fs-5 fw-bold mb-2" v-if="doNotImport==0">Imported successful!</label>
                                                     </div>
                                                     <!--end::Input group-->
                                                     <!--begin::Input group-->
                                                     <div class="fv-row">
-                                                    <label v-if="doNotImport==0">{{fileImport.length}} new record(s) imported</label>
-                                                        <label v-if="doNotImport==1">{{deviceError.length}} new record(s) do not imported</label>
+                                                    <label v-if="doNotImport==0">Do you want to import {{fileImport.length}} records?</label>
+                                                        <label v-if="doNotImport==1"> Do you want to not import {{deviceError.length}} records?</label>
                                                     </div>
                                                     <!--end::Input group-->
                                                 </div>
@@ -1117,6 +1115,7 @@
             {
                 $('#deviceConfirm1').modal('show');
                 this.dataDeviceEdit=device;
+                console.log(device);
               return   this.dataDeviceEdit = {
                    'name' : device.device_name,
                     'id' :device.id,

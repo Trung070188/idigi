@@ -919,7 +919,7 @@ class PlansController extends AdminBaseController
             }
             return [
                 'code' => 0,
-                'message' => 'Đã cập nhật',
+                'message' => 'Imported successful!',
             ];
 
         }

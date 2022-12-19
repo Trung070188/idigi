@@ -44,7 +44,7 @@
             <!--end::Row-->
             <!--begin::Row-->
             <div class="row gy-5 g-xl-8">
-                <div class="col-xl-8">
+                <div class="col-xl-8 chart">
                     <div class="card card-xl-stretch mb-xl-8">
                         <div class="card-header border-0 pt-5 mt-0">
                             <div>
@@ -293,6 +293,16 @@
         white-space: nowrap;
         cursor: pointer;
         padding: 0.75rem;
+        vertical-align: top;
+    }
+    .chart{
+        max-width: 1000px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        cursor: pointer;
+        /*padding: 0.75rem;*/
+        padding: 0px 8px 0px;
         vertical-align: top;
     }
 
