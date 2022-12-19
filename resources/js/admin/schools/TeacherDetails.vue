@@ -108,22 +108,23 @@
                                     </div>
                                 </div>
                                 <div class="row" v-if=" school.active_allocation==1" >
-                                    <div class="form-group col-sm-10">
+                                    <div class="form-group col-sm-12">
                                         <label>Course<span class="text-danger">*</span></label>
                                         <treeselect :options="allCourses" :multiple="true" @deselect="deleteCourse" v-model="courseTeachers" @input="selectTotalCourse" />
                                         <error-label  for="f_grade" :errors="errors.courseTeachers"></error-label>
-
-                                        <div class="container" style="display: grid;grid-template-columns: 15% 85%; margin: 16px -25px 0px" v-if="courseTeachers.length>0">
-                                            <div >Course name</div>
-                                            <div >Unit <span class="text-danger">*</span></div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                        <div class="col-lg-12" style="display: flex" v-if="courseTeachers.length>0">
+                                            <div style="display: flex;align-items: center;flex-basis: 10%">Course name</div>
+                                            <div style="flex-basis: 90%"  >Unit <span class="text-danger">*</span></div>
                                         </div>
-                                        <div class="container" style="display: grid;grid-template-columns: 15% 85%; margin: 16px -25px 0px" v-for="courseTeacher in courseTeachers">
-                                            <div v-for="course in courses" v-if="courseTeacher==course.id" > {{course.label}}</div>
-                                            <div v-for="course in courses" v-if="courseTeacher==course.id" >
+                                        <div class="col-lg-12" style="display: flex ;margin: 16px 0px 0px" v-for="courseTeacher in courseTeachers">
+                                            <div v-for="course in courses" v-if="courseTeacher==course.id"  style="display: flex;align-items: center;flex-basis: 10%"> {{course.label}}</div>
+                                            <div v-for="course in courses" v-if="courseTeacher==course.id" style="flex-basis: 90%">
                                                 <treeselect :options="course.total_unit" :multiple="true" v-model="course.courseTea" @input="selectTotalUnit(course)" :style="{ minWidth: minWidth + 'px' }"/>
                                             </div>
                                         </div>
-                                    </div>
                                 </div>
                                 <div class="form-check form-check-custom form-check-solid ml-3 pb-5" v-if="school.active_allocation==1">
                                     <input id="state1" type="checkbox" v-model="active_allocation" class="form-check-input h-20px w-20px" @change="activeAllocation">
