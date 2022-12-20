@@ -205,7 +205,7 @@ class PlansController extends AdminBaseController
                 'school_id' => $device->school_id,
                 'secret_key' => $device->secret_key,
                 'reason' => $device->reason,
-                'expire_date' => ($device->expire_date),
+                'expire_date' => $device->expire_date,
                 'created_at' => $device->created_at,
                 'updated_at' => $device->updated_at,
                 'roleName' => $roleName,
@@ -259,7 +259,7 @@ class PlansController extends AdminBaseController
             'plan_zip_package_lesson'=>$permissionDetail->havePermission('plan_zip_package_lesson',$permissions,$user),
             'plan_rename_lesson_package'=>$permissionDetail->havePermission('plan_rename_lesson_package',$permissions,$user),
             'plan_device_get_confirm_code'=>$permissionDetail->havePermission('plan_device_get_confirm_code',$permissions,$user),
-
+            'plan_edit_device_information'=>$permissionDetail->havePermission('plan_edit_device_information',$permissions,$user),
 
         ];
         $exportDeviceName='export_device_'. uniqid(time());
@@ -416,8 +416,19 @@ class PlansController extends AdminBaseController
                     'message' => 'Không tìm thấy',
                 ];
             }
-
+            $devices=UserDevice::where('plan_id',$data['id'])->get();
+            $deviceUpdate=[];
+            foreach ($devices as $device)
+            {
+                $date1 = Carbon::createFromFormat('Y-m-d', $req->entry['expire_date']);
+                $date2 = Carbon::createFromFormat('Y-m-d', $device->expire_date);
+                if($date1->gte($date2)==false|| $device->expire_date==$entry->expire_date )
+                {
+                    $deviceUpdate[]=$device->id;
+                }
+            }
             $entry->fill($data);
+            UserDevice::whereIn('id',$deviceUpdate)->update(['expire_date'=>$data['expire_date']]);
             $entry->save();
             SchoolPlan::where('plan_id', $entry->id)->delete();
             if (@$dataRole['schoolPlan']) {
@@ -425,7 +436,6 @@ class PlansController extends AdminBaseController
                     SchoolPlan::create(['school_id' => $school, 'plan_id' => $entry->id]);
                 }
             }
-
             return [
                 'code' => 0,
                 'message' => 'Đã cập nhật',
@@ -662,6 +672,12 @@ class PlansController extends AdminBaseController
                                     $item['device_uid'] = $decoded->device_uid;
                                 }
                                 catch (\Exception $e) {
+                                    $code=2;
+                                    $item['error']=[
+                                    'device_uid'=>[
+                                        'Register code is invalid'
+                                    ]
+                                  ];
                                 }
                             }
                             else{
@@ -669,11 +685,13 @@ class PlansController extends AdminBaseController
                             }
                             if($item['expire_date']!=null)
                             {
+                                $current = Carbon::now()->format('Y/m/d');
+
                                 $validator = Validator::make($item, [
                                     'device_name' => ['required'],
                                     'device_uid' => ['required'],
                                     'type' => 'required',
-                                    'expire_date' => ['date_format:d/m/Y', 'before_or_equal:' . $dayExpireDevice]
+                                    'expire_date' => ['date_format:d/m/Y', 'before_or_equal:' . $dayExpireDevice,'after_or_equal:' . $current]
                                 ]);
 
                                 $validator->after(function ($validate) use ($item,$planId){
@@ -692,8 +710,8 @@ class PlansController extends AdminBaseController
                             if($item['expire_date']==null)
                             {
                                 $validator = Validator::make($item, [
-                                    'device_name' => ['required'],
-                                    'device_uid' => ['required'],
+                                    'device_name' => 'required',
+                                    'device_uid' =>'required',
                                     'type' => 'required',
                                 ]);
                                 $validator->after(function ($validate) use ($item,$planId){
@@ -719,12 +737,80 @@ class PlansController extends AdminBaseController
                         }
                     }
                 }
+                $errorDeviceName=[];
+                $errorDeviceUid=[];
+                $checkDuplicateDeviceName=[];
+                $checkDuplicateUid=[];
+                $check=0;
+
+                foreach ($validations as $validation)
+                {
+                    if(@$validation['error'])
+                    {
+                        $errorDeviceName[]=[];
+                    }
+                   else{
+                       if(in_array($validation['device_name'], $checkDuplicateDeviceName)){
+                           $code=2;
+                           $check=1;
+                           $errorDeviceName[] = $validation['device_name'];
+                       }
+                       else{
+                           $checkDuplicateDeviceName[]=$validation['device_name'];
+                       }
+                   }
+                }
+                foreach ($validations as $validation)
+                {
+                    if(@$validation['error'])
+                    {
+                        $errorDeviceUid[]=[];
+                    }
+                    else{
+                        if(in_array($validation['device_uid'], $checkDuplicateUid)){
+                            $code=2;
+                            $check=0;
+                            $errorDeviceUid[] = $validation['device_uid'];
+                        }
+                        else{
+                            $checkDuplicateUid[]=$validation['device_uid'];
+                        }
+                    }
+
+                }
                 $fileError = [];
                 $fileImport = [];
                 $devicePlan = [];
                 if ($code == 2) {
                     //export
                     foreach ($validations as $validation) {
+                            foreach ($errorDeviceName as $err)
+                            {
+
+                                if($err!==[]&&$validation['device_name']==$err && $check==1)
+                                {
+                                    $validation['error']=[
+                                        'device_name'=>[
+                                            'The device name have duplication'
+                                        ]
+                                    ];
+                                }
+
+                            }
+
+
+                            foreach ($errorDeviceUid as $err)
+                            {
+                                if($err!==[]&&$validation['device_uid']==$err && $check==0)
+                                {
+                                    $validation['error']=[
+                                        'device_uid'=>[
+                                            'The device uid have duplication'
+                                        ]
+                                    ];
+                                }
+                            }
+
                         if (@$validation['error']) {
                             $fileError[] = [
                                 'device_name' => $validation['device_name'],
@@ -836,7 +922,7 @@ class PlansController extends AdminBaseController
             }
             return [
                 'code' => 0,
-                'message' => 'Đã cập nhật',
+                'message' => 'Imported successful!',
             ];
 
         }
@@ -1008,6 +1094,7 @@ class PlansController extends AdminBaseController
      */
     public function data(Request $req)
     {
+        $countPlan=Plan::query()->orderBy('id','desc')->count();
         $user = Auth::user();
         foreach ($user->roles as $role) {
             $roleName = $role->role_name;
@@ -1102,6 +1189,7 @@ class PlansController extends AdminBaseController
         return [
             'code' => 0,
             'data' => $data,
+            'countPlan'=>$countPlan,
             'paginate' => [
                 'currentPage' => $entries->currentPage(),
                 'lastPage' => $entries->lastPage(),
@@ -1639,7 +1727,7 @@ class PlansController extends AdminBaseController
     }
     public function dataDevice(Request $req)
     {
-        $dataDevice=UserDevice::query()->whereNotNull('plan_id')->get();
+        $dataDevice=UserDevice::query()->where('plan_id',$req->plan_id)->get();
         return[
             'data'=>$dataDevice
         ];
@@ -1684,6 +1772,51 @@ class PlansController extends AdminBaseController
             'data'=>$getPlan,
         ];
 
+    }
+    public function editDevice(Request $req)
+    {
+        $current = Carbon::now()->format('Y-m-d');
+        $plan=Plan::query()->where('id',$req->plan['id'])->first();
+      if($current>$req->device['expired'] || $plan['expire_date'] < $req->device['expired'] || $req->device['name']==null ||  $req->device['expired']==null  )
+      {
+          if($req->device['name']==null)
+          {
+              return [
+                  'code'=>2,
+                  'errors'=>[
+                      'edit_name_device'=>['The device name is required ']
+                  ],
+              ];
+          }
+          if($current>$req->device['expired'])
+          {
+              $current=Carbon::createFromFormat('Y-m-d',$current)->format('d/m/Y');
+              return [
+                  'code'=>2,
+                  'errors'=>[
+                      'edit_device_date'=>['The expire date must be a date after or equal to '.$current]
+                  ],
+              ];
+          }
+          if($plan['expired'] < $req->device['expired'])
+          {
+              return [
+                  'code'=>2,
+                  'errors'=>[
+                      'edit_device_date'=>['The expire date must be a date before or equal to '.$plan['expire_date']]
+                  ],
+              ];
+          }
+
+      }
+
+       else {
+            UserDevice::query()->where('id',$req->device['id'])->update(['device_name'=>$req->device['name'],'expire_date'=>$req->device['expired'],'type'=>$req->device['os']]);
+            return [
+                'code'=>0,
+                'message'=>'Đã cập nhật'
+            ];
+        }
     }
 }
 

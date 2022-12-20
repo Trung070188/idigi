@@ -296,6 +296,10 @@
                                                     </a>
                                                     <div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-bold fs-7 w-180px py-4" data-kt-menu="true">
                                                         <div class="menu-item px-3">
+                                                            <a v-if="permissionFields['plan_edit_device_information']==false"   class="menu-link px-3 isDisabled">Edit</a>
+                                                            <a v-else class="menu-link px-3" @click="modalEditDevice(device)">Edit</a>
+                                                        </div>
+                                                        <div class="menu-item px-3">
                                                             <a v-if="permissionFields['plan_device_get_confirm_code']==false"   class="menu-link px-3 isDisabled">Get confirmation code</a>
                                                             <a v-else class="menu-link px-3" @click="modalConfirmationCode(device)">Get confirmation code</a>
                                                         </div>
@@ -494,6 +498,50 @@
 
         <!-- end: modal add device-->
 
+        <!-- begin :modal edit device -->
+        <div class="modal fade" style="margin-right:50px " id="deviceConfirm1" tabindex="-1" role="dialog"
+             aria-labelledby="deviceConfirm"
+             aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered popup-main-1" role="document"
+                 style="max-width: 500px;">
+                <div class="modal-content box-shadow-main paymment-status" style="margin-right:20px; left:140px;" >
+
+                        <div class="btn btn-sm btn-icon btn-active-color-primary " data-bs-dismiss="modal" style="margin-left: 440px;cursor: pointer;width: 50px;height: 50px" >
+                                <span class="svg-icon svg-icon-1" data-bs-dismiss="modal">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                         viewBox="0 0 24 24" fill="none">
+                                        <rect opacity="0.5" x="6" y="17.3137" width="16" height="2"
+                                              rx="1" transform="rotate(-45 6 17.3137)"
+                                              fill="black"/>
+                                        <rect x="7.41422" y="6" width="16" height="2" rx="1" transform="rotate(45 7.41422 6)" fill="black"/>
+                                    </svg>
+                                </span>
+                        </div>
+                    <label style="text-align: center; margin-top: -20px" class="pt-7 fs-1 ">Edit device information </label>
+                    <div class="px-10 py-5 text-left">
+                        <label style="margin-bottom: 0px">Device name</label>
+                        <input type="text" class="form-control " placeholder="Enter the device name" aria-label="" style="margin-bottom: 10px" aria-describedby="basic-addon1" v-model="dataDeviceEdit.name">
+                        <error-label for="f_category_id" :errors="errors.edit_name_device"></error-label>
+                        <span>OS</span>
+                       <select class="form-control " style="margin: 0px 0px 15px" v-model="dataDeviceEdit.os">
+                           <option value="Windows">Windows</option>
+                           <option value="MacOs">MacOs</option>
+                       </select>
+                        <span>Expire date</span>
+
+                        <Datepicker readonly   class="form-control "  v-model="dataDeviceEdit.expired" ></Datepicker>
+                        <error-label for="f_category_id" :errors="errors.edit_device_date"></error-label>
+                    </div>
+                    <div class="form-group d-flex justify-content-center">
+                        <!--                        <button  class="btn btn-danger ito-btn-small" data-dismiss="modal" @click="save()">Add now</button>-->
+                        <button class="btn btn-primary ito-btn-add mr-3" data-dismiss="modal" @click="saveEditDevice(dataDeviceEdit)">Save
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- end :modal edit device -->
+
         <!-- BEGIN: MODAL IMPPORT DEVICE -->
 
         <div class="post d-flex flex-column-fluid" id="kt_post">
@@ -615,22 +663,13 @@
                                                                     </div>
                                                                     <div class="dropzone-error mt-0" data-dz-errormessage=""></div>
                                                                 </div>
-                                                                <!--end::File-->
-                                                                <!--begin::Progress-->
-                                                                <!--                                                        <div class="dropzone-progress">-->
-                                                                <!--                                                            <div class="progress bg-light-primary">-->
-                                                                <!--                                                                <div class="progress-bar bg-primary" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" data-dz-uploadprogress=""></div>-->
-                                                                <!--                                                            </div>-->
-                                                                <!--                                                        </div>-->
-                                                                <!--end::Progress-->
-                                                                <!--begin::Toolbar-->
                                                                 <div class="dropzone-toolbar">
                                                                     <span class="dropzone-delete" data-dz-remove="">
 																			<i style="font-size: 15px; color: red" class="bi bi-trash" @click="removeFileDevice"></i>
 																		</span>
                                                                 </div>
-                                                                <!--end::Toolbar-->
                                                             </div>
+                                                            <error-label :errors="errors.sizeFile"></error-label>
                                                         </div>
                                                         <div v-if="valueValidateImportDevice==0" class="dropzone-panel mb-4  ">
                                                             <a class="btn btn-light btn-active-light-primary btn-sm" data-kt-menu-trigger="click" @click="downloadTemplate()" ><i class="bi bi-download mr-2"></i>Download template here</a>
@@ -699,15 +738,12 @@
                                                 <div class="w-100">
                                                     <!--begin::Input group-->
                                                     <div class="fv-row mb-10">
-                                                        <!--begin::Label-->
-                                                        <label class="required fs-5 fw-bold mb-2"  v-if="doNotImport==1"  >Imported unsuccessful!</label>
-                                                        <label class="required fs-5 fw-bold mb-2" v-if="doNotImport==0">Imported successful!</label>
                                                     </div>
                                                     <!--end::Input group-->
                                                     <!--begin::Input group-->
                                                     <div class="fv-row">
-                                                    <label v-if="doNotImport==0">{{fileImport.length}} new record(s) imported</label>
-                                                        <label v-if="doNotImport==1">{{deviceError.length}} new record(s) do not imported</label>
+                                                    <label v-if="doNotImport==0">Do you want to import {{fileImport.length}} records?</label>
+                                                        <label v-if="doNotImport==1"> Do you want to not import {{fileImport.length}} records?</label>
                                                     </div>
                                                     <!--end::Input group-->
                                                 </div>
@@ -933,6 +969,7 @@
             };
 
             return {
+                dataDeviceEdit:[],
                 disableContinue:false,
                 cachePlan:$json.cachePlan,
                 cacheLesson:$json.cacheLesson,
@@ -1042,6 +1079,10 @@
             {
                 this.deviceExpireDate='';
             },
+            EditDeviceExpireDateClear(dataDeviceEdit)
+            {
+                dataDeviceEdit.expire_date='';
+            },
             expireDateClear()
             {
                 this.entry.expire_date='';
@@ -1060,6 +1101,22 @@
                 $('#addNamePackageLesson').modal('show');
                 this.packageLessonName='';
                 this.tabLessonContent='';
+            },
+            modalEditDevice:function(device={})
+            {
+                $('#deviceConfirm1').modal('show');
+                this.dataDeviceEdit=device;
+                console.log(device);
+              return   this.dataDeviceEdit = {
+                   'name' : device.device_name,
+                    'id' :device.id,
+                    'uid':device.device_uid,
+                    'os':device.type,
+                    'expired':device.expire_date
+                }
+
+
+
             },
             renameLessonPackage:function(rename='')
             {
@@ -1336,18 +1393,36 @@
 
             // validate device khi import
             async importFileDevice() {
-                if (this.$refs.uploader.files) {
+                const fileExtension =this.$refs.uploader.files[0].name.split('.').pop();
+                if(fileExtension!=='xlsx')
+                {
+                    return  this.errors={
+                        'sizeFile':['The file is not in the correct format']
+                    };
+                }
+                else{
+                    this.errors={};
                    let fileSize=(this.$refs.uploader.files[0].size.toString());
                     if(fileSize.length < 7)
                     {
                         let size= `${Math.round(+fileSize/1024).toFixed(2)}kb`
                         this.sizeFile=size;
+
                     }
                     else {
-                       let size= `${(Math.round(+fileSize/1024)/1000).toFixed(2)}MB`
+                       let size= `${(Math.round(+fileSize/1024)/1000).toFixed(2)}MB`;
+                       let numberSize=(Math.round(+fileSize/1024)/1000).toFixed(2)
                         this.sizeFile=size;
-                    }
+                       if(numberSize>5)
+                       {
+                          return  this.errors={
+                               'sizeFile':['Max file size is 5Mb']
+                           };
 
+                       }
+
+                    }
+                    this.errors={};
                     this.fileUpLoad=this.$refs.uploader.files[0].name
                     const files = this.$refs.uploader.files;
                     this.disableContinue=true;
@@ -1437,9 +1512,8 @@
                             toastr.success(res.message);
                             let self=this;
                             setTimeout(function () {
-                                $.get('/xadmin/plans/dataDevice',function (res) {
-                                    let dataDevicePlan=res.data.filter(item => item.plan_id==self.entry.id)
-                                    self.data=dataDevicePlan;
+                                $.get('/xadmin/plans/dataDevice?plan_id='+self.entry.id,function (res) {
+                                    self.data=res.data;
                                     $('#kt_modal_create_app').modal('hide');
                                     self.$refs.uploader.value = null;
                                     setTimeout(function (){
@@ -1655,9 +1729,8 @@
                     toastr.success(res.message);
                     let self=this
                     setTimeout(function () {
-                        $.get('/xadmin/plans/dataDevice',function (res) {
-                            let dataDevicePlan=res.data.filter(item => item.plan_id==self.entry.id)
-                            self.data=dataDevicePlan;
+                        $.get('/xadmin/plans/dataDevice?plan_id='+self.entry.id,function (res) {
+                            self.data=res.data;
                             setTimeout(function (){
                                 KTMenu.createInstances();
                             }, 0)
@@ -1941,6 +2014,28 @@
             exportDeviceError()
             {
                 window.location.href='/xadmin/plans/exportDeviceError?deviceError='+this.errorDeviceName;
+            },
+            async saveEditDevice(dataDeviceEdit)
+            {
+                const res=await $post('/xadmin/plans/editDevice',{device:dataDeviceEdit,plan:this.entry})
+
+                if (res.code) {
+                    this.errors=res.errors;
+                } else {
+                    let self=this;
+                    setTimeout(function () {
+                        $.get('/xadmin/plans/dataDevice?plan_id='+self.entry.id,function (res) {
+                            self.data=res.data;
+                            setTimeout(function (){
+                                KTMenu.createInstances();
+                            }, 0)
+                        })
+                        $('#deviceConfirm1').modal('hide');
+
+
+                    },0)
+
+                }
             }
         }
     }
@@ -1992,5 +2087,4 @@
 input[type="file"] {
     display: none;
 }
-
 </style>
