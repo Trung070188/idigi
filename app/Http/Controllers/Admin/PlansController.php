@@ -420,7 +420,9 @@ class PlansController extends AdminBaseController
             $deviceUpdate=[];
             foreach ($devices as $device)
             {
-                if($device->expire_date==$entry->expire_date)
+                $date1 = Carbon::createFromFormat('Y-m-d', $req->entry['expire_date']);
+                $date2 = Carbon::createFromFormat('Y-m-d', $device->expire_date);
+                if($date1->gte($date2)==false|| $device->expire_date==$entry->expire_date )
                 {
                     $deviceUpdate[]=$device->id;
                 }
@@ -434,7 +436,6 @@ class PlansController extends AdminBaseController
                     SchoolPlan::create(['school_id' => $school, 'plan_id' => $entry->id]);
                 }
             }
-
             return [
                 'code' => 0,
                 'message' => 'Đã cập nhật',
@@ -684,11 +685,13 @@ class PlansController extends AdminBaseController
                             }
                             if($item['expire_date']!=null)
                             {
+                                $current = Carbon::now()->format('Y/m/d');
+
                                 $validator = Validator::make($item, [
                                     'device_name' => ['required'],
                                     'device_uid' => ['required'],
                                     'type' => 'required',
-                                    'expire_date' => ['date_format:d/m/Y', 'before_or_equal:' . $dayExpireDevice]
+                                    'expire_date' => ['date_format:d/m/Y', 'before_or_equal:' . $dayExpireDevice,'after_or_equal:' . $current]
                                 ]);
 
                                 $validator->after(function ($validate) use ($item,$planId){
@@ -1787,6 +1790,7 @@ class PlansController extends AdminBaseController
           }
           if($current>$req->device['expired'])
           {
+              $current=Carbon::createFromFormat('Y-m-d',$current)->format('d/m/Y');
               return [
                   'code'=>2,
                   'errors'=>[

@@ -752,7 +752,7 @@
                                                     <!--begin::Input group-->
                                                     <div class="fv-row">
                                                     <label v-if="doNotImport==0">Do you want to import {{fileImport.length}} records?</label>
-                                                        <label v-if="doNotImport==1"> Do you want to not import {{deviceError.length}} records?</label>
+                                                        <label v-if="doNotImport==1"> Do you want to not import {{fileImport.length}} records?</label>
                                                     </div>
                                                     <!--end::Input group-->
                                                 </div>

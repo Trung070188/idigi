@@ -159,7 +159,7 @@ class SchoolsController extends AdminBaseController
     public function dataTeacher(Request $req)
     {
         $id = $req->id;
-        $countTeacher=User::query()->whereHas('roles',function ($q)
+        $countTeacher=User::query()->where('school_id',$id)->whereHas('roles',function ($q)
         {
             $q->where('role_name','Teacher');
         })->count();
