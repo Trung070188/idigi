@@ -663,22 +663,13 @@
                                                                     </div>
                                                                     <div class="dropzone-error mt-0" data-dz-errormessage=""></div>
                                                                 </div>
-                                                                <!--end::File-->
-                                                                <!--begin::Progress-->
-                                                                <!--                                                        <div class="dropzone-progress">-->
-                                                                <!--                                                            <div class="progress bg-light-primary">-->
-                                                                <!--                                                                <div class="progress-bar bg-primary" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" data-dz-uploadprogress=""></div>-->
-                                                                <!--                                                            </div>-->
-                                                                <!--                                                        </div>-->
-                                                                <!--end::Progress-->
-                                                                <!--begin::Toolbar-->
                                                                 <div class="dropzone-toolbar">
                                                                     <span class="dropzone-delete" data-dz-remove="">
 																			<i style="font-size: 15px; color: red" class="bi bi-trash" @click="removeFileDevice"></i>
 																		</span>
                                                                 </div>
-                                                                <!--end::Toolbar-->
                                                             </div>
+                                                            <error-label :errors="errors.sizeFile"></error-label>
                                                         </div>
                                                         <div v-if="valueValidateImportDevice==0" class="dropzone-panel mb-4  ">
                                                             <a class="btn btn-light btn-active-light-primary btn-sm" data-kt-menu-trigger="click" @click="downloadTemplate()" ><i class="bi bi-download mr-2"></i>Download template here</a>
@@ -1402,18 +1393,36 @@
 
             // validate device khi import
             async importFileDevice() {
-                if (this.$refs.uploader.files) {
+                const fileExtension =this.$refs.uploader.files[0].name.split('.').pop();
+                if(fileExtension!=='xlsx')
+                {
+                    return  this.errors={
+                        'sizeFile':['The file is not in the correct format']
+                    };
+                }
+                else{
+                    this.errors={};
                    let fileSize=(this.$refs.uploader.files[0].size.toString());
                     if(fileSize.length < 7)
                     {
                         let size= `${Math.round(+fileSize/1024).toFixed(2)}kb`
                         this.sizeFile=size;
+
                     }
                     else {
-                       let size= `${(Math.round(+fileSize/1024)/1000).toFixed(2)}MB`
+                       let size= `${(Math.round(+fileSize/1024)/1000).toFixed(2)}MB`;
+                       let numberSize=(Math.round(+fileSize/1024)/1000).toFixed(2)
                         this.sizeFile=size;
-                    }
+                       if(numberSize>5)
+                       {
+                          return  this.errors={
+                               'sizeFile':['Max file size is 5Mb']
+                           };
 
+                       }
+
+                    }
+                    this.errors={};
                     this.fileUpLoad=this.$refs.uploader.files[0].name
                     const files = this.$refs.uploader.files;
                     this.disableContinue=true;
