@@ -159,6 +159,10 @@ class SchoolsController extends AdminBaseController
     public function dataTeacher(Request $req)
     {
         $id = $req->id;
+        $countTeacher=User::query()->whereHas('roles',function ($q)
+        {
+            $q->where('role_name','Teacher');
+        })->count();
         $entry = School::find($id);
         $query = User::query()
             ->with(['roles', 'user_devices'])
@@ -190,6 +194,7 @@ class SchoolsController extends AdminBaseController
         $users = $entries->items();
 
         return [
+            'countTeacher'=>$countTeacher,
             'code' => 0,
             'lengthDeviceTeacher'=>$entry->devices_per_user,
             'data' => $users,
