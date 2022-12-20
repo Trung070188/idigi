@@ -189,7 +189,7 @@ class PermissionDetailsController extends AdminBaseController
         ->with(['permissionDetails'])
         ->where('role_name', '<>','Super Administrator')
         ->orderBy('order', 'ASC')->get();
-        $permissions=Permission::with(['permissionDetails'])->whereNotNull('display_permission_detail')->get();
+        $permissions=Permission::with(['permissionDetails'])->whereNotNull('display_permission_detail')->orderBy('order_permission','ASC')->get();
        $data=[];
        foreach($roles as $role)
        {
@@ -201,7 +201,8 @@ class PermissionDetailsController extends AdminBaseController
                   $item =[
                       'id'=>$permissionDetail->id,
                       'permission'=>$permission->id,
-                      'value'=>0
+                      'value'=>0,
+                      'is_admin'=>$permissionDetail->is_admin
                   ];
                   foreach ($role->permissionDetails as $_permissionDetail)
                   {
