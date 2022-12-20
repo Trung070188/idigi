@@ -189,7 +189,7 @@ class PermissionDetailsController extends AdminBaseController
         ->with(['permissionDetails'])
         ->where('role_name', '<>','Super Administrator')
         ->orderBy('order', 'ASC')->get();
-        $permissions=Permission::with(['permissionDetails'])->whereNotNull('display_permission_detail')->get();
+        $permissions=Permission::with(['permissionDetails'])->whereNotNull('display_permission_detail')->orderBy('order_permission','ASC')->get();
        $data=[];
        foreach($roles as $role)
        {

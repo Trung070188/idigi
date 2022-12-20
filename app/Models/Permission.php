@@ -25,6 +25,7 @@ class Permission extends BaseModel
         'description',
         'path',
         'code',
+        'order_permission',
         'group_permission_id',
         'display_permission_detail'
     ];
