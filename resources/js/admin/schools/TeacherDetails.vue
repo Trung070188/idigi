@@ -122,11 +122,12 @@
                                         <div class="col-lg-12" style="display: flex ;margin: 16px 0px 0px" v-for="courseTeacher in courseTeachers">
                                             <div v-for="course in courses" v-if="courseTeacher==course.id"  style="display: flex;align-items: center;flex-basis: 10%"> {{course.label}}</div>
                                             <div v-for="course in courses" v-if="courseTeacher==course.id" style="flex-basis: 90%">
-                                                <treeselect :options="course.total_unit" :multiple="true" v-model="course.courseTea" @input="selectTotalUnit(course)" :style="{ minWidth: minWidth + 'px' }"/>
+                                                <treeselect :options="course.total_unit" :multiple="true" v-model="course.courseTea" @input="selectTotalUnit(course)"/>
+                                                <error-label :errors="errors.courseTea"></error-label>
                                             </div>
                                         </div>
                                 </div>
-                                <div class="form-check form-check-custom form-check-solid ml-3 pb-5" v-if="school.active_allocation==1">
+                                <div class="form-check form-check-custom form-check-solid mt-3" v-if="school.active_allocation==1">
                                     <input id="state1" type="checkbox" v-model="active_allocation" class="form-check-input h-20px w-20px" @change="activeAllocation">
                                     <label for="state1" class="form-check-label fw-bold">Active allocation</label>
                                     <error-label for="f_grade" :errors="active_allocation"></error-label>
@@ -265,7 +266,6 @@
                 }
             })
             return {
-                minWidth: 940,
                 school:{},
                 deviceLog:[],
                 active_allocation:$json.active_allocation,

@@ -190,44 +190,64 @@
                                     <error-label for="f_grade" ></error-label>
                                 </div>
 
-                                <table class="table table-row-bordered align-middle gy-4 gs-9" v-if="courses!=null">
-                                    <thead
-                                        class="border-bottom border-gray-200 fs-6 text-gray-600 fw-bolder bg-light bg-opacity-75">
-                                    <tr>
-                                        <th class="">Course name</th>
-                                        <th>Unit</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    <tr v-for="course in courses">
-                                        <td>
-                                            {{course.label}}
-                                        </td>
-                                        <td>
-                                            <treeselect :options="units" :multiple="true" v-model="course.total_unit" :disabled="true" />
-                                        </td>
-                                    </tr>
-                                    </tbody>
-                                </table>
-                                <table class="table table-row-bordered align-middle gy-4 gs-9" v-if="courses==null">
-                                    <thead
-                                        class="border-bottom border-gray-200 fs-6 text-gray-600 fw-bolder bg-light bg-opacity-75">
-                                    <tr>
-                                        <th class="">Course name</th>
-                                        <th>Unit</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    <tr v-for="course in courses2">
-                                        <td>
-                                            {{course.label}}
-                                        </td>
-                                        <td>
-                                            <treeselect :options="course.units" :multiple="true" v-model="course.total_unit" :disabled="true" />
-                                        </td>
-                                    </tr>
-                                    </tbody>
-                                </table>
+<!--                                <table class="table table-row-bordered align-middle gy-4 gs-9" v-if="courses!=null">-->
+<!--                                    <thead-->
+<!--                                        class="border-bottom border-gray-200 fs-6 text-gray-600 fw-bolder bg-light bg-opacity-75">-->
+<!--                                    <tr>-->
+<!--                                        <th class="">Course name</th>-->
+<!--                                        <th>Unit</th>-->
+<!--                                    </tr>-->
+<!--                                    </thead>-->
+<!--                                    <tbody>-->
+<!--                                    <tr v-for="course in courses">-->
+<!--                                        <td>-->
+<!--                                            {{course.label}}-->
+<!--                                        </td>-->
+<!--                                        <td>-->
+<!--                                            <treeselect :options="units" :multiple="true" v-model="course.total_unit" :disabled="true" />-->
+<!--                                        </td>-->
+<!--                                    </tr>-->
+<!--                                    </tbody>-->
+<!--                                </table>-->
+<!--                                <table class="table table-row-bordered align-middle gy-4 gs-9" v-if="courses==null">-->
+<!--                                    <thead-->
+<!--                                        class="border-bottom border-gray-200 fs-6 text-gray-600 fw-bolder bg-light bg-opacity-75">-->
+<!--                                    <tr>-->
+<!--                                        <th class="">Course name</th>-->
+<!--                                        <th>Unit</th>-->
+<!--                                    </tr>-->
+<!--                                    </thead>-->
+<!--                                    <tbody>-->
+<!--                                    <tr v-for="course in courses2">-->
+<!--                                        <td>-->
+<!--                                            {{course.label}}-->
+<!--                                        </td>-->
+<!--                                        <td>-->
+<!--                                            <treeselect :options="course.units" :multiple="true" v-model="course.total_unit" :disabled="true" />-->
+<!--                                        </td>-->
+<!--                                    </tr>-->
+<!--                                    </tbody>-->
+<!--                                </table>-->
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-12" style="display: flex" v-if="courses!=null">
+                                    <div style="display: flex;align-items: center;flex-basis: 10%">Course name</div>
+                                    <div style="flex-basis: 90%" >Unit </div>
+                                </div>
+                                <div class="col-lg-12" style="display: flex ;margin: 16px 0px 0px" v-for="course in courses" v-if="courses!=null">
+                                    <div   style="display: flex;align-items: center;flex-basis: 10%"> {{course.label}}</div>
+                                    <div  style="flex-basis: 90%">
+                                        <treeselect :options="units" :multiple="true" v-model="course.total_unit" :disabled="true" />
+                                        <error-label  for="f_total_course" :errors="errors.total_unit"></error-label>
+                                    </div>
+                                </div>
+                                <div class="col-lg-12" style="display: flex ;margin: 16px 0px 0px" v-for="course in courses2" v-if="courses==null">
+                                    <div   style="display: flex;align-items: center;flex-basis: 10%"> {{course.label}}</div>
+                                    <div  style="flex-basis: 90%">
+                                        <treeselect :options="units" :multiple="true" v-model="course.total_unit" :disabled="true" />
+                                        <error-label  for="f_total_course" :errors="errors.total_unit"></error-label>
+                                    </div>
+                                </div>
                             </div>
                             <div class="col-lg-12" v-if="roleName=='School Admin' && entry.active_allocation==0">
                                 <div class="row">
