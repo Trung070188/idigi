@@ -26,11 +26,10 @@ class DeviceErrorExport implements FromView,WithColumnWidths
     public function columnWidths(): array
     {
         return [
-            'A' => 30,
+            'A' => 40,
             'B' => 15,
             'C'=>20,
-            'D'=>30,
-            'E'=>40
+            'D'=>40,
 
         ];
     }
