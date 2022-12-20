@@ -296,7 +296,7 @@
                                                     </a>
                                                     <div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-bold fs-7 w-180px py-4" data-kt-menu="true">
                                                         <div class="menu-item px-3">
-                                                            <a v-if="permissionFields['plan_device_get_confirm_code']==false"   class="menu-link px-3 isDisabled">Edit</a>
+                                                            <a v-if="permissionFields['plan_edit_device_information']==false"   class="menu-link px-3 isDisabled">Edit</a>
                                                             <a v-else class="menu-link px-3" @click="modalEditDevice(device)">Edit</a>
                                                         </div>
                                                         <div class="menu-item px-3">
