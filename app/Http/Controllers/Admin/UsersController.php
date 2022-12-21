@@ -922,7 +922,7 @@ class UsersController extends AdminBaseController
         }
             if(@$data['phone'])
             {
-                $rules['phone']=['min:10'];
+                $rules['phone']=['regex:/^[0-9]{10}$/'];
             }
         if (!isset($data['id'])) {
             if($data_role['auto_gen']==false)
