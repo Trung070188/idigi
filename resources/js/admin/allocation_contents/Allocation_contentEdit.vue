@@ -202,9 +202,9 @@
                 window.location.href = '/xadmin/allocation_contents/index';
             },
             async save() {
-                this.isLoading = true;
+                this.$loading(true);
                 const res = await $post('/xadmin/allocation_contents/save', {entry: this.entry,total_school:this.total_school,total_course:this.total_course,total_unit:this.courses.total_unit,unit:this.courses}, false);
-                this.isLoading = false;
+                this.$loading(false);
                 if (res.errors) {
                     this.errors = res.errors;
                     return;
