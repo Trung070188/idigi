@@ -5,10 +5,14 @@ namespace App\Http\Controllers\Admin;
 use App\Exports\TeacherErrorExport;
 use App\Helpers\PermissionField;
 use App\Imports\TeacherImport;
+use App\Models\Course;
 use App\Models\File;
 use App\Models\RequestRole;
 use App\Models\Role;
 use App\Models\School;
+use App\Models\SchoolCourse;
+use App\Models\SchoolCourseUnit;
+use App\Models\Unit;
 use App\Models\UserCourseUnit;
 use App\Models\UserDevice;
 use App\Models\UserRole;
@@ -993,6 +997,14 @@ class UsersController extends AdminBaseController
         ];
         $v = Validator::make($data, $rules, $customMessages);
 
+        $v->after(function($validate ) use ($data_role,$data)
+        {
+            if(isset($data['id']) && $data_role['password']!=$data_role['password_confirmation'])
+            {
+                $validate->errors()->add('password_confirmation','The password and confirmation password do not match.');
+            }
+        });
+
         if ($v->fails()) {
             return [
                 'code' => 2,
@@ -1010,6 +1022,11 @@ class UsersController extends AdminBaseController
                 ];
             }
             $entry->fill($data);
+            if($data_role['password'] !=null)
+            {
+                $entry->password = Hash::make($data_role['password']);
+                User::where('id',$entry->id)->update(['password'=>$entry->password]);
+            }
             $entry->save();
             $schoolId = $data['school_id'];
             UserRole::where('user_id', $entry->id)->delete();
@@ -1079,6 +1096,8 @@ class UsersController extends AdminBaseController
             }
             UserRole::create(['user_id' => $entry->id, 'role_id' => 5]);
 
+            $this->createUserCourseUnit($entry, $data_role);
+
             return [
                 'code' => 0,
                 'message' => 'Đã thêm',
@@ -1090,6 +1109,28 @@ class UsersController extends AdminBaseController
 
         }
 
+    }
+    public function createUserCourseUnit($entry, $data_role)
+    {
+        if (@$data_role['courseTeachers']) {
+            $unitTeacher=[];
+            $courseTeacher=[];
+            foreach ($data_role['courseTeachers'] as $courseTeacherId) {
+                $courseTeacher[]=(['user_id' => $entry->id, 'course_id' => $courseTeacherId, 'school_id' => $data_role['school']['id'],'allocation_content_id'=>$data_role['allocationContent']]);
+                if (@$data_role['courses']) {
+                    foreach ($data_role['courses'] as $course) {
+                        if($course['id']==$courseTeacherId)
+                            foreach ($course['teacher_unit'] as $unit)
+                                if (in_array($course['id'], $data_role['courseTeachers'])) {
+                                    $unitTeacher[]=(['user_id' => $entry->id, 'unit_id' => $unit, 'course_id' => $course['id'], 'school_id' =>$data_role['school']['id'],'allocation_content_id'=>$data_role['allocationContent']]);
+
+                                }
+                    }
+                }
+            }
+            UserUnit::insert($unitTeacher);
+            UserCourseUnit::insert($courseTeacher);
+        }
     }
 
 
@@ -1687,6 +1728,36 @@ class UsersController extends AdminBaseController
         $devices=UserDevice::where('user_id',$req->id)->whereNull('plan_id')->get();
         return [
           'devices'=>$devices
+        ];
+    }
+    public function dataContentCreateTeacher(Request $req)
+    {
+        $schoolCourses=SchoolCourse::where('school_id',$req->id)->get();
+        $dataCourse=[];
+        foreach ($schoolCourses as $schoolCourse)
+        {
+            $dataCourse[]=$schoolCourse->course_id;
+            $allocationContent=$schoolCourse->allocation_content_id;
+        }
+        $courses=Course::whereIn('id',$dataCourse)->get();
+        foreach ($courses as $course)
+        {
+           $course['units']=[];
+           $units=[];
+           foreach ($course->unitSchool as $unit)
+           {
+              if($unit->school_id==$req->id)
+              {
+                  $dataUnit=Unit::where('id',$unit->unit_id)->get();
+                  $units[]=$dataUnit;
+              }
+           }
+            $course['units']=collect($units)->collapse()->all();
+        }
+
+        return [
+            'allocationContent'=>$allocationContent,
+          'course'=>$courses,
         ];
     }
 }

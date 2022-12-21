@@ -91,6 +91,20 @@
                                         <input class="form-control form-control-solid" v-model="schools.label" disabled>
                                         <error-label for="f_category_id" :errors="errors.label"></error-label>
                                     </div>
+                                    <div  class="form-group  col-sm-4">
+                                        <label>Password <span class="text-danger">*</span></label>
+                                        <input :type="showPass ? 'text' : 'password'" class="form-control"
+                                               ref="password" v-model="password" placeholder="Enter the password">
+                                        <error-label for="f_category_id" :errors="errors.password"></error-label>
+                                    </div>
+
+                                    <div  class="form-group  col-sm-4">
+                                        <label>Confirm your password <span class="text-danger">*</span></label>
+                                        <input class="form-control" :type="showConfirm ? 'text' : 'password'"
+                                               v-model="password_confirmation"  placeholder="Re-enter to confirm the password">
+                                        <error-label for="f_category_id"
+                                                     :errors="errors.password_confirmation"></error-label>
+                                    </div>
                                     <div class="form-check form-check-custom form-check-solid ml-3 pb-5">
                                         <input id="state" type="checkbox" v-model="entry.state" class="form-check-input h-20px w-20px">
                                         <label for="state" class="form-check-label fw-bold">Active teacher</label>
@@ -266,6 +280,8 @@
                 }
             })
             return {
+                password:'',
+                password_confirmation:'',
                 school:{},
                 deviceLog:[],
                 active_allocation:$json.active_allocation,
@@ -411,7 +427,17 @@
 
             async save() {
                 this.isLoading = true;
-                const res = await $post('/xadmin/users/saveTeacher', {entry: this.entry, roles: this.roles,courseTeachers:this.courseTeachers,unit:this.courses,name_role:this.nameRole,schoolId:this.schools.id,allocationContentId:this.allocationContentId}, false);
+                const res = await $post('/xadmin/users/saveTeacher', {
+                    entry: this.entry,
+                    roles: this.roles,
+                    courseTeachers:this.courseTeachers,
+                    unit:this.courses,
+                    name_role:this.nameRole,
+                    schoolId:this.schools.id,
+                    allocationContentId:this.allocationContentId,
+                    password: this.password,
+                    password_confirmation:this.password_confirmation
+                }, false);
                 this.isLoading = false;
                 if (res.errors) {
                     this.errors = res.errors;

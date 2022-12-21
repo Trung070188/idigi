@@ -64,16 +64,42 @@
                                     </div>
                                 </div>
 
-                                <div class="form-group  col-sm-8">
-                                    <input  type="checkbox" v-model="auto_gen">
-                                    <label>Auto password</label>
+                                <div class="form-check form-check-custom form-check-solid pb-5">
+                                    <input  type="checkbox" class="form-check-input h-20px w-20px" v-model="auto_gen">
+                                    <label class="form-check-label fw-bold">Auto password</label>
                                 </div>
                                 <div class="form-check form-check-custom form-check-solid pb-5">
-                                    <input id="state" type="checkbox" v-model="entry.state" class="form-check-input h-20px w-20px"  checked>
-                                    <label for="state" class="form-check-label fw-bold">Active</label>
+                                    <input id="state1" type="checkbox" v-model="entry.state" class="form-check-input h-20px w-20px"  checked>
+                                    <label for="state1" class="form-check-label fw-bold">Active teacher</label>
                                     <error-label for="f_grade" :errors="errors.state"></error-label>
                                 </div>
+                                <div class="row"  >
+                                    <div class="form-group col-sm-12" >
+                                        <label>Course<span class="text-danger">*</span></label>
+                                        <treeselect :options="courses" :multiple="true" v-model="courseTeachers" />
+                                        <error-label  for="f_grade" :errors="errors.courseTeachers"></error-label>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-12" style="display: flex" v-if="courseTeachers.length>0" >
+                                        <div style="display: flex;align-items: center;flex-basis: 10%">Course name</div>
+                                        <div style="flex-basis: 90%"  >Unit <span class="text-danger">*</span></div>
+                                    </div>
+                                    <div class="col-lg-12" style="display: flex ;margin: 16px 0px 0px" v-for="courseTeacher in courseTeachers">
+                                        <div v-for="course in courses" v-if="courseTeacher==course.id" style="display: flex;align-items: center;flex-basis: 10%"> {{course.label}}</div>
+                                        <div  style="flex-basis: 90%" v-for="course in courses" v-if="courseTeacher==course.id">
+                                            <treeselect :options="course.units" :multiple="true" v-model="course.teacher_unit"  />
+                                            <error-label :errors="errors.courseTea"></error-label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-check form-check-custom form-check-solid pb-5 mt-3">
+                                    <input id="state2" type="checkbox" v-model="entry.active_allocation" class="form-check-input h-20px w-20px"  checked>
+                                    <label for="state2" class="form-check-label fw-bold">Active allocation </label>
+                                    <error-label for="f_grade" :errors="errors.active_allocation"></error-label>
+                                </div>
                             </div>
+
                         </div>
                         <hr style="margin-top: 5px;">
                         <div>
@@ -91,17 +117,26 @@
 </template>
 
 <script>
-    import {$post} from "../../utils";
+    import {$get,$post} from "../../utils";
 
     import ActionBar from "../includes/ActionBar";
     import SwitchButton from "../../components/SwitchButton";
+    import Treeselect from '@riophae/vue-treeselect'
+    import '@riophae/vue-treeselect/dist/vue-treeselect.css'
+    import $router from "../../lib/SimpleRouter";
+
 
     export default {
         name: "TeacherCreated.vue",
-        components: {ActionBar, SwitchButton},
+        components: {ActionBar, SwitchButton,Treeselect},
+
         data() {
 
             return {
+                allocationContent:'',
+                courseTeachers:[],
+                units:[],
+                courses:[],
                 auto_gen:false,
                 showConfirm: false,
                 showPass: false,
@@ -138,6 +173,8 @@
         },
         mounted()
         {
+            $router.on('/', this.load).init();
+
             $('.nospace').keypress(function (e) {
                 if (e.keyCode == 32 ) {
                     e.preventDefault();
@@ -152,17 +189,35 @@
 
         },
         methods: {
-            // checkbox_roles()
-            // {
-            //     this.entry=this.roles;
-            // },
+            async load() {
+                let query = $router.getQuery();
+                const res  = await $get('/xadmin/users/dataContentCreateTeacher?id='+this.school.id, query);
+                this.courses=res.course.map(res =>{
+                    return {
+                      'label':res.course_name,
+                        'id':res.id,
+                        'units':res.units.map(rec =>{
+                            return {
+                                'id':rec.id,
+                                'label': 'Unit' + ' ' + rec.position +' : '+rec.unit_name
+                            }
+                        })
+                    };
+                })
+                this.allocationContent=res.allocationContent;
+            },
             backIndex() {
 
                 window.location.href = '/xadmin/users/index';
             },
             async save() {
                 this.isLoading = true;
-                const res = await $post('/xadmin/users/saveTeacher', {entry: this.entry, roles: this.roles,auto_gen:this.auto_gen,school:this.school}, false);
+                const res = await $post('/xadmin/users/saveTeacher', {entry: this.entry, roles: this.roles,
+                    auto_gen:this.auto_gen,
+                    school:this.school,courses:this.courses,
+                    courseTeachers:this.courseTeachers,
+                    allocationContent:this.allocationContent
+                }, false);
                 this.isLoading = false;
                 if (res.errors) {
                     this.errors = res.errors;

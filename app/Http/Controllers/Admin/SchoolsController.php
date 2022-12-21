@@ -1096,4 +1096,5 @@ class SchoolsController extends AdminBaseController
           'message'=>'Đã cập nhật'
         ];
     }
+
 }
