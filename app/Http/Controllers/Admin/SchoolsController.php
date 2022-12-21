@@ -490,7 +490,7 @@ class SchoolsController extends AdminBaseController
         }
         if(@$data['school_phone'])
         {
-            $rules['school_phone']=['min:10','numeric'];
+            $rules['school_phone']=['regex:/^[0-9]{10}$/'];
         }
         // $rules['license_to']='after:' .$today;
         $message=[
