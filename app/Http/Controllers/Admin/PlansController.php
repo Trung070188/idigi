@@ -528,6 +528,14 @@ class PlansController extends AdminBaseController
 
             if($dataRole['deviceExpireDate']!=null)
             {
+                $current = Carbon::now()->format('Y-m-d');
+                if($dataRole['deviceExpireDate']<$current)
+                {
+                    $current=Carbon::createFromFormat('Y-m-d',$current)->format('d/m/Y');
+                    $validate->errors()->add('deviceExpireDate','The expire date must be a date after or equal to ' .$current);
+
+
+                }
                 if($dataRole['deviceExpireDate']>$data['expire_date'])
                 {
                     $validate->errors()->add('deviceExpireDate','The expire date must be a date before or equal to ' .Carbon::parse($data['expire_date'])->format('d/m/Y') .'.');
