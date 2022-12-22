@@ -76,7 +76,7 @@
                                 <div class="row"  >
                                     <div class="form-group col-sm-12" >
                                         <label>Course<span class="text-danger">*</span></label>
-                                        <treeselect :options="courses" :multiple="true" v-model="courseTeachers" />
+                                        <treeselect :options="courses" :multiple="true" v-model="courseTeachers" @input="selectTotalCourse"/>
                                         <error-label  for="f_grade" :errors="errors.courseTeachers"></error-label>
                                     </div>
                                 </div>
@@ -86,10 +86,10 @@
                                         <div style="flex-basis: 90%"  >Unit <span class="text-danger">*</span></div>
                                     </div>
                                     <div class="col-lg-12" style="display: flex ;margin: 16px 0px 0px" v-for="courseTeacher in courseTeachers">
-                                        <div v-for="course in courses" v-if="courseTeacher==course.id" style="display: flex;align-items: center;flex-basis: 10%"> {{course.label}}</div>
-                                        <div  style="flex-basis: 90%" v-for="course in courses" v-if="courseTeacher==course.id">
-                                            <treeselect :options="course.units" :multiple="true" v-model="course.teacher_unit"  />
-                                            <error-label :errors="errors.courseTea"></error-label>
+                                        <div v-for="course in courses[0].children" v-if="courseTeacher==course.id" style="display: flex;align-items: center;flex-basis: 10%"> {{course.label}}</div>
+                                        <div  style="flex-basis: 90%" v-for="course in courses[0].children" v-if="courseTeacher==course.id">
+                                            <treeselect :options="course.unit" :multiple="true" v-model="course.teacher_unit" @input="selectTotalUnit(course)" />
+                                            <error-label :errors="errors.teacher_unit"></error-label>
                                         </div>
                                     </div>
                                 </div>
@@ -204,17 +204,65 @@
                         })
                     };
                 })
+              this.courses=[
+                  {
+                      'id':'all',
+                      'label':'all course',
+                      'children':this.courses
+                  }
+              ]
+                let units=this.courses[0].children.map( rec => {
+                    return {
+                        'id':rec.id,
+                        'label':rec.label,
+                        'teacher_unit':[],
+                        'unit':[
+                            {
+                                'id':'all',
+                                'label':'all units',
+                                'children':rec.units
+                            }
+                        ]
+                    }
+                })
+                this.courses=[
+                    {
+                        'id':'all',
+                        'label':'all course',
+                        'children':units
+                    }
+                ]
+
                 this.allocationContent=res.allocationContent;
             },
             backIndex() {
 
                 window.location.href = '/xadmin/users/index';
             },
+            selectTotalCourse()
+            {
+                if(this.courseTeachers.length > 0 && this.courseTeachers[0]=='all')
+                {
+                    this.courseTeachers=this.courses[0].children.map(res=>{
+                        return res.id;
+                    })
+                }
+            },
+            selectTotalUnit(course)
+            {
+                if(course.teacher_unit=='all' )
+                {
+                    course.teacher_unit=course.unit[0].children.map( res => {
+                        return res.id
+                    })
+                }
+            },
             async save() {
                 this.isLoading = true;
                 const res = await $post('/xadmin/users/saveTeacher', {entry: this.entry, roles: this.roles,
                     auto_gen:this.auto_gen,
-                    school:this.school,courses:this.courses,
+                    school:this.school,
+                    courses:this.courses,
                     courseTeachers:this.courseTeachers,
                     allocationContent:this.allocationContent
                 }, false);

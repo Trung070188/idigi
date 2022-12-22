@@ -965,10 +965,6 @@ class UsersController extends AdminBaseController
                 if (@$data_role['courseTeachers']==[]) {
                     $rules['courseTeachers'] = ['required'];
                 }
-
-                if (@$data_role['courseTeachers']==[]) {
-                    $rules['courseTeachers'] = ['required'];
-                }
                 if(@$data_role['courseTeachers'])
                 {
                     foreach($data_role['courseTeachers'] as $courseTeacher)
@@ -988,12 +984,33 @@ class UsersController extends AdminBaseController
             }
 
         }
-
-
+        if(!isset($data['id']))
+        {
+            if (@$data_role['courseTeachers']==[]) {
+                $rules['courseTeachers'] = ['required'];
+            }
+            if(@$data_role['courseTeachers'])
+            {
+                foreach ($data_role['courseTeachers'] as $cour)
+                {
+                    if(@$data_role['courses'][0])
+                    {
+                        foreach ($data_role['courses'][0]['children'] as $un)
+                        {
+                            if(count($un['teacher_unit'])==0 && $cour==$un['id'])
+                            {
+                                $rules['teacher_unit'] = ['required'];
+                            }
+                        }
+                    }
+                }
+            }
+        }
         $customMessages = [
             'school_id.required' => 'The school field is required.',
             'courseTeachers.required'=>'The course field is required.',
-           'courseTea.required'=>'The unit field is required.'
+           'courseTea.required'=>'The unit field is required.',
+            'teacher_unit.required'=>'The unit field is required.'
         ];
         $v = Validator::make($data, $rules, $customMessages);
 
@@ -1118,7 +1135,7 @@ class UsersController extends AdminBaseController
             foreach ($data_role['courseTeachers'] as $courseTeacherId) {
                 $courseTeacher[]=(['user_id' => $entry->id, 'course_id' => $courseTeacherId, 'school_id' => $data_role['school']['id'],'allocation_content_id'=>$data_role['allocationContent']]);
                 if (@$data_role['courses']) {
-                    foreach ($data_role['courses'] as $course) {
+                    foreach ($data_role['courses'][0]['children'] as $course) {
                         if($course['id']==$courseTeacherId)
                             foreach ($course['teacher_unit'] as $unit)
                                 if (in_array($course['id'], $data_role['courseTeachers'])) {
