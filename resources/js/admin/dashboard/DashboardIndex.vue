@@ -54,8 +54,8 @@
                             </div>
 
                         </div>
-                        <GoogleChart  :chart_data="dataChart" />
-<!--                        <GoogleChartNoData/>-->
+                        <GoogleChart  :chart_data="dataChart" v-if="check==0"/>
+                       <GoogleChartNoData v-if="check==1"/>
                     </div>
                 </div>
                 <div class="col-xl-4">
@@ -169,6 +169,7 @@
                 created: $q.created || '' ,
             };
             return {
+                check:0,
                 logAuth:[],
                 created:'',
                 filter: filter,
@@ -263,9 +264,14 @@
             this.entries = res.data;
             this.logAuth=res.logAu;
             this.entries=this.entries.concat(this.logAuth);
-            console.log(this.entries);
-
             this.dataChart=res.dataChart;
+            const checkDataChart = res.dataChart.slice(1).every(item => item.length === 3 && item[1] === 0 && item[2] === 0);
+            console.log(checkDataChart);
+            if (checkDataChart) {
+            this.check=1;
+            } else {
+                this.check=0;
+            }
 
         },
 
