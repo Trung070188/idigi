@@ -55,6 +55,7 @@
 
                         </div>
                         <GoogleChart  :chart_data="dataChart" />
+<!--                        <GoogleChartNoData/>-->
                     </div>
                 </div>
                 <div class="col-xl-4">
@@ -153,12 +154,13 @@
     import $router from "../../lib/SimpleRouter";
     import {$get, $post, getTimeRangeAll} from "../../utils";
     import GoogleChart from "../../components/google-chart/GoogleChart"
+    import GoogleChartNoData from "../../components/google-chart/GoogleChartNoData";
     let created = getTimeRangeAll();
     const $q = $router.getQuery();
     export default {
 
         name: "DashboardIndex",
-        components: {ActionBar,GoogleChart},
+        components: {GoogleChartNoData, ActionBar,GoogleChart},
         data()
         {
             let today=new Date();
