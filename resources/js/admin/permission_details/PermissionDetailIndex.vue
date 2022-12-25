@@ -12,22 +12,23 @@
                     <div class="card-header border-0 pt-2">
                         <table class="table bg-white table-bordered">
                             <tbody>
-                            <tr>
-                                <td></td>
-                                <td v-for="role in roles">
+                            <tr >
+                                <th></th>
+                                <th v-for="role in roles">
                                     <div class="text-center" style="cursor: pointer">
                                         <span class="badge badge-warning fs-6 fw-bold"  >{{role.role_name}}</span>
                                     </div>
-                                </td>
+                                </th>
                             </tr>
                             </tbody>
                             <tr v-for="permission in permissions" >
-                                <th scope="col">
+                                <th scope="col" style="border-left:1px solid #ddd;border-bottom: none;border-right: none;border-top: none">
                                     <span >{{permission.display_permission_detail}}</span>
-                                    <span v-for="permissionDetail in permission.permission_details" class="d-block fw-bold ml-5"><i class="bi bi-arrow-right-short mr-1"></i>{{permissionDetail.name}}</span>
+                                    <span v-for="permissionDetail in permission.permission_details" class="d-block fw-bold ml-5" style="border-bottom:1px dotted #ddd"><i class="bi bi-arrow-right-short mr-1"></i>{{permissionDetail.name}}</span>
                                 </th>
-                                <th v-for="role in roles">
-                                    <div class="form-check form-check-custom form-check-solid justify-content-center" v-for="permissionDetail in role.permission" v-if="permissionDetail.permission==permission.id">
+                                <th scope="row" v-for="role in roles" style="border-left:1px solid #ddd;border-bottom: none;border-right: none;border-top: none;padding: 5px 0px 0px" >
+                                    <span></span>
+                                    <div class="form-check form-check-custom form-check-solid justify-content-center" v-for="permissionDetail in role.permission" v-if="permissionDetail.permission==permission.id" style="border-bottom:1px dotted #ddd">
                                         <input disabled @change="changePermissionDetail(role.id,permissionDetail.id,permissionDetail.value)"  class="form-check-input h-20px w-20px"  type="checkbox"  v-model="permissionDetail.value" v-if="permissionDetail.is_admin=='Yes'" style="background-color:#ebedf3;border-color:#ebedf3" >
                                         <input  @change="changePermissionDetail(role.id,permissionDetail.id,permissionDetail.value)"  class="form-check-input h-20px w-20px"  type="checkbox"  v-model="permissionDetail.value" v-else style="border-color:#ddd">
                                         <br>
