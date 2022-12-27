@@ -61,7 +61,7 @@
                                         <label>Role <span class="text-danger">*</span></label>
                                         <div class="d-flex align-items-center justify-content-start mt-2">
                                             <div class="form-check form-check-custom form-check-solid mr-10" v-for="role in roles">
-                                                <input type="radio" class="form-check-input mr-2" v-model="name_role" v-bind:value="role.id">
+                                                <input type="radio" class="form-check-input mr-2"  v-model="name_role" v-bind:value="role.id">
                                                 <span>{{role.role_name}}</span>
                                             </div>
                                             <error-label for="f_grade" :errors="errors.name_role"></error-label>
@@ -72,17 +72,17 @@
                                     <div class="form-group col-sm-4 mb-7">
                                         <label>School <span class="text-danger">*</span></label>
                                         <Treeselect :options="schools" :multiple="true" v-model="userSchool" placeholder="Choose school"/>
-                                        <error-label for="f_grade" :errors="errors.school_id"></error-label>
+                                        <error-label for="f_grade" :errors="errors.userSchool"></error-label>
                                     </div>
                                 </div>
                                 <div class="row" v-if="name_role==5">
                                     <div class="form-group col-sm-4">
                                         <label>School <span class="text-danger">*</span></label>
                                         <select required  class="form-control form-select"  v-model="entry.school_id" @input="disableSave(entry)">
-                                            <option value="" disabled selected>Choose school</option>
+                                            <option value="" disabled selected></option>
                                             <option v-for="school in schools" :value="school.id">{{school.label}}</option>
                                         </select>
-                                        <error-label for="f_grade" :errors="errors.school_id"></error-label>
+                                        <error-label for="f_grade" :errors="errors.userSchool"></error-label>
                                     </div>
                                 </div>
                                 <div class="row">

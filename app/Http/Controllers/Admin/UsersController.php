@@ -694,9 +694,6 @@ class UsersController extends AdminBaseController
             ],
         ];
         if (!isset($data['id'])) {
-            if($data_role['name_role']==5 || $data_role['name_role']==2){
-                $rules['school_id']=['required'];
-            }
                 if($data_role['auto_gen']==false)
            {
                $rules['password']=['required'];
@@ -709,9 +706,6 @@ class UsersController extends AdminBaseController
         }
         if (isset($data['id'])) {
             $user = User::find($data['id']);
-            if( $data_role['name_role']==5){
-                $rules['school_id']=['required'];
-            }
             if ($data['email']) {
                 $rules['email'] = ['email', Rule::unique('users')->ignore($user->id),];
 
@@ -732,7 +726,7 @@ class UsersController extends AdminBaseController
 //            $rules['school_id'] = ['required'];
 //        }
         $customMessages = [
-//            'school_id.required' => 'The school field is required.',
+//            'userSchool.required' => 'The school field is required.',
             'name_role.required'=>'The role field is required.'
         ];
         $v = Validator::make($data, $rules, $customMessages,$data_role);
@@ -745,7 +739,12 @@ class UsersController extends AdminBaseController
             }
             if($data_role['name_role']==2 && isset($data['id']) && $data_role['userSchool']==[])
             {
-                $validate->errors()->add('userSchool','The school id field is required.');
+                $validate->errors()->add('userSchool','The school field is required.');
+
+            }
+            if($data_role['name_role']==2 && !isset($data['id']) && $data_role['userSchool']==[] || $data_role['name_role']==5 && !isset($data['id']) && $data_role['userSchool']==[])
+            {
+                $validate->errors()->add('userSchool','The school field is required.');
 
             }
             if(!isset($data['id']) && $data['password']!=$data_role['password_confirmation'] && $data_role['auto_gen']==false)
