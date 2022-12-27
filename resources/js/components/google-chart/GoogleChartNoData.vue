@@ -38,9 +38,10 @@
                     position: 'none', // Tắt không hiển thị chú thích
                 },
                 chartArea: {
-                    left: '5%',
-                    top: '10%',
-                    width: '90%',
+                    left: '12%',
+                    top: '5%',
+                    width: '70%',
+                    bottom:"20%"
                     // height: '80%',
                 },
                 // width: 800,
