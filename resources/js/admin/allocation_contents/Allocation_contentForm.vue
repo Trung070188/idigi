@@ -24,29 +24,42 @@
                                     </div>
                             </div>
                         </div>
-                         <table class="table table-row-bordered align-middle gy-4 gs-9">
-                            <thead class="border-bottom border-gray-200 fs-6 text-gray-600 fw-bolder bg-light bg-opacity-75">
-                            <tr>
-                                <th class="">Course Name</th>
-                                <th>Unit</th>
-                            </tr>
-                            </thead>
-                            <tbody v-for="entry in newTotalCourse" >
-                            <tr v-for="course in courses" v-if="entry==course.id">
-                                <td >
-                                    {{course.label}}
-                                </td>
-                                <td >
-                                <treeselect :options="course.units" :multiple="true" v-model="course.total_unit" @input="selectTotalUnit(course)" />
-                                <error-label v-if="!course.total_unit" for="f_total_course" :errors="errors.total_unit"></error-label>
+                        <div class="row">
+                            <div class="col-lg-12" style="display: flex" v-if="total_course.length>0">
+                                <div style="display: flex;align-items: center;flex-basis: 10%">Course name</div>
+                                <div style="flex-basis: 90%" >Unit <span class="text-danger">*</span></div>
+                            </div>
+                            <div class="col-lg-12" style="display: flex ;margin: 16px 0px 0px" v-for="entry in newTotalCourse">
+                                <div v-for="course in courses" v-if="entry==course.id" style="display: flex;align-items: center;flex-basis: 10%"> {{course.label}}</div>
+                                <div v-for="course in courses" v-if="entry==course.id" style="flex-basis: 90%">
+                                    <treeselect :options="course.units" :multiple="true"  v-model="course.total_unit" @input="selectTotalUnit(course)" />
+                                    <error-label v-if="!course.total_unit" for="f_total_course" :errors="errors.total_unit"></error-label>
+                                </div>
+                            </div>
+                        </div>
+<!--                         <table class="table table-row-bordered align-middle gy-4 gs-9">-->
+<!--                            <thead class="border-bottom border-gray-200 fs-6 text-gray-600 fw-bolder bg-light bg-opacity-75">-->
+<!--                            <tr>-->
+<!--                                <th class="">Course Name</th>-->
+<!--                                <th>Unit</th>-->
+<!--                            </tr>-->
+<!--                            </thead>-->
+<!--                            <tbody v-for="entry in newTotalCourse" >-->
+<!--                            <tr v-for="course in courses" v-if="entry==course.id">-->
+<!--                                <td >-->
+<!--                                    {{course.label}}-->
+<!--                                </td>-->
+<!--                                <td >-->
+<!--                                <treeselect :options="course.units" :multiple="true" v-model="course.total_unit" @input="selectTotalUnit(course)" />-->
+<!--                                <error-label v-if="!course.total_unit" for="f_total_course" :errors="errors.total_unit"></error-label>-->
 
-                                <!-- <error-label v-if="!course.total_unit " for="f_total_course" :errors="errors.total_unit"></error-label> -->
-                                </td>
-                            </tr>
+<!--                                &lt;!&ndash; <error-label v-if="!course.total_unit " for="f_total_course" :errors="errors.total_unit"></error-label> &ndash;&gt;-->
+<!--                                </td>-->
+<!--                            </tr>-->
 
 
-                            </tbody>
-                        </table>
+<!--                            </tbody>-->
+<!--                        </table>-->
 
                         <hr style="margin:20px 0px 20px">
                         <div >
@@ -137,7 +150,7 @@
                     allCourses:allCourses,
                     breadcrumbs: [
                         {
-                            title: 'School Management'
+                            title: 'Resource management'
                         },
                         {
                             title: 'Resource allocation',

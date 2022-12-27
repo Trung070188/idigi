@@ -1,6 +1,9 @@
 <template>
 
+
     <div class="post d-flex flex-column-fluid" id="kt_post">
+         <ActionBar type="index"
+                   :breadcrumbs="breadcrumbs" title = "Dashboard"/>
         <!--begin::Container-->
         <div id="kt_content_container" class="container-xxl">
             <!--begin::Row-->
@@ -41,146 +44,102 @@
             <!--end::Row-->
             <!--begin::Row-->
             <div class="row gy-5 g-xl-8">
-                <div class="col-xl-8">
-                    <!--begin::Tables Widget 9-->
-                    <div class="card card-xl-stretch-50 mb-5 mb-xl-8">
-                        <!--begin::Body-->
-                        <div class="card-body p-0 d-flex justify-content-between flex-column overflow-hidden">
-                            <!--begin::Hidden-->
-                            <div class="d-flex flex-stack flex-wrap flex-grow-1 px-9 pt-9 pb-3">
-                                <div class="me-2">
-
-                                </div>
-
+                <div class="col-xl-8 chart">
+                    <div class="card card-xl-stretch mb-xl-8">
+                        <div class="card-header border-0 pt-5 mt-0">
+                            <div>
+                                <i class="bi bi-arrow-left" style="cursor: pointer"  @click="subMonthYear()"></i>
+                                <span style="padding:8px 10px 5px 10px; color:#043B79; font-weight:800" v-model="cbYear"> {{(select=='Month')?(cbMonth + '/'):('')}}{{cbYear}} </span>
+                                <i class="bi bi-arrow-right" style="cursor: pointer" @click="addMonthYear()"></i>
                             </div>
-                            <!--end::Hidden-->
-                            <!--begin::Chart-->
-                            <div class="mixed-widget-10-chart" data-kt-color="primary" style="height: 175px"></div>
-                            <!--end::Chart-->
+
                         </div>
+                        <GoogleChart  :chart_data="dataChart" v-if="check==0"/>
+                       <GoogleChartNoData v-if="check==1"/>
                     </div>
-                    <!--end::Tables Widget 9-->
                 </div>
                 <div class="col-xl-4">
                     <!--begin::List Widget 3-->
                     <div class="card card-xl-stretch mb-xl-8">
                         <!--begin::Header-->
                         <div class="card-header border-0">
-                            <h3 class="card-title fw-bolder text-dark">Activities</h3>
-
+                            <h3 class="card-title fw-bolder text-dark">Licenses</h3>
                         </div>
                         <!--end::Header-->
                         <!--begin::Body-->
-                        <div class="card-body pt-2" >
-                            <!--begin::Item-->
-                            <div class="d-flex align-items-center mb-8" v-for="entry in entries">
-
-                                <div class="flex-grow-1" >
-                                    <div  class="text-gray-800 text-hover-primary fw-bolder fs-6">{{entry.username}} {{entry.status}}  {{entry.actionName}} </div>
+                        <div class="card-body pt-2 mh-600px scroll-y me-n7 pe-7" >
+                            <div class="d-flex flex-stack mb-5" v-for="license in licenseRemain">
+                                <!--begin::Section-->
+                                <div class="d-flex align-items-center me-2">
+                                    <!--begin::Symbol-->
+                                    <div class="symbol symbol-50px me-3">
+                                        <div class="symbol-label bg-light">
+                                            <i class="bi bi-bank"></i>
+                                        </div>
+                                    </div>
+                                    <!--end::Symbol-->
+                                    <!--begin::Title-->
+                                    <div>
+                                        <a :href="license.url" class="fs-6 text-gray-800 text-hover-primary fw-bolder">{{license.label}}</a>
+                                        <div class="fs-7 text-muted fw-bold mt-1">{{license.dayEnd}} days remaining</div>
+                                    </div>
+                                    <!--end::Title-->
                                 </div>
-
+                                <!--end::Section-->
+                                <!--begin::Label-->
+                                <div class="badge  fw-bold py-4 px-3"><a :href="license.url"><button class="btn btn-primary">Renew</button></a></div>
+                                <!--end::Label-->
                             </div>
-
                         </div>
                         <!--end::Body-->
                     </div>
                     <!--end:List Widget 3-->
                 </div>
-
             </div>
 
-            <div class="row g-5 g-xl-8">
-                <div class="col-xl-8">
-                    <!--begin::Tables Widget 5-->
-                    <div class="card card-xxl-stretch mb-5 mb-xl-8">
-                        <!--begin::Header-->
+            <div class="row g-5 g-xl-12">
+                <div class="col-xl-12">
+                    <div class="card card-xl-stretch mb-xl-12">
                         <div class="card-header border-0 pt-5">
                             <h3 class="card-title align-items-start flex-column">
-                                <span class="card-label fw-bolder fs-3 mb-1">Licenses</span>
-                            </h3>
-
-                        </div>
-
-                        <div class="card-body py-3">
-                            <div class="tab-content">
-                                <!--begin::Tap pane-->
-                                    <!--begin::Table container-->
-                                    <div class="table-responsive">
-                                        <!--begin::Table-->
-                                        <table class="table table-row-gray-200  gs-0 gy-4">
-                                            <!--begin::Table head-->
-                                            <thead>
-                                            <tr class="border-0">
-                                                <th class="p-0 w-50px"></th>
-                                                <th class="p-0 min-w-150px"></th>
-                                                <th class="p-0 min-w-140px"></th>
-                                                <th class="p-0 min-w-110px"></th>
-                                                <th class="p-0 min-w-50px"></th>
-                                            </tr>
-                                            </thead>
-                                            <!--end::Table head-->
-                                            <!--begin::Table body-->
-                                            <tbody >
-                                            <tr v-for="license in licenseRemain">
-                                                <td>
-                                                    <div class="symbol symbol-45px me-2">
-																				<span class="symbol-label">
-                                                                                    <i class="bi bi-bank"></i>
-																				</span>
-                                                    </div>
-                                                </td>
-                                                <td>
-                                                    <a href="index.html#" class="text-dark fw-bolder text-hover-primary mb-1 fs-6">{{license.label}}</a>
-                                                    <span class="text-muted fw-bold d-block">{{license.dayEnd}} days remaining</span>
-                                                </td>
-                                                <td></td>
-
-                                                <td >
-
-                                                </td>
-                                                <td class="text-end">
-                                                    <a :href="license.url">
-                                                        <button class="btn btn-primary">Renew license</button>
-                                                    </a>
-
-                                                </td>
-                                            </tr>
-
-                                            </tbody>
-
-                                        </table>
-                                    </div>
-
-
-                            </div>
-                        </div>
-                        <!--end::Body-->
-                    </div>
-                    <!--end::Tables Widget 5-->
-                </div>
-                <div class="col-xl-4">
-                    <!--begin::Mixed Widget 5-->
-                    <div class="card card-xxl-stretch mb-xl-8">
-                        <!--begin::Beader-->
-                        <div class="card-header border-0 py-5">
-                            <h3 class="card-title align-items-start flex-column">
-                                <span class="card-label fw-bolder fs-3 mb-1">New schools</span>
+                                <span class="card-label fw-bolder fs-3 mb-1">Activity</span>
                             </h3>
                             <div class="card-toolbar">
-
-                                <div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-800 menu-state-bg-light-primary fw-bold w-200px py-3" data-kt-menu="true">
-
-                                </div>
-
+                                <Datepicker v-model="filter.created" @input="doFilter" readonly/>
                             </div>
                         </div>
+                        <div class="mh-650px scroll-y me-n7 pe-7">
+                            <table class="table table-row-bordered align-middle gy-4 gs-9">
+                                <thead class="border-bottom border-gray-200 fs-6 text-gray-600 fw-bolder bg-light bg-opacity-75">
+                                <tr >
+                                    <th>No.</th>
+                                    <th class="">User name</th>
+                                    <th class="">Role</th>
+                                    <th class="">Description</th>
+                                    <th class="">Object</th>
+                                    <th>IP</th>
+                                    <th>Time</th>
 
-
-                        <!--end::Body-->
+                                </tr>
+                                </thead>
+                                <tbody >
+                                <tr v-for="(entry,index) in entries">
+                                    <td>{{index+1}}</td>
+                                    <td v-text="entry.username"></td>
+                                    <td v-text="entry.role"></td>
+                                    <td v-text="entry.status"></td>
+                                    <td class="" data-bs-toggle="tooltip" :title="entry.object" v-text="entry.object"></td>
+                                    <td v-text="entry.ip"></td>
+                                    <td>{{d(entry.time)}}</td>
+<!--                                    <td class="">-->
+<!--                                        <button class="btn btn-active-danger btn-light-danger btn-sm" @click="remove(entry)">Delete</button>-->
+<!--                                    </td>-->
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
-                    <!--end::Mixed Widget 5-->
                 </div>
-
             </div>
 
 
@@ -193,39 +152,166 @@
 <script>
     import ActionBar from "../includes/ActionBar";
     import $router from "../../lib/SimpleRouter";
-    import {$get} from "../../utils";
+    import {$get, $post, getTimeRangeAll} from "../../utils";
+    import GoogleChart from "../../components/google-chart/GoogleChart"
+    import GoogleChartNoData from "../../components/google-chart/GoogleChartNoData";
+    let created = getTimeRangeAll();
+    const $q = $router.getQuery();
     export default {
+
         name: "DashboardIndex",
-        components: {ActionBar},
+        components: {GoogleChartNoData, ActionBar,GoogleChart},
         data()
         {
+            let today=new Date();
+            let date=today.getDate()+'-'+(today.getMonth()+1)+'-'+today.getFullYear();
+            let filter = {
+                created: $q.created || '' ,
+            };
             return {
+                check:0,
+                logAuth:[],
+                created:'',
+                filter: filter,
+                select:null,
+                cbYear: new Date().getFullYear(),
+                cbMonth: new Date().getMonth(),
+                labelsYear: ["Jan","Feb","Mar","Apr","May","Jun","Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+                labelsMonth:[],
+
+                breadcrumbs:[
+                    {
+                        title: 'Dashboard'
+                    },
+                ],
                 entries:[],
                 users:$json.users,
                 schools:$json.schools,
                 devices:$json.devices,
                 lessons:$json.lessons,
                 licenseRemain:$json.licenseRemain,
+                dataChart:[]
             }
         },
         mounted() {
             $router.on('/', this.load).init();
         },
+        watch:{
+            cbMonth:function(){
+                if (this.select != 'Year'){
+                    var dayOfMonth = new Date(this.cbYear, this.cbMonth, 0).getDate()
+                    this.labelsMonth=[]
+                    for(let i=1; i <= dayOfMonth; i++){
+                        this.labelsMonth.push(i.toString())
+                    }
+                }
+            }
+        },
         methods:
         {
+            filterClear() {
+
+                for (var key in this.filter) {
+                    this.filter[key] = '';
+                }
+                $router.setQuery({});
+            },
+            doFilter() {
+                $router.setQuery(this.filter)
+            },
+            changeCombo(){
+                if (this.select == 'Month'){
+                    this.cbYear = new Date().getFullYear()
+                    this.cbMonth= new Date().getMonth() + 1
+                }
+                else{
+                    this.cbYear = new Date().getFullYear()
+                }
+
+            },
+            addMonthYear(){
+                if (this.select == 'Month'){
+                    if (this.cbMonth + 1 > 12){
+                        this.cbMonth = 1;
+                        this.cbYear += 1;
+                    }
+                    else this.cbMonth += 1;
+                }else{
+                    this.cbYear += 1;
+
+                }
+                this.load();
+            },
+            subMonthYear(){
+                if (this.select == 'Month'){
+                    if (this.cbMonth - 1 == 0){
+                        this.cbMonth = 12;
+                        this.cbYear -= 1;
+                    }
+                    else this.cbMonth -= 1;
+                }else{
+
+                    this.cbYear -= 1;
+                }
+                this.load();
+            },
             async load() {
             let query = $router.getQuery();
-            const res = await $get('/xadmin/dashboard/data', query);
+                let today=new Date();
+                let create=today.getFullYear()+'-'+String(today.getMonth() + 1).padStart(2, '0')+'-'+String(today.getDate()).padStart(2, '0');
+                console.log(create);
+            const res = await $get('/xadmin/dashboard/data?year='+this.cbYear+'&created='+create, query);
             this.entries = res.data;
-            console.log(this.entries);
-
-
+            this.logAuth=res.logAu;
+            this.entries=this.entries.concat(this.logAuth);
+            this.dataChart=res.dataChart;
+            const checkDataChart = res.dataChart.slice(1).every(item => item.length === 3 && item[1] === 0 && item[2] === 0);
+            console.log(checkDataChart);
+            if (checkDataChart) {
+            this.check=1;
+            } else {
+                this.check=0;
+            }
 
         },
+
+            async remove(entry)
+            {
+                const res= await $post('/xadmin/dashboard/remove',{
+                    id:entry.id
+                })
+                if (res.code) {
+                    toastr.error(res.message);
+                } else {
+                    toastr.success(res.message);
+                    let self=this;
+                    self.entries=  self.entries.filter(item => item.id !=entry.id);
+                }
+            }
         },
     }
 </script>
 
 <style scoped>
+    .table th, .table td
+    {
+        max-width: 150px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        cursor: pointer;
+        padding: 0.75rem;
+        vertical-align: top;
+    }
+    .chart{
+        max-width: 1000px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        cursor: pointer;
+        /*padding: 0.75rem;*/
+        padding: 0px 8px 0px;
+        vertical-align: top;
+    }
 
 </style>

@@ -90,6 +90,13 @@
                             </div>
 
                         </div>
+                        <form class="col-lg-12" >
+                            <div class="row">
+                                <div style="margin:7px 3px 0px">
+                                    <button type="button" class="btn btn-primary" @click="doFilter()">Search</button>
+                                </div>
+                            </div>
+                        </form>
                     </div>
                     <div class="tab-content">
                         <div class="d-flex flex-stack pt-4 pl-9 pr-9">
@@ -103,7 +110,7 @@
                                         </svg>
                                     </span>
 
-                                        <div v-text="from +'-'+ to +' of '+ paginate.totalRecord" v-if="entries.length > 0"></div>
+                                        <div v-text="from +'-'+ to +' of '+ countContent" v-if="entries.length > 0"></div>
 
                                 </div>
                             </div>
@@ -195,6 +202,7 @@
         data() {
              const permissions = clone(window.$permissions)
             return {
+                countContent:'',
                permissions,
                 entry:'',
                 entries: [],
@@ -236,9 +244,8 @@
                  const res  = await $get('/xadmin/allocation_contents/data', query);
                  this.$loading(false);
                  this.paginate = res.paginate;
-                 console.log(this.paginate);
                 this.entries = res.data;
-                 console.log(this.entries);
+                this.countContent=res.countContent;
                  setTimeout(function (){
                     KTMenu.createInstances();
                 }, 0)

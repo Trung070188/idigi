@@ -46,6 +46,8 @@ class User extends Authenticatable
         'description',
         'last_login',
         'state',
+        'active_allocation',
+        'full_name_active_content',
         'sso_id',
     ];
 

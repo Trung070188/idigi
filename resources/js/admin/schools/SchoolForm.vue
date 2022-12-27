@@ -17,7 +17,7 @@
                                      </button>
                                  </a>
                                  <button v-if="title=='Edit school'" class="btn btn-danger button-create " @click="remove(entry)">
-                                     Delete User <i class="fas fa-trash"></i>
+                                     Delete user <i class="fas fa-trash"></i>
                                  </button>
                              </div>
                          </div>
@@ -30,24 +30,24 @@
                                 <input v-model="entry.id" type="hidden" name="id" value="">
                                 <div class="row">
                                      <div class="form-group col-lg-4">
-                                        <label>School Name <span class="text-danger">*</span></label>
+                                        <label>School name <span class="text-danger">*</span></label>
                                         <input  v-model="entry.label"  class="form-control "
-                                               placeholder="Nhập vào tên trường" >
+                                               placeholder="Enter the school name" >
                                         <error-label for="f_school_name" :errors="errors.label"></error-label>
 
                                     </div>
 
                                     <div class="form-group col-lg-4">
-                                        <label>School Address <span class="text-danger">*</span></label>
+                                        <label>School address <span class="text-danger">*</span></label>
                                         <input  v-model="entry.school_address" class="form-control"
-                                               placeholder="Nhập vào địa chỉ của trường" >
+                                               placeholder="Enter the school address">
                                         <error-label  :errors="errors.school_address"></error-label>
 
                                     </div>
                                     <div class="form-group col-lg-4">
-                                        <label>School Email </label>
+                                        <label>School email</label>
                                         <input  v-model="entry.school_email"  class="form-control"
-                                                placeholder="Nhập vào email của trường" >
+                                                placeholder="Enter the email prefix" >
                                         <error-label  :errors="errors.school_email"></error-label>
 
                                     </div>
@@ -57,22 +57,22 @@
                                     <div class="form-group col-lg-4">
                                         <label>Phone number </label>
                                         <input  v-model="entry.school_phone"  class="form-control noString"
-                                                placeholder="Nhập vào số điện thoại của trường" >
+                                                placeholder="Enter the phone number" >
                                         <error-label for="f_school_name" :errors="errors.school_phone"></error-label>
 
                                     </div>
 
                                     <div class="form-group col-lg-4">
                                         <label>No. of Device per user <span class="text-danger">*</span></label>
-                                        <input type="number" min="1" max="20" v-model="entry.devices_per_user" class="form-control"
-                                                placeholder="Nhập số lượng cho phép thiết bị của mỗi giáo viên" >
+                                        <input type="number" min="1" max="200" v-model="entry.devices_per_user" class="form-control noString"
+                                                placeholder="Enter number of Device per User" >
                                         <error-label  :errors="errors.devices_per_user"></error-label>
 
                                     </div>
                                     <div class="form-group col-lg-4">
                                         <label>No. of User <span class="text-danger">*</span></label>
-                                        <input type="number" min="1" max="10000" v-model="entry.number_of_users"  class="form-control"
-                                                placeholder="Nhập số lượng giáo viên" >
+                                        <input type="number" min="1" max="10000" v-model="entry.number_of_users"  class="form-control noString"
+                                                placeholder="Enter number of User" >
                                         <error-label  :errors="errors.number_of_users"></error-label>
 
                                     </div>
@@ -103,47 +103,50 @@
                                 </div>
                                     <div class="form-group col-lg-4">
                                         <label>Expired date/License <span class="text-danger">*</span></label>
-                                        <datepicker  v-model="entry.license_to" rows="5" class="form-control" ></datepicker>
+                                        <datepicker  v-model="entry.license_to" rows="5" class="form-control" readonly></datepicker>
                                         <error-label for="f_grade" :errors="errors.license_to"></error-label>
                                     </div>
+                                </div>
+                                <div class="form-check form-check-custom form-check-solid pb-5 ">
+                                    <input id="state" type="checkbox"  class="form-check-input h-20px w-20px" checked>
+                                    <label for="state" class="form-check-label fw-bold">Active school</label>
+                                    <error-label for="f_grade" ></error-label>
                                 </div>
                             </div>
                              <div class="row">
                                     <div class="form-group col-lg-8">
-                                        <label>Resource Allocation </label>
-                                       <select class="form-control form-select" v-model="allocationContenSchool" required @change="changeAllocationContent()">
+                                        <label>Resource allocation <span class="text-danger">*</span></label>
+                                       <select required class="form-control form-select" v-model="allocationContenSchool" @change="changeAllocationContent()">
+<!--                                           <option value="" disabled selected>Choose role</option>-->
                                            <option v-for="allocationConten in allocationContens" :value="allocationConten.id">{{allocationConten.title}}</option>
                                        </select>
                                     </div>
-                                       <table class="table table-row-bordered align-middle gy-4 gs-9">
-                            <thead class="border-bottom border-gray-200 fs-6 text-gray-600 fw-bolder bg-light bg-opacity-75">
-                            <tr>
-                                <th class="">Course Name</th>
-                                <th>Unit</th>
-                            </tr>
-                            </thead>
-                            <tbody v-if="allocationContenSchool!=null" >
-                            <tr v-for="course in courses" >
-                                <td  >
-                                    {{course.label}}
-                                </td>
-                                <td >
-                                 <treeselect :options="units" :multiple="true" v-model="course.total_unit" :disabled="true"/>
-                                    </td>
-                            </tr>
-                            </tbody>
-                        </table>
+                                    <div class="form-check form-check-custom form-check-solid pb-5 ml-3">
+                                <input id="state1" type="checkbox"  class="form-check-input h-20px w-20px" checked>
+                                <label for="state1" class="form-check-label fw-bold">Active allocation </label>
+                                <error-label for="f_grade" ></error-label>
+                            </div>
+                            </div>
+                        </div>
+                        <div class="row" v-if="allocationContenSchool!=null">
+                            <div class="col-lg-12" style="display: flex">
+                                <div style="display: flex;align-items: center;flex-basis: 10%">Course name</div>
+                                <div style="flex-basis: 90%" >Unit </div>
+                            </div>
+                            <div class="col-lg-12" style="display: flex ;margin: 16px 0px 0px" v-for="course in courses">
+                                <div   style="display: flex;align-items: center;flex-basis: 10%"> {{course.label}}</div>
+                                <div  style="flex-basis: 90%">
+                                    <treeselect :options="units" :multiple="true" v-model="course.total_unit" :disabled="true"/>
+                                </div>
                             </div>
                         </div>
                         <hr style="margin-top: 5px;">
                         <div >
-                            <button type="reset" @click="save()" class="btn btn-primary mr-2"><i class="bi bi-send mr-1"></i>Submit</button>
+                            <button type="reset" @click="save()" class="btn btn-primary mr-2"><i class="bi bi-send"></i>Save</button>
                             <button type="reset" @click="backIndex()" class="btn btn-light">Cancel</button>
                         </div>
                     </div>
                 </div>
-
-
             </div>
         </div>
     </div>
@@ -187,17 +190,15 @@
                 breadcrumbs: [
 
                     {
-                        title: 'School Management',
-                    },
-                    {
-                        title: 'Manage schools',
+                        title: 'School management',
                         url: '/xadmin/schools/index',
                     },
+
                     {
-                        title: $json.entry ? 'School details' : 'Create New school',
+                        title: $json.entry ? 'School details' : 'Create new school',
                     },
                 ],
-                title: $json.entry ? 'Edit school' : 'Create New school',
+                title: $json.entry ? 'Edit school' : 'Create new school',
 
                 entry: $json.entry || {},
                 isLoading: false,
@@ -281,5 +282,20 @@
 </script>
 
 <style scoped>
+  .table th, .table td
+    {
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    cursor: pointer;
+    padding: 0.75rem;
+    border-top: 1px solid #EBEDF3;
+    }
+  select:required:invalid {
+      color: #adadad;
+  }
+  option {
+      color: black;
+  }
 
 </style>
