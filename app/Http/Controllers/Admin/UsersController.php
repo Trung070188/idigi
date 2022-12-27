@@ -98,12 +98,15 @@ class UsersController extends AdminBaseController
 
     public function create_teacher(Request $req)
     {
+        $data=$req->all();
         $component = 'TeacherCreated';
         $title = 'Create Teacher';
         $roles = Role::query()->orderBy('role_name')->get();
         $user = Auth::user();
-        $school = ($user->schools->label);
+        $school=School::query()->where('id',$data['schoolId'])->first();
+        $schoolName = $school->label;
         $jsonData = [
+            'schoolName'=>$schoolName,
             'school' => $school,
             'roles' => $roles
         ];
