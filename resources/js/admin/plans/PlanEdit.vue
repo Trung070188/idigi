@@ -1002,7 +1002,8 @@
                 exportDevicePlan: '',
                 lessonPackagePlans: $json.lessonPackagePlans,
                 dataTableLesson:[],
-                data: $json.data || [],
+                // data: $json.data || [],
+                data:[],
                 allDeviceSelected:false,
                 allViewLessonSelected:[],
                 filter: filter,
@@ -1044,7 +1045,7 @@
                 abc:'',
                 checkZipPackage:[],
                 errorDeviceName:'',
-                exportDeviceName:$json.exportDeviceName
+                exportDeviceName:'',
 
             }
         },
@@ -1106,13 +1107,16 @@
             {
                 $('#deviceConfirm1').modal('show');
                 this.dataDeviceEdit=device;
-                console.log(device);
+                const originalDate = device.expire_date;
+                console.log(originalDate);
+                const [day, month, year] = originalDate.split("/");
+                const newDate = `${year}-${month.padStart(2, "0")}-${day.padStart(2, "0")}`;
               return   this.dataDeviceEdit = {
                    'name' : device.device_name,
                     'id' :device.id,
                     'uid':device.device_uid,
                     'os':device.type,
-                    'expired':device.expire_date
+                    'expired':newDate
                 }
 
 
@@ -1730,7 +1734,23 @@
                     let self=this
                     setTimeout(function () {
                         $.get('/xadmin/plans/dataDevice?plan_id='+self.entry.id,function (res) {
-                            self.data=res.data;
+                            self.data=res.data.map(rec =>{
+                                const [year, month, day] = rec.expire_date.split("-");
+                                const newDate = `${day.padStart(2, "0")}/${month.padStart(2, "0")}/${year}`;
+                                return {
+                                    'id':rec.id,
+                                    'device_uid':rec.device_uid,
+                                    'device_name':rec.device_name,
+                                    'user_id':rec.user_id,
+                                    'plan_id':rec.plan_id,
+                                    'type':rec.type,
+                                    'status':rec.status,
+                                    'secret_key':rec.secret_key,
+                                    'expire_date':newDate,
+                                    'created_at':rec.created_at,
+                                    'updated_at':rec.updated_at
+                                }
+                            })
                             setTimeout(function (){
                                 KTMenu.createInstances();
                             }, 0)
@@ -1854,6 +1874,27 @@
                 const res = await $get('/xadmin/plans/dataLesson?idPlan='+this.entry.id + '&packageLessonId='+this.tabLessonContent, query);
                 this.$loading(false);
                 this.entries = res.data;
+                this.data=res.devices.map(rec => {
+                    setTimeout(function (){
+                        KTMenu.createInstances();
+                    }, 0)
+                    const [year, month, day] = rec.expire_date.split("-");
+                    const newDate = `${day.padStart(2, "0")}/${month.padStart(2, "0")}/${year}`;
+                    return {
+                        'id':rec.id,
+                        'device_uid':rec.device_uid,
+                        'device_name':rec.device_name,
+                        'user_id':rec.user_id,
+                        'plan_id':rec.plan_id,
+                        'type':rec.type,
+                        'status':rec.status,
+                        'secret_key':rec.secret_key,
+                        'expire_date':newDate,
+                        'created_at':rec.created_at,
+                        'updated_at':rec.updated_at
+                    }
+                })
+                this.exportDeviceName=res.export_device_name;
                 this.dataAddLessonPlan=res.dataAddLessonPlan;
             },
             onPageChange(page) {
@@ -2025,7 +2066,23 @@
                     let self=this;
                     setTimeout(function () {
                         $.get('/xadmin/plans/dataDevice?plan_id='+self.entry.id,function (res) {
-                            self.data=res.data;
+                            self.data=res.data.map(rec =>{
+                                const [year, month, day] = rec.expire_date.split("-");
+                                const newDate = `${day.padStart(2, "0")}/${month.padStart(2, "0")}/${year}`;
+                                return {
+                                    'id':rec.id,
+                                    'device_uid':rec.device_uid,
+                                    'device_name':rec.device_name,
+                                    'user_id':rec.user_id,
+                                    'plan_id':rec.plan_id,
+                                    'type':rec.type,
+                                    'status':rec.status,
+                                    'secret_key':rec.secret_key,
+                                    'expire_date':newDate,
+                                    'created_at':rec.created_at,
+                                    'updated_at':rec.updated_at
+                                }
+                            });
                             setTimeout(function (){
                                 KTMenu.createInstances();
                             }, 0)

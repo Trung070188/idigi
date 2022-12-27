@@ -32,12 +32,12 @@
                     </div>
                     <div class="modal-footer" style="justify-content: center">
                         <button type="button" class="btn btn-primary"
-                                @click="downloadLesson" :disabled="lessons.length == 0 || !device || isConfirm == 0"> Download for Windows  <i class="bi bi-windows"></i>
+                                @click="downloadLesson" :disabled="lessons.length == 0 || !device || isConfirm == 0"> Download <i class="bi bi-download mb-1 ml-1"></i>
                         </button>
-                        <button type="button" class="btn btn-primary"  @click="downloadLesson" :disabled="lessons.length == 0 || !device || isConfirm == 0"
-                              >
-                            Download for MacOS <i style="margin:-3px 0px 0px" class="bi bi-apple"></i>
-                        </button>
+<!--                        <button type="button" class="btn btn-primary"  @click="downloadLesson" :disabled="lessons.length == 0 || !device || isConfirm == 0"-->
+<!--                              >-->
+<!--                            Download for MacOS <i style="margin:-3px 0px 0px" class="bi bi-apple"></i>-->
+<!--                        </button>-->
                     </div>
                 </div>
             </div>
@@ -67,6 +67,10 @@
                                                         <rect x="7.41422" y="6" width="16" height="2" rx="1" transform="rotate(45 7.41422 6)" fill="black" style="fill:red" />
                                             </svg>
                                         </span>
+                                            <select v-if="roleName=='School Admin'" class="form-control form-select w-250px ps-15 ml-5" v-model="schoolLesson" @change="checkSchool" >
+                                                <option value="null">All school</option>
+                                                <option v-for="school in schools" :value="school.id" >{{school.label}}</option>
+                                            </select>
                                     </div>
 
                                 </div>
@@ -85,16 +89,21 @@
                                      <div class="d-flex justify-content-end align-items-center d-none" data-kt-customer-table-toolbar="selected" v-if="permissions['011'] && lessonIds!=''">
                                          <span v-if="lessons.length>3" style="color:#f1416c;margin: 0px 10px 0px ">Chỉ được chọn tối đa 3 lesson để tải xuống</span>
 												<div class="fw-bolder me-5" v-if="lessons.length<=3">
-												<span class="me-2" data-kt-customer-table-select="selected_count"></span>{{ lessonIds.length }} Selected</div>
+												<span class="me-2" data-kt-customer-table-select="selected_count"></span>{{ lessonIds.length }} lesson</div>
 
-												<button @click="openModal()" :disabled="lessons.length>3" type="button" class="btn btn-danger" data-kt-customer-table-select="delete_selected">Download Selected</button>
+												<button @click="openModal()" :disabled="lessons.length>3" type="button" class="btn btn-danger" data-kt-customer-table-select="delete_selected">Download lesson</button>
 
 											</div>
+                                 </div>
+                      <form class="col-lg-12" v-if="!isShowFilter">
+                          <div class="row">
+                              <div style="margin:7px 3px 0px">
+                                  <button type="button" class="btn btn-primary" @click="doFilter()">Search</button>
+                              </div>
+                          </div>
+                      </form>
 
-                                </div>
-
-
-                                <form class="col-lg-12" v-if="isShowFilter">
+                        <form class="col-lg-12" v-if="isShowFilter">
                                     <div class="row">
                                         <div class="form-group col-lg-3">
                                             <label>Name </label>
@@ -146,12 +155,20 @@
                                             </div>
 
                                         </div>
-                                    </div>
-                                    <div style="margin: auto 0">
-                                        <button type="button" class="btn btn-primary" @click="doFilter($event)">Search</button>
+                                        <div style="margin: auto 0">
+                                            <button type="button" class="btn btn-primary" @click="doFilter()">Search</button>
+                                        </div>
                                     </div>
                                 </form>
+
                             </div>
+<!--                    <div class="row">-->
+<!--                        <div class="d-flex align-items-center position-absolute my-1 col-lg-12 ml-10">-->
+<!--                            <select class="form-control col-lg-2"><option>1</option></select>-->
+<!--                        </div>-->
+
+<!--                    </div>-->
+
 
 
                     <!--<div class="card-body d-flex flex-column">-->
@@ -207,13 +224,23 @@
                             </tr>
                             </thead>
                             <tbody>
-                            <tr  v-for="entry in entries">
+                            <tr v-if="user.active_allocation==0">
+                                <td valign="top" colspan="10" class="text-center" style="font-size: 15px;font-weight: bold">Resource allocation has been deactivated by {{user.full_name_active_content}}.</td>
+
+                            </tr>
+
+                            <tr v-if="user.active_allocation==1 && entries.length==0">
+                                <td valign="top" colspan="10" class="text-center">No results found. Try different keywords or remove search filters.</td>
+
+                            </tr>
+
+                            <tr  v-for="(entry,index) in entries" v-if="user.active_allocation==1 && entries.length>0">
                                 <td class="">
                                     <div class="form-check form-check-sm form-check-custom form-check-solid">
                                         <input class="form-check-input" type="checkbox" v-model="lessonIds" :value="entry.id" @change="updateCheckAll">
                                     </div>
                                 </td>
-                                <td class="" v-text="entry.id"></td>
+                                <td >{{((index+1)+(from+1))-2}}</td>
                                 <td v-text="entry.name"></td>
                                 <td class="" v-text="entry.grade"></td>
                                 <td class="" v-text="entry.subject"></td>
@@ -297,7 +324,7 @@
                 name:$q.name||'',
                 subject: $q.subject || '',
                 grade: $q.grade || '',
-                enabled: $q.enabled || ''
+                enabled: $q.enabled || '',
             };
             for (var key in filter) {
                 if (filter[key] != '') {
@@ -305,6 +332,12 @@
                 }
             }
             return {
+                countLesson:'',
+                user:{},
+                roleName:'',
+                idSchool:null,
+                schoolLesson:null,
+                schools:[],
                 permissions,
                 device: '',
                 devices: [],
@@ -341,6 +374,12 @@
             });
         },
         methods: {
+            checkSchool()
+            {
+                   this.idSchool=this.schoolLesson;
+
+              this.load()
+            },
             openModalEntry(entry) {
                 this.isConfirm = 1;
                 this.lessons = [entry];
@@ -407,13 +446,18 @@
             async load() {
                 let query = $router.getQuery();
                 this.$loading(true);
-                const res = await $get('/xadmin/lessons/data', query);
+                const res = await $get('/xadmin/lessons/data?schoolLesson='+this.idSchool, query);
                 this.$loading(false);
                 setTimeout(function (){
                     KTMenu.createInstances();
                 }, 0)
                 this.paginate = res.paginate;
-                this.entries = res.data;
+                // this.entries=res.data;
+                this.entries = [...(new Set(res.data))];
+                this.schools=res.schools;
+                this.roleName=res.roleName;
+                this.user=res.user;
+                this.countLesson=res.countLesson;
                 this.from = (this.paginate.currentPage - 1) * (this.limit) + 1;
                 this.to = (this.paginate.currentPage - 1) * (this.limit) + this.entries.length;
             },
@@ -492,5 +536,6 @@
     option {
         color: black;
     }
+
 
 </style>

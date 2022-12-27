@@ -47,6 +47,15 @@ class AllocationContentsController extends AdminBaseController
         $component = 'Allocation_contentIndex';
         return component($component, compact('title'));
     }
+    public function roleName()
+    {
+        $auth=Auth::user();
+        foreach ($auth->roles as $role)
+        {
+            $roleName=$role->role_name;
+        }
+        return $roleName;
+    }
 
     /**
      * Create new entry
@@ -191,8 +200,9 @@ class AllocationContentsController extends AdminBaseController
         return [
             'code' => 0,
             'message' => 'Đã xóa',
-            'actionName'=>$entry->title,
-            'status'=>'deleted content allocation'
+            'object'=>$entry->title,
+            'status'=>'Delete content allocation',
+            'role'=>$this->roleName()
         ];
     }
 
@@ -209,12 +219,24 @@ class AllocationContentsController extends AdminBaseController
         $dataContent=$req->all();
 
         $rules = [
-            'title' => 'required',
-            // 'total_school' => 'max:1000',
-            // 'total_course' => 'max:1000',
-            // 'total_unit' => 'max:1000',
-            // 'status' => 'numeric',
         ];
+        if(!isset($data['id']))
+        {
+            $rules['title']=['required' ,'unique:allocation_contents,title', function ($attribute, $value, $fail) {
+                if (preg_match('/[\'\/~`\!@#\$%\^&\*\(\)\-\+=\{\}\[\]\|;:"\<\>,\?\\\]/', $value)) {
+                    return $fail(__(' The :attribute no special characters'));
+                }
+            }];
+        }
+        if(isset($data['id']))
+        {
+            $rules['title'] = ['required', Rule::unique('allocation_contents')->ignore($data['id']), function ($attribute, $value, $fail) {
+                if (preg_match('/[\'\/~`\!@#\$%\^&\*\(\)\-\+=\{\}\[\]\|;:"\<\>,\?\\\]/', $value)) {
+                    return $fail(__(' The :attribute no special characters'));
+                }
+            }];
+        }
+
         if($dataContent['total_course']==[])
         {
 
@@ -272,31 +294,6 @@ class AllocationContentsController extends AdminBaseController
 
             $entry->fill($data);
             $entry->save();
-            AllocationContentSchool::where('allocation_content_id',$entry->id)->delete();
-            if(@$dataContent['total_school'])
-            {
-                foreach($dataContent['total_school'] as $schoolId)
-                {
-
-                    $contentSchools=AllocationContentSchool::query()->orderBy('allocation_content_id','desc')->get();
-                    foreach ( $contentSchools as  $contentSchool)
-                    {
-                        if($contentSchool->school_id==$schoolId)
-                        {
-                            return [
-                                'code' => 3,
-                                'message' =>'Trường đã xuất hiện trong content khác',
-                            ];
-                        }
-                    }
-                    AllocationContentSchool::create(['school_id'=>$schoolId,'allocation_content_id'=>$entry->id]);
-
-
-
-                }
-
-            }
-
             AllocationContentCourse::where('allocation_content_id',$entry->id)->delete();
 
 
@@ -304,12 +301,12 @@ class AllocationContentsController extends AdminBaseController
 
             if(@$dataContent['total_course'])
             {
-
-
+                $allocationContentCourse=[];
                 foreach($dataContent['total_course'] as $courseId)
                 {
-                    AllocationContentCourse::create(['course_id'=>$courseId,'allocation_content_id'=>$entry->id]);
+                    $allocationContentCourse[]=(['course_id'=>$courseId,'allocation_content_id'=>$entry->id]);
                 }
+                AllocationContentCourse::insert($allocationContentCourse);
                 $contentCourses=AllocationContentCourse::where('allocation_content_id',$entry->id)->get();
                 $deleteCourses=[];
                     foreach($contentCourses as $contentCourse)
@@ -327,11 +324,13 @@ class AllocationContentsController extends AdminBaseController
                 {
                     SchoolCourse::where('allocation_content_id',$entry->id)->delete();
 
+                    $schoolCourse=[];
                     foreach($deleteCourses as $deleteCourse)
                     {
-                        SchoolCourse::create(['allocation_content_id'=>$entry->id,'school_id'=>$contentUpdate->school_id,'course_id'=>$deleteCourse]);
+                        $schoolCourse[]=(['allocation_content_id'=>$entry->id,'school_id'=>$contentUpdate->school_id,'course_id'=>$deleteCourse]);
 
                     }
+                    SchoolCourse::insert($schoolCourse);
 
                 }
 
@@ -350,12 +349,14 @@ class AllocationContentsController extends AdminBaseController
 
                         if(@$course['total_unit'])
                         {
+                            $allocationContentUnit=[];
                             foreach($course['total_unit'] as $unitId)
                             {
                                 if(in_array($course['id'], $dataContent['total_course'])){
-                                    AllocationContentUnit::create(['course_id'=>$course['id'],'allocation_content_id'=>$entry->id,'unit_id'=>$unitId]);
+                                    $allocationContentUnit[]=(['course_id'=>$course['id'],'allocation_content_id'=>$entry->id,'unit_id'=>$unitId]);
                                 }
                             }
+                            AllocationContentUnit::insert($allocationContentUnit);
 
                         }
 
@@ -366,12 +367,13 @@ class AllocationContentsController extends AdminBaseController
                     foreach($contentUnitUpdates as $contentUnitUpdate)
                     {
                         SchoolCourseUnit::where('allocation_content_id',$entry->id)->delete();
-
+                        $schoolCourseUnit=[];
                         foreach($contentCourseUnits as $contentCourseUnit)
                         {
-                            SchoolCourseUnit::create(['allocation_content_id'=>$entry->id,'school_id'=>$contentUnitUpdate->school_id,'course_id'=>$contentCourseUnit->course_id,'unit_id'=>$contentCourseUnit->unit_id]);
+                            $schoolCourseUnit[]=(['allocation_content_id'=>$entry->id,'school_id'=>$contentUnitUpdate->school_id,'course_id'=>$contentCourseUnit->course_id,'unit_id'=>$contentCourseUnit->unit_id]);
 
                         }
+                        SchoolCourseUnit::insert($schoolCourseUnit);
 
                     }
                     $deleteUnitUsers=[];
@@ -380,9 +382,6 @@ class AllocationContentsController extends AdminBaseController
                         $deleteUnitUsers[]=$contentCourseUnit->unit_id;
                     }
                   UserUnit::where('allocation_content_id',$entry->id)->whereNotIn('unit_id',$deleteUnitUsers)->delete();
-
-
-
                 }
 
             }
@@ -391,8 +390,9 @@ class AllocationContentsController extends AdminBaseController
                 'code' => 0,
                 'message' => 'Đã cập nhật',
                 'id' => $entry->id,
-                'actionName'=>$entry->title,
-                'status'=>'edited content allocation'
+                'object'=>$entry->title,
+                'status'=>'Update content allocation',
+                'role'=>$this->roleName()
 
             ];
         } else {
@@ -432,8 +432,9 @@ class AllocationContentsController extends AdminBaseController
                 'code' => 0,
                 'message' => 'Đã thêm',
                 'id' => $entry->id,
-                'actionName'=>$entry->title,
-                'status'=>'created new content allocation'
+                'object'=>$entry->title,
+                'status'=>'Create new content allocation',
+                'role'=>$this->roleName()
             ];
         }
     }
@@ -468,6 +469,7 @@ class AllocationContentsController extends AdminBaseController
      * @return  array
      */
     public function data(Request $req) {
+        $countContent=AllocationContent::query()->orderBy('id','desc')->count();
         $query = AllocationContent::query()->with(['courses','units','schools'])->orderBy('id', 'desc');
 
         if ($req->keyword) {
@@ -484,6 +486,7 @@ class AllocationContentsController extends AdminBaseController
         return [
             'code' => 0,
             'data' => $entries->items(),
+            'countContent'=>$countContent,
             'paginate' => [
                 'currentPage' => $entries->currentPage(),
                 'lastPage' => $entries->lastPage(),

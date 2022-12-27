@@ -111,17 +111,30 @@
                                             <error-label for="f_grade" :errors="errors.name_role"></error-label>
                                         </div>
                                     </div>
-
-                                    <!--<div  class="form-group col-sm-2" v-for="role in roles">
-                                        <input type="radio" :id="role.id" v-model="name_role" :value="role.id">
-                                        <label :for="role.id">{{role.role_name}}</label>
-                                    </div>-->
+                                    <!-- <div class=" form-group col-lg-3 ">
+                                        <label >Password</label>
+                                        <div class="d-flex align-items-center justify-content-start mt-2" >
+                                            <input :disabled="permissionFields['user_password']==false" class="form-control " type="password" placeholder="Enter the password" v-model="password" >
+                                            <error-label></error-label>
+                                        </div>
+                                    </div> -->
                                 </div>
-                                <div class="row" v-if="name_role==2 || name_role==5">
+                                <div class="row" v-if="name_role==2">
                                     <div class="form-group col-sm-4 mb-7">
                                         <label>School <span class="text-danger">*</span></label>
-                                        <select  class="form-control form-select" v-model="entry.school_id" required>
-                                            <option v-for="school in schools" :value="school.id" >{{school.label}}</option>
+                                        <!--                                        <select  class="form-control form-select" v-model="entry.school_id" required>-->
+                                        <!--                                            <option v-for="school in schools" :value="school.id" >{{school.label}}</option>-->
+                                        <!--                                        </select>-->
+                                        <Treeselect :options="schools" :multiple="true" v-model="userSchool" placeholder="Choose school"/>
+                                    <error-label for="f_grade" :errors="errors.userSchool"></error-label>
+                                    </div>
+                                </div>
+                                <div class="row" v-if="name_role==5">
+                                    <div class="form-group col-sm-4">
+                                        <label>School <span class="text-danger">*</span></label>
+                                        <select required  class="form-control form-select"  v-model="entry.school_id" >
+                                            <option value="" disabled selected>Choose role</option>
+                                            <option v-for="school in schools" :value="school.id">{{school.label}}</option>
                                         </select>
                                         <error-label for="f_grade" :errors="errors.school_id"></error-label>
                                     </div>
@@ -140,14 +153,11 @@
                                     <label for="state" class="form-check-label fw-bold">Active</label>
                                     <error-label for="f_grade" :errors="errors.state"></error-label>
                                 </div>
+                                <div class="mt-2 mb-4">
+                                    <button type="reset" @click="save()" class="btn btn-primary mr-3" style="padding: 8.375px 13.75px"><i class="bi bi-save2 mr-1"></i>Save</button>
+                                    <button type="reset" @click="backIndex()" class="btn btn-light" style="padding: 8.375px 13.75px">Cancel</button>
+                                </div>
                             </div>
-                        </div>
-                        <!--<hr style="margin: 0px 0px 16px;">-->
-                        <div class="mt-5">
-                            <button type="reset" @click="save()" class="btn btn-primary mr-3"><i class="bi bi-save2 mr-1"></i>Save</button>
-                            <button type="reset" @click="backIndex()" class="btn btn-light">Cancel</button>
-                        <label style="margin-left: 20px">Username and password will be sent to the user's email.
-                          </label>
                         </div>
                         <!--<hr style="margin: 0px 0px 16px;">-->
                         <h3 style="margin-top: 10px">Current registered devices</h3>

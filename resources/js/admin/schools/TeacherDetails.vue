@@ -35,10 +35,11 @@
                         <p>Are you sure to delete the device "{{deviceTeacher.device_name}}"?</p>
                     </div>
                     <div class="swal2-actions">
+                        <button type="reset" id="kt_modal_new_target_cancel1" class="swal2-cancel btn fw-bold btn-active-light-primary" data-bs-dismiss="modal" style="margin: 0px 8px 0px" @click="refuse(deviceTeacher)">Refuse</button>
+
                         <button type="submit" class="swal2-confirm btn fw-bold btn-danger" @click="remove_device(deviceTeacher)">
                             <span class="indicator-label">Yes, delete!</span>
                         </button>
-                        <button type="reset" id="kt_modal_new_target_cancel" class="swal2-cancel btn fw-bold btn-active-light-primary" data-bs-dismiss="modal" style="margin: 0px 8px 0px">No, cancel</button>
                     </div>
                 </div>
             </div>
@@ -90,52 +91,62 @@
                                         <input class="form-control form-control-solid" v-model="schools.label" disabled>
                                         <error-label for="f_category_id" :errors="errors.label"></error-label>
                                     </div>
-                                <div class="row">
-                                    <div class="form-group col-sm-8">
-                                        <label>Teacher description</label>
-                                        <textarea v-model="entry.description" rows="5" class="form-control"
-                                                  placeholder="Type the description here (200 characters)"></textarea>
-                                        <error-label for="f_grade" :errors="errors.description"></error-label>
-
+                                    <div  class="form-group  col-sm-4">
+                                        <label>Password <span class="text-danger">*</span></label>
+                                        <input :type="showPass ? 'text' : 'password'" class="form-control"
+                                               ref="password" v-model="password" placeholder="Enter the password">
+                                        <error-label for="f_category_id" :errors="errors.password"></error-label>
                                     </div>
-                                </div>
+
+                                    <div  class="form-group  col-sm-4">
+                                        <label>Confirm your password <span class="text-danger">*</span></label>
+                                        <input class="form-control" :type="showConfirm ? 'text' : 'password'"
+                                               v-model="password_confirmation"  placeholder="Re-enter to confirm the password">
+                                        <error-label for="f_category_id"
+                                                     :errors="errors.password_confirmation"></error-label>
+                                    </div>
                                     <div class="form-check form-check-custom form-check-solid ml-3 pb-5">
                                         <input id="state" type="checkbox" v-model="entry.state" class="form-check-input h-20px w-20px">
-                                        <label for="state" class="form-check-label fw-bold">Active</label>
+                                        <label for="state" class="form-check-label fw-bold">Active teacher</label>
                                         <error-label for="f_grade" :errors="errors.state"></error-label>
                                     </div>
                                 </div>
                                 <hr style="margin-top:5px">
-                                <h4>Resource enrollment</h4>
-                                <div class="row">
-
-                                    <div class="form-group col-sm-10"  @change="saveTeacherCourse()">
-                                        <label>Course</label>
-                                        <treeselect :options="allCourses" :multiple="true" @deselect="deleteCourse" v-model="courseTeachers" @input="selectTotalCourse" />
-                                        <error-label  for="f_grade" :errors="errors.courseTeachers"></error-label>
-
-                                        <table class="table table-row-bordered align-middle gy-4 gs-9" style="margin:25px 0px 0px">
-                                            <thead class="border-bottom border-gray-200 fs-6 text-gray-600 fw-bolder bg-light bg-opacity-75">
-                                            <tr>
-                                                <th class="">Course Name</th>
-                                                <th>Unit</th>
-                                            </tr>
-                                            </thead>
-                                            <tbody v-for="courseTeacher in courseTeachers" >
-                                            <tr v-for="course in courses" v-if="courseTeacher==course.id" >
-                                                <td  >
-                                                    {{course.label}}
-                                                </td>
-                                                <td  >
-                                                    <treeselect :options="course.total_unit" :multiple="true" v-model="course.courseTea" @input="selectTotalUnit(course)"/>
-                                                    <error-label  :errors="errors.courseTea"></error-label>
-                                                </td>
-                                            </tr>
-                                            </tbody>
-                                        </table>
-
+                                <h4>Resource allocation</h4>
+                                <div class="col-lg-12" v-if="entry.active_allocation==0 && school.active_allocation==0">
+                                    <div class="row">
+                                        <div class="row" >
+                                            <label>Resource allocation<span class="text-danger">*</span></label>
+                                            <h3 style="text-align: center; font-weight: bold;font-size: 15px">Resource allocation has been deactivated by Super admin </h3>
+                                        </div>
                                     </div>
                                 </div>
+                                <div class="row" v-if=" school.active_allocation==1" >
+                                    <div class="form-group col-sm-12">
+                                        <label>Course<span class="text-danger">*</span></label>
+                                        <treeselect :options="allCourses" :multiple="true" @deselect="deleteCourse" v-model="courseTeachers" @input="selectTotalCourse" />
+                                        <error-label  for="f_grade" :errors="errors.courseTeachers"></error-label>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                        <div class="col-lg-12" style="display: flex" v-if="courseTeachers.length>0">
+                                            <div style="display: flex;align-items: center;flex-basis: 10%">Course name</div>
+                                            <div style="flex-basis: 90%"  >Unit <span class="text-danger">*</span></div>
+                                        </div>
+                                        <div class="col-lg-12" style="display: flex ;margin: 16px 0px 0px" v-for="courseTeacher in courseTeachers">
+                                            <div v-for="course in courses" v-if="courseTeacher==course.id"  style="display: flex;align-items: center;flex-basis: 10%"> {{course.label}}</div>
+                                            <div v-for="course in courses" v-if="courseTeacher==course.id" style="flex-basis: 90%">
+                                                <treeselect :options="course.total_unit" :multiple="true" v-model="course.courseTea" @input="selectTotalUnit(course)"/>
+                                                <error-label :errors="errors.courseTea"></error-label>
+                                            </div>
+                                        </div>
+                                </div>
+                                <div class="form-check form-check-custom form-check-solid mt-3" v-if="school.active_allocation==1">
+                                    <input id="state1" type="checkbox" v-model="active_allocation" class="form-check-input h-20px w-20px" @change="activeAllocation">
+                                    <label for="state1" class="form-check-label fw-bold">Active allocation</label>
+                                    <error-label for="f_grade" :errors="active_allocation"></error-label>
+                                </div>
+
                             </div>
                         </div>
                         <hr style="margin-top: 10px">
@@ -145,9 +156,10 @@
                         </div>
                         <hr style="margin-top: 10px">
                         <h4>Current registed devices</h4>
-                        <table class=" table  table-head-custom table-head-bg table-vertical-center">
-                            <thead>
+                        <table class="table table-row-bordered align-middle gy-4 gs-9">
+                            <thead  class="border-bottom border-gray-200 fs-6 text-gray-600 fw-bolder bg-light bg-opacity-75">
                             <tr>
+                                <th>No.</th>
                                 <th>Device name</th>
                                 <th>Device detail</th>
                                 <th>Registed date</th>
@@ -158,22 +170,22 @@
                             </tr>
                             </thead>
                             <tbody>
-                            <tr v-for="device in user_device" v-if="device.user_id===entry.id">
+                            <tr v-for="(device,index) in userDevices" >
+                                <td >{{index+1}}</td>
                                 <td v-text="device.device_name"></td>
                                 <td v-text="device.device_name"></td>
                                 <td v-text="d(device.created_at)"></td>
                                 <td style="color: #f1c40f" v-if="device.delete_request!=null" v-text="device.delete_request"></td>
                                 <td v-else></td>
                                 <td>
-                                    <a @click="modalDevice(device)" href="javascript:;" class="btn-trash deleted"><i
-                                        class="fa fa-trash mr-1 deleted"></i></a>
+                                    <a @click="modalDevice(device)" href="javascript:;" class="btn-trash deleted"><i class="bi bi-trash"></i></a>
                                 </td>
                             </tr>
                             </tbody>
                         </table>
                         <h4>Devices activities</h4>
-                        <table  class=" table  table-head-custom table-head-bg table-vertical-center">
-                            <thead>
+                        <table  class="table table-row-bordered align-middle gy-4 gs-9">
+                            <thead  class="border-bottom border-gray-200 fs-6 text-gray-600 fw-bolder bg-light bg-opacity-75">
                             <tr>
                                 <th>Date</th>
                                 <th>Action</th>
@@ -181,12 +193,11 @@
                             </tr>
                             </thead>
                             <tbody>
-                            <tr v-for="device in user_device" v-if="device.user_id==entry.id">
-                                <td v-if="device.delete_request!=null"  v-text="d(device.updated_at)"></td>
-                                <td v-else v-text="d(device.created_at)"></td>
-                                <td v-if="device.delete_request!=null"  >Remove device</td>
-                                <td v-else >Register device</td>
-                                <td v-text="device.device_name"></td>
+                            <tr v-for="device in deviceLog" >
+                                <td v-text="d(device.time)"></td>
+                                <td v-if="device.dataLog.status=='Register device'">Register device</td>
+                                <td v-if="device.dataLog.status=='Approve remove device'">Remove device</td>
+                                <td v-text="device.dataLog.object"></td>
                             </tr>
                             </tbody>
                         </table>
@@ -201,7 +212,7 @@
 </template>
 
 <script>
-    import {$post, forEach} from "../../utils";
+    import {$get, $post, forEach} from "../../utils";
 
     import ActionBar from "../includes/ActionBar";
     import SwitchButton from "../../components/SwitchButton";
@@ -269,11 +280,15 @@
                 }
             })
             return {
+                password:'',
+                password_confirmation:'',
+                school:{},
+                deviceLog:[],
+                active_allocation:$json.active_allocation,
                 deviceTeacher:[],
                 allCourses:allCourses,
                 nameRole:5,
                 courseTeachers:$json.courseTeachers || {},
-                schoolId:$json.schoolId,
                 showConfirm: false,
                 showPass: false,
                 types: [],
@@ -299,7 +314,7 @@
                 entry: $json.entry || {
                     roles: []
                 },
-                user_device: $json.user_device || [],
+                userDevices: [],
                 allocationContentId:$json.allocationContentId,
                 schools:$json.schools || [],
                 courses:courseTreeselect,
@@ -308,6 +323,8 @@
             }
         },
         mounted() {
+            $router.on('/', this.load).init();
+
             $('.noString').keypress(function (e) {
                 if (e.keyCode < 48 || e.keyCode > 57) {
                     e.preventDefault();
@@ -315,6 +332,18 @@
             })
         },
         methods: {
+            async load() {
+                let query = $router.getQuery();
+                this.$loading(true);
+                const res  = await $get('/xadmin/users/deviceTeacher?id='+this.entry.id, query);
+                this.$loading(false);
+                setTimeout(function (){
+                    KTMenu.createInstances();
+                }, 0)
+                this.userDevices = res.data;
+                this.school=res.school
+                this.deviceLog=res.deviceLog
+            },
            selectTotalUnit(course)
             {
               let self=this;
@@ -371,10 +400,44 @@
                 $router.updateQuery({ _: Date.now()});
 
             },
+            async activeAllocation()
+            {
+              const res=await $post('/xadmin/users/activeAllocation',{active_allocation:this.active_allocation,id:this.entry.id})
+                if(res.code)
+                {
+                    toastr.errors(res.message)
+                }
+                else {
+                    toastr.success(res.message)
+                }
+            },
+            async refuse(deviceTeacher)
+            {
+                const res=await $post('/xadmin/users/refuseDevice',{id:deviceTeacher.id});
+                if(res.code)
+                {
+                    toastr.error(res.message);
+                }
+                else {
+                    toastr.success(res.message);
+                }
+                window.location.reload();
+
+            },
 
             async save() {
                 this.isLoading = true;
-                const res = await $post('/xadmin/users/saveTeacher', {entry: this.entry, roles: this.roles,courseTeachers:this.courseTeachers,unit:this.courses,name_role:this.nameRole,schoolId:this.schools.id,allocationContentId:this.allocationContentId}, false);
+                const res = await $post('/xadmin/users/saveTeacher', {
+                    entry: this.entry,
+                    roles: this.roles,
+                    courseTeachers:this.courseTeachers,
+                    unit:this.courses,
+                    name_role:this.nameRole,
+                    schoolId:this.schools.id,
+                    allocationContentId:this.allocationContentId,
+                    password: this.password,
+                    password_confirmation:this.password_confirmation
+                }, false);
                 this.isLoading = false;
                 if (res.errors) {
                     this.errors = res.errors;
@@ -398,7 +461,7 @@
                 } else {
                     toastr.success(res.message);
                 }
-                location.replace('/xadmin/users/teacher');
+                location.replace('/xadmin/schools/teacherList?id='+this.school.id);
                 $router.updateQuery({page: this.paginate.currentPage, _: Date.now()});
             },
         }
