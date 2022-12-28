@@ -117,9 +117,10 @@
                                     <div class="form-group col-lg-8">
                                         <label>Resource allocation <span class="text-danger">*</span></label>
                                        <select required class="form-control form-select" v-model="allocationContenSchool" @change="changeAllocationContent()">
-<!--                                           <option value="" disabled selected>Choose role</option>-->
+                                           <option value="" disabled selected>Choose resource allocation</option>
                                            <option v-for="allocationConten in allocationContens" :value="allocationConten.id">{{allocationConten.title}}</option>
                                        </select>
+                                        <error-label for="f_grade" :errors="errors.allocationContenSchool"></error-label>
                                     </div>
                                     <div class="form-check form-check-custom form-check-solid pb-5 ml-3">
                                 <input id="state1" type="checkbox"  class="form-check-input h-20px w-20px" checked>
@@ -128,7 +129,7 @@
                             </div>
                             </div>
                         </div>
-                        <div class="row" v-if="allocationContenSchool!=null">
+                        <div class="row" v-if="allocationContenSchool!=''">
                             <div class="col-lg-12" style="display: flex">
                                 <div style="display: flex;align-items: center;flex-basis: 10%">Course name</div>
                                 <div style="flex-basis: 90%" >Unit </div>
@@ -185,7 +186,7 @@
             return {
                 courses: courseTreeselect,
                 units:unitTreeselect,
-                allocationContenSchool:null,
+                allocationContenSchool:'',
                 allocationContens:$json.newAllocationContents,
                 breadcrumbs: [
 
@@ -294,6 +295,11 @@
   select:required:invalid {
       color: #adadad;
   }
+
+  option[value=""][disabled] {
+      display: none;
+  }
+
   option {
       color: black;
   }
