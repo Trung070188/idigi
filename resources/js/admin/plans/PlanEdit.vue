@@ -775,7 +775,7 @@
 																		</span>
                                                                           </span>
                                                     </button>
-                                                    <button type="button" class="btn btn-lg btn-primary" data-kt-stepper-action="next" @click="continueImportDevice()" :disabled="disableContinue==false">Continue
+                                                    <button type="button" class="btn btn-lg btn-primary" data-kt-stepper-action="next"  :disabled="disableContinue==false">Continue
                                                         <!--begin::Svg Icon | path: icons/duotune/arrows/arr064.svg-->
                                                         <span class="svg-icon svg-icon-3 ms-1 me-0">
 																		<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
