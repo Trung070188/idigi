@@ -113,7 +113,7 @@
                                 <thead class="border-bottom border-gray-200 fs-6 text-gray-600 fw-bolder bg-light bg-opacity-75">
                                 <tr >
                                     <th>No.</th>
-                                    <th class="">User name</th>
+                                    <th class="">Username</th>
                                     <th class="">Role</th>
                                     <th class="">Description</th>
                                     <th class="">Object</th>
