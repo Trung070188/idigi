@@ -51,8 +51,9 @@ class SyncData extends Command
     {
 
         //Đồng bộ file và inventory
-        /*\DB::connection('mysql2')->table('inventories')
-            ->where('id', '>',209)
+        \DB::connection('mysql2')->table('inventories')
+            ->where('id', '>=',1481)
+            ->where('id', '<=',1548)
             ->chunkById(100, function ($inventories) {
                 foreach ($inventories as $inventory){
                     $userCreate = User::where('username', $inventory->created_by)->first();
@@ -141,9 +142,10 @@ class SyncData extends Command
 
                     echo 'Sync inventory: '.$inventory->id.PHP_EOL;
                 }
-            });*/
+            });
         //Đồng bộ lesson
         \DB::connection('mysql2')->table('lessons')
+            ->where('id',665)
             ->chunkById(100, function ($lessons) {
                 foreach ($lessons as $lesson) {
                     $userCreate = User::where('username', $lesson->created_by)->first();
