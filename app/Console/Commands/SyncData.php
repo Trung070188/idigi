@@ -144,7 +144,7 @@ class SyncData extends Command
                 }
             });
         //Đồng bộ lesson
-        \DB::connection('mysql2')->table('lessons')
+        /*\DB::connection('mysql2')->table('lessons')
             ->where('id', 665)
             ->chunkById(100, function ($lessons) {
                 foreach ($lessons as $lesson) {
@@ -224,7 +224,7 @@ class SyncData extends Command
 
                     echo 'Sync lesson: ' . $lesson->id . PHP_EOL;
                 }
-            });
+            });*/
 
        /* //Đồng bộ inventory và lesson
         \DB::connection('mysql2')->table('lessons')
