@@ -504,9 +504,9 @@ class SchoolsController extends AdminBaseController
         $v = Validator::make($data, $rules,$message,$dataContent);
         $v->after(function ($validate) use ($dataContent)
         {
-           if($dataContent['allocationContenSchool']=="")
+           if(!isset($data['id']) && $dataContent['allocationContentSchool']=="" )
            {
-               $validate->errors()->add('allocationContenSchool','Resource allocation field is required ');
+               $validate->errors()->add('allocationContentSchool','Resource allocation field is required ');
 
            }
         });
