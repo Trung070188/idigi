@@ -816,13 +816,6 @@
                 exportErrorImportTeacher()
                 {
                     window.location.href='/xadmin/users/exportErrorTeacher?fileError='+ this.errorName;
-                    this.$refs.uploader.value = null;
-                    this.fileUpLoad='';
-                    this.fileImport.length=0;
-                    this.fileError.length=0;
-                    this.valueValidateImportTeacher=0;
-                    $('#kt_modal_create_app').modal('hide');
-                    location.reload();
                 },
                 removeFileTeacher() {
                     if (this.$refs.uploader.files) {
