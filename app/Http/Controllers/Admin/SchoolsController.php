@@ -478,12 +478,11 @@ class SchoolsController extends AdminBaseController
 
         $rules = [
             'label' => 'required|max:45',
-            'school_address' => ['required','max:255','regex:/^[\pL\s\.]+$/u'],
+            'school_address' => ['required','max:255','regex:/^[\pL\s\/\0-9.,]+$/u'],
             'number_of_users' => 'required|min:1|integer',
             'devices_per_user' => 'required|min:1|integer',
             'license_to'=>'required|after_or_equal:'. $current,
         ];
-
         if(@$data['school_email'])
         {
             $rules['school_email']=['email'];
