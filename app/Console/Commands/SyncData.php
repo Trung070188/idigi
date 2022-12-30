@@ -51,8 +51,9 @@ class SyncData extends Command
     {
 
         //Đồng bộ file và inventory
-        /*\DB::connection('mysql2')->table('inventories')
-            ->where('id', '>',209)
+        \DB::connection('mysql2')->table('inventories')
+            ->where('id', '<=',1548)
+            ->where('id', '>=',1481)
             ->chunkById(100, function ($inventories) {
                 foreach ($inventories as $inventory){
                     $userCreate = User::where('username', $inventory->created_by)->first();
@@ -141,9 +142,10 @@ class SyncData extends Command
 
                     echo 'Sync inventory: '.$inventory->id.PHP_EOL;
                 }
-            });*/
+            });
         //Đồng bộ lesson
-        \DB::connection('mysql2')->table('lessons')
+        /*\DB::connection('mysql2')->table('lessons')
+            ->where('id', 665)
             ->chunkById(100, function ($lessons) {
                 foreach ($lessons as $lesson) {
                     $userCreate = User::where('username', $lesson->created_by)->first();
@@ -222,9 +224,9 @@ class SyncData extends Command
 
                     echo 'Sync lesson: ' . $lesson->id . PHP_EOL;
                 }
-            });
+            });*/
 
-        //Đồng bộ inventory và lesson
+       /* //Đồng bộ inventory và lesson
         \DB::connection('mysql2')->table('lessons')
             ->chunkById(100, function ($lessons) {
                 foreach ($lessons as $lesson){
@@ -259,7 +261,7 @@ class SyncData extends Command
 
                     echo 'Sync lesson inventory: '.$lesson->id.PHP_EOL;
                 }
-            });
+            });*/
     }
 
     protected function insertFile($path, $isImage = 0)
