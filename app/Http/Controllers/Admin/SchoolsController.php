@@ -504,9 +504,9 @@ class SchoolsController extends AdminBaseController
         $v = Validator::make($data, $rules,$message,$dataContent);
         $v->after(function ($validate) use ($dataContent)
         {
-           if($dataContent['allocationContenSchool']=="")
+           if(!isset($data['id']) && $dataContent['allocationContentSchool']=="" )
            {
-               $validate->errors()->add('allocationContenSchool','Resource allocation field is required ');
+               $validate->errors()->add('allocationContentSchool','Resource allocation field is required ');
 
            }
         });
@@ -579,18 +579,18 @@ class SchoolsController extends AdminBaseController
             $entry = new School();
             $entry->fill($data);
             $entry->save();
-            if (@$dataContent['allocationContenSchool']) {
-                AllocationContentSchool::create(['allocation_content_id' => $dataContent['allocationContenSchool'], 'school_id' => $entry->id]);
+            if (@$dataContent['allocationContentSchool']) {
+                AllocationContentSchool::create(['allocation_content_id' => $dataContent['allocationContentSchool'], 'school_id' => $entry->id]);
 
                 foreach ($entry->allocation_contents as $contents) {
                     foreach ($contents->course_unit as $schoolCourse) {
-                        SchoolCourseUnit::create(['school_id' => $entry->id, 'course_id' => $schoolCourse->course_id, 'unit_id' => $schoolCourse->unit_id,'allocation_content_id'=>$dataContent['allocationContenSchool']]);
+                        SchoolCourseUnit::create(['school_id' => $entry->id, 'course_id' => $schoolCourse->course_id, 'unit_id' => $schoolCourse->unit_id,'allocation_content_id'=>$dataContent['allocationContentSchool']]);
                     }
                 }
 
                 foreach ($entry->allocation_contents as $contents) {
                     foreach ($contents->courses as $schoolCourse) {
-                        SchoolCourse::create(['school_id' => $entry->id, 'course_id' => $schoolCourse->id,'allocation_content_id'=>$dataContent['allocationContenSchool']]);
+                        SchoolCourse::create(['school_id' => $entry->id, 'course_id' => $schoolCourse->id,'allocation_content_id'=>$dataContent['allocationContentSchool']]);
                     }
                 }
             }
