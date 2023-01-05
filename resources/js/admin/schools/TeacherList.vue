@@ -359,7 +359,7 @@
                                     <i class="bi bi-funnel"></i>
                                     Advanced Search
                                 </button>
-                                <button  type="button" class="btn btn-primary mr-2" @click="importTeacher">
+                                <button  type="button" class="btn btn-primary mr-2" @click="importTeacher" v-if="permissions['050']">
                                         <span class="svg-icon svg-icon-2">
 													<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
 														<path opacity="0.3" d="M10 4H21C21.6 4 22 4.4 22 5V7H10V4Z" fill="black" />
@@ -368,7 +368,7 @@
 													</svg>
 												</span>
                                         Import teacher </button>
-                                         <a :href="'/xadmin/users/create_teacher?schoolId='+JSON.stringify(entry.id)">
+                                         <a :href="'/xadmin/users/create_teacher?schoolId='+JSON.stringify(entry.id)" v-if="permissions['013']">
                                           <button  type="button" class="btn btn-primary mr-2" >
 
                                         <span class="svg-icon svg-icon-2">
