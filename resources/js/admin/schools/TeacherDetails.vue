@@ -124,7 +124,7 @@
                                 <div class="row" v-if=" school.active_allocation==1" >
                                     <div class="form-group col-sm-12">
                                         <label>Course<span class="text-danger">*</span></label>
-                                        <treeselect :options="allCourses" :multiple="true" @deselect="deleteCourse" v-model="courseTeachers" @input="selectTotalCourse" />
+                                        <treeselect :options="allCourses" :multiple="true" @deselect="deleteCourse" v-model="courseTeachers" @input="selectTotalCourse" :disabled="permissionFields['resource_allocation']==false"/>
                                         <error-label  for="f_grade" :errors="errors.courseTeachers"></error-label>
                                     </div>
                                 </div>
@@ -142,7 +142,7 @@
                                         </div>
                                 </div>
                                 <div class="form-check form-check-custom form-check-solid mt-3" v-if="school.active_allocation==1">
-                                    <input id="state1" type="checkbox" v-model="active_allocation" class="form-check-input h-20px w-20px" @change="activeAllocation">
+                                    <input id="state1" type="checkbox" v-model="active_allocation" class="form-check-input h-20px w-20px" @change="activeAllocation" :disabled="permissionFields['active_allocation']==false">
                                     <label for="state1" class="form-check-label fw-bold">Active allocation</label>
                                     <error-label for="f_grade" :errors="active_allocation"></error-label>
                                 </div>
@@ -178,8 +178,7 @@
                                 <td style="color: #f1c40f" v-if="device.delete_request!=null" v-text="device.delete_request" ></td>
                                 <td v-else></td>
                                 <td>
-                                    <a v-if="permissionFields['delete_device']==false"  href="javascript:;" class="btn-trash deleted"><i class="bi bi-trash"></i></a>
-                                    <a v-else @click="modalDevice(device)" href="javascript:;" class="btn-trash deleted"><i class="bi bi-trash"></i></a>
+                                    <a v-if="permissionFields['delete_device']==true" @click="modalDevice(device)" href="javascript:;" class="btn-trash deleted"><i class="bi bi-trash"></i></a>
                                 </td>
                             </tr>
                             </tbody>

@@ -4,9 +4,12 @@
 namespace App\Models;
 
 
+use Illuminate\Database\Eloquent\SoftDeletes;
+
 class UserDevice extends BaseModel
 {
     public $timestamps = true;
+    use SoftDeletes;
     protected $table = 'user_devices';
     protected  $fillable = [
         'device_uid',
