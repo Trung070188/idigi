@@ -1,11 +1,14 @@
 <?php
 
 namespace App\Http\Controllers\Admin;
+use App\Helpers\PermissionField;
 use App\Models\Notification;
 use App\Models\Plan;
 use App\Models\School;
+use Faker\Core\Number;
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
+use http\Client\Response;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
@@ -42,6 +45,7 @@ class UserDevicesController extends AdminBaseController
         {
             foreach ($user->roles as $role)
             {
+                @$checkDeleteDeviceRequest=($role->check_delete_device_request);
                 $roleName=$role->role_name;
                 if($role->role_name=='School Admin'|| $role->role_name=='Teacher')
                 {
@@ -50,7 +54,17 @@ class UserDevicesController extends AdminBaseController
                 }
             }
         }
+        $user = Auth::user();
+        $permissionDetail = new PermissionField();
+        $permissions = $permissionDetail->permission($user);
+        $permissionFields= [
+            'device_rename' => $permissionDetail->havePermission('device_rename',$permissions,$user),
+            'device_confirmation_code'=>$permissionDetail->havePermission('device_confirmation_code',$permissions,$user),
+            'device_delete'=>$permissionDetail->havePermission('device_delete',$permissions,$user),
+        ];
         $jsonData = [
+            'checkDeleteDeviceRequest'=>@$checkDeleteDeviceRequest,
+            'permissionFields'=>$permissionFields,
             @'roleName'=>@$roleName,
             @'devicesPerUser' => @$devicesPerUser
         ];
@@ -100,16 +114,16 @@ class UserDevicesController extends AdminBaseController
     public function remove(Request $req) {
         $id = $req->id;
         $entry = UserDevice::find($id);
-
+        UserDevice::where('id',$id)->update(['deleted_at'=>Carbon::now()]);
         if (!$entry) {
             throw new NotFoundHttpException();
         }
-
-        $entry->delete();
-
         return [
             'code' => 0,
-            'message' => 'Đã xóa'
+            'message' => 'Đã xóa',
+            'object'=>$entry->device_name,
+            'status'=>'Remove device',
+            'role'=>$this->roleName()
         ];
     }
 
@@ -118,6 +132,15 @@ class UserDevicesController extends AdminBaseController
      * @return  array
      */
 
+    public function roleName()
+    {
+        $auth=Auth::user();
+        foreach ($auth->roles as $role)
+        {
+            $roleName=$role->role_name;
+        }
+        return $roleName;
+    }
     public function save(Request $req) {
 
         if (!$req->isMethod('POST')) {
@@ -149,7 +172,8 @@ class UserDevicesController extends AdminBaseController
                 ];
             }
             $entry->fill($data);
-            $entry->status=1;
+            $entry->delete_request='Deleting request';
+            $entry->save();
                     $data_device = new Notification();
                     $data_device->status='new';
                     $data_device->content=$entry->device_name;
@@ -158,13 +182,13 @@ class UserDevicesController extends AdminBaseController
                     $data_device->url=url("xadmin/users/editTeacher?id={$entry->user_id}");
                     $data_device->title='Yêu cầu xóa thiết bị';
             $data_device->save();
-            $entry->save();
-
-
             return [
                 'code' => 0,
                 'message' => 'Đã cập nhật',
                 'id' => $entry->id,
+                'object'=>$entry->device_name,
+                'status'=>'Request remove device',
+                'role'=>$this->roleName()
             ];
         }
         /**
@@ -185,6 +209,9 @@ class UserDevicesController extends AdminBaseController
                 'code' => 0,
                 'message' => 'Đã thêm',
                 'id' => $entry->id,
+                'object'=>$entry->device_name,
+                'status'=>'Add device',
+                'role'=>$this->roleName()
             ];
 
         }
@@ -264,15 +291,21 @@ class UserDevicesController extends AdminBaseController
         }catch (\Exception $e)
         {
             return [
-                'code' => 2,
-                'message'=>'Register code is invalid'
+                'code'=>2,
+                'errors'=>[
+                    'device_uid'=>['Register code is invalid.']
+                ]
             ];
+
         }
 
         $entry->save();
         return [
             'code' => 0,
             'message' => 'Đã thêm',
+            'object'=>$entry->device_name,
+            'status'=>'Register device',
+            'role'=>$this->roleName(),
             'id' => $entry->id
         ];
     }
@@ -310,7 +343,7 @@ class UserDevicesController extends AdminBaseController
      * @return  array
      */
     public function data(Request $req) {
-       $devices=UserDevice::query()->with(['users'])->where('plan_id','=',NULL)->orderBy('created_at','ASC')->get();
+       $devices=UserDevice::query()->with(['users'])->where('plan_id','=',NULL)->whereNull('deleted_at')->orderBy('created_at','ASC')->get();
        $data=[];
        foreach ($devices as $device)
        {
@@ -330,8 +363,10 @@ class UserDevicesController extends AdminBaseController
                        'status'=>$device->status,
                        'secret_key'=>$device->secret_key,
                        'reason'=>$device->reason,
+                       'delete_request'=>$device->delete_request,
                        'created_at'=>$device->created_at,
                        'updated_at'=>$device->updated_at,
+                       'deleted_at'=>$device->deleted_at,
                        'roleName'=>$roleName,
                    ];
                }
