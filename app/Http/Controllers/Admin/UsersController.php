@@ -475,6 +475,7 @@ class UsersController extends AdminBaseController
             'active_allocation'=>$permissionDetail->havePermission('active_allocation',$permissions,$user),
             'resource_allocation'=>$permissionDetail->havePermission('resource_allocation',$permissions,$user),
             'password'=>$permissionDetail->havePermission('password',$permissions,$user),
+            'teacher_delete'=>$permissionDetail->havePermission('teacher_delete',$permissions,$user),
 
         ];
         $jsonData = [

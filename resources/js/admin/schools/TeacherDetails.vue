@@ -37,7 +37,7 @@
                     <div class="swal2-actions">
                         <button type="reset" id="kt_modal_new_target_cancel1" class="swal2-cancel btn fw-bold btn-active-light-primary" data-bs-dismiss="modal" style="margin: 0px 8px 0px" @click="refuse(deviceTeacher)">Refuse</button>
 
-                        <button type="submit" class="swal2-confirm btn fw-bold btn-danger" @click="remove_device(deviceTeacher)">
+                        <button  type="submit" class="swal2-confirm btn fw-bold btn-danger" @click="remove_device(deviceTeacher)">
                             <span class="indicator-label">Yes, delete!</span>
                         </button>
                     </div>
@@ -49,7 +49,7 @@
                 <div class="card card-custom card-stretch gutter-b">
                     <div  class="d-flex justify-content-end"
                           data-kt-customer-table-toolbar="base">
-                        <button class="btn btn-danger button-create " @click="removeTeacher" style="margin: 15px 25px 0px ">
+                        <button class="btn btn-danger button-create " @click="removeTeacher" style="margin: 15px 25px 0px " :disabled="permissionFields['teacher_delete']==false">
                             <i class="bi bi-person-dash mr-1"></i>Delete teacher
                         </button>
                     </div>
@@ -136,7 +136,7 @@
                                         <div class="col-lg-12" style="display: flex ;margin: 16px 0px 0px" v-for="courseTeacher in courseTeachers">
                                             <div v-for="course in courses" v-if="courseTeacher==course.id"  style="display: flex;align-items: center;flex-basis: 10%"> {{course.label}}</div>
                                             <div v-for="course in courses" v-if="courseTeacher==course.id" style="flex-basis: 90%">
-                                                <treeselect :options="course.total_unit" :multiple="true" v-model="course.courseTea" @input="selectTotalUnit(course)"/>
+                                                <treeselect :options="course.total_unit" :multiple="true" v-model="course.courseTea" @input="selectTotalUnit(course)" :disabled="permissionFields['resource_allocation']==false"/>
                                                 <error-label :errors="errors.courseTea"></error-label>
                                             </div>
                                         </div>
