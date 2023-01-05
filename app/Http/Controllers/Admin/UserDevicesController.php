@@ -365,6 +365,7 @@ class UserDevicesController extends AdminBaseController
                        'delete_request'=>$device->delete_request,
                        'created_at'=>$device->created_at,
                        'updated_at'=>$device->updated_at,
+                       'deleted_at'=>$device->deleted_at,
                        'roleName'=>$roleName,
                    ];
                }

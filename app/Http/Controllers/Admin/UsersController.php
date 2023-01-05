@@ -469,6 +469,9 @@ class UsersController extends AdminBaseController
             'teacher_school'=>$permissionDetail->havePermission('teacher_school',$permissions,$user),
             'teacher_description'=>$permissionDetail->havePermission('teacher_description',$permissions,$user),
             'teacher_import'=>$permissionDetail->havePermission('teacher_import',$permissions,$user),
+            'delete_device'=>$permissionDetail->havePermission('delete_device',$permissions,$user),
+            'active_teacher'=>$permissionDetail->havePermission('active_teacher',$permissions,$user),
+            'teacher_full_name'=>$permissionDetail->havePermission('teacher_full_name',$permissions,$user),
 
         ];
         $jsonData = [

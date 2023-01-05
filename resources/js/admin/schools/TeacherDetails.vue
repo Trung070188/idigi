@@ -60,53 +60,53 @@
                                 <div class="row">
                                     <div class="form-group  col-sm-4">
                                         <label>Username <span class="text-danger">*</span></label>
-                                        <input class="form-control" v-model="entry.username" disabled>
+                                        <input class="form-control" v-model="entry.username" :disabled="permissionFields['teacher_username']==false">
 
                                         <error-label for="f_category_id" :errors="errors.username"></error-label>
                                     </div>
                                     <div class="form-group  col-sm-4">
                                         <label>Teacher name <span class="text-danger">*</span></label>
-                                        <input class="form-control" v-model="entry.full_name">
+                                        <input class="form-control" v-model="entry.full_name" :disabled="permissionFields['teacher_full_name']==false">
 
                                         <error-label for="f_category_id" :errors="errors.full_name"></error-label>
                                     </div>
                                     <div class="form-group  col-sm-4">
                                         <label>Email </label>
-                                        <input class="form-control" v-model="entry.email">
+                                        <input class="form-control" v-model="entry.email" :disabled="permissionFields['teacher_email']==false">
 
                                         <error-label for="f_category_id" :errors="errors.email"></error-label>
                                     </div>
                                     <div class="form-group  col-sm-4">
                                         <label>Phone number </label>
-                                        <input class="form-control noString" v-model="entry.phone" >
+                                        <input class="form-control noString" v-model="entry.phone" :disabled="permissionFields['teacher_phone']==false">
                                         <error-label for="f_category_id" :errors="errors.phone"></error-label>
                                     </div>
                                     <div class="form-group  col-sm-4">
                                         <label>Class</label>
-                                        <input class="form-control" v-model="entry.class">
+                                        <input class="form-control" v-model="entry.class" :disabled="permissionFields['teacher_class']==false">
                                         <error-label for="f_category_id" :errors="errors.class"></error-label>
                                     </div>
                                     <div class="form-group col-sm-4">
                                         <label>School</label>
-                                        <input class="form-control form-control-solid" v-model="schools.label" disabled>
+                                        <input class="form-control form-control-solid" v-model="schools.label" :disabled="permissionFields['teacher_school']==false">
                                         <error-label for="f_category_id" :errors="errors.label"></error-label>
                                     </div>
                                     <div  class="form-group  col-sm-4">
                                         <label>Password <span class="text-danger">*</span></label>
                                         <input :type="showPass ? 'text' : 'password'" class="form-control"
-                                               ref="password" v-model="password" placeholder="Enter the password">
+                                               ref="password" v-model="password" placeholder="Enter the password" :disabled="permissionFields['password']==false">
                                         <error-label for="f_category_id" :errors="errors.password"></error-label>
                                     </div>
 
                                     <div  class="form-group  col-sm-4">
                                         <label>Confirm your password <span class="text-danger">*</span></label>
                                         <input class="form-control" :type="showConfirm ? 'text' : 'password'"
-                                               v-model="password_confirmation"  placeholder="Re-enter to confirm the password">
+                                               v-model="password_confirmation"  placeholder="Re-enter to confirm the password" :disabled="permissionFields['password']==false">
                                         <error-label for="f_category_id"
                                                      :errors="errors.password_confirmation"></error-label>
                                     </div>
                                     <div class="form-check form-check-custom form-check-solid ml-3 pb-5">
-                                        <input id="state" type="checkbox" v-model="entry.state" class="form-check-input h-20px w-20px">
+                                        <input id="state" type="checkbox" v-model="entry.state" class="form-check-input h-20px w-20px" :disabled="permissionFields['active_teacher']==false">
                                         <label for="state" class="form-check-label fw-bold">Active teacher</label>
                                         <error-label for="f_grade" :errors="errors.state"></error-label>
                                     </div>
@@ -175,10 +175,11 @@
                                 <td v-text="device.device_name"></td>
                                 <td v-text="device.device_name"></td>
                                 <td v-text="d(device.created_at)"></td>
-                                <td style="color: #f1c40f" v-if="device.delete_request!=null" v-text="device.delete_request"></td>
+                                <td style="color: #f1c40f" v-if="device.delete_request!=null" v-text="device.delete_request" ></td>
                                 <td v-else></td>
                                 <td>
-                                    <a @click="modalDevice(device)" href="javascript:;" class="btn-trash deleted"><i class="bi bi-trash"></i></a>
+                                    <a v-if="permissionFields['delete_device']==false"  href="javascript:;" class="btn-trash deleted"><i class="bi bi-trash"></i></a>
+                                    <a v-else @click="modalDevice(device)" href="javascript:;" class="btn-trash deleted"><i class="bi bi-trash"></i></a>
                                 </td>
                             </tr>
                             </tbody>
@@ -280,6 +281,7 @@
                 }
             })
             return {
+                permissionFields:$json.permissionFields,
                 password:'',
                 password_confirmation:'',
                 school:{},
