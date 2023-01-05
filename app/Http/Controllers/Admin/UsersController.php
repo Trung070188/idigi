@@ -742,7 +742,7 @@ class UsersController extends AdminBaseController
                 $validate->errors()->add('userSchool','The school field is required.');
 
             }
-            if($data_role['name_role']==2 && !isset($data['id']) && $data_role['userSchool']==[] || $data_role['name_role']==5 && !isset($data['id']) && $data_role['userSchool']==[])
+            if($data_role['name_role']==2 && !isset($data['id']) && $data_role['userSchool']==[] || $data_role['name_role']==5 && !isset($data['id']) && $data['school_id']==[])
             {
                 $validate->errors()->add('userSchool','The school field is required.');
 
