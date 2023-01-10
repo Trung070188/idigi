@@ -705,11 +705,14 @@ class UsersController extends AdminBaseController
            {
                $rules['password']=['required'];
            }
-            $rules['username'] = ['required', 'min:8', 'unique:users,username', function ($attribute, $value, $fail) {
-                if (preg_match('/[\'\/~`\!@#\$%\^&\*\(\)\-\+=\{\}\[\]\|;:"\<\>,\?\\\]/', $value)) {
-                    return $fail(__(' The :attribute no special characters'));
-                }
-            },];
+            if($data_role['name_role']==null)
+            {
+                $rules['name_role']=['required'];
+            }
+            if ($data['email']) {
+                $rules['email'] = ['email', Rule::unique('users'),];
+
+            }
         }
         if (isset($data['id'])) {
             $user = User::find($data['id']);
@@ -718,19 +721,6 @@ class UsersController extends AdminBaseController
 
             }
 
-
-        }
-        if(!isset($data['id']))
-        {
-
-           if($data_role['name_role']==null)
-           {
-               $rules['name_role']=['required'];
-           }
-            if ($data['email']) {
-                $rules['email'] = ['email', Rule::unique('users'),];
-
-            }
 
         }
 //        if ($data_role['name_role'] == 2 || $data_role['name_role'] == 5) {
