@@ -727,6 +727,10 @@ class UsersController extends AdminBaseController
            {
                $rules['name_role']=['required'];
            }
+            if ($data['email']) {
+                $rules['email'] = ['email', Rule::unique('users'),];
+
+            }
 
         }
 //        if ($data_role['name_role'] == 2 || $data_role['name_role'] == 5) {
