@@ -1713,7 +1713,7 @@ class UsersController extends AdminBaseController
         {
             $request_uri[]=$requestUri->request_uri;
         }
-        $deviceLogs=Xlogger::query()->whereIn('request_uri',$request_uri)->where('http_method','POST')->where('http_code',200)->orderBy('time','desc')->get();
+        $deviceLogs=Xlogger::query()->whereIn('request_uri',$request_uri)->where('username',$user->username)->where('http_method','POST')->where('http_code',200)->orderBy('time','desc')->get();
         $dataDeviceLog=[];
         foreach ($deviceLogs as $deviceLog)
         {
