@@ -53,7 +53,7 @@ class SyncDataSec extends Command
          //Đồng bộ file và inventory
         \DB::connection('mysql3')->table('inventories')
              ->where('id', '>=',452)
-             ->where('id', '<=',455)
+             ->where('id', '<=',456)
              ->chunkById(100, function ($inventories) {
                  foreach ($inventories as $inventory){
 
