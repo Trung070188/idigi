@@ -705,6 +705,9 @@ class UsersController extends AdminBaseController
            {
                $rules['password']=['required'];
            }
+                if($data_role['auto_gen']==true){
+                    $rules['email'] = ['email', Rule::unique('users'),];
+                }
             if($data_role['name_role']==null)
             {
                 $rules['name_role']=['required'];
