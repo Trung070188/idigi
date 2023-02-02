@@ -38,10 +38,21 @@
                                     </div>
                                     <div class="form-group col-sm-12"  style="border: 1px solid #b5b5c3;border-radius: 25px">
                                         <label style="margin:15px 0px 10px ">List of module</label>
-                                        <select class="form-control form-select" style="margin-bottom: 15px">
-                                            <option></option>
+                                        <div style="margin-top: 10px;float: right;display: inline-block;margin-right: -13px" class="form-group col-lg-3">
+                                            <select class="form-control form-select" required v-model="filter.type" @change="doFilter()">
+                                                <option value="" disabled selected>Choose the type</option>
+                                                <option value="Vocabulary">Vocabulary</option>
+                                                <option value="Summary">Summary</option>
+                                                <option value="Practice">Practice</option>
+                                                <option value="Summary">Summary</option>
+                                            </select>
+                                        </div>
+                                        <select class="form-control form-select" style="margin-bottom: 15px" v-model="list" @change="doFilter()" required>
+                                            <option value="" disabled selected>Search module</option>
+                                            <option v-for="module in modules" :value="module.id">{{module.name}}</option>
                                         </select>
                                         <draggable
+                                            :list="list"
                                             :animation="200"
                                             ghost-class="moving-card"
                                             group="users"
@@ -91,16 +102,25 @@
 </template>
 
 <script>
-    import {$post} from "../../utils";
+    import {$get, $post, getTimeRangeAll} from "../../utils";
     import ActionBar from "../includes/ActionBar";
     import draggable from "vuedraggable";
+    import $router from "../../lib/SimpleRouter";
 
-
+    let created = getTimeRangeAll();
+    const $q = $router.getQuery();
     export default {
         name: "LessonsForm.vue",
         components: {ActionBar,draggable},
         data() {
+            let filter = {
+                type: $q.type || "",
+            };
             return {
+                filter:filter,
+                module_type:'',
+                modules:[],
+                list:[],
                 breadcrumbs:[
                     {
                         title: 'Resource management',
@@ -118,7 +138,25 @@
                 errors: {}
             }
         },
+        mounted() {
+            $router.on("/", this.load).init();
+        },
         methods: {
+            doFilter() {
+                $router.setQuery(this.filter);
+            },
+            async load() {
+                let query = $router.getQuery();
+                this.$loading(true);
+                const res = await $get("/xadmin/lessons/dataEditLesson", query);
+                this.$loading(false);
+                setTimeout(function () {
+                    KTMenu.createInstances();
+                }, 0);
+                this.modules = res.module;
+                console.log(this.list);
+
+            },
             backIndex(){
                 window.location.href = '/xadmin/lessons/index';
             },
@@ -147,5 +185,15 @@
 </script>
 
 <style scoped>
+    select:required:invalid {
+        color: #adadad;
+    }
 
+    option[value=""][disabled] {
+        display: none;
+    }
+
+    option {
+        color: black;
+    }
 </style>

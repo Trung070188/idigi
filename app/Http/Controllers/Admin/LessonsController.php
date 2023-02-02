@@ -11,6 +11,7 @@ use App\Models\AllocationContentSchool;
 use App\Models\DownloadAppLog;
 use App\Models\DownloadLessonFile;
 use App\Models\DownloadLessonLog;
+use App\Models\Inventory;
 use App\Models\School;
 use App\Models\UserDevice;
 use Carbon\Carbon;
@@ -337,6 +338,19 @@ class LessonsController extends AdminBaseController
                 'lastPage' => $entries->lastPage(),
                 'totalRecord' => $query->count(),
             ]
+        ];
+    }
+    public function dataEditLesson(Request $req)
+    {
+
+
+        $modules=Inventory::query()->orderBy('id','desc');
+        if($req->type)
+        {
+            $modules->where('type',$req->type);
+        }
+        return [
+            'module'=>$modules->get(),
         ];
     }
 
