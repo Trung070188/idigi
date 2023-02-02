@@ -15,6 +15,9 @@ class Course extends BaseModel
     protected $table = 'courses';
     protected $fillable = [
     'course_name',
+    'subject',
+    'grade',
+    'description',
     'public_from',
     'public_to',
     'status',

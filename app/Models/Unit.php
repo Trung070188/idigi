@@ -13,6 +13,8 @@ class Unit extends BaseModel
     protected $table = 'units';
     protected $fillable=[
         'unit_name',
+        'subject',
+        'description',
         'course_id',
         'position'
     ];
