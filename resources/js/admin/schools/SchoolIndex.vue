@@ -188,14 +188,14 @@
                                                @change="selectAll()">
                                     </div>
                                 </td>
-                                <th class="text-center">No.</th>
-                                <th class="text-center">Name</th>
-                                <th class="text-center">Address</th>
-                                <th class="text-center">Administrator name</th>
-                                <th class="text-center">Teacher</th>
-                                <th class="text-center">Devices per user</th>
-                                <th class="text-center">License</th>
-                                <th class="text-center">Action</th>
+                                <th >No.</th>
+                                <th >Name</th>
+                                <th >Address</th>
+                                <th >Administrator name</th>
+                                <th >Teacher</th>
+                                <th >Devices per user</th>
+                                <th >License</th>
+                                <th >Action</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -209,14 +209,14 @@
                                                :value="entry.id" @change="updateCheckAll">
                                     </div>
                                 </td>
-                                <td class="text-center">{{index+1}}</td>
-                                <td class="text-center" v-text="entry.label" @click="edit(entry)"></td>
-                                <td class="text-center" v-text="entry.school_address" @click="edit(entry)"></td>
-                                <td class="text-center" @click="edit(entry)">{{entry.nameSchoolAdmin}}</td>
-                                <td class="text-center" v-text="entry.teacher.length" @click="edit(entry)"></td>
-                                <td class="text-center" v-text="entry.devices_per_user" @click="edit(entry)"></td>
-                                <td  class="text-center" @click="edit(entry)">{{d(entry.license_to)}}</td>
-                                <td class="text-center">
+                                <td >{{index+1}}</td>
+                                <td  v-text="entry.label" @click="edit(entry)"></td>
+                                <td  v-text="entry.school_address" @click="edit(entry)"></td>
+                                <td  @click="edit(entry)" class="" data-bs-toggle="tooltip" :title="entry.nameSchoolAdmin" >{{entry.nameSchoolAdmin}}</td>
+                                <td  v-text="entry.teacher.length" @click="edit(entry)"></td>
+                                <td  v-text="entry.devices_per_user" @click="edit(entry)"></td>
+                                <td  @click="edit(entry)">{{d(entry.license_to)}}</td>
+                                <td >
                                     <a href="list.html#" class="btn btn-light btn-active-light-primary btn-sm" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">Actions
                                         <!--begin::Svg Icon | path: icons/duotune/arrows/arr072.svg-->
                                         <span class="svg-icon svg-icon-5 m-0">
@@ -477,6 +477,16 @@
 <style scoped>
     td {
         cursor: pointer;
+    }
+    .table th, .table td
+    {
+        max-width: 150px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        cursor: pointer;
+        padding: 0.75rem;
+        vertical-align: top;
     }
 
 </style>

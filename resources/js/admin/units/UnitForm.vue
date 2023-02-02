@@ -13,13 +13,15 @@
                                 <div class="row">
                                     <div class="form-group col-sm-9">
                                         <label>Unit name <span class="text-danger">*</span></label>
-                                        <input class="form-control nospace" placeholder="Enter the course name" v-model="entry.unit_name" >
+                                        <input class="form-control nospace" placeholder="Enter the unit name" v-model="entry.unit_name" >
                                         <error-label  for="f_category_id" :errors="errors.unit_name"></error-label>
                                     </div>
                                     <div class="form-group col-sm-3">
                                         <label>Subject<span class="text-danger">*</span></label>
-                                        <select class="form-control form-select">
-                                            <option></option>
+                                        <select class="form-control form-select" required>
+                                            <option value="" disabled selected>Choose the subject</option>
+                                            <option value="Math">Math</option>
+                                            <option value="Science">Science</option>
                                         </select>
                                     </div>
                                     <div class="form-group col-sm-9">
@@ -29,7 +31,8 @@
                                     </div>
                                     <div class="form-group col-sm-3">
                                         <label>Course <span class="text-danger">*</span></label>
-                                        <select class="form-select form-control">
+                                        <select class="form-select form-control" required>
+                                            <option value="" disabled selected>Choose the course</option>
                                             <option></option>
                                         </select>
                                     </div>
@@ -141,5 +144,15 @@
 </script>
 
 <style scoped>
+    select:required:invalid {
+        color: #adadad;
+    }
 
+    option[value=""][disabled] {
+        display: none;
+    }
+
+    option {
+        color: black;
+    }
 </style>

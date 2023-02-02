@@ -25,10 +25,9 @@
                                         <label>Type <span class="text-danger">*</span></label>
                                         <select class="form-control" v-model="entry.type" :disabled="permissionFields['resource_type']==false">
                                             <option value="Vocabulary">Vocabulary</option>
+                                            <option value="Summary">Lecture</option>
+                                            <option value="Practice">Practice</option>
                                             <option value="Summary">Summary</option>
-                                            <option value="Lecture">Lecture</option>
-                                            <option value="Activity1">Activity1</option>
-                                            <option value="Activity2">Activity2</option>
                                         </select>
                                         <error-label for="f_category_id" :errors="errors.type"></error-label>
                                     </div>
@@ -36,7 +35,7 @@
                                         <label>Subject <span class="text-danger">*</span></label>
                                         <select class="form-control" v-model="entry.subject" :disabled="permissionFields['resource_subject']==false">
 
-                                            <option value="math">Maths</option>
+                                            <option value="math">Math</option>
                                             <option value="science ">Science </option>
                                         </select>
                                         <error-label for="f_category_id" :errors="errors.subject"></error-label>

@@ -1,125 +1,90 @@
 <template>
     <div class="container-fluid">
-        <ActionBar type="form" @save="save()"
-                   :code="entry.id"
-                   backUrl="/xadmin/lessons/index"
-                   title="LessonForm"/>
+        <ActionBar type="index"
+                   :breadcrumbs="breadcrumbs"  title = "Create new lesson"/>
+
         <div class="row">
             <div class="col-lg-12">
                 <div class="card card-custom card-stretch gutter-b">
-                    <div class="card-body d-flex flex-column" >
+                    <div class="card-body d-flex flex-column">
                         <div class="row">
-                            <div class="col-lg-12">
+                            <div class=" col-sm-12">
                                 <input v-model="entry.id" type="hidden" name="id" value="">
-                                                                    <div class="form-group">
-                                        <label>Created By</label>
-                                        <input id="f_created_by" v-model="entry.created_by" name="name" class="form-control"
-                                               placeholder="created_by" >
-                                        <error-label for="f_created_by" :errors="errors.created_by"></error-label>
-
+                                <div class="row">
+                                    <div class="form-group col-sm-9">
+                                        <label>Lesson name <span class="text-danger">*</span></label>
+                                        <input class="form-control nospace" placeholder="Enter the unit name" v-model="entry.name" >
+                                        <error-label  for="f_category_id" :errors="errors.name"></error-label>
                                     </div>
-                                                                    <div class="form-group">
-                                        <label>Created Date</label>
-                                        <input id="f_created_date" v-model="entry.created_date" name="name" class="form-control"
-                                               placeholder="created_date" >
-                                        <error-label for="f_created_date" :errors="errors.created_date"></error-label>
-
+                                    <div class="form-group col-sm-3">
+                                        <label>Subject<span class="text-danger">*</span></label>
+                                        <select class="form-control form-select" required>
+                                            <option value="" disabled selected>Choose the subject</option>
+                                            <option value="Math">Math</option>
+                                            <option value="Science">Science</option>
+                                        </select>
                                     </div>
-                                                                    <div class="form-group">
-                                        <label>Enabled</label>
-                                        <input id="f_enabled" v-model="entry.enabled" name="name" class="form-control"
-                                               placeholder="enabled" >
-                                        <error-label for="f_enabled" :errors="errors.enabled"></error-label>
-
+                                    <div class="form-group col-sm-9">
+                                        <label>Description </label>
+                                        <textarea class="form-control"  placeholder="Type the description here (200 characters)" rows="5" v-model="entry.description"></textarea>
+                                        <error-label for="f_category_id" :errors="errors.description"></error-label>
                                     </div>
-                                                                    <div class="form-group">
-                                        <label>Grade</label>
-                                        <input id="f_grade" v-model="entry.grade" name="name" class="form-control"
-                                               placeholder="grade" >
-                                        <error-label for="f_grade" :errors="errors.grade"></error-label>
-
+                                    <div class="form-group col-sm-3">
+                                        <label>Unit <span class="text-danger">*</span></label>
+                                        <select class="form-select form-control" required>
+                                            <option value="" disabled selected>Choose the unit</option>
+                                            <option></option>
+                                        </select>
                                     </div>
-                                                                    <div class="form-group">
-                                        <label>Last Modified By</label>
-                                        <input id="f_last_modified_by" v-model="entry.last_modified_by" name="name" class="form-control"
-                                               placeholder="last_modified_by" >
-                                        <error-label for="f_last_modified_by" :errors="errors.last_modified_by"></error-label>
+                                    <div class="form-group col-sm-12"  style="border: 1px solid #b5b5c3;border-radius: 25px">
+                                        <label style="margin:15px 0px 10px ">List of module</label>
+                                        <select class="form-control form-select" style="margin-bottom: 15px">
+                                            <option></option>
+                                        </select>
+                                        <draggable
+                                            :animation="200"
+                                            ghost-class="moving-card"
+                                            group="users"
+                                            filter=".action-button"
+                                            class="form-group col-sm-12"
+                                            tag="ul"
+                                        >
+                                            <div style="width: 100%">
+                                                <i class="bi bi-text-center" style="width: 5%; display: inline-block"></i>
+                                                <div style="width: 5%;display: inline-block"></div>
+                                                <div style="width: 50%;display: inline-block">
+                                                    <span>Resource name:</span>
+                                                    <input class="form-control">
+                                                </div>
+                                                <div style="width: 30%;display: inline-block">
+                                                    <span>Type:</span>
+                                                    <input class="form-control">
+                                                </div>
+                                                <div style="width: 10%;display: inline-block"></div>
+                                            </div>
 
+                                        </draggable>
                                     </div>
-                                                                    <div class="form-group">
-                                        <label>Last Modified Date</label>
-                                        <input id="f_last_modified_date" v-model="entry.last_modified_date" name="name" class="form-control"
-                                               placeholder="last_modified_date" >
-                                        <error-label for="f_last_modified_date" :errors="errors.last_modified_date"></error-label>
 
-                                    </div>
-                                                                    <div class="form-group">
-                                        <label>Name</label>
-                                        <input id="f_name" v-model="entry.name" name="name" class="form-control"
-                                               placeholder="name" >
-                                        <error-label for="f_name" :errors="errors.name"></error-label>
 
-                                    </div>
-                                                                    <div class="form-group">
-                                        <label>Rating</label>
-                                        <input id="f_rating" v-model="entry.rating" name="name" class="form-control"
-                                               placeholder="rating" >
-                                        <error-label for="f_rating" :errors="errors.rating"></error-label>
-
-                                    </div>
-                                                                    <div class="form-group">
-                                        <label>Shared</label>
-                                        <input id="f_shared" v-model="entry.shared" name="name" class="form-control"
-                                               placeholder="shared" >
-                                        <error-label for="f_shared" :errors="errors.shared"></error-label>
-
-                                    </div>
-                                                                    <div class="form-group">
-                                        <label>Structure</label>
-                                        <input id="f_structure" v-model="entry.structure" name="name" class="form-control"
-                                               placeholder="structure" >
-                                        <error-label for="f_structure" :errors="errors.structure"></error-label>
-
-                                    </div>
-                                                                    <div class="form-group">
-                                        <label>Subject</label>
-                                        <input id="f_subject" v-model="entry.subject" name="name" class="form-control"
-                                               placeholder="subject" >
-                                        <error-label for="f_subject" :errors="errors.subject"></error-label>
-
-                                    </div>
-                                                                    <div class="form-group">
-                                        <label>Unit</label>
-                                        <input id="f_unit" v-model="entry.unit" name="name" class="form-control"
-                                               placeholder="unit" >
-                                        <error-label for="f_unit" :errors="errors.unit"></error-label>
-
-                                    </div>
-                                                                    <div class="form-group">
-                                        <label>Number</label>
-                                        <input id="f_number" v-model="entry.number" name="name" class="form-control"
-                                               placeholder="number" >
-                                        <error-label for="f_number" :errors="errors.number"></error-label>
-
-                                    </div>
-                                                                    <div class="form-group">
-                                        <label>Customized</label>
-                                        <input id="f_customized" v-model="entry.customized" name="name" class="form-control"
-                                               placeholder="customized" >
-                                        <error-label for="f_customized" :errors="errors.customized"></error-label>
-
-                                    </div>
-                                
+                                </div>
+                                <div class="form-check form-check-custom form-check-solid pb-5">
+                                    <input id="state" type="checkbox" v-model="entry.active" class="form-check-input h-20px w-20px" checked>
+                                    <label for="state" class="form-check-label fw-bold">Active</label>
+                                    <error-label for="f_grade" :errors="errors.active"></error-label>
+                                </div>
                             </div>
                         </div>
-                        <hr style="margin-top: 5px;">
-                        <div >
-                            <button type="reset" @click="save()" class="btn btn-primary mr-2">Save</button>
-                            <button type="reset" @click="backIndex()" class="btn btn-secondary">Cancel</button>
+                        <!--<hr style="margin: 0px 0px 16px;">-->
+                        <div class="mt-5">
+                            <button type="reset" @click="save()"  class="btn btn-primary mr-3" ><i class="bi bi-send mr-1"></i>Save</button>
+                            <button type="reset" @click="backIndex()" class="btn btn-light">Cancel</button>
                         </div>
                     </div>
                 </div>
+
             </div>
+
         </div>
     </div>
 
@@ -128,12 +93,26 @@
 <script>
     import {$post} from "../../utils";
     import ActionBar from "../includes/ActionBar";
+    import draggable from "vuedraggable";
+
 
     export default {
         name: "LessonsForm.vue",
-        components: {ActionBar},
+        components: {ActionBar,draggable},
         data() {
             return {
+                breadcrumbs:[
+                    {
+                        title: 'Resource management',
+                    },
+                    {
+                        title: 'Lesson',
+                        url: '/xadmin/lessons/index',
+                    },
+                    {
+                        title:'Create new lesson',
+                    },
+                ],
                 entry: $json.entry || {},
                 isLoading: false,
                 errors: {}

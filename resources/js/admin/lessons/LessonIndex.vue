@@ -94,6 +94,9 @@
 												<button @click="openModal()" :disabled="lessons.length>3" type="button" class="btn btn-danger" data-kt-customer-table-select="delete_selected">Download lesson</button>
 
 											</div>
+                                     <a :href="'/xadmin/lessons/create'">
+                                         <button class="btn btn-primary button-create" style="margin:0 0 0 15px"><i class="bi bi-plus-lg"></i>Create new lesson</button>
+                                     </a>
                                  </div>
                       <form class="col-lg-12" v-if="!isShowFilter">
                           <div class="row">
