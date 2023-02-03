@@ -237,7 +237,7 @@
 
                             </tr>
 
-                            <tr  v-for="(entry,index) in entries" v-if="user.active_allocation==1 && entries.length>0">
+                            <tr  v-for="(entry,index) in entries" v-if="user.active_allocation==1 && entries.length>0" @click="edit(entry.id)">
                                 <td class="">
                                     <div class="form-check form-check-sm form-check-custom form-check-solid">
                                         <input class="form-check-input" type="checkbox" v-model="lessonIds" :value="entry.id" @change="updateCheckAll">
@@ -377,6 +377,9 @@
             });
         },
         methods: {
+            edit: function (id){
+                window.location.href='/xadmin/lessons/edit?id='+ id;
+            },
             checkSchool()
             {
                    this.idSchool=this.schoolLesson;
@@ -439,12 +442,6 @@
                         }
                     })
                 })
-            },
-            edit: function (id, event) {
-                if (!$(event.target).hasClass('deleted')) {
-                    window.location.href = '/xadmin/lessons/edit?id=' + id;
-                }
-
             },
             async load() {
                 let query = $router.getQuery();
