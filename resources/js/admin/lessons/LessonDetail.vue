@@ -47,10 +47,11 @@
                                                 <option value="Summary">Summary</option>
                                             </select>
                                         </div>
-                                        <select class="form-control form-select" style="margin-bottom: 15px" v-model="listResource" @change="resource()" required>
-                                            <option value="" disabled selected>Search module</option>
-                                            <option v-for="module in modules" :value="module">{{module.name}}</option>
-                                        </select>
+                                        <Treeselect :options="modules" :multiple="true" v-model="listResource" @input="resource()"/>
+<!--                                        <select class="form-control form-select" style="margin-bottom: 15px" v-model="listResource" @change="resource()" required>-->
+<!--                                            <option value="" disabled selected>Search module</option>-->
+<!--                                            <option v-for="module in modules" :value="module">{{module.name}}</option>-->
+<!--                                        </select>-->
                                         <draggable
                                             :list="list"
                                             :animation="200"
@@ -64,7 +65,7 @@
                                                 <i class="bi bi-text-center" style="width: 10%; display: inline-block"></i>
                                                 <div style="width: 50%;display: inline-block;margin-left: -75px">
                                                     <span>Resource name:</span>
-                                                    <input class="form-control" v-model="res.name" disabled>
+                                                    <input class="form-control" v-model="res.label" disabled>
                                                 </div>
                                                 <div style="width: 30%;display: inline-block;margin-left: 20px">
                                                     <span>Type:</span>
@@ -111,12 +112,15 @@
     import ActionBar from "../includes/ActionBar";
     import draggable from "vuedraggable";
     import $router from "../../lib/SimpleRouter";
+    import Treeselect from '@riophae/vue-treeselect';
+    import '@riophae/vue-treeselect/dist/vue-treeselect.css'
+
 
     let created = getTimeRangeAll();
     const $q = $router.getQuery();
     export default {
         name: "LessonDetail.vue",
-        components: {ActionBar,draggable},
+        components: {ActionBar,draggable,Treeselect},
         data() {
             let filter = {
                 type: $q.type || "",
@@ -151,20 +155,24 @@
             removeResource(index)
             {
                 this.list=this.list.filter((item,key)=>key!==index);
-                console.log(this.list);
+                this.listResource=this.list.map(rec => rec.id);
             },
             resource()
             {
-                this.listResource=
-                    {
-                        'inventory_id':this.listResource.id,
-                        'lesson_id':this.entry.id,
-                        'name':this.listResource.name,
-                        'type':this.listResource.type
-                    }
-                this.list = this.list.concat(this.listResource);
-                console.log(this.list);
-                this.listResource=[];
+                // this.listResource=
+                //     {
+                //         'inventory_id':this.listResource.id,
+                //         'lesson_id':this.entry.id,
+                //         'name':this.listResource.name,
+                //         'type':this.listResource.type
+                //     }
+                // this.list = this.list.concat(this.listResource);
+                // this.listResource=[];
+                console.log(this.listResource);
+                this.list = this.listResource.map(id => {
+                    const item = this.modules.find(i => i.id === id);
+                    return {id, label: item.label,type:item.type};
+                });
             },
             doFilter() {
                 $router.setQuery(this.filter);
@@ -172,15 +180,22 @@
             async load() {
                 let query = $router.getQuery();
                 this.$loading(true);
-                const res = await $get("/xadmin/lessons/dataEditLesson?id="+this.entry.id, query);
+                console.log(this.listResource);
+                const res = await $get("/xadmin/lessons/dataEditLesson?id="+this.entry.id,query);
                 this.$loading(false);
                 setTimeout(function () {
                     KTMenu.createInstances();
                 }, 0);
-                this.list=res.lessons;
-                this.modules = res.module;
-                console.log(this.list);
-
+                // this.list=res.lessons;
+                this.listResource=res.lessons.map(rec => rec.inventory_id);
+                console.log(this.listResource);
+                this.modules = res.module.map(res=>{
+                    return {
+                        'id':res.id,
+                        'label':res.name,
+                        'type':res.type
+                    }
+                });
             },
             backIndex(){
                 window.location.href = '/xadmin/lessons/index';

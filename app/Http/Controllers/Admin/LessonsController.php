@@ -176,7 +176,7 @@ class LessonsController extends AdminBaseController
             }
             foreach ($req->inventory as $inven)
             {
-                 LessonInventory::create(['lesson_id'=>$entry->id,'inventory_id'=>$inven['inventory_id']]);
+                 LessonInventory::create(['lesson_id'=>$entry->id,'inventory_id'=>$inven['id']]);
             }
             $entry->save();
 
@@ -383,9 +383,17 @@ class LessonsController extends AdminBaseController
        ])->get();
 
         $modules=Inventory::query()->orderBy('id','desc');
+//        $listResource = json_decode(($req->listResource), true);
+//        dd($listResource);
+        $module=[];
+        foreach ($lessons as $lesson)
+        {
+            $module[]=$lesson->inventory_id;
+        }
+
         if($req->type)
         {
-            $modules->where('type',$req->type);
+            $modules->where('type',$req->type)->orWhereIn('id',$module);
         }
         return [
             'lessons'=>$lessons,

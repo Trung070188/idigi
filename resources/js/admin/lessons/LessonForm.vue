@@ -47,10 +47,11 @@
                                                 <option value="Summary">Summary</option>
                                             </select>
                                         </div>
-                                        <select class="form-control form-select" style="margin-bottom: 15px" v-model="listResource" @change="resource()" required>
-                                            <option value="" disabled selected>Search module</option>
-                                            <option v-for="module in modules" :value="module">{{module.name}}</option>
-                                        </select>
+                                        <Treeselect :options="modules" :multiple="true" v-model="listResource" @input="resource()"/>
+<!--                                        <select class="form-control form-select" style="margin-bottom: 15px" v-model="listResource" @change="resource()" required>-->
+<!--                                            <option value="" disabled selected>Search module</option>-->
+<!--                                            <option v-for="module in modules" :value="module">{{module.name}}</option>-->
+<!--                                        </select>-->
                                         <draggable
                                             :list="list"
                                             :animation="200"
@@ -64,7 +65,7 @@
                                                 <i class="bi bi-text-center" style="width: 10%; display: inline-block"></i>
                                                 <div style="width: 50%;display: inline-block;margin-left: -75px">
                                                     <span>Resource name:</span>
-                                                    <input class="form-control" v-model="res.name" disabled>
+                                                    <input class="form-control" v-model="res.label" disabled>
                                                 </div>
                                                 <div style="width: 30%;display: inline-block;margin-left: 20px">
                                                     <span>Type:</span>
@@ -111,17 +112,21 @@
     import ActionBar from "../includes/ActionBar";
     import draggable from "vuedraggable";
     import $router from "../../lib/SimpleRouter";
+    import Treeselect from '@riophae/vue-treeselect';
+    import '@riophae/vue-treeselect/dist/vue-treeselect.css'
+
 
     let created = getTimeRangeAll();
     const $q = $router.getQuery();
     export default {
         name: "LessonsForm.vue",
-        components: {ActionBar,draggable},
+        components: {ActionBar,draggable,Treeselect},
         data() {
             let filter = {
                 type: $q.type || "",
             };
             return {
+                checkResource:[],
                 listResource:[],
                 filter:filter,
                 module_type:'',
@@ -151,11 +156,17 @@
             removeResource(index)
             {
               this.list=this.list.filter((item,key)=>key!==index);
+              this.listResource=this.list.map(rec => rec.id);
+              console.log(this.list);
             },
             resource()
             {
-                this.list = this.list.concat(this.listResource);
-                this.listResource=[];
+                // this.list = this.list.concat(this.listResource);
+                // this.listResource=[];
+                this.list = this.listResource.map(id => {
+                    const item = this.modules.find(i => i.id === id);
+                    return {id, label: item.label,type:item.type};
+                });
             },
             doFilter() {
                 $router.setQuery(this.filter);
@@ -168,8 +179,15 @@
                 setTimeout(function () {
                     KTMenu.createInstances();
                 }, 0);
-                this.modules = res.module;
                 console.log(this.list);
+                this.modules = res.module.map(rec => {
+                    return {
+                        'id':rec.id,
+                        'label':rec.name,
+                        'type':rec.type
+                    }
+                });
+                this.modules=this.modules.concat(this.list);
 
             },
             backIndex(){

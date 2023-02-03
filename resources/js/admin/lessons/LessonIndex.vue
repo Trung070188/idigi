@@ -237,18 +237,18 @@
 
                             </tr>
 
-                            <tr  v-for="(entry,index) in entries" v-if="user.active_allocation==1 && entries.length>0" @click="edit(entry.id)">
+                            <tr  v-for="(entry,index) in entries" v-if="user.active_allocation==1 && entries.length>0" style="cursor: pointer">
                                 <td class="">
                                     <div class="form-check form-check-sm form-check-custom form-check-solid">
                                         <input class="form-check-input" type="checkbox" v-model="lessonIds" :value="entry.id" @change="updateCheckAll">
                                     </div>
                                 </td>
-                                <td >{{((index+1)+(from+1))-2}}</td>
-                                <td v-text="entry.name"></td>
-                                <td class="" v-text="entry.grade"></td>
-                                <td class="" v-text="entry.subject"></td>
-                                <td class="" v-text="entry.enabled == 0 ? 'No' : 'Yes'"></td>
-                                <td class="" v-text=" d(entry.created_at)"></td>
+                                <td @click="edit(entry.id)">{{((index+1)+(from+1))-2}}</td>
+                                <td v-text="entry.name" @click="edit(entry.id)"></td>
+                                <td class="" v-text="entry.grade" @click="edit(entry.id)"></td>
+                                <td class="" v-text="entry.subject" @click="edit(entry.id)"></td>
+                                <td class="" v-text="entry.enabled == 0 ? 'No' : 'Yes'" @click="edit(entry.id)"></td>
+                                <td class="" v-text=" d(entry.created_at)" @click="edit(entry.id)"></td>
                                 <td class="">
                                     <a href="list.html#" class="btn btn-light btn-active-light-primary btn-sm" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">Actions
                                         <!--begin::Svg Icon | path: icons/duotune/arrows/arr072.svg-->

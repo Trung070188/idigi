@@ -115,9 +115,6 @@
             return {
                 listLesson:[],
                 lessons:[],
-                listLesson:[
-
-                ],
                 list:[],
                 breadcrumbs: [
                     {
@@ -155,7 +152,6 @@
                     };
                 });
                 this.listLesson=res.list_lessons.map(res => res.id)
-                console.log(this.listLesson);
             },
             removeLesson(index)
             {
