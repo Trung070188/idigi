@@ -115,7 +115,7 @@
     let created = getTimeRangeAll();
     const $q = $router.getQuery();
     export default {
-        name: "LessonsForm.vue",
+        name: "LessonDetail.vue",
         components: {ActionBar,draggable},
         data() {
             let filter = {
@@ -150,11 +150,20 @@
         methods: {
             removeResource(index)
             {
-              this.list=this.list.filter((item,key)=>key!==index);
+                this.list=this.list.filter((item,key)=>key!==index);
+                console.log(this.list);
             },
             resource()
             {
+                this.listResource=
+                    {
+                        'inventory_id':this.listResource.id,
+                        'lesson_id':this.entry.id,
+                        'name':this.listResource.name,
+                        'type':this.listResource.type
+                    }
                 this.list = this.list.concat(this.listResource);
+                console.log(this.list);
                 this.listResource=[];
             },
             doFilter() {
@@ -163,11 +172,12 @@
             async load() {
                 let query = $router.getQuery();
                 this.$loading(true);
-                const res = await $get("/xadmin/lessons/dataCreateLesson", query);
+                const res = await $get("/xadmin/lessons/dataEditLesson?id="+this.entry.id, query);
                 this.$loading(false);
                 setTimeout(function () {
                     KTMenu.createInstances();
                 }, 0);
+                this.list=res.lessons;
                 this.modules = res.module;
                 console.log(this.list);
 

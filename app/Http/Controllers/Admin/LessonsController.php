@@ -12,6 +12,7 @@ use App\Models\DownloadAppLog;
 use App\Models\DownloadLessonFile;
 use App\Models\DownloadLessonLog;
 use App\Models\Inventory;
+use App\Models\LessonInventory;
 use App\Models\School;
 use App\Models\UserDevice;
 use Carbon\Carbon;
@@ -84,7 +85,7 @@ class LessonsController extends AdminBaseController
          */
 
         $title = 'Edit';
-        $component = 'LessonForm';
+        $component = 'LessonDetail';
 
 
         return component($component, compact('title', 'entry'));
@@ -169,6 +170,14 @@ class LessonsController extends AdminBaseController
             }
 
             $entry->fill($data);
+            if($req->inventory)
+            {
+                LessonInventory::where('lesson_id',$entry->id)->delete();
+            }
+            foreach ($req->inventory as $inven)
+            {
+                 LessonInventory::create(['lesson_id'=>$entry->id,'inventory_id'=>$inven['inventory_id']]);
+            }
             $entry->save();
 
             return [
@@ -181,6 +190,10 @@ class LessonsController extends AdminBaseController
             $entry->fill($data);
             $entry->save();
 
+            foreach ($req->inventory as $inven)
+            {
+                LessonInventory::create(['lesson_id'=>$entry->id,'inventory_id'=>$inven['id']]);
+            }
             return [
                 'code' => 0,
                 'message' => 'Đã thêm',
@@ -340,7 +353,7 @@ class LessonsController extends AdminBaseController
             ]
         ];
     }
-    public function dataEditLesson(Request $req)
+    public function dataCreateLesson(Request $req)
     {
 
 
@@ -350,6 +363,32 @@ class LessonsController extends AdminBaseController
             $modules->where('type',$req->type);
         }
         return [
+            'module'=>$modules->get(),
+        ];
+    }
+    public function dataEditLesson(Request $req)
+    {
+        $lessons=DB::table('lessons')->leftJoin('lesson_inventory',function ($join)
+        {
+           $join->on('lessons.id','=','lesson_inventory.lesson_id');
+        })->leftJoin('inventories',function ($join)
+        {
+            $join->on('inventories.id','=','lesson_inventory.inventory_id');
+        })->where('lessons.id',$req->id);
+      $lessons= $lessons->select([
+            'lessons.id as lesson_id',
+            'inventories.id as inventory_id',
+            'inventories.name as name',
+            'inventories.type as type'
+       ])->get();
+
+        $modules=Inventory::query()->orderBy('id','desc');
+        if($req->type)
+        {
+            $modules->where('type',$req->type);
+        }
+        return [
+            'lessons'=>$lessons,
             'module'=>$modules->get(),
         ];
     }

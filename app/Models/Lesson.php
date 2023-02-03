@@ -35,6 +35,7 @@ class Lesson extends BaseModel
         'shared',
         'structure',
         'subject',
+        'description',
         'unit',
         'unit_id',
         'course_id',

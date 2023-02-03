@@ -111,14 +111,14 @@
 
                                     <div class="form-group col-lg-4">
                                         <label>No. of Device per user <span class="text-danger">*</span></label>
-                                        <input type="number" v-model="entry.devices_per_user" :disabled="permissionFields['school_device']==false" class="form-control"
+                                        <input type="number" min="1" max="200" v-model="entry.devices_per_user" :disabled="permissionFields['school_device']==false" class="form-control"
                                                placeholder="Enter number of Device per User">
                                         <error-label :errors="errors.devices_per_user"></error-label>
 
                                     </div>
                                     <div class="form-group col-lg-4">
                                         <label>No. of User <span class="text-danger">*</span></label>
-                                        <input type="number" v-model="entry.number_of_users" :disabled="permissionFields['school_user']==false" class="form-control"
+                                        <input type="number" min="1" max="200" v-model="entry.number_of_users" :disabled="permissionFields['school_user']==false" class="form-control"
                                                placeholder="Enter number of User">
                                         <error-label :errors="errors.number_of_users"></error-label>
 

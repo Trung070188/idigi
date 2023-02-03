@@ -10,6 +10,5 @@ class LessonInventory extends BaseModel
     protected  $fillable = [
         'lesson_id',
         'inventory_id',
-        'level',
     ];
 }
