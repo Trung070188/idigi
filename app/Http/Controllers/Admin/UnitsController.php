@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Admin;
 
 
+use App\Models\Lesson;
+use App\Models\LessonInventory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -65,7 +67,7 @@ class UnitsController extends AdminBaseController
         */
 
         $title = 'Edit';
-        $component = 'UnitForm';
+        $component = 'UnitDetail';
 
 
         return component($component, compact('title', 'entry'));
@@ -139,6 +141,12 @@ class UnitsController extends AdminBaseController
             $entry = new Unit();
             $entry->fill($data);
             $entry->save();
+            foreach ($req->list as $lesson)
+            {
+                Lesson::query()->where('id',$lesson['id'])->update(['unit_id'=>$entry->id]);
+            }
+
+
 
             return [
                 'code' => 0,
@@ -196,6 +204,22 @@ class UnitsController extends AdminBaseController
                 'currentPage' => $entries->currentPage(),
                 'lastPage' => $entries->lastPage(),
             ]
+        ];
+    }
+    public function dataCreateUnit(Request $req)
+    {
+        $lessons=Lesson::query()->orderBy('id','desc');
+        return [
+          'lessons'=>$lessons->get()
+        ];
+    }
+    public function dataEditUnit(Request $req)
+    {
+        $listLessons=Lesson::query()->where('unit_id',$req->id)->get();
+        $lessons=Lesson::query()->orderBy('id','desc');
+        return [
+            'lessons'=>$lessons->get(),
+            'list_lessons'=>$listLessons
         ];
     }
 

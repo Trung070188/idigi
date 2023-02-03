@@ -1,7 +1,7 @@
 <template>
     <div class="container-fluid">
         <ActionBar type="index"
-                   :breadcrumbs="breadcrumbs"  title = "Create new unit"/>
+                   :breadcrumbs="breadcrumbs"  title = "Unit detail"/>
 
         <div class="row">
             <div class="col-lg-12">
@@ -41,10 +41,10 @@
                                         <treeselect :options="lessons" :multiple="true" v-model="listLesson" @input="lesson()" />
 
 
-<!--                                        <select class="form-control form-select" style="margin-bottom: 15px" v-model="listLesson" @change="lesson()" required>-->
-<!--                                            <option value="" disabled selected>Search module</option>-->
-<!--                                            <option v-for="lesson in lessons" :value="lesson">{{lesson.name}}</option>-->
-<!--                                        </select>-->
+                                        <!--                                        <select class="form-control form-select" style="margin-bottom: 15px" v-model="listLesson" @change="lesson()" required>-->
+                                        <!--                                            <option value="" disabled selected>Search module</option>-->
+                                        <!--                                            <option v-for="lesson in lessons" :value="lesson">{{lesson.name}}</option>-->
+                                        <!--                                        </select>-->
                                         <draggable
                                             :list="list"
                                             :animation="200"
@@ -109,10 +109,11 @@
     import '@riophae/vue-treeselect/dist/vue-treeselect.css'
 
     export default {
-        name: "UnitsForm.vue",
+        name: "UnitDetail.vue",
         components: {ActionBar,draggable,Treeselect},
         data() {
             return {
+                listLesson:[],
                 lessons:[],
                 listLesson:[
 
@@ -142,23 +143,25 @@
             async load() {
                 let query = $router.getQuery();
                 this.$loading(true);
-                const res = await $get("/xadmin/units/dataCreateUnit", query);
+                const res = await $get("/xadmin/units/dataEditUnit?id="+this.entry.id, query);
                 this.$loading(false);
                 setTimeout(function () {
                     KTMenu.createInstances();
                 }, 0);
                 this.lessons = res.lessons.map(res => {
                     return {
-                      'id':res.id,
-                      'label':res.name
+                        'id':res.id,
+                        'label':res.name
                     };
                 });
+                this.listLesson=res.list_lessons.map(res => res.id)
+                console.log(this.listLesson);
             },
             removeLesson(index)
             {
                 this.list=this.list.filter((item,key)=>key!==index);
 
-               let list=this.list.map(res=>{
+                let list=this.list.map(res=>{
                     return {
                         'id':res.id
                     }

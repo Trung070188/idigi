@@ -42,6 +42,7 @@ import CourseIndex from "./admin/courses/CourseIndex";
 import CourseForm from  "./admin/courses/CourseForm";
 import UnitIndex from  "./admin/units/UnitIndex";
 import UnitForm from  "./admin/units/UnitForm";
+import UnitDetail from "./admin/units/UnitDetail";
 export default {
     DashboardIndex,
     UserIndex,
@@ -86,6 +87,7 @@ export default {
     CourseIndex,
     CourseForm,
     UnitIndex,
-    UnitForm
+    UnitForm,
+    UnitDetail
 
 }
