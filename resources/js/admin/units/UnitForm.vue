@@ -18,7 +18,7 @@
                                     </div>
                                     <div class="form-group col-sm-3">
                                         <label>Subject<span class="text-danger">*</span></label>
-                                        <select class="form-control form-select" required>
+                                        <select class="form-control form-select" required v-model="entry.subject">
                                             <option value="" disabled selected>Choose the subject</option>
                                             <option value="Math">Math</option>
                                             <option value="Science">Science</option>
@@ -31,9 +31,9 @@
                                     </div>
                                     <div class="form-group col-sm-3">
                                         <label>Course <span class="text-danger">*</span></label>
-                                        <select class="form-select form-control" required>
+                                        <select class="form-select form-control" required v-model="entry.course_id">
                                             <option value="" disabled selected>Choose the course</option>
-                                            <option></option>
+                                            <option v-for="course in courses" :value="course.id">{{course.course_name}}</option>
                                         </select>
                                     </div>
                                     <div class="form-group col-sm-12"  style="border: 1px solid #b5b5c3;border-radius: 25px">
@@ -113,6 +113,7 @@
         components: {ActionBar,draggable,Treeselect},
         data() {
             return {
+                courses:[],
                 lessons:[],
                 listLesson:[
 
@@ -130,7 +131,9 @@
                         title:'Create new unit',
                     },
                 ],
-                entry: $json.entry || {},
+                entry:{
+                    course_id:''
+                },
                 isLoading: false,
                 errors: {}
             }
@@ -144,15 +147,13 @@
                 this.$loading(true);
                 const res = await $get("/xadmin/units/dataCreateUnit", query);
                 this.$loading(false);
-                setTimeout(function () {
-                    KTMenu.createInstances();
-                }, 0);
                 this.lessons = res.lessons.map(res => {
                     return {
                       'id':res.id,
                       'label':res.name
                     };
                 });
+                this.courses=res.courses;
             },
             removeLesson(index)
             {

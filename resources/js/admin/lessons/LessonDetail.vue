@@ -31,9 +31,9 @@
                                     </div>
                                     <div class="form-group col-sm-3">
                                         <label>Unit <span class="text-danger">*</span></label>
-                                        <select class="form-select form-control" required>
+                                        <select class="form-select form-control" required v-model="entry.unit_id">
                                             <option value="" disabled selected>Choose the unit</option>
-                                            <option></option>
+                                            <option v-for="unit in units" :value="unit.id">{{unit.unit_name}}</option>
                                         </select>
                                     </div>
                                     <div class="form-group col-sm-12"  style="border: 1px solid #b5b5c3;border-radius: 25px">
@@ -126,6 +126,8 @@
                 type: $q.type || "",
             };
             return {
+                lessonUnit:'',
+                units:[],
                 listResource:[],
                 filter:filter,
                 module_type:'',
@@ -180,15 +182,9 @@
             async load() {
                 let query = $router.getQuery();
                 this.$loading(true);
-                console.log(this.listResource);
                 const res = await $get("/xadmin/lessons/dataEditLesson?id="+this.entry.id,query);
                 this.$loading(false);
-                setTimeout(function () {
-                    KTMenu.createInstances();
-                }, 0);
-                // this.list=res.lessons;
                 this.listResource=res.lessons.map(rec => rec.inventory_id);
-                console.log(this.listResource);
                 this.modules = res.module.map(res=>{
                     return {
                         'id':res.id,
@@ -196,13 +192,14 @@
                         'type':res.type
                     }
                 });
+                this.units=res.units;
             },
             backIndex(){
                 window.location.href = '/xadmin/lessons/index';
             },
             async save() {
                 this.isLoading = true;
-                const res = await $post('/xadmin/lessons/save', {entry: this.entry,inventory:this.list}, false);
+                const res = await $post('/xadmin/lessons/save', {entry: this.entry,inventory:this.list,lessonUnit: this.lessonUnit}, false);
                 this.isLoading = false;
                 if (res.errors) {
                     this.errors = res.errors;

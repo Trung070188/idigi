@@ -232,6 +232,7 @@ class CoursesController extends AdminBaseController
     {
         $listUnit=Unit::query()->where('course_id',$req->id)->orderBy('position','ASC')->get();
         $units=Unit::query()->orderBy('id','desc');
+
         return [
             'units'=>$units->get(),
             'listUnit'=>$listUnit

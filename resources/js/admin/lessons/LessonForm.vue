@@ -31,9 +31,9 @@
                                     </div>
                                     <div class="form-group col-sm-3">
                                         <label>Unit <span class="text-danger">*</span></label>
-                                        <select class="form-select form-control" required>
+                                        <select class="form-select form-control" required v-model="entry.unit_id">
                                             <option value="" disabled selected>Choose the unit</option>
-                                            <option></option>
+                                            <option v-for="unit in units" :value="unit.id">{{unit.unit_name}}</option>
                                         </select>
                                     </div>
                                     <div class="form-group col-sm-12"  style="border: 1px solid #b5b5c3;border-radius: 25px">
@@ -122,6 +122,7 @@
                 type: $q.type || "",
             };
             return {
+                units:[],
                 checkResource:[],
                 listResource:[],
                 filter:filter,
@@ -140,7 +141,10 @@
                         title:'Create new lesson',
                     },
                 ],
-                entry: $json.entry || {},
+                entry:{
+                    unit_id:'',
+                    subject:''
+                },
                 isLoading: false,
                 errors: {}
             }
@@ -184,6 +188,7 @@
                     }
                 });
                 this.modules=this.modules.concat(this.list);
+                this.units=res.units;
 
             },
             backIndex(){

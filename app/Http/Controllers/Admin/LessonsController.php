@@ -14,6 +14,7 @@ use App\Models\DownloadLessonLog;
 use App\Models\Inventory;
 use App\Models\LessonInventory;
 use App\Models\School;
+use App\Models\Unit;
 use App\Models\UserDevice;
 use Carbon\Carbon;
 use Illuminate\Contracts\View\View;
@@ -168,8 +169,13 @@ class LessonsController extends AdminBaseController
                     'message' => 'Không tìm thấy',
                 ];
             }
-
+            if($entry->unit_id)
+            {
+                Lesson::query()->where('unit_id',$data['unit_id'])->update(['unit_id'=>NULL,'unit_name'=>NUll]);
+            }
+            $unit=Unit::query()->where('id',$data['unit_id'])->first();
             $entry->fill($data);
+            $entry->unit_name=$unit['unit_name'];
             if($req->inventory)
             {
                 LessonInventory::where('lesson_id',$entry->id)->delete();
@@ -188,8 +194,10 @@ class LessonsController extends AdminBaseController
         } else {
             $entry = new Lesson();
             $entry->fill($data);
+            Lesson::query()->where('unit_id',$data['unit_id'])->update(['unit_id'=>NULL,'unit_name'=>NUll]);
+            $unit=Unit::query()->where('id',$data['unit_id'])->first();
+            $entry->unit_name=$unit['unit_name'];
             $entry->save();
-
             foreach ($req->inventory as $inven)
             {
                 LessonInventory::create(['lesson_id'=>$entry->id,'inventory_id'=>$inven['id']]);
@@ -358,11 +366,14 @@ class LessonsController extends AdminBaseController
 
 
         $modules=Inventory::query()->orderBy('id','desc');
+        $units=Unit::query()->orderBy('id','desc')->get();
+
         if($req->type)
         {
             $modules->where('type',$req->type);
         }
         return [
+            'units'=>$units,
             'module'=>$modules->get(),
         ];
     }
@@ -375,6 +386,7 @@ class LessonsController extends AdminBaseController
         {
             $join->on('inventories.id','=','lesson_inventory.inventory_id');
         })->where('lessons.id',$req->id);
+        $units=Unit::query()->orderBy('id','desc')->get();
       $lessons= $lessons->select([
             'lessons.id as lesson_id',
             'inventories.id as inventory_id',
@@ -396,6 +408,7 @@ class LessonsController extends AdminBaseController
             $modules->where('type',$req->type)->orWhereIn('id',$module);
         }
         return [
+            'units'=>$units,
             'lessons'=>$lessons,
             'module'=>$modules->get(),
         ];

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 
+use App\Models\Course;
 use App\Models\Lesson;
 use App\Models\LessonInventory;
 use Illuminate\Contracts\View\View;
@@ -128,8 +129,22 @@ class UnitsController extends AdminBaseController
                     'message' => 'Không tìm thấy',
                 ];
             }
-
-            $entry->fill($data);
+            if($entry->course_id!=$data['course_id'])
+            {
+                $dsUnit=Unit::query()->where('course_id',$data['course_id'])->count();
+                $entry->fill($data);
+                $entry->position=($dsUnit+1);
+            }
+            else {
+                $entry->fill($data);
+            }
+            foreach ($req->list as $lesson)
+            {
+                Lesson::query()->where('id',$lesson['id'])->update(['unit_id'=>$entry->id,
+                    'unit_name'=>$entry->unit_name,
+                    'course_id'=>$entry->course_id,
+                ]);
+            }
             $entry->save();
 
             return [
@@ -140,10 +155,15 @@ class UnitsController extends AdminBaseController
         } else {
             $entry = new Unit();
             $entry->fill($data);
+            $dsUnit=Unit::query()->where('course_id',$entry->course_id)->count();
+            $entry->position=($dsUnit+1);
             $entry->save();
             foreach ($req->list as $lesson)
             {
-                Lesson::query()->where('id',$lesson['id'])->update(['unit_id'=>$entry->id]);
+                Lesson::query()->where('id',$lesson['id'])->update(['unit_id'=>$entry->id,
+                    'unit_name'=>$entry->unit_name,
+                    'course_id'=>$entry->course_id,
+                ]);
             }
 
 
@@ -209,17 +229,24 @@ class UnitsController extends AdminBaseController
     public function dataCreateUnit(Request $req)
     {
         $lessons=Lesson::query()->orderBy('id','desc');
+        $courses=Course::query()->orderBy('id','desc')->get();
+
         return [
-          'lessons'=>$lessons->get()
+          'lessons'=>$lessons->get(),
+            'courses'=>$courses
         ];
     }
     public function dataEditUnit(Request $req)
     {
         $listLessons=Lesson::query()->where('unit_id',$req->id)->get();
         $lessons=Lesson::query()->orderBy('id','desc');
+        $courses=Course::query()->orderBy('id','desc')->get();
+
         return [
             'lessons'=>$lessons->get(),
-            'list_lessons'=>$listLessons
+            'list_lessons'=>$listLessons,
+            'courses'=>$courses
+
         ];
     }
 

@@ -18,7 +18,7 @@
                                     </div>
                                     <div class="form-group col-sm-3">
                                         <label>Subject<span class="text-danger">*</span></label>
-                                        <select class="form-control form-select" required>
+                                        <select class="form-control form-select" required v-model="entry.subject">
                                             <option value="" disabled selected>Choose the subject</option>
                                             <option value="Math">Math</option>
                                             <option value="Science">Science</option>
@@ -31,20 +31,14 @@
                                     </div>
                                     <div class="form-group col-sm-3">
                                         <label>Course <span class="text-danger">*</span></label>
-                                        <select class="form-select form-control" required>
+                                        <select class="form-select form-control" required v-model="entry.course_id">
                                             <option value="" disabled selected>Choose the course</option>
-                                            <option></option>
+                                            <option v-for="course in courses" :value="course.id">{{course.course_name}}</option>
                                         </select>
                                     </div>
                                     <div class="form-group col-sm-12"  style="border: 1px solid #b5b5c3;border-radius: 25px">
                                         <label style="margin:15px 0px 10px ">List of lesson</label>
                                         <treeselect :options="lessons" :multiple="true" v-model="listLesson" @input="lesson()" />
-
-
-                                        <!--                                        <select class="form-control form-select" style="margin-bottom: 15px" v-model="listLesson" @change="lesson()" required>-->
-                                        <!--                                            <option value="" disabled selected>Search module</option>-->
-                                        <!--                                            <option v-for="lesson in lessons" :value="lesson">{{lesson.name}}</option>-->
-                                        <!--                                        </select>-->
                                         <draggable
                                             :list="list"
                                             :animation="200"
@@ -113,6 +107,7 @@
         components: {ActionBar,draggable,Treeselect},
         data() {
             return {
+                courses:[],
                 listLesson:[],
                 lessons:[],
                 list:[],
@@ -142,16 +137,14 @@
                 this.$loading(true);
                 const res = await $get("/xadmin/units/dataEditUnit?id="+this.entry.id, query);
                 this.$loading(false);
-                setTimeout(function () {
-                    KTMenu.createInstances();
-                }, 0);
                 this.lessons = res.lessons.map(res => {
                     return {
                         'id':res.id,
                         'label':res.name
                     };
                 });
-                this.listLesson=res.list_lessons.map(res => res.id)
+                this.listLesson=res.list_lessons.map(res => res.id);
+                this.courses=res.courses;
             },
             removeLesson(index)
             {
