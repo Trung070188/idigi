@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 
+use App\Models\Unit;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -65,7 +66,7 @@ class CoursesController extends AdminBaseController
         */
 
         $title = 'Edit';
-        $component = 'CourseForm';
+        $component = 'CourseDetail';
 
 
         return component($component, compact('title', 'entry'));
@@ -103,10 +104,10 @@ class CoursesController extends AdminBaseController
         $data = $req->get('entry');
 
         $rules = [
-    'name' => 'numeric',
-    'public_from' => 'date_format:Y-m-d H:i:s',
-    'public_to' => 'date_format:Y-m-d H:i:s',
-    'status' => 'numeric',
+            'name' => 'numeric',
+            'public_from' => 'date_format:Y-m-d H:i:s',
+            'public_to' => 'date_format:Y-m-d H:i:s',
+            'status' => 'numeric',
 ];
 
         $v = Validator::make($data, $rules);
@@ -131,6 +132,18 @@ class CoursesController extends AdminBaseController
             }
 
             $entry->fill($data);
+            if($req->deleteUnit)
+            {
+                Unit::query()->whereIn('id',$req->deleteUnit)->update(['course_id'=>NULL]);
+            }
+            if($req->units)
+            {
+                foreach ($req->units as $key=>$unit)
+                {
+                    Unit::query()->where('id',$unit['id'])->update(['course_id'=>$entry->id,'position'=>$key+1]);
+                }
+
+            }
             $entry->save();
 
             return [
@@ -142,6 +155,13 @@ class CoursesController extends AdminBaseController
             $entry = new Course();
             $entry->fill($data);
             $entry->save();
+            if($req->units)
+            {
+                foreach ($req->units as $key => $unit)
+                {
+                    Unit::query()->where('id',$unit['id'])->update(['course_id'=>$entry->id,'position'=>$key+1]);
+                }
+            }
 
             return [
                 'code' => 0,
@@ -199,6 +219,22 @@ class CoursesController extends AdminBaseController
                 'currentPage' => $entries->currentPage(),
                 'lastPage' => $entries->lastPage(),
             ]
+        ];
+    }
+    public function dataCreateCourse(Request $req)
+    {
+        $units=Unit::query()->orderBy('id','desc');
+        return [
+          'units'=>$units->get(),
+        ];
+    }
+    public function dataEditCourse(Request $req)
+    {
+        $listUnit=Unit::query()->where('course_id',$req->id)->orderBy('position','ASC')->get();
+        $units=Unit::query()->orderBy('id','desc');
+        return [
+            'units'=>$units->get(),
+            'listUnit'=>$listUnit
         ];
     }
 

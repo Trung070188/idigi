@@ -18,8 +18,9 @@
                                     </div>
                                     <div class="form-group col-sm-3">
                                         <label>Subject<span class="text-danger">*</span></label>
-                                        <select class="form-control form-select">
-                                            <option></option>
+                                        <select class="form-control form-select" v-model="entry.subject">
+                                            <option value="Math">Math</option>
+                                            <option value="Science ">Science </option>
                                         </select>
                                     </div>
                                     <div class="form-group col-sm-9">
@@ -29,16 +30,23 @@
                                     </div>
                                     <div class="form-group col-sm-3">
                                         <label>Grade <span class="text-danger">*</span></label>
-                                        <select class="form-select form-control">
-                                            <option></option>
+                                        <select class="form-select form-control" v-model="entry.grade">
+                                            <option value="1">1</option>
+                                            <option value="2">2</option>
+                                            <option value="3">3</option>
+                                            <option value="4">4</option>
+                                            <option value="5">5</option>
+                                            <option value="6">6</option>
+                                            <option value="7">7</option>
+                                            <option value="8">8</option>
+                                            <option value="9">9</option>
                                         </select>
                                     </div>
                                     <div class="form-group col-sm-12"  style="border: 1px solid #b5b5c3;border-radius: 25px">
                                         <label style="margin:15px 0px 10px ">List of unit</label>
-                                        <select class="form-control form-select" style="margin-bottom: 15px">
-                                            <option></option>
-                                        </select>
+                                        <Treeselect :options="units" :multiple="true" v-model="listUnit" @input="unit()"/>
                                         <draggable
+                                            :list="list"
                                             :animation="200"
                                             ghost-class="moving-card"
                                             group="users"
@@ -46,16 +54,24 @@
                                             class="form-group col-sm-12"
                                             tag="ul"
                                         >
-                                            <div style="width: 100%">
+                                            <div style="width: 100%;cursor: pointer" v-for="(res,index) in list" :key="index">
                                                 <i class="bi bi-text-center" style="width: 5%; display: inline-block"></i>
-                                                <div style="width: 5%;display: inline-block"></div>
-                                                <div style="width: 50%;display: inline-block">
-                                                    <input class="form-control">
+                                                <div style="width: 5%;display: inline-block;position: relative;left: -17px;font-size: 20px">{{index+1}}</div>
+                                                <div style="width: 50%;display: inline-block;margin-left: -50px">
+                                                    <span>Resource name:</span>
+                                                    <input class="form-control" v-model="res.label" disabled>
                                                 </div>
-                                                <div style="width: 30%;display: inline-block">
-                                                    <input class="form-control">
+                                                <div style="width: 30%;display: inline-block;margin-left: 20px">
+                                                    <span>Type:</span>
+                                                    <input class="form-control" v-model="res.id" disabled>
                                                 </div>
-                                                <div style="width: 10%;display: inline-block"></div>
+                                                <i style="width: 10%;
+                                                display: inline-block;
+                                                font-size: 50px;
+                                                top: 14px;
+                                                position: relative;
+                                                left: -10px;
+                                                cursor: pointer" class="bi bi-x" @click="removeUnit(index)"></i>
                                             </div>
 
                                         </draggable>
@@ -84,14 +100,21 @@
 </template>
 
 <script>
-    import {$post} from "../../utils";
+    import {$get, $post} from "../../utils";
     import ActionBar from "../includes/ActionBar";
     import draggable from "vuedraggable";
+    import Treeselect from '@riophae/vue-treeselect';
+    import '@riophae/vue-treeselect/dist/vue-treeselect.css'
+    import $router from "../../lib/SimpleRouter";
+
     export default {
         name: "CoursesForm.vue",
-        components: {ActionBar,draggable},
+        components: {ActionBar,draggable,Treeselect},
         data() {
             return {
+                list:[],
+                listUnit:[],
+                units:[],
                 breadcrumbs: [
                     {
                         title: 'Resource management',
@@ -109,13 +132,40 @@
                 errors: {}
             }
         },
+        mounted() {
+            $router.on("/", this.load).init();
+        },
         methods: {
+            removeUnit(index)
+            {
+                this.list=this.list.filter((item,key)=>key!==index);
+                this.listUnit=this.list.map(rec => rec.id);
+            },
+            unit()
+            {
+                this.list = this.listUnit.map(id => {
+                    const item = this.units.find(i => i.id === id);
+                    return {index:item.index,id, label: item.label};
+                });
+            },
+            async load() {
+                let query = $router.getQuery();
+                this.$loading(true);
+                const res = await $get("/xadmin/courses/dataCreateCourse", query);
+                this.$loading(false);
+                this.units = res.units.map(rec => {
+                    return {
+                        'id':rec.id,
+                        'label':rec.unit_name,
+                    }
+                });
+            },
             backIndex(){
                 window.location.href = '/xadmin/courses/index';
             },
             async save() {
                 this.isLoading = true;
-                const res = await $post('/xadmin/courses/save', {entry: this.entry}, false);
+                const res = await $post('/xadmin/courses/save', {entry: this.entry,units:this.list}, false);
                 this.isLoading = false;
                 if (res.errors) {
                     this.errors = res.errors;

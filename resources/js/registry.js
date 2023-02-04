@@ -40,6 +40,7 @@ import UserDeactive from "./admin/users/UserDeactive";
 import PermissionDetailIndex from "./admin/permission_details/PermissionDetailIndex.vue";
 import CourseIndex from "./admin/courses/CourseIndex";
 import CourseForm from  "./admin/courses/CourseForm";
+import CourseDetail from  "./admin/courses/CourseDetail";
 import UnitIndex from  "./admin/units/UnitIndex";
 import UnitForm from  "./admin/units/UnitForm";
 import UnitDetail from "./admin/units/UnitDetail";
@@ -86,6 +87,7 @@ export default {
     PermissionDetailIndex,
     CourseIndex,
     CourseForm,
+    CourseDetail,
     UnitIndex,
     UnitForm,
     UnitDetail
