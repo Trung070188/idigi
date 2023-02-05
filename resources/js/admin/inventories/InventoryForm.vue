@@ -21,41 +21,32 @@
 
                                 </div>
                                 <div class="row">
-                                    <div class="form-group col-lg-4">
-                                        <label>Type <span class="text-danger">*</span></label>
-                                        <select class="form-control" v-model="entry.type" :disabled="permissionFields['resource_type']==false">
-                                            <option value="Vocabulary">Vocabulary</option>
-                                            <option value="Summary">Lecture</option>
-                                            <option value="Practice">Practice</option>
-                                            <option value="Summary">Summary</option>
-                                        </select>
-                                        <error-label for="f_category_id" :errors="errors.type"></error-label>
-                                    </div>
-                                    <div class="form-group col-lg-4">
-                                        <label>Subject <span class="text-danger">*</span></label>
-                                        <select class="form-control" v-model="entry.subject" :disabled="permissionFields['resource_subject']==false">
 
-                                            <option value="math">Math</option>
-                                            <option value="science ">Science </option>
-                                        </select>
-                                        <error-label for="f_category_id" :errors="errors.subject"></error-label>
-                                    </div>
-                                    <div class="form-group col-lg-4">
-                                        <label>Grade <span class="text-danger">*</span></label>
-                                        <select class="form-control" v-model="entry.grade" :disabled="permissionFields['resource_grade']==false">
+<!--                                    <div class="form-group col-lg-4">-->
+<!--                                        <label>Subject <span class="text-danger">*</span></label>-->
+<!--                                        <select class="form-control" v-model="entry.subject" :disabled="permissionFields['resource_subject']==false">-->
 
-                                            <option value="1">1</option>
-                                            <option value="2">2</option>
-                                            <option value="3">3</option>
-                                            <option value="4">4</option>
-                                            <option value="5">5</option>
-                                            <option value="6">6</option>
-                                            <option value="7">7</option>
-                                            <option value="8">8</option>
-                                            <option value="9">9</option>
-                                        </select>
-                                        <error-label for="f_category_id" :errors="errors.grade"></error-label>
-                                    </div>
+<!--                                            <option value="math">Math</option>-->
+<!--                                            <option value="science ">Science </option>-->
+<!--                                        </select>-->
+<!--                                        <error-label for="f_category_id" :errors="errors.subject"></error-label>-->
+<!--                                    </div>-->
+<!--                                    <div class="form-group col-lg-4">-->
+<!--                                        <label>Grade <span class="text-danger">*</span></label>-->
+<!--                                        <select class="form-control" v-model="entry.grade" :disabled="permissionFields['resource_grade']==false">-->
+
+<!--                                            <option value="1">1</option>-->
+<!--                                            <option value="2">2</option>-->
+<!--                                            <option value="3">3</option>-->
+<!--                                            <option value="4">4</option>-->
+<!--                                            <option value="5">5</option>-->
+<!--                                            <option value="6">6</option>-->
+<!--                                            <option value="7">7</option>-->
+<!--                                            <option value="8">8</option>-->
+<!--                                            <option value="9">9</option>-->
+<!--                                        </select>-->
+<!--                                        <error-label for="f_category_id" :errors="errors.grade"></error-label>-->
+<!--                                    </div>-->
                                 </div>
                                 <div class="form-group">
                                     <label>Description</label>
@@ -63,12 +54,12 @@
                                     <error-label for="f_grade" :errors="errors.description"></error-label>
 
                                 </div>
-                                <div class="form-group">
-                                    <label>Tags</label>
-                                    <input  v-model="entry.tags"  class="form-control" :disabled="permissionFields['resource_tags']==false" placeholder="Enter the tags name" >
-                                    <error-label for="f_grade" :errors="errors.tags"></error-label>
+<!--                                <div class="form-group">-->
+<!--                                    <label>Tags</label>-->
+<!--                                    <input  v-model="entry.tags"  class="form-control" :disabled="permissionFields['resource_tags']==false" placeholder="Enter the tags name" >-->
+<!--                                    <error-label for="f_grade" :errors="errors.tags"></error-label>-->
 
-                                </div>
+<!--                                </div>-->
 
                                 <div class="form-check form-check-custom form-check-solid me-10 pb-5">
                                     <input id="enabled" type="checkbox" class="form-check-input h-20px w-20px" v-model="entry.enabled" :disabled="permissionFields['resource_active']==false">
@@ -78,15 +69,26 @@
                             </div>
 
                             <div class="col-lg-3 col-sm-12">
-                                <div class="form-group mb-3" v-if="permissionFields['resource_picture']==false">
-                                    <label>Chọn ảnh</label>
+                                <div class="form-group mb-3">
+                                    <label>Type <span class="text-danger">*</span></label>
+                                    <select class="form-control form-select" v-model="entry.type" :disabled="permissionFields['resource_type']==false" required>
+                                        <option value="" selected disabled>Choose type</option>
+                                        <option value="Vocabulary">Vocabulary</option>
+                                        <option value="Summary">Lecture</option>
+                                        <option value="Practice">Practice</option>
+                                        <option value="Summary">Summary</option>
+                                    </select>
+                                    <error-label for="f_category_id" :errors="errors.type"></error-label>
                                 </div>
-                                <div class="form-group mb-3" v-else>
-                                    <label>Chọn ảnh</label>
-                                    <file-manager-input v-model="entry.file_image_new" :disabled="permissionFields['resource_picture']==false"  :hide-preview="true"></file-manager-input>
-                                    <error-label for="f_title" :errors="errors.file_image_new"></error-label>
+<!--                                <div class="form-group mb-3" v-if="permissionFields['resource_picture']==false">-->
+<!--                                    <label>Chọn ảnh</label>-->
+<!--                                </div>-->
+<!--                                <div class="form-group mb-3" v-else>-->
+<!--                                    <label>Chọn ảnh</label>-->
+<!--                                    <file-manager-input v-model="entry.file_image_new" :disabled="permissionFields['resource_picture']==false"  :hide-preview="true"></file-manager-input>-->
+<!--                                    <error-label for="f_title" :errors="errors.file_image_new"></error-label>-->
 
-                                </div>
+<!--                                </div>-->
                                 <div class="form-group mb-3" v-if="permissionFields['resource_file_asset_bundle']==false">
                                     <label>File asset bundle</label>
 
@@ -146,7 +148,9 @@
                     },
                 ],
                 title: $json.entry ?  'Resource detail' : 'Create new resource',
-                entry: $json.entry || {},
+                entry: $json.entry || {
+                    'type': ''
+                },
                 permissionFields:$json.permissionFields || [],
                 isLoading: false,
                 errors: {}
@@ -183,5 +187,16 @@
 </script>
 
 <style scoped>
+    select:required:invalid {
+        color: #adadad;
+    }
+
+    option[value=""][disabled] {
+        display: none;
+    }
+
+    option {
+        color: black;
+    }
 
 </style>
