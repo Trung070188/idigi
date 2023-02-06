@@ -50,7 +50,7 @@
                                     <i class="bi bi-funnel"></i>
                                     Advanced Search
                                 </button>
-                                <a :href="'/xadmin/courses/create'">
+                                <a :href="'/xadmin/courses/create'" v-if="permissions['051']">
                                     <button class="btn btn-primary button-create" style="margin:0 0 0 15px"><i class="bi bi-plus-lg"></i>Create new course</button>
                                 </a>
                             </div>
@@ -225,16 +225,16 @@
 </template>
 
 <script>
-    import {$get, $post, getTimeRangeAll} from "../../utils";
+    import {$get, $post, getTimeRangeAll,clone} from "../../utils";
     import $router from '../../lib/SimpleRouter';
     import ActionBar from "../includes/ActionBar";
     let created = getTimeRangeAll();
     const $q = $router.getQuery();
-
     export default {
         name: "CoursesIndex.vue",
         components: {ActionBar},
         data() {
+            const permissions = clone(window.$permissions);
             let isShowFilter = false;
             let filter = {
                 keyword: $q.keyword || '',
@@ -247,6 +247,7 @@
             }
 
             return {
+                permissions,
                 allSelected: false,
                 entries: [],
                 filter: filter,
@@ -273,8 +274,13 @@
             $router.on('/', this.load).init();
         },
         methods: {
+
             edit: function (id){
+                if(this.permissions['054'])
+                {
                     window.location.href='/xadmin/courses/edit?id='+ id;
+
+                }
 
             },
             async load() {

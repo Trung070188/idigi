@@ -18,7 +18,8 @@
                                     </div>
                                     <div class="form-group col-sm-3">
                                         <label>Subject<span class="text-danger">*</span></label>
-                                        <select class="form-control form-select" v-model="entry.subject">
+                                        <select class="form-control form-select" v-model="entry.subject" required>
+                                            <option value="" disabled selected>Choose subject</option>
                                             <option value="Math">Math</option>
                                             <option value="Science ">Science </option>
                                         </select>
@@ -32,7 +33,8 @@
                                     </div>
                                     <div class="form-group col-sm-3">
                                         <label>Grade <span class="text-danger">*</span></label>
-                                        <select class="form-select form-control" v-model="entry.grade">
+                                        <select class="form-select form-control" v-model="entry.grade" required>
+                                            <option value="" disabled selected>Choose grade</option>
                                             <option value="1">1</option>
                                             <option value="2">2</option>
                                             <option value="3">3</option>
@@ -131,7 +133,10 @@
                         title:'Create new course',
                     },
                 ],
-                entry: $json.entry || {},
+                entry:{
+                    'subject':'',
+                    'grade':''
+                },
                 isLoading: false,
                 errors: {}
             }
@@ -192,5 +197,14 @@
 </script>
 
 <style scoped>
+    select:required:invalid {
+        color: #adadad;
+    }
+    option[value=""][disabled] {
+        display: none;
+    }
+    option {
+        color: black;
+    }
 
 </style>

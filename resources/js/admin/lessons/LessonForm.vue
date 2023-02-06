@@ -178,10 +178,6 @@
                 this.$loading(true);
                 const res = await $get("/xadmin/lessons/dataCreateLesson", query);
                 this.$loading(false);
-                setTimeout(function () {
-                    KTMenu.createInstances();
-                }, 0);
-                console.log(this.list);
                 this.modules = res.module.map(rec => {
                     return {
                         'id':rec.id,

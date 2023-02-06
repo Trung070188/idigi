@@ -50,7 +50,7 @@
                                     <i class="bi bi-funnel"></i>
                                     Advanced Search
                                 </button>
-                                <a :href="'/xadmin/units/create'">
+                                <a :href="'/xadmin/units/create'" v-if="permissions['055']">
                                     <button class="btn btn-primary button-create" style="margin:0 0 0 15px"><i class="bi bi-plus-lg"></i>Create new unit</button>
                                 </a>
                             </div>
@@ -221,7 +221,7 @@
 </template>
 
 <script>
-    import {$get, $post, getTimeRangeAll} from "../../utils";
+    import {$get, $post, getTimeRangeAll,clone} from "../../utils";
     import $router from '../../lib/SimpleRouter';
     import ActionBar from "../includes/ActionBar";
 
@@ -232,6 +232,7 @@
         name: "UnitsIndex.vue",
         components: {ActionBar},
         data() {
+            const permissions = clone(window.$permissions);
             let isShowFilter = false;
             let filter = {
                 keyword: $q.keyword || '',
@@ -244,6 +245,7 @@
             }
 
             return {
+                permissions,
                 allSelected: false,
                 filter: filter,
                 isShowFilter: isShowFilter,
@@ -275,7 +277,11 @@
         },
         methods: {
             edit: function (id){
+                if(this.permissions['056'])
+                {
                     window.location.href='/xadmin/units/edit?id='+ id;
+
+                }
             },
             async load() {
                 let query = $router.getQuery();
