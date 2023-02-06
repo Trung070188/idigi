@@ -22,6 +22,8 @@
                                             <option value="Math">Math</option>
                                             <option value="Science ">Science </option>
                                         </select>
+                                        <error-label  for="f_category_id" :errors="errors.subject"></error-label>
+
                                     </div>
                                     <div class="form-group col-sm-9">
                                         <label>Description </label>
@@ -41,6 +43,8 @@
                                             <option value="8">8</option>
                                             <option value="9">9</option>
                                         </select>
+                                        <error-label  for="f_category_id" :errors="errors.grade"></error-label>
+
                                     </div>
                                     <div class="form-group col-sm-12"  style="border: 1px solid #b5b5c3;border-radius: 25px">
                                         <label style="margin:15px 0px 10px ">List of unit</label>
@@ -58,11 +62,11 @@
                                                 <i class="bi bi-text-center" style="width: 5%; display: inline-block"></i>
                                                 <div style="width: 5%;display: inline-block;position: relative;left: -17px;font-size: 20px">{{index+1}}</div>
                                                 <div style="width: 50%;display: inline-block;margin-left: -50px">
-                                                    <span>Resource name:</span>
+                                                    <span>Unit name:</span>
                                                     <input class="form-control" v-model="res.label" disabled>
                                                 </div>
                                                 <div style="width: 30%;display: inline-block;margin-left: 20px">
-                                                    <span>Type:</span>
+                                                    <span>Unit ID:</span>
                                                     <input class="form-control" v-model="res.id" disabled>
                                                 </div>
                                                 <i style="width: 10%;

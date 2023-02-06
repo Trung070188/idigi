@@ -104,10 +104,9 @@ class CoursesController extends AdminBaseController
         $data = $req->get('entry');
 
         $rules = [
-            'name' => 'numeric',
-            'public_from' => 'date_format:Y-m-d H:i:s',
-            'public_to' => 'date_format:Y-m-d H:i:s',
-            'status' => 'numeric',
+            'course_name' => 'required|numeric',
+            'subject' => 'required',
+            'grade'=>'required'
 ];
 
         $v = Validator::make($data, $rules);

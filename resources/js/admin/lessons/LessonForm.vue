@@ -23,6 +23,8 @@
                                             <option value="Math">Math</option>
                                             <option value="Science">Science</option>
                                         </select>
+                                        <error-label  for="f_category_id" :errors="errors.subject"></error-label>
+
                                     </div>
                                     <div class="form-group col-sm-9">
                                         <label>Description </label>
@@ -30,7 +32,7 @@
                                         <error-label for="f_category_id" :errors="errors.description"></error-label>
                                     </div>
                                     <div class="form-group col-sm-3">
-                                        <label>Unit <span class="text-danger">*</span></label>
+                                        <label>Unit </label>
                                         <select class="form-select form-control" required v-model="entry.unit_id">
                                             <option value="" disabled selected>Choose the unit</option>
                                             <option v-for="unit in units" :value="unit.id">{{unit.unit_name}}</option>

@@ -140,13 +140,8 @@ class LessonsController extends AdminBaseController
         $data = $req->get('entry');
 
         $rules = [
-            'created_by' => 'max:255',
-            'created_date' => 'date_format:Y-m-d H:i:s',
-            'last_modified_by' => 'max:255',
-            'last_modified_date' => 'date_format:Y-m-d H:i:s',
-            'name' => 'max:255',
-            'subject' => 'max:255',
-            'number' => 'max:255',
+            'name' => 'required|max:255',
+            'subject' => 'required|max:255',
         ];
 
         $v = Validator::make($data, $rules);

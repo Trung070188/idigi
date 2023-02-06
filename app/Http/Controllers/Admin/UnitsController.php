@@ -106,10 +106,14 @@ class UnitsController extends AdminBaseController
         $data = $req->get('entry');
 
         $rules = [
-    'label' => 'max:191',
+    'label' => 'required|max:191',
+    'subject'=>'required'
 ];
+        $message =[
+          'label.required'=>'The unit name field is required'
+        ];
 
-        $v = Validator::make($data, $rules);
+        $v = Validator::make($data, $rules,$message);
 
         if ($v->fails()) {
             return [

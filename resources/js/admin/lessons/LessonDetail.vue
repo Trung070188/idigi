@@ -23,6 +23,8 @@
                                             <option value="Math">Math</option>
                                             <option value="Science">Science</option>
                                         </select>
+                                        <error-label  for="f_category_id" :errors="errors.subject"></error-label>
+
                                     </div>
                                     <div class="form-group col-sm-9">
                                         <label>Description </label>
