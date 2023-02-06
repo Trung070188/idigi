@@ -104,7 +104,7 @@ class CoursesController extends AdminBaseController
         $data = $req->get('entry');
 
         $rules = [
-            'course_name' => 'required|numeric',
+            'course_name' => 'required',
             'subject' => 'required',
             'grade'=>'required'
 ];
@@ -185,7 +185,7 @@ class CoursesController extends AdminBaseController
             ];
         }
 
-        $entry->status = $req->status ? 1 : 0;
+        $entry->active = $req->active ? 1 : 0;
         $entry->save();
 
         return [
@@ -206,10 +206,14 @@ class CoursesController extends AdminBaseController
             //$query->where('title', 'LIKE', '%' . $req->keyword. '%');
         }
 
+
         $query->createdIn($req->created);
 
-
-        $entries = $query->paginate();
+        $limit = 25;
+        if ($req->limit) {
+            $limit = $req->limit;
+        }
+        $entries = $query->paginate($limit);
 
         return [
             'code' => 0,
