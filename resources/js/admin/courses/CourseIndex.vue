@@ -65,11 +65,11 @@
                         <div class="card-toolbar">
                             <div class="d-flex justify-content-end" data-kt-customer-table-toolbar="base" >
 
-                                <button type="button" style="margin-left: 10px" @click="isShowFilter = !isShowFilter" class="btn btn-light" v-if="isShowFilter">
+                                <button type="button" style="margin-left: 10px" @click="advanceSearch()" class="btn btn-light" v-if="isShowFilter" >
                                     <i style="margin-left: 5px" class="fas fa-times"></i>
                                     Close Advanced Search
                                 </button>
-                                <button type="button" style="margin-left: 10px" @click="isShowFilter = !isShowFilter" class="btn btn-light" v-if="!isShowFilter">
+                                <button type="button" style="margin-left: 10px" @click="advanceSearch()" class="btn btn-light" v-if="!isShowFilter">
                                     <i class="bi bi-funnel"></i>
                                     Advanced Search
                                 </button>
@@ -91,9 +91,9 @@
                             <div class="row">
                                 <div class="form-group col-lg-3">
                                     <label>Name </label>
-                                    <input  @keydown.enter="doFilter('name', filter.name, $event)"
-                                            class="form-control" placeholder="Enter the lesson name"
-                                            v-model="filter.name"/>
+                                    <input  @keydown.enter="doFilter('course_name', filter.name, $event)"
+                                            class="form-control" placeholder="Enter the course name"
+                                            v-model="filter.course_name"/>
                                 </div>
                                 <div class="form-group col-lg-2">
                                     <label>Subject </label>
@@ -107,7 +107,7 @@
                                 </div>
                                 <div class="form-group col-lg-2">
                                     <label>Grade </label>
-                                    <select required class="form-control form-select" v-model="filter.grade" @keydown.enter="doFilter('grade', filter.grade, $event)">
+                                    <select required class="form-control form-select" v-model="filter.grade" @keydown.enter="doFilter('grade', filter.grade, $event)" >
                                         <option value="" disabled selected>Choose Grade</option>
                                         <option value="0">All</option>
                                         <option value="1">1</option>
@@ -160,7 +160,7 @@
                                         </svg>
                                     </span>
 
-                                    <div v-text=" from +'-'+ to +' of '+ countLesson" v-if="entries.length > 0"></div>
+                                    <div v-text=" from +'-'+ to +' of '+ count" v-if="entries.length > 0"></div>
                                 </div>
                             </div>
                         </div>
@@ -253,15 +253,21 @@
             let isShowFilter = false;
             let filter = {
                 keyword: $q.keyword || '',
+                course_name:$q.course_name || '',
                 created: $q.created || '',
+                subject:$q.subject || '',
+                grade:$q.grade || '',
+                active:$q.active || ''
             };
             for (var key in filter) {
                 if (filter[key] != '') {
                     isShowFilter = true;
+
                 }
             }
 
             return {
+                count:'',
                 deleteCour:'',
                 permissions,
                 allSelected: false,
@@ -290,6 +296,14 @@
             $router.on('/', this.load).init();
         },
         methods: {
+            advanceSearch()
+            {
+                this.isShowFilter=!this.isShowFilter;
+                for (var key in this.filter) {
+                    this.filter[key] = '';
+                }
+                $router.setQuery({});
+            },
             deleteCourse:function(entry='')
             {
                 $('#delete').modal('show');
@@ -306,6 +320,7 @@
                 const res  = await $get('/xadmin/courses/data', query);
                 this.paginate = res.paginate;
                 this.entries = res.data;
+                this.count=res.count;
                 this.from = (this.paginate.currentPage-1)*(this.limit) + 1;
                 this.to = (this.paginate.currentPage-1)*(this.limit) + this.entries.length;
             },
@@ -322,20 +337,13 @@
                 $router.updateQuery({page: this.paginate.currentPage, _: Date.now()});
             },
             filterClear() {
-                for( var key in app.filter) {
-                    app.filter[key] = '';
+                for (var key in this.filter) {
+                    this.filter[key] = '';
                 }
-
                 $router.setQuery({});
             },
-            doFilter(field, value, event) {
-                if (event) {
-                    event.preventDefault();
-                }
-
-                const params = {page: 1};
-                params[field] = value;
-                $router.setQuery(params)
+            doFilter() {
+                $router.setQuery(this.filter)
             },
             changeLimit() {
                 let params = $router.getQuery();
@@ -365,5 +373,15 @@
 </script>
 
 <style scoped>
+    select:required:invalid {
+        color: #adadad;
+    }
 
+    option[value=""][disabled] {
+        display: none;
+    }
+
+    option {
+        color: black;
+    }
 </style>

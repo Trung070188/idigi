@@ -203,9 +203,25 @@ class CoursesController extends AdminBaseController
         $query = Course::query()->orderBy('id', 'desc');
 
         if ($req->keyword) {
-            //$query->where('title', 'LIKE', '%' . $req->keyword. '%');
+            $query->where('course_name', 'LIKE', '%' . $req->keyword. '%')
+            ->orWhere('subject','LIKE','%' .$req->keyword . '%')
+            ->orWhere('grade','LIKE','%' .$req->keyword . '%');
         }
-
+        if($req->course_name)
+        {
+            $query->where('course_name','LIKE','%' .$req->course_name .'%');
+        }
+        if($req->subject)
+        {
+            $query->where('subject','LIKE','%' .$req->subject. '%');
+        }
+        if($req->grade)
+        {
+            $query->where('grade','LIKE','%'.$req->grade. '%');
+        }
+        if ($req->active != '') {
+            $query->where('active', $req->active);
+        }
 
         $query->createdIn($req->created);
 
@@ -216,6 +232,7 @@ class CoursesController extends AdminBaseController
         $entries = $query->paginate($limit);
 
         return [
+            'count'=>$entries->count(),
             'code' => 0,
             'data' => $entries->items(),
             'paginate' => [
