@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 
 use App\Models\Unit;
+use Carbon\Carbon;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -91,7 +92,14 @@ class CoursesController extends AdminBaseController
             'message' => 'Đã xóa'
         ];
     }
-
+    public function removeCourse(Request $req)
+    {
+        Course::query()->whereIn('id',$req->courseIds)->update(['deleted_at'=>Carbon::now()]);
+        return [
+          'code'=>0,
+          'message'=>'Đã xóa'
+        ];
+    }
     /**
     * @uri  /xadmin/courses/save
     * @return  array

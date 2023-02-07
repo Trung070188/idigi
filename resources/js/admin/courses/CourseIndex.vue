@@ -26,10 +26,33 @@
                                 <p >Are you sure to delete this course?</p>
                             </div>
                             <div class="swal2-actions">
-                                <button type="submit" id="kt_modal_new_target_submit" class="swal2-confirm btn fw-bold btn-danger" @click="remove(deleteCour)">
+                                <button type="submit" id="kt_modal_new_target_submit" class="swal2-confirm btn fw-bold btn-danger" @click="removeCourse(deleteCour)">
                                     <span class="indicator-label">Yes, delete!</span>
                                 </button>
                                 <button type="reset" id="kt_modal_new_target_cancel" class="swal2-cancel btn fw-bold btn-active-light-primary" data-bs-dismiss="modal" style="margin: 0px 8px 0px">No, cancel</button>
+
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="modal fade" style="margin-right:50px;border:2px solid #333333  " id="deleteAll" tabindex="-1" role="dialog"
+                     aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered popup-main-1" role="document"
+                         style="max-width: 450px;">
+                        <div class="modal-content box-shadow-main paymment-status" style="left:120px;text-align: center; padding: 20px 0px 55px;">
+                            <div class="close-popup" data-dismiss="modal"></div>
+                            <div class="swal2-icon swal2-warning swal2-icon-show">
+                                <div class="swal2-icon-content" style="margin: 0px 24.5px 0px ">!</div>
+                            </div>
+                            <div class="swal2-html-container">
+                                <p >Are you sure to delete this course?</p>
+                            </div>
+                            <div class="swal2-actions">
+                                <button type="submit" id="kt_modal_new_target_submit1" class="swal2-confirm btn fw-bold btn-danger" @click="removeCourse()">
+                                    <span class="indicator-label">Yes, delete!</span>
+                                </button>
+                                <button type="reset" id="kt_modal_new_target_cancel1" class="swal2-cancel btn fw-bold btn-active-light-primary" data-bs-dismiss="modal" style="margin: 0px 8px 0px">No, cancel</button>
 
                             </div>
 
@@ -63,7 +86,7 @@
 
                         </div>
                         <div class="card-toolbar">
-                            <div class="d-flex justify-content-end" data-kt-customer-table-toolbar="base" >
+                            <div class="d-flex justify-content-end" data-kt-customer-table-toolbar="base" v-if="courseIds=='' ">
 
                                 <button type="button" style="margin-left: 10px" @click="advanceSearch()" class="btn btn-light" v-if="isShowFilter" >
                                     <i style="margin-left: 5px" class="fas fa-times"></i>
@@ -76,6 +99,15 @@
                                 <a :href="'/xadmin/courses/create'" v-if="permissions['051']">
                                     <button class="btn btn-primary button-create" style="margin:0 0 0 15px"><i class="bi bi-plus-lg"></i>Create new course</button>
                                 </a>
+                            </div>
+                            <div class="d-flex justify-content-end align-items-center d-none"
+                                 data-kt-customer-table-toolbar="selected" v-if="courseIds!='' ">
+                                <div class="fw-bolder me-5">
+                                    <span class="me-2" data-kt-customer-table-select="selected_count">{{courseIds.length}} Selected</span>
+                                </div>
+                                <button   type="button" class="btn btn-danger"
+                                          data-kt-customer-table-select="delete_selected" @click="removeAllCourse">Delete Selected
+                                </button>
                             </div>
 
                         </div>
@@ -187,8 +219,16 @@
                             <tbody>
                             <tr  v-for="(entry,index) in entries" style="cursor: pointer">
                                 <td class="">
-                                    <div class="form-check form-check-sm form-check-custom form-check-solid">
-                                        <input class="form-check-input" type="checkbox"  :value="entry.id" >
+                                    <div
+                                        class="form-check form-check-sm form-check-custom form-check-solid"
+                                    >
+                                        <input
+                                            class="form-check-input"
+                                            type="checkbox"
+                                            v-model="courseIds"
+                                            :value="entry.id"
+                                            @change="updateCheckAll"
+                                        />
                                     </div>
                                 </td>
                                 <td @click="edit(entry.id)">{{((index+1)+(from+1))-2}}</td>
@@ -267,6 +307,8 @@
             }
 
             return {
+                courseIds:'',
+                course:[],
                 count:'',
                 deleteCour:'',
                 permissions,
@@ -296,6 +338,50 @@
             $router.on('/', this.load).init();
         },
         methods: {
+            removeAllCourse()
+            {
+                $('#deleteAll').modal('show');
+            },
+            async removeCourse()
+            {
+                const res=$post('/xadmin/courses/removeCourse',{unitIds:this.unitIds})
+                if (res.code) {
+                    toastr.error(res.message);
+                } else {
+                    toastr.success(res.message);
+                    $('#deleteAll').modal('hide');
+                    this.courseIds = [];
+                    this.course = [];
+                }
+
+                $router.updateQuery({page: this.paginate.currentPage, _: Date.now()});
+            },
+            selectAll() {
+                if (this.allSelected) {
+                    const selected = this.entries.map(u => u.id);
+                    this.courseIds = selected;
+                    this.course = this.entries;
+                } else {
+                    this.courseIds = [];
+                    this.course = [];
+                }
+            },
+            updateCheckAll() {
+                this.course = [];
+                if (this.courseIds.length === this.entries.length) {
+                    this.allSelected = true;
+                } else {
+                    this.allSelected = false;
+                }
+                let self = this;
+                self.courseIds.forEach(function(e) {
+                    self.entries.forEach(function(e1) {
+                        if (e1.id == e) {
+                            self.course.push(e1);
+                        }
+                    });
+                });
+            },
             advanceSearch()
             {
                 this.isShowFilter=!this.isShowFilter;

@@ -2,6 +2,8 @@
 namespace App\Models;
 
 
+ use Illuminate\Database\Eloquent\SoftDeletes;
+
  /**
  * @property int       $id
  * @property string    $label
@@ -10,6 +12,7 @@ namespace App\Models;
  */
 class Unit extends BaseModel
 {
+    use SoftDeletes;
     protected $table = 'units';
     protected $fillable=[
         'unit_name',

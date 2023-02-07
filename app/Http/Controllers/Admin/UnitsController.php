@@ -6,6 +6,7 @@ namespace App\Http\Controllers\Admin;
 use App\Models\Course;
 use App\Models\Lesson;
 use App\Models\LessonInventory;
+use Carbon\Carbon;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -80,18 +81,22 @@ class UnitsController extends AdminBaseController
     */
     public function remove(Request $req) {
         $id = $req->id;
-        $entry = Unit::find($id);
-
+        $entry = Unit::query()->where('id',$id)->update(['deleted_at'=>Carbon::now()]);
         if (!$entry) {
             throw new NotFoundHttpException();
         }
-
-        $entry->delete();
-
         return [
             'code' => 0,
             'message' => 'Đã xóa'
         ];
+    }
+    function removeUnit(Request $req)
+    {
+       Unit::query()->whereIn('id',$req->unitIds)->update(['deleted_at'=>Carbon::now()]);
+       return [
+           'code' => 0,
+           'message' => 'Đã xóa'
+       ];
     }
 
     /**
