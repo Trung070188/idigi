@@ -185,7 +185,7 @@
                                     </div>
                                 </div>
                                 <div class="form-check form-check-custom form-check-solid pb-5" v-if="roleName=='Super Administrator'">
-                                    <input id="state1" type="checkbox"  class="form-check-input h-20px w-20px" v-model="active_allocation" @change="activeAllocation" checked>
+                                    <input id="state1" type="checkbox"  class="form-check-input h-20px w-20px" v-model="entry.active_allocation" checked>
                                     <label for="state1" class="form-check-label fw-bold" >Active allocation</label>
                                     <error-label for="f_grade" ></error-label>
                                 </div>
@@ -425,17 +425,7 @@
 
                 $router.updateQuery({page: this.paginate.currentPage, _: Date.now()});
             },
-            async activeAllocation()
-            {
-                const res=await $post('/xadmin/schools/activeAllocation',{active_allocation:this.active_allocation,id:this.entry.id})
-                if(res.code)
-                {
-                    toastr.errors(res.message)
-                }
-                else {
-                    toastr.success(res.message)
-                }
-            },
+
         }
     }
 </script>
