@@ -159,7 +159,7 @@
                         <table class="table table-row-bordered align-middle gy-4 gs-9">
                             <thead  class="border-bottom border-gray-200 fs-6 text-gray-600 fw-bolder bg-light bg-opacity-75">
                             <tr>
-                                <th>No.</th>
+                                <th>ID</th>
                                 <th>Device name</th>
                                 <th>Device detail</th>
                                 <th>Registed date</th>
@@ -171,7 +171,7 @@
                             </thead>
                             <tbody>
                             <tr v-for="(device,index) in userDevices" >
-                                <td >{{index+1}}</td>
+                                <td v-text="device.id"></td>
                                 <td v-text="device.device_name"></td>
                                 <td v-text="device.device_name"></td>
                                 <td v-text="d(device.created_at)"></td>
