@@ -16,6 +16,7 @@ class Unit extends BaseModel
         'subject',
         'description',
         'course_id',
+        'active',
         'position'
     ];
 }

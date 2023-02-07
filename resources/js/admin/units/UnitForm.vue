@@ -133,6 +133,7 @@
                     },
                 ],
                 entry:{
+                    subject:'',
                     course_id:''
                 },
                 isLoading: false,

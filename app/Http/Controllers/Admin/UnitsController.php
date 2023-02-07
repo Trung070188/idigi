@@ -195,7 +195,7 @@ class UnitsController extends AdminBaseController
             ];
         }
 
-        $entry->status = $req->status ? 1 : 0;
+        $entry->active = $req->active ? 1 : 0;
         $entry->save();
 
         return [
@@ -209,20 +209,37 @@ class UnitsController extends AdminBaseController
     * @uri  /xadmin/units/data
     * @return  array
     */
-    public function data(Request $req) {
+    public function data(Request $req)
+    {
         $query = Unit::query()->orderBy('id', 'desc');
+        $courses = Course::query()->orderBy('id', 'desc')->get();
 
         if ($req->keyword) {
-            //$query->where('title', 'LIKE', '%' . $req->keyword. '%');
+            $query->where('unit_name', 'LIKE', '%' . $req->keyword . '%')
+                ->orWhere('subject', 'LIKE', '%' . $req->subject . '%');
+        }
+        if ($req->course_name) {
+            $query->where('unit_name', 'LIKE', '%' . $req->course_name . '%');
+        }
+        if ($req->subject) {
+            $query->where('subject', 'LIKE', '%' . $req->subject . '%');
+        }
+        if ($req->course_id)
+        {
+            $query->where('course_id','LIKE','%'.$req->course_id . '%');
         }
 
         $query->createdIn($req->created);
-
-
-        $entries = $query->paginate();
+        $limit = 25;
+        if ($req->limit) {
+            $limit = $req->limit;
+        }
+        $entries = $query->paginate($limit);
 
         return [
             'code' => 0,
+            'courses'=>$courses,
+            'count'=>$query->count(),
             'data' => $entries->items(),
             'paginate' => [
                 'currentPage' => $entries->currentPage(),

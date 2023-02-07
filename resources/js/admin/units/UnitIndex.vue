@@ -13,6 +13,29 @@
 
         <div class="row">
             <div class="col-lg-12">
+                <div class="modal fade" style="margin-right:50px;border:2px solid #333333  " id="delete" tabindex="-1" role="dialog"
+                     aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered popup-main-1" role="document"
+                         style="max-width: 450px;">
+                        <div class="modal-content box-shadow-main paymment-status" style="left:120px;text-align: center; padding: 20px 0px 55px;">
+                            <div class="close-popup" data-dismiss="modal"></div>
+                            <div class="swal2-icon swal2-warning swal2-icon-show">
+                                <div class="swal2-icon-content" style="margin: 0px 24.5px 0px ">!</div>
+                            </div>
+                            <div class="swal2-html-container">
+                                <p >Are you sure to delete this unit?</p>
+                            </div>
+                            <div class="swal2-actions">
+                                <button type="submit" id="kt_modal_new_target_submit" class="swal2-confirm btn fw-bold btn-danger" @click="remove(deleteUni)">
+                                    <span class="indicator-label">Yes, delete!</span>
+                                </button>
+                                <button type="reset" id="kt_modal_new_target_cancel" class="swal2-cancel btn fw-bold btn-active-light-primary" data-bs-dismiss="modal" style="margin: 0px 8px 0px">No, cancel</button>
+
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
                 <div class="card card-custom card-stretch gutter-b">
 
                     <div class="card-header border-0 pt-6">
@@ -42,11 +65,11 @@
                         <div class="card-toolbar">
                             <div class="d-flex justify-content-end" data-kt-customer-table-toolbar="base" >
 
-                                <button type="button" style="margin-left: 10px" @click="isShowFilter = !isShowFilter" class="btn btn-light" v-if="isShowFilter">
+                                <button type="button" style="margin-left: 10px" @click="advanceSearch()" class="btn btn-light" v-if="isShowFilter">
                                     <i style="margin-left: 5px" class="fas fa-times"></i>
                                     Close Advanced Search
                                 </button>
-                                <button type="button" style="margin-left: 10px" @click="isShowFilter = !isShowFilter" class="btn btn-light" v-if="!isShowFilter">
+                                <button type="button" style="margin-left: 10px" @click="advanceSearch()" class="btn btn-light" v-if="!isShowFilter">
                                     <i class="bi bi-funnel"></i>
                                     Advanced Search
                                 </button>
@@ -68,9 +91,9 @@
                             <div class="row">
                                 <div class="form-group col-lg-3">
                                     <label>Name </label>
-                                    <input  @keydown.enter="doFilter('name', filter.name, $event)"
+                                    <input  @keydown.enter="doFilter('unit_name', filter.name, $event)"
                                             class="form-control" placeholder="Enter the lesson name"
-                                            v-model="filter.name"/>
+                                            v-model="filter.unit_name"/>
                                 </div>
                                 <div class="form-group col-lg-3">
                                     <label>Subject </label>
@@ -82,16 +105,17 @@
                                     </select>
 
                                 </div>
-                                <div class="form-group col-lg-3">
-                                    <label>Unit ID </label>
-                                    <select required class="form-control form-select" v-model="filter.grade" @keydown.enter="doFilter('id', filter.grade, $event)">
-                                        <option value="" disabled selected>Choose unit ID</option>
-                                    </select>
-                                </div>
+<!--                                <div class="form-group col-lg-3">-->
+<!--                                    <label>Unit ID </label>-->
+<!--                                    <select required class="form-control form-select" v-model="filter.grade" @keydown.enter="doFilter('id', filter.grade, $event)"  >-->
+<!--                                        <option value="" disabled selected>Choose unit ID</option>-->
+<!--                                    </select>-->
+<!--                                </div>-->
                                 <div class="form-group col-lg-3">
                                     <label>Course</label>
-                                    <select class="form-control form-select">
-                                        <option></option>
+                                    <select class="form-control form-select" v-model="filter.course_id" @keydown.enter="doFilter('course_id', filter.course_id, $event)" required>
+                                        <option value="" selected disabled>Choose course</option>
+                                        <option v-for="course in courses" :value="course.id">{{course.course_name}}</option>
                                     </select>
                                 </div>
                                 <div class="form-group col-lg-4">
@@ -143,7 +167,7 @@
                                         </svg>
                                     </span>
 
-                                    <!--                                    <div v-text=" from +'-'+ to +' of '+ countLesson" v-if="entries.length > 0"></div>-->
+                                        <div v-text=" from +'-'+ to +' of '+ count" v-if="entries.length > 0"></div>
                                 </div>
                             </div>
                         </div>
@@ -168,22 +192,24 @@
                             </tr>
                             </thead>
                             <tbody>
-                            <tr  v-for="(entry,index) in entries" @click="edit(entry.id)">
+                            <tr  v-for="(entry,index) in entries" >
                                 <td class="">
                                     <div class="form-check form-check-sm form-check-custom form-check-solid">
                                         <input class="form-check-input" type="checkbox"  :value="entry.id" >
                                     </div>
                                 </td>
                                 <td >{{((index+1)+(from+1))-2}}</td>
-                                <td v-text="entry.unit_name"></td>
-                                <td v-text="entry.id"></td>
-                                <td class="" v-text="entry.course_id"></td>
-                                <td class="" v-text="entry.subject"></td>
-                                <td class="" v-text=" d(entry.created_at)"></td>
+                                <td v-text="entry.unit_name" @click="edit(entry.id)"></td>
+                                <td v-text="entry.id" @click="edit(entry.id)"></td>
+                                <td class="" v-text="entry.course_id" @click="edit(entry.id)"></td>
+                                <td class="" v-text="entry.subject" @click="edit(entry.id)"></td>
+                                <td class="" v-text=" d(entry.created_at)" @click="edit(entry.id)"></td>
                                 <td>
-                                    <i class="bi bi-trash"></i>
+                                    <i class="bi bi-trash" style="font-size: 20px" @click="deleteUnit(entry)"></i>
                                 </td>
-                                <td class="" v-text="entry.enabled == 0 ? 'No' : 'Yes'"></td>
+                                <td>
+                                    <switch-button v-model="entry.active" @change="toggleStatus(entry)"></switch-button>
+                                </td>
                             </tr>
                             </tbody>
                         </table>
@@ -237,6 +263,9 @@
             let filter = {
                 keyword: $q.keyword || '',
                 created: $q.created || '',
+                unit_name:$q.unit_name || '',
+                subject: $q.subject || '',
+                course_id: $q.course_id || ''
             };
             for (var key in filter) {
                 if (filter[key] != '') {
@@ -245,6 +274,9 @@
             }
 
             return {
+                deleteUni:'',
+                count:'',
+                courses:[],
                 permissions,
                 allSelected: false,
                 filter: filter,
@@ -260,6 +292,9 @@
                 entries: [],
                 filter: {
                     keyword: $q.keyword || '',
+                    unit_name:$q.unit_name || '',
+                    subject :$q.subject || '',
+                    course_id: $q.course_id || '',
                     created: $q.created || created,
                 },
                 limit: 25,
@@ -276,6 +311,19 @@
             $router.on('/', this.load).init();
         },
         methods: {
+            deleteUnit(entry)
+            {
+                $('#delete').modal('show');
+                this.deleteUni=entry
+            },
+            advanceSearch()
+            {
+                this.isShowFilter=!this.isShowFilter;
+                for (var key in this.filter) {
+                    this.filter[key] = '';
+                }
+                $router.setQuery({});
+            },
             edit: function (id){
                 if(this.permissions['056'])
                 {
@@ -288,40 +336,34 @@
                 const res  = await $get('/xadmin/units/data', query);
                 this.paginate = res.paginate;
                 this.entries = res.data;
+                this.courses=res.courses;
+                this.count=res.count;
                 this.from = (this.paginate.currentPage-1)*(this.limit) + 1;
                 this.to = (this.paginate.currentPage-1)*(this.limit) + this.entries.length;
             },
             async remove(entry) {
-                if (!confirm('Xóa bản ghi: ' + entry.id)) {
-                    return;
-                }
-
                 const res = await $post('/xadmin/units/remove', {id: entry.id});
 
                 if (res.code) {
                     toastr.error(res.message);
                 } else {
                     toastr.success(res.message);
+                    $('#delete').modal('hide');
                 }
 
                 $router.updateQuery({page: this.paginate.currentPage, _: Date.now()});
             },
             filterClear() {
-                for( var key in app.filter) {
-                    app.filter[key] = '';
-                }
 
+                for (var key in this.filter) {
+                    this.filter[key] = '';
+                }
                 $router.setQuery({});
             },
-            doFilter(field, value, event) {
-                if (event) {
-                    event.preventDefault();
-                }
-
-                const params = {page: 1};
-                params[field] = value;
-                $router.setQuery(params)
+            doFilter() {
+                $router.setQuery(this.filter)
             },
+
             changeLimit() {
                 let params = $router.getQuery();
                 params['page']=1;
@@ -332,7 +374,7 @@
             async toggleStatus(entry) {
                 const res = await $post('/xadmin/units/toggleStatus', {
                     id: entry.id,
-                    status: entry.status
+                    active: entry.active
                 });
 
                 if (res.code === 200) {
@@ -350,5 +392,15 @@
 </script>
 
 <style scoped>
+    select:required:invalid {
+        color: #adadad;
+    }
 
+    option[value=""][disabled] {
+        display: none;
+    }
+
+    option {
+        color: black;
+    }
 </style>
