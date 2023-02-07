@@ -899,14 +899,14 @@ class UsersController extends AdminBaseController
 
 //            'password' => '|max:191|confirmed',
         ];
-        if(@$data['class'])
-        {
-            $rules['class']=['max:6',function ($attribute, $value, $fail) {
-                if (preg_match('/[\'\/~`\!@#\$%\^&\*\(\)_\-\+=\{\}\[\]\|;:"\<\>,\.\?\\\]/', $value)) {
-                    return $fail(__(' The :attribute no special characters'));
-                }
-            }];
-        }
+//        if(@$data['class'])
+//        {
+//            $rules['class']=['max:6',function ($attribute, $value, $fail) {
+//                if (preg_match('/[\'\/~`\!@#\$%\^&\*\(\)_\-\+=\{\}\[\]\|;:"\<\>,\.\?\\\]/', $value)) {
+//                    return $fail(__(' The :attribute no special characters'));
+//                }
+//            }];
+//        }
             if(@$data['phone'])
             {
                 $rules['phone']=['regex:/^[0-9]{10}$/'];
