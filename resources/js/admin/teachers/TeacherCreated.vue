@@ -44,7 +44,7 @@
                                 </div>
                                 <div class="row">
                                     <div v-if="entry.id==null" class="form-group  col-sm-4">
-                                        <label>Password </label>
+                                        <label>Password <span class="text-danger">*</span></label>
                                         <input v-if="auto_gen==true" disabled :type="showPass ? 'text' : 'password'" class="form-control"
                                            placeholder="Enter the password"  ref="password" v-model="entry.password">
                                         <input v-if="auto_gen==false"  :type="showPass ? 'text' : 'password'" class="form-control"
@@ -54,7 +54,7 @@
                                     </div>
 
                                     <div v-if="entry.id==null" class="form-group  col-sm-4">
-                                        <label>Confirm your password</label>
+                                        <label>Confirm your password <span class="text-danger">*</span></label>
                                         <input v-if="auto_gen==true" disabled class="form-control" :type="showConfirm ? 'text' : 'password'"
                                             placeholder="Re-enter to confirm the password"   v-model="entry.password_confirmation">
                                         <input v-if="auto_gen==false"  class="form-control" :type="showConfirm ? 'text' : 'password'"

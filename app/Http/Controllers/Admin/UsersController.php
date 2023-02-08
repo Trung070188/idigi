@@ -932,6 +932,10 @@ class UsersController extends AdminBaseController
             {
                 $rules['password']=['required'];
             }
+            if($data_role['auto_gen']==true)
+            {
+                $rules['email']=['required','email','unique:users,email'];
+            }
             if(@$data['password'])
             {
                 $rules['password_confirmation']=['required'];
@@ -941,7 +945,7 @@ class UsersController extends AdminBaseController
                     return $fail(__(' The :attribute no special characters'));
                 }
             },];
-            $rules['email'] = 'email|unique:users,email';
+//            $rules['email'] = 'email|unique:users,email';
 
         }
         $user = Auth::user();
