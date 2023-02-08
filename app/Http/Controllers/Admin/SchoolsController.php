@@ -809,19 +809,27 @@ class SchoolsController extends AdminBaseController
 
         }
         else{
-
             $query = School::query()->with(['users'])->orderBy('id', 'ASC');
-            if($req->role_name)
-            {
-                $nameAdmins=User::query()->where('full_name',$req->role_name)->first();
-                $schoolAdmins=explode(',',@$nameAdmins->school_id);
-                $schoolIdA=[];
-             foreach ($schoolAdmins as $schoolId)
-             {
-                 $schoolIdA[]=(int)$schoolId;
-             }
+            if($req->role_name) {
+                $admins = [];
+                $nameAdmins = User::query()->with(['roles'])->where('full_name', 'LIKE', '%' . $req->role_name . '%')->get();
+                foreach ($nameAdmins as $nameAdmin) {
+                    foreach ($nameAdmin->roles as $role) {
+                        if ($role->role_name == 'School Admin') {
+                            $admins[] = $nameAdmin;
+                        }
+                    }
+                }
+                $explodeIds = [];
+                foreach ($admins as $admin) {
+                    $explodeIds[] = explode(',', @$admin->school_id);
+                }
 
-                $query = School::query()->with(['users'])->whereIn('id',$schoolIdA)->orderBy('id', 'ASC');
+                foreach ($explodeIds as $explodeId)
+                {
+                    $query = School::query()->with(['users'])->whereIn('id',$explodeId)->orderBy('id', 'ASC');
+
+                }
             }
         }
         if ($req->keyword) {
