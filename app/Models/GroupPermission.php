@@ -35,6 +35,6 @@ class GroupPermission extends BaseModel
     }
 
     public function childs(){
-        return $this->hasMany(GroupPermission::class, 'parent_id');
+        return $this->hasMany(GroupPermission::class, 'parent_id')->orderBy('order','ASC');
     }
 }
