@@ -1577,11 +1577,13 @@ class UsersController extends AdminBaseController
                 foreach ($validations as $key=>$validation) {
                         if($check==1)
                         {
+                            $validateTemp=$validation['error'];
                             $validation['error']=[
                                 'max_length'=>[
                                     'Allowed to register up to '. $school->number_of_users .' users'
                                 ]
                             ];
+                            $validation['error']=array_merge($validateTemp,$validation['error']);
                         }
                     if (@$validation['error'] || $error!=[] && $error==[$validation['username']]) {
                         {
