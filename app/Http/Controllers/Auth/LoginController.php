@@ -105,7 +105,7 @@ class LoginController extends Controller
             }
             if($user->roles){
                 foreach ($user->roles as $role){
-                    if($role->role_name == "Teacher" || $role->role_name == "School Admin"){
+                    if($role->role_name == "Teacher"){
 
                             $school = School::where('id', $user->school_id)->first();
                             if($school!=null)
@@ -177,7 +177,7 @@ class LoginController extends Controller
         $authenticationLog= new AuthenticationLog();
         $authenticationLog->user_id=$user->id;
         $authenticationLog->user_agent=$request->userAgent();
-        $authenticationLog->ip_address=$request->getClientIp();
+        $authenticationLog->ip_address=$this->getClientIp();
         $authenticationLog->login_at=Carbon::now();
         $authenticationLog->save();
         $this->clearLoginAttempts($request);
@@ -191,6 +191,34 @@ class LoginController extends Controller
             ? new JsonResponse([], 204)
             : redirect()->intended($this->redirectPath());
     }
+    private function getClientIp()
+    {
+        static $ip;
+
+        if (isset ($ip)) {
+            return $ip;
+        }
+
+        if (!empty ($_SERVER['HTTP_CLIENT_IP']) ) {
+            $ip = $_SERVER['HTTP_CLIENT_IP'];
+        } else if (!empty ($_SERVER['HTTP_X_FORWARDED_FOR'])) {
+            $ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
+        } else if (!empty ($_SERVER['HTTP_X_FORWARDED'])) {
+            $ip = $_SERVER['HTTP_X_FORWARDED'];
+        } else if ( !empty ($_SERVER['HTTP_FORWARDED_FOR'])) {
+            $ip = $_SERVER['HTTP_FORWARDED_FOR'];
+        } else if ( !empty ($_SERVER['HTTP_FORWARDED']) ) {
+            $ip = $_SERVER['HTTP_FORWARDED'];
+        } else if( !empty ($_SERVER['REMOTE_ADDR'])) {
+            $ip = $_SERVER['REMOTE_ADDR'];
+        } else {
+            $ip = 'UNKNOWN';
+        }
+
+
+        return $ip;
+    }
+
 
     public function loginSSO(Request $request)
     {
