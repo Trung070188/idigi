@@ -266,7 +266,6 @@ class UserDevicesController extends AdminBaseController
         ];
 
         $v = Validator::make($data, $rules);
-
         if ($v->fails()) {
             return [
                 'code' => 2,
