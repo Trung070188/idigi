@@ -11,8 +11,8 @@
                     <div class="close-popup" data-dismiss="modal"></div>
                     <h3 class="popup-title success" style="margin-top: 20px">Delete Device</h3>
                     <div class="content" style="text-align: center;margin: 0px">
-                        <p>Yêu cầu xóa thiết bị khỏi danh sách cần có phê duyệt của Admin.</p>
-                        <p > Bạn có muốn gửi yêu cầu tới Admin không? </p>
+                        <p>Requesting the removal of a device requires admin approval.</p>
+                        <p > Do you want to send a request to admin?</p>
                     </div>
                     <div  class="form-group d-flex justify-content-between" >
                         <button  class="btn btn-light ito-btn-add"  data-dismiss="modal" @click="Cancel()" style="margin-left: 113px">Cancel</button>
@@ -158,7 +158,7 @@
                     <div class="close-popup" data-dismiss="modal"></div>
                     <h3 class="popup-title success" style="margin-left:25px">Can not add more devices</h3>
                     <div class="content">
-                        <p>Bạn chỉ được truy cập vào tối đa {{devicesPerUser}} thiết bị, hãy xóa bớt thiết bị cũ nếu muốn truy cập vào thiết bị mới.</p>
+                        <p> You are allowed to access up to {{devicesPerUser}} devices. Remove your old device if you want to access a new one.</p>
                     </div>
                 </div>
             </div>
