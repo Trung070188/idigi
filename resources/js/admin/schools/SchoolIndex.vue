@@ -488,5 +488,8 @@
         padding: 0.75rem;
         vertical-align: top;
     }
+    tr:hover {
+        background-color: #f2f2f2;
+    }
 
 </style>
