@@ -191,7 +191,7 @@ class LessonsController extends AdminBaseController
             $entry->fill($data);
             Lesson::query()->where('unit_id',$data['unit_id'])->update(['unit_id'=>NULL,'unit_name'=>NUll]);
             $unit=Unit::query()->where('id',$data['unit_id'])->first();
-            $entry->unit_name=$unit['unit_name'];
+            $entry->unit_name=@$unit['unit_name'];
             $entry->save();
             foreach ($req->inventory as $inven)
             {

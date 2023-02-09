@@ -154,9 +154,9 @@ class InventoriesController extends AdminBaseController
             //'file_image_new' => 'required',
             'name' => 'max:255|required',
             'file_asset_new' => 'required',
-            'subject' => 'max:255|required',
+//            'subject' => 'max:255|required',
             'type' => 'max:255|required',
-            'grade' => 'max:255|required',
+//            'grade' => 'max:255|required',
             'link_webview' => 'max:255',
             'tags' => 'max:1000',
         ];
