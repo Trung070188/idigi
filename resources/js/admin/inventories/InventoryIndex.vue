@@ -426,7 +426,7 @@
                                 <td v-text="entry.name"></td>
                                 <td class="" v-text="entry.grade"></td>
                                 <td class="" v-text="entry.type"></td>
-                                <td class="" v-text="entry.enabled == 0 ? '<span class=No' : 'Yes'"></td>
+                                <td class="" v-text="entry.enabled == 0 ? 'No' : 'Yes'"></td>
                                 <td
                                     class=""
                                     v-text="d(entry.created_at)"

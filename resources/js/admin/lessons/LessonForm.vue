@@ -49,7 +49,7 @@
                                                 <option value="Summary">Summary</option>
                                             </select>
                                         </div>
-                                        <Treeselect :options="modules" :multiple="true" v-model="listResource" @input="resource()"/>
+                                        <Treeselect :options="modules" :multiple="true" v-model="listResource" @input="resource()" @search-change="handleSearchChange"/>
                                         <draggable
                                             :list="list"
                                             :animation="200"
@@ -148,6 +148,7 @@
                     subject:''
                 },
                 isLoading: false,
+                searchLimit:50,
                 errors: {}
             }
         },
@@ -155,6 +156,15 @@
             $router.on("/", this.load).init();
         },
         methods: {
+          async handleSearchChange(value) {
+                if (value) {
+                    let query = $router.getQuery();
+                    const res = await $get("/xadmin/lessons/dataCreateLesson",query);
+                    this.modules=res.module;
+                    const filteredOptions = this.modules.filter(option => option.label.includes(value)).slice(0,this.searchLimit);
+                    this.modules = filteredOptions
+                }
+        },
             removeResource(index)
             {
               this.list=this.list.filter((item,key)=>key!==index);
@@ -178,13 +188,7 @@
                 this.$loading(true);
                 const res = await $get("/xadmin/lessons/dataCreateLesson", query);
                 this.$loading(false);
-                this.modules = res.module.map(rec => {
-                    return {
-                        'id':rec.id,
-                        'label':rec.name,
-                        'type':rec.type
-                    }
-                });
+                // this.modules = res.module;
                 this.modules=this.modules.concat(this.list);
                 this.units=res.units;
 

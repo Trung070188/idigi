@@ -107,7 +107,7 @@
                     <div class="close-popup" data-dismiss="modal"></div>
                     <h3 style="margin:20px auto;font-weight: 500;" class="popup-title success">Edit device name</h3>
                     <div class="content">
-                        <label>Device Name</label>
+                        <label>Device Name<span class="text-danger">*</span></label>
                         <input type="text" class="form-control " placeholder="Device name" aria-label=""
                                style="margin-bottom: 10px" aria-describedby="basic-addon1" v-model="Edit_name.device_name">
                         <error-label for="f_category_id" :errors="errors.device_name"></error-label>
@@ -131,7 +131,7 @@
                     <div class="close-popup" data-dismiss="modal"></div>
                     <h3 style="margin:20px auto;font-weight: 500;" class="popup-title success">  Get confirmation code</h3>
                     <div class="content">
-                        <label>Device Name</label>
+                        <label>Device Name<span class="text-danger">*</span></label>
                         <input type="text" class="form-control " placeholder="Device name" aria-label=""
                                style="margin-bottom: 10px" aria-describedby="basic-addon1" v-model="editDevice"
                                disabled>

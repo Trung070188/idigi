@@ -360,12 +360,21 @@ class LessonsController extends AdminBaseController
     {
 
 
-        $modules=Inventory::query()->orderBy('id','desc');
+//        $modules=Inventory::query()->orderBy('id','desc');
+        $modules=Inventory::query()->select([
+            'inventories.id as id',
+            'inventories.name as label',
+            'inventories.type as type'
+        ])->orderBy('id','desc');
         $units=Unit::query()->orderBy('id','desc')->get();
 
         if($req->type)
         {
-            $modules->where('type',$req->type);
+            $modules->where('type',$req->type)->select([
+                'inventories.id as id',
+                'inventories.name as label',
+                'inventories.type as type'
+            ])->orderBy('id','desc');
         }
         return [
             'units'=>$units,
@@ -388,10 +397,16 @@ class LessonsController extends AdminBaseController
             'inventories.name as name',
             'inventories.type as type'
        ])->get();
-
-        $modules=Inventory::query()->orderBy('id','desc');
-//        $listResource = json_decode(($req->listResource), true);
-//        dd($listResource);
+//    $modules=DB::table('inventories')->select([
+//            'inventories.id as id',
+//           'inventories.name as label',
+//           'inventories.type as type'
+//    ])->orderBy('id','desc');
+        $modules=Inventory::query()->select([
+           'inventories.id as id',
+           'inventories.name as label',
+           'inventories.type as type'
+        ])->orderBy('id','desc');
         $module=[];
         foreach ($lessons as $lesson)
         {
@@ -400,7 +415,11 @@ class LessonsController extends AdminBaseController
 
         if($req->type)
         {
-            $modules->where('type',$req->type)->orWhereIn('id',$module);
+            $modules->where('type',$req->type)->orWhereIn('id',$module)->select([
+                'inventories.id as id',
+                'inventories.name as label',
+                'inventories.type as type'
+            ])->orderBy('id','desc');
         }
         return [
             'units'=>$units,

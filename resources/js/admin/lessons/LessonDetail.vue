@@ -49,7 +49,7 @@
                                                 <option value="Summary">Summary</option>
                                             </select>
                                         </div>
-                                        <Treeselect :options="modules" :multiple="true" v-model="listResource" @input="resource()"/>
+                                        <Treeselect :options="modules" :multiple="true" v-model="listResource" @input="resource()" @search-change="handleSearchChange"/>
 <!--                                        <select class="form-control form-select" style="margin-bottom: 15px" v-model="listResource" @change="resource()" required>-->
 <!--                                            <option value="" disabled selected>Search module</option>-->
 <!--                                            <option v-for="module in modules" :value="module">{{module.name}}</option>-->
@@ -147,6 +147,7 @@
                         title:'Create new lesson',
                     },
                 ],
+                searchLimit:50,
                 entry: $json.entry || {},
                 isLoading: false,
                 errors: {}
@@ -156,6 +157,15 @@
             $router.on("/", this.load).init();
         },
         methods: {
+            async handleSearchChange(value) {
+                if (value) {
+                    let query = $router.getQuery();
+                    const res = await $get("/xadmin/lessons/dataCreateLesson",query);
+                    this.modules=res.module;
+                    const filteredOptions = this.modules.filter(option => option.label.includes(value)).slice(0,this.searchLimit);
+                    this.modules = filteredOptions
+                }
+        },
             removeResource(index)
             {
                 this.list=this.list.filter((item,key)=>key!==index);
@@ -187,13 +197,7 @@
                 const res = await $get("/xadmin/lessons/dataEditLesson?id="+this.entry.id,query);
                 this.$loading(false);
                 this.listResource=res.lessons.map(rec => rec.inventory_id);
-                this.modules = res.module.map(res=>{
-                    return {
-                        'id':res.id,
-                        'label':res.name,
-                        'type':res.type
-                    }
-                });
+                // this.modules = res.module;
                 this.units=res.units;
             },
             backIndex(){
