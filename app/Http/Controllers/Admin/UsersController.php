@@ -849,11 +849,23 @@ class UsersController extends AdminBaseController
             if (@$data['password'] == null) {
                 $entry->password = Str::random(10);
                 $realPassword = $entry->password;
-               $data['password'] = Hash::make($entry->password);
+//              $entry->password = Hash::make($entry->password);
             }
             if (@$data['password'] != null) {
                 $realPassword = $data['password'];
                 $data['password'] = Hash::make($data['password']);
+            }
+            if ($data['email']) {
+                $content = [
+                    'full_name' => $entry->full_name,
+                    'password' => $realPassword,
+                    'username' => $entry->username,
+                ];
+                dispatch(new SendMailPassword($data['email'], 'New account information', $content));
+            }
+            if(@$data['password']==null)
+            {
+                $data['password']=Hash::make($entry->password);
             }
             $entry->fill($data);
             $entry->save();
@@ -862,14 +874,7 @@ class UsersController extends AdminBaseController
                 $userSchools = implode(',', $data_role['userSchool']);
                 User::where('id',$entry->id)->update(['school_id'=>$userSchools]);
             }
-            if ($entry->email) {
-                $content = [
-                    'full_name' => $entry->full_name,
-                    'password' => $realPassword,
-                    'username' => $entry->username,
-                ];
-                dispatch(new SendMailPassword($entry->email, 'New account information', $content));
-            }
+
             if ($data_role['name_role']) {
                 UserRole::updateOrCreate([
                     'user_id' => @$entry->id,
