@@ -833,13 +833,21 @@ class UsersController extends AdminBaseController
             if (@$data['password'] == null) {
                 $entry->password = Str::random(10);
                 $realPassword = $entry->password;
-                $entry->password = Hash::make($entry->password);
-
+//              $entry->password = Hash::make($entry->password);
             }
             if (@$data['password'] != null) {
                 $realPassword = $data['password'];
-                $data['password'] = Hash::make($data['password']);
+//                $data['password'] = Hash::make($data['password']);
             }
+            if ($data['email']) {
+                $content = [
+                    'full_name' =>$data['full_name'],
+                    'password' => $realPassword,
+                    'username' => $data['username'],
+                ];
+                dispatch(new SendMailPassword($data['email'], 'New account information', $content));
+            }
+            $data['password']=Hash::make($realPassword);
             $entry->fill($data);
             $entry->save();
             if(@$data_role['userSchool'])
@@ -847,14 +855,7 @@ class UsersController extends AdminBaseController
                 $userSchools = implode(',', $data_role['userSchool']);
                 User::where('id',$entry->id)->update(['school_id'=>$userSchools]);
             }
-            if ($entry->email) {
-                $content = [
-                    'full_name' => $entry->full_name,
-                    'password' => $realPassword,
-                    'username' => $entry->username,
-                ];
-                dispatch(new SendMailPassword($entry->email, 'New account information', $content));
-            }
+
             if ($data_role['name_role']) {
                 UserRole::updateOrCreate([
                     'user_id' => @$entry->id,
@@ -1081,23 +1082,25 @@ class UsersController extends AdminBaseController
             if (@$data['password'] == null) {
                 $entry->password = Str::random(10);
                 $realPassword = $entry->password;
-                $entry->password = Hash::make($entry->password);
+//                $entry->password = Hash::make($entry->password);
 
             }
             if (@$data['password'] != null) {
                 $realPassword = $data['password'];
-                $data['password'] = Hash::make($data['password']);
+//                $data['password'] = Hash::make($data['password']);
             }
-            $entry->fill($data);
-            $entry->save();
-            if ($entry->email) {
+            if ($data['email']) {
                 $content = [
-                    'full_name' => $entry->full_name,
+                    'full_name' =>$data['full_name'],
                     'password' => $realPassword,
-                    'username' => $entry->username,
+                    'username' => $data['username'],
                 ];
                 dispatch(new SendMailPassword($entry->email, 'New account information', $content));
             }
+            $data['password']=Hash::make($realPassword);
+            $entry->fill($data);
+            $entry->save();
+
             UserRole::create(['user_id' => $entry->id, 'role_id' => 5]);
 
             $this->createUserCourseUnit($entry, $data_role);
