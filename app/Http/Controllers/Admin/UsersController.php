@@ -857,9 +857,9 @@ class UsersController extends AdminBaseController
             }
             if ($data['email']) {
                 $content = [
-                    'full_name' => $entry->full_name,
+                    'full_name' =>$data['full_name'],
                     'password' => $realPassword,
-                    'username' => $entry->username,
+                    'username' => $data['username'],
                 ];
                 dispatch(new SendMailPassword($data['email'], 'New account information', $content));
             }
