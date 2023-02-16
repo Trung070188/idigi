@@ -850,7 +850,7 @@ class UsersController extends AdminBaseController
                 $entry->password = Str::random(10);
                 $realPassword = $entry->password;
                 $entry->password = Hash::make($entry->password);
-
+                $data['password']=$entry->password;
             }
             if (@$data['password'] != null) {
                 $realPassword = $data['password'];
