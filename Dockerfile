@@ -35,6 +35,7 @@ COPY ./conf/queue.sh /etc/queue.sh
 COPY ./conf/php.ini /usr/local/etc/php/php.ini
 RUN chmod +x /etc/entrypoint.sh
 RUN chmod +x /etc/schedule.sh
+RUN chmod +x /etc/queue.sh
 
 #USER www
 WORKDIR /var/www
