@@ -258,7 +258,7 @@
                 }
             },
             async save() {
-                this.isLoading = true;
+                this.$loading(true);
                 const res = await $post('/xadmin/users/saveTeacher', {entry: this.entry, roles: this.roles,
                     auto_gen:this.auto_gen,
                     school:this.school,
@@ -266,7 +266,7 @@
                     courseTeachers:this.courseTeachers,
                     allocationContent:this.allocationContent
                 }, false);
-                this.isLoading = false;
+                this.$loading(false);
                 if (res.errors) {
                     this.errors = res.errors;
                     return;

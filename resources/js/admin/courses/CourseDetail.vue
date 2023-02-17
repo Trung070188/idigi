@@ -1,7 +1,7 @@
 <template>
     <div class="container-fluid">
         <ActionBar type="index"
-                   :breadcrumbs="breadcrumbs"  title = "Create new course"/>
+                   :breadcrumbs="breadcrumbs"  title = "Course detail"/>
 
         <div class="row">
             <div class="col-lg-12">
@@ -127,7 +127,7 @@
                         url: '/xadmin/courses/index',
                     },
                     {
-                        title:'Create new course',
+                        title:'Course detail',
                     },
                 ],
                 entry: $json.entry || {},

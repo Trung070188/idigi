@@ -31,7 +31,7 @@
                                         <error-label for="f_category_id" :errors="errors.description"></error-label>
                                     </div>
                                     <div class="form-group col-sm-3">
-                                        <label>Course <span class="text-danger">*</span></label>
+                                        <label>Course</label>
                                         <select class="form-select form-control" required v-model="entry.course_id">
                                             <option value="" disabled selected>Choose the course</option>
                                             <option v-for="course in courses" :value="course.id">{{course.course_name}}</option>

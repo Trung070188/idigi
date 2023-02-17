@@ -120,7 +120,7 @@
                         url: '/xadmin/units/index',
                     },
                     {
-                        title:'Create new unit',
+                        title:'Unit detail',
                     },
                 ],
                 entry: $json.entry || {},

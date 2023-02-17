@@ -13,7 +13,7 @@
                                 <div class="row">
                                     <div class="form-group col-sm-9">
                                         <label>Lesson name <span class="text-danger">*</span></label>
-                                        <input class="form-control nospace" placeholder="Enter the unit name" v-model="entry.name" >
+                                        <input class="form-control nospace" placeholder="Enter the lesson name" v-model="entry.name" >
                                         <error-label  for="f_category_id" :errors="errors.name"></error-label>
                                     </div>
                                     <div class="form-group col-sm-3">
@@ -28,7 +28,7 @@
                                     </div>
                                     <div class="form-group col-sm-9">
                                         <label>Description </label>
-                                        <textarea class="form-control"  placeholder="Type the description here (200 characters)" rows="5" v-model="entry.description"></textarea>
+                                        <textarea class="form-control"  placeholder="Your text here..." rows="5" v-model="entry.description"></textarea>
                                         <error-label for="f_category_id" :errors="errors.description"></error-label>
                                     </div>
                                     <div class="form-group col-sm-3">
@@ -39,7 +39,7 @@
                                         </select>
                                     </div>
                                     <div class="form-group col-sm-12"  style="border: 1px solid #b5b5c3;border-radius: 25px">
-                                        <label style="margin:15px 0px 10px ">List of module</label>
+                                        <label style="margin:15px 0px 10px ">List of modules</label>
                                         <div style="margin-top: 10px;float: right;display: inline-block;margin-right: -13px" class="form-group col-lg-3">
                                             <select class="form-control form-select" required v-model="filter.type" @change="doFilter()">
                                                 <option value="" disabled selected>Choose the type</option>
@@ -49,7 +49,7 @@
                                                 <option value="Summary">Summary</option>
                                             </select>
                                         </div>
-                                        <Treeselect :options="modules" :multiple="true" v-model="listResource" @input="resource()" @search-change="handleSearchChange"/>
+                                        <Treeselect :options="modules"  placeholder="Search module" :multiple="true" v-model="listResource" @input="resource()" @search-change="handleSearchChange"/>
                                         <draggable
                                             :list="list"
                                             :animation="200"

@@ -115,7 +115,7 @@
                             </div>
                              <div class="row">
                                     <div class="form-group col-lg-8">
-                                        <label>Resource allocation <span class="text-danger">*</span></label>
+                                        <label>Resource allocation </label>
                                        <select required class="form-control form-select" v-model="allocationContentSchool" @change="changeAllocationContent()">
                                            <option value="" disabled selected>Choose resource allocation</option>
                                            <option v-for="allocationConten in allocationContens" :value="allocationConten.id">{{allocationConten.title}}</option>

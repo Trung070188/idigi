@@ -164,7 +164,7 @@
                             <div class="col-lg-12" v-if="roleName=='School Admin' && entry.active_allocation==1 || roleName=='Super Administrator'" >
                                 <div class="row" >
                                     <div class="form-group col-lg-8">
-                                        <label>Resource allocation<span class="text-danger">*</span></label>
+                                        <label>Resource allocation</label>
 
                                         <select class="form-control form-select " required v-model="allocationContentSchool" :disabled="permissionFields['school_content']==false"
                                                 @change="changeAllocationContent() ">

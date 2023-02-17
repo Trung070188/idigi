@@ -324,10 +324,10 @@
                                             <div class="d-flex justify-content-end mb-4" >
                                                 <a v-if="dataTableLesson.checkRemoveLesson==1 && dataZipLesson.status=='waitting' && permissionFields['plan_remove_lesson']==true" class="btn btn-danger btn-sm mr-3" @click="deleteAllLesson" >Remove lesson</a>
                                                 <a v-if="dataTableLesson.checkRemoveLesson==1 && dataZipLesson.status=='waitting' && permissionFields['plan_remove_lesson']==false" class="btn btn-danger btn-sm mr-3 isDisabled" @click="deleteAllLesson" >Remove lesson</a>
-                                             <a  v-if="dataZipLesson.status=='inprogress'"  class="mt-2 mr-5" style="color: rgb(230 180 0)"> Lesson list is packaging...</a>
+                                             <a  v-if="dataZipLesson.status=='running'"  class="mt-2 mr-5" style="color: rgb(230 180 0)"> Lesson list is packaging...</a>
                                                 <a  v-if="  dataZipLesson.status=='done' && permissionFields['plan_download_package']==true" :href="dataZipLesson.url" class="btn btn-primary btn-sm mr-3 "> Download package</a>
                                                 <a  v-if="  dataZipLesson.status=='done' && permissionFields['plan_download_package']==false" :href="dataZipLesson.url" class="btn btn-primary btn-sm mr-3 isDisabled"> Download package</a>
-                                                <a v-if="dataZipLesson.status=='inprogress'" class="btn btn-light btn-active-light-primary btn-sm isDisabled" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end" >Actions
+                                                <a v-if="dataZipLesson.status=='running'" class="btn btn-light btn-active-light-primary btn-sm isDisabled" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end" >Actions
                                                     <span class="svg-icon svg-icon-5 m-0">
 															<svg xmlns="http://www.w3.org/2000/svg" width="24"
                                                                  height="24" viewBox="0 0 24 24" fill="none">

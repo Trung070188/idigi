@@ -144,7 +144,7 @@
                         url: '/xadmin/lessons/index',
                     },
                     {
-                        title:'Create new lesson',
+                        title:'Lesson detail',
                     },
                 ],
                 searchLimit:50,

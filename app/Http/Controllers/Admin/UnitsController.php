@@ -112,7 +112,8 @@ class UnitsController extends AdminBaseController
 
         $rules = [
     'unit_name' => 'required|max:191',
-    'subject'=>'required'
+    'subject'=>'required',
+    'description'=>'max:200'
 ];
         $message =[
           'unit_name.required'=>'The unit name field is required'
