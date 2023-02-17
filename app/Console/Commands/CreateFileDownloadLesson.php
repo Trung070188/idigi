@@ -183,7 +183,8 @@ class CreateFileDownloadLesson extends Command
                 'download_lesson_log_id' => $lessonLog->id,
                 'path' => $zip_file,
                 'is_main' => 0,
-                'is_deleted_file' => 0
+                'is_deleted_file' => 0,
+                'source' => 'plan',
             ];
 
             UpdateDownloadLessonFile::dispatch($dataLessonFile);
@@ -199,7 +200,8 @@ class CreateFileDownloadLesson extends Command
             'download_lesson_log_id' => $lessonLog->id,
             'path' => $zipFileAll,
             'is_main' => 1,
-            'is_deleted_file' => 0
+            'is_deleted_file' => 0,
+            'source' => 'plan',
         ];
         UpdateDownloadLessonFile::dispatch($dataLessonFile);
 

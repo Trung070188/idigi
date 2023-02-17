@@ -13,6 +13,7 @@ class DownloadLessonFile extends BaseModel
     protected $table = 'download_lesson_files';
     protected $fillable = [
         'download_lesson_log_id',
+        'source',
         'path',
         'is_main',
         'is_deleted_file'
