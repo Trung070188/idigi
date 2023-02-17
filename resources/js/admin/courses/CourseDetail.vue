@@ -11,10 +11,15 @@
                             <div class=" col-sm-12">
                                 <input v-model="entry.id" type="hidden" name="id" value="">
                                 <div class="row">
-                                    <div class="form-group col-sm-9">
+                                    <div class="form-group col-sm-6">
                                         <label>Course name <span class="text-danger">*</span></label>
                                         <input class="form-control nospace" placeholder="Enter the course name" v-model="entry.course_name" >
                                         <error-label  for="f_category_id" :errors="errors.course_name"></error-label>
+                                    </div>
+                                    <div class="form-group col-sm-3">
+                                        <label>Course ID<span class="text-danger">*</span></label>
+                                        <input class="form-control" v-model="entry.id" disabled>
+                                        <error-label  for="f_category_id" :errors="errors.subject"></error-label>
                                     </div>
                                     <div class="form-group col-sm-3">
                                         <label>Subject<span class="text-danger">*</span></label>
@@ -46,7 +51,7 @@
                                     </div>
                                     <div class="form-group col-sm-12"  style="border: 1px solid #b5b5c3;border-radius: 25px">
                                         <label style="margin:15px 0px 10px ">List of unit</label>
-                                        <Treeselect :options="units" :multiple="true" v-model="listUnit" @input="unit()"/>
+                                        <Treeselect :options="units" :multiple="true" v-model="listUnit" @input="unit()"  placeholder="Search unit"/>
                                         <draggable
                                             :list="list"
                                             :animation="200"

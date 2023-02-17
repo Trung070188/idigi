@@ -112,9 +112,11 @@ class CoursesController extends AdminBaseController
         $data = $req->get('entry');
 
         $rules = [
-            'course_name' => 'required',
+            'course_name' => ['required','max:200','regex:/^[\p{L}\s\/0-9.,?\(\)_-]+$/u'],
             'subject' => 'required',
-            'grade'=>'required'
+            'grade'=>'required',
+            'description'=>'max:200'
+
 ];
 
         $v = Validator::make($data, $rules);

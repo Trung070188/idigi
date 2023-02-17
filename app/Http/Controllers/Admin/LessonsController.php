@@ -140,7 +140,7 @@ class LessonsController extends AdminBaseController
         $data = $req->get('entry');
 
         $rules = [
-            'name' => ['required','max:200','regex:/^[\p{L}\s\/0-9.,_-]+$/u'],
+            'name' => ['required','max:200','regex:/^[\p{L}\s\/0-9.,?\(\)_-]+$/u'],
             'subject' => 'required|max:200',
             'description'=>'max:200'
         ];

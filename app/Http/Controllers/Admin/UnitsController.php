@@ -111,7 +111,7 @@ class UnitsController extends AdminBaseController
         $data = $req->get('entry');
 
         $rules = [
-    'unit_name' => 'required|max:191',
+    'unit_name' => ['required','max:191','regex:/^[\p{L}\s\/0-9.,?\(\)_-]+$/u'],
     'subject'=>'required',
     'description'=>'max:200'
 ];

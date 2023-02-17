@@ -19,7 +19,7 @@
                                     <div class="form-group col-sm-3">
                                         <label>Subject<span class="text-danger">*</span></label>
                                         <select class="form-control form-select" v-model="entry.subject" required>
-                                            <option value="" disabled selected>Choose subject</option>
+                                            <option value="" disabled selected>Choose the subject</option>
                                             <option value="Math">Math</option>
                                             <option value="Science ">Science </option>
                                         </select>
@@ -28,13 +28,13 @@
                                     </div>
                                     <div class="form-group col-sm-9">
                                         <label>Description </label>
-                                        <textarea class="form-control"  placeholder="Type the description here (200 characters)" rows="5" v-model="entry.description"></textarea>
+                                        <textarea class="form-control"  placeholder="Your text here..." rows="5" v-model="entry.description"></textarea>
                                         <error-label for="f_category_id" :errors="errors.description"></error-label>
                                     </div>
                                     <div class="form-group col-sm-3">
                                         <label>Grade <span class="text-danger">*</span></label>
                                         <select class="form-select form-control" v-model="entry.grade" required>
-                                            <option value="" disabled selected>Choose grade</option>
+                                            <option value="" disabled selected>Choose the grade</option>
                                             <option value="1">1</option>
                                             <option value="2">2</option>
                                             <option value="3">3</option>
@@ -50,7 +50,7 @@
                                     </div>
                                     <div class="form-group col-sm-12"  style="border: 1px solid #b5b5c3;border-radius: 25px">
                                         <label style="margin:15px 0px 10px ">List of unit</label>
-                                        <Treeselect :options="units" :multiple="true" v-model="listUnit" @input="unit()"/>
+                                        <Treeselect :options="units" :multiple="true" v-model="listUnit" @input="unit()" placeholder="Search unit"/>
                                         <draggable
                                             :list="list"
                                             :animation="200"
