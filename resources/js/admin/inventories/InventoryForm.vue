@@ -16,7 +16,7 @@
 
                                 <div class="form-group">
                                     <label>Name <span class="text-danger">*</span></label>
-                                    <input  v-model="entry.name"  class="form-control" :disabled="permissionFields['resource_name']==false" placeholder="Enter the inventories name" >
+                                    <input  v-model="entry.name"  class="form-control" :disabled="permissionFields['resource_name']==false" placeholder="Enter the module name" >
                                     <error-label for="f_grade" :errors="errors.name"></error-label>
 
                                 </div>
@@ -50,7 +50,7 @@
                                 </div>
                                 <div class="form-group">
                                     <label>Description</label>
-                                    <textarea  v-model="entry.description" rows="5" class="form-control" :disabled="permissionFields['resource_description']==false" placeholder="Your text here"></textarea>
+                                    <textarea  v-model="entry.description" rows="5" class="form-control" :disabled="permissionFields['resource_description']==false" placeholder="Your text here..."></textarea>
                                     <error-label for="f_grade" :errors="errors.description"></error-label>
 
                                 </div>
@@ -90,11 +90,10 @@
 
 <!--                                </div>-->
                                 <div class="form-group mb-3" v-if="permissionFields['resource_file_asset_bundle']==false">
-                                    <label>File asset bundle</label>
-
+                                    <label>File asset bundle<span class="text-danger">*</span></label>
                                 </div>
                                 <div class="form-group mb-3" v-else>
-                                    <label>File asset bundle</label>
+                                    <label>File asset bundle<span class="text-danger">*</span></label>
                                     <file-manager-input v-model="entry.file_asset_new" ></file-manager-input>
                                     <error-label for="f_title" :errors="errors.file_asset_new"></error-label>
 
@@ -144,10 +143,10 @@
                         url: '/xadmin/inventories/index',
                     },
                     {
-                        title: $json.entry ? 'Resource detail' : 'Create new resource',
+                        title: $json.entry ? 'Module detail' : 'Create new module',
                     },
                 ],
-                title: $json.entry ?  'Resource detail' : 'Create new resource',
+                title: $json.entry ?  'Module detail' : 'Create new module',
                 entry: $json.entry || {
                     'type': ''
                 },

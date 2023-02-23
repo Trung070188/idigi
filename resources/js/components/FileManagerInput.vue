@@ -27,7 +27,7 @@
         <div class="fmi-dropdown" ref="dropdown">
             <input @change="fileChanged()" type="file" ref="uploader" style="display: none;width: 1px;height: 1px;"/>
             <button ref="button" @click="toggleTooltip()" class="btn btn-primary btn-sm" type="button">
-                Chọn file
+                Choose file
                 <i class="fa fa-caret-down"></i>
             </button>
             <div>

@@ -124,11 +124,13 @@
                                 data-kt-customer-table-toolbar="base"
                                 v-if="inventoryIds == ''"
                             >
-                                <button type="button" style="margin-left: 10px" @click="isShowFilter = !isShowFilter" class="btn btn-light" v-if="isShowFilter">
+                                <button type="button" style="margin-left: 10px" @click="isShowFilter = !isShowFilter"
+                                        class="btn btn-light" v-if="isShowFilter">
                                     <i style="margin-left: 5px" class="fas fa-times"></i>
                                     Close Advanced Search
                                 </button>
-                                <button type="button" style="margin-left: 10px" @click="isShowFilter = !isShowFilter" class="btn btn-light" v-if="!isShowFilter">
+                                <button type="button" style="margin-left: 10px" @click="isShowFilter = !isShowFilter"
+                                        class="btn btn-light" v-if="!isShowFilter">
                                     <i class="bi bi-funnel"></i>
                                     Advanced Search
                                 </button>
@@ -137,7 +139,7 @@
                                     v-if="permissions['007']"
                                 >
                                     <button class="btn btn-primary button-create" style="margin: 0 0 0 15px">
-                                        <i class="bi bi-plus-lg"></i>New Resource
+                                        <i class="bi bi-plus-lg"></i>Create new
                                     </button>
                                 </a>
                             </div>
@@ -579,7 +581,7 @@
                 }
             }
             return {
-                countInventory:'',
+                countInventory: '',
                 entry: '',
                 inventory: [],
                 inventoryIds: [],
@@ -639,7 +641,7 @@
                 }, 0);
                 this.paginate = res.paginate;
                 this.entries = res.data;
-                this.countInventory=res.countInventory;
+                this.countInventory = res.countInventory;
                 this.last_updated = res.last_updated;
                 this.from = (this.paginate.currentPage - 1) * this.limit + 1;
                 this.to =
