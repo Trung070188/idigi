@@ -54,7 +54,8 @@ class DeleteFileDownloadDaily extends Command
     {
 
         $logLessons = DownloadLessonFile::where('is_deleted_file', '<>', 1)
-            ->where("created_at", "<", Carbon::now()->addHours(-24))
+            ->where('is_main', 0)
+            //->where("created_at", "<", Carbon::now()->addHours(-24))
             ->get();
 
 
