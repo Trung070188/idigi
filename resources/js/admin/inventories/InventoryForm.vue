@@ -15,7 +15,7 @@
                                 <input v-model="entry.id" type="hidden" name="id" value="">
 
                                 <div class="form-group">
-                                    <label>Name <span class="text-danger">*</span></label>
+                                    <label>Module name <span class="text-danger">*</span></label>
                                     <input  v-model="entry.name"  class="form-control" :disabled="permissionFields['resource_name']==false" placeholder="Enter the module name" >
                                     <error-label for="f_grade" :errors="errors.name"></error-label>
 
@@ -143,10 +143,10 @@
                         url: '/xadmin/inventories/index',
                     },
                     {
-                        title: $json.entry ? 'Module detail' : 'Create new module',
+                        title: $json.entry ? 'Modules detail' : 'Create new module',
                     },
                 ],
-                title: $json.entry ?  'Module detail' : 'Create new module',
+                title: $json.entry ?  'Modules detail' : 'Create new module',
                 entry: $json.entry || {
                     'type': ''
                 },
