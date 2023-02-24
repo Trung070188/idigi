@@ -231,7 +231,7 @@ class SyncDataSec extends Command
 
         //Đồng bộ inventory và lesson
         \DB::connection('mysql3')->table('lessons')
-            ->where('id', 75)
+            ->where('id', 44)
             ->chunkById(100, function ($lessons) {
                 foreach ($lessons as $lesson){
                     if($lesson->structure){
