@@ -52,8 +52,8 @@ class SyncDataSec extends Command
 
          //Đồng bộ file và inventory
         \DB::connection('mysql3')->table('inventories')
-             ->where('id', '>=',452)
-             ->where('id', '<=',456)
+             ->where('id', '>=',275)
+             ->where('id', '<=',277)
              ->chunkById(100, function ($inventories) {
                  foreach ($inventories as $inventory){
 
@@ -147,7 +147,7 @@ class SyncDataSec extends Command
              });
          //Đồng bộ lesson
         \DB::connection('mysql3')->table('lessons')
-            ->where('id', 75)
+            ->where('id', 44)
             ->chunkById(100, function ($lessons) {
                 foreach ($lessons as $lesson) {
                     $userCreate = User::where('username', $lesson->created_by)->first();
