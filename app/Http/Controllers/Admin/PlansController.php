@@ -1502,8 +1502,8 @@ class PlansController extends AdminBaseController
             {
                 ZipPlanLesson::where('package_id',$dataLesson['package'])->delete();
                 $stringLesson = implode(",", $dataLesson['dataTableLesson']['lesson_ids']);
-                $zipFile= ZipPlanLesson::create(['user_id' => $dataLesson['idRoleIt'], 'plan_id' => $entry->id, 'lesson_ids' => $stringLesson, 'package_id' => $dataLesson['package'], 'status' => 'inprogress']);
-                if($zipFile->status=='inprogress')
+                $zipFile= ZipPlanLesson::create(['user_id' => $dataLesson['idRoleIt'], 'plan_id' => $entry->id, 'lesson_ids' => $stringLesson, 'package_id' => $dataLesson['package'], 'status' => 'running']);
+                if($zipFile->status=='inprogress' || $zipFile->status=='running')
                 {
                     $entry->status='Packaging';
                 }
