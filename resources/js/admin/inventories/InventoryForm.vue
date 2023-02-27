@@ -54,6 +54,26 @@
                                     <error-label for="f_grade" :errors="errors.description"></error-label>
 
                                 </div>
+                                <div class="form-group">
+                                    <button class="btn btn-primary" @click="location">Location</button>
+                                </div>
+                                <div class="form-group col-sm-10"  style="border: 1px solid #b5b5c3;
+                                                                          border-radius: 25px;
+                                                                          justify-content: center;
+                                                                          display: flex;
+                                                                          align-items: center" v-if="entry.location==1">
+
+                                    <select class="form-control form-select col-lg-4" style="margin-bottom: 20px;top:10px" required v-model="subject">
+                                        <option value="" selected disabled>Choose type</option>
+                                        <option value="Vocabulary">Vocabulary</option>
+                                        <option value="Summary">Lecture</option>
+                                        <option value="Practice">Practice</option>
+                                        <option value="Summary">Summary</option>
+                                    </select>
+                                    <select class="form-control form-select col-lg-4" style="margin-left: 20px" v-model="lessonId">
+                                        <option v-for="lesson in lessons" :value="lesson.id">{{lesson.name}}</option>
+                                    </select>
+                                </div>
 <!--                                <div class="form-group">-->
 <!--                                    <label>Tags</label>-->
 <!--                                    <input  v-model="entry.tags"  class="form-control" :disabled="permissionFields['resource_tags']==false" placeholder="Enter the tags name" >-->
@@ -101,7 +121,6 @@
                             </div>
 
                         </div>
-
                         <hr style="margin-top: 5px;" >
                         <div >
                             <button type="reset" @click="save()" class="btn btn-primary mr-2"><i class="bi bi-save2 mr-1"></i>Save</button>
@@ -119,11 +138,12 @@
 </template>
 
 <script>
-    import {$post} from "../../utils";
+import {$get, $post} from "../../utils";
     import ActionBar from "../includes/ActionBar";
     //import UploadFileComponent from "../../components/UploadFileComponent";
     import FileManagerInput from "../../components/FileManagerInput";
     import SwitchButton from "../../components/SwitchButton";
+import $router from "../../lib/SimpleRouter";
 
     export default {
         name: "InventoriesForm.vue",
@@ -148,14 +168,33 @@
                 ],
                 title: $json.entry ?  'Module details' : 'Create new module',
                 entry: $json.entry || {
-                    'type': ''
+                    'type': '',
+                    'location':0,
                 },
+                lessonId:'',
+                subject:'',
+                lessons:[],
                 permissionFields:$json.permissionFields || [],
                 isLoading: false,
                 errors: {}
             }
         },
+        mounted() {
+            $router.on("/", this.data).init();
+        },
         methods: {
+            async data()
+            {
+                this.$loading(true);
+                const res=await $get('/xadmin/inventories/dataForm');
+                this.$loading(false);
+                this.lessons=res.lessons;
+            },
+            location()
+            {
+                console.log(this.entry.location);
+                this.entry.location=1;
+            },
             backIndex(){
                 window.location.href = '/xadmin/inventories/index';
             },

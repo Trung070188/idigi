@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 
 use App\Helpers\PermissionField;
+use App\Models\Lesson;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -291,6 +292,13 @@ class InventoriesController extends AdminBaseController
                 'lastPage' => $entries->lastPage(),
                 'totalRecord' => $query->count(),
             ]
+        ];
+    }
+    public function dataForm(Request $req)
+    {
+        $lessons=Lesson::query()->orderBy('name','ASC')->get();
+        return [
+          'lessons'=>$lessons
         ];
     }
 
