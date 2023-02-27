@@ -6,15 +6,48 @@
         <div class="row">
             <div class="col-lg-12">
                 <div class="card card-custom card-stretch gutter-b">
+                    <div class="modal fade" style="margin-right:50px;border:2px solid #333333  " id="delete" tabindex="-1" role="dialog"
+                         aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered popup-main-1" role="document"
+                             style="max-width: 450px;">
+                            <div class="modal-content box-shadow-main paymment-status" style="left:120px;text-align: center; padding: 20px 0px 55px;">
+                                <div class="close-popup" data-dismiss="modal"></div>
+                                <div class="swal2-icon swal2-warning swal2-icon-show">
+                                    <div class="swal2-icon-content" style="margin: 0px 24.5px 0px ">!</div>
+                                </div>
+                                <div class="swal2-html-container">
+                                    <p >Are you sure to delete this unit?</p>
+                                </div>
+                                <div class="swal2-actions">
+                                    <button type="submit" id="kt_modal_new_target_submit" class="swal2-confirm btn fw-bold btn-danger" @click="remove(deleteUni)">
+                                        <span class="indicator-label">Yes, delete!</span>
+                                    </button>
+                                    <button type="reset" id="kt_modal_new_target_cancel" class="swal2-cancel btn fw-bold btn-active-light-primary" data-bs-dismiss="modal" style="margin: 0px 8px 0px">No, cancel</button>
+
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-header border-0 pt-6" style="margin:0px 0px -35px">
+                        <div class="card-title"></div>
+                        <div class="card-toolbar">
+                            <button @click="deleteUnit(entry)"   class="btn btn-danger" >Delete unit<i class="bi bi-trash ml-1"></i></button>
+                        </div>
+                    </div>
                     <div class="card-body d-flex flex-column">
                         <div class="row">
                             <div class=" col-sm-12">
                                 <input v-model="entry.id" type="hidden" name="id" value="">
                                 <div class="row">
-                                    <div class="form-group col-sm-9">
+                                    <div class="form-group col-sm-6">
                                         <label>Unit name <span class="text-danger">*</span></label>
                                         <input class="form-control nospace" placeholder="Enter the unit name" v-model="entry.unit_name" >
                                         <error-label  for="f_category_id" :errors="errors.unit_name"></error-label>
+                                    </div>
+                                    <div class="form-group col-sm-3">
+                                        <label>Unit ID<span class="text-danger">*</span></label>
+                                        <input class="form-control" v-model="entry.id" disabled/>
                                     </div>
                                     <div class="form-group col-sm-3">
                                         <label>Subject<span class="text-danger">*</span></label>
@@ -30,7 +63,7 @@
                                         <error-label for="f_category_id" :errors="errors.description"></error-label>
                                     </div>
                                     <div class="form-group col-sm-3">
-                                        <label>Course <span class="text-danger">*</span></label>
+                                        <label>Course</label>
                                         <select class="form-select form-control" required v-model="entry.course_id">
                                             <option value="" disabled selected>Choose the course</option>
                                             <option v-for="course in courses" :value="course.id">{{course.course_name}}</option>
@@ -107,6 +140,7 @@
         components: {ActionBar,draggable,Treeselect},
         data() {
             return {
+                deleteUni:'',
                 courses:[],
                 listLesson:[],
                 lessons:[],
@@ -132,6 +166,11 @@
             $router.on("/", this.load).init();
         },
         methods: {
+            deleteUnit(entry)
+            {
+                $('#delete').modal('show');
+                this.deleteUni=entry
+            },
             async load() {
                 let query = $router.getQuery();
                 this.$loading(true);
@@ -186,7 +225,18 @@
                     }
 
                 }
-            }
+            },
+            async remove(entry) {
+                const res = await $post('/xadmin/units/remove', {id: entry.id});
+
+                if (res.code) {
+                    toastr.error(res.message);
+                } else {
+                    toastr.success(res.message);
+                    $('#delete').modal('hide');
+                }
+                location.replace('/xadmin/units/index');
+            },
         }
     }
 </script>
