@@ -274,7 +274,7 @@
 </template>
 
 <script>
-    import {$post, clone} from "../../utils";
+    import {$post, clone,$get} from "../../utils";
     import ActionBar from "../includes/ActionBar";
     import QSelect from "../../components/QSelect";
     import Datepicker from "../../components/Datepicker";

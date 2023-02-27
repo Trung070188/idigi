@@ -138,10 +138,14 @@ class SchoolsController extends AdminBaseController
 
         return view('admin.layouts.vue', compact('title', 'component', 'jsonData'));
     }
-
     public function schoolNameNavBar(Request $req)
     {
         $user = Auth::user();
+        if($user->school_id)
+        {
+            $schoolIds=explode(',',$user->school_id);
+            $schools=School::query()->where('id',$schoolIds)->get();
+        }
         @$schoolName = $user->schools->label;
         foreach ($user->roles as $role) {
             @$roleName = $role->role_name;
@@ -149,6 +153,7 @@ class SchoolsController extends AdminBaseController
 
         return [
             'code' => 0,
+            'schools'=>$schools,
             'schoolName' => $schoolName,
             'roleName' => $roleName
         ];
@@ -236,7 +241,7 @@ class SchoolsController extends AdminBaseController
         $entry = School::with(['allocation_contents', 'school_courses', 'school_course_units', 'allocation_school','users'])->where('id', $id)->first();
         $allocationContents = AllocationContent::query()->with(['course_unit', 'courses','units'])->orderBy('id', 'desc')->get()->toArray();
         $lengthTeacher=0;
-        $active_allocation=$entry->active_allocation;
+        @$active_allocation=$entry->active_allocation;
         if(@$entry->users)
         {
             $teacher=[];
@@ -289,7 +294,7 @@ class SchoolsController extends AdminBaseController
         $allocationContentSchools = @$entry->allocation_contents;
         $allocationContentId = @$entry->allocation_school->allocation_content_id;
         $courses=null;
-        if($entry->allocation_contents)
+        if(@$entry->allocation_contents)
         {
             foreach ($allocationContentSchools as $allocationContentSchool) {
 

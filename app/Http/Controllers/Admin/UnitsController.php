@@ -111,10 +111,10 @@ class UnitsController extends AdminBaseController
         $data = $req->get('entry');
 
         $rules = [
-    'unit_name' => ['required','max:191','regex:/^[\p{L}\s\/0-9.,?\(\)_-]+$/u'],
-    'subject'=>'required',
-    'description'=>'max:200'
-];
+            'unit_name' => ['required','max:200','regex:/^[\p{L}\s\/0-9.,?\(\)_-]+$/u'],
+            'subject'=>'required',
+            'description'=>'max:200'
+        ];
         $message =[
           'unit_name.required'=>'The unit name field is required'
         ];
