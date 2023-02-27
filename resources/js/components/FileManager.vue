@@ -1,14 +1,14 @@
 <template>
     <div>
         <div class="row1" >
-            <input @keydown="search()" class="fm-search-input" placeholder="tìm kiếm" v-model="filter.keyword">
+            <input @keydown="search()" class="fm-search-input" placeholder="Search" v-model="filter.keyword">
             <Daterangepicker
                 @input="doFilter()"
                 default-class="fm-search-input" placeholder="chọn ngày" v-model="filter.created"/>
             <button
                 @click.prevent="selectFile()"
                 type="button"
-                style="margin-left: 15px;" class="btn btn-primary btn-sm"><i class="fa fa-upload"></i> Tải lên</button>
+                style="margin-left: 15px;" class="btn btn-primary btn-sm"><i class="fa fa-upload"></i> Upload file</button>
             <button
                     v-if="multiple"
                     @click.prevent="fileClickedAll()"
@@ -24,16 +24,16 @@
                     </th>
                     <th class="text-center">#</th>
                     <th>
-                        <TableSortField @onsort="sort" name="Tên file" field="name"/>
+                        <TableSortField @onsort="sort" name="File name" field="name"/>
                     </th>
                     <th>
-                        <TableSortField @onsort="sort" name="Định dạng" field="extension"/>
+                        <TableSortField @onsort="sort" name="Format" field="extension"/>
                     </th>
                     <th>
-                        <TableSortField @onsort="sort" name="Kích thước" field="size"/>
+                        <TableSortField @onsort="sort" name="Size" field="size"/>
                     </th>
                     <th>
-                        <TableSortField @onsort="sort" name="Ngày tạo" field="created_at"/>
+                        <TableSortField @onsort="sort" name="Creation date" field="created_at"/>
                     </th>
 
                     <th>

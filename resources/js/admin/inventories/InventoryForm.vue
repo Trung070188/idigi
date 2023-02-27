@@ -143,10 +143,10 @@
                         url: '/xadmin/inventories/index',
                     },
                     {
-                        title: $json.entry ? 'Modules detail' : 'Create new module',
+                        title: $json.entry ? 'Module details' : 'Create new module',
                     },
                 ],
-                title: $json.entry ?  'Modules detail' : 'Create new module',
+                title: $json.entry ?  'Module details' : 'Create new module',
                 entry: $json.entry || {
                     'type': ''
                 },

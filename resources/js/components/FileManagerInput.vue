@@ -34,8 +34,8 @@
                 <span class="qinput-error-label" v-if="errorMessage">{{ errorMessage }}</span>
             </div>
             <div class="fmi-dropdown-menu" v-if="showToolTip" ref="tooltip">
-                <a class="fmi-dropdown-item" href="#" @click.prevent="chooseFile()">Tải file</a>
-                <a class="fmi-dropdown-item" href="#" @click.prevent="showModal()">Chọn file từ thư viện</a>
+                <a class="fmi-dropdown-item" href="#" @click.prevent="chooseFile()">Upload file</a>
+                <a class="fmi-dropdown-item" href="#" @click.prevent="showModal()">Choose file from library</a>
             </div>
         </div>
         <div>
@@ -43,7 +43,7 @@
                 <div class="modal-dialog" role="document" style="    max-width: 80%;">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title">Quản lí file</h5>
+                            <h5 class="modal-title">File management</h5>
                             <button type="button" class="close" data-dismiss="modal" data-bs-dismiss="modal"
                                     aria-label="Close">
                                 &times;

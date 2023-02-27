@@ -193,6 +193,9 @@
                     if (!this.entry.id) {
                         location.replace('/xadmin/courses/edit?id=' + res.id);
                     }
+                    toastr.options.timeOut=1000;
+                    toastr.options.preventDuplicates = true;
+                    toastr.success(res.message);
 
                 }
             }
