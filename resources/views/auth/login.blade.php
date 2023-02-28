@@ -25,7 +25,14 @@ License: For each use you must have a valid license purchased only from above li
 		<link href="/themes/admin/assets/css/style.bundle.css" rel="stylesheet" type="text/css" />
         <script src="https://code.jquery.com/jquery-3.6.0.min.js" ></script>
 		<!--end::Global Stylesheets Bundle-->
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-MZPTFX5T14"></script>
+        <script>
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
 
+            gtag('config', 'G-MZPTFX5T14');
+        </script>
         <style>
             #loginForm .form-control {
                 width: 100%;
