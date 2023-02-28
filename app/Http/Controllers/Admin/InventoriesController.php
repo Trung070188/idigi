@@ -329,7 +329,7 @@ class InventoriesController extends AdminBaseController
         }
         return [
           'lessons'=>$lessons->get(),
-          'lesson'=>$lesson
+          'lesson'=>@$lesson
 
         ];
     }
