@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Helpers\PermissionField;
 use App\Models\Lesson;
+use App\Models\LessonInventory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -195,8 +196,20 @@ class InventoriesController extends AdminBaseController
             }
 
             $entry->fill($data);
-            $entry->save();
+            if($data['location']==1)
+            {
+                LessonInventory::query()->where('inventory_id',$data['id'])->delete();
+                LessonInventory::query()->create([
+                    'lesson_id'=>$req->lessonId,
+                    'inventory_id'=>$data['id']
+                ]);
+            }
+            else{
+                LessonInventory::query()->where('inventory_id',$data['id'])->delete();
+            }
 
+
+            $entry->save();
             return [
                 'code' => 0,
                 'message' => 'Đã cập nhật',
@@ -206,7 +219,13 @@ class InventoriesController extends AdminBaseController
             $entry = new Inventory();
             $entry->fill($data);
             $entry->save();
-
+            if($entry->location==1)
+            {
+                LessonInventory::query()->create([
+                    'inventory_id'=>$entry->id,
+                    'lesson_id'=>$req->lessonId,
+                ]);
+            }
             return [
                 'code' => 0,
                 'message' => 'Đã thêm',
@@ -296,9 +315,22 @@ class InventoriesController extends AdminBaseController
     }
     public function dataForm(Request $req)
     {
-        $lessons=Lesson::query()->orderBy('name','ASC')->get();
+        $lessons=Lesson::query()->orderBy('name','ASC');
+        if($req->subject)
+        {
+            $lessons->where('subject',$req->subject);
+        }
+        if($req->id)
+        {
+            $lesson=Lesson::query()->whereHas('inventories',function ($q) use ($req)
+            {
+               $q->where('inventory_id','=',$req->id);
+            })->get();
+        }
         return [
-          'lessons'=>$lessons
+          'lessons'=>$lessons->get(),
+          'lesson'=>$lesson
+
         ];
     }
 

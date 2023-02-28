@@ -57,22 +57,24 @@
                                 <div class="form-group">
                                     <button class="btn btn-primary" @click="location">Location</button>
                                 </div>
-                                <div class="form-group col-sm-10"  style="border: 1px solid #b5b5c3;
+                                 <div class="form-group col-sm-10"  style="border: 1px solid #b5b5c3;
                                                                           border-radius: 25px;
                                                                           justify-content: center;
                                                                           display: flex;
                                                                           align-items: center" v-if="entry.location==1">
-
-                                    <select class="form-control form-select col-lg-4" style="margin-bottom: 20px;top:10px" required v-model="subject">
-                                        <option value="" selected disabled>Choose type</option>
-                                        <option value="Vocabulary">Vocabulary</option>
-                                        <option value="Summary">Lecture</option>
-                                        <option value="Practice">Practice</option>
-                                        <option value="Summary">Summary</option>
+                                    <select class="form-control form-select col-lg-4" style="margin-bottom: 20px;top:10px" required v-model="subject" @change="data()">
+                                        <option value="" selected disabled>Choose subject</option>
+                                        <option value="Math">Math</option>
+                                        <option value="Science">Science</option>
                                     </select>
-                                    <select class="form-control form-select col-lg-4" style="margin-left: 20px" v-model="lessonId">
+                                    <select class="form-control form-select col-lg-4" style="margin-left: 20px" v-model="lessonId" @change="filterSubject(lessonId)" required>
+                                        <option value="" selected disabled>Choose lesson</option>
                                         <option v-for="lesson in lessons" :value="lesson.id">{{lesson.name}}</option>
                                     </select>
+                                    <i style="width: 10%;
+                                                display: inline-block;
+                                                font-size: 50px;
+                                                cursor: pointer" class="bi bi-x" @click="removeLesson"></i>
                                 </div>
 <!--                                <div class="form-group">-->
 <!--                                    <label>Tags</label>-->
@@ -176,19 +178,59 @@ import $router from "../../lib/SimpleRouter";
                 lessons:[],
                 permissionFields:$json.permissionFields || [],
                 isLoading: false,
-                errors: {}
+                errors: {},
+                check:1,
             }
         },
         mounted() {
             $router.on("/", this.data).init();
         },
         methods: {
+            removeLesson()
+            {
+              this.entry.location=0;
+            },
+            filterSubject(lessonId)
+            {
+                this.check=1;
+                if(this.check==1)
+
+                {
+                    let filter= this.lessons.find(function (e) {
+                        if(e.id==lessonId)
+                        {
+                            return e
+                        }
+                    })
+                    this.subject=filter.subject;
+                    return this.subject;
+                }
+                else {
+                    return this.subject
+                }
+
+            },
             async data()
             {
+                this.check=0;
                 this.$loading(true);
-                const res=await $get('/xadmin/inventories/dataForm');
+                if(this.entry.id)
+                {
+                    const res=await $get('/xadmin/inventories/dataForm?id='+this.entry.id+'&subject='+this.subject);
+                    this.lessons=res.lessons;
+                    if(res.lesson.length>0)
+                    {
+                        this.lessonId=res.lesson[0].id;
+                        this.subject=res.lesson[0].subject
+                    }
+
+                }
+                else {
+                    const res=await $get('/xadmin/inventories/dataForm?subject='+this.subject+'&lessonId='+this.lessonId);
+                    this.lessons=res.lessons;
+
+                }
                 this.$loading(false);
-                this.lessons=res.lessons;
             },
             location()
             {
@@ -201,7 +243,7 @@ import $router from "../../lib/SimpleRouter";
             async save() {
 
                // this.$loading(true);
-                const res = await $post('/xadmin/inventories/save', {entry: this.entry}, false);
+                const res = await $post('/xadmin/inventories/save', {entry: this.entry,lessonId: this.lessonId,subject:this.subject}, false);
 
                // this.$loading(false);
                 if (res.errors) {
