@@ -189,6 +189,8 @@ import $router from "../../lib/SimpleRouter";
             removeLesson()
             {
               this.entry.location=0;
+              this.subject='';
+              this.lessonId='';
             },
             filterSubject(lessonId)
             {
