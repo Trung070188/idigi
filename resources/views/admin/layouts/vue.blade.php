@@ -282,6 +282,14 @@ $title = isset($title) ? $title : '';
 <noscript>
     <iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5FS8GGP" height="0" width="0" style="display:none;visibility:hidden"></iframe>
 </noscript>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-MZPTFX5T14"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-MZPTFX5T14');
+</script>
 
 </body>
 </html>
