@@ -34,7 +34,7 @@
                         <div class="card-title"></div>
                         <div class="card-toolbar">
                             <button  class="btn btn-danger" @click="deleteCourse(entry)">
-                                Delete unit <i class="bi bi-trash"></i>
+                                Delete course <i class="bi bi-trash"></i>
                             </button>
                         </div>
                     </div>
