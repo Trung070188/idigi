@@ -246,7 +246,7 @@
                     window.location.href = '/xadmin/courses/index';
                 }
 
-                },
+            },
 
         }
     }
