@@ -621,6 +621,7 @@
                     isShowFilter = false;
                 }
             }
+
             return {
                 disableContinue:false,
                 countTeacher:'',
@@ -640,7 +641,7 @@
                 teacher:[],
                 permissions,
                 isShowFilter: isShowFilter,
-                isCreateTeacher: $json.entry.isCreateTeacher,
+                isCreateTeacher: $json.isCreateTeacher,
                 breadcrumbs: [
                     {
                       title:'School management',
