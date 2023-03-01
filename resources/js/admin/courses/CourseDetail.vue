@@ -34,7 +34,7 @@
                         <div class="card-title"></div>
                         <div class="card-toolbar">
                             <button  class="btn btn-danger" @click="deleteCourse(entry)">
-                                Delete course<i class="bi bi-trash"></i>
+                                Delete unit <i class="bi bi-trash"></i>
                             </button>
                         </div>
                     </div>
@@ -164,7 +164,7 @@
                         url: '/xadmin/courses/index',
                     },
                     {
-                        title:'Course detail',
+                        title:'Course details',
                     },
                 ],
                 entry: $json.entry || {},
