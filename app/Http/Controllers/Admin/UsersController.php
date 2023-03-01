@@ -1676,6 +1676,13 @@ class UsersController extends AdminBaseController
                     $user->state =1;
                     $user->save();
                     UserRole::create(['user_id' => $user->id, 'role_id' => 5]);
+
+                    $content = [
+                        'full_name' =>$import['full_name'],
+                        'password' => $import['password'],
+                        'username' => $import['username']
+                    ];
+                    dispatch(new SendMailPassword($import['email'], 'New account information', $content));
                 }
             return [
                 'code' => 0,
