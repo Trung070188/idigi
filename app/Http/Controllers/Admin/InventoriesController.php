@@ -162,7 +162,10 @@ class InventoriesController extends AdminBaseController
             'link_webview' => 'max:255',
             'tags' => 'max:1000',
         ];
-
+        if($data['location']==1)
+        {
+            $rules['lessonId']=['required'];
+        }
         $v = Validator::make($data, $rules);
 
         if ($v->fails()) {
