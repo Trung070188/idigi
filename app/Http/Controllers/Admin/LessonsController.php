@@ -360,15 +360,26 @@ class LessonsController extends AdminBaseController
     public function dataCreateLesson(Request $req)
     {
 
+        if($req->subject)
+        {
+            $modules=Inventory::query()->select([
+                'inventories.id as id',
+                'inventories.name as label',
+                'inventories.type as type',
+                'inventories.subject as subject'
+            ])->where('subject',$req->subject)->orderBy('id','desc');
+            $units=Unit::query()->where('subject',$req->subject)->orderBy('id','desc')->get();
+        }
+        else{
+            $modules=Inventory::query()->select([
+                'inventories.id as id',
+                'inventories.name as label',
+                'inventories.type as type',
+                'inventories.subject as subject'
+            ])->orderBy('id','desc');
+            $units=Unit::query()->orderBy('id','desc')->get();
 
-//        $modules=Inventory::query()->orderBy('id','desc');
-        $modules=Inventory::query()->select([
-            'inventories.id as id',
-            'inventories.name as label',
-            'inventories.type as type'
-        ])->orderBy('id','desc');
-        $units=Unit::query()->orderBy('id','desc')->get();
-
+        }
         if($req->type)
         {
             $modules->where('type',$req->type)->select([
@@ -391,23 +402,32 @@ class LessonsController extends AdminBaseController
         {
             $join->on('inventories.id','=','lesson_inventory.inventory_id');
         })->where('lessons.id',$req->id);
-        $units=Unit::query()->orderBy('id','desc')->get();
       $lessons= $lessons->select([
             'lessons.id as lesson_id',
             'inventories.id as inventory_id',
-            'inventories.name as name',
+            'inventories.name as label',
             'inventories.type as type'
        ])->get();
-//    $modules=DB::table('inventories')->select([
-//            'inventories.id as id',
-//           'inventories.name as label',
-//           'inventories.type as type'
-//    ])->orderBy('id','desc');
-        $modules=Inventory::query()->select([
-           'inventories.id as id',
-           'inventories.name as label',
-           'inventories.type as type'
-        ])->orderBy('id','desc');
+      if($req->subject)
+      {
+          $units=Unit::query()->where('subject',$req->subject)->orderBy('id','desc')->get();
+
+          $modules=Inventory::query()->select([
+              'inventories.id as id',
+              'inventories.name as label',
+              'inventories.type as type'
+          ])->where('subject',$req->subject)->orderBy('id','desc');
+      }
+      else{
+          $units=Unit::query()->orderBy('id','desc')->get();
+          $modules=Inventory::query()->select([
+              'inventories.id as id',
+              'inventories.name as label',
+              'inventories.type as type'
+          ])->orderBy('id','desc');
+
+      }
+
         $module=[];
         foreach ($lessons as $lesson)
         {

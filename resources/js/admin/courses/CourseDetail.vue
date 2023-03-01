@@ -55,7 +55,7 @@
                                     </div>
                                     <div class="form-group col-sm-3">
                                         <label>Subject<span class="text-danger">*</span></label>
-                                        <select class="form-control form-select" v-model="entry.subject">
+                                        <select class="form-control form-select" v-model="entry.subject" @change="load">
                                                 <option value="Math">Math</option>
                                                 <option value="Science ">Science </option>
                                         </select>
@@ -200,7 +200,7 @@
             async load() {
                 let query = $router.getQuery();
                 this.$loading(true);
-                const res = await $get("/xadmin/courses/dataEditCourse?id="+this.entry.id, query);
+                const res = await $get("/xadmin/courses/dataEditCourse?id="+this.entry.id+'&subject='+this.entry.subject, query);
                 this.$loading(false);
                 this.units = res.units.map(rec => {
                     return {

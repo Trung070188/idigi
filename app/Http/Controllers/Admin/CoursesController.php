@@ -253,15 +253,31 @@ class CoursesController extends AdminBaseController
     }
     public function dataCreateCourse(Request $req)
     {
-        $units=Unit::query()->orderBy('id','desc');
+        if($req->subject)
+        {
+            $units=Unit::query()->where('subject',$req->subject)->orderBy('id','desc');
+
+        }
+        else{
+            $units=Unit::query()->orderBy('id','desc');
+
+        }
         return [
           'units'=>$units->get(),
         ];
     }
     public function dataEditCourse(Request $req)
     {
+        if($req->subject)
+        {
+            $units=Unit::query()->where('subject',$req->subject)->orderBy('id','desc');
+
+        }
+        else{
+            $units=Unit::query()->orderBy('id','desc');
+
+        }
         $listUnit=Unit::query()->where('course_id',$req->id)->orderBy('position','ASC')->get();
-        $units=Unit::query()->orderBy('id','desc');
 
         return [
             'units'=>$units->get(),

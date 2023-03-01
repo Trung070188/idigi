@@ -255,8 +255,19 @@ class UnitsController extends AdminBaseController
     }
     public function dataCreateUnit(Request $req)
     {
-        $lessons=Lesson::query()->orderBy('id','desc');
-        $courses=Course::query()->orderBy('id','desc')->get();
+        if($req->subject)
+        {
+            $lessons=Lesson::query()->where('subject',$req->subject)->orderBy('id','desc');
+            $courses=Course::query()->where('subject',$req->subject)->orderBy('id','desc')->get();
+
+
+        }
+        else
+        {
+            $lessons=Lesson::query()->orderBy('id','desc');
+            $courses=Course::query()->orderBy('id','desc')->get();
+
+        }
 
         return [
           'lessons'=>$lessons->get(),
@@ -266,8 +277,17 @@ class UnitsController extends AdminBaseController
     public function dataEditUnit(Request $req)
     {
         $listLessons=Lesson::query()->where('unit_id',$req->id)->get();
-        $lessons=Lesson::query()->orderBy('id','desc');
-        $courses=Course::query()->orderBy('id','desc')->get();
+        if($req->subject)
+        {
+            $lessons=Lesson::query()->where('subject',$req->subject)->orderBy('id','desc');
+            $courses=Course::query()->where('subject',$req->subject)->orderBy('id','desc')->get();
+
+
+        }
+        else{
+            $lessons=Lesson::query()->orderBy('id','desc');
+            $courses=Course::query()->orderBy('id','desc')->get();
+        }
 
         return [
             'lessons'=>$lessons->get(),

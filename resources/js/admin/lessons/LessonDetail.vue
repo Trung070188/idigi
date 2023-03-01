@@ -18,7 +18,7 @@
                                     </div>
                                     <div class="form-group col-sm-3">
                                         <label>Subject<span class="text-danger">*</span></label>
-                                        <select class="form-control form-select" v-model="entry.subject" required>
+                                        <select class="form-control form-select" v-model="entry.subject" required @change="load">
                                             <option value="" disabled selected>Choose the subject</option>
                                             <option value="Math">Math</option>
                                             <option value="Science">Science</option>
@@ -160,7 +160,7 @@
             async handleSearchChange(value) {
                 if (value) {
                     let query = $router.getQuery();
-                    const res = await $get("/xadmin/lessons/dataCreateLesson",query);
+                    const res = await $get("/xadmin/lessons/dataCreateLesson?subject="+this.entry.subject,query);
                     this.modules=res.module;
                     const filteredOptions = this.modules.filter(option => option.label.includes(value)).slice(0,this.searchLimit);
                     this.modules = filteredOptions
@@ -196,6 +196,18 @@
                 this.$loading(true);
                 const res = await $get("/xadmin/lessons/dataEditLesson?id="+this.entry.id,query);
                 this.$loading(false);
+                let inventory=[];
+                res.lessons.forEach(function (e)
+                {
+                   res.module.forEach(function (e1)
+                   {
+                       if(e1.id==e.inventory_id)
+                       {
+                           inventory.push(e1);
+                       }
+                   })
+                })
+                this.modules=inventory;
                 this.listResource=res.lessons.map(rec => rec.inventory_id);
                 // this.modules = res.module;
                 this.units=res.units;
