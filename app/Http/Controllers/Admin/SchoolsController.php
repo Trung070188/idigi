@@ -1119,5 +1119,4 @@ class SchoolsController extends AdminBaseController
         return view('admin.layouts.vue', compact('title', 'component', 'jsonData'));
     }
 
-
 }

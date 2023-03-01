@@ -425,7 +425,6 @@
 
                 $router.updateQuery({page: this.paginate.currentPage, _: Date.now()});
             },
-
         }
     }
 </script>

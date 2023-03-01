@@ -47,7 +47,7 @@
                 // width: 800,
                 height: 600,
             };
-          let  chartData = [
+            let  chartData = [
                 ['Year', 'Download app', 'Download lesson'],
                 ['Jan', 0, 0],
                 ['Feb', 0, 0],
