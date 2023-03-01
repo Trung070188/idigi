@@ -76,7 +76,7 @@
                                 <div class="row"  >
                                     <div class="form-group col-sm-12" >
                                         <label>Course<span class="text-danger">*</span></label>
-                                        <treeselect :options="courses" :multiple="true" v-model="courseTeachers" @input="selectTotalCourse"/>
+                                        <treeselect :options="courses" :multiple="true" v-model="courseTeacherTmp" @input="selectTotalCourse"/>
                                         <error-label  for="f_grade" :errors="errors.courseTeachers"></error-label>
                                     </div>
                                 </div>
@@ -88,7 +88,7 @@
                                     <div class="col-lg-12" style="display: flex ;margin: 16px 0px 0px" v-for="courseTeacher in courseTeachers">
                                         <div v-for="course in courses[0].children" v-if="courseTeacher==course.id" style="display: flex;align-items: center;flex-basis: 10%"> {{course.label}}</div>
                                         <div  style="flex-basis: 90%" v-for="course in courses[0].children" v-if="courseTeacher==course.id">
-                                            <treeselect :options="course.unit" :multiple="true" v-model="course.teacher_unit" @input="selectTotalUnit(course)" />
+                                            <treeselect :options="course.unit" :multiple="true" v-model="course.teacher_unit_tmp" @input="selectTotalUnit(course)" />
                                             <error-label :errors="errors.teacher_unit"></error-label>
                                         </div>
                                     </div>
@@ -134,6 +134,7 @@
 
             return {
                 allocationContent:'',
+                courseTeacherTmp:[],
                 courseTeachers:[],
                 units:[],
                 courses:[],
@@ -216,6 +217,7 @@
                         'id':rec.id,
                         'label':rec.label,
                         'teacher_unit':[],
+                        'teacher_unit_tmp':[],
                         'unit':[
                             {
                                 'id':'all',
@@ -233,6 +235,7 @@
                     }
                 ]
 
+
                 this.allocationContent=res.allocationContent;
             },
             backIndex() {
@@ -241,20 +244,24 @@
             },
             selectTotalCourse()
             {
-                if(this.courseTeachers.length > 0 && this.courseTeachers[0]=='all')
+                if(this.courseTeacherTmp.length > 0 && this.courseTeacherTmp[0]=='all')
                 {
                     this.courseTeachers=this.courses[0].children.map(res=>{
                         return res.id;
                     })
+                }else{
+                    this.courseTeachers = this.courseTeacherTmp;
                 }
             },
             selectTotalUnit(course)
             {
-                if(course.teacher_unit=='all' )
+                if(course.teacher_unit_tmp=='all' )
                 {
                     course.teacher_unit=course.unit[0].children.map( res => {
                         return res.id
                     })
+                }else{
+                    course.teacher_unit = course.teacher_unit_tmp;
                 }
             },
             async save() {
