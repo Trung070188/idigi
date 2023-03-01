@@ -211,7 +211,7 @@
                     toastr.success(res.message);
 
                     // if (!this.entry.id) {
-                    //     location.replace('/xadmin/lessons/edit?id=' + res.id);
+                        location.replace('/xadmin/lessons/edit?id=' + res.id);
                     // }
 
                 }

@@ -1,7 +1,7 @@
 <template>
     <div class="container-fluid">
         <ActionBar type="index"
-                   :breadcrumbs="breadcrumbs"  title = "Create new lesson"/>
+                   :breadcrumbs="breadcrumbs"  title = "Lesson details"/>
 
         <div class="row">
             <div class="col-lg-12">
