@@ -111,8 +111,13 @@ class UsersController extends AdminBaseController
         $component = 'TeacherCreated';
         $title = 'Create Teacher';
         $roles = Role::query()->orderBy('role_name')->get();
-        $user = Auth::user();
         $school=School::query()->where('id',$data['schoolId'])->first();
+        $userTotal = User::where('school_id', $data['schoolId'])->count();
+
+        if($userTotal >= $school->number_of_users){
+            abort(403, "Số lượng giáo viên đã đủ.");
+        }
+
         $schoolName = $school->label;
         $jsonData = [
             'schoolName'=>$schoolName,

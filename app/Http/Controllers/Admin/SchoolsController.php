@@ -217,8 +217,16 @@ class SchoolsController extends AdminBaseController
         $component = 'TeacherList';
         $id = $req->id;
         $entry = School::find($id);
+        $userTotal = User::where('school_id', $id)->count();
+        $isCreateTeacher = 1;
+
+        if($userTotal >= $entry->number_of_users){
+            $isCreateTeacher = 0;
+        }
+
         $jsonData = [
             'entry' => $entry,
+            'isCreateTeacher' => $isCreateTeacher,
         ];
         if (!$entry) {
             throw new NotFoundHttpException();
