@@ -42,10 +42,15 @@
                             <div class=" col-sm-12">
                                 <input v-model="entry.id" type="hidden" name="id" value="">
                                 <div class="row">
-                                    <div class="form-group col-sm-9">
+                                    <div class="form-group col-sm-6">
                                         <label>Lesson name <span class="text-danger">*</span></label>
                                         <input class="form-control nospace" placeholder="Enter the unit name" v-model="entry.name" >
                                         <error-label  for="f_category_id" :errors="errors.name"></error-label>
+                                    </div>
+                                    <div class="form-group col-sm-3">
+                                        <label>Lesson ID <span class="text-danger">*</span></label>
+                                        <input class="form-control " v-model="entry.id" disabled>
+                                        <error-label  for="f_category_id" :errors="errors.id"></error-label>
                                     </div>
                                     <div class="form-group col-sm-3">
                                         <label>Subject<span class="text-danger">*</span></label>
@@ -175,7 +180,7 @@
                         url: '/xadmin/lessons/index',
                     },
                     {
-                        title:'Lesson detail',
+                        title:'Lesson details',
                     },
                 ],
                 searchLimit:50,
