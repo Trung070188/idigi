@@ -32,8 +32,8 @@
                 <div class="card card-custom card-stretch gutter-b">
                     <div class="card-header border-0 pt-6" style="margin:0px 0px -35px">
                         <div class="card-title"></div>
-                        <div class="card-toolbar">
-                            <button  class="btn btn-danger" @click="deleteCourse(entry)">
+                        <div class="card-toolbar" @click="deleteCourse(entry)" style="z-index: 1">
+                            <button  class="btn btn-danger">
                                 Delete course <i class="bi bi-trash"></i>
                             </button>
                         </div>

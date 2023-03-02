@@ -31,8 +31,8 @@
                     </div>
                     <div class="card-header border-0 pt-6" style="margin:0px 0px -35px">
                         <div class="card-title"></div>
-                        <div class="card-toolbar">
-                            <button @click="deleteUnit(entry)"   class="btn btn-danger" >Delete unit<i class="bi bi-trash ml-1"></i></button>
+                        <div class="card-toolbar" @click="deleteUnit(entry)" style="z-index: 1">
+                            <button class="btn btn-danger" >Delete unit<i class="bi bi-trash ml-1"></i></button>
                         </div>
                     </div>
                     <div class="card-body d-flex flex-column">
