@@ -152,7 +152,7 @@
                                 </div>
 
                                 <div class="form-group col-lg-3">
-                                    <label >Address </label>
+                                    <label >Stress/ Award </label>
                                     <input v-model="filter.school_address" class="form-control" type="text" placeholder="Enter the region/city">
 
                                 </div>
@@ -205,7 +205,7 @@
                                 <th >Name</th>
                                 <th >City/ Province</th>
                                 <th >District/ Town</th>
-                                <th >Address</th>
+                                <th >Stress/ Award</th>
                                 <th >Administrator name</th>
                                 <th >Teacher</th>
                                 <th >Devices per user</th>
