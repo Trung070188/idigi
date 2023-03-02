@@ -140,10 +140,23 @@
 
                                 </div>
                                 <div class="form-group col-lg-3">
-                                    <label >Region/City </label>
+                                    <label >City/ Province </label>
+                                    <treeselect :options="provinces" v-model="filter.province_id"
+                                                @input="selectProvince"/>
+
+                                </div>
+                                <div class="form-group col-lg-3" v-if="filter.province_id">
+                                    <label >District/ Town </label>
+                                    <treeselect :options="districts" v-model="filter.district_id"/>
+
+                                </div>
+
+                                <div class="form-group col-lg-3">
+                                    <label >Address </label>
                                     <input v-model="filter.school_address" class="form-control" type="text" placeholder="Enter the region/city">
 
                                 </div>
+
 
                             </div>
 
@@ -190,6 +203,8 @@
                                 </td>
                                 <th >No.</th>
                                 <th >Name</th>
+                                <th >City/ Province</th>
+                                <th >District/ Town</th>
                                 <th >Address</th>
                                 <th >Administrator name</th>
                                 <th >Teacher</th>
@@ -211,6 +226,8 @@
                                 </td>
                                 <td >{{index+1}}</td>
                                 <td  v-text="entry.label" @click="edit(entry)"></td>
+                                <td  v-text="entry.province" @click="edit(entry)"></td>
+                                <td  v-text="entry.district" @click="edit(entry)"></td>
                                 <td  v-text="entry.school_address" @click="edit(entry)"></td>
                                 <td  @click="edit(entry)" class="" data-bs-toggle="tooltip" :title="entry.nameSchoolAdmin" >{{entry.nameSchoolAdmin}}</td>
                                 <td  v-text="entry.teacher.length" @click="edit(entry)"></td>
@@ -290,13 +307,15 @@
     import {$get, $post, clone, getTimeRangeAll} from "../../utils";
     import $router from '../../lib/SimpleRouter';
     import ActionBar from "../includes/ActionBar";
+    import Treeselect from '@riophae/vue-treeselect'
+    import '@riophae/vue-treeselect/dist/vue-treeselect.css'
 
     let created = getTimeRangeAll();
     const $q = $router.getQuery();
 
     export default {
         name: "SchoolsIndex.vue",
-        components: {ActionBar},
+        components: {ActionBar,Treeselect},
         data() {
             const permissions = clone(window.$permissions)
             let isShowFilter = false;
@@ -304,7 +323,9 @@
                 keyword: $q.keyword || '',
                 label: $q.label || '',
                 school_address:$q.school_address || '',
-                role_name:$q.role_name || ''
+                role_name:$q.role_name || '',
+                district_id: $q.district_id != 'undefined' && $q.district_id != 'null' ? $q.district_id : null,
+                province_id:$q.province_id != 'undefined' && $q.province_id != 'null' ? $q.province_id : null,
             };
             for (var key in filter) {
                 if (filter[key] != '') {
@@ -312,6 +333,8 @@
                 }
             }
             return {
+                provinces:[],
+                districts:[],
                 permissions,
                schoolIds: [],
                 school: [],
@@ -336,9 +359,27 @@
             }
         },
         mounted() {
+            let self = this;
+            $.get('/xadmin/schools/getProvince', function (res) {
+                self.provinces = res;
+                if(self.filter.province_id){
+                    self.districts = self.provinces.filter(e => e.id == self.filter.province_id)[0]['districts'];
+                }
+
+            });
             $router.on('/', this.load).init();
+
+
         },
         methods: {
+            selectProvince() {
+                this.filter.district_id = null;
+                this.districts = [];
+                if (this.filter.province_id) {
+                    this.districts = this.provinces.filter(e => e.id == this.filter.province_id)[0]['districts'];
+                }
+
+            },
               removeSchool:function(deleteSchool='')
             {
                   $('#delete').modal('show');

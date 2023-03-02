@@ -6,6 +6,7 @@ use App\Helpers\PermissionField;
 use App\Models\AllocationContent;
 use App\Models\AllocationContentSchool;
 use App\Models\Course;
+use App\Models\Province;
 use App\Models\SchoolCourse;
 use App\Models\SchoolCourseUnit;
 use App\Models\User;
@@ -492,6 +493,8 @@ class SchoolsController extends AdminBaseController
         $rules = [
             'label' => ['required','regex:/^[\p{L}\s\/0-9.,_-]+$/u'],
             'school_address' => ['required','max:255','regex:/^[\p{L}\s\/0-9.,_-]+$/u'],
+            'province_id' => ['required'],
+            'district_id' => ['required'],
             'number_of_users' => 'required|min:1|integer',
             'devices_per_user' => 'required|min:1|integer',
             'license_to'=>'required|after_or_equal:'. $current,
@@ -817,12 +820,12 @@ class SchoolsController extends AdminBaseController
         }
         if($check==0)
         {
-            $query = School::query()->whereIn('id',$schoolIdArrs)->with(['users'])->orderBy('id', 'ASC');
+            $query = School::query()->whereIn('id',$schoolIdArrs)->with(['users', 'province', 'district'])->orderBy('id', 'ASC');
 
 
         }
         else{
-            $query = School::query()->with(['users'])->orderBy('id', 'ASC');
+            $query = School::query()->with(['users', 'province', 'district'])->orderBy('id', 'ASC');
             if($req->role_name) {
                 $admins = [];
                 $nameAdmins = User::query()->with(['roles'])->where('full_name', 'LIKE', '%' . $req->role_name . '%')->get();
@@ -855,6 +858,13 @@ class SchoolsController extends AdminBaseController
         if ($req->school_address) {
             $query->where('school_address', 'LIKE', '%' . $req->school_address . '%');
         }
+        if ($req->province_id && $req->province_id != 'undefined' && $req->province_id != 'null') {
+            $query->where('province_id', $req->province_id);
+        }
+        if ($req->district_id && $req->district_id != 'undefined' && $req->district_id != 'null') {
+            $query->where('district_id', $req->district_id);
+        }
+
 
         $limit = 25;
 
@@ -864,7 +874,6 @@ class SchoolsController extends AdminBaseController
         $data = [];
         $entries = $query->paginate($limit);
         $users=User::query()->with(['roles'])->whereNotNull('school_id')->orderBy('id','ASC')->get();
-
 
         $userAdminSchools=[];
 //        foreach($users as $user)
@@ -932,6 +941,8 @@ class SchoolsController extends AdminBaseController
             $data[] = [
                 'id' => $entry->id,
                 'label' => $entry->label,
+                'province' => @$entry->province->name,
+                'district' => @$entry->district->name,
                 'school_address' => $entry->school_address,
                 'school_email' => $entry->school_email,
                 'school_phone' => $entry->school_phone,
@@ -944,6 +955,7 @@ class SchoolsController extends AdminBaseController
                 'teacher' => $teacher,
 
             ];
+
 
 
 
@@ -1125,6 +1137,28 @@ class SchoolsController extends AdminBaseController
 
         ];
         return view('admin.layouts.vue', compact('title', 'component', 'jsonData'));
+    }
+
+    public function getProvince(){
+        $provinces = Province::orderBy('name', 'ASC')->with(['districts'])->get();
+        $provinceData = [];
+
+        foreach ($provinces as $province){
+            $districts = [];
+            foreach ($province->districts as $district){
+                $districts[] = [
+                    'id' => $district->id,
+                    'label' => $district->name,
+                ];
+            }
+            $provinceData[] = [
+                'id' => $province->id,
+                'label' => $province->name,
+                'districts' => $districts
+            ];
+        }
+
+        return $provinceData;
     }
 
 }
