@@ -69,7 +69,7 @@
                                             <option v-for="course in courses" :value="course.id">{{course.course_name}}</option>
                                         </select>
                                     </div>
-                                    <div class="form-group col-sm-12"  style="border: 1px solid #b5b5c3;border-radius: 25px">
+                                    <div class="form-group col-sm-12"  style="border: 1px solid #b5b5c3;border-radius: 25px" v-if="entry.subject">
                                         <label style="margin:15px 0px 10px ">List of lesson</label>
                                         <treeselect :options="lessons" :multiple="true" v-model="listLesson" @input="lesson()" />
                                         <draggable

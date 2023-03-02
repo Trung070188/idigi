@@ -154,7 +154,7 @@ class InventoriesController extends AdminBaseController
 
         $rules = [
             //'file_image_new' => 'required',
-            'name' => ['required','max:255','regex:/^[\p{L}\s\/0-9.,?\(\)_:-]+$/u'],
+            'name' => ['required','max:100','regex:/^[\p{L}\s\/0-9.,?\(\)_:-]+$/u'],
             'file_asset_new' => 'required',
 //            'subject' => 'max:255|required',
             'type' => 'max:255|required',
