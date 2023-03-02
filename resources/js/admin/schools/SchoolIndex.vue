@@ -201,18 +201,13 @@
                                                @change="selectAll()">
                                     </div>
                                 </td>
-                                <th >No.</th>
-                                <th >Name</th>
-                                <th >City/ Province</th>
-                                <th >District/ Town</th>
-                                <th >Stress/ Award</th>
-                                <th >Administrator name</th>
-                                <th >Teacher</th>
-                                <th >Devices per user</th>
-                                <th >License</th>
+                                <th v-for="(header, index) in tableHeaders" :key="index" @click="sortTable(index)">
+                                    <i v-html="header.icon"></i>{{ header.text }}
+                                </th>
                                 <th >Action</th>
                             </tr>
                             </thead>
+<!--                            <i class="bi bi-sort-up ml-1 mt-1"></i>-->
                             <tbody>
                             <tr v-if="entries.length==0">
                                 <td valign="top" colspan="10" class="text-center">No results found. Try different keywords or remove search filters.</td>
@@ -333,6 +328,18 @@
                 }
             }
             return {
+                tableHeaders: [
+                    { text: 'No.', icon: '' },
+                    { text: 'Name', icon: '' },
+                    { text: 'City/ Province', icon: '' },
+                    { text: 'District/ Town', icon: '' },
+                    { text: 'Stress/ Award', icon: '' },
+                    { text: 'Administrator name', icon: '' },
+                    { text: 'Teacher', icon: '' },
+                    { text: 'Devices per user', icon: '' },
+                    { text: 'License', icon: '' },
+                ],
+                sortDirection: 1,
                 provinces:[],
                 districts:[],
                 permissions,
@@ -372,6 +379,15 @@
 
         },
         methods: {
+            sortTable(index) {
+                // Thay đổi hướng sắp xếp
+                this.sortDirection = -this.sortDirection;
+                // Thay đổi biểu tượng sắp xếp
+                const sortIcon = this.sortDirection > 0 ? '<i class="bi bi-sort-up ml-1 mt-1"></i>' : '<i class="bi bi-sort-down-alt ml-1 mt-1"></i>';
+                this.tableHeaders.forEach((header, i) => {
+                    header.icon = index === i ? sortIcon : '';
+                });
+            },
             selectProvince() {
                 this.filter.district_id = null;
                 this.districts = [];
