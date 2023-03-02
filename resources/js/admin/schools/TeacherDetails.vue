@@ -396,10 +396,7 @@
                 } else {
                     toastr.success(res.message);
                 }
-                window.location.reload();
-
-                $router.updateQuery({ _: Date.now()});
-
+                location.replace('/xadmin/users/editTeacher?id=' + res.id);
             },
             async activeAllocation()
             {
@@ -422,7 +419,7 @@
                 else {
                     toastr.success(res.message);
                 }
-                window.location.reload();
+                location.replace('/xadmin/users/editTeacher?id=' + res.id);
 
             },
 

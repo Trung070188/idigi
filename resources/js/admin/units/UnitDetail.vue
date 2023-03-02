@@ -51,7 +51,7 @@
                                     </div>
                                     <div class="form-group col-sm-3">
                                         <label>Subject<span class="text-danger">*</span></label>
-                                        <select class="form-control form-select" required v-model="entry.subject">
+                                        <select class="form-control form-select" required v-model="entry.subject" @change="load">
                                             <option value="" disabled selected>Choose the subject</option>
                                             <option value="Math">Math</option>
                                             <option value="Science">Science</option>
@@ -174,7 +174,7 @@
             async load() {
                 let query = $router.getQuery();
                 this.$loading(true);
-                const res = await $get("/xadmin/units/dataEditUnit?id="+this.entry.id, query);
+                const res = await $get("/xadmin/units/dataEditUnit?id="+this.entry.id+'&subject='+this.entry.subject, query);
                 this.$loading(false);
                 this.lessons = res.lessons.map(res => {
                     return {

@@ -6,8 +6,39 @@
             :title="title"
         />
         <div class="row">
+            <div class="modal fade" style="margin-right:50px;border:2px solid #333333  " id="delete" tabindex="-1" role="dialog"
+                 aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered popup-main-1" role="document"
+                     style="max-width: 450px;">
+                    <div class="modal-content box-shadow-main paymment-status" style="left:120px;text-align: center; padding: 20px 0px 55px;">
+                        <div class="close-popup" data-dismiss="modal"></div>
+                        <div class="swal2-icon swal2-warning swal2-icon-show">
+                            <div class="swal2-icon-content" style="margin: 0px 24.5px 0px ">!</div>
+                        </div>
+                        <div class="swal2-html-container">
+                            <p >Are you sure to delete this module?</p>
+                        </div>
+                        <div class="swal2-actions">
+                            <button type="submit" id="kt_modal_new_target_submit" class="swal2-confirm btn fw-bold btn-danger" @click="remove(entry)">
+                                <span class="indicator-label">Yes, delete!</span>
+                            </button>
+                            <button type="reset" id="kt_modal_new_target_cancel" class="swal2-cancel btn fw-bold btn-active-light-primary" data-bs-dismiss="modal" style="margin: 0px 8px 0px">No, cancel</button>
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
             <div class="col-lg-12">
                 <div class="card card-custom card-stretch gutter-b">
+                    <div class="card-header border-0 pt-6" style="margin:0px 0px -35px" v-if="entry.id">
+                        <div class="card-title"></div>
+                        <div class="card-toolbar">
+                            <button  class="btn btn-danger" @click="deleteModule(entry)">
+                                Delete module <i class="bi bi-trash"></i>
+                            </button>
+                        </div>
+                    </div>
                     <div class="card-body d-flex flex-column" >
 
                         <div class="row">
@@ -57,21 +88,32 @@
                                 <div class="form-group">
                                     <button class="btn btn-primary" @click="location">Location</button>
                                 </div>
-                                 <div class="form-group col-sm-10"  style="border: 1px solid #b5b5c3;
-                                                                          border-radius: 25px;
+                                 <div class="col-sm-10"  style="border: 1px solid #b5b5c3;
+                                                                          border-radius: 10px;
                                                                           justify-content: center;
                                                                           display: flex;
                                                                           align-items: center" v-if="entry.location==1">
-                                    <select class="form-control form-select col-lg-4" style="margin-bottom: 20px;top:10px" required v-model="subject" @change="data()">
-                                        <option value="" selected disabled>Choose subject</option>
-                                        <option value="Math">Math</option>
-                                        <option value="Science">Science</option>
-                                    </select>
-                                    <select class="form-control form-select col-lg-4" style="margin-left: 20px" v-model="lessonId" @change="filterSubject(lessonId)" required>
-                                        <option value="" selected disabled>Choose lesson</option>
-                                        <option v-for="lesson in lessons" :value="lesson.id">{{lesson.name}}</option>
-                                    </select>
-                                    <i style="width: 10%;
+                                     <div class="col-lg-4" style="margin-bottom: 20px;top:10px">
+                                         <label>Subject</label>
+                                         <select class="form-control form-select "  required v-model="subject" @change="data()">
+                                             <option value="" selected disabled>Choose subject</option>
+                                             <option value="Math">Math</option>
+                                             <option value="Science">Science</option>
+                                         </select>
+                                     </div>
+                                     <div class="col-lg-4" style="margin-left: 20px">
+                                         <label>Lesson<span class="text-danger">*</span></label>
+                                         <select class="form-control form-select"  v-model="lessonId" @change="filterSubject(lessonId)" required>
+                                             <option value="" selected disabled>Choose lesson</option>
+                                             <option v-for="lesson in lessons" :value="lesson.id">{{lesson.name}}</option>
+                                         </select>
+                                         <error-label for="f_grade" :errors="errors.lessonId" ></error-label>
+                                     </div>
+
+
+
+                                     <i style="width: 10%;
+                                                margin-top:25px;
                                                 display: inline-block;
                                                 font-size: 50px;
                                                 cursor: pointer" class="bi bi-x" @click="removeLesson"></i>
@@ -83,7 +125,7 @@
 
 <!--                                </div>-->
 
-                                <div class="form-check form-check-custom form-check-solid me-10 pb-5">
+                                <div class="form-check form-check-custom form-check-solid me-10 pb-5 mt-2">
                                     <input id="enabled" type="checkbox" class="form-check-input h-20px w-20px" v-model="entry.enabled" :disabled="permissionFields['resource_active']==false">
                                     <label for="enabled" class="form-check-label fw-bold">Active</label>
                                     <error-label for="f_grade" :errors="errors.enabled"></error-label>
@@ -186,11 +228,17 @@ import $router from "../../lib/SimpleRouter";
             $router.on("/", this.data).init();
         },
         methods: {
+            deleteModule:function(entry='')
+            {
+                $('#delete').modal('show');
+                this.deleteCour=entry;
+            },
             removeLesson()
             {
               this.entry.location=0;
               this.subject='';
               this.lessonId='';
+              this.errors.lessonId='';
             },
             filterSubject(lessonId)
             {
@@ -263,7 +311,19 @@ import $router from "../../lib/SimpleRouter";
                     }
 
                 }
-            }
+            },
+            async remove(entry) {
+                const res = await $post('/xadmin/inventories/remove', {id: entry.id});
+
+                if (res.code) {
+                    toastr.error(res.message);
+                } else {
+                    toastr.success(res.message);
+                    $('#delete').modal('hide');
+                    window.location.href = '/xadmin/inventories/index';
+                }
+
+            },
         }
     }
 </script>
