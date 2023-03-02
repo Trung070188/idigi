@@ -941,6 +941,14 @@
      padding: 0.75rem;
      vertical-align: top;
  }
-
+ .stepper.stepper-pills .stepper-item.current:last-child .stepper-icon .stepper-number{
+     display:inline-block;
+ }
+ .stepper.stepper-pills .stepper-item.current:last-child .stepper-icon .stepper-check{
+     display:none;
+ }
+ .stepper.stepper-pills .stepper-item.current:last-child .stepper-icon{
+     background-color: #696CFF;
+ }
 
 </style>
