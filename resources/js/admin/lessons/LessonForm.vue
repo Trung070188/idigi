@@ -38,7 +38,7 @@
                                             <option v-for="unit in units" :value="unit.id">{{unit.unit_name}}</option>
                                         </select>
                                     </div>
-                                    <div class="form-group col-sm-12"  style="border: 1px solid #b5b5c3;border-radius: 25px">
+                                    <div class="form-group col-sm-12"  style="border: 1px solid #b5b5c3;border-radius: 25px" v-if="entry.subject">
                                         <label style="margin:15px 0px 10px ">List of modules</label>
                                         <div style="margin-top: 10px;float: right;display: inline-block;margin-right: -13px" class="form-group col-lg-3">
                                             <select class="form-control form-select" required v-model="filter.type" @change="doFilter()">
