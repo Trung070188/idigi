@@ -820,12 +820,12 @@ class SchoolsController extends AdminBaseController
         }
         if($check==0)
         {
-            $query = School::query()->whereIn('id',$schoolIdArrs)->with(['users', 'province', 'district'])->orderBy('id', 'ASC');
+            $query = School::query()->whereIn('id',$schoolIdArrs)->with(['users', 'province', 'district']);
 
 
         }
         else{
-            $query = School::query()->with(['users', 'province', 'district'])->orderBy('id', 'ASC');
+            $query = School::query()->with(['users', 'province', 'district']);
             if($req->role_name) {
                 $admins = [];
                 $nameAdmins = User::query()->with(['roles'])->where('full_name', 'LIKE', '%' . $req->role_name . '%')->get();
@@ -864,6 +864,39 @@ class SchoolsController extends AdminBaseController
         if ($req->district_id && $req->district_id != 'undefined' && $req->district_id != 'null') {
             $query->where('district_id', $req->district_id);
         }
+//Sắp xếp
+        if($req->sortBy){
+            if($req->sortBy == 'school_address' || $req->sortBy == 'license_to' || $req->sortBy == 'label' || $req->sortBy = 'devices_per_user'){
+                if($req->sortDirection == 1){
+                    $query->orderBy($req->sortBy, 'ASC');
+                }
+
+                if($req->sortDirection == -1){
+                    $query->orderBy($req->sortBy, 'DESC');
+                }
+
+            }
+            if($req->sortBy == 'province'){
+                $query->join('provinces', 'provinces.id', '=', 'school.province_id');
+                if($req->sortDirection == 1){
+                    $query->orderBy('provinces.name', 'ASC');
+                }
+
+                if($req->sortDirection == -1){
+                    $query->orderBy('provinces.name', 'DESC');
+                }
+            }
+            if($req->sortBy == 'district'){
+                $query->join('districts', 'districts.id', '=', 'school.district_id');
+                if($req->sortDirection == 1){
+                    $query->orderBy('districts.name', 'ASC');
+                }
+
+                if($req->sortDirection == -1){
+                    $query->orderBy('districts.name', 'DESC');
+                }
+            }
+        }
 
 
         $limit = 25;
@@ -875,30 +908,6 @@ class SchoolsController extends AdminBaseController
         $entries = $query->paginate($limit);
         $users=User::query()->with(['roles'])->whereNotNull('school_id')->orderBy('id','ASC')->get();
 
-        $userAdminSchools=[];
-//        foreach($users as $user)
-//        {
-//            foreach($user->roles as $role)
-//            {
-//               if($role->role_name=='School Admin')
-//               {
-//                   $userAdminSchools[]=$user;
-//               }
-//            }
-//        }
-
-//        foreach($userAdminSchools as $userAdminSchool )
-//        {
-//            $schools=explode(',',$userAdminSchool->school_id);
-//
-//            foreach ($schools as $school)
-//            {
-//                if ($school) {
-//                    $schoolIdArr[] = (int)$school;
-//                }
-//            }
-//
-//        }
         foreach ($entries as $entry) {
 
 

@@ -5,23 +5,27 @@
         <div class="row">
             <div class="col-lg-12">
                 <!-- modal xoa nhieu -->
-                <div class="modal fade" style="margin-right:50px;border:2px solid #333333  " id="delete1" tabindex="-1" role="dialog"
+                <div class="modal fade" style="margin-right:50px;border:2px solid #333333  " id="delete1" tabindex="-1"
+                     role="dialog"
                      aria-hidden="true">
                     <div class="modal-dialog modal-dialog-centered popup-main-1" role="document"
                          style="max-width: 450px;">
-                        <div class="modal-content box-shadow-main paymment-status" style="left:120px;text-align: center; padding: 20px 0px 55px;">
+                        <div class="modal-content box-shadow-main paymment-status"
+                             style="left:120px;text-align: center; padding: 20px 0px 55px;">
                             <div class="close-popup" data-dismiss="modal"></div>
                             <div class="swal2-icon swal2-warning swal2-icon-show">
                                 <div class="swal2-icon-content" style="margin: 0px 25px 0px ">!</div>
                             </div>
                             <div class="swal2-html-container">
-                                <p >Are you sure to delete this school?</p>
+                                <p>Are you sure to delete this school?</p>
                             </div>
                             <div class="swal2-actions">
-                                <button type="submit"  class="swal2-confirm btn fw-bold btn-danger" @click="removeAll">
+                                <button type="submit" class="swal2-confirm btn fw-bold btn-danger" @click="removeAll">
                                     <span class="indicator-label">Yes, delete!</span>
                                 </button>
-                                <button type="reset"  class="swal2-cancel btn fw-bold btn-active-light-primary" data-bs-dismiss="modal" style="margin: 0px 8px 0px">No, cancel</button>
+                                <button type="reset" class="swal2-cancel btn fw-bold btn-active-light-primary"
+                                        data-bs-dismiss="modal" style="margin: 0px 8px 0px">No, cancel
+                                </button>
 
                             </div>
 
@@ -30,23 +34,29 @@
                 </div>
                 <!-- end modal xoa nhieu -->
 
-                <div class="modal fade" style="margin-right:50px;border:2px solid #333333  " id="delete" tabindex="-1" role="dialog"
+                <div class="modal fade" style="margin-right:50px;border:2px solid #333333  " id="delete" tabindex="-1"
+                     role="dialog"
                      aria-hidden="true">
                     <div class="modal-dialog modal-dialog-centered popup-main-1" role="document"
                          style="max-width: 450px;">
-                        <div class="modal-content box-shadow-main paymment-status" style="left:120px;text-align: center; padding: 20px 0px 55px;">
+                        <div class="modal-content box-shadow-main paymment-status"
+                             style="left:120px;text-align: center; padding: 20px 0px 55px;">
                             <div class="close-popup" data-dismiss="modal"></div>
                             <div class="swal2-icon swal2-warning swal2-icon-show">
                                 <div class="swal2-icon-content" style="margin: 0px 25px 0px ">!</div>
                             </div>
                             <div class="swal2-html-container">
-                                <p >Are you sure to delete this school?</p>
+                                <p>Are you sure to delete this school?</p>
                             </div>
                             <div class="swal2-actions">
-                                <button type="submit" id="kt_modal_new_target_submit" class="swal2-confirm btn fw-bold btn-danger" @click="remove(entry)">
+                                <button type="submit" id="kt_modal_new_target_submit"
+                                        class="swal2-confirm btn fw-bold btn-danger" @click="remove(entry)">
                                     <span class="indicator-label">Yes, delete!</span>
                                 </button>
-                                <button type="reset" id="kt_modal_new_target_cancel" class="swal2-cancel btn fw-bold btn-active-light-primary" data-bs-dismiss="modal" style="margin: 0px 8px 0px">No, cancel</button>
+                                <button type="reset" id="kt_modal_new_target_cancel"
+                                        class="swal2-cancel btn fw-bold btn-active-light-primary"
+                                        data-bs-dismiss="modal" style="margin: 0px 8px 0px">No, cancel
+                                </button>
 
                             </div>
 
@@ -92,16 +102,19 @@
                         <div class="card-toolbar">
                             <div class="d-flex justify-content-end" data-kt-customer-table-toolbar="base"
                                  v-if="schoolIds==''">
-                                <button type="button" style="margin-left: 10px" @click="isShowFilter = !isShowFilter" class="btn btn-light" v-if="isShowFilter">
+                                <button type="button" style="margin-left: 10px" @click="isShowFilter = !isShowFilter"
+                                        class="btn btn-light" v-if="isShowFilter">
                                     <i style="margin-left: 5px" class="fas fa-times"></i>
                                     Close Advanced Search
                                 </button>
-                                <button type="button" style="margin-left: 10px" @click="isShowFilter = !isShowFilter" class="btn btn-light" v-if="!isShowFilter">
+                                <button type="button" style="margin-left: 10px" @click="isShowFilter = !isShowFilter"
+                                        class="btn btn-light" v-if="!isShowFilter">
                                     <i class="bi bi-funnel"></i>
                                     Advanced Search
                                 </button>
                                 <a :href="'/xadmin/schools/create'">
-                                    <button v-if="permissions['016']" class="btn btn-primary button-create" style="margin:0 0 0 15px">
+                                    <button v-if="permissions['016']" class="btn btn-primary button-create"
+                                            style="margin:0 0 0 15px">
                                         <i class="bi bi-plus-lg"></i>New School
                                     </button>
                                 </a>
@@ -110,10 +123,12 @@
                                  data-kt-customer-table-toolbar="selected" v-if=" schoolIds!=''">
                                 <div class="fw-bolder me-5">
                                     <span class="me-2" data-kt-customer-table-select="selected_count"></span>{{
-                                    schoolIds.length }} Selected
+                                        schoolIds.length
+                                    }} Selected
                                 </div>
-                                <button v-if="permissions['018']"  type="button" class="btn btn-danger"
-                                        data-kt-customer-table-select="delete_selected" @click="removeAllModal">Delete Selected
+                                <button v-if="permissions['018']" type="button" class="btn btn-danger"
+                                        data-kt-customer-table-select="delete_selected" @click="removeAllModal">Delete
+                                    Selected
                                 </button>
                             </div>
 
@@ -140,20 +155,21 @@
 
                                 </div>
                                 <div class="form-group col-lg-3">
-                                    <label >City/ Province </label>
+                                    <label>City/ Province </label>
                                     <treeselect :options="provinces" v-model="filter.province_id"
                                                 @input="selectProvince"/>
 
                                 </div>
                                 <div class="form-group col-lg-3" v-if="filter.province_id">
-                                    <label >District/ Town </label>
+                                    <label>District/ Town </label>
                                     <treeselect :options="districts" v-model="filter.district_id"/>
 
                                 </div>
 
                                 <div class="form-group col-lg-3">
-                                    <label >Stress/ Award </label>
-                                    <input v-model="filter.school_address" class="form-control" type="text" placeholder="Enter the region/city">
+                                    <label>Stress/ Award </label>
+                                    <input v-model="filter.school_address" class="form-control" type="text"
+                                           placeholder="Enter the region/city">
 
                                 </div>
 
@@ -193,7 +209,8 @@
                         </div>
 
                         <table class="table table-row-bordered align-middle gy-4 gs-9">
-                            <thead class="border-bottom border-gray-200 fs-6 text-gray-600 fw-bolder bg-light bg-opacity-75">
+                            <thead
+                                class="border-bottom border-gray-200 fs-6 text-gray-600 fw-bolder bg-light bg-opacity-75">
                             <tr>
                                 <td width="25" v-if="permissions['018']">
                                     <div class="form-check form-check-sm form-check-custom form-check-solid">
@@ -201,64 +218,84 @@
                                                @change="selectAll()">
                                     </div>
                                 </td>
-                                <th v-for="(header, index) in tableHeaders" :key="index" @click="sortTable(index)">
-                                    <i v-html="header.icon"></i>{{ header.text }}
+                                <th v-for="(header, index) in tableHeaders" :key="index" @click="sortTable(index)"
+                                    :class="header.icon ? 'sort_color' : ''">
+                                    {{ header.text }}<i v-html="header.icon"></i>
                                 </th>
-                                <th >Action</th>
+                                <th>Action</th>
                             </tr>
                             </thead>
-<!--                            <i class="bi bi-sort-up ml-1 mt-1"></i>-->
+                            <!--                            <i class="bi bi-sort-up ml-1 mt-1"></i>-->
                             <tbody>
                             <tr v-if="entries.length==0">
-                                <td valign="top" colspan="10" class="text-center">No results found. Try different keywords or remove search filters.</td>
+                                <td valign="top" colspan="10" class="text-center">No results found. Try different
+                                    keywords or remove search filters.
+                                </td>
                             </tr>
-                            <tr  v-if="entries.length!==0" v-for="(entry,index) in entries" >
+                            <tr v-if="entries.length!==0" v-for="(entry,index) in entries">
                                 <td class="" v-if="permissions['018']">
                                     <div class="form-check form-check-sm form-check-custom form-check-solid">
                                         <input class="form-check-input" type="checkbox" v-model="schoolIds"
                                                :value="entry.id" @change="updateCheckAll">
                                     </div>
                                 </td>
-                                <td >{{index+1}}</td>
-                                <td  v-text="entry.label" @click="edit(entry)"></td>
-                                <td  v-text="entry.province" @click="edit(entry)"></td>
-                                <td  v-text="entry.district" @click="edit(entry)"></td>
-                                <td  v-text="entry.school_address" @click="edit(entry)"></td>
-                                <td  @click="edit(entry)" class="" data-bs-toggle="tooltip" :title="entry.nameSchoolAdmin" >{{entry.nameSchoolAdmin}}</td>
-                                <td  v-text="entry.teacher.length" @click="edit(entry)"></td>
-                                <td  v-text="entry.devices_per_user" @click="edit(entry)"></td>
-                                <td  @click="edit(entry)">{{d(entry.license_to)}}</td>
-                                <td >
-                                    <a href="list.html#" class="btn btn-light btn-active-light-primary btn-sm" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">Actions
+                                <td>{{ index + 1 }}</td>
+                                <td v-text="entry.label" @click="edit(entry)"></td>
+                                <td v-text="entry.province" @click="edit(entry)"></td>
+                                <td v-text="entry.district" @click="edit(entry)"></td>
+                                <td v-text="entry.school_address" @click="edit(entry)"></td>
+                                <td @click="edit(entry)" class="" data-bs-toggle="tooltip"
+                                    :title="entry.nameSchoolAdmin">{{ entry.nameSchoolAdmin }}
+                                </td>
+                                <td v-text="entry.teacher.length" @click="edit(entry)"></td>
+                                <td v-text="entry.devices_per_user" @click="edit(entry)"></td>
+                                <td @click="edit(entry)">{{ d(entry.license_to) }}</td>
+                                <td>
+                                    <a href="list.html#" class="btn btn-light btn-active-light-primary btn-sm"
+                                       data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">Actions
                                         <!--begin::Svg Icon | path: icons/duotune/arrows/arr072.svg-->
                                         <span class="svg-icon svg-icon-5 m-0">
-															<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-																<path d="M11.4343 12.7344L7.25 8.55005C6.83579 8.13583 6.16421 8.13584 5.75 8.55005C5.33579 8.96426 5.33579 9.63583 5.75 10.05L11.2929 15.5929C11.6834 15.9835 12.3166 15.9835 12.7071 15.5929L18.25 10.05C18.6642 9.63584 18.6642 8.96426 18.25 8.55005C17.8358 8.13584 17.1642 8.13584 16.75 8.55005L12.5657 12.7344C12.2533 13.0468 11.7467 13.0468 11.4343 12.7344Z" fill="black" />
+															<svg xmlns="http://www.w3.org/2000/svg" width="24"
+                                                                 height="24" viewBox="0 0 24 24" fill="none">
+																<path
+                                                                    d="M11.4343 12.7344L7.25 8.55005C6.83579 8.13583 6.16421 8.13584 5.75 8.55005C5.33579 8.96426 5.33579 9.63583 5.75 10.05L11.2929 15.5929C11.6834 15.9835 12.3166 15.9835 12.7071 15.5929L18.25 10.05C18.6642 9.63584 18.6642 8.96426 18.25 8.55005C17.8358 8.13584 17.1642 8.13584 16.75 8.55005L12.5657 12.7344C12.2533 13.0468 11.7467 13.0468 11.4343 12.7344Z"
+                                                                    fill="black"/>
 															</svg>
 														</span>
                                     </a>
 
-                                    <div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-bold fs-7 w-125px py-4" data-kt-menu="true">
+                                    <div
+                                        class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-bold fs-7 w-125px py-4"
+                                        data-kt-menu="true">
 
                                         <div class="menu-item px-3">
-                                            <a v-if="permissions['017']" :href="'/xadmin/schools/edit?id='+entry.id" class="menu-link px-3">Edit</a>
+                                            <a v-if="permissions['017']" :href="'/xadmin/schools/edit?id='+entry.id"
+                                               class="menu-link px-3">Edit</a>
                                         </div>
-                                        <div class="menu-item px-3" >
-                                            <a class="menu-link text-danger px-3" v-if="permissions['018'] && entry.teacher.length==0" @click="removeSchool(entry.id)" data-kt-subscriptions-table-filter="delete_row">Delete</a>
-                                            <a class="menu-link text-danger px-3" v-if="permissions['018'] && entry.teacher.length>0" @click="modalDeleteSchool()" data-kt-subscriptions-table-filter="delete_row">Delete</a>
+                                        <div class="menu-item px-3">
+                                            <a class="menu-link text-danger px-3"
+                                               v-if="permissions['018'] && entry.teacher.length==0"
+                                               @click="removeSchool(entry.id)"
+                                               data-kt-subscriptions-table-filter="delete_row">Delete</a>
+                                            <a class="menu-link text-danger px-3"
+                                               v-if="permissions['018'] && entry.teacher.length>0"
+                                               @click="modalDeleteSchool()"
+                                               data-kt-subscriptions-table-filter="delete_row">Delete</a>
 
 
                                         </div>
                                     </div>
                                 </td>
-                                <div class="modal fade" style="margin-right:50px;border:2px solid #333333  " id="deviceConfirm" tabindex="-1" role="dialog"
+                                <div class="modal fade" style="margin-right:50px;border:2px solid #333333  "
+                                     id="deviceConfirm" tabindex="-1" role="dialog"
                                      aria-labelledby="deviceConfirm"
                                      aria-hidden="true">
                                     <div class="modal-dialog modal-dialog-centered popup-main-1" role="document"
                                          style="max-width: 500px;">
-                                        <div class="modal-content box-shadow-main paymment-status" style="left:140px;text-align: center; padding: 27px 0px 10px;">
+                                        <div class="modal-content box-shadow-main paymment-status"
+                                             style="left:140px;text-align: center; padding: 27px 0px 10px;">
                                             <div class="close-popup" data-dismiss="modal"></div>
-                                            <h3 class="popup-title success" >Cannot delete this school</h3>
+                                            <h3 class="popup-title success">Cannot delete this school</h3>
                                             <div class="content">
                                                 <p>You can only delete this school if the list of teachers is empty.</p>
                                             </div>
@@ -269,12 +306,14 @@
                             </tbody>
                         </table>
                         <div class="d-flex pl-9 pr-9 mb-8">
-                            <div class="col-sm-12 col-md-5 d-flex align-items-center justify-content-center justify-content-md-start">
+                            <div
+                                class="col-sm-12 col-md-5 d-flex align-items-center justify-content-center justify-content-md-start">
                                 <!--<div class="mr-2">
                                     <label>Records per page:</label>
                                 </div>-->
                                 <div>
-                                    <select class="form-select form-select-sm form-select-solid" v-model="limit" @change="changeLimit">
+                                    <select class="form-select form-select-sm form-select-solid" v-model="limit"
+                                            @change="changeLimit">
                                         <option value="25">25</option>
                                         <option value="50">50</option>
                                         <option value="100">100</option>
@@ -283,7 +322,8 @@
                                 </div>
                             </div>
                             <!--<div style="float: right; margin: 10px">-->
-                            <div class="col-sm-12 col-md-7 d-flex align-items-center justify-content-center justify-content-md-end">
+                            <div
+                                class="col-sm-12 col-md-7 d-flex align-items-center justify-content-center justify-content-md-end">
                                 <div class="dataTables_paginate paging_simple_numbers" id="kt_customers_table_paginate">
                                     <Paginate :value="paginate" :pagechange="onPageChange"></Paginate>
                                 </div>
@@ -292,261 +332,293 @@
 
                     </div>
                 </div>
+            </div>
         </div>
-    </div>
     </div>
 
 </template>
 
 <script>
-    import {$get, $post, clone, getTimeRangeAll} from "../../utils";
-    import $router from '../../lib/SimpleRouter';
-    import ActionBar from "../includes/ActionBar";
-    import Treeselect from '@riophae/vue-treeselect'
-    import '@riophae/vue-treeselect/dist/vue-treeselect.css'
+import {$get, $post, clone, getTimeRangeAll} from "../../utils";
+import $router from '../../lib/SimpleRouter';
+import ActionBar from "../includes/ActionBar";
+import Treeselect from '@riophae/vue-treeselect'
+import '@riophae/vue-treeselect/dist/vue-treeselect.css'
 
-    let created = getTimeRangeAll();
-    const $q = $router.getQuery();
+let created = getTimeRangeAll();
+const $q = $router.getQuery();
 
-    export default {
-        name: "SchoolsIndex.vue",
-        components: {ActionBar,Treeselect},
-        data() {
-            const permissions = clone(window.$permissions)
-            let isShowFilter = false;
-            let filter = {
-                keyword: $q.keyword || '',
-                label: $q.label || '',
-                school_address:$q.school_address || '',
-                role_name:$q.role_name || '',
-                district_id: $q.district_id != 'undefined' && $q.district_id != 'null' ? $q.district_id : null,
-                province_id:$q.province_id != 'undefined' && $q.province_id != 'null' ? $q.province_id : null,
-            };
-            for (var key in filter) {
-                if (filter[key] != '') {
-                    isShowFilter = true;
-                }
-            }
-            return {
-                tableHeaders: [
-                    { text: 'No.', icon: '' },
-                    { text: 'Name', icon: '' },
-                    { text: 'City/ Province', icon: '' },
-                    { text: 'District/ Town', icon: '' },
-                    { text: 'Stress/ Award', icon: '' },
-                    { text: 'Administrator name', icon: '' },
-                    { text: 'Teacher', icon: '' },
-                    { text: 'Devices per user', icon: '' },
-                    { text: 'License', icon: '' },
-                ],
-                sortDirection: 1,
-                provinces:[],
-                districts:[],
-                permissions,
-               schoolIds: [],
-                school: [],
-                allSelected: false,
-                breadcrumbs: [
-                    {
-                        title: 'School management'
-                    },
-                ],
-                entry:'',
-                entries: [],
-                isShowFilter: isShowFilter,
-                filter: filter,
-                limit: 25,
-                from: 0,
-                to: 0,
-                paginate: {
-                    currentPage: 1,
-                    lastPage: 1,
-                    totalRecord: 0
-                }
-            }
-        },
-        mounted() {
-            let self = this;
-            $.get('/xadmin/schools/getProvince', function (res) {
-                self.provinces = res;
-                if(self.filter.province_id){
-                    self.districts = self.provinces.filter(e => e.id == self.filter.province_id)[0]['districts'];
-                }
+export default {
+    name: "SchoolsIndex.vue",
+    components: {ActionBar, Treeselect},
+    data() {
+        let self = this;
+        const permissions = clone(window.$permissions)
+        let isShowFilter = false;
 
-            });
-            $router.on('/', this.load).init();
+        let filter = {
+            keyword: $q.keyword || '',
+            label: $q.label || '',
+            school_address: $q.school_address || '',
+            role_name: $q.role_name || '',
+            district_id: $q.district_id != 'undefined' && $q.district_id != 'null' ? $q.district_id : null,
+            province_id: $q.province_id != 'undefined' && $q.province_id != 'null' ? $q.province_id : null,
+            sortBy: $q.sortBy || '',
+            sortDirection: $q.sortDirection || '',
+        };
 
-
-        },
-        methods: {
-            sortTable(index) {
-                // Thay đổi hướng sắp xếp
-                this.sortDirection = -this.sortDirection;
-                // Thay đổi biểu tượng sắp xếp
-                const sortIcon = this.sortDirection > 0 ? '<i class="bi bi-sort-up ml-1 mt-1"></i>' : '<i class="bi bi-sort-down-alt ml-1 mt-1"></i>';
-                this.tableHeaders.forEach((header, i) => {
-                    header.icon = index === i ? sortIcon : '';
-                });
-            },
-            selectProvince() {
-                this.filter.district_id = null;
-                this.districts = [];
-                if (this.filter.province_id) {
-                    this.districts = this.provinces.filter(e => e.id == this.filter.province_id)[0]['districts'];
-                }
-
-            },
-              removeSchool:function(deleteSchool='')
-            {
-                  $('#delete').modal('show');
-                     this.entry=deleteSchool;
-            },
-            modalDeleteSchool() {
-                $('#deviceConfirm').modal('show');
-            },
-            removeAllModal()
-            {
-                $('#delete1').modal('show');
-            },
-            edit(entry)
-            {
-                    window.location.href = '/xadmin/schools/edit?id='+entry.id;
-            },
-            async load() {
-                let query = $router.getQuery();
-                this.$loading(true);
-                const res = await $get('/xadmin/schools/data', query);
-                this.$loading(false);
-                setTimeout(function (){
-                    KTMenu.createInstances();
-                }, 0)
-                this.paginate = res.paginate;
-                this.entries = res.data;
-                this.user=res.users;
-                console.log(this.entries);
-                this.from = (this.paginate.currentPage - 1) * (this.limit) + 1;
-                this.to = (this.paginate.currentPage - 1) * (this.limit) + this.entries.length;
-            },
-            async remove() {
-                const res = await $post('/xadmin/schools/remove', {id: this.entry});
-
-                if (res.code) {
-                    toastr.error(res.message);
-                } else {
-                    toastr.success(res.message);
-                    $('#delete').modal('hide');
-
-                }
-
-                $router.updateQuery({page: this.paginate.currentPage, _: Date.now()});
-            },
-            filterClear() {
-                for (var key in this.filter) {
-                    this.filter[key] = '';
-                }
-
-                $router.setQuery({});
-            },
-            doFilter(event) {
-                if (event) {
-                    event.preventDefault();
-                }
-                $router.setQuery(this.filter)
-            },
-            changeLimit() {
-                let params = $router.getQuery();
-                params['page'] = 1;
-                params['limit'] = this.limit;
-                $router.setQuery(params)
-            },
-
-            async toggleStatus(entry) {
-                const res = await $post('/xadmin/schools/toggleStatus', {
-                    id: entry.id,
-                    status: entry.status
-                });
-
-                if (res.code === 200) {
-                    toastr.success(res.message);
-                } else {
-                    toastr.error(res.message);
-                }
-
-            },
-            onPageChange(page) {
-                $router.updateQuery({page: page})
-            },
-            selectAll() {
-                if (this.allSelected) {
-                    const selected = this.entries.map((u) => u.id);
-                    this.schoolIds = selected;
-                    this.school = this.entries
-                } else {
-                    this.schoolIds = [];
-                    this.school = [];
-                }
-            },
-            updateCheckAll() {
-                this.school = [];
-                if (this.schoolIds.length === this.entries.length) {
-                    this.allSelected = true;
-                } else {
-                    this.allSelected = false;
-                }
-                let self = this;
-                self.schoolIds.forEach(function (e) {
-                    self.entries.forEach(function (e1) {
-                        if (e1.id == e) {
-                            self.school.push(e1);
-                        }
-                    })
-                })
-            },
-            async removeAll()
-            {
-
-                const res = await $post('/xadmin/schools/removeAll', {ids: this.schoolIds});
-                if(res.code==1)
-                {
-                    $('#delete1').modal('hide');
-                    $('#deviceConfirm').modal('show');
-                    this.schoolIds = [];
-                    this.school = [];
-                    this.allSelected = false;
-                }
-
-                 else {
-                    toastr.success(res.message);
-                    this.schoolIds = [];
-                    this.school = [];
-                    $('#delete1').modal('hide');
-                    this.allSelected = false;
-                    $router.updateQuery({page: this.paginate.currentPage, _: Date.now()});
-
-                }
-
-
+        for (var key in filter) {
+            if (filter[key] != '' && filter[key] != 'undefined' && filter[key] != null && key != 'sortBy' && key != 'sortDirection') {
+                isShowFilter = true;
             }
         }
+        let tableHeaders = [
+            {text: 'No.', icon: ''},
+            {text: 'Name', icon: '', name: 'label'},
+            {text: 'City/ Province', icon: '', name: 'province'},
+            {text: 'District/ Town', icon: '', name: 'district'},
+            {text: 'Stress/ Award', icon: '', name: 'school_address'},
+            {text: 'Administrator name', icon: ''},
+            {text: 'Teacher', icon: ''},
+            {text: 'Devices per user', icon: '', name: 'devices_per_user'},
+            {text: 'License', icon: '', name: 'license_to'},
+        ];
+
+
+        tableHeaders.forEach(function (e) {
+            if (e.name == filter['sortBy']) {
+
+                self.sortDirection = filter['sortDirection'];
+                let icon = self.sortDirection > 0 ? '<i class="bi bi-sort-up ml-1 mt-1"></i>' : '<i class="bi bi-sort-down-alt ml-1 mt-1"></i>';
+                e.icon = icon;
+            }
+        })
+
+        return {
+            tableHeaders,
+            sortDirection: 1,
+            provinces: [],
+            districts: [],
+            permissions,
+            schoolIds: [],
+            school: [],
+            allSelected: false,
+            breadcrumbs: [
+                {
+                    title: 'School management'
+                },
+            ],
+            entry: '',
+            entries: [],
+            isShowFilter: isShowFilter,
+            filter: filter,
+            limit: 25,
+            from: 0,
+            to: 0,
+            paginate: {
+                currentPage: 1,
+                lastPage: 1,
+                totalRecord: 0
+            }
+        }
+    },
+    mounted() {
+        let self = this;
+        $.get('/xadmin/schools/getProvince', function (res) {
+            self.provinces = res;
+            if (self.filter.province_id) {
+                self.districts = self.provinces.filter(e => e.id == self.filter.province_id)[0]['districts'];
+            }
+
+        });
+        $router.on('/', this.load).init();
+
+
+    },
+    methods: {
+        sortTable(index) {
+            let self = this;
+            let check = 0;
+            this.tableHeaders.forEach((header, i) => {
+                if (header.name) {
+                    if (index === i) {
+                        self.sortDirection = -this.sortDirection;
+                        self.filter.sortDirection = this.sortDirection;
+                        const sortIcon = this.sortDirection > 0 ? '<i class="bi bi-sort-up ml-1 mt-1"></i>' : '<i class="bi bi-sort-down-alt ml-1 mt-1"></i>';
+                        header.icon = sortIcon;
+                        self.filter.sortBy = header.name;
+                        $router.setQuery(this.filter);
+                        self.filter.sortBy = header.name;
+                        check = 1;
+                        $router.setQuery(this.filter);
+                    }
+                }
+            });
+
+            this.tableHeaders.forEach((header, i) => {
+                if (header.name) {
+                    if (index != i && check == 1) {
+                        header.icon = '';
+                    }
+                }
+            });
+        },
+        selectProvince() {
+            this.filter.district_id = null;
+            this.districts = [];
+            if (this.filter.province_id) {
+                this.districts = this.provinces.filter(e => e.id == this.filter.province_id)[0]['districts'];
+            }
+
+        },
+        removeSchool: function (deleteSchool = '') {
+            $('#delete').modal('show');
+            this.entry = deleteSchool;
+        },
+        modalDeleteSchool() {
+            $('#deviceConfirm').modal('show');
+        },
+        removeAllModal() {
+            $('#delete1').modal('show');
+        },
+        edit(entry) {
+            window.location.href = '/xadmin/schools/edit?id=' + entry.id;
+        },
+        async load() {
+            let query = $router.getQuery();
+            this.$loading(true);
+            const res = await $get('/xadmin/schools/data', query);
+            this.$loading(false);
+            setTimeout(function () {
+                KTMenu.createInstances();
+            }, 0)
+            this.paginate = res.paginate;
+            this.entries = res.data;
+            this.user = res.users;
+            this.from = (this.paginate.currentPage - 1) * (this.limit) + 1;
+            this.to = (this.paginate.currentPage - 1) * (this.limit) + this.entries.length;
+        },
+        async remove() {
+            const res = await $post('/xadmin/schools/remove', {id: this.entry});
+
+            if (res.code) {
+                toastr.error(res.message);
+            } else {
+                toastr.success(res.message);
+                $('#delete').modal('hide');
+
+            }
+
+            $router.updateQuery({page: this.paginate.currentPage, _: Date.now()});
+        },
+        filterClear() {
+            for (var key in this.filter) {
+                this.filter[key] = '';
+            }
+
+            $router.setQuery({});
+        },
+        doFilter(event) {
+            if (event) {
+                event.preventDefault();
+            }
+            $router.setQuery(this.filter)
+        },
+        changeLimit() {
+            let params = $router.getQuery();
+            params['page'] = 1;
+            params['limit'] = this.limit;
+            $router.setQuery(params)
+        },
+
+        async toggleStatus(entry) {
+            const res = await $post('/xadmin/schools/toggleStatus', {
+                id: entry.id,
+                status: entry.status
+            });
+
+            if (res.code === 200) {
+                toastr.success(res.message);
+            } else {
+                toastr.error(res.message);
+            }
+
+        },
+        onPageChange(page) {
+            $router.updateQuery({page: page})
+        },
+        selectAll() {
+            if (this.allSelected) {
+                const selected = this.entries.map((u) => u.id);
+                this.schoolIds = selected;
+                this.school = this.entries
+            } else {
+                this.schoolIds = [];
+                this.school = [];
+            }
+        },
+        updateCheckAll() {
+            this.school = [];
+            if (this.schoolIds.length === this.entries.length) {
+                this.allSelected = true;
+            } else {
+                this.allSelected = false;
+            }
+            let self = this;
+            self.schoolIds.forEach(function (e) {
+                self.entries.forEach(function (e1) {
+                    if (e1.id == e) {
+                        self.school.push(e1);
+                    }
+                })
+            })
+        },
+        async removeAll() {
+
+            const res = await $post('/xadmin/schools/removeAll', {ids: this.schoolIds});
+            if (res.code == 1) {
+                $('#delete1').modal('hide');
+                $('#deviceConfirm').modal('show');
+                this.schoolIds = [];
+                this.school = [];
+                this.allSelected = false;
+            } else {
+                toastr.success(res.message);
+                this.schoolIds = [];
+                this.school = [];
+                $('#delete1').modal('hide');
+                this.allSelected = false;
+                $router.updateQuery({page: this.paginate.currentPage, _: Date.now()});
+
+            }
+
+
+        }
     }
+}
 </script>
 
 <style scoped>
-    td {
-        cursor: pointer;
-    }
-    .table th, .table td
-    {
-        max-width: 150px;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-        cursor: pointer;
-        padding: 0.75rem;
-        vertical-align: top;
-    }
-    tr:hover {
-        background-color: #f2f2f2;
-    }
+td {
+    cursor: pointer;
+}
+
+.table th, .table td {
+    max-width: 150px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    cursor: pointer;
+    padding: 0.75rem;
+    vertical-align: top;
+}
+
+tr:hover {
+    background-color: #f2f2f2;
+}
+
+.sort_color {
+    color: black;
+}
 
 </style>
