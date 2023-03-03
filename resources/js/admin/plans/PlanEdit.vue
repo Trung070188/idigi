@@ -58,31 +58,19 @@
                                     <input v-model="filter.keyword" @keydown.enter="doFilter($event)" class="form-control" placeholder="Enter the lesson name"/>
                                 </div>
                                 <div class="h-15px me-3" style="width: 218px">
-                                    <label>Subject </label>
-                                    <select required class="form-control form-select" v-model="filter.subject"
-                                            @keydown.enter="doFilter('subject', filter.subject, $event)">
-                                        <option value="" disabled selected>Choose Subject</option>
-                                        <option value="0">All</option>
-                                        <option value="Math">Math</option>
-                                        <option value="Science ">Science</option>
-                                    </select>
+                                    <label>Unit </label>
+<!--                                    <select required class="form-control form-select" v-model="filter.subject"-->
+<!--                                            @keydown.enter="doFilter('subject', filter.subject, $event)">-->
+<!--                                        <option value="" disabled selected>Choose Subject</option>-->
+<!--                                        <option value="0">All</option>-->
+<!--                                        <option value="Math">Math</option>-->
+<!--                                        <option value="Science ">Science</option>-->
+<!--                                    </select>-->
+                                    <treeselect :options="units" v-model="filter.units" placeholder="Choose unit"/>
                                 </div>
                                 <div class="h-15px me-3" style="width: 218px">
-                                    <label>Grade </label>
-                                    <select required class="form-control form-select" v-model="filter.grade"
-                                            @keydown.enter="doFilter('grade', filter.grade, $event)">
-                                        <option value="" disabled selected>Choose Grade</option>
-                                        <option value="0">All</option>
-                                        <option value="1">1</option>
-                                        <option value="2">2</option>
-                                        <option value="3">3</option>
-                                        <option value="4">4</option>
-                                        <option value="5">5</option>
-                                        <option value="6">6</option>
-                                        <option value="7">7</option>
-                                        <option value="8">8</option>
-                                        <option value="9">9</option>
-                                    </select>
+                                    <label>Course </label>
+                                    <treeselect :options="courses" v-model="filter.courses" placeholder="Choose course"/>
                                 </div>
                             </div>
                             <div class="d-flex mt-20">
@@ -966,9 +954,14 @@
                 name: $q.name || '',
                 subject: $q.subject || '',
                 grade: $q.grade || '',
+                units: $q.units != 'undefined' && $q.units != 'null' ? $q.units : null,
+                courses: $q.courses != 'undefined' && $q.courses != 'null' ? $q.courses : null,
+
             };
 
             return {
+                courses:$json.courses || [],
+                units:$json.units || [],
                 dataDeviceEdit:[],
                 disableContinue:false,
                 cachePlan:$json.cachePlan,
@@ -1054,6 +1047,14 @@
             $router.on('/', this.load).init();
         },
         methods: {
+            selectProvince() {
+                this.filter.district_id = null;
+                this.districts = [];
+                if (this.filter.province_id) {
+                    this.districts = this.provinces.filter(e => e.id == this.filter.province_id)[0]['districts'];
+                }
+
+            },
             cancelModalLesson()
             {
                 $('#kt_modal_invite').modal('hide');
