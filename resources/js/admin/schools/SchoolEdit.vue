@@ -84,13 +84,13 @@
 
                                     </div>
 
-                                    <div class="form-group col-lg-4">
+<!--                                    <div class="form-group col-lg-4">
                                         <label>School address <span class="text-danger">*</span></label>
                                         <input v-model="entry.school_address" :disabled="permissionFields['school_address']==false" class="form-control"
                                                placeholder="Enter the school address">
                                         <error-label :errors="errors.school_address"></error-label>
 
-                                    </div>
+                                    </div>-->
                                     <div class="form-group col-lg-4">
                                         <label>School email</label>
                                         <input v-model="entry.school_email" :disabled="permissionFields['school_email']==false" class="form-control"
@@ -99,6 +99,29 @@
 
                                     </div>
 
+                                </div>
+                                <div class="row">
+                                    <div class="form-group col-lg-4">
+                                        <label>Province <span class="text-danger">*</span></label>
+                                        <treeselect :options="provinces" v-model="entry.province_id"
+                                                    @input="selectProvince"/>
+                                        <error-label for="f_school_name" :errors="errors.province_id"></error-label>
+
+                                    </div>
+                                    <div class="form-group col-lg-4" v-if="entry.province_id">
+                                        <label>District <span class="text-danger">*</span></label>
+                                        <treeselect :options="districts" v-model="entry.district_id"/>
+                                        <error-label for="f_school_name" :errors="errors.district_id"></error-label>
+
+                                    </div>
+
+                                    <div class="form-group col-lg-4">
+                                        <label>School address <span class="text-danger">*</span></label>
+                                        <input v-model="entry.school_address" class="form-control"
+                                               placeholder="Enter the school address">
+                                        <error-label :errors="errors.school_address"></error-label>
+
+                                    </div>
                                 </div>
                                 <div class="row">
                                     <div class="form-group col-lg-4">
@@ -323,6 +346,8 @@
             })
 
             return {
+                provinces: [],
+                districts: [],
                 active_allocation:$json.active_allocation,
                 roleName:$json.roleName,
                 permissions,
@@ -352,6 +377,15 @@
             }
         },
         mounted() {
+            let self = this;
+            $.get('/xadmin/schools/getProvince', function (res) {
+                self.provinces = res;
+                if(self.entry.province_id){
+                    self.districts = self.provinces.filter(e => e.id == self.entry.province_id)[0]['districts'];
+                }
+
+            });
+
             $('.noString').keypress(function (e) {
                 if (e.keyCode < 48 || e.keyCode > 57) {
                     e.preventDefault();
@@ -359,6 +393,14 @@
             })
         },
         methods: {
+            selectProvince() {
+                this.entry.district_id = null;
+                this.districts = [];
+                if (this.entry.province_id) {
+                    this.districts = this.provinces.filter(e => e.id == this.entry.province_id)[0]['districts'];
+                }
+
+            },
             modalDeleteSchool() {
                 $('#deviceConfirm').modal('show');
             },
