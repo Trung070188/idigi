@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Exports\SchoolErrorExport;
 use App\Exports\TeacherErrorExport;
 use App\Helpers\PermissionField;
 use App\Imports\SchoolImport;
@@ -1148,7 +1149,7 @@ class SchoolsController extends AdminBaseController
 
     public function downloadTemplate(): BinaryFileResponse
     {
-        return response()->download(public_path('sample/Import_School_Template.xlsx'));
+        return response()->download(public_path('sample/Import_School_Template_a.xlsx'));
     }
 
     public function validateImportSchool(Request $req)
@@ -1210,7 +1211,6 @@ class SchoolsController extends AdminBaseController
         foreach ($schoolLists as $schoolList) {
 
             foreach ($schoolList as $schools) {
-
                 foreach ($schools as $key => $school) {
                     if ($key > 8 && $school[0] != null) {
                         $item = [];
@@ -1229,18 +1229,27 @@ class SchoolsController extends AdminBaseController
                             'license_to' => ['required','date_format:d/m/Y']
                         ]);
                         $province = Province::query()->where('name', 'LIKE', '%' . $item['province'] . '%')->get();
-                        if ($province) {
+                        if ($province->count()!==0) {
+                            $item['province']=$province[0]->id;
                             $district = District::query()->where('province_id', $province[0]->id)->where('name', 'LIKE', '%' . $item['district'] . '%')->get();
+                            $item['district']=$district[0]->id;
                         }
-                        $validator->after(function ($validate) use ($province, $district) {
+                        $validator->after(function ($validate) use ($province) {
                             if ($province->count() == 0) {
                                 $validate->errors()->add('province', 'City is not found');
                             }
-                            if ($district->count() == 0) {
-                                $validate->errors()->add('district', 'District is not found');
 
-                            }
                         });
+                        if($province->count()!==0)
+                        {
+                            $validator->after(function ($validate) use ($district)
+                            {
+                                if ($district->count() == 0) {
+                                    $validate->errors()->add('district', 'District is not found');
+
+                                }
+                            });
+                        }
                         if ($validator->fails()) {
                             $item['error'] = $validator->errors()->messages();
                             $code = 2;//Có lỗi
@@ -1293,12 +1302,12 @@ class SchoolsController extends AdminBaseController
 
     }
 
-    public function exportErrorTeacher(Request $req)
+    public function exportErrorSchool(Request $req)
     {
         $fileName = $req->fileError;
         $fileError = json_decode(Cache::get($fileName), true);
         Cache::forget($fileName);
-        return Excel::download(new TeacherErrorExport($fileError), "File_import_teacher_error.xlsx");
+        return Excel::download(new SchoolErrorExport($fileError), "File_import_school_error.xlsx");
     }
 
     public function import(Request $req)
@@ -1309,26 +1318,17 @@ class SchoolsController extends AdminBaseController
             return ['code' => 405, 'message' => 'Method not allow'];
         }
         if ($dataImport['fileImport'] != []) {
-            $user = Auth::user();
             foreach ($dataImport['fileImport'] as $import) {
-                $user = new User();
-                $user->username = $import['username'];
-                $user->full_name = $import['full_name'];
-                $user->phone = $import['phone'];
-                $user->email = $import['email'];
-                $user->class = $import['class'];
-                $user->password = Hash::make($import['password']);
-                $user->school_id = $dataImport['school_id'];
-                $user->state = 1;
-                $user->save();
-                UserRole::create(['user_id' => $user->id, 'role_id' => 5]);
-
-                $content = [
-                    'full_name' => $import['full_name'],
-                    'password' => $import['password'],
-                    'username' => $import['username']
-                ];
-                dispatch(new SendMailPassword($import['email'], 'New account information', $content));
+                $school = new School();
+                $school->label = $import['label'];
+                $school->school_phone = $import['school_phone'];
+                $school->school_email = $import['school_email'];
+                $school->devices_per_user = $import['devices_per_user'];
+                $school->number_of_users = ($import['number_of_users']);
+                $school->province_id = $import['province'];
+                $school->district_id = $import['district'];
+                $school->license_to = date('Y-m-d H:i:s', strtotime($import['license_to']));
+                $school->save();
             }
             return [
                 'code' => 0,

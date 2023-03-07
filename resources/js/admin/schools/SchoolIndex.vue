@@ -811,7 +811,7 @@ export default {
             if (this.doNotImport ==0) {
                 {
                     this.$loading(true);
-                    const res = await $post('/xadmin/users/import', {
+                    const res = await $post('/xadmin/schools/import', {
                         fileImport: this.fileImport,
                         school_id:this.entry.id,
                     }, false);
@@ -845,7 +845,7 @@ export default {
         },
         exportErrorImportSchool()
         {
-            window.location.href='/xadmin/users/exportErrorTeacher?fileError='+ this.errorName;
+            window.location.href='/xadmin/schools/exportErrorSchool?fileError='+ this.errorName;
         },
         downloadTemplate()
         {
