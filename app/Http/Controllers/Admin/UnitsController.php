@@ -193,7 +193,7 @@ class UnitsController extends AdminBaseController
                 "codeSubject" => $entry->subject,
                 "nameSubject" => 'iSMART ' . $entry->subject,
                 "grade" => $lesson->grade,
-                "idUnit" => $entry->id,
+                "idUnit" => $entry->position,
                 "titleUnit" => $entry->unit_name,
                 "nameUnit" => $entry->unit_name,
                 "idLesson" => $lesson->id,
