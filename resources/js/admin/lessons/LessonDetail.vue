@@ -124,9 +124,9 @@
 
                                 </div>
                                 <div class="form-check form-check-custom form-check-solid pb-5">
-                                    <input id="state" type="checkbox" v-model="entry.active" class="form-check-input h-20px w-20px" checked>
+                                    <input id="state" type="checkbox" v-model="entry.enabled" class="form-check-input h-20px w-20px" checked>
                                     <label for="state" class="form-check-label fw-bold">Active</label>
-                                    <error-label for="f_grade" :errors="errors.active"></error-label>
+                                    <error-label for="f_grade" :errors="errors.enabled"></error-label>
                                 </div>
                             </div>
                         </div>
