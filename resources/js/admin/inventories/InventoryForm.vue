@@ -307,7 +307,8 @@ import $router from "../../lib/SimpleRouter";
                     toastr.success(res.message);
 
                     if (!this.entry.id) {
-                        location.replace('/xadmin/inventories/edit?id=' + res.id);
+                        //location.replace('/xadmin/inventories/edit?id=' + res.id);
+                        location.replace('/xadmin/inventories/index');
                     }
 
                 }

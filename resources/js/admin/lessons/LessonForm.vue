@@ -188,8 +188,8 @@
                 this.$loading(true);
                 const res = await $get("/xadmin/lessons/dataCreateLesson", query);
                 this.$loading(false);
-                // this.modules = res.module;
-                this.modules=this.modules.concat(this.list);
+                this.modules = res.module;
+                //this.modules=this.modules.concat(this.list);
                 this.units=res.units;
 
             },

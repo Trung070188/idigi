@@ -151,6 +151,8 @@ class InventoriesController extends AdminBaseController
         }
 
         $data = $req->get('entry');
+        $data['lessonId'] = $req->lessonId;
+        $data['subject'] = $req->subject;
 
         $rules = [
             //'file_image_new' => 'required',
@@ -166,6 +168,8 @@ class InventoriesController extends AdminBaseController
         {
             $rules['lessonId']=['required'];
         }
+
+
         $v = Validator::make($data, $rules);
 
         if ($v->fails()) {
