@@ -4,6 +4,310 @@
                    :breadcrumbs="breadcrumbs" title="School management"/>
         <div class="row">
             <div class="col-lg-12">
+
+                <!-- Modal Import School -->
+                <div class="post d-flex flex-column-fluid" id="kt_post">
+                    <div id="kt_content_container" class="container-xxl">
+                        <div class="modal fade" id="kt_modal_create_app" ref="myModal" tabindex="-1" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered mw-900px">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h2>Import School</h2>
+                                        <div class="btn btn-sm btn-icon btn-active-color-primary"
+                                             data-bs-dismiss="modal">
+                                            <span class="svg-icon svg-icon-1">
+														<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                                             viewBox="0 0 24 24" fill="none">
+															<rect opacity="0.5" x="6" y="17.3137" width="16" height="2"
+                                                                  rx="1" transform="rotate(-45 6 17.3137)"
+                                                                  fill="black"/>
+															<rect x="7.41422" y="6" width="16" height="2" rx="1"
+                                                                  transform="rotate(45 7.41422 6)" fill="black"/>
+														</svg>
+													</span>
+                                        </div>
+                                    </div>
+                                    <div class="modal-body py-lg-10 px-lg-10">
+                                        <div
+                                            class="stepper stepper-pills stepper-column d-flex flex-column flex-xl-row flex-row-fluid"
+                                            id="kt_modal_create_app_stepper">
+                                            <div
+                                                class="d-flex justify-content-center justify-content-xl-start flex-row-auto w-100 w-xl-300px">
+                                                <div class="stepper-nav ps-lg-10">
+                                                    <div class="stepper-item current" data-kt-stepper-element="nav">
+                                                        <div class="stepper-line w-40px"></div>
+                                                        <div class="stepper-icon w-40px h-40px">
+                                                            <i class="stepper-check fas fa-check"></i>
+                                                            <span class="stepper-number">1</span>
+                                                        </div>
+                                                        <div class="stepper-label">
+                                                            <h3 class="stepper-title">Upload file</h3>
+                                                        </div>
+                                                    </div>
+                                                    <div class="stepper-item" data-kt-stepper-element="nav">
+                                                        <div class="stepper-line w-40px"></div>
+                                                        <div class="stepper-icon w-40px h-40px">
+                                                            <i class="stepper-check fas fa-check"></i>
+                                                            <span class="stepper-number">2</span>
+                                                        </div>
+                                                        <div class="stepper-label">
+                                                            <h3 class="stepper-title">Validation</h3>
+                                                        </div>
+                                                        <!--begin::Label-->
+                                                    </div>
+                                                    <!--end::Step 2-->
+                                                    <!--begin::Step 3-->
+                                                    <div class="stepper-item" data-kt-stepper-element="nav">
+                                                        <!--begin::Line-->
+                                                        <div class="stepper-line w-40px"></div>
+                                                        <!--end::Line-->
+                                                        <!--begin::Icon-->
+                                                        <div class="stepper-icon w-40px h-40px">
+                                                            <i class="stepper-check fas fa-check"></i>
+                                                            <span class="stepper-number">3</span>
+                                                        </div>
+                                                        <!--end::Icon-->
+                                                        <!--begin::Label-->
+                                                        <div class="stepper-label">
+                                                            <h3 class="stepper-title">Completed</h3>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <!--end::Nav-->
+                                            </div>
+                                            <!--begin::Aside-->
+                                            <!--begin::Content-->
+                                            <div class="flex-row-fluid py-lg-5 px-lg-15">
+                                                <!--begin::Form-->
+                                                <form class="form" novalidate="novalidate"
+                                                      id="kt_modal_create_app_form">
+                                                    <!--begin::Step 1-->
+                                                    <div class="current" data-kt-stepper-element="content">
+                                                        <div class="w-100">
+                                                            <!--begin::Input group-->
+                                                            <div class="fv-row mb-10">
+                                                                <div class="dropzone dropzone-queue mb-2 ">
+                                                                    <label for="file-upload"
+                                                                           class="btn btn-primary btn-active-primary btn-sm">
+                                                                        Upload file
+                                                                    </label>
+                                                                    <label>Click to select file (*.xls, *.xlsx). Max
+                                                                        file size is 5Mb</label>
+                                                                    <!--                                                    <button for="file-upload" class="btn btn-primary" > Upload file</button>-->
+                                                                    <input type="file" id="file-upload" ref="uploader"
+                                                                           class="form-control-file"
+                                                                           @change="importFileSchool">
+                                                                    <error-label></error-label>
+                                                                    <div class="dropzone-items wm-200px"></div>
+
+                                                                    <div class="dropzone-item p-5"
+                                                                         v-if="fileUpLoad!=''">
+                                                                        <!--begin::File-->
+                                                                        <div class="dropzone-file">
+                                                                            <div class="dropzone-filename text-dark"
+                                                                                 title="some_image_file_name.jpg">
+                                                                                <span
+                                                                                    data-dz-name="">{{ fileUpLoad }}</span>
+                                                                                <strong>(
+                                                                                    <span
+                                                                                        data-dz-size="">{{ sizeFile }}</span>)</strong>
+                                                                            </div>
+                                                                            <div class="dropzone-error mt-0"
+                                                                                 data-dz-errormessage=""></div>
+                                                                        </div>
+                                                                        <div class="dropzone-toolbar">
+                                                                    <span class="dropzone-delete" data-dz-remove="">
+																			<i style="font-size: 15px; color: red"
+                                                                               class="bi bi-trash"
+                                                                               @click="removeFileSchool"></i>
+																		</span>
+                                                                        </div>
+                                                                    </div>
+                                                                    <error-label
+                                                                        :errors="errors.sizeFile"></error-label>
+                                                                </div>
+                                                                <div v-if="valueValidateImportSchool==0"
+                                                                     class="dropzone-panel mb-4  ">
+                                                                    <a class="btn btn-light btn-active-light-primary btn-sm"
+                                                                       data-kt-menu-trigger="click"
+                                                                       @click="downloadTemplate()"><i
+                                                                        class="bi bi-download mr-2"></i>Download
+                                                                        template here</a>
+
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <!--end::Step 1-->
+                                                    <!--begin::Step 2-->
+                                                    <div data-kt-stepper-element="content">
+                                                        <div class="w-100">
+                                                            <!--begin::Input group-->
+                                                            <div class="fv-row">
+                                                                <!--begin::Label-->
+                                                                <label
+                                                                    class="d-flex align-items-center fs-5 fw-bold mb-4">
+                                                                    <span class="required">Validation result</span>
+                                                                    <i class="fas fa-exclamation-circle ms-2 fs-7"
+                                                                       data-bs-toggle="tooltip"
+                                                                       title="validation result"></i>
+                                                                </label>
+                                                            </div>
+                                                            <div v-if="valueValidateImportSchool!=0"
+                                                                 class="d-flex flex-stack py-5 border-bottom border-gray-300 border-bottom-dashed">
+                                                                <div class="d-flex align-items-center">
+                                                                    <div class="ms-6">
+
+                                                                        <div class="fw-bold text-muted">
+                                                                            {{ fileImport.length }} new
+                                                                            record(s)
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="d-flex">
+                                                                    <div class="text-end">
+                                                                <span
+                                                                    class="form-check form-check-custom form-check-solid">
+                                                                    <input class="form-check-input" type="radio"
+                                                                           name="category" value="0"
+                                                                           v-model="doNotImport"/>
+                                                                    <label style="margin: 0px 10px 0px">Import</label>
+                                                                    <input class="form-check-input" type="radio"
+                                                                           name="category" value="1"
+                                                                           v-model="doNotImport"/>
+                                                                    <label
+                                                                        style="margin: 0px 10px 0px"> Do not import </label>
+                                                                </span>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div v-if="valueValidateImportSchool!=0"
+                                                                 class="d-flex flex-stack py-5 border-bottom border-gray-300 border-bottom-dashed">
+                                                                <div class="d-flex align-items-center">
+                                                                    <div class="ms-6">
+
+                                                                        <div class="fw-bold text-muted">
+                                                                            {{ fileError.length }} error
+                                                                            record(s)
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="d-flex" v-if="fileError.length>0">
+                                                                    <div class="text-end">
+                                                                        <div class="fs-7 text-muted">
+                                                                            <a @click="exportErrorImportSchool"
+                                                                               type="button" class="btn btn-primary">Export</a>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <!--end::Input group-->
+                                                        </div>
+                                                    </div>
+                                                    <!--end::Step 2-->
+                                                    <!--begin::Step 3-->
+                                                    <div data-kt-stepper-element="content">
+                                                        <div class="w-100">
+                                                            <!--begin::Input group-->
+                                                            <div class="fv-row mb-10">
+                                                            </div>
+                                                            <!--end::Input group-->
+                                                            <!--begin::Input group-->
+                                                            <div class="fv-row">
+                                                                <label v-if="doNotImport==0">Do you want to import
+                                                                    {{ fileImport.length }} records?</label>
+                                                                <label v-if="doNotImport==1"> Do you want to not import
+                                                                    {{ fileImport.length }} records?</label>
+                                                            </div>
+                                                            <!--end::Input group-->
+                                                        </div>
+                                                    </div>
+                                                    <div class="d-flex flex-stack pt-10">
+                                                        <!--begin::Wrapper-->
+                                                        <div class="me-2">
+                                                            <button type="button"
+                                                                    class="btn btn-lg btn-light-primary me-3"
+                                                                    data-kt-stepper-action="previous">
+                                                                <!--begin::Svg Icon | path: icons/duotune/arrows/arr063.svg-->
+                                                                <span class="svg-icon svg-icon-3 me-1">
+																		<svg xmlns="http://www.w3.org/2000/svg"
+                                                                             width="24" height="24" viewBox="0 0 24 24"
+                                                                             fill="none">
+																			<rect opacity="0.5" x="6" y="11" width="13"
+                                                                                  height="2" rx="1" fill="black"/>
+																			<path
+                                                                                d="M8.56569 11.4343L12.75 7.25C13.1642 6.83579 13.1642 6.16421 12.75 5.75C12.3358 5.33579 11.6642 5.33579 11.25 5.75L5.70711 11.2929C5.31658 11.6834 5.31658 12.3166 5.70711 12.7071L11.25 18.25C11.6642 18.6642 12.3358 18.6642 12.75 18.25C13.1642 17.8358 13.1642 17.1642 12.75 16.75L8.56569 12.5657C8.25327 12.2533 8.25327 11.7467 8.56569 11.4343Z"
+                                                                                fill="black"/>
+																		</svg>
+																	</span>
+                                                                <!--end::Svg Icon-->Back
+                                                            </button>
+                                                        </div>
+                                                        <!--end::Wrapper-->
+                                                        <!--begin::Wrapper-->
+                                                        <div>
+                                                            <button type="button" class="btn btn-lg btn-primary"
+                                                                    data-kt-stepper-action="submit"
+                                                                    @click="saveImport()">
+																		<span class="indicator-label">Submit
+                                                                            <!--begin::Svg Icon | path: icons/duotune/arrows/arr064.svg-->
+																		<span class="svg-icon svg-icon-3 ms-2 me-0">
+																			<svg xmlns="http://www.w3.org/2000/svg"
+                                                                                 width="24" height="24"
+                                                                                 viewBox="0 0 24 24" fill="none">
+																				<rect opacity="0.5" x="18" y="13"
+                                                                                      width="13" height="2" rx="1"
+                                                                                      transform="rotate(-180 18 13)"
+                                                                                      fill="black"/>
+																				<path
+                                                                                    d="M15.4343 12.5657L11.25 16.75C10.8358 17.1642 10.8358 17.8358 11.25 18.25C11.6642 18.6642 12.3358 18.6642 12.75 18.25L18.2929 12.7071C18.6834 12.3166 18.6834 11.6834 18.2929 11.2929L12.75 5.75C12.3358 5.33579 11.6642 5.33579 11.25 5.75C10.8358 6.16421 10.8358 6.83579 11.25 7.25L15.4343 11.4343C15.7467 11.7467 15.7467 12.2533 15.4343 12.5657Z"
+                                                                                    fill="black"/>
+																			</svg>
+																		</span>
+                                                                          </span>
+                                                            </button>
+                                                            <button type="button" class="btn btn-lg btn-primary"
+                                                                    data-kt-stepper-action="next"
+                                                                    :disabled="disableContinue==false">Continue
+                                                                <!--begin::Svg Icon | path: icons/duotune/arrows/arr064.svg-->
+                                                                <span class="svg-icon svg-icon-3 ms-1 me-0">
+																		<svg xmlns="http://www.w3.org/2000/svg"
+                                                                             width="24" height="24" viewBox="0 0 24 24"
+                                                                             fill="none">
+																			<rect opacity="0.5" x="18" y="13" width="13"
+                                                                                  height="2" rx="1"
+                                                                                  transform="rotate(-180 18 13)"
+                                                                                  fill="black"/>
+																			<path
+                                                                                d="M15.4343 12.5657L11.25 16.75C10.8358 17.1642 10.8358 17.8358 11.25 18.25C11.6642 18.6642 12.3358 18.6642 12.75 18.25L18.2929 12.7071C18.6834 12.3166 18.6834 11.6834 18.2929 11.2929L12.75 5.75C12.3358 5.33579 11.6642 5.33579 11.25 5.75C10.8358 6.16421 10.8358 6.83579 11.25 7.25L15.4343 11.4343C15.7467 11.7467 15.7467 12.2533 15.4343 12.5657Z"
+                                                                                fill="black"/>
+																		</svg>
+																	</span>
+                                                                <!--end::Svg Icon--></button>
+                                                        </div>
+                                                        <!--end::Wrapper-->
+                                                    </div>
+                                                    <!--end::Actions-->
+                                                </form>
+                                                <!--end::Form-->
+                                            </div>
+                                            <!--end::Content-->
+                                        </div>
+                                        <!--end::Stepper-->
+                                    </div>
+                                    <!--end::Modal body-->
+                                </div>
+                                <!--end::Modal content-->
+                            </div>
+                            <!--end::Modal dialog-->
+                        </div>
+                        <!--end::Modal - Create App-->
+                    </div>
+                    <!--end::Container-->
+                </div>
+
+                <!--end: Modal Import School -->
+
                 <!-- modal xoa nhieu -->
                 <div class="modal fade" style="margin-right:50px;border:2px solid #333333  " id="delete1" tabindex="-1"
                      role="dialog"
@@ -111,6 +415,10 @@
                                         class="btn btn-light" v-if="!isShowFilter">
                                     <i class="bi bi-funnel"></i>
                                     Advanced Search
+                                </button>
+                                <button class="btn btn-primary button-create"
+                                        style="margin:0 0 0 15px" @click="importSchool">
+                                    <i class="bi bi-plus-lg"></i>Import School
                                 </button>
                                 <a :href="'/xadmin/schools/create'">
                                     <button v-if="permissions['016']" class="btn btn-primary button-create"
@@ -395,6 +703,14 @@ export default {
         })
 
         return {
+            errors: {},
+            disableContinue:false,
+            doNotImport:0,
+            fileError: [],
+            fileImport: [],
+            valueValidateImportSchool: 0,
+            sizeFile: '',
+            fileUpLoad: '',
             tableHeaders,
             sortDirection: 1,
             provinces: [],
@@ -436,6 +752,141 @@ export default {
 
     },
     methods: {
+        removeFileSchool() {
+            if (this.$refs.uploader.files) {
+                this.fileUpLoad = '';
+                this.$refs.uploader.value = null;
+                this.valueValidateImportTeacher = 0;
+                this.fileImport.length=0;
+                this.fileError.length=0;
+                this.disableContinue=false;
+
+            }
+        },
+        importSchool() {
+            $('#kt_modal_create_app').modal('show');
+        },
+        async validateImportSchool() {
+            console.log(1);
+            this.errors = {};
+            this.valueValidateImportSchool=1;
+            const files = this.$refs.uploader.files;
+            const formData = new FormData();
+            formData.append('_token', window.$csrf);
+            console.log(files);
+            files.forEach(function(e,index)
+            {
+                formData.append(index,e);
+            })
+            // forEach(files, (v, k) => {
+            //     formData.append(k, v);
+            // });
+
+            for (let i = 0; i < files.length; i++) {
+                formData.append('file_' + i, files[i]);
+                formData.append('school_id', this.entry.id);
+            }
+
+            $('#overlay').show();
+            let res = await fetch('/xadmin/schools/validateImportSchool', {
+                method: 'POST',
+                body: formData
+            })
+                .then((response) => response.json())
+                .catch((error) => {
+                    console.error('Error:', error);
+                });
+            if (res.code == 2) {
+                this.code = res.code;
+                this.fileError = res.fileError;
+                this.fileImport=res.fileImport;
+                this.errorName=res.errorFileName;
+            }
+            if (res.code == 0) {
+                this.fileImport = res.fileImport;
+            }
+        },
+        async saveImport()
+        {
+            if (this.doNotImport ==0) {
+                {
+                    this.$loading(true);
+                    const res = await $post('/xadmin/users/import', {
+                        fileImport: this.fileImport,
+                        school_id:this.entry.id,
+                    }, false);
+                    this.$loading(false);
+                    if (res.code) {
+                        toastr.error(res.message);
+                    } else {
+                        this.errors = {};
+                        toastr.success(res.message);
+                        let self=this;
+                        $('#kt_modal_create_app').modal('hide');
+                        self.$refs.uploader.value = null;
+                        self.fileUpLoad='';
+                        self.valueValidateImportSchool=0;
+                        self.fileImport.length=0;
+                        self.fileError.length=0;
+                        location.reload();
+                    }
+                }
+            }
+            if (this.doNotImport ==1) {
+                $('#kt_modal_create_app').modal('hide');
+                this.$refs.uploader.value = null;
+                this.fileUpLoad='';
+                this.valueValidateImportSchool=0;
+                this.fileImport.length=0;
+                this.fileError.length=0;
+                location.reload();
+            }
+
+        },
+        exportErrorImportSchool()
+        {
+            window.location.href='/xadmin/users/exportErrorTeacher?fileError='+ this.errorName;
+        },
+        downloadTemplate()
+        {
+            window.location.href= '/xadmin/schools/downloadTemplate';
+        },
+        async importFileSchool() {
+            const fileExtension =this.$refs.uploader.files[0].name.split('.').pop();
+            if(fileExtension!=='xlsx')
+            {
+                return  this.errors={
+                    'sizeFile':['The file is not in the correct format']
+                };
+            }
+            else {
+                this.errors={};
+                let fileSize=(this.$refs.uploader.files[0].size.toString());
+                if(fileSize.length < 7)
+                {
+                    let size= `${Math.round(+fileSize/1024).toFixed(2)}kb`
+                    this.sizeFile=size;
+
+                }
+                else {
+                    let size= `${(Math.round(+fileSize/1024)/1000).toFixed(2)}MB`;
+                    let numberSize=(Math.round(+fileSize/1024)/1000).toFixed(2)
+                    this.sizeFile=size;
+                    if(numberSize>5)
+                    {
+                        return  this.errors={
+                            'sizeFile':['Max file size is 5Mb']
+                        };
+
+                    }
+
+                }
+                this.fileUpLoad = this.$refs.uploader.files[0].name;
+                this.disableContinue=true;
+                this.validateImportSchool();
+            }
+        },
+
         sortTable(index) {
             let self = this;
             let check = 0;
@@ -599,6 +1050,9 @@ export default {
 </script>
 
 <style scoped>
+input[type="file"] {
+    display: none;
+}
 td {
     cursor: pointer;
 }
