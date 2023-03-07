@@ -11,6 +11,7 @@ import InventoryIndex from "./admin/inventories/InventoryIndex";
 import InventoryForm from "./admin/inventories/InventoryForm";
 import LessonIndex from "./admin/lessons/LessonIndex";
 import LessonForm from "./admin/lessons/LessonForm";
+import LessonDetail from "./admin/lessons/LessonDetail";
 import SchoolIndex from "./admin/schools/SchoolIndex";
 import SchoolForm from "./admin/schools/SchoolForm";
 import SchoolEdit from "./admin/schools/SchoolEdit.vue";
@@ -37,6 +38,12 @@ import PlanForm from "./admin/plans/PlanForm";
 import PlanEdit from "./admin/plans/PlanEdit";
 import UserDeactive from "./admin/users/UserDeactive";
 import PermissionDetailIndex from "./admin/permission_details/PermissionDetailIndex.vue";
+import CourseIndex from "./admin/courses/CourseIndex";
+import CourseForm from  "./admin/courses/CourseForm";
+import CourseDetail from  "./admin/courses/CourseDetail";
+import UnitIndex from  "./admin/units/UnitIndex";
+import UnitForm from  "./admin/units/UnitForm";
+import UnitDetail from "./admin/units/UnitDetail";
 export default {
     DashboardIndex,
     UserIndex,
@@ -49,6 +56,7 @@ export default {
     InventoryForm,
     LessonIndex,
     LessonForm,
+    LessonDetail,
     SchoolIndex,
     SchoolForm,
     SchoolEdit,
@@ -76,5 +84,12 @@ export default {
     PlanForm,
     PlanEdit,
     UserDeactive,
-    PermissionDetailIndex
+    PermissionDetailIndex,
+    CourseIndex,
+    CourseForm,
+    CourseDetail,
+    UnitIndex,
+    UnitForm,
+    UnitDetail
+
 }

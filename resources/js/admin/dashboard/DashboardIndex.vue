@@ -113,7 +113,7 @@
                                 <thead class="border-bottom border-gray-200 fs-6 text-gray-600 fw-bolder bg-light bg-opacity-75">
                                 <tr >
                                     <th>No.</th>
-                                    <th class="">User name</th>
+                                    <th class="">Username</th>
                                     <th class="">Role</th>
                                     <th class="">Description</th>
                                     <th class="">Object</th>
@@ -137,10 +137,32 @@
                                 </tr>
                                 </tbody>
                             </table>
+                            <div class="d-flex pl-9 pr-9 mb-8">
+                                <div class="col-sm-12 col-md-5 d-flex align-items-center justify-content-center justify-content-md-start">
+                                    <!--<div class="mr-2">
+                                        <label>Records per page:</label>
+                                    </div>-->
+                                    <div>
+                                        <select class="form-select form-select-sm form-select-solid" v-model="limit" @change="changeLimit">
+                                            <option value="25">25</option>
+                                            <option value="50">50</option>
+                                            <option value="100">100</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <!--<div style="float: right; margin: 10px">-->
+                                <div class="col-sm-12 col-md-7 d-flex align-items-center justify-content-center justify-content-md-end">
+                                    <div class="dataTables_paginate paging_simple_numbers" id="kt_customers_table_paginate">
+                                        <Paginate :value="paginate" :pagechange="onPageChange"></Paginate>
+                                    </div>
+                                </div>
+                            </div>
+
                         </div>
                     </div>
                 </div>
             </div>
+
 
 
         </div>
@@ -190,7 +212,15 @@
                 devices:$json.devices,
                 lessons:$json.lessons,
                 licenseRemain:$json.licenseRemain,
-                dataChart:[]
+                dataChart:[],
+                limit: $q.limit || 25,
+                from: 0,
+                to: 0,
+                paginate: {
+                    currentPage: 1,
+                    lastPage: 1,
+                    totalRecord: 0
+                }
             }
         },
         mounted() {
@@ -209,6 +239,15 @@
         },
         methods:
         {
+            onPageChange(page) {
+                $router.updateQuery({page: page})
+            },
+            changeLimit() {
+                let params = $router.getQuery();
+                params['page'] = 1;
+                params['limit'] = this.limit;
+                $router.setQuery(params)
+            },
             filterClear() {
 
                 for (var key in this.filter) {
@@ -264,9 +303,11 @@
             this.entries = res.data;
             this.logAuth=res.logAu;
             this.entries=this.entries.concat(this.logAuth);
+            this.paginate = res.paginate;
+            this.from = (this.paginate.currentPage - 1) * (this.limit) + 1;
+            this.to = (this.paginate.currentPage - 1) * (this.limit) + this.entries.length;
             this.dataChart=res.dataChart;
             const checkDataChart = res.dataChart.slice(1).every(item => item.length === 3 && item[1] === 0 && item[2] === 0);
-            console.log(checkDataChart);
             if (checkDataChart) {
             this.check=1;
             } else {

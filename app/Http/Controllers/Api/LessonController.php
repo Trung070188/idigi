@@ -32,12 +32,14 @@ class LessonController extends Controller
 
         foreach ($user->roles as $role) {
             if ($role->role_name == 'Teacher') {
-                if ($user->user_units) {
-                    foreach ($user->user_units as $unit) {
-                        $unitIds[] = $unit->unit_id;
+                if($user->active_allocation==1)
+                {
+                    if ($user->user_units) {
+                        foreach ($user->user_units as $unit) {
+                            $unitIds[] = $unit->unit_id;
+                        }
                     }
                 }
-
 
             }
             if ($role->role_name == 'School Admin') {

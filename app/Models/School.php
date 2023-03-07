@@ -20,6 +20,8 @@ class School extends BaseModel
     protected $fillable = [
     'label',
     'school_address',
+    'province_id',
+    'district_id',
     'school_email',
     'school_phone',
     'license_info',
@@ -62,5 +64,12 @@ class School extends BaseModel
         return $this->hasMany(UserDevice::class,'school_id');
     }
 
+    public function province(){
+        return $this->belongsTo(Province::class);
+    }
+
+    public function district(){
+        return $this->belongsTo(District::class);
+    }
 
 }

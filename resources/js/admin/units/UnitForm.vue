@@ -1,7 +1,7 @@
 <template>
     <div class="container-fluid">
         <ActionBar type="index"
-                   :breadcrumbs="breadcrumbs"  title = "Create new lesson"/>
+                   :breadcrumbs="breadcrumbs"  title = "Create new unit"/>
 
         <div class="row">
             <div class="col-lg-12">
@@ -12,19 +12,18 @@
                                 <input v-model="entry.id" type="hidden" name="id" value="">
                                 <div class="row">
                                     <div class="form-group col-sm-9">
-                                        <label>Lesson name <span class="text-danger">*</span></label>
-                                        <input class="form-control nospace" placeholder="Enter the lesson name" v-model="entry.name" >
-                                        <error-label  for="f_category_id" :errors="errors.name"></error-label>
+                                        <label>Unit name <span class="text-danger">*</span></label>
+                                        <input class="form-control nospace" placeholder="Enter the unit name" v-model="entry.unit_name" >
+                                        <error-label  for="f_category_id" :errors="errors.label"></error-label>
                                     </div>
                                     <div class="form-group col-sm-3">
                                         <label>Subject<span class="text-danger">*</span></label>
-                                        <select class="form-control form-select" v-model="entry.subject" required >
+                                        <select class="form-control form-select" required v-model="entry.subject" @change="load">
                                             <option value="" disabled selected>Choose the subject</option>
                                             <option value="Math">Math</option>
                                             <option value="Science">Science</option>
                                         </select>
                                         <error-label  for="f_category_id" :errors="errors.subject"></error-label>
-
                                     </div>
                                     <div class="form-group col-sm-9">
                                         <label>Description </label>
@@ -32,24 +31,21 @@
                                         <error-label for="f_category_id" :errors="errors.description"></error-label>
                                     </div>
                                     <div class="form-group col-sm-3">
-                                        <label>Unit </label>
-                                        <select class="form-select form-control" required v-model="entry.unit_id">
-                                            <option value="" disabled selected>Choose the unit</option>
-                                            <option v-for="unit in units" :value="unit.id">{{unit.unit_name}}</option>
+                                        <label>Course</label>
+                                        <select class="form-select form-control" required v-model="entry.course_id">
+                                            <option value="" disabled selected>Choose the course</option>
+                                            <option v-for="course in courses" :value="course.id">{{course.course_name}}</option>
                                         </select>
                                     </div>
                                     <div class="form-group col-sm-12"  style="border: 1px solid #b5b5c3;border-radius: 25px" v-if="entry.subject">
-                                        <label style="margin:15px 0px 10px ">List of modules</label>
-                                        <div style="margin-top: 10px;float: right;display: inline-block;margin-right: -13px" class="form-group col-lg-3">
-                                            <select class="form-control form-select" required v-model="filter.type" @change="doFilter()">
-                                                <option value="" disabled selected>Choose the type</option>
-                                                <option value="Vocabulary">Vocabulary</option>
-                                                <option value="Summary">Summary</option>
-                                                <option value="Practice">Practice</option>
-                                                <option value="Summary">Summary</option>
-                                            </select>
-                                        </div>
-                                        <Treeselect :options="modules"  placeholder="Search module" :multiple="true" v-model="listResource" @input="resource()" @search-change="handleSearchChange"/>
+                                        <label style="margin:15px 0px 10px ">List of lesson</label>
+                                        <treeselect :options="lessons" :multiple="true" v-model="listLesson" @input="lesson()" />
+
+
+<!--                                        <select class="form-control form-select" style="margin-bottom: 15px" v-model="listLesson" @change="lesson()" required>-->
+<!--                                            <option value="" disabled selected>Search module</option>-->
+<!--                                            <option v-for="lesson in lessons" :value="lesson">{{lesson.name}}</option>-->
+<!--                                        </select>-->
                                         <draggable
                                             :list="list"
                                             :animation="200"
@@ -62,12 +58,12 @@
                                             <div style="width: 100%;cursor: pointer" v-for="(res,index) in list" :key="index">
                                                 <i class="bi bi-text-center" style="width: 10%; display: inline-block"></i>
                                                 <div style="width: 50%;display: inline-block;margin-left: -75px">
-                                                    <span>Resource name:</span>
+                                                    <span>Lesson name:</span>
                                                     <input class="form-control" v-model="res.label" disabled>
                                                 </div>
                                                 <div style="width: 30%;display: inline-block;margin-left: 20px">
-                                                    <span>Type:</span>
-                                                    <input class="form-control" v-model="res.type" disabled>
+                                                    <span>Lesson ID:</span>
+                                                    <input class="form-control" v-model="res.id" disabled>
                                                 </div>
                                                 <i style="width: 10%;
                                                 display: inline-block;
@@ -75,7 +71,7 @@
                                                 top: 14px;
                                                 position: relative;
                                                 left: -10px;
-                                                cursor: pointer" class="bi bi-x" @click="removeResource(index)"></i>
+                                                cursor: pointer" class="bi bi-x" @click="removeLesson(index)"></i>
                                             </div>
 
                                         </draggable>
@@ -106,49 +102,41 @@
 </template>
 
 <script>
-    import {$get, $post, getTimeRangeAll} from "../../utils";
+    import {$get, $post} from "../../utils";
     import ActionBar from "../includes/ActionBar";
     import draggable from "vuedraggable";
     import $router from "../../lib/SimpleRouter";
     import Treeselect from '@riophae/vue-treeselect';
     import '@riophae/vue-treeselect/dist/vue-treeselect.css'
 
-
-    let created = getTimeRangeAll();
-    const $q = $router.getQuery();
     export default {
-        name: "LessonsForm.vue",
+        name: "UnitsForm.vue",
         components: {ActionBar,draggable,Treeselect},
         data() {
-            let filter = {
-                type: $q.type || "",
-            };
             return {
-                units:[],
-                checkResource:[],
-                listResource:[],
-                filter:filter,
-                module_type:'',
-                modules:[],
+                courses:[],
+                lessons:[],
+                listLesson:[
+
+                ],
                 list:[],
-                breadcrumbs:[
+                breadcrumbs: [
                     {
                         title: 'Resource management',
                     },
                     {
-                        title: 'Lesson',
-                        url: '/xadmin/lessons/index',
+                        title: 'Unit',
+                        url: '/xadmin/units/index',
                     },
                     {
-                        title:'Create new lesson',
+                        title:'Create new unit',
                     },
                 ],
                 entry:{
-                    unit_id:'',
-                    subject:''
+                    subject:'',
+                    course_id:''
                 },
                 isLoading: false,
-                searchLimit:50,
                 errors: {}
             }
         },
@@ -156,49 +144,43 @@
             $router.on("/", this.load).init();
         },
         methods: {
-          async handleSearchChange(value) {
-                if (value) {
-                    let query = $router.getQuery();
-                    const res = await $get("/xadmin/lessons/dataCreateLesson?subject="+this.entry.subject,query);
-                    this.modules=res.module;
-                    const filteredOptions = this.modules.filter(option => option.label.includes(value)).slice(0,this.searchLimit);
-                    this.modules = filteredOptions
-                }
-        },
-            removeResource(index)
-            {
-              this.list=this.list.filter((item,key)=>key!==index);
-              this.listResource=this.list.map(rec => rec.id);
-              console.log(this.list);
-            },
-            resource()
-            {
-                // this.list = this.list.concat(this.listResource);
-                // this.listResource=[];
-                this.list = this.listResource.map(id => {
-                    const item = this.modules.find(i => i.id === id);
-                    return {id, label: item.label,type:item.type};
-                });
-            },
-            doFilter() {
-                $router.setQuery(this.filter);
-            },
             async load() {
                 let query = $router.getQuery();
                 this.$loading(true);
-                const res = await $get("/xadmin/lessons/dataCreateLesson", query);
+                const res = await $get("/xadmin/units/dataCreateUnit?subject="+this.entry.subject, query);
                 this.$loading(false);
-                this.modules = res.module;
-                //this.modules=this.modules.concat(this.list);
-                this.units=res.units;
+                this.lessons = res.lessons.map(res => {
+                    return {
+                      'id':res.id,
+                      'label':res.name
+                    };
+                });
+                this.courses=res.courses;
+            },
+            removeLesson(index)
+            {
+                this.list=this.list.filter((item,key)=>key!==index);
 
+               let list=this.list.map(res=>{
+                    return {
+                        'id':res.id
+                    }
+                });
+                this.listLesson = list.reduce((acc, curr) => acc.concat(Object.values(curr)), []);
+            },
+            lesson()
+            {
+                this.list = this.listLesson.map(id => {
+                    const item = this.lessons.find(i => i.id === id);
+                    return {id, label: item.label};
+                });
             },
             backIndex(){
-                window.location.href = '/xadmin/lessons/index';
+                window.location.href = '/xadmin/units/index';
             },
             async save() {
                 this.isLoading = true;
-                const res = await $post('/xadmin/lessons/save', {entry: this.entry,inventory:this.list}, false);
+                const res = await $post('/xadmin/units/save', {entry: this.entry,list:this.list}, false);
                 this.isLoading = false;
                 if (res.errors) {
                     this.errors = res.errors;
@@ -210,9 +192,9 @@
                     this.errors = {};
                     toastr.success(res.message);
 
-                    // if (!this.entry.id) {
-                        location.replace('/xadmin/lessons/edit?id=' + res.id);
-                    // }
+                    if (!this.entry.id) {
+                        location.replace('/xadmin/units/edit?id=' + res.id);
+                    }
 
                 }
             }

@@ -198,10 +198,10 @@
             async save() {
                 console.log(this.role);
 
-                this.isLoading = true;
+                this.$loading(true);
                 const res = await $post('/xadmin/users/save', {entry: this.entry, name_role: this.name_role,user_school:this.user_school,auto_gen: this.auto_gen,password_confirmation:this.password_confirmation,userSchool:this.userSchool}, false);
 
-                this.isLoading = false;
+                this.$loading(false);
                 if (res.errors) {
                     this.errors = res.errors;
                     return;

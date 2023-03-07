@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Admin;
 
 
+use App\Models\Unit;
+use Carbon\Carbon;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -65,7 +67,7 @@ class CoursesController extends AdminBaseController
         */
 
         $title = 'Edit';
-        $component = 'CourseForm';
+        $component = 'CourseDetail';
 
 
         return component($component, compact('title', 'entry'));
@@ -90,7 +92,14 @@ class CoursesController extends AdminBaseController
             'message' => 'Đã xóa'
         ];
     }
-
+    public function removeCourse(Request $req)
+    {
+        Course::query()->whereIn('id',$req->courseIds)->update(['deleted_at'=>Carbon::now()]);
+        return [
+          'code'=>0,
+          'message'=>'Đã xóa'
+        ];
+    }
     /**
     * @uri  /xadmin/courses/save
     * @return  array
@@ -103,10 +112,11 @@ class CoursesController extends AdminBaseController
         $data = $req->get('entry');
 
         $rules = [
-    'name' => 'numeric',
-    'public_from' => 'date_format:Y-m-d H:i:s',
-    'public_to' => 'date_format:Y-m-d H:i:s',
-    'status' => 'numeric',
+            'course_name' => ['required','max:100','regex:/^[\p{L}\s\/0-9.,?\(\)_:-]+$/u'],
+            'subject' => 'required',
+            'grade'=>'required',
+            'description'=>'max:200'
+
 ];
 
         $v = Validator::make($data, $rules);
@@ -131,6 +141,18 @@ class CoursesController extends AdminBaseController
             }
 
             $entry->fill($data);
+            if($req->deleteUnit)
+            {
+                Unit::query()->whereIn('id',$req->deleteUnit)->update(['course_id'=>NULL]);
+            }
+            if($req->units)
+            {
+                foreach ($req->units as $key=>$unit)
+                {
+                    Unit::query()->where('id',$unit['id'])->update(['course_id'=>$entry->id,'position'=>$key+1]);
+                }
+
+            }
             $entry->save();
 
             return [
@@ -142,6 +164,13 @@ class CoursesController extends AdminBaseController
             $entry = new Course();
             $entry->fill($data);
             $entry->save();
+            if($req->units)
+            {
+                foreach ($req->units as $key => $unit)
+                {
+                    Unit::query()->where('id',$unit['id'])->update(['course_id'=>$entry->id,'position'=>$key+1]);
+                }
+            }
 
             return [
                 'code' => 0,
@@ -166,7 +195,7 @@ class CoursesController extends AdminBaseController
             ];
         }
 
-        $entry->status = $req->status ? 1 : 0;
+        $entry->active = $req->active ? 1 : 0;
         $entry->save();
 
         return [
@@ -184,21 +213,75 @@ class CoursesController extends AdminBaseController
         $query = Course::query()->orderBy('id', 'desc');
 
         if ($req->keyword) {
-            //$query->where('title', 'LIKE', '%' . $req->keyword. '%');
+            $query->where('course_name', 'LIKE', '%' . $req->keyword. '%')
+            ->orWhere('subject','LIKE','%' .$req->keyword . '%')
+            ->orWhere('grade','LIKE','%' .$req->keyword . '%');
+        }
+        if($req->course_name)
+        {
+            $query->where('course_name','LIKE','%' .$req->course_name .'%');
+        }
+        if($req->subject)
+        {
+            $query->where('subject','LIKE','%' .$req->subject. '%');
+        }
+        if($req->grade)
+        {
+            $query->where('grade','LIKE','%'.$req->grade. '%');
+        }
+        if ($req->active != '') {
+            $query->where('active', $req->active);
         }
 
         $query->createdIn($req->created);
 
-
-        $entries = $query->paginate();
+        $limit = 25;
+        if ($req->limit) {
+            $limit = $req->limit;
+        }
+        $entries = $query->paginate($limit);
 
         return [
+            'count'=>$entries->count(),
             'code' => 0,
             'data' => $entries->items(),
             'paginate' => [
                 'currentPage' => $entries->currentPage(),
                 'lastPage' => $entries->lastPage(),
             ]
+        ];
+    }
+    public function dataCreateCourse(Request $req)
+    {
+        if($req->subject)
+        {
+            $units=Unit::query()->where('subject',$req->subject)->orderBy('id','desc');
+
+        }
+        else{
+            $units=Unit::query()->orderBy('id','desc');
+
+        }
+        return [
+          'units'=>$units->get(),
+        ];
+    }
+    public function dataEditCourse(Request $req)
+    {
+        if($req->subject)
+        {
+            $units=Unit::query()->where('subject',$req->subject)->orderBy('id','desc');
+
+        }
+        else{
+            $units=Unit::query()->orderBy('id','desc');
+
+        }
+        $listUnit=Unit::query()->where('course_id',$req->id)->orderBy('position','ASC')->get();
+
+        return [
+            'units'=>$units->get(),
+            'listUnit'=>$listUnit
         ];
     }
 

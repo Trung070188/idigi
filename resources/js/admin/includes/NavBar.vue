@@ -12,9 +12,9 @@
                             <div data-kt-menu-trigger="click" data-kt-menu-placement="bottom-start" class="menu-item menu-lg-down-accordion me-lg-1" style="margin: 12px 0px 0px">
                                 <span class="py-3">
 
-                           <div class="badge badge-lg badge-light-success mb-15">
-                               <div class="d-flex align-items-center flex-wrap" v-if="roleName=='School Admin' || roleName=='Teacher' ">
-                                   <div v-text="'School: '+ schoolName " ></div>
+                           <div class="badge badge-lg badge-light-success mb-15" v-if="pathname=='/xadmin/schools/edit'" >
+                               <div class="d-flex align-items-center flex-wrap" v-if="roleName=='School Admin'">
+                                  <div v-text="'School: '+ entry.label " ></div>
 
 
 
@@ -207,9 +207,12 @@
             });
 
             return {
+                entry:$json.entry || {},
+                pathname:pathname,
                 menus,
                 roleName:'',
                 schoolName:'',
+                schools:null
             }
         },
         mounted() {
@@ -222,6 +225,12 @@
                 const res = await $get('/xadmin/schools/schoolNameNavBar', query);
                 this.roleName = res.roleName;
                 this.schoolName = res.schoolName;
+                if(this.pathname=='/xadmin/schools/edit')
+                {
+                    this.schools=res.schools.find(function (res) {
+                        return res.id==$json.entry.id
+                    })
+                }
             },
         }
     }

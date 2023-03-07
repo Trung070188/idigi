@@ -116,7 +116,7 @@ class User extends Authenticatable
 
     public function user_devices()
     {
-        return $this->hasMany(UserDevice::class);
+        return $this->hasMany(UserDevice::class)->whereNull('deleted_at');
     }
 
     public function fileImage()

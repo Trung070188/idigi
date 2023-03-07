@@ -2,10 +2,9 @@
 <table class="table table-bordered" style="width: 100%">
     <thead>
     <tr>
-        <th style="border: 1px solid black">Device Name</th>
-        <td style="border: 1px solid black">Type</td>
+        <th style="border: 1px solid black">Device name</th>
+        <td style="border: 1px solid black">Os</td>
         <td style="border: 1px solid black">Expire date</td>
-        <td style="border: 1px solid black">Register code</td>
     </tr>
     </thead>
 
@@ -16,7 +15,6 @@
             <td style="border: 1px solid black">{{$item['device_name']}}</td>
             <td style="border: 1px solid black">{{$item['type']}}</td>
             <td style="border: 1px solid black">{{$item['expire_date']}}</td>
-            <td style="border: 1px solid black">{{$item['device_uid']}}</td>
             <td style="border: 1px solid black">@if(@$item['error'])
                     @foreach($item['error'] as $er)
                         @foreach($er as $value)

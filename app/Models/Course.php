@@ -2,6 +2,8 @@
 namespace App\Models;
 
 
+ use Illuminate\Database\Eloquent\SoftDeletes;
+
  /**
  * @property int       $id
  * @property int       $name
@@ -12,9 +14,13 @@ namespace App\Models;
  */
 class Course extends BaseModel
 {
+    use SoftDeletes;
     protected $table = 'courses';
     protected $fillable = [
     'course_name',
+    'subject',
+    'grade',
+    'description',
     'public_from',
     'public_to',
     'status',

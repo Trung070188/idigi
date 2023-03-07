@@ -1,10 +1,10 @@
-<h3>FIle Teacher Import Error</h3>
+<h3>File teacher import error</h3>
 <br>
 <table class="table table-bordered" style="width: 100%">
     <thead>
     <tr>
-        <th style="border: 1px solid black">User Name</th>
-        <th style="border: 1px solid black">Full Name</th>
+        <th style="border: 1px solid black">User name</th>
+        <th style="border: 1px solid black">Full name</th>
         <th style="border: 1px solid black">Password</th>
         <th style="border: 1px solid black">Phone</th>
         <th style="border: 1px solid black">Email</th>

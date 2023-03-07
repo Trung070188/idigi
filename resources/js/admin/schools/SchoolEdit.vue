@@ -84,13 +84,13 @@
 
                                     </div>
 
-                                    <div class="form-group col-lg-4">
+<!--                                    <div class="form-group col-lg-4">
                                         <label>School address <span class="text-danger">*</span></label>
                                         <input v-model="entry.school_address" :disabled="permissionFields['school_address']==false" class="form-control"
                                                placeholder="Enter the school address">
                                         <error-label :errors="errors.school_address"></error-label>
 
-                                    </div>
+                                    </div>-->
                                     <div class="form-group col-lg-4">
                                         <label>School email</label>
                                         <input v-model="entry.school_email" :disabled="permissionFields['school_email']==false" class="form-control"
@@ -99,6 +99,29 @@
 
                                     </div>
 
+                                </div>
+                                <div class="row">
+                                    <div class="form-group col-lg-4">
+                                        <label>Province <span class="text-danger">*</span></label>
+                                        <treeselect :options="provinces" v-model="entry.province_id"
+                                                    @input="selectProvince"/>
+                                        <error-label for="f_school_name" :errors="errors.province_id"></error-label>
+
+                                    </div>
+                                    <div class="form-group col-lg-4" v-if="entry.province_id">
+                                        <label>District <span class="text-danger">*</span></label>
+                                        <treeselect :options="districts" v-model="entry.district_id"/>
+                                        <error-label for="f_school_name" :errors="errors.district_id"></error-label>
+
+                                    </div>
+
+                                    <div class="form-group col-lg-4">
+                                        <label>School address <span class="text-danger">*</span></label>
+                                        <input v-model="entry.school_address" class="form-control"
+                                               placeholder="Enter the school address">
+                                        <error-label :errors="errors.school_address"></error-label>
+
+                                    </div>
                                 </div>
                                 <div class="row">
                                     <div class="form-group col-lg-4">
@@ -111,14 +134,14 @@
 
                                     <div class="form-group col-lg-4">
                                         <label>No. of Device per user <span class="text-danger">*</span></label>
-                                        <input type="number" v-model="entry.devices_per_user" :disabled="permissionFields['school_device']==false" class="form-control"
+                                        <input type="number" min="1" max="200" v-model="entry.devices_per_user" :disabled="permissionFields['school_device']==false" class="form-control"
                                                placeholder="Enter number of Device per User">
                                         <error-label :errors="errors.devices_per_user"></error-label>
 
                                     </div>
                                     <div class="form-group col-lg-4">
                                         <label>No. of User <span class="text-danger">*</span></label>
-                                        <input type="number" v-model="entry.number_of_users" :disabled="permissionFields['school_user']==false" class="form-control"
+                                        <input type="number" min="1" max="200" v-model="entry.number_of_users" :disabled="permissionFields['school_user']==false" class="form-control"
                                                placeholder="Enter number of User">
                                         <error-label :errors="errors.number_of_users"></error-label>
 
@@ -164,7 +187,7 @@
                             <div class="col-lg-12" v-if="roleName=='School Admin' && entry.active_allocation==1 || roleName=='Super Administrator'" >
                                 <div class="row" >
                                     <div class="form-group col-lg-8">
-                                        <label>Resource allocation<span class="text-danger">*</span></label>
+                                        <label>Resource allocation</label>
 
                                         <select class="form-control form-select " required v-model="allocationContentSchool" :disabled="permissionFields['school_content']==false"
                                                 @change="changeAllocationContent() ">
@@ -185,7 +208,7 @@
                                     </div>
                                 </div>
                                 <div class="form-check form-check-custom form-check-solid pb-5" v-if="roleName=='Super Administrator'">
-                                    <input id="state1" type="checkbox"  class="form-check-input h-20px w-20px" v-model="active_allocation" @change="activeAllocation" checked>
+                                    <input id="state1" type="checkbox"  class="form-check-input h-20px w-20px" v-model="entry.active_allocation" checked>
                                     <label for="state1" class="form-check-label fw-bold" >Active allocation</label>
                                     <error-label for="f_grade" ></error-label>
                                 </div>
@@ -274,7 +297,7 @@
 </template>
 
 <script>
-    import {$post, clone} from "../../utils";
+    import {$post, clone,$get} from "../../utils";
     import ActionBar from "../includes/ActionBar";
     import QSelect from "../../components/QSelect";
     import Datepicker from "../../components/Datepicker";
@@ -323,6 +346,8 @@
             })
 
             return {
+                provinces: [],
+                districts: [],
                 active_allocation:$json.active_allocation,
                 roleName:$json.roleName,
                 permissions,
@@ -352,6 +377,15 @@
             }
         },
         mounted() {
+            let self = this;
+            $.get('/xadmin/schools/getProvince', function (res) {
+                self.provinces = res;
+                if(self.entry.province_id){
+                    self.districts = self.provinces.filter(e => e.id == self.entry.province_id)[0]['districts'];
+                }
+
+            });
+
             $('.noString').keypress(function (e) {
                 if (e.keyCode < 48 || e.keyCode > 57) {
                     e.preventDefault();
@@ -359,6 +393,14 @@
             })
         },
         methods: {
+            selectProvince() {
+                this.entry.district_id = null;
+                this.districts = [];
+                if (this.entry.province_id) {
+                    this.districts = this.provinces.filter(e => e.id == this.entry.province_id)[0]['districts'];
+                }
+
+            },
             modalDeleteSchool() {
                 $('#deviceConfirm').modal('show');
             },
@@ -424,17 +466,6 @@
 
 
                 $router.updateQuery({page: this.paginate.currentPage, _: Date.now()});
-            },
-            async activeAllocation()
-            {
-                const res=await $post('/xadmin/schools/activeAllocation',{active_allocation:this.active_allocation,id:this.entry.id})
-                if(res.code)
-                {
-                    toastr.errors(res.message)
-                }
-                else {
-                    toastr.success(res.message)
-                }
             },
         }
     }

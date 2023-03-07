@@ -11,8 +11,8 @@
                     <div class="close-popup" data-dismiss="modal"></div>
                     <h3 class="popup-title success" style="margin-top: 20px">Delete Device</h3>
                     <div class="content" style="text-align: center;margin: 0px">
-                        <p>Yêu cầu xóa thiết bị khỏi danh sách cần có phê duyệt của Admin.</p>
-                        <p > Bạn có muốn gửi yêu cầu tới Admin không? </p>
+                        <p>Requesting the removal of a device requires admin approval.</p>
+                        <p > Do you want to send a request to admin?</p>
                     </div>
                     <div  class="form-group d-flex justify-content-between" >
                         <button  class="btn btn-light ito-btn-add"  data-dismiss="modal" @click="Cancel()" style="margin-left: 113px">Cancel</button>
@@ -107,7 +107,7 @@
                     <div class="close-popup" data-dismiss="modal"></div>
                     <h3 style="margin:20px auto;font-weight: 500;" class="popup-title success">Edit device name</h3>
                     <div class="content">
-                        <label>Device Name</label>
+                        <label>Device Name<span class="text-danger">*</span></label>
                         <input type="text" class="form-control " placeholder="Device name" aria-label=""
                                style="margin-bottom: 10px" aria-describedby="basic-addon1" v-model="Edit_name.device_name">
                         <error-label for="f_category_id" :errors="errors.device_name"></error-label>
@@ -131,7 +131,7 @@
                     <div class="close-popup" data-dismiss="modal"></div>
                     <h3 style="margin:20px auto;font-weight: 500;" class="popup-title success">  Get confirmation code</h3>
                     <div class="content">
-                        <label>Device Name</label>
+                        <label>Device Name<span class="text-danger">*</span></label>
                         <input type="text" class="form-control " placeholder="Device name" aria-label=""
                                style="margin-bottom: 10px" aria-describedby="basic-addon1" v-model="editDevice"
                                disabled>
@@ -158,7 +158,7 @@
                     <div class="close-popup" data-dismiss="modal"></div>
                     <h3 class="popup-title success" style="margin-left:25px">Can not add more devices</h3>
                     <div class="content">
-                        <p>Bạn chỉ được truy cập vào tối đa {{devicesPerUser}} thiết bị, hãy xóa bớt thiết bị cũ nếu muốn truy cập vào thiết bị mới.</p>
+                        <p> You are allowed to access up to {{devicesPerUser}} devices. Remove your old device if you want to access a new one.</p>
                     </div>
                 </div>
             </div>
@@ -170,53 +170,51 @@
                     <div class="card-header border-0 pt-6">
 
                         <div class="card-title">
-                            <div
-                                class="d-flex align-items-center position-relative my-1"
-                            >
-                              <span
-                                    class="svg-icon svg-icon-1 position-absolute ms-6"
-                                >
-                                    <svg
-                                        xmlns="http://www.w3.org/2000/svg"
-                                        width="24"
-                                        height="24"
-                                        viewBox="0 0 24 24"
-                                        fill="none"
-                                    >
-                                        <rect
-                                            opacity="0.5"
-                                            x="17.0365"
-                                            y="15.1223"
-                                            width="8.15546"
-                                            height="2"
-                                            rx="1"
-                                            transform="rotate(45 17.0365 15.1223)"
-                                            fill="black"
-                                        ></rect>
-                                        <path
-                                            d="M11 19C6.55556 19 3 15.4444 3 11C3 6.55556 6.55556 3 11 3C15.4444 3 19 6.55556 19 11C19 15.4444 15.4444 19 11 19ZM11 5C7.53333 5 5 7.53333 5 11C5 14.4667 7.53333 17 11 17C14.4667 17 17 14.4667 17 11C17 7.53333 14.4667 5 11 5Z"
-                                            fill="black"
-                                        ></path>
-                                    </svg>
-                                </span>
-                                  <input
-                                    type="text"
-                                    data-kt-filemanager-table-filter="search"
-                                    class="form-control form-control-solid w-250px ps-15"
+<!--                            <div class="d-flex align-items-center position-relative my-1">-->
+<!--                              <span-->
+<!--                                    class="svg-icon svg-icon-1 position-absolute ms-6"-->
+<!--                                >-->
+<!--                                    <svg-->
+<!--                                        xmlns="http://www.w3.org/2000/svg"-->
+<!--                                        width="24"-->
+<!--                                        height="24"-->
+<!--                                        viewBox="0 0 24 24"-->
+<!--                                        fill="none"-->
+<!--                                    >-->
+<!--                                        <rect-->
+<!--                                            opacity="0.5"-->
+<!--                                            x="17.0365"-->
+<!--                                            y="15.1223"-->
+<!--                                            width="8.15546"-->
+<!--                                            height="2"-->
+<!--                                            rx="1"-->
+<!--                                            transform="rotate(45 17.0365 15.1223)"-->
+<!--                                            fill="black"-->
+<!--                                        ></rect>-->
+<!--                                        <path-->
+<!--                                            d="M11 19C6.55556 19 3 15.4444 3 11C3 6.55556 6.55556 3 11 3C15.4444 3 19 6.55556 19 11C19 15.4444 15.4444 19 11 19ZM11 5C7.53333 5 5 7.53333 5 11C5 14.4667 7.53333 17 11 17C14.4667 17 17 14.4667 17 11C17 7.53333 14.4667 5 11 5Z"-->
+<!--                                            fill="black"-->
+<!--                                        ></path>-->
+<!--                                    </svg>-->
+<!--                                </span>-->
+<!--                                  <input-->
+<!--                                    type="text"-->
+<!--                                    data-kt-filemanager-table-filter="search"-->
+<!--                                    class="form-control form-control-solid w-250px ps-15"-->
 
 
-                                    placeholder="Search..."
-                                    value=""
-                                />
-                                <span
+<!--                                    placeholder="Search..."-->
+<!--                                    value=""-->
+<!--                                />-->
+<!--                                <span-->
 
-                                    class="svg-icon svg-icon-2 svg-icon-lg-1 me-0"
+<!--                                    class="svg-icon svg-icon-2 svg-icon-lg-1 me-0"-->
 
-                                >
-                                </span>
+<!--                                >-->
+<!--                                </span>-->
 
 
-                            </div>
+<!--                            </div>-->
                         </div>
                        <div class="card-toolbar">
                             <div
@@ -404,7 +402,6 @@
                 }, 0)
                 this.paginate = res.paginate;
                 this.entries = res.data;
-                console.log(this.entries)
             },
             async remove() {
                 const res = await $post('/xadmin/user_devices/remove', {id:this.idDevice});
@@ -589,6 +586,13 @@
     }
     .menu.menu-sub{
         width: 200px !important;
+    }
+    .isDisabled {
+        color: currentColor;
+        cursor: not-allowed;
+        opacity: 0.5;
+        text-decoration: none;
+        pointer-events: none
     }
 
 

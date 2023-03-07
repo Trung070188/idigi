@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Helpers\PermissionField;
 use App\Helpers\PhpDoc;
 use App\Imports\DeviceImport;
 use App\Imports\TeacherImport;
@@ -9,6 +10,7 @@ use App\Jobs\SendMailPassword;
 use App\Models\GroupPermission;
 use App\Models\Inventory;
 use App\Models\Permission;
+use App\Models\PermissionDetail;
 use App\Models\Product;
 use App\Models\RoleHasPermission;
 use App\Models\User;
@@ -51,6 +53,9 @@ class TestCommand extends Command
      */
     public function handle()
     {
+
+        PermissionDetail::orderBy('id','desc')->update(['is_admin'=>'No']);
+        dd(1);
         $sheets = Excel::toCollection(new DeviceImport(), "iTO-data.xlsx", 'excel-import');
         $query = '';
         foreach ($sheets as $sheet){

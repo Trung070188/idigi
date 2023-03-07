@@ -37,7 +37,7 @@
                     <div class="swal2-actions">
                         <button type="reset" id="kt_modal_new_target_cancel1" class="swal2-cancel btn fw-bold btn-active-light-primary" data-bs-dismiss="modal" style="margin: 0px 8px 0px" @click="refuse(deviceTeacher)">Refuse</button>
 
-                        <button type="submit" class="swal2-confirm btn fw-bold btn-danger" @click="remove_device(deviceTeacher)">
+                        <button  type="submit" class="swal2-confirm btn fw-bold btn-danger" @click="remove_device(deviceTeacher)">
                             <span class="indicator-label">Yes, delete!</span>
                         </button>
                     </div>
@@ -49,7 +49,7 @@
                 <div class="card card-custom card-stretch gutter-b">
                     <div  class="d-flex justify-content-end"
                           data-kt-customer-table-toolbar="base">
-                        <button class="btn btn-danger button-create " @click="removeTeacher" style="margin: 15px 25px 0px ">
+                        <button class="btn btn-danger button-create " @click="removeTeacher" style="margin: 15px 25px 0px " :disabled="permissionFields['teacher_delete']==false">
                             <i class="bi bi-person-dash mr-1"></i>Delete teacher
                         </button>
                     </div>
@@ -60,53 +60,53 @@
                                 <div class="row">
                                     <div class="form-group  col-sm-4">
                                         <label>Username <span class="text-danger">*</span></label>
-                                        <input class="form-control" v-model="entry.username" disabled>
+                                        <input class="form-control" v-model="entry.username" :disabled="permissionFields['teacher_username']==false">
 
                                         <error-label for="f_category_id" :errors="errors.username"></error-label>
                                     </div>
                                     <div class="form-group  col-sm-4">
                                         <label>Teacher name <span class="text-danger">*</span></label>
-                                        <input class="form-control" v-model="entry.full_name">
+                                        <input class="form-control" v-model="entry.full_name" :disabled="permissionFields['teacher_full_name']==false">
 
                                         <error-label for="f_category_id" :errors="errors.full_name"></error-label>
                                     </div>
                                     <div class="form-group  col-sm-4">
                                         <label>Email </label>
-                                        <input class="form-control" v-model="entry.email">
+                                        <input class="form-control" v-model="entry.email" :disabled="permissionFields['teacher_email']==false">
 
                                         <error-label for="f_category_id" :errors="errors.email"></error-label>
                                     </div>
                                     <div class="form-group  col-sm-4">
                                         <label>Phone number </label>
-                                        <input class="form-control noString" v-model="entry.phone" >
+                                        <input class="form-control noString" v-model="entry.phone" :disabled="permissionFields['teacher_phone']==false">
                                         <error-label for="f_category_id" :errors="errors.phone"></error-label>
                                     </div>
                                     <div class="form-group  col-sm-4">
                                         <label>Class</label>
-                                        <input class="form-control" v-model="entry.class">
+                                        <input class="form-control" v-model="entry.class" :disabled="permissionFields['teacher_class']==false">
                                         <error-label for="f_category_id" :errors="errors.class"></error-label>
                                     </div>
                                     <div class="form-group col-sm-4">
                                         <label>School</label>
-                                        <input class="form-control form-control-solid" v-model="schools.label" disabled>
+                                        <input class="form-control form-control-solid" v-model="schools.label" :disabled="permissionFields['teacher_school']==false">
                                         <error-label for="f_category_id" :errors="errors.label"></error-label>
                                     </div>
                                     <div  class="form-group  col-sm-4">
                                         <label>Password <span class="text-danger">*</span></label>
                                         <input :type="showPass ? 'text' : 'password'" class="form-control"
-                                               ref="password" v-model="password" placeholder="Enter the password">
+                                               ref="password" v-model="password" placeholder="Enter the password" :disabled="permissionFields['password']==false">
                                         <error-label for="f_category_id" :errors="errors.password"></error-label>
                                     </div>
 
                                     <div  class="form-group  col-sm-4">
                                         <label>Confirm your password <span class="text-danger">*</span></label>
                                         <input class="form-control" :type="showConfirm ? 'text' : 'password'"
-                                               v-model="password_confirmation"  placeholder="Re-enter to confirm the password">
+                                               v-model="password_confirmation"  placeholder="Re-enter to confirm the password" :disabled="permissionFields['password']==false">
                                         <error-label for="f_category_id"
                                                      :errors="errors.password_confirmation"></error-label>
                                     </div>
                                     <div class="form-check form-check-custom form-check-solid ml-3 pb-5">
-                                        <input id="state" type="checkbox" v-model="entry.state" class="form-check-input h-20px w-20px">
+                                        <input id="state" type="checkbox" v-model="entry.state" class="form-check-input h-20px w-20px" :disabled="permissionFields['active_teacher']==false">
                                         <label for="state" class="form-check-label fw-bold">Active teacher</label>
                                         <error-label for="f_grade" :errors="errors.state"></error-label>
                                     </div>
@@ -124,7 +124,7 @@
                                 <div class="row" v-if=" school.active_allocation==1" >
                                     <div class="form-group col-sm-12">
                                         <label>Course<span class="text-danger">*</span></label>
-                                        <treeselect :options="allCourses" :multiple="true" @deselect="deleteCourse" v-model="courseTeachers" @input="selectTotalCourse" />
+                                        <treeselect :options="allCourses" :multiple="true" @deselect="deleteCourse" v-model="courseTeachersTmp" @input="selectTotalCourse" :disabled="permissionFields['resource_allocation']==false"/>
                                         <error-label  for="f_grade" :errors="errors.courseTeachers"></error-label>
                                     </div>
                                 </div>
@@ -136,13 +136,13 @@
                                         <div class="col-lg-12" style="display: flex ;margin: 16px 0px 0px" v-for="courseTeacher in courseTeachers">
                                             <div v-for="course in courses" v-if="courseTeacher==course.id"  style="display: flex;align-items: center;flex-basis: 10%"> {{course.label}}</div>
                                             <div v-for="course in courses" v-if="courseTeacher==course.id" style="flex-basis: 90%">
-                                                <treeselect :options="course.total_unit" :multiple="true" v-model="course.courseTea" @input="selectTotalUnit(course)"/>
+                                                <treeselect :options="course.total_unit" :multiple="true" v-model="course.courseTeaTmp" @input="selectTotalUnit(course)" :disabled="permissionFields['resource_allocation']==false"/>
                                                 <error-label :errors="errors.courseTea"></error-label>
                                             </div>
                                         </div>
                                 </div>
                                 <div class="form-check form-check-custom form-check-solid mt-3" v-if="school.active_allocation==1">
-                                    <input id="state1" type="checkbox" v-model="active_allocation" class="form-check-input h-20px w-20px" @change="activeAllocation">
+                                    <input id="state1" type="checkbox" v-model="active_allocation" class="form-check-input h-20px w-20px" @change="activeAllocation" :disabled="permissionFields['active_allocation']==false">
                                     <label for="state1" class="form-check-label fw-bold">Active allocation</label>
                                     <error-label for="f_grade" :errors="active_allocation"></error-label>
                                 </div>
@@ -159,7 +159,7 @@
                         <table class="table table-row-bordered align-middle gy-4 gs-9">
                             <thead  class="border-bottom border-gray-200 fs-6 text-gray-600 fw-bolder bg-light bg-opacity-75">
                             <tr>
-                                <th>No.</th>
+                                <th>ID</th>
                                 <th>Device name</th>
                                 <th>Device detail</th>
                                 <th>Registed date</th>
@@ -171,14 +171,14 @@
                             </thead>
                             <tbody>
                             <tr v-for="(device,index) in userDevices" >
-                                <td >{{index+1}}</td>
+                                <td v-text="device.id"></td>
                                 <td v-text="device.device_name"></td>
                                 <td v-text="device.device_name"></td>
                                 <td v-text="d(device.created_at)"></td>
-                                <td style="color: #f1c40f" v-if="device.delete_request!=null" v-text="device.delete_request"></td>
+                                <td style="color: #f1c40f" v-if="device.delete_request!=null" v-text="device.delete_request" ></td>
                                 <td v-else></td>
                                 <td>
-                                    <a @click="modalDevice(device)" href="javascript:;" class="btn-trash deleted"><i class="bi bi-trash"></i></a>
+                                    <a v-if="permissionFields['delete_device']==true" @click="modalDevice(device)" href="javascript:;" class="btn-trash deleted"><i class="bi bi-trash"></i></a>
                                 </td>
                             </tr>
                             </tbody>
@@ -258,10 +258,16 @@
 
                     }
                 })
+                let courseTeaTmp = rec.courseTea;
+
+                if(rec.courseTea.length == rec.total_unit.length){
+                    courseTeaTmp = ['all'];
+                }
                 return {
                     'id':rec.id,
                     'label': rec.course_name,
                     'courseTea':rec.courseTea,
+                    'courseTeaTmp':courseTeaTmp,
                     'total_unit':unitAll,
                 }
             })
@@ -279,7 +285,16 @@
                     'children':res.children,
                 }
             })
+            let courseTeachersTmp = $json.courseTeachers;
+            if(Array.isArray(courseTeachersTmp)){
+                if(courseTeachersTmp.length == allCourses[0].children.length){
+                    courseTeachersTmp = ['all'];
+                }
+
+            }
+
             return {
+                permissionFields:$json.permissionFields,
                 password:'',
                 password_confirmation:'',
                 school:{},
@@ -288,6 +303,7 @@
                 deviceTeacher:[],
                 allCourses:allCourses,
                 nameRole:5,
+                courseTeachersTmp,
                 courseTeachers:$json.courseTeachers || {},
                 showConfirm: false,
                 showPass: false,
@@ -351,22 +367,26 @@
               {
                   if(e.id==course.id)
                   {
-                      if(e.total_unit.length>0 && e.courseTea[0]=='all')
+                      if(e.total_unit.length>0 && e.courseTeaTmp[0]=='all')
                       {
                           e.courseTea=e.total_unit[0].children.map(rec => {
                               return rec.id;
                           })
+                      }else {
+                          e.courseTea = e.courseTeaTmp;
                       }
                   }
               })
             },
              selectTotalCourse()
             {
-               if(this.courseTeachers.length > 0 && this.courseTeachers[0]=='all')
+               if(this.courseTeachersTmp.length > 0 && this.courseTeachersTmp[0]=='all')
                {
                    this.courseTeachers=this.courses.map(res=>{
                        return res.id;
                    })
+               }else{
+                   this.courseTeachers = this.courseTeachersTmp;
                }
             },
             removeTeacher:function()
@@ -395,10 +415,7 @@
                 } else {
                     toastr.success(res.message);
                 }
-                window.location.reload();
-
-                $router.updateQuery({ _: Date.now()});
-
+                location.replace('/xadmin/users/editTeacher?id=' + res.id);
             },
             async activeAllocation()
             {
@@ -421,7 +438,7 @@
                 else {
                     toastr.success(res.message);
                 }
-                window.location.reload();
+                location.replace('/xadmin/users/editTeacher?id=' + res.id);
 
             },
 

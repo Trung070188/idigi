@@ -63,40 +63,41 @@ class DashboardController extends AdminBaseController
     public function data(Request $req)
     {
        $dataAll=($req->all());
-        $requestUris=Xlogger::query()
-            ->where('request_uri', '=', '/xadmin/schools/save')
-            ->orwhere('request_uri', '=', '/xadmin/schools/remove')
-            ->orWhere('request_uri', '=', '/xadmin/users/save')
-            ->orWhere('request_uri', '=', '/xadmin/users/remove')
-            ->orWhere('request_uri', '/xadmin/users/saveTeacher')
-            ->orWhere('request_uri', '/xadmin/roles/save')
-            ->orWhere('request_uri', '=', '/xadmin/roles/remove')
-            ->orWhere('request_uri', '/xadmin/allocation_contents/save')
-            ->orWhere('request_uri', '/xadmin/schools/saveLicense')
-            ->orWhere('request_uri', '/xadmin/plans/remove')
-            ->orWhere('request_uri', '/xadmin/plans/save')
-            ->orWhere('request_uri', '/xadmin/plans/saveDevice')
-            ->orWhere('request_uri', '/xadmin/plans/addPackageLesson')
-            ->orWhere('request_uri', '/xadmin/plans/planLesson')
-            ->orWhere('request_uri', '/xadmin/plans/removeAllLesson')
-            ->orWhere('request_uri', '/xadmin/plans/deleteLesson')
-            ->orWhere('request_uri', '/xadmin/plans/deletePackageLesson')
-            ->orWhere('request_uri', '/xadmin/user_devices/save')
-            ->orwhere('request_uri','/xadmin/user_devices/savesend')
-            ->orWhere('request_uri','/xadmin/users/removeDevice')
-            ->orWhere('request_uri','/xadmin/users/refuseDevice')
-            ->orWhere('request_uri', '/xadmin/user_devices/remove')->get();
-        $logAuthentications=AuthenticationLog::query()->orderBy('id','desc')->get();
-        $xlogerLogin=[];
-        foreach ($logAuthentications as $authentication)
-        {
-            $time=Carbon::createFromFormat('Y-m-d H:i:s',$authentication->login_at )->format('Y-m-d');
-            if($time==$req->created)
-            {
-                $xlogerLogin[]=$authentication->id;
-            }
+        $start_date=Carbon::createFromFormat('Y-m-d',$req->created)->format('Y-m-d 0:0:0');
+        $end_date=Carbon::createFromFormat('Y-m-d',$req->created)->format('Y-m-d 23:59:59');
+
+        $requestUris = Xlogger::query()->where('http_code',200)
+            ->whereIn('request_uri', [
+                '/xadmin/schools/save',
+                '/xadmin/schools/remove',
+                '/xadmin/users/save',
+                '/xadmin/users/remove',
+                '/xadmin/users/saveTeacher',
+                '/xadmin/roles/save',
+                '/xadmin/roles/remove',
+                '/xadmin/allocation_contents/save',
+                '/xadmin/schools/saveLicense',
+                '/xadmin/plans/remove',
+                '/xadmin/plans/save',
+                '/xadmin/plans/saveDevice',
+                '/xadmin/plans/addPackageLesson',
+                '/xadmin/plans/planLesson',
+                '/xadmin/plans/removeAllLesson',
+                '/xadmin/plans/deleteLesson',
+                '/xadmin/plans/deletePackageLesson',
+                '/xadmin/user_devices/save',
+                '/xadmin/user_devices/savesend',
+                '/xadmin/users/removeDevice',
+                '/xadmin/users/refuseDevice',
+                '/xadmin/user_devices/remove'
+            ])->whereBetween('time',[$start_date,$end_date]);
+        $limit = 1;
+        if ($req->limit) {
+            $limit = $req->limit;
         }
-        $logAuths=AuthenticationLog::whereIn('id',$xlogerLogin)->get();
+        $requestUris = $requestUris->paginate($limit);
+        $logAuths=AuthenticationLog::query()->whereBetween('login_at',[$start_date,$end_date]);
+        $logAuths = $logAuths->paginate($limit);
         $request_uri=[];
         foreach ($requestUris as $requestUri)
         {
@@ -203,7 +204,12 @@ class DashboardController extends AdminBaseController
             'code' => 0,
             'data' =>$xlogger,
             'logAu'=>$logAu,
-            'dataChart'=>$dataChart
+            'dataChart'=>$dataChart,
+            'paginate' => [
+                'currentPage' => $requestUris->currentPage(),
+                'lastPage' => $requestUris->lastPage(),
+                'totalRecord' =>$requestUris->count(),
+            ]
 
         ];
     }

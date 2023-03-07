@@ -94,6 +94,9 @@
 												<button @click="openModal()" :disabled="lessons.length>3" type="button" class="btn btn-danger" data-kt-customer-table-select="delete_selected">Download lesson</button>
 
 											</div>
+                                     <a :href="'/xadmin/lessons/create'">
+                                         <button class="btn btn-primary button-create" style="margin:0 0 0 15px"><i class="bi bi-plus-lg"></i>Create new lesson</button>
+                                     </a>
                                  </div>
                       <form class="col-lg-12" v-if="!isShowFilter">
                           <div class="row">
@@ -186,7 +189,7 @@
                                         </svg>
                                     </span>
 
-                                    <div v-text=" from +'-'+ to +' of '+ paginate.totalRecord" v-if="entries.length > 0"></div>
+                                    <div v-text=" from +'-'+ to +' of '+ countLesson" v-if="entries.length > 0"></div>
 
                                     <template v-if="lessonIds.length > 0">
                                         <!-- <span class="svg-icon svg-icon-2x svg-icon-primary mx-1">
@@ -234,18 +237,18 @@
 
                             </tr>
 
-                            <tr  v-for="(entry,index) in entries" v-if="user.active_allocation==1 && entries.length>0">
+                            <tr  v-for="(entry,index) in entries" v-if="user.active_allocation==1 && entries.length>0" style="cursor: pointer">
                                 <td class="">
                                     <div class="form-check form-check-sm form-check-custom form-check-solid">
                                         <input class="form-check-input" type="checkbox" v-model="lessonIds" :value="entry.id" @change="updateCheckAll">
                                     </div>
                                 </td>
-                                <td >{{((index+1)+(from+1))-2}}</td>
-                                <td v-text="entry.name"></td>
-                                <td class="" v-text="entry.grade"></td>
-                                <td class="" v-text="entry.subject"></td>
-                                <td class="" v-text="entry.enabled == 0 ? 'No' : 'Yes'"></td>
-                                <td class="" v-text=" d(entry.created_at)"></td>
+                                <td @click="edit(entry.id)">{{((index+1)+(from+1))-2}}</td>
+                                <td v-text="entry.name" @click="edit(entry.id)"></td>
+                                <td class="" v-text="entry.grade" @click="edit(entry.id)"></td>
+                                <td class="" v-text="entry.subject" @click="edit(entry.id)"></td>
+                                <td class="" v-text="entry.enabled == 0 ? 'No' : 'Yes'" @click="edit(entry.id)"></td>
+                                <td class="" v-text=" d(entry.created_at)" @click="edit(entry.id)"></td>
                                 <td class="">
                                     <a href="list.html#" class="btn btn-light btn-active-light-primary btn-sm" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">Actions
                                         <!--begin::Svg Icon | path: icons/duotune/arrows/arr072.svg-->
@@ -374,6 +377,9 @@
             });
         },
         methods: {
+            edit: function (id){
+                window.location.href='/xadmin/lessons/edit?id='+ id;
+            },
             checkSchool()
             {
                    this.idSchool=this.schoolLesson;
@@ -436,12 +442,6 @@
                         }
                     })
                 })
-            },
-            edit: function (id, event) {
-                if (!$(event.target).hasClass('deleted')) {
-                    window.location.href = '/xadmin/lessons/edit?id=' + id;
-                }
-
             },
             async load() {
                 let query = $router.getQuery();

@@ -1,24 +1,60 @@
 <template>
     <div class="container-fluid">
         <ActionBar type="index"
-                   :breadcrumbs="breadcrumbs"  title = "Create new lesson"/>
+                   :breadcrumbs="breadcrumbs"  title = "Lesson details"/>
 
         <div class="row">
+            <div class="modal fade" style="margin-right:50px;border:2px solid #333333  " id="delete" tabindex="-1" role="dialog"
+                 aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered popup-main-1" role="document"
+                     style="max-width: 450px;">
+                    <div class="modal-content box-shadow-main paymment-status" style="left:120px;text-align: center; padding: 20px 0px 55px;">
+                        <div class="close-popup" data-dismiss="modal"></div>
+                        <div class="swal2-icon swal2-warning swal2-icon-show">
+                            <div class="swal2-icon-content" style="margin: 0px 24.5px 0px ">!</div>
+                        </div>
+                        <div class="swal2-html-container">
+                            <p >Are you sure to delete this lesson?</p>
+                        </div>
+                        <div class="swal2-actions">
+                            <button type="submit" id="kt_modal_new_target_submit" class="swal2-confirm btn fw-bold btn-danger" @click="remove(entry)">
+                                <span class="indicator-label">Yes, delete!</span>
+                            </button>
+                            <button type="reset" id="kt_modal_new_target_cancel" class="swal2-cancel btn fw-bold btn-active-light-primary" data-bs-dismiss="modal" style="margin: 0px 8px 0px">No, cancel</button>
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
             <div class="col-lg-12">
                 <div class="card card-custom card-stretch gutter-b">
+                    <div class="card-header border-0 pt-6" style="margin:0px 0px -35px" v-if="entry.id">
+                        <div class="card-title"></div>
+                        <div class="card-toolbar" @click="deleteLesson(entry)" style="z-index: 1">
+                            <button  class="btn btn-danger" >
+                                Delete lesson <i class="bi bi-trash"></i>
+                            </button>
+                        </div>
+                    </div>
                     <div class="card-body d-flex flex-column">
                         <div class="row">
                             <div class=" col-sm-12">
                                 <input v-model="entry.id" type="hidden" name="id" value="">
                                 <div class="row">
-                                    <div class="form-group col-sm-9">
+                                    <div class="form-group col-sm-6">
                                         <label>Lesson name <span class="text-danger">*</span></label>
-                                        <input class="form-control nospace" placeholder="Enter the lesson name" v-model="entry.name" >
+                                        <input class="form-control nospace" placeholder="Enter the unit name" v-model="entry.name" >
                                         <error-label  for="f_category_id" :errors="errors.name"></error-label>
                                     </div>
                                     <div class="form-group col-sm-3">
+                                        <label>Lesson ID <span class="text-danger">*</span></label>
+                                        <input class="form-control " v-model="entry.id" disabled>
+                                        <error-label  for="f_category_id" :errors="errors.id"></error-label>
+                                    </div>
+                                    <div class="form-group col-sm-3">
                                         <label>Subject<span class="text-danger">*</span></label>
-                                        <select class="form-control form-select" v-model="entry.subject" required >
+                                        <select class="form-control form-select" v-model="entry.subject" required @change="load">
                                             <option value="" disabled selected>Choose the subject</option>
                                             <option value="Math">Math</option>
                                             <option value="Science">Science</option>
@@ -49,7 +85,11 @@
                                                 <option value="Summary">Summary</option>
                                             </select>
                                         </div>
-                                        <Treeselect :options="modules"  placeholder="Search module" :multiple="true" v-model="listResource" @input="resource()" @search-change="handleSearchChange"/>
+                                        <Treeselect :options="modules" :multiple="true" v-model="listResource" @input="resource()" @search-change="handleSearchChange"/>
+<!--                                        <select class="form-control form-select" style="margin-bottom: 15px" v-model="listResource" @change="resource()" required>-->
+<!--                                            <option value="" disabled selected>Search module</option>-->
+<!--                                            <option v-for="module in modules" :value="module">{{module.name}}</option>-->
+<!--                                        </select>-->
                                         <draggable
                                             :list="list"
                                             :animation="200"
@@ -84,9 +124,9 @@
 
                                 </div>
                                 <div class="form-check form-check-custom form-check-solid pb-5">
-                                    <input id="state" type="checkbox" v-model="entry.active" class="form-check-input h-20px w-20px" checked>
+                                    <input id="state" type="checkbox" v-model="entry.enabled" class="form-check-input h-20px w-20px" checked>
                                     <label for="state" class="form-check-label fw-bold">Active</label>
-                                    <error-label for="f_grade" :errors="errors.active"></error-label>
+                                    <error-label for="f_grade" :errors="errors.enabled"></error-label>
                                 </div>
                             </div>
                         </div>
@@ -117,15 +157,15 @@
     let created = getTimeRangeAll();
     const $q = $router.getQuery();
     export default {
-        name: "LessonsForm.vue",
+        name: "LessonDetail.vue",
         components: {ActionBar,draggable,Treeselect},
         data() {
             let filter = {
                 type: $q.type || "",
             };
             return {
+                lessonUnit:'',
                 units:[],
-                checkResource:[],
                 listResource:[],
                 filter:filter,
                 module_type:'',
@@ -140,15 +180,12 @@
                         url: '/xadmin/lessons/index',
                     },
                     {
-                        title:'Create new lesson',
+                        title:'Lesson details',
                     },
                 ],
-                entry:{
-                    unit_id:'',
-                    subject:''
-                },
-                isLoading: false,
                 searchLimit:50,
+                entry: $json.entry || {},
+                isLoading: false,
                 errors: {}
             }
         },
@@ -156,7 +193,12 @@
             $router.on("/", this.load).init();
         },
         methods: {
-          async handleSearchChange(value) {
+            deleteLesson:function(entry='')
+            {
+                $('#delete').modal('show');
+                this.deleteCour=entry;
+            },
+            async handleSearchChange(value) {
                 if (value) {
                     let query = $router.getQuery();
                     const res = await $get("/xadmin/lessons/dataCreateLesson?subject="+this.entry.subject,query);
@@ -167,14 +209,21 @@
         },
             removeResource(index)
             {
-              this.list=this.list.filter((item,key)=>key!==index);
-              this.listResource=this.list.map(rec => rec.id);
-              console.log(this.list);
+                this.list=this.list.filter((item,key)=>key!==index);
+                this.listResource=this.list.map(rec => rec.id);
             },
             resource()
             {
+                // this.listResource=
+                //     {
+                //         'inventory_id':this.listResource.id,
+                //         'lesson_id':this.entry.id,
+                //         'name':this.listResource.name,
+                //         'type':this.listResource.type
+                //     }
                 // this.list = this.list.concat(this.listResource);
                 // this.listResource=[];
+                console.log(this.listResource);
                 this.list = this.listResource.map(id => {
                     const item = this.modules.find(i => i.id === id);
                     return {id, label: item.label,type:item.type};
@@ -186,19 +235,30 @@
             async load() {
                 let query = $router.getQuery();
                 this.$loading(true);
-                const res = await $get("/xadmin/lessons/dataCreateLesson", query);
+                const res = await $get("/xadmin/lessons/dataEditLesson?id="+this.entry.id,query);
                 this.$loading(false);
-                this.modules = res.module;
-                //this.modules=this.modules.concat(this.list);
+                let inventory=[];
+                res.lessons.forEach(function (e)
+                {
+                   res.module.forEach(function (e1)
+                   {
+                       if(e1.id==e.inventory_id)
+                       {
+                           inventory.push(e1);
+                       }
+                   })
+                })
+                this.modules=inventory;
+                this.listResource=res.lessons.map(rec => rec.inventory_id);
+                // this.modules = res.module;
                 this.units=res.units;
-
             },
             backIndex(){
                 window.location.href = '/xadmin/lessons/index';
             },
             async save() {
                 this.isLoading = true;
-                const res = await $post('/xadmin/lessons/save', {entry: this.entry,inventory:this.list}, false);
+                const res = await $post('/xadmin/lessons/save', {entry: this.entry,inventory:this.list,lessonUnit: this.lessonUnit}, false);
                 this.isLoading = false;
                 if (res.errors) {
                     this.errors = res.errors;
@@ -211,11 +271,23 @@
                     toastr.success(res.message);
 
                     // if (!this.entry.id) {
-                        location.replace('/xadmin/lessons/edit?id=' + res.id);
+                    //     location.replace('/xadmin/lessons/edit?id=' + res.id);
                     // }
 
                 }
-            }
+            },
+            async remove(entry) {
+                const res = await $post('/xadmin/lessons/remove', {id: entry.id});
+
+                if (res.code) {
+                    toastr.error(res.message);
+                } else {
+                    toastr.success(res.message);
+                    $('#delete').modal('hide');
+                    window.location.href = '/xadmin/lessons/index';
+                }
+
+            },
         }
     }
 </script>

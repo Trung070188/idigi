@@ -11,7 +11,10 @@ use App\Models\AllocationContentSchool;
 use App\Models\DownloadAppLog;
 use App\Models\DownloadLessonFile;
 use App\Models\DownloadLessonLog;
+use App\Models\Inventory;
+use App\Models\LessonInventory;
 use App\Models\School;
+use App\Models\Unit;
 use App\Models\UserDevice;
 use Carbon\Carbon;
 use Illuminate\Contracts\View\View;
@@ -83,7 +86,7 @@ class LessonsController extends AdminBaseController
          */
 
         $title = 'Edit';
-        $component = 'LessonForm';
+        $component = 'LessonDetail';
 
 
         return component($component, compact('title', 'entry'));
@@ -137,13 +140,9 @@ class LessonsController extends AdminBaseController
         $data = $req->get('entry');
 
         $rules = [
-            'created_by' => 'max:255',
-            'created_date' => 'date_format:Y-m-d H:i:s',
-            'last_modified_by' => 'max:255',
-            'last_modified_date' => 'date_format:Y-m-d H:i:s',
-            'name' => 'max:255',
-            'subject' => 'max:255',
-            'number' => 'max:255',
+            'name' => ['required','max:100','regex:/^[\p{L}\s\/0-9.,?\(\)_:-]+$/u'],
+            'subject' => 'required|max:200',
+            'description'=>'max:200'
         ];
 
         $v = Validator::make($data, $rules);
@@ -166,8 +165,21 @@ class LessonsController extends AdminBaseController
                     'message' => 'Không tìm thấy',
                 ];
             }
-
+            if($entry->unit_id)
+            {
+                Lesson::query()->where('unit_id',$data['unit_id'])->update(['unit_id'=>NULL,'unit_name'=>NUll]);
+            }
+            $unit=Unit::query()->where('id',$data['unit_id'])->first();
             $entry->fill($data);
+            $entry->unit_name=$unit['unit_name'];
+            if($req->inventory)
+            {
+                LessonInventory::where('lesson_id',$entry->id)->delete();
+            }
+            foreach ($req->inventory as $inven)
+            {
+                 LessonInventory::create(['lesson_id'=>$entry->id,'inventory_id'=>$inven['id']]);
+            }
             $entry->save();
 
             return [
@@ -178,8 +190,14 @@ class LessonsController extends AdminBaseController
         } else {
             $entry = new Lesson();
             $entry->fill($data);
+            Lesson::query()->where('unit_id',$data['unit_id'])->update(['unit_id'=>NULL,'unit_name'=>NUll]);
+            $unit=Unit::query()->where('id',$data['unit_id'])->first();
+            $entry->unit_name=@$unit['unit_name'];
             $entry->save();
-
+            foreach ($req->inventory as $inven)
+            {
+                LessonInventory::create(['lesson_id'=>$entry->id,'inventory_id'=>$inven['id']]);
+            }
             return [
                 'code' => 0,
                 'message' => 'Đã thêm',
@@ -337,6 +355,97 @@ class LessonsController extends AdminBaseController
                 'lastPage' => $entries->lastPage(),
                 'totalRecord' => $query->count(),
             ]
+        ];
+    }
+    public function dataCreateLesson(Request $req)
+    {
+
+        if($req->subject)
+        {
+            $modules=Inventory::query()->select([
+                'inventories.id as id',
+                'inventories.name as label',
+                'inventories.type as type',
+                'inventories.subject as subject'
+            ])->where('subject',$req->subject)->orderBy('id','desc');
+            $units=Unit::query()->where('subject',$req->subject)->orderBy('id','desc')->get();
+        }
+        else{
+            $modules=Inventory::query()->select([
+                'inventories.id as id',
+                'inventories.name as label',
+                'inventories.type as type',
+                'inventories.subject as subject'
+            ])->orderBy('id','desc');
+            $units=Unit::query()->orderBy('id','desc')->get();
+
+        }
+        if($req->type)
+        {
+            $modules->where('type',$req->type)->select([
+                'inventories.id as id',
+                'inventories.name as label',
+                'inventories.type as type'
+            ])->orderBy('id','desc');
+        }
+        return [
+            'units'=>$units,
+            'module'=>$modules->get(),
+        ];
+    }
+    public function dataEditLesson(Request $req)
+    {
+        $lessons=DB::table('lessons')->leftJoin('lesson_inventory',function ($join)
+        {
+           $join->on('lessons.id','=','lesson_inventory.lesson_id');
+        })->leftJoin('inventories',function ($join)
+        {
+            $join->on('inventories.id','=','lesson_inventory.inventory_id');
+        })->where('lessons.id',$req->id);
+      $lessons= $lessons->select([
+            'lessons.id as lesson_id',
+            'inventories.id as inventory_id',
+            'inventories.name as label',
+            'inventories.type as type'
+       ])->get();
+      if($req->subject)
+      {
+          $units=Unit::query()->where('subject',$req->subject)->orderBy('id','desc')->get();
+
+          $modules=Inventory::query()->select([
+              'inventories.id as id',
+              'inventories.name as label',
+              'inventories.type as type'
+          ])->where('subject',$req->subject)->orderBy('id','desc');
+      }
+      else{
+          $units=Unit::query()->orderBy('id','desc')->get();
+          $modules=Inventory::query()->select([
+              'inventories.id as id',
+              'inventories.name as label',
+              'inventories.type as type'
+          ])->orderBy('id','desc');
+
+      }
+
+        $module=[];
+        foreach ($lessons as $lesson)
+        {
+            $module[]=$lesson->inventory_id;
+        }
+
+        if($req->type)
+        {
+            $modules->where('type',$req->type)->orWhereIn('id',$module)->select([
+                'inventories.id as id',
+                'inventories.name as label',
+                'inventories.type as type'
+            ])->orderBy('id','desc');
+        }
+        return [
+            'units'=>$units,
+            'lessons'=>$lessons,
+            'module'=>$modules->get(),
         ];
     }
 

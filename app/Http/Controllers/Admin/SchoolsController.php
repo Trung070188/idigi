@@ -2,23 +2,37 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Exports\SchoolErrorExport;
+use App\Exports\TeacherErrorExport;
 use App\Helpers\PermissionField;
+use App\Imports\SchoolImport;
+use App\Imports\TeacherImport;
+use App\Jobs\SendMailPassword;
 use App\Models\AllocationContent;
 use App\Models\AllocationContentSchool;
 use App\Models\Course;
+use App\Models\District;
+use App\Models\File;
+use App\Models\Province;
 use App\Models\SchoolCourse;
 use App\Models\SchoolCourseUnit;
 use App\Models\User;
 use App\Models\UserCourseUnit;
+use App\Models\UserRole;
 use App\Models\UserUnit;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use App\Models\School;
 use App\Models\Unit;
 use Carbon\Carbon;
+use Illuminate\Validation\Rule;
+use Maatwebsite\Excel\Facades\Excel;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
@@ -64,23 +78,23 @@ class SchoolsController extends AdminBaseController
     {
         $component = 'SchoolForm';
         $title = 'Create schools';
-        $allocationContens = AllocationContent::query()->with(['course_unit', 'courses','units'])->orderBy('id', 'desc')->get()->toArray();
+        $allocationContens = AllocationContent::query()->with(['course_unit', 'courses', 'units'])->orderBy('id', 'desc')->get()->toArray();
         //cap nhat content tu dong
         $newAllocationContents = [];
-        foreach ($allocationContens as $allocationContent){
-            $units=$allocationContent['units'];
-        // khoi tao array Course
+        foreach ($allocationContens as $allocationContent) {
+            $units = $allocationContent['units'];
+            // khoi tao array Course
             $arrayCourse = [];
 
-            if(@$allocationContent['courses']){
+            if (@$allocationContent['courses']) {
 
-                foreach ($allocationContent['courses'] as $course){
+                foreach ($allocationContent['courses'] as $course) {
                     $newCourse = $course;
 
                     $newCourse['total_unit'] = [];
-                    if(@$allocationContent['course_unit']){
-                        foreach (@$allocationContent['course_unit'] as $courseUnit){
-                            if($course['id'] == $courseUnit['course_id']){
+                    if (@$allocationContent['course_unit']) {
+                        foreach (@$allocationContent['course_unit'] as $courseUnit) {
+                            if ($course['id'] == $courseUnit['course_id']) {
                                 $newCourse['total_unit'][] = $courseUnit['unit_id'];
                             }
                         }
@@ -95,8 +109,8 @@ class SchoolsController extends AdminBaseController
         }
         $jsonData = [
             'newAllocationContents' => $newAllocationContents,
-            'arrayCourse'=> $arrayCourse,
-            'units'=>$units,
+            'arrayCourse' => $arrayCourse,
+            'units' => $units,
 
 
         ];
@@ -142,6 +156,10 @@ class SchoolsController extends AdminBaseController
     public function schoolNameNavBar(Request $req)
     {
         $user = Auth::user();
+        if ($user->school_id) {
+            $schoolIds = explode(',', $user->school_id);
+            $schools = School::query()->where('id', $schoolIds)->get();
+        }
         @$schoolName = $user->schools->label;
         foreach ($user->roles as $role) {
             @$roleName = $role->role_name;
@@ -149,6 +167,7 @@ class SchoolsController extends AdminBaseController
 
         return [
             'code' => 0,
+            'schools' => $schools,
             'schoolName' => $schoolName,
             'roleName' => $roleName
         ];
@@ -159,9 +178,8 @@ class SchoolsController extends AdminBaseController
     public function dataTeacher(Request $req)
     {
         $id = $req->id;
-        $countTeacher=User::query()->where('school_id',$id)->whereHas('roles',function ($q)
-        {
-            $q->where('role_name','Teacher');
+        $countTeacher = User::query()->where('school_id', $id)->whereHas('roles', function ($q) {
+            $q->where('role_name', 'Teacher');
         })->count();
         $entry = School::find($id);
         $query = User::query()
@@ -177,7 +195,7 @@ class SchoolsController extends AdminBaseController
 
         });
         if ($req->full_name) {
-            $query->where('full_name', 'LIKE' ,'%' . $req->full_name . '%');
+            $query->where('full_name', 'LIKE', '%' . $req->full_name . '%');
         }
         if ($req->email) {
             $query->where('email', 'LIKE', '%' . $req->email . '%');
@@ -194,9 +212,9 @@ class SchoolsController extends AdminBaseController
         $users = $entries->items();
 
         return [
-            'countTeacher'=>$countTeacher,
+            'countTeacher' => $countTeacher,
             'code' => 0,
-            'lengthDeviceTeacher'=>$entry->devices_per_user,
+            'lengthDeviceTeacher' => $entry->devices_per_user,
             'data' => $users,
             'paginate' => [
                 'currentPage' => $entries->currentPage(),
@@ -212,8 +230,16 @@ class SchoolsController extends AdminBaseController
         $component = 'TeacherList';
         $id = $req->id;
         $entry = School::find($id);
+        $userTotal = User::where('school_id', $id)->count();
+        $isCreateTeacher = 1;
+
+        if ($userTotal >= $entry->number_of_users) {
+            $isCreateTeacher = 0;
+        }
+
         $jsonData = [
             'entry' => $entry,
+            'isCreateTeacher' => $isCreateTeacher,
         ];
         if (!$entry) {
             throw new NotFoundHttpException();
@@ -233,47 +259,42 @@ class SchoolsController extends AdminBaseController
     public function edit(Request $req)
     {
         $id = $req->id;
-        $entry = School::with(['allocation_contents', 'school_courses', 'school_course_units', 'allocation_school','users'])->where('id', $id)->first();
-        $allocationContents = AllocationContent::query()->with(['course_unit', 'courses','units'])->orderBy('id', 'desc')->get()->toArray();
-        $lengthTeacher=0;
-        $active_allocation=$entry->active_allocation;
-        if(@$entry->users)
-        {
-            $teacher=[];
-            foreach ($entry->users as $user)
-            {
-                if(@$user->roles)
-                {
-                    foreach ($user->roles as $role)
-                    {
-                        if($role->role_name=='Teacher')
-                        {
-                            $teacher[]=$user;
+        $entry = School::with(['allocation_contents', 'school_courses', 'school_course_units', 'allocation_school', 'users'])->where('id', $id)->first();
+        $allocationContents = AllocationContent::query()->with(['course_unit', 'courses', 'units'])->orderBy('id', 'desc')->get()->toArray();
+        $lengthTeacher = 0;
+        @$active_allocation = $entry->active_allocation;
+        if (@$entry->users) {
+            $teacher = [];
+            foreach ($entry->users as $user) {
+                if (@$user->roles) {
+                    foreach ($user->roles as $role) {
+                        if ($role->role_name == 'Teacher') {
+                            $teacher[] = $user;
 
                         }
                     }
                 }
-        }
+            }
 
-            $lengthTeacher=count($teacher);
+            $lengthTeacher = count($teacher);
         }
 
 
         //load content tu dong
         $newAllocationContents = [];
-        foreach ($allocationContents as $allocationContent){
+        foreach ($allocationContents as $allocationContent) {
 
             $arrayCourse = [];
 
-            if(@$allocationContent['courses']){
+            if (@$allocationContent['courses']) {
 
-                foreach ($allocationContent['courses'] as $course){
+                foreach ($allocationContent['courses'] as $course) {
                     $newCourse = $course;
 
                     $newCourse['total_unit'] = [];
-                    if(@$allocationContent['course_unit']){
-                        foreach (@$allocationContent['course_unit'] as $courseUnit){
-                            if($course['id'] == $courseUnit['course_id']){
+                    if (@$allocationContent['course_unit']) {
+                        foreach (@$allocationContent['course_unit'] as $courseUnit) {
+                            if ($course['id'] == $courseUnit['course_id']) {
                                 $newCourse['total_unit'][] = $courseUnit['unit_id'];
                             }
                         }
@@ -288,17 +309,15 @@ class SchoolsController extends AdminBaseController
         }
         $allocationContentSchools = @$entry->allocation_contents;
         $allocationContentId = @$entry->allocation_school->allocation_content_id;
-        $courses=null;
-        if($entry->allocation_contents)
-        {
+        $courses = null;
+        if (@$entry->allocation_contents) {
             foreach ($allocationContentSchools as $allocationContentSchool) {
 
                 $courses = ($allocationContentSchool->courses);
                 $course_unit = $allocationContentSchool->course_unit;
-                if($allocationContentSchool->courses)
-                {
+                if ($allocationContentSchool->courses) {
                     foreach ($courses as $course) {
-                        $course['unit']=$course->unit;
+                        $course['unit'] = $course->unit;
 
                         $course['total_unit'] = [];
                         $total_unit = [];
@@ -314,7 +333,6 @@ class SchoolsController extends AdminBaseController
                 }
 
 
-
                 $units = ($allocationContentSchool->units);
             }
         }
@@ -323,13 +341,11 @@ class SchoolsController extends AdminBaseController
             @$allocationContentSchoolName = $allocationContentSchool->title;
         }
 
-        if(@$entry->school_courses)
-        {
-            $courses2=$entry->school_courses;
+        if (@$entry->school_courses) {
+            $courses2 = $entry->school_courses;
             $course_unit2 = $entry->school_course_units;
-            foreach ( $courses2 as $course2)
-            {
-                $course2['unit']=$course2->unit;
+            foreach ($courses2 as $course2) {
+                $course2['unit'] = $course2->unit;
 
                 $course2['total_unit'] = [];
                 $total_unit2 = [];
@@ -356,41 +372,40 @@ class SchoolsController extends AdminBaseController
          */
 
         $user = Auth::user();
-        foreach ($user->roles as $role)
-        {
-            $roleName=$role->role_name;
+        foreach ($user->roles as $role) {
+            $roleName = $role->role_name;
         }
         $permissionDetail = new PermissionField();
         $permissions = $permissionDetail->permission($user);
         $permissionFields = [
-            'school_name' => $permissionDetail->havePermission('school_name',$permissions,$user),
-            'school_address'=>$permissionDetail->havePermission('school_address',$permissions,$user),
-            'school_email'=>$permissionDetail->havePermission('school_email',$permissions,$user),
-            'school_phone_number'=>$permissionDetail->havePermission('school_phone_number',$permissions,$user),
-            'school_device'=>$permissionDetail->havePermission('school_device',$permissions,$user),
-            'school_user'=>$permissionDetail->havePermission('school_user',$permissions,$user),
-            'school_expire_date'=>$permissionDetail->havePermission('school_expire_date',$permissions,$user),
-            'school_description'=>$permissionDetail->havePermission('school_description',$permissions,$user),
-            'school_content'=>$permissionDetail->havePermission('school_content',$permissions,$user),
-            'school_delete'=>$permissionDetail->havePermission('school_delete',$permissions,$user),
-            'school_teacher_list'=>$permissionDetail->havePermission('school_teacher_list',$permissions,$user),
+            'school_name' => $permissionDetail->havePermission('school_name', $permissions, $user),
+            'school_address' => $permissionDetail->havePermission('school_address', $permissions, $user),
+            'school_email' => $permissionDetail->havePermission('school_email', $permissions, $user),
+            'school_phone_number' => $permissionDetail->havePermission('school_phone_number', $permissions, $user),
+            'school_device' => $permissionDetail->havePermission('school_device', $permissions, $user),
+            'school_user' => $permissionDetail->havePermission('school_user', $permissions, $user),
+            'school_expire_date' => $permissionDetail->havePermission('school_expire_date', $permissions, $user),
+            'school_description' => $permissionDetail->havePermission('school_description', $permissions, $user),
+            'school_content' => $permissionDetail->havePermission('school_content', $permissions, $user),
+            'school_delete' => $permissionDetail->havePermission('school_delete', $permissions, $user),
+            'school_teacher_list' => $permissionDetail->havePermission('school_teacher_list', $permissions, $user),
 
         ];
         $title = 'Edit';
         $component = 'SchoolEdit';
         $entry->allocationContentId = $allocationContentId;
         $jsonData = [
-            'active_allocation'=>$active_allocation,
-            'roleName'=>@$roleName,
-            'permissionFields'=>$permissionFields,
-            'teacher'=>$lengthTeacher,
+            'active_allocation' => $active_allocation,
+            'roleName' => @$roleName,
+            'permissionFields' => $permissionFields,
+            'teacher' => $lengthTeacher,
             'entry' => $entry,
             @'allocationContents' => @$newAllocationContents,
-            @'allocationContentSchoolName' =>@ $allocationContentSchoolName,
+            @'allocationContentSchoolName' => @ $allocationContentSchoolName,
             'allocationContentId' => $allocationContentId,
-            'courses' =>$courses,
+            'courses' => $courses,
             @'units' => @$units,
-            @'courses2'=>@$courses2
+            @'courses2' => @$courses2
         ];
         return view('admin.layouts.vue', compact('title', 'component', 'jsonData'));
     }
@@ -401,10 +416,9 @@ class SchoolsController extends AdminBaseController
      */
     public function remove(Request $req)
     {
-        $user=Auth::user();
-        foreach ($user->roles as $role)
-        {
-            $roleName=$role->role_name;
+        $user = Auth::user();
+        foreach ($user->roles as $role) {
+            $roleName = $role->role_name;
         }
         $id = $req->id;
         $entry = School::find($id);
@@ -418,33 +432,34 @@ class SchoolsController extends AdminBaseController
         return [
             'code' => 0,
             'message' => 'Đã xóa',
-            'object'=>$entry->label,
-            'role'=>$roleName,
-            'status'=>'Delete school'
+            'object' => $entry->label,
+            'role' => $roleName,
+            'status' => 'Delete school'
         ];
     }
+
     public function removeLicense(Request $req)
     {
         $id = $req->id;
         $entry = School::find($id);
-       School::where('license_to',$entry->license_to)->delete();
+        School::where('license_to', $entry->license_to)->delete();
 
         if (!$entry) {
             throw new NotFoundHttpException();
         }
         School::updateOrCreate(
             [
-                'id'=>$entry->id,
+                'id' => $entry->id,
             ],
             [
 
-                'label'=>$entry->label,
-                'school_email'=>$entry->school_email,
-                'school_phone'=>$entry->school_phone,
-                'school_description'=>$entry->school_description,
-                'number_of_users'=>$entry->number_of_users,
-                'devices_per_user'=>$entry->devices_per_user,
-                'license_state'=>0
+                'label' => $entry->label,
+                'school_email' => $entry->school_email,
+                'school_phone' => $entry->school_phone,
+                'school_description' => $entry->school_description,
+                'number_of_users' => $entry->number_of_users,
+                'devices_per_user' => $entry->devices_per_user,
+                'license_state' => 0
 
             ]
         );
@@ -460,10 +475,9 @@ class SchoolsController extends AdminBaseController
      */
     public function save(Request $req)
     {
-        $user=Auth::user();
-        foreach ($user->roles as $role)
-        {
-            $roleName=$role->role_name;
+        $user = Auth::user();
+        foreach ($user->roles as $role) {
+            $roleName = $role->role_name;
         }
 
         $dataContent = $req->all();
@@ -477,38 +491,36 @@ class SchoolsController extends AdminBaseController
 
 
         $rules = [
-            'label' => 'required|max:45',
-            'school_address' => ['required','max:255','regex:/^[\pL\s\/\0-9.,]+$/u'],
+            'label' => ['required', 'regex:/^[\p{L}\s\/0-9.,_-]+$/u'],
+            'school_address' => ['required', 'max:255', 'regex:/^[\p{L}\s\/0-9.,_-]+$/u'],
+            'province_id' => ['required'],
+            'district_id' => ['required'],
             'number_of_users' => 'required|min:1|integer',
             'devices_per_user' => 'required|min:1|integer',
-            'license_to'=>'required|after_or_equal:'. $current,
+            'license_to' => 'required|after_or_equal:' . $current,
         ];
-        if(@$data['school_email'])
-        {
-            $rules['school_email']=['email'];
+        if (@$data['school_email']) {
+            $rules['school_email'] = ['email'];
         }
-        if(@$data['school_phone'])
-        {
-            $rules['school_phone']=['regex:/^[0-9]{10}$/'];
+        if (@$data['school_phone']) {
+            $rules['school_phone'] = ['regex:/^[0-9]{10}$/'];
         }
         // $rules['license_to']='after:' .$today;
-        $message=[
-            'label.required'=>'The school name field is required.',
-            'number_of_users.required'=>'The No. of User field is required.',
-            'devices_per_user.required'=>'The No. of Device per user field is required.',
-            'license_to.required'=>'The Expired date/License is required.',
-            'license_to.after_or_equal'=>'The Expired date/License must be a date after or equal to ' .$today,
+        $message = [
+            'label.required' => 'The school name field is required.',
+            'number_of_users.required' => 'The No. of User field is required.',
+            'devices_per_user.required' => 'The No. of Device per user field is required.',
+            'license_to.required' => 'The Expired date/License is required.',
+            'license_to.after_or_equal' => 'The Expired date/License must be a date after or equal to ' . $today,
 
         ];
 
-        $v = Validator::make($data, $rules,$message,$dataContent);
-        $v->after(function ($validate) use ($dataContent)
-        {
-           if(!isset($data['id']) && $dataContent['allocationContentSchool']=="" )
-           {
-               $validate->errors()->add('allocationContentSchool','Resource allocation field is required ');
+        $v = Validator::make($data, $rules, $message, $dataContent);
+        $v->after(function ($validate) use ($dataContent) {
+            if (!isset($data['id']) && $dataContent['allocationContentSchool'] == "") {
+                $validate->errors()->add('allocationContentSchool', 'Resource allocation field is required ');
 
-           }
+            }
         });
 
         if ($v->fails()) {
@@ -529,41 +541,40 @@ class SchoolsController extends AdminBaseController
                     'message' => 'Không tìm thấy',
                 ];
             }
+            $this->activeAllocation($data);
             $entry->fill($data);
             $entry->save();
             AllocationContentSchool::where('school_id', $entry->id)->delete();
             SchoolCourseUnit::where('school_id', $entry->id)->delete();
-            $userUnits=UserUnit::query()->where('school_id','=',$entry->id)->get();
-            foreach ($userUnits as $userUnit)
-            {
-                if($userUnit->allocation_content_id!=$dataContent['allocationContentSchool'])
-                {
-                    UserUnit::where('school_id',$entry->id)->delete();
-                    UserCourseUnit::where('school_id',$entry->id)->delete();
+            $userUnits = UserUnit::query()->where('school_id', '=', $entry->id)->get();
+            foreach ($userUnits as $userUnit) {
+                if ($userUnit->allocation_content_id != $dataContent['allocationContentSchool']) {
+                    UserUnit::where('school_id', $entry->id)->delete();
+                    UserCourseUnit::where('school_id', $entry->id)->delete();
                 }
             }
             if (@$dataContent['allocationContentSchool']) {
                 AllocationContentSchool::updateOrCreate(
-                  [
-                      'school_id'=>$entry->id,
-                  ]  ,
                     [
-                        'allocation_content_id'=>$dataContent['allocationContentSchool']
+                        'school_id' => $entry->id,
+                    ],
+                    [
+                        'allocation_content_id' => $dataContent['allocationContentSchool']
                     ]
                 );
 //                AllocationContentSchool::create(['allocation_content_id' => $dataContent['allocationContentSchool'], 'school_id' => $entry->id]);
 
             }
-            SchoolCourseUnit::where('school_id',$entry->id)->delete();
+            SchoolCourseUnit::where('school_id', $entry->id)->delete();
             foreach ($entry->allocation_contents as $contents) {
                 foreach ($contents->course_unit as $schoolCourse) {
-                    SchoolCourseUnit::create(['school_id' => $entry->id, 'course_id' => $schoolCourse->course_id, 'unit_id' => $schoolCourse->unit_id,'allocation_content_id'=>$dataContent['allocationContentSchool']]);
+                    SchoolCourseUnit::create(['school_id' => $entry->id, 'course_id' => $schoolCourse->course_id, 'unit_id' => $schoolCourse->unit_id, 'allocation_content_id' => $dataContent['allocationContentSchool']]);
                 }
             }
-            SchoolCourse::where('school_id',$entry->id)->delete();
+            SchoolCourse::where('school_id', $entry->id)->delete();
             foreach ($entry->allocation_contents as $contents) {
                 foreach ($contents->courses as $schoolCourse) {
-                    SchoolCourse::create(['school_id' => $entry->id, 'course_id' => $schoolCourse->id,'allocation_content_id'=>$dataContent['allocationContentSchool']]);
+                    SchoolCourse::create(['school_id' => $entry->id, 'course_id' => $schoolCourse->id, 'allocation_content_id' => $dataContent['allocationContentSchool']]);
                 }
             }
 
@@ -571,26 +582,26 @@ class SchoolsController extends AdminBaseController
                 'code' => 0,
                 'message' => 'Đã cập nhật',
                 'id' => $entry->id,
-                'role'=>$roleName,
-                'object'=>$entry->label,
-                'status'=>'Update school',
+                'role' => $roleName,
+                'object' => $entry->label,
+                'status' => 'Update school',
             ];
         } else {
             $entry = new School();
             $entry->fill($data);
             $entry->save();
-            if (@$dataContent['allocationContenSchool']) {
-                AllocationContentSchool::create(['allocation_content_id' => $dataContent['allocationContenSchool'], 'school_id' => $entry->id]);
+            if (@$dataContent['allocationContentSchool']) {
+                AllocationContentSchool::create(['allocation_content_id' => $dataContent['allocationContentSchool'], 'school_id' => $entry->id]);
 
                 foreach ($entry->allocation_contents as $contents) {
                     foreach ($contents->course_unit as $schoolCourse) {
-                        SchoolCourseUnit::create(['school_id' => $entry->id, 'course_id' => $schoolCourse->course_id, 'unit_id' => $schoolCourse->unit_id,'allocation_content_id'=>$dataContent['allocationContenSchool']]);
+                        SchoolCourseUnit::create(['school_id' => $entry->id, 'course_id' => $schoolCourse->course_id, 'unit_id' => $schoolCourse->unit_id, 'allocation_content_id' => $dataContent['allocationContentSchool']]);
                     }
                 }
 
                 foreach ($entry->allocation_contents as $contents) {
                     foreach ($contents->courses as $schoolCourse) {
-                        SchoolCourse::create(['school_id' => $entry->id, 'course_id' => $schoolCourse->id,'allocation_content_id'=>$dataContent['allocationContenSchool']]);
+                        SchoolCourse::create(['school_id' => $entry->id, 'course_id' => $schoolCourse->id, 'allocation_content_id' => $dataContent['allocationContentSchool']]);
                     }
                 }
             }
@@ -598,12 +609,37 @@ class SchoolsController extends AdminBaseController
                 'code' => 0,
                 'message' => 'Đã thêm',
                 'id' => $entry->id,
-                'role'=>$roleName,
-                'object'=>$entry->label,
-                'status'=>'Create new school'
+                'role' => $roleName,
+                'object' => $entry->label,
+                'status' => 'Create new school'
             ];
         }
     }
+
+    public function activeAllocation($data)
+    {
+        $auth = Auth::user();
+        $id = $data['id'];
+        $schoolIds = User::query()->where('school_id', $id)->get();
+        $userSchool = [];
+        foreach ($schoolIds as $schoolId) {
+            $userSchool[] = $schoolId->id;
+        }
+        if ($data['active_allocation'] == true) {
+            School::where('id', $id)->update(['active_allocation' => 1, 'full_name_active_content' => $auth->full_name]);
+            User::query()->WhereIn('id', $userSchool)->update(['active_allocation' => 1, 'full_name_active_content' => $auth->full_name]);
+
+        } else {
+            School::where('id', $id)->update(['active_allocation' => 0, 'full_name_active_content' => $auth->full_name]);
+            User::query()->WhereIn('id', $userSchool)->update(['active_allocation' => 0, 'full_name_active_content' => $auth->full_name]);
+
+        }
+        return [
+            'code' => 0,
+            'message' => 'Đã cập nhật'
+        ];
+    }
+
     public function saveEditLicense(Request $req)
     {
         $dataContent = $req->all();
@@ -615,7 +651,7 @@ class SchoolsController extends AdminBaseController
 
         $rules = [
 //            'label' => 'required|max:45',
-          'license_to'=>'required',
+            'license_to' => 'required',
         ];
 
         $v = Validator::make($data, $rules);
@@ -668,7 +704,7 @@ class SchoolsController extends AdminBaseController
 //            'school_phone' => 'required|max:45',
 //            'number_of_users' => 'required|integer|min:1',
 //            'devices_per_user' => 'required|integer|min:1',
-            'license_to'=>'required'
+            'license_to' => 'required'
         ];
 
         $v = Validator::make($data, $rules);
@@ -686,19 +722,19 @@ class SchoolsController extends AdminBaseController
 
         School::updateOrCreate(
             [
-                'id'=>$data['id'],
+                'id' => $data['id'],
             ],
             [
-                @'license_to'=>@$data['license_to'],
-                @'license_info'=>@$data['license_info'],
-                'license_state'=>1
+                @'license_to' => @$data['license_to'],
+                @'license_info' => @$data['license_info'],
+                'license_state' => 1
             ]
         );
 
         return [
             'code' => 0,
             'message' => 'Đã cập nhật',
-            'id' =>$data['id']
+            'id' => $data['id']
         ];
     }
 
@@ -718,27 +754,25 @@ class SchoolsController extends AdminBaseController
                 'message' => 'Not Found'
             ];
         }
-        if($entry->license_state == 0)
-        {
+        if ($entry->license_state == 0) {
             $entry->license_state = 1;
             $entry->save();
             return [
                 'code' => 200,
                 'message' => 'Đã Lưu',
-                'object'=>$entry->label,
-                'status'=>'activated license'
+                'object' => $entry->label,
+                'status' => 'activated license'
 
             ];
         }
-        if($entry->license_state == 1)
-        {
+        if ($entry->license_state == 1) {
             $entry->license_state = 0;
             $entry->save();
             return [
                 'code' => 200,
                 'message' => 'Đã Lưu',
-                'object'=>$entry->label,
-                'status'=>'deactivated license '
+                'object' => $entry->label,
+                'status' => 'deactivated license '
 
             ];
         }
@@ -750,6 +784,7 @@ class SchoolsController extends AdminBaseController
 //            'message' => 'Đã lưu'
 //        ];
     }
+
     /**
      * Ajax data for index page
      * @uri  /xadmin/schools/data
@@ -757,44 +792,45 @@ class SchoolsController extends AdminBaseController
      */
     public function data(Request $req)
     {
-        $user=Auth::user();
-        $schoolAdmins=explode(',',$user->school_id);
-        $schoolIdArrs=[];
-        foreach ($schoolAdmins as $schoolAdmin)
-        {
-            if($schoolAdmin)
-            {
-                $schoolIdArrs[]=(int)$schoolAdmin;
+        $user = Auth::user();
+        $schoolAdmins = explode(',', $user->school_id);
+        $schoolIdArrs = [];
+        foreach ($schoolAdmins as $schoolAdmin) {
+            if ($schoolAdmin) {
+                $schoolIdArrs[] = (int)$schoolAdmin;
             }
         }
-        $check=0;
-        foreach($user->roles as $role)
-        {
-            if($role->role_name=='Super Administrator')
-            {
-                $check=1;
+        $check = 0;
+        foreach ($user->roles as $role) {
+            if ($role->role_name == 'Super Administrator') {
+                $check = 1;
             }
         }
-        if($check==0)
-        {
-            $query = School::query()->whereIn('id',$schoolIdArrs)->with(['users'])->orderBy('id', 'ASC');
+        if ($check == 0) {
+            $query = School::query()->whereIn('id', $schoolIdArrs)->with(['users', 'province', 'district']);
 
 
-        }
-        else{
+        } else {
+            $query = School::query()->with(['users', 'province', 'district']);
+            if ($req->role_name) {
+                $admins = [];
+                $nameAdmins = User::query()->with(['roles'])->where('full_name', 'LIKE', '%' . $req->role_name . '%')->get();
+                foreach ($nameAdmins as $nameAdmin) {
+                    foreach ($nameAdmin->roles as $role) {
+                        if ($role->role_name == 'School Admin') {
+                            $admins[] = $nameAdmin;
+                        }
+                    }
+                }
+                $explodeIds = [];
+                foreach ($admins as $admin) {
+                    $explodeIds[] = explode(',', @$admin->school_id);
+                }
 
-            $query = School::query()->with(['users'])->orderBy('id', 'ASC');
-            if($req->role_name)
-            {
-                $nameAdmins=User::query()->where('full_name',$req->role_name)->first();
-                $schoolAdmins=explode(',',@$nameAdmins->school_id);
-                $schoolIdA=[];
-             foreach ($schoolAdmins as $schoolId)
-             {
-                 $schoolIdA[]=(int)$schoolId;
-             }
+                foreach ($explodeIds as $explodeId) {
+                    $query = School::query()->with(['users'])->whereIn('id', $explodeId)->orderBy('id', 'ASC');
 
-                $query = School::query()->with(['users'])->whereIn('id',$schoolIdA)->orderBy('id', 'ASC');
+                }
             }
         }
         if ($req->keyword) {
@@ -807,6 +843,46 @@ class SchoolsController extends AdminBaseController
         if ($req->school_address) {
             $query->where('school_address', 'LIKE', '%' . $req->school_address . '%');
         }
+        if ($req->province_id && $req->province_id != 'undefined' && $req->province_id != 'null') {
+            $query->where('province_id', $req->province_id);
+        }
+        if ($req->district_id && $req->district_id != 'undefined' && $req->district_id != 'null') {
+            $query->where('district_id', $req->district_id);
+        }
+//Sắp xếp
+        if ($req->sortBy) {
+            if ($req->sortBy == 'school_address' || $req->sortBy == 'license_to' || $req->sortBy == 'label' || $req->sortBy = 'devices_per_user') {
+                if ($req->sortDirection == 1) {
+                    $query->orderBy($req->sortBy, 'ASC');
+                }
+
+                if ($req->sortDirection == -1) {
+                    $query->orderBy($req->sortBy, 'DESC');
+                }
+
+            }
+            if ($req->sortBy == 'province') {
+                $query->join('provinces', 'provinces.id', '=', 'school.province_id');
+                if ($req->sortDirection == 1) {
+                    $query->orderBy('provinces.name', 'ASC');
+                }
+
+                if ($req->sortDirection == -1) {
+                    $query->orderBy('provinces.name', 'DESC');
+                }
+            }
+            if ($req->sortBy == 'district') {
+                $query->join('districts', 'districts.id', '=', 'school.district_id');
+                if ($req->sortDirection == 1) {
+                    $query->orderBy('districts.name', 'ASC');
+                }
+
+                if ($req->sortDirection == -1) {
+                    $query->orderBy('districts.name', 'DESC');
+                }
+            }
+        }
+
 
         $limit = 25;
 
@@ -815,54 +891,24 @@ class SchoolsController extends AdminBaseController
         }
         $data = [];
         $entries = $query->paginate($limit);
-        $users=User::query()->with(['roles'])->whereNotNull('school_id')->orderBy('id','ASC')->get();
+        $users = User::query()->with(['roles'])->whereNotNull('school_id')->orderBy('id', 'ASC')->get();
 
-
-        $userAdminSchools=[];
-//        foreach($users as $user)
-//        {
-//            foreach($user->roles as $role)
-//            {
-//               if($role->role_name=='School Admin')
-//               {
-//                   $userAdminSchools[]=$user;
-//               }
-//            }
-//        }
-
-//        foreach($userAdminSchools as $userAdminSchool )
-//        {
-//            $schools=explode(',',$userAdminSchool->school_id);
-//
-//            foreach ($schools as $school)
-//            {
-//                if ($school) {
-//                    $schoolIdArr[] = (int)$school;
-//                }
-//            }
-//
-//        }
         foreach ($entries as $entry) {
 
 
-            $nameSchoolAdmin=[];
-            foreach ($users as $user)
-            {
-                $userSchools=explode(',',$user->school_id);
-                $arrUserSchools=[];
-                foreach ($userSchools as $userSchool)
-                {
-                    $arrUserSchools[]=(int)$userSchool;
+            $nameSchoolAdmin = [];
+            foreach ($users as $user) {
+                $userSchools = explode(',', $user->school_id);
+                $arrUserSchools = [];
+                foreach ($userSchools as $userSchool) {
+                    $arrUserSchools[] = (int)$userSchool;
                 }
 
 
-                foreach ($user->roles as $role)
-                {
-                    foreach ($arrUserSchools as $arrUserSchool)
-                    {
-                        if($role->role_name=='School Admin' && $arrUserSchool==$entry->id)
-                        {
-                            $nameSchoolAdmin[]=$user->full_name;
+                foreach ($user->roles as $role) {
+                    foreach ($arrUserSchools as $arrUserSchool) {
+                        if ($role->role_name == 'School Admin' && $arrUserSchool == $entry->id) {
+                            $nameSchoolAdmin[] = $user->full_name;
                         }
                     }
 
@@ -884,19 +930,20 @@ class SchoolsController extends AdminBaseController
             $data[] = [
                 'id' => $entry->id,
                 'label' => $entry->label,
+                'province' => @$entry->province->name,
+                'district' => @$entry->district->name,
                 'school_address' => $entry->school_address,
                 'school_email' => $entry->school_email,
                 'school_phone' => $entry->school_phone,
                 'number_of_users' => $entry->number_of_users,
                 'devices_per_user' => $entry->devices_per_user,
-                'nameSchoolAdmin'=>implode(' , ',$nameSchoolAdmin),
+                'nameSchoolAdmin' => implode(' , ', $nameSchoolAdmin),
 //                'license_info'=>$entry->license_info,
-               'license_to'=>$entry->license_to,
+                'license_to' => $entry->license_to,
                 'license_state' => $entry->license_state,
                 'teacher' => $teacher,
 
             ];
-
 
 
         }
@@ -1029,41 +1076,35 @@ class SchoolsController extends AdminBaseController
     public function removeAll(Request $req)
     {
         $ids = $req->ids;
-        $schools=School::query()->with(['users'])->whereIn('id',$ids)->get();
-        $data=[];
-        foreach ($schools as $school)
-        {
+        $schools = School::query()->with(['users'])->whereIn('id', $ids)->get();
+        $data = [];
+        foreach ($schools as $school) {
 
-            foreach ($school->users as $user)
-            {
+            foreach ($school->users as $user) {
 
-                foreach ($user->roles as $role)
-                {
+                foreach ($user->roles as $role) {
 
-                    if($role->role_name=='Teacher' && $school->id==$user->school_id )
-                    {
-                        $data[]=$user;
+                    if ($role->role_name == 'Teacher' && $school->id == $user->school_id) {
+                        $data[] = $user;
                     }
                 }
             }
         }
-       if($data==[])
-       {
-           $check=0;
-           School::whereIn('id', $ids)->delete();
-           return [
-               'code' => 0,
-               'check'=>$check,
-               'message' => 'Đã xóa'
-           ];
-       }
-       else{
-           $check=1;
-           return [
-               'code'=>1,
-               'check'=>$check,
-           ];
-       }
+        if ($data == []) {
+            $check = 0;
+            School::whereIn('id', $ids)->delete();
+            return [
+                'code' => 0,
+                'check' => $check,
+                'message' => 'Đã xóa'
+            ];
+        } else {
+            $check = 1;
+            return [
+                'code' => 1,
+                'check' => $check,
+            ];
+        }
 
 
     }
@@ -1078,30 +1119,228 @@ class SchoolsController extends AdminBaseController
         ];
         return view('admin.layouts.vue', compact('title', 'component', 'jsonData'));
     }
-    public function activeAllocation(Request $req)
+
+    public function getProvince()
     {
-        $auth=Auth::user();
-        $id=$req->id;
-        School::where('id',$id)->update(['active_allocation'=>$req->active_allocation,'full_name_active_content'=>$auth->full_name]);
-        $schoolIds=User::query()->where('school_id',$id)->get();
-        $userSchool=[];
-        foreach ($schoolIds as $schoolId)
-        {
-            $userSchool[]=$schoolId->id;
-        }
-        if($req->active_allocation==true)
-        {
-            User::query()->WhereIn('id',$userSchool)->update(['active_allocation'=>1,'full_name_active_content'=>$auth->full_name]);
+        $provinces = Province::orderBy('name', 'ASC')->with(['districts'])->get();
+        $provinceData = [];
 
+        foreach ($provinces as $province) {
+            $districts = [];
+            foreach ($province->districts as $district) {
+                $districts[] = [
+                    'id' => $district->id,
+                    'label' => $district->name,
+                ];
+            }
+            $provinceData[] = [
+                'id' => $province->id,
+                'label' => $province->name,
+                'districts' => $districts
+            ];
         }
-        else{
-            User::query()->WhereIn('id',$userSchool)->update(['active_allocation'=>0,'full_name_active_content'=>$auth->full_name]);
 
-        }
-        return [
-          'code'=>0,
-          'message'=>'Đã cập nhật'
-        ];
+        return $provinceData;
     }
+
+    /**
+     * Các chức năng về Import school
+     */
+
+    public function downloadTemplate(): BinaryFileResponse
+    {
+        return response()->download(public_path('sample/Import_School_Template_a.xlsx'));
+    }
+
+    public function validateImportSchool(Request $req)
+    {
+        $data = $req->all();
+        if (!$req->isMethod('POST')) {
+            return ['code' => 405, 'message' => 'Method not allow'];
+        }
+        $rules = [
+        ];
+        $v = Validator::make($req->all(), $rules);
+
+        if ($v->fails()) {
+            return [
+                'code' => 2,
+                'errors' => $v->errors()
+            ];
+        }
+
+        //Upload File
+        $file0 = $_FILES['file_0'];
+
+        $y = date('Y');
+        $m = date('m');
+
+        $allowed = [
+            'xls', 'xlsx'
+        ];
+
+
+        $info = pathinfo($file0['name']);
+        $extension = strtolower($info['extension']);
+
+        if (!in_array($extension, $allowed)) {
+            return [
+                'code' => 3,
+                'message' => 'Extension: ' . $extension . ' is now allowed'
+            ];
+        }
+
+        $dir = public_path("uploads/excel_import/{$y}/{$m}");
+        if (!is_dir($dir)) {
+            mkdir($dir, 0755, true);
+        }
+
+        $info = pathinfo($file0['name']);
+        $extension = strtolower($info['extension']);
+
+        $hash = sha1(uniqid());
+        $newFilePath = $dir . '/' . $hash . '.' . $extension;
+        $ok = move_uploaded_file($file0['tmp_name'], $newFilePath);
+        $newUrl = url("/uploads/excel_import/{$y}/{$m}/{$hash}.{$extension}");
+        $sheets = Excel::toCollection(new SchoolImport(), "{$y}/{$m}/{$hash}.{$extension}", 'excel-import');
+        $schoolLists[] = $sheets;
+        $validations = [];
+        $error = [];
+        $user = Auth::user();
+        $code = 0;
+        foreach ($schoolLists as $schoolList) {
+
+            foreach ($schoolList as $schools) {
+                foreach ($schools as $key => $school) {
+                    if ($key > 8 && $school[0] != null) {
+                        $item = [];
+                        $item['label'] = $school[0];
+                        $item['school_phone'] = $school[1];
+                        $item['school_email'] = $school[2];
+                        $item['devices_per_user'] = $school[3];
+                        $item['number_of_users'] = $school[4];
+                        $item['province'] = $school[5];
+                        $item['district'] = $school[6];
+                        $item['license_to'] = $school[7];
+                        $validator = Validator::make($item, [
+                            'label' => ['required','regex:/^[\p{L}\s\/0-9.,_-]+$/u'],
+                            'devices_per_user' => ['required', 'numeric', 'gt:0'],
+                            'number_of_users' => ['required', 'numeric', 'gt:0'],
+                            'license_to' => ['required','date_format:d/m/Y']
+                        ]);
+                        $province = Province::query()->where('name', 'LIKE', '%' . $item['province'] . '%')->get();
+                        if ($province->count()!==0) {
+                            $item['province']=$province[0]->id;
+                            $district = District::query()->where('province_id', $province[0]->id)->where('name', 'LIKE', '%' . $item['district'] . '%')->get();
+                            $item['district']=$district[0]->id;
+                        }
+                        $validator->after(function ($validate) use ($province) {
+                            if ($province->count() == 0) {
+                                $validate->errors()->add('province', 'City is not found');
+                            }
+
+                        });
+                        if($province->count()!==0)
+                        {
+                            $validator->after(function ($validate) use ($district)
+                            {
+                                if ($district->count() == 0) {
+                                    $validate->errors()->add('district', 'District is not found');
+
+                                }
+                            });
+                        }
+                        if ($validator->fails()) {
+                            $item['error'] = $validator->errors()->messages();
+                            $code = 2;//Có lỗi
+                        }
+                        $validations[] = $item;
+                    }
+                }
+            }
+
+            $fileError = [];
+            $fileImport = [];
+            if ($code == 2) {
+                //export
+                foreach ($validations as $key => $validation) {
+                    if (@$validation['error']) {
+                        {
+                            $fileError[] = $validation;
+                        }
+                    } else {
+                        $fileImport[] = $validation;
+                    }
+                }
+                $errorName = 'export_teacher_error_' . uniqid(time());
+                Cache::add($errorName, json_encode($fileError));
+                return [
+                    'code' => 2,
+                    'fileImport' => $fileImport,
+                    'fileError' => $fileError,
+                    'errorFileName' => $errorName
+                ];
+            } else {
+                $file = new File();
+                $file->type = $file0['type'];
+                $file->hash = sha1($newFilePath);
+                $file->url = $newUrl;
+                $file->is_image = 0;
+                $file->is_excel = 1;
+                $file->size = $file0['size'];
+                $file->name = $info['filename'];
+                $file->path = $newFilePath;
+                $file->extension = $extension;
+                $file->save();
+                return [
+                    'code' => 0,
+                    'fileImport' => $validations
+                ];
+            }
+
+        }
+
+    }
+
+    public function exportErrorSchool(Request $req)
+    {
+        $fileName = $req->fileError;
+        $fileError = json_decode(Cache::get($fileName), true);
+        Cache::forget($fileName);
+        return Excel::download(new SchoolErrorExport($fileError), "File_import_school_error.xlsx");
+    }
+
+    public function import(Request $req)
+    {
+        $dataImport = $req->all();
+
+        if (!$req->isMethod('POST')) {
+            return ['code' => 405, 'message' => 'Method not allow'];
+        }
+        if ($dataImport['fileImport'] != []) {
+            foreach ($dataImport['fileImport'] as $import) {
+                $school = new School();
+                $school->label = $import['label'];
+                $school->school_phone = $import['school_phone'];
+                $school->school_email = $import['school_email'];
+                $school->devices_per_user = $import['devices_per_user'];
+                $school->number_of_users = ($import['number_of_users']);
+                $school->province_id = $import['province'];
+                $school->district_id = $import['district'];
+                $school->license_to = date('Y-m-d H:i:s', strtotime($import['license_to']));
+                $school->save();
+            }
+            return [
+                'code' => 0,
+                'message' => 'Đã cập nhật '
+            ];
+        } else {
+            return [
+                'message' => 'Không có teacher nào được thêm'
+            ];
+
+        }
+    }
+
 
 }

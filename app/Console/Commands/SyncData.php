@@ -190,7 +190,7 @@ class SyncData extends Command
 
                     $unitData = [
                         'course_id' => $course->id,
-                        'unit_name' => @$oldStructure['UnitName']
+                        'unit_name' => trim(@$oldStructure['UnitName'])
                     ];
 
                     $unit = Unit::updateOrCreate($unitData, $unitData);
@@ -226,7 +226,7 @@ class SyncData extends Command
                 }
             });
 
-        //Đồng bộ inventory và lesson
+       /* //Đồng bộ inventory và lesson
         \DB::connection('mysql2')->table('lessons')
             ->where('id',665)
             ->chunkById(100, function ($lessons) {
@@ -262,7 +262,7 @@ class SyncData extends Command
 
                     echo 'Sync lesson inventory: '.$lesson->id.PHP_EOL;
                 }
-            });
+            });*/
     }
 
     protected function insertFile($path, $isImage = 0)

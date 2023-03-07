@@ -27,15 +27,15 @@
         <div class="fmi-dropdown" ref="dropdown">
             <input @change="fileChanged()" type="file" ref="uploader" style="display: none;width: 1px;height: 1px;"/>
             <button ref="button" @click="toggleTooltip()" class="btn btn-primary btn-sm" type="button">
-                Chọn file
+                Choose file
                 <i class="fa fa-caret-down"></i>
             </button>
             <div>
                 <span class="qinput-error-label" v-if="errorMessage">{{ errorMessage }}</span>
             </div>
             <div class="fmi-dropdown-menu" v-if="showToolTip" ref="tooltip">
-                <a class="fmi-dropdown-item" href="#" @click.prevent="chooseFile()">Tải file</a>
-                <a class="fmi-dropdown-item" href="#" @click.prevent="showModal()">Chọn file từ thư viện</a>
+                <a class="fmi-dropdown-item" href="#" @click.prevent="chooseFile()">Upload file</a>
+                <a class="fmi-dropdown-item" href="#" @click.prevent="showModal()">Choose file from library</a>
             </div>
         </div>
         <div>
@@ -43,7 +43,7 @@
                 <div class="modal-dialog" role="document" style="    max-width: 80%;">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title">Quản lí file</h5>
+                            <h5 class="modal-title">File management</h5>
                             <button type="button" class="close" data-dismiss="modal" data-bs-dismiss="modal"
                                     aria-label="Close">
                                 &times;

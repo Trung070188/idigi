@@ -359,7 +359,7 @@
                                     <i class="bi bi-funnel"></i>
                                     Advanced Search
                                 </button>
-                                <button  type="button" class="btn btn-primary mr-2" @click="importTeacher" v-if="permissions['050']">
+                                <button  type="button" class="btn btn-primary mr-2" @click="importTeacher" v-if="permissions['050'] && isCreateTeacher == 1" >
                                         <span class="svg-icon svg-icon-2">
 													<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
 														<path opacity="0.3" d="M10 4H21C21.6 4 22 4.4 22 5V7H10V4Z" fill="black" />
@@ -368,7 +368,7 @@
 													</svg>
 												</span>
                                         Import teacher </button>
-                                         <a :href="'/xadmin/users/create_teacher?schoolId='+JSON.stringify(entry.id)" v-if="permissions['013']">
+                                         <a :href="'/xadmin/users/create_teacher?schoolId='+JSON.stringify(entry.id)" v-if="permissions['013'] && isCreateTeacher == 1" >
                                           <button  type="button" class="btn btn-primary mr-2" >
 
                                         <span class="svg-icon svg-icon-2">
@@ -621,8 +621,8 @@
                     isShowFilter = false;
                 }
             }
+
             return {
-                isLoading:false,
                 disableContinue:false,
                 countTeacher:'',
                  errorName:[],
@@ -641,6 +641,7 @@
                 teacher:[],
                 permissions,
                 isShowFilter: isShowFilter,
+                isCreateTeacher: $json.isCreateTeacher,
                 breadcrumbs: [
                     {
                       title:'School management',
@@ -932,7 +933,7 @@
     }
  .table th, .table td
  {
-     max-width: 200px;
+     max-width: 150px;
      overflow: hidden;
      text-overflow: ellipsis;
      white-space: nowrap;
@@ -940,6 +941,14 @@
      padding: 0.75rem;
      vertical-align: top;
  }
-
+ .stepper.stepper-pills .stepper-item.current:last-child .stepper-icon .stepper-number{
+     display:inline-block;
+ }
+ .stepper.stepper-pills .stepper-item.current:last-child .stepper-icon .stepper-check{
+     display:none;
+ }
+ .stepper.stepper-pills .stepper-item.current:last-child .stepper-icon{
+     background-color: #696CFF;
+ }
 
 </style>

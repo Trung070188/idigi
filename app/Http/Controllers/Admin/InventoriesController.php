@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Admin;
 
 
 use App\Helpers\PermissionField;
+use App\Models\Lesson;
+use App\Models\LessonInventory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -149,17 +151,24 @@ class InventoriesController extends AdminBaseController
         }
 
         $data = $req->get('entry');
+        $data['lessonId'] = $req->lessonId;
+        $data['subject'] = $req->subject;
 
         $rules = [
             //'file_image_new' => 'required',
-            'name' => 'max:255|required',
+            'name' => ['required','max:100','regex:/^[\p{L}\s\/0-9.,?\(\)_:-]+$/u'],
             'file_asset_new' => 'required',
-            'subject' => 'max:255|required',
+//            'subject' => 'max:255|required',
             'type' => 'max:255|required',
-            'grade' => 'max:255|required',
+//            'grade' => 'max:255|required',
             'link_webview' => 'max:255',
             'tags' => 'max:1000',
         ];
+        if($data['location']==1)
+        {
+            $rules['lessonId']=['required'];
+        }
+
 
         $v = Validator::make($data, $rules);
 
@@ -194,8 +203,20 @@ class InventoriesController extends AdminBaseController
             }
 
             $entry->fill($data);
-            $entry->save();
+            if($data['location']==1)
+            {
+                LessonInventory::query()->where('inventory_id',$data['id'])->delete();
+                LessonInventory::query()->create([
+                    'lesson_id'=>$req->lessonId,
+                    'inventory_id'=>$data['id']
+                ]);
+            }
+            else{
+                LessonInventory::query()->where('inventory_id',$data['id'])->delete();
+            }
 
+
+            $entry->save();
             return [
                 'code' => 0,
                 'message' => 'Đã cập nhật',
@@ -205,7 +226,13 @@ class InventoriesController extends AdminBaseController
             $entry = new Inventory();
             $entry->fill($data);
             $entry->save();
-
+            if($entry->location==1)
+            {
+                LessonInventory::query()->create([
+                    'inventory_id'=>$entry->id,
+                    'lesson_id'=>$req->lessonId,
+                ]);
+            }
             return [
                 'code' => 0,
                 'message' => 'Đã thêm',
@@ -245,6 +272,7 @@ class InventoriesController extends AdminBaseController
      */
     public function data(Request $req)
     {
+        $countInventory=Inventory::query()->orderBy('id','desc')->count();
         $query = Inventory::query();
         if ($req->order && $req->sortBy) {
             $query = $query->orderBy($req->order, $req->sortBy);
@@ -282,6 +310,7 @@ class InventoriesController extends AdminBaseController
 
 
         return [
+            'countInventory'=>$countInventory,
             'code' => 0,
             'data' => $entries->items(),
             'paginate' => [
@@ -289,6 +318,26 @@ class InventoriesController extends AdminBaseController
                 'lastPage' => $entries->lastPage(),
                 'totalRecord' => $query->count(),
             ]
+        ];
+    }
+    public function dataForm(Request $req)
+    {
+        $lessons=Lesson::query()->orderBy('name','ASC');
+        if($req->subject)
+        {
+            $lessons->where('subject',$req->subject);
+        }
+        if($req->id)
+        {
+            $lesson=Lesson::query()->whereHas('inventories',function ($q) use ($req)
+            {
+               $q->where('inventory_id','=',$req->id);
+            })->get();
+        }
+        return [
+          'lessons'=>$lessons->get(),
+          'lesson'=>@$lesson
+
         ];
     }
 

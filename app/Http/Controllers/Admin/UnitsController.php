@@ -3,6 +3,10 @@
 namespace App\Http\Controllers\Admin;
 
 
+use App\Models\Course;
+use App\Models\Lesson;
+use App\Models\LessonInventory;
+use Carbon\Carbon;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -24,35 +28,38 @@ class UnitsController extends AdminBaseController
     ];
 
     /**
-    * Index page
-    * @uri  /xadmin/units/index
-    * @throw  NotFoundHttpException
-    * @return  View
-    */
-    public function index() {
+     * Index page
+     * @uri  /xadmin/units/index
+     * @throw  NotFoundHttpException
+     * @return  View
+     */
+    public function index()
+    {
         $title = 'Unit';
         $component = 'UnitIndex';
         return component($component, compact('title'));
     }
 
     /**
-    * Create new entry
-    * @uri  /xadmin/units/create
-    * @throw  NotFoundHttpException
-    * @return  View
-    */
-    public function create (Request $req) {
+     * Create new entry
+     * @uri  /xadmin/units/create
+     * @throw  NotFoundHttpException
+     * @return  View
+     */
+    public function create(Request $req)
+    {
         $component = 'UnitForm';
         $title = 'Create units';
         return component($component, compact('title'));
     }
 
     /**
-    * @uri  /xadmin/units/edit?id=$id
-    * @throw  NotFoundHttpException
-    * @return  View
-    */
-    public function edit (Request $req) {
+     * @uri  /xadmin/units/edit?id=$id
+     * @throw  NotFoundHttpException
+     * @return  View
+     */
+    public function edit(Request $req)
+    {
         $id = $req->id;
         $entry = Unit::find($id);
 
@@ -61,30 +68,36 @@ class UnitsController extends AdminBaseController
         }
 
         /**
-        * @var  Unit $entry
-        */
+         * @var  Unit $entry
+         */
 
         $title = 'Edit';
-        $component = 'UnitForm';
+        $component = 'UnitDetail';
 
 
         return component($component, compact('title', 'entry'));
     }
 
     /**
-    * @uri  /xadmin/units/remove
-    * @return  array
-    */
-    public function remove(Request $req) {
+     * @uri  /xadmin/units/remove
+     * @return  array
+     */
+    public function remove(Request $req)
+    {
         $id = $req->id;
-        $entry = Unit::find($id);
-
+        $entry = Unit::query()->where('id', $id)->update(['deleted_at' => Carbon::now()]);
         if (!$entry) {
             throw new NotFoundHttpException();
         }
+        return [
+            'code' => 0,
+            'message' => 'Đã xóa'
+        ];
+    }
 
-        $entry->delete();
-
+    function removeUnit(Request $req)
+    {
+        Unit::query()->whereIn('id', $req->unitIds)->update(['deleted_at' => Carbon::now()]);
         return [
             'code' => 0,
             'message' => 'Đã xóa'
@@ -92,10 +105,11 @@ class UnitsController extends AdminBaseController
     }
 
     /**
-    * @uri  /xadmin/units/save
-    * @return  array
-    */
-    public function save(Request $req) {
+     * @uri  /xadmin/units/save
+     * @return  array
+     */
+    public function save(Request $req)
+    {
         if (!$req->isMethod('POST')) {
             return ['code' => 405, 'message' => 'Method not allow'];
         }
@@ -103,10 +117,15 @@ class UnitsController extends AdminBaseController
         $data = $req->get('entry');
 
         $rules = [
-    'label' => 'max:191',
-];
+            'unit_name' => ['required', 'max:100', 'regex:/^[\p{L}\s\/0-9.,?\(\)_-]+$/u'],
+            'subject' => 'required',
+            'description' => 'max:200'
+        ];
+        $message = [
+            'unit_name.required' => 'The unit name field is required'
+        ];
 
-        $v = Validator::make($data, $rules);
+        $v = Validator::make($data, $rules, $message);
 
         if ($v->fails()) {
             return [
@@ -116,8 +135,9 @@ class UnitsController extends AdminBaseController
         }
 
         /**
-        * @var  Unit $entry
-        */
+         * @var  Unit $entry
+         */
+
         if (isset($data['id'])) {
             $entry = Unit::find($data['id']);
             if (!$entry) {
@@ -126,31 +146,82 @@ class UnitsController extends AdminBaseController
                     'message' => 'Không tìm thấy',
                 ];
             }
+            if ($entry->course_id != $data['course_id']) {
+                $dsUnit = Unit::query()->where('course_id', $data['course_id'])->count();
+                $entry->fill($data);
+                $entry->position = ($dsUnit + 1);
+            } else {
+                $entry->fill($data);
+            }
 
-            $entry->fill($data);
             $entry->save();
-
-            return [
-                'code' => 0,
-                'message' => 'Đã cập nhật',
-                'id' => $entry->id
-            ];
+            $message = 'Đã cập nhật';
         } else {
             $entry = new Unit();
             $entry->fill($data);
+            $dsUnit = Unit::query()->where('course_id', $entry->course_id)->count();
+            $entry->position = ($dsUnit + 1);
             $entry->save();
+            $message = 'Đã thêm';
 
-            return [
-                'code' => 0,
-                'message' => 'Đã thêm',
-                'id' => $entry->id
-            ];
+
         }
+        $lessonIds = [];
+        foreach ($req->list as $_lesson){
+            $lessonIds[] = $_lesson['id'];
+        }
+        $course = Course::where('id', $entry->course_id)->first();
+        $lessons = Lesson::whereIn('id', $lessonIds)->with(['inventories'])->get();
+        foreach ($lessons as $lesson) {
+
+            $lessonNameArr = explode(':', $lesson->name);
+            $inventories = $lesson->inventories;
+            $inventoryData = [];
+            foreach ($inventories as $inventory) {
+                $pathArr = explode('/', $inventory->virtual_path);
+                $inventoryData[] = [
+                    "idSublesson" => $inventory->id,
+                    "pathIcon" => "",
+                    "name" => $inventory->name,
+                    "time" => "",
+                    "type" => $inventory->type,
+                    "link" => $pathArr[count($pathArr) - 1],
+                    "full_link" => asset($inventory->virtual_path)
+                ];
+            }
+            $structure = [
+                "idSubject" => $entry->subject == 'Science' ? 1 : 0,
+                "codeSubject" => $entry->subject,
+                "nameSubject" => 'iSMART ' . $entry->subject,
+                "grade" => $course->grade,
+                "idUnit" => $entry->position,
+                "titleUnit" => $entry->unit_name,
+                "nameUnit" => $entry->unit_name,
+                "idLesson" => $lesson->id,
+                "codeLesson" => $lessonNameArr[0],
+                "titleLesson" => $lesson->name,
+                "nameLesson" => $lesson->name,
+                "subLessons" => $inventoryData,
+            ];
+            $lesson->unit_name = $entry->unit_name;
+            $lesson->course_id = $entry->course_id;
+            $lesson->unit_id = $entry->id;
+            $lesson->structure = json_encode($structure);
+            $lesson->save();
+
+        }
+
+
+        return [
+            'code' => 0,
+            'message' => $message,
+            'id' => $entry->id
+        ];
     }
 
     /**
-    * @param  Request $req
-    */
+     * @param Request $req
+     */
     public function toggleStatus(Request $req)
     {
         $id = $req->get('id');
@@ -163,7 +234,7 @@ class UnitsController extends AdminBaseController
             ];
         }
 
-        $entry->status = $req->status ? 1 : 0;
+        $entry->active = $req->active ? 1 : 0;
         $entry->save();
 
         return [
@@ -173,24 +244,40 @@ class UnitsController extends AdminBaseController
     }
 
     /**
-    * Ajax data for index page
-    * @uri  /xadmin/units/data
-    * @return  array
-    */
-    public function data(Request $req) {
+     * Ajax data for index page
+     * @uri  /xadmin/units/data
+     * @return  array
+     */
+    public function data(Request $req)
+    {
         $query = Unit::query()->orderBy('id', 'desc');
+        $courses = Course::query()->orderBy('id', 'desc')->get();
 
         if ($req->keyword) {
-            //$query->where('title', 'LIKE', '%' . $req->keyword. '%');
+            $query->where('unit_name', 'LIKE', '%' . $req->keyword . '%')
+                ->orWhere('subject', 'LIKE', '%' . $req->subject . '%');
+        }
+        if ($req->course_name) {
+            $query->where('unit_name', 'LIKE', '%' . $req->course_name . '%');
+        }
+        if ($req->subject) {
+            $query->where('subject', 'LIKE', '%' . $req->subject . '%');
+        }
+        if ($req->course_id) {
+            $query->where('course_id', 'LIKE', '%' . $req->course_id . '%');
         }
 
         $query->createdIn($req->created);
-
-
-        $entries = $query->paginate();
+        $limit = 25;
+        if ($req->limit) {
+            $limit = $req->limit;
+        }
+        $entries = $query->paginate($limit);
 
         return [
             'code' => 0,
+            'courses' => $courses,
+            'count' => $query->count(),
             'data' => $entries->items(),
             'paginate' => [
                 'currentPage' => $entries->currentPage(),
@@ -199,10 +286,51 @@ class UnitsController extends AdminBaseController
         ];
     }
 
-    public function export() {
-                $keys = [
-                            'label' => ['A', 'label'],
-                            ];
+    public function dataCreateUnit(Request $req)
+    {
+        if ($req->subject) {
+            $lessons = Lesson::query()->where('subject', $req->subject)->orderBy('id', 'desc');
+            $courses = Course::query()->where('subject', $req->subject)->orderBy('id', 'desc')->get();
+
+
+        } else {
+            $lessons = Lesson::query()->orderBy('id', 'desc');
+            $courses = Course::query()->orderBy('id', 'desc')->get();
+
+        }
+
+        return [
+            'lessons' => $lessons->get(),
+            'courses' => $courses
+        ];
+    }
+
+    public function dataEditUnit(Request $req)
+    {
+        $listLessons = Lesson::query()->where('unit_id', $req->id)->get();
+        if ($req->subject) {
+            $lessons = Lesson::query()->where('subject', $req->subject)->orderBy('id', 'desc');
+            $courses = Course::query()->where('subject', $req->subject)->orderBy('id', 'desc')->get();
+
+
+        } else {
+            $lessons = Lesson::query()->orderBy('id', 'desc');
+            $courses = Course::query()->orderBy('id', 'desc')->get();
+        }
+
+        return [
+            'lessons' => $lessons->get(),
+            'list_lessons' => $listLessons,
+            'courses' => $courses
+
+        ];
+    }
+
+    public function export()
+    {
+        $keys = [
+            'label' => ['A', 'label'],
+        ];
 
         $query = Unit::query()->orderBy('id', 'desc');
 
@@ -215,7 +343,7 @@ class UnitsController extends AdminBaseController
                 $sheet->setCellValue($v . "1", $key);
             } elseif (is_array($v)) {
                 list($c, $n) = $v;
-                 $sheet->setCellValue($c . "1", $n);
+                $sheet->setCellValue($c . "1", $n);
             }
         }
 

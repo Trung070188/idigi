@@ -71,7 +71,16 @@ class UsersController extends AdminBaseController
         $title = 'Teacher';
         $component = 'TeacherIndex';
         $roles = Role::query()->orderBy('role_name')->get();
+        $user=Auth::user();
+        $permissionDetail = new PermissionField();
+        $permissions = $permissionDetail->permission($user);
+        $permissionFields = [
+            'teacher_management_import' => $permissionDetail->havePermission('teacher_management_import',$permissions,$user),
+            'teacher_management_create_new'=>$permissionDetail->havePermission('teacher_management_create_new',$permissions,$user),
+        ];
+
         $jsonData = [
+            'permissionFields'=>$permissionFields,
             'roles' => $roles
         ];
         return view('admin.layouts.vue', compact('title', 'component', 'jsonData'));
@@ -102,8 +111,13 @@ class UsersController extends AdminBaseController
         $component = 'TeacherCreated';
         $title = 'Create Teacher';
         $roles = Role::query()->orderBy('role_name')->get();
-        $user = Auth::user();
         $school=School::query()->where('id',$data['schoolId'])->first();
+        $userTotal = User::where('school_id', $data['schoolId'])->count();
+
+        if($userTotal >= $school->number_of_users){
+            abort(403, "Số lượng giáo viên đã đủ.");
+        }
+
         $schoolName = $school->label;
         $jsonData = [
             'schoolName'=>$schoolName,
@@ -460,6 +474,13 @@ class UsersController extends AdminBaseController
             'teacher_school'=>$permissionDetail->havePermission('teacher_school',$permissions,$user),
             'teacher_description'=>$permissionDetail->havePermission('teacher_description',$permissions,$user),
             'teacher_import'=>$permissionDetail->havePermission('teacher_import',$permissions,$user),
+            'delete_device'=>$permissionDetail->havePermission('delete_device',$permissions,$user),
+            'active_teacher'=>$permissionDetail->havePermission('active_teacher',$permissions,$user),
+            'teacher_full_name'=>$permissionDetail->havePermission('teacher_full_name',$permissions,$user),
+            'active_allocation'=>$permissionDetail->havePermission('active_allocation',$permissions,$user),
+            'resource_allocation'=>$permissionDetail->havePermission('resource_allocation',$permissions,$user),
+            'password'=>$permissionDetail->havePermission('password',$permissions,$user),
+            'teacher_delete'=>$permissionDetail->havePermission('teacher_delete',$permissions,$user),
 
         ];
         $jsonData = [
@@ -839,7 +860,7 @@ class UsersController extends AdminBaseController
                 $realPassword = $data['password'];
 //                $data['password'] = Hash::make($data['password']);
             }
-            if (@$data['email']) {
+            if ($data['email']) {
                 $content = [
                     'full_name' =>$data['full_name'],
                     'password' => $realPassword,
@@ -917,6 +938,10 @@ class UsersController extends AdminBaseController
             {
                 $rules['password']=['required'];
             }
+            if($data_role['auto_gen']==true)
+            {
+                $rules['email']=['required','email','unique:users,email'];
+            }
             if(@$data['password'])
             {
                 $rules['password_confirmation']=['required'];
@@ -926,7 +951,7 @@ class UsersController extends AdminBaseController
                     return $fail(__(' The :attribute no special characters'));
                 }
             },];
-            $rules['email'] = 'email|unique:users,email';
+//            $rules['email'] = 'email|unique:users,email';
 
         }
         $user = Auth::user();
@@ -1089,7 +1114,7 @@ class UsersController extends AdminBaseController
                 $realPassword = $data['password'];
 //                $data['password'] = Hash::make($data['password']);
             }
-            if (@$data['email']) {
+            if ($data['email']) {
                 $content = [
                     'full_name' =>$data['full_name'],
                     'password' => $realPassword,
@@ -1564,11 +1589,13 @@ class UsersController extends AdminBaseController
                 foreach ($validations as $key=>$validation) {
                         if($check==1)
                         {
+                            $validateTemp=$validation['error'];
                             $validation['error']=[
                                 'max_length'=>[
                                     'Allowed to register up to '. $school->number_of_users .' users'
                                 ]
                             ];
+                            $validation['error']=array_merge($validateTemp,$validation['error']);
                         }
                     if (@$validation['error'] || $error!=[] && $error==[$validation['username']]) {
                         {
@@ -1649,6 +1676,13 @@ class UsersController extends AdminBaseController
                     $user->state =1;
                     $user->save();
                     UserRole::create(['user_id' => $user->id, 'role_id' => 5]);
+
+                    $content = [
+                        'full_name' =>$import['full_name'],
+                        'password' => $import['password'],
+                        'username' => $import['username']
+                    ];
+                    dispatch(new SendMailPassword($import['email'], 'New account information', $content));
                 }
             return [
                 'code' => 0,

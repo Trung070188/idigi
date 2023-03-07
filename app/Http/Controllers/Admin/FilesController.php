@@ -104,18 +104,32 @@ class FilesController extends AdminBaseController
         ];
 
         $info = pathinfo($file0['name']);
-        $extension = strtolower($info['extension']);
+        if(@$info['extension'])
+        {
+            $extension = strtolower($info['extension']);
+            $hash = sha1(uniqid());
+            $newFilePath = $dir.'/'.$hash.'.'.$extension;
 
-        if (!in_array($extension, $allowed)) {
-            return [
-                'code' => 3,
-                'message' => 'Extension: '.$extension.' is now allowed'
-            ];
+            $newUrl = url("/files/attachments/{$y}/{$m}/{$hash}.{$extension}");
+
+            if (!in_array($extension, $allowed)) {
+                return [
+                    'code' => 3,
+                    'message' => 'Extension: '.$extension.' is now allowed'
+                ];
+            }
+
+
         }
-        $hash = sha1(uniqid());
-        $newFilePath = $dir.'/'.$hash.'.'.$extension;
+        else{
+            $hash = sha1(uniqid());
+            $newFilePath = $dir.'/'.$hash;
 
-        $newUrl = url("/files/attachments/{$y}/{$m}/{$hash}.{$extension}");
+            $newUrl = url("/files/attachments/{$y}/{$m}/{$hash}");
+
+        }
+
+
 
         $ok = move_uploaded_file($file0['tmp_name'], $newFilePath);
 
@@ -131,12 +145,12 @@ class FilesController extends AdminBaseController
         $file->type = $file0['type'];
         $file->hash = sha1($newFilePath);
         $file->url = $newUrl;
-        $file->is_image = isset($imageExtension[$extension]) ? 1 : 0;
+        $file->is_image = @isset($imageExtension[$extension]) ? 1 : 0;
         $file->size = $file0['size'];
         $file->name = $info['filename'];
         $file->path = $newFilePath;
         $file->uploaded_by = $user->name;
-        $file->extension = $extension;
+        $file->extension = @$extension;
         $file->save();
 
 
