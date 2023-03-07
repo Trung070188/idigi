@@ -170,7 +170,7 @@ class UnitsController extends AdminBaseController
         foreach ($req->list as $_lesson){
             $lessonIds[] = $_lesson['id'];
         }
-        $course = Course::where('id', $entry->course_id)>first();
+        $course = Course::where('id', $entry->course_id)->first();
         $lessons = Lesson::whereIn('id', $lessonIds)->with(['inventories'])->get();
         foreach ($lessons as $lesson) {
 
