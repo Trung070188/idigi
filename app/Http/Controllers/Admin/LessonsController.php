@@ -299,7 +299,7 @@ class LessonsController extends AdminBaseController
                     }
                 }
 
-                if ($role->role_name == 'Super Administrator') {
+                if ($role->role_name != 'Teacher' && $role->role_name != 'School Admin') {
                     $isSuperAdmin = 1;
                 }
 

@@ -104,20 +104,20 @@
                                     <div class="form-group col-lg-4">
                                         <label>Province <span class="text-danger">*</span></label>
                                         <treeselect :options="provinces" v-model="entry.province_id"
-                                                    @input="selectProvince"/>
+                                                    @input="selectProvince" :disabled="permissionFields['school_province']==false"/>
                                         <error-label for="f_school_name" :errors="errors.province_id"></error-label>
 
                                     </div>
                                     <div class="form-group col-lg-4" v-if="entry.province_id">
                                         <label>District <span class="text-danger">*</span></label>
-                                        <treeselect :options="districts" v-model="entry.district_id"/>
+                                        <treeselect :options="districts" v-model="entry.district_id" :disabled="permissionFields['school_district']==false"/>
                                         <error-label for="f_school_name" :errors="errors.district_id"></error-label>
 
                                     </div>
 
                                     <div class="form-group col-lg-4">
                                         <label>School address <span class="text-danger">*</span></label>
-                                        <input v-model="entry.school_address" class="form-control"
+                                        <input v-model="entry.school_address" class="form-control" :disabled="permissionFields['school_address']==false"
                                                placeholder="Enter the school address">
                                         <error-label :errors="errors.school_address"></error-label>
 
