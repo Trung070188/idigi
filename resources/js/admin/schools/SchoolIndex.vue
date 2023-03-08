@@ -475,7 +475,7 @@
                                 </div>
 
                                 <div class="form-group col-lg-3">
-                                    <label>Stress/ Award </label>
+                                    <label>Street/ Award </label>
                                     <input v-model="filter.school_address" class="form-control" type="text"
                                            placeholder="Enter the region/city">
 
