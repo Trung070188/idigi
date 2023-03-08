@@ -955,7 +955,7 @@ class SchoolsController extends AdminBaseController
             'paginate' => [
                 'currentPage' => $entries->currentPage(),
                 'lastPage' => $entries->lastPage(),
-                'totalRecord' => $entries->count()
+                'totalRecord' => $query->count()
             ]
         ];
     }
