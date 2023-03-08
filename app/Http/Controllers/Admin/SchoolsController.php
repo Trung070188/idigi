@@ -494,7 +494,7 @@ class SchoolsController extends AdminBaseController
 
         $rules = [
             'label' => ['required', 'regex:/^[\p{L}\s\/0-9.,_-]+$/u'],
-            'school_address' => ['required', 'max:255', 'regex:/^[\p{L}\s\/0-9.,_-]+$/u'],
+            'school_address' => [ 'max:255', 'regex:/^[\p{L}\s\/0-9.,_-]+$/u'],
             'province_id' => ['required'],
             'district_id' => ['required'],
             'number_of_users' => 'required|min:1|integer',

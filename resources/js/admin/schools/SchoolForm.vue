@@ -31,47 +31,40 @@
                             <div class="col-lg-12">
                                 <input v-model="entry.id" type="hidden" name="id" value="">
                                 <div class="row">
-                                    <div class="form-group col-lg-4">
+                                    <div class="form-group col-lg-3">
                                         <label>School name <span class="text-danger">*</span></label>
                                         <input v-model="entry.label" class="form-control "
                                                placeholder="Enter the school name">
                                         <error-label for="f_school_name" :errors="errors.label"></error-label>
 
                                     </div>
-
-
-                                    <div class="form-group col-lg-4">
-                                        <label>School email</label>
-                                        <input v-model="entry.school_email" class="form-control"
-                                               placeholder="Enter the email prefix">
-                                        <error-label :errors="errors.school_email"></error-label>
-
-                                    </div>
-
-                                </div>
-                                <div class="row">
-                                    <div class="form-group col-lg-4">
+                                    <div class="form-group col-lg-3">
                                         <label>Province <span class="text-danger">*</span></label>
                                         <treeselect :options="provinces" v-model="entry.province_id"
                                                     @input="selectProvince"/>
                                         <error-label for="f_school_name" :errors="errors.province_id"></error-label>
 
                                     </div>
-                                    <div class="form-group col-lg-4" v-if="entry.province_id">
+                                    <div class="form-group col-lg-3" v-if="entry.province_id">
                                         <label>District <span class="text-danger">*</span></label>
                                         <treeselect :options="districts" v-model="entry.district_id"/>
                                         <error-label for="f_school_name" :errors="errors.district_id"></error-label>
 
                                     </div>
 
-                                    <div class="form-group col-lg-4">
-                                        <label>School address <span class="text-danger">*</span></label>
+                                    <div class="form-group col-lg-3">
+                                        <label>School address </label>
                                         <input v-model="entry.school_address" class="form-control"
                                                placeholder="Enter the school address">
                                         <error-label :errors="errors.school_address"></error-label>
 
                                     </div>
+
+
+
+
                                 </div>
+
                                 <div class="row">
                                     <div class="form-group col-lg-4">
                                         <label>Phone number </label>
@@ -116,18 +109,28 @@
                                 </div>
                             </div>-->
                                 <div class="row">
+                                    <div class="form-group col-lg-4">
+                                        <label>School email</label>
+                                        <input v-model="entry.school_email" class="form-control"
+                                               placeholder="Enter the email prefix">
+                                        <error-label :errors="errors.school_email"></error-label>
+
+                                    </div>
+
+                                    <div class="form-group col-lg-4">
+                                        <label>Expired date/License <span class="text-danger">*</span></label>
+                                        <datepicker v-model="entry.license_to" rows="5" class="form-control"
+                                                    readonly></datepicker>
+                                        <error-label for="f_grade" :errors="errors.license_to"></error-label>
+                                    </div>
+                                </div>
+                                <div class="row">
                                     <div class="form-group col-lg-8">
                                         <label>School description</label>
                                         <textarea v-model="entry.school_description" rows="5" class="form-control"
                                                   placeholder="Your text here..."></textarea>
                                         <error-label for="f_grade" :errors="errors.school_description"></error-label>
 
-                                    </div>
-                                    <div class="form-group col-lg-4">
-                                        <label>Expired date/License <span class="text-danger">*</span></label>
-                                        <datepicker v-model="entry.license_to" rows="5" class="form-control"
-                                                    readonly></datepicker>
-                                        <error-label for="f_grade" :errors="errors.license_to"></error-label>
                                     </div>
                                 </div>
                                 <div class="form-check form-check-custom form-check-solid pb-5 ">

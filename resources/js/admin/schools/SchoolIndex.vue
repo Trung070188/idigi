@@ -685,7 +685,7 @@ export default {
             {text: 'Name', icon: '', name: 'label'},
             {text: 'City/ Province', icon: '', name: 'province'},
             {text: 'District/ Town', icon: '', name: 'district'},
-            {text: 'Stress/ Award', icon: '', name: 'school_address'},
+            {text: 'Street/ Award', icon: '', name: 'school_address'},
             {text: 'Administrator name', icon: ''},
             {text: 'Teacher', icon: ''},
             {text: 'Devices per user', icon: '', name: 'devices_per_user'},
