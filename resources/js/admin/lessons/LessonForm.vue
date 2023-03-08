@@ -44,7 +44,7 @@
                                             <select class="form-control form-select" required v-model="filter.type" @change="doFilter()">
                                                 <option value="" disabled selected>Choose the type</option>
                                                 <option value="Vocabulary">Vocabulary</option>
-                                                <option value="Summary">Summary</option>
+                                                <option value="Lecture">Lecture</option>
                                                 <option value="Practice">Practice</option>
                                                 <option value="Summary">Summary</option>
                                             </select>
