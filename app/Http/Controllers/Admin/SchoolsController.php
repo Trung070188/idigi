@@ -380,6 +380,8 @@ class SchoolsController extends AdminBaseController
         $permissionFields = [
             'school_name' => $permissionDetail->havePermission('school_name', $permissions, $user),
             'school_address' => $permissionDetail->havePermission('school_address', $permissions, $user),
+            'school_province' => $permissionDetail->havePermission('school_province', $permissions, $user),
+            'school_district' => $permissionDetail->havePermission('school_district', $permissions, $user),
             'school_email' => $permissionDetail->havePermission('school_email', $permissions, $user),
             'school_phone_number' => $permissionDetail->havePermission('school_phone_number', $permissions, $user),
             'school_device' => $permissionDetail->havePermission('school_device', $permissions, $user),
