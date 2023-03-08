@@ -47,7 +47,7 @@ class Inventory extends BaseModel
     }
 
     public function download_inventory_logs(){
-        return $this->hasMany(DownloadInventoryLog::class);
+        return $this->hasMany(DownloadInventoryLog::class, 'inventory_id');
     }
 
 }
