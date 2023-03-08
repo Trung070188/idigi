@@ -401,6 +401,7 @@
                                 <th class="">Type</th>
                                 <th class="">Active</th>
                                 <th class="">Creation Date</th>
+                                <th class="">Downloaded</th>
                                 <th class="">Action</th>
                             </tr>
                             </thead>
@@ -433,6 +434,7 @@
                                     class=""
                                     v-text="d(entry.created_at)"
                                 ></td>
+                                <td class="" v-text="entry.download_inventory_logs_count"></td>
                                 <td class="">
                                     <a
                                         href="list.html#"

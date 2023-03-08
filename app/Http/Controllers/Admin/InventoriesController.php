@@ -273,7 +273,7 @@ class InventoriesController extends AdminBaseController
     public function data(Request $req)
     {
         $countInventory=Inventory::query()->orderBy('id','desc')->count();
-        $query = Inventory::query();
+        $query = Inventory::query()->withCount(['download_inventory_logs']);
         if ($req->order && $req->sortBy) {
             $query = $query->orderBy($req->order, $req->sortBy);
         } else {
