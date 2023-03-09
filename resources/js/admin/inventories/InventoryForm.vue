@@ -264,14 +264,15 @@ import $router from "../../lib/SimpleRouter";
             {
                 this.check=0;
                 this.$loading(true);
+                this.lessonId = null;
                 if(this.entry.id)
                 {
                     const res=await $get('/xadmin/inventories/dataForm?id='+this.entry.id+'&subject='+this.subject);
                     this.lessons=res.lessons;
                     if(res.lesson.length>0)
                     {
-                        this.lessonId=res.lesson[0].id;
-                        this.subject=res.lesson[0].subject
+                        //this.lessonId=res.lesson[0].id;
+                       // this.subject=res.lesson[0].subject
                     }
 
                 }
