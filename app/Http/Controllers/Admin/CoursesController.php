@@ -242,7 +242,7 @@ class CoursesController extends AdminBaseController
         $entries = $query->paginate($limit);
 
         return [
-            'count'=>$entries->count(),
+            'count'=>$query->count(),
             'code' => 0,
             'data' => $entries->items(),
             'paginate' => [

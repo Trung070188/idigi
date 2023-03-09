@@ -504,6 +504,7 @@
                                     </div>
                                 </td>
                                 <th class="">No.</th>
+                                <th class="">Username</th>
                                 <th class="">Teacher name</th>
                                 <th class="">Teacher email</th>
                                 <th>Class</th>
@@ -533,6 +534,7 @@
                                     </div>
                                 </td>
                                 <td >{{index+from}}</td>
+                                <td class="" v-text="entry.username"></td>
                                 <td class="" v-text="entry.full_name"></td>
                                 <td class="" v-text="entry.email" data-bs-toggle="tooltip" :title="entry.email"></td>
                                 <td v-text="entry.class"></td>

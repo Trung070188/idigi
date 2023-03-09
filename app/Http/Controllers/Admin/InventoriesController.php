@@ -78,6 +78,13 @@ class InventoriesController extends AdminBaseController
         }else{
             $entry->file_image_new = NULL;
         }
+
+        $entry->lessonId = NULL;
+        if($entry->lessons){
+            foreach ($entry->lessons as $lesson){
+                $entry->lessonId = $lesson->id;
+            }
+        }
         if(@$entry->fileAsset){
             $entry->file_asset_new =[
                 'id' => @$entry->fileAsset->id,
@@ -151,8 +158,6 @@ class InventoriesController extends AdminBaseController
         }
 
         $data = $req->get('entry');
-        $data['lessonId'] = $req->lessonId;
-        $data['subject'] = $req->subject;
 
         $rules = [
             //'file_image_new' => 'required',
@@ -170,7 +175,7 @@ class InventoriesController extends AdminBaseController
         }
 
 
-        $v = Validator::make($data, $rules);
+        $v = Validator::make($data, $rules, ['lessonId.required' => 'The lesson is required.']);
 
         if ($v->fails()) {
             return [
@@ -273,7 +278,7 @@ class InventoriesController extends AdminBaseController
     public function data(Request $req)
     {
         $countInventory=Inventory::query()->orderBy('id','desc')->count();
-        $query = Inventory::query();
+        $query = Inventory::query()->withCount(['download_inventory_logs']);
         if ($req->order && $req->sortBy) {
             $query = $query->orderBy($req->order, $req->sortBy);
         } else {

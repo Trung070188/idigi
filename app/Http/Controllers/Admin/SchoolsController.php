@@ -156,6 +156,7 @@ class SchoolsController extends AdminBaseController
     public function schoolNameNavBar(Request $req)
     {
         $user = Auth::user();
+        $schools = NULL;
         if ($user->school_id) {
             $schoolIds = explode(',', $user->school_id);
             $schools = School::query()->where('id', $schoolIds)->get();
@@ -494,7 +495,7 @@ class SchoolsController extends AdminBaseController
 
         $rules = [
             'label' => ['required', 'regex:/^[\p{L}\s\/0-9.,_-]+$/u'],
-            'school_address' => ['required', 'max:255', 'regex:/^[\p{L}\s\/0-9.,_-]+$/u'],
+            'school_address' => [ 'max:255', 'regex:/^[\p{L}\s\/0-9.,_-]+$/u'],
             'province_id' => ['required'],
             'district_id' => ['required'],
             'number_of_users' => 'required|min:1|integer',
@@ -955,7 +956,7 @@ class SchoolsController extends AdminBaseController
             'paginate' => [
                 'currentPage' => $entries->currentPage(),
                 'lastPage' => $entries->lastPage(),
-                'totalRecord' => $entries->count()
+                'totalRecord' => $query->count()
             ]
         ];
     }

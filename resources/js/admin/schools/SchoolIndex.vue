@@ -475,7 +475,7 @@
                                 </div>
 
                                 <div class="form-group col-lg-3">
-                                    <label>Stress/ Award </label>
+                                    <label>Street/ Ward </label>
                                     <input v-model="filter.school_address" class="form-control" type="text"
                                            placeholder="Enter the region/city">
 
@@ -685,7 +685,7 @@ export default {
             {text: 'Name', icon: '', name: 'label'},
             {text: 'City/ Province', icon: '', name: 'province'},
             {text: 'District/ Town', icon: '', name: 'district'},
-            {text: 'Stress/ Award', icon: '', name: 'school_address'},
+            {text: 'Street/ Ward', icon: '', name: 'school_address'},
             {text: 'Administrator name', icon: ''},
             {text: 'Teacher', icon: ''},
             {text: 'Devices per user', icon: '', name: 'devices_per_user'},

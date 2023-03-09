@@ -344,12 +344,14 @@
             },
             async removeCourse()
             {
-                const res=$post('/xadmin/courses/removeCourse',{unitIds:this.unitIds})
+                const res= await $post('/xadmin/courses/removeCourse',{courseIds:this.courseIds})
+                console.log(res)
                 if (res.code) {
                     toastr.error(res.message);
                 } else {
                     toastr.success(res.message);
                     $('#deleteAll').modal('hide');
+                    $('#delete').modal('hide');
                     this.courseIds = [];
                     this.course = [];
                 }
@@ -393,7 +395,10 @@
             deleteCourse:function(entry='')
             {
                 $('#delete').modal('show');
-                this.deleteCour=entry;
+                if(entry){
+                    this.courseIds=[entry.id];
+                }
+
             },
             edit: function (id){
                 if(this.permissions['054'])
