@@ -158,7 +158,9 @@
                                     <!--[if mso]>
                                     <v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" fill="true" stroke="false" style="width:540px;v-text-anchor:middle;" arcsize="30%" fillcolor="#f5f5f5">
                                         <v:textbox inset="15px,15px,15px,15px" style="width:100%">
-                                            <center style="color:#424242;font-family:sans-serif;font-size:18px;font-weight:700;">Guide to access your account</center>
+                                            <center style="color:#424242;font-family:sans-serif;font-size:18px;font-weight:700;">Guide to access your account<br>
+<span>(Hướng dẫn truy cập tài khoản)</span>
+</center>
                                         </v:textbox>
                                     </v:roundrect>
                                     <![endif]-->
@@ -167,19 +169,34 @@
                             <![if !mso]>
                             <tr>
                                 <td align="center" style="box-sizing: border-box; border-radius: 16px;background-color: #f5f5f5;">
-                                    <p style="font-family: 'Montserrat',Arial,sans-serif; -webkit-font-smoothing: antialiased; -ms-text-size-adjust: 100%; -webkit-text-size-adjust: 100%; font-size: 18px; font-weight: 700;margin:0;padding:15px; color: #424242;display: inline-block;border-radius: 16px;background-color: #f5f5f5;">Guide to access your account</p>
+                                    <p style="font-family: 'Montserrat',Arial,sans-serif; -webkit-font-smoothing: antialiased; -ms-text-size-adjust: 100%; -webkit-text-size-adjust: 100%; font-size: 18px; font-weight: 700;margin:0;padding:15px; color: #424242;display: inline-block;border-radius: 16px;background-color: #f5f5f5;">Guide to access your account<br><span >(Hướng dẫn truy cập tài khoản)</span></p>
+
                                 </td>
                             </tr>
                             <![endif]>
                             <tr><td style="height:20px;"></td></tr>
                             <tr>
                                 <td style="box-sizing: border-box; width: 100%; padding: 20px 25px;border-radius: 16px; border: dashed 3px #eee;">
-                                    <p style="font-family: 'Montserrat',Arial,sans-serif; -webkit-font-smoothing: antialiased; -ms-text-size-adjust: 100%; -webkit-text-size-adjust: 100%; font-size: 16px; font-weight: 500; color: #424242; margin: 0; margin-bottom: 10px;">Hi <span style="font-weight: 700;">{{$content['full_name']}}</span>,</p>
-                                    <p style="font-family: 'Montserrat',Arial,sans-serif; -webkit-font-smoothing: antialiased; -ms-text-size-adjust: 100%; -webkit-text-size-adjust: 100%; font-size: 16px; font-weight: 500; color: #424242; margin: 0; margin-bottom: 5px;">To take new password for your account, please check the following information:</p>
-                                    <p style="font-family: 'Montserrat',Arial,sans-serif; -webkit-font-smoothing: antialiased; -ms-text-size-adjust: 100%; -webkit-text-size-adjust: 100%; font-size: 16px; font-weight: 500; color: #424242;margin: 0; margin-left: 15px; margin-bottom: 5px;">- Username : <span style="font-weight: 700;">{{$content['username']}}</span></p>
-                                    <p style="font-family: 'Montserrat',Arial,sans-serif; -webkit-font-smoothing: antialiased; -ms-text-size-adjust: 100%; -webkit-text-size-adjust: 100%; font-size: 16px; font-weight: 500; color: #424242; margin: 0; margin-left: 15px; margin-bottom: 15px;">- Password : <span style="font-weight: 700;">{{$content['password']}}</span></p>
-                                    <p style="font-family: 'Montserrat',Arial,sans-serif; -webkit-font-smoothing: antialiased; -ms-text-size-adjust: 100%; -webkit-text-size-adjust: 100%; font-size: 16px; font-weight: 500; color: #424242; margin: 0; margin-bottom: 5px;">Please click on the following button to access to iSMART-DIGI system.</p>
-                                    <p style="font-family: 'Montserrat',Arial,sans-serif; -webkit-font-smoothing: antialiased; -ms-text-size-adjust: 100%; -webkit-text-size-adjust: 100%; font-size: 16px; font-weight: 500; color: #424242; margin: 0; margin-top: 10px; margin-bottom: 5px;">Best regards,</p>
+                                    <p style="font-family: 'Montserrat',Arial,sans-serif; -webkit-font-smoothing: antialiased; -ms-text-size-adjust: 100%; -webkit-text-size-adjust: 100%; font-size: 16px; font-weight: 500; color: #424242; margin: 0; margin-bottom: 10px;">Hi <span style="font-weight: 700;">{{$content['full_name']}}</span>,
+                                    <br>
+                                        <span style="font-style:italic">Gửi anh/ chị</span> <span style="font-weight: 700;">{{$content['full_name']}}</span>
+                                    </p>
+
+                                    <p style="font-family: 'Montserrat',Arial,sans-serif; -webkit-font-smoothing: antialiased; -ms-text-size-adjust: 100%; -webkit-text-size-adjust: 100%; font-size: 16px; font-weight: 500; color: #424242; margin: 0; margin-bottom: 5px;">To take new password for your account, please check the following information:
+                                    <br>
+                                        <span style="font-style:italic">Để tạo mật khẩu mới cho tài khoản của bạn, vui lòng kiểm tra lại các thông tin dưới đây:</span>
+                                    </p>
+
+                                    <p style="font-family: 'Montserrat',Arial,sans-serif; -webkit-font-smoothing: antialiased; -ms-text-size-adjust: 100%; -webkit-text-size-adjust: 100%; font-size: 16px; font-weight: 500; color: #424242;margin: 0; margin-left: 15px; margin-bottom: 5px;">- Username<span style="font-style: italic">(Tên đăng nhập)</span> : <span style="font-weight: 700;">{{$content['username']}}</span></p>
+                                    <p style="font-family: 'Montserrat',Arial,sans-serif; -webkit-font-smoothing: antialiased; -ms-text-size-adjust: 100%; -webkit-text-size-adjust: 100%; font-size: 16px; font-weight: 500; color: #424242; margin: 0; margin-left: 15px; margin-bottom: 15px;">- Password<span style="font-style: italic">(Mật khẩu)</span> : <span style="font-weight: 700;">{{$content['password']}}</span></p>
+                                    <p style="font-family: 'Montserrat',Arial,sans-serif; -webkit-font-smoothing: antialiased; -ms-text-size-adjust: 100%; -webkit-text-size-adjust: 100%; font-size: 16px; font-weight: 500; color: #424242; margin: 0; margin-bottom: 5px;">Please click on the following button to access to iSMART-DIGI system.<br>
+                                        <span style="font-style:italic">Sau khi kiểm tra xong thông tin, vui lòng nhấn vào đường dẫn bên dưới đây để truy cập vào hệ thống iSMART-DIGI.</span>
+                                    </p>
+
+                                    <p style="font-family: 'Montserrat',Arial,sans-serif; -webkit-font-smoothing: antialiased; -ms-text-size-adjust: 100%; -webkit-text-size-adjust: 100%; font-size: 16px; font-weight: 500; color: #424242; margin: 0; margin-top: 10px; margin-bottom: 5px;">Best regards,<br>
+                                        <span style="font-style:italic">Trân trọng,</span>
+                                    </p>
+
                                 </td>
                             </tr>
                             <tr><td style="height:20px;"></td></tr>
