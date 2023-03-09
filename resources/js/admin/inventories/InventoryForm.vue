@@ -138,7 +138,7 @@
                                     <select class="form-control form-select" v-model="entry.type" :disabled="permissionFields['resource_type']==false" required>
                                         <option value="" selected disabled>Choose type</option>
                                         <option value="Vocabulary">Vocabulary</option>
-                                        <option value="Summary">Lecture</option>
+                                        <option value="Lecture">Lecture</option>
                                         <option value="Practice">Practice</option>
                                         <option value="Summary">Summary</option>
                                     </select>
