@@ -53,7 +53,7 @@
                                     </div>
 
                                     <div class="form-group col-lg-3">
-                                        <label>Street/ Award </label>
+                                        <label>Street/ Ward </label>
                                         <input v-model="entry.school_address" class="form-control"
                                                placeholder="Enter the school address">
                                         <error-label :errors="errors.school_address"></error-label>
