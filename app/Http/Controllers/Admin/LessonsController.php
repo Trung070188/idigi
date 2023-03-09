@@ -367,7 +367,7 @@ class LessonsController extends AdminBaseController
                 'inventories.name as label',
                 'inventories.type as type',
                 'inventories.subject as subject'
-            ])->where('subject',$req->subject)->orderBy('id','desc');
+            ])->where('subject',$req->subject)->limit(100)->orderBy('id','desc');
             $units=Unit::query()->where('subject',$req->subject)->orderBy('id','desc')->get();
         }
         else{
@@ -376,7 +376,7 @@ class LessonsController extends AdminBaseController
                 'inventories.name as label',
                 'inventories.type as type',
                 'inventories.subject as subject'
-            ])->orderBy('id','desc');
+            ])->limit(100)->orderBy('id','desc');
             $units=Unit::query()->orderBy('id','desc')->get();
 
         }
@@ -386,13 +386,35 @@ class LessonsController extends AdminBaseController
                 'inventories.id as id',
                 'inventories.name as label',
                 'inventories.type as type'
-            ])->orderBy('id','desc');
+            ])->limit(100)->orderBy('id','desc');
         }
         return [
             'units'=>$units,
             'module'=>$modules->get(),
         ];
     }
+
+    public function getModules(Request  $req){
+        $modules =  $modules=Inventory::query()->select([
+            'inventories.id as id',
+            'inventories.name as label',
+            'inventories.type as type',
+            'inventories.subject as subject'
+        ])->limit(100)->orderBy('id','desc');
+
+        if($req->subject){
+            $modules = $modules->where('subject', $req->subject);
+        }
+        if($req->type){
+            $modules = $modules->where('type', $req->type);
+        }
+        if($req->keyword){
+            $modules = $modules->where('name', 'LIKE', '%'.$req->keyword.'%');
+        }
+
+        return $modules->get();
+    }
+
     public function dataEditLesson(Request $req)
     {
         $lessons=DB::table('lessons')->leftJoin('lesson_inventory',function ($join)

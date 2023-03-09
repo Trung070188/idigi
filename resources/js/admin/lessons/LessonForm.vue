@@ -49,7 +49,7 @@
                                                 <option value="Summary">Summary</option>
                                             </select>
                                         </div>
-                                        <Treeselect :options="modules"  placeholder="Search module" :multiple="true" v-model="listResource" @input="resource()" @search-change="handleSearchChange"/>
+                                        <Treeselect :options="modules" :async="true"  placeholder="Search module" :multiple="true" v-model="listResource" @input="resource()" :load-options="handleSearchChange"/>
                                         <draggable
                                             :list="list"
                                             :animation="200"
@@ -156,15 +156,12 @@
             $router.on("/", this.load).init();
         },
         methods: {
-          async handleSearchChange(value) {
-                if (value) {
-                    let query = $router.getQuery();
-                    const res = await $get("/xadmin/lessons/dataCreateLesson?subject="+this.entry.subject,query);
-                    this.modules=res.module;
-                    const filteredOptions = this.modules.filter(option => option.label.includes(value)).slice(0,this.searchLimit);
-                    this.modules = filteredOptions
-                }
-        },
+            async handleSearchChange({action, searchQuery, callback}) {
+
+                const res = await $get("/xadmin/lessons/getModules", {subject: this.entry.subject, type: this.filter.type, keyword: searchQuery});
+                callback(null, res)
+
+            },
             removeResource(index)
             {
               this.list=this.list.filter((item,key)=>key!==index);
