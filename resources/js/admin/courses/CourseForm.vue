@@ -162,6 +162,7 @@
                 this.$loading(true);
                 const res = await $get("/xadmin/courses/dataCreateCourse?subject="+this.entry.subject, query);
                 this.$loading(false);
+                this.listUnit = [];
                 this.units = res.units.map(rec => {
                     return {
                         'id':rec.id,
