@@ -39,21 +39,21 @@
 
                                     </div>
                                     <div class="form-group col-lg-3">
-                                        <label>Province <span class="text-danger">*</span></label>
+                                        <label>City/ Province <span class="text-danger">*</span></label>
                                         <treeselect :options="provinces" v-model="entry.province_id"
                                                     @input="selectProvince"/>
                                         <error-label for="f_school_name" :errors="errors.province_id"></error-label>
 
                                     </div>
                                     <div class="form-group col-lg-3" v-if="entry.province_id">
-                                        <label>District <span class="text-danger">*</span></label>
+                                        <label>District/ Town <span class="text-danger">*</span></label>
                                         <treeselect :options="districts" v-model="entry.district_id"/>
                                         <error-label for="f_school_name" :errors="errors.district_id"></error-label>
 
                                     </div>
 
                                     <div class="form-group col-lg-3">
-                                        <label>School address </label>
+                                        <label>Street/ Award </label>
                                         <input v-model="entry.school_address" class="form-control"
                                                placeholder="Enter the school address">
                                         <error-label :errors="errors.school_address"></error-label>
