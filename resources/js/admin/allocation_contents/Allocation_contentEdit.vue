@@ -36,6 +36,17 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <input v-model="entry.id" type="hidden" name="id" value="">
+                                <div class="form-group">
+                                    <label>School <span class="text-danger">*</span></label>
+                                    <treeselect :options="schools" :multiple="true" v-model="school"/>
+                                    <error-label for="f_total_course" :errors="errors.total_course"></error-label>
+                                </div>
+
+                            </div>
+                        </div>
                         <hr style="margin:20px 0px 20px">
                         <div >
                             <button type="reset" @click="save()" class="btn btn-primary mr-2"><i class="bi bi-save2 mr-1"></i>Save</button>
@@ -138,12 +149,13 @@
                         title: 'Allocation detail'
                     },
                 ],
+                school:$json.school || {},
                 allCourses:allCourses,
                 unit:[],
                 total_school:$json.totalSchoolArray ||{},
                 total_course:$json.totalCourseArray ||{},
                 entry: $json.entry || {},
-                schools:$json.schools ||{},
+                schools:$json.schools ||[],
                 permissionFields:$json.permissionFields || [],
                 courses:courseTreeselect,
                 units:unitTreeselect,
@@ -203,7 +215,14 @@
             },
             async save() {
                 this.$loading(true);
-                const res = await $post('/xadmin/allocation_contents/save', {entry: this.entry,total_school:this.total_school,total_course:this.total_course,total_unit:this.courses.total_unit,unit:this.courses}, false);
+                const res = await $post('/xadmin/allocation_contents/save', {
+                    entry: this.entry,
+                    total_school:this.total_school,
+                    total_course:this.total_course,
+                    total_unit:this.courses.total_unit,
+                    unit:this.courses,
+                    school:this.school
+                }, false);
                 this.$loading(false);
                 if (res.errors) {
                     this.errors = res.errors;
