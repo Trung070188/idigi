@@ -170,7 +170,7 @@ class InventoriesController extends AdminBaseController
         }
 
 
-        $v = Validator::make($data, $rules);
+        $v = Validator::make($data, $rules, ['lessonId.required' => 'The lesson is required.']);
 
         if ($v->fails()) {
             return [
