@@ -57,7 +57,7 @@
                                         <label>Subject<span class="text-danger">*</span></label>
                                         <select class="form-control form-select" v-model="entry.subject" @change="load">
                                                 <option value="Math">Math</option>
-                                                <option value="Science ">Science </option>
+                                                <option value="Science">Science </option>
                                         </select>
                                         <error-label  for="f_category_id" :errors="errors.subject"></error-label>
                                     </div>
@@ -202,6 +202,7 @@
                 this.$loading(true);
                 const res = await $get("/xadmin/courses/dataEditCourse?id="+this.entry.id+'&subject='+this.entry.subject, query);
                 this.$loading(false);
+                this.listUnit = [];
                 this.units = res.units.map(rec => {
                     return {
                         'id':rec.id,
