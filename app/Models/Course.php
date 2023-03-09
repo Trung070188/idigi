@@ -23,6 +23,7 @@ class Course extends BaseModel
     'description',
     'public_from',
     'public_to',
+    'active',
     'status',
 ];
     public function units()
