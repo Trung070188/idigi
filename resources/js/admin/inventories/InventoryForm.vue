@@ -95,7 +95,7 @@
                                                                           align-items: center" v-if="entry.location==1">
                                      <div class="col-lg-4" style="margin-bottom: 20px;top:10px">
                                          <label>Subject</label>
-                                         <select class="form-control form-select "  required v-model="subject" @change="data()">
+                                         <select class="form-control form-select "  required v-model="entry.subject" @change="data()">
                                              <option value="" selected disabled>Choose subject</option>
                                              <option value="Math">Math</option>
                                              <option value="Science">Science</option>
@@ -103,7 +103,7 @@
                                      </div>
                                      <div class="col-lg-4" style="margin-left: 20px">
                                          <label>Lesson<span class="text-danger">*</span></label>
-                                         <select class="form-control form-select"  v-model="lessonId" @change="filterSubject(lessonId)" required>
+                                         <select class="form-control form-select"  v-model="entry.lessonId" @change="filterSubject(entry.lessonId)" required>
                                              <option value="" selected disabled>Choose lesson</option>
                                              <option v-for="lesson in lessons" :value="lesson.id">{{lesson.name}}</option>
                                          </select>

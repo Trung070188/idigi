@@ -156,6 +156,7 @@ class SchoolsController extends AdminBaseController
     public function schoolNameNavBar(Request $req)
     {
         $user = Auth::user();
+        $schools = NULL;
         if ($user->school_id) {
             $schoolIds = explode(',', $user->school_id);
             $schools = School::query()->where('id', $schoolIds)->get();

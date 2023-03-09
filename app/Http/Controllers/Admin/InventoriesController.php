@@ -78,6 +78,13 @@ class InventoriesController extends AdminBaseController
         }else{
             $entry->file_image_new = NULL;
         }
+
+        $entry->lessonId = NULL;
+        if($entry->lessons){
+            foreach ($entry->lessons as $lesson){
+                $entry->lessonId = $lesson->id;
+            }
+        }
         if(@$entry->fileAsset){
             $entry->file_asset_new =[
                 'id' => @$entry->fileAsset->id,
@@ -151,8 +158,6 @@ class InventoriesController extends AdminBaseController
         }
 
         $data = $req->get('entry');
-        $data['lessonId'] = $req->lessonId;
-        $data['subject'] = $req->subject;
 
         $rules = [
             //'file_image_new' => 'required',
