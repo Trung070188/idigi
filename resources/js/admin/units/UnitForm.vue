@@ -18,7 +18,7 @@
                                     </div>
                                     <div class="form-group col-sm-3">
                                         <label>Subject<span class="text-danger">*</span></label>
-                                        <select class="form-control form-select" required v-model="entry.subject" @change="load">
+                                        <select class="form-control form-select" required v-model="entry.subject" @change="changeSubject">
                                             <option value="" disabled selected>Choose the subject</option>
                                             <option value="Math">Math</option>
                                             <option value="Science">Science</option>
@@ -41,11 +41,6 @@
                                         <label style="margin:15px 0px 10px ">List of lesson</label>
                                         <treeselect :options="lessons" :multiple="true" v-model="listLesson" @input="lesson()" />
 
-
-<!--                                        <select class="form-control form-select" style="margin-bottom: 15px" v-model="listLesson" @change="lesson()" required>-->
-<!--                                            <option value="" disabled selected>Search module</option>-->
-<!--                                            <option v-for="lesson in lessons" :value="lesson">{{lesson.name}}</option>-->
-<!--                                        </select>-->
                                         <draggable
                                             :list="list"
                                             :animation="200"
@@ -141,21 +136,23 @@
             }
         },
         mounted() {
-            $router.on("/", this.load).init();
+            this.getCourses();
+            this.getLessons();
         },
         methods: {
-            async load() {
-                let query = $router.getQuery();
-                this.$loading(true);
-                const res = await $get("/xadmin/units/dataCreateUnit?subject="+this.entry.subject, query);
-                this.$loading(false);
-                this.lessons = res.lessons.map(res => {
-                    return {
-                      'id':res.id,
-                      'label':res.name
-                    };
-                });
-                this.courses=res.courses;
+            changeSubject(){
+                this.courses = this.allCourse.filter(e => e.subject == this.entry.subject);
+                this.listLesson = [];
+                this.list = [];
+            },
+            async getCourses() {
+                const res = await $get("/xadmin/courses/getCourses");
+                this.allCourse=res;
+                this.courses = this.allCourse.filter(e => e.subject == this.entry.subject);
+            },
+            async getLessons() {
+                const res = await $get("/xadmin/lessons/getLessons");
+                this.lessons=res;
             },
             removeLesson(index)
             {

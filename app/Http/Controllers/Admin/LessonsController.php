@@ -587,4 +587,9 @@ class LessonsController extends AdminBaseController
 
     }
 
+    public function getLessons(){
+        $lessons = Lesson::query()->select(['id', 'name as label'])->orderBy('name', 'ASC')->get();
+        return $lessons;
+    }
+
 }

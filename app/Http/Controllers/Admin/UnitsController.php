@@ -61,7 +61,8 @@ class UnitsController extends AdminBaseController
     public function edit(Request $req)
     {
         $id = $req->id;
-        $entry = Unit::find($id);
+        $entry = Unit::where('id',$id)->with(['lessons'])->first();
+
 
         if (!$entry) {
             throw new NotFoundHttpException();
@@ -171,6 +172,10 @@ class UnitsController extends AdminBaseController
             $lessonIds[] = $_lesson['id'];
         }
         $course = Course::where('id', $entry->course_id)->first();
+        Lesson::where('unit_id', $entry->id)->update([
+            'unit_id' => NULL,
+            'course_id' => NULL,
+        ]);
         $lessons = Lesson::whereIn('id', $lessonIds)->with(['inventories'])->get();
         foreach ($lessons as $lesson) {
 

@@ -51,7 +51,7 @@
                                     </div>
                                     <div class="form-group col-sm-3">
                                         <label>Subject<span class="text-danger">*</span></label>
-                                        <select class="form-control form-select" required v-model="entry.subject" @change="load">
+                                        <select class="form-control form-select" required v-model="entry.subject" @change="changeSubject">
                                             <option value="" disabled selected>Choose the subject</option>
                                             <option value="Math">Math</option>
                                             <option value="Science">Science</option>
@@ -139,10 +139,19 @@
         name: "UnitDetail.vue",
         components: {ActionBar,draggable,Treeselect},
         data() {
+            let listLesson = [];
+            let entry = $json.entry;
+
+            if(entry.lessons){
+                entry.lessons.forEach(function (e){
+                    listLesson.push(e.id)
+                })
+            }
             return {
                 deleteUni:'',
+                allCourse:[],
                 courses:[],
-                listLesson:[],
+                listLesson,
                 lessons:[],
                 list:[],
                 breadcrumbs: [
@@ -163,7 +172,8 @@
             }
         },
         mounted() {
-            $router.on("/", this.load).init();
+            this.getCourses();
+            this.getLessons();
         },
         methods: {
             deleteUnit(entry)
@@ -171,19 +181,31 @@
                 $('#delete').modal('show');
                 this.deleteUni=entry
             },
-            async load() {
-                let query = $router.getQuery();
-                this.$loading(true);
-                const res = await $get("/xadmin/units/dataEditUnit?id="+this.entry.id+'&subject='+this.entry.subject, query);
-                this.$loading(false);
-                this.lessons = res.lessons.map(res => {
-                    return {
-                        'id':res.id,
-                        'label':res.name
-                    };
-                });
-                this.listLesson=res.list_lessons.map(res => res.id);
-                this.courses=res.courses;
+            changeSubject(){
+                this.courses = this.allCourse.filter(e => e.subject == this.entry.subject);
+                this.listLesson = [];
+                this.list = [];
+            },
+            async getCourses() {
+                const res = await $get("/xadmin/courses/getCourses");
+                this.allCourse=res;
+                this.courses = this.allCourse.filter(e => e.subject == this.entry.subject);
+            },
+            async getLessons() {
+                let self = this;
+                const res = await $get("/xadmin/lessons/getLessons");
+                this.lessons=res;
+
+                    self.listLesson.forEach(function (e){
+                        self.lessons.forEach(function (e1){
+                            if(e1.id == e){
+                                self.list.push(e1);
+                            }
+                        });
+
+
+                })
+
             },
             removeLesson(index)
             {

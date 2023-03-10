@@ -266,6 +266,12 @@ class CoursesController extends AdminBaseController
           'units'=>$units->get(),
         ];
     }
+
+    public function getCourses(){
+        $courses = Course::orderBy('course_name', 'ASC')->get();
+
+        return $courses;
+    }
     public function dataEditCourse(Request $req)
     {
         if($req->subject)
