@@ -257,7 +257,7 @@ class UnitsController extends AdminBaseController
      */
     public function data(Request $req)
     {
-        $query = Unit::query()->orderBy('id', 'desc');
+        $query = Unit::query()->with(['course'])->orderBy('id', 'desc');
         $courses = Course::query()->orderBy('id', 'desc')->get();
 
         if ($req->keyword) {
