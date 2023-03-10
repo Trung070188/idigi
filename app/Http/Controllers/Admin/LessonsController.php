@@ -75,7 +75,7 @@ class LessonsController extends AdminBaseController
     public function edit(Request $req)
     {
         $id = $req->id;
-        $entry = Lesson::find($id);
+        $entry = Lesson::with(['inventories'])->where('id', $id)->first();
 
         if (!$entry) {
             throw new NotFoundHttpException();

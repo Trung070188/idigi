@@ -62,7 +62,7 @@
                                     <div class="form-group col-sm-3">
                                         <label>Subject<span class="text-danger">*</span></label>
                                         <select class="form-control form-select" v-model="entry.subject" required
-                                                @change="load">
+                                                @change="changeSubject">
                                             <option value="" disabled selected>Choose the subject</option>
                                             <option value="Math">Math</option>
                                             <option value="Science">Science</option>
@@ -78,7 +78,7 @@
                                     </div>
                                     <div class="form-group col-sm-3">
                                         <label>Unit </label>
-                                        <select class="form-select form-control" required v-model="entry.unit_id">
+                                        <select class="form-select form-control" required v-model="entry.unit_id" @change="changeUnit">
                                             <option value="" disabled selected>Choose the unit</option>
                                             <option v-for="unit in units" :value="unit.id">{{ unit.unit_name }}</option>
                                         </select>
@@ -90,7 +90,7 @@
                                             style="margin-top: 10px;float: right;display: inline-block;margin-right: -13px"
                                             class="form-group col-lg-3">
                                             <select class="form-control form-select" required v-model="filter.type"
-                                                    @change="doFilter()">
+                                                    @change="changeType">
                                                 <option value="" disabled selected>Choose the type</option>
                                                 <option value="Vocabulary">Vocabulary</option>
                                                 <option value="Summary">Summary</option>
@@ -98,13 +98,10 @@
                                                 <option value="Summary">Summary</option>
                                             </select>
                                         </div>
-                                        <Treeselect :options="modules" :async="true" :multiple="true"
+                                        <Treeselect :options="modules" :async="true" :defaultOptions="modules" :multiple="true" :cacheOptions="false"
                                                     v-model="listResource" @input="resource()"
                                                     :load-options="handleSearchChange"/>
-                                        <!--                                        <select class="form-control form-select" style="margin-bottom: 15px" v-model="listResource" @change="resource()" required>-->
-                                        <!--                                            <option value="" disabled selected>Search module</option>-->
-                                        <!--                                            <option v-for="module in modules" :value="module">{{module.name}}</option>-->
-                                        <!--                                        </select>-->
+
                                         <draggable
                                             :list="list"
                                             :animation="200"
@@ -183,13 +180,25 @@ export default {
         let filter = {
             type: $q.type || "",
         };
+        let entry = $json.entry;
+        let modules = [];
+        if(entry.inventories){
+            entry.inventories.forEach(function(e){
+                modules.push({
+                    id: e.id,
+                    label: e.name,
+                })
+            })
+        }
+
+
         return {
             lessonUnit: '',
             units: [],
             listResource: [],
             filter: filter,
             module_type: '',
-            modules: [],
+            modules,
             list: [],
             breadcrumbs: [
                 {
@@ -229,16 +238,6 @@ export default {
             this.listResource = this.list.map(rec => rec.id);
         },
         resource() {
-            // this.listResource=
-            //     {
-            //         'inventory_id':this.listResource.id,
-            //         'lesson_id':this.entry.id,
-            //         'name':this.listResource.name,
-            //         'type':this.listResource.type
-            //     }
-            // this.list = this.list.concat(this.listResource);
-            // this.listResource=[];
-            console.log(this.listResource);
             this.list = this.listResource.map(id => {
                 const item = this.modules.find(i => i.id === id);
                 return {id, label: item.label, type: item.type};
@@ -246,6 +245,18 @@ export default {
         },
         doFilter() {
             $router.setQuery(this.filter);
+        },
+        changeSubject(){
+            this.modules = [];
+            this.listResource = [];
+        },
+        changeUnit(){
+            this.modules = [];
+            this.listResource = [];
+        },
+        changeType(){
+            this.modules = [];
+            this.listResource = [];
         },
         async load() {
             let query = $router.getQuery();
@@ -264,6 +275,8 @@ export default {
             this.listResource = res.lessons.map(rec => rec.inventory_id);
             // this.modules = res.module;
             this.units = res.units;
+            console.log(this.modules);
+            console.log(this.listResource);
         },
         backIndex() {
             window.location.href = '/xadmin/lessons/index';

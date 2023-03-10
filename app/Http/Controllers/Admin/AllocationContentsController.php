@@ -69,8 +69,8 @@ class AllocationContentsController extends AdminBaseController
         $component = 'Allocation_contentForm';
         $title = 'Create allocation_contents';
         $schools = School::query()->orderBy('id', 'desc')->get();
-        $courses = Course::query()->with(['unit'])->orderBy('id', 'desc')->get();
-        $units = Unit::query()->orderBy('id', 'desc')->get();
+        $courses = Course::query()->where('active',1)->with(['unit'])->orderBy('id', 'desc')->get();
+        $units = Unit::query()->where('active',1)->orderBy('id', 'desc')->get();
         foreach ($courses as $course) {
 
 
@@ -104,8 +104,8 @@ class AllocationContentsController extends AdminBaseController
         $data = $req->all();
         $id = $req->id;
         $entry = AllocationContent::query()->with(['schools', 'courses', 'units', 'course_unit'])->where('id', $id)->first();
-        $courses = Course::query()->with(['units', 'unit'])->orderBy('id', 'ASC')->get();
-        $units = Unit::query()->orderBy('id', 'desc')->get();
+        $courses = Course::query()->where('active',1)->with(['units', 'unit'])->orderBy('id', 'ASC')->get();
+        $units = Unit::query()->where('active',1)->orderBy('id', 'desc')->get();
         $total_units = ($entry->units);
         $total_schools = $entry->schools;
         $total_courses = $entry->courses;

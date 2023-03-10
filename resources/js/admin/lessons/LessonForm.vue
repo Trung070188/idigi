@@ -18,7 +18,7 @@
                                     </div>
                                     <div class="form-group col-sm-3">
                                         <label>Subject<span class="text-danger">*</span></label>
-                                        <select class="form-control form-select" v-model="entry.subject" required >
+                                        <select class="form-control form-select" v-model="entry.subject" required @change="changeSubject">
                                             <option value="" disabled selected>Choose the subject</option>
                                             <option value="Math">Math</option>
                                             <option value="Science">Science</option>
@@ -33,7 +33,7 @@
                                     </div>
                                     <div class="form-group col-sm-3">
                                         <label>Unit </label>
-                                        <select class="form-select form-control" required v-model="entry.unit_id">
+                                        <select class="form-select form-control" required v-model="entry.unit_id" @change="changeUnit">
                                             <option value="" disabled selected>Choose the unit</option>
                                             <option v-for="unit in units" :value="unit.id">{{unit.unit_name}}</option>
                                         </select>
@@ -41,7 +41,7 @@
                                     <div class="form-group col-sm-12"  style="border: 1px solid #b5b5c3;border-radius: 25px" v-if="entry.subject">
                                         <label style="margin:15px 0px 10px ">List of modules</label>
                                         <div style="margin-top: 10px;float: right;display: inline-block;margin-right: -13px" class="form-group col-lg-3">
-                                            <select class="form-control form-select" required v-model="filter.type" @change="doFilter()">
+                                            <select class="form-control form-select" required v-model="filter.type" @change="changeType">
                                                 <option value="" disabled selected>Choose the type</option>
                                                 <option value="Vocabulary">Vocabulary</option>
                                                 <option value="Lecture">Lecture</option>
@@ -49,7 +49,7 @@
                                                 <option value="Summary">Summary</option>
                                             </select>
                                         </div>
-                                        <Treeselect :options="modules" :async="true"  placeholder="Search module" :multiple="true" v-model="listResource" @input="resource()" :load-options="handleSearchChange"/>
+                                        <Treeselect :options="modules" :async="true"  placeholder="Search module" :multiple="true" v-model="listResource" @input="resource()" :cacheOptions="false" :load-options="handleSearchChange"/>
                                         <draggable
                                             :list="list"
                                             :animation="200"
@@ -179,6 +179,18 @@
             },
             doFilter() {
                 $router.setQuery(this.filter);
+            },
+            changeSubject(){
+                this.modules = [];
+                this.listResource = [];
+            },
+            changeUnit(){
+                this.modules = [];
+                this.listResource = [];
+            },
+            changeType(){
+                this.modules = [];
+                this.listResource = [];
             },
             async load() {
                 let query = $router.getQuery();
