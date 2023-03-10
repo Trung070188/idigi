@@ -98,12 +98,12 @@
                                                 <option value="Summary">Summary</option>
                                             </select>
                                         </div>
-                                        <Treeselect :options="modules" :async="true" :defaultOptions="modules" :multiple="true" :cacheOptions="false"
-                                                    v-model="listResource" @input="resource()"
+                                        <Treeselect :options="modules" :async="true" :defaultOptions="modules" :multiple="true" :cacheOptions="false" :valueFormat="'object'"
+                                                    v-model="listResource"
                                                     :load-options="handleSearchChange"/>
 
                                         <draggable
-                                            :list="list"
+                                            :list="listResource"
                                             :animation="200"
                                             ghost-class="moving-card"
                                             group="users"
@@ -111,7 +111,7 @@
                                             class="form-group col-sm-12"
                                             tag="ul"
                                         >
-                                            <div style="width: 100%;cursor: pointer" v-for="(res,index) in list"
+                                            <div style="width: 100%;cursor: pointer" v-for="(res,index) in listResource"
                                                  :key="index">
                                                 <i class="bi bi-text-center"
                                                    style="width: 10%; display: inline-block"></i>
@@ -180,7 +180,7 @@ export default {
         let filter = {
             type: $q.type || "",
         };
-        let listResource = [];
+
         let entry = $json.entry;
         let modules = [];
         if(entry.inventories){
@@ -188,15 +188,16 @@ export default {
                 modules.push({
                     id: e.id,
                     label: e.name,
+                    type: e.type,
                 })
-                listResource.push(e.id);
+
             })
         }
 
         return {
             lessonUnit: '',
             units: [],
-            listResource,
+            listResource:modules,
             filter: filter,
             module_type: '',
             modules,
@@ -235,15 +236,9 @@ export default {
         },
 
         removeResource(index) {
-            this.list = this.list.filter((item, key) => key !== index);
-            this.listResource = this.list.map(rec => rec.id);
+            this.listResource=this.listResource.filter((item,key)=>key!==index);
         },
-        resource() {
-            this.list = this.listResource.map(id => {
-                const item = this.modules.find(i => i.id === id);
-                return {id, label: item.label, type: item.type};
-            });
-        },
+
 
         changeSubject(){
             this.modules = [];

@@ -179,7 +179,7 @@ class LessonsController extends AdminBaseController
                 foreach ($req->inventory as $inven) {
                     LessonInventory::create([
                         'lesson_id' => $entry->id,
-                        'inventory_id' => $inven,
+                        'inventory_id' => $inven['id'],
                     ]);
                 }
             }
@@ -199,7 +199,7 @@ class LessonsController extends AdminBaseController
 
             if($req->inventory){
                 foreach ($req->inventory as $inven) {
-                    LessonInventory::create(['lesson_id' => $entry->id, 'inventory_id' => $inven]);
+                    LessonInventory::create(['lesson_id' => $entry->id, 'inventory_id' => $inven['id']]);
                 }
             }
 

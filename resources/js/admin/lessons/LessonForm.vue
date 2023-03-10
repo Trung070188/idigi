@@ -49,9 +49,9 @@
                                                 <option value="Summary">Summary</option>
                                             </select>
                                         </div>
-                                        <Treeselect :options="modules" :async="true"  placeholder="Search module" :multiple="true" v-model="listResource" @input="resource()" :cacheOptions="false" :load-options="handleSearchChange"/>
+                                        <Treeselect :options="modules" :async="true"  placeholder="Search module" :multiple="true" v-model="listResource"  :valueFormat="'object'":cacheOptions="false" :load-options="handleSearchChange"/>
                                         <draggable
-                                            :list="list"
+                                            :list="listResource"
                                             :animation="200"
                                             ghost-class="moving-card"
                                             group="users"
@@ -59,7 +59,7 @@
                                             class="form-group col-sm-12"
                                             tag="ul"
                                         >
-                                            <div style="width: 100%;cursor: pointer" v-for="(res,index) in list" :key="index">
+                                            <div style="width: 100%;cursor: pointer" v-for="(res,index) in listResource" :key="index">
                                                 <i class="bi bi-text-center" style="width: 10%; display: inline-block"></i>
                                                 <div style="width: 50%;display: inline-block;margin-left: -75px">
                                                     <span>Resource name:</span>
@@ -163,21 +163,10 @@
                 callback(null, res)
 
             },
-            removeResource(index)
-            {
-              this.list=this.list.filter((item,key)=>key!==index);
-              this.listResource=this.list.map(rec => rec.id);
+            removeResource(index) {
+                this.listResource=this.listResource.filter((item,key)=>key!==index);
+            },
 
-            },
-            resource()
-            {
-                // this.list = this.list.concat(this.listResource);
-                // this.listResource=[];
-                this.list = this.listResource.map(id => {
-                    const item = this.modules.find(i => i.id === id);
-                    return {id, label: item.label,type:item.type};
-                });
-            },
             changeSubject(){
                 this.modules = [];
                 this.listResource = [];
@@ -204,7 +193,7 @@
             },
             async save() {
                 this.isLoading = true;
-                const res = await $post('/xadmin/lessons/save', {entry: this.entry,inventory:this.list}, false);
+                const res = await $post('/xadmin/lessons/save', {entry: this.entry,inventory:this.listResource}, false);
                 this.isLoading = false;
                 if (res.errors) {
                     this.errors = res.errors;
