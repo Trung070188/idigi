@@ -148,7 +148,7 @@ class CoursesController extends AdminBaseController
             }
 
             $entry->fill($data);
-            Unit::query()->whereIn('id', $req->deleteUnit)->update(['course_id' => NULL]);
+            Unit::query()->where('course_id', $entry->id)->update(['course_id' => NULL]);
 
             if ($req->units) {
                 foreach ($req->units as $key => $unit) {
