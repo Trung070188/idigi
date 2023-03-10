@@ -378,4 +378,10 @@ class UnitsController extends AdminBaseController
         $writer->save('php://output');
         die;
     }
+
+    public function getUnits(){
+        $units = Unit::orderBy('unit_name', 'ASC')->where('subject', '<>', NULL)->get();
+
+        return $units;
+    }
 }

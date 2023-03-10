@@ -112,7 +112,10 @@ class UsersController extends AdminBaseController
         $title = 'Create Teacher';
         $roles = Role::query()->orderBy('role_name')->get();
         $school=School::query()->where('id',$data['schoolId'])->first();
-        $userTotal = User::where('school_id', $data['schoolId'])->count();
+        $userTotal = User::where('school_id', $data['schoolId'])
+            ->whereHas('roles', function ($q) {
+                $q->where('role_name', 'Teacher');
+            })->count();
 
         if($userTotal >= $school->number_of_users){
             abort(403, "Số lượng giáo viên đã đủ.");
