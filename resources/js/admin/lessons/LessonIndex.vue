@@ -219,7 +219,8 @@
                                 </td>
                                 <th class="">No.</th>
                                 <th>Lesson</th>
-                                <th class="">Grade</th>
+                                <th>Lesson ID</th>
+                                <th class="">Unit</th>
                                 <th class="">Subject</th>
                                 <th class="">Active</th>
                                 <th class="">Creation Date</th>
@@ -245,7 +246,8 @@
                                 </td>
                                 <td @click="edit(entry.id)">{{((index+1)+(from+1))-2}}</td>
                                 <td v-text="entry.name" @click="edit(entry.id)"></td>
-                                <td class="" v-text="entry.grade" @click="edit(entry.id)"></td>
+                                <td v-text="entry.id" @click="edit(entry.id)"></td>
+                                <td class="" v-text="entry.unit ? entry.unit.unit_name : ''" @click="edit(entry.id)"></td>
                                 <td class="" v-text="entry.subject" @click="edit(entry.id)"></td>
                                 <td class="" v-text="entry.enabled == 0 ? 'No' : 'Yes'" @click="edit(entry.id)"></td>
                                 <td class="" v-text=" d(entry.created_at)" @click="edit(entry.id)"></td>

@@ -305,7 +305,7 @@ class LessonsController extends AdminBaseController
 
             }
 
-        $query = Lesson::query()->with(['user_units'])
+        $query = Lesson::query()->with(['user_units', 'unit'])
             ->orderBy('id', 'ASC');
 
         if($isSuperAdmin == 0){
