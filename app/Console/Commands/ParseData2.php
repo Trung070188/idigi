@@ -16,7 +16,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
-class ParseData extends Command
+class ParseData2 extends Command
 {
     /**
      * The name and signature of the console command.
