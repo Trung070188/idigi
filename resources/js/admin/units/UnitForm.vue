@@ -18,7 +18,7 @@
                                     </div>
                                     <div class="form-group col-sm-3">
                                         <label>Subject<span class="text-danger">*</span></label>
-                                        <select class="form-control form-select" required v-model="entry.subject" @change="changeSubject">
+                                        <select class="form-control form-select" required v-model="entry.subject" @change="getLessons">
                                             <option value="" disabled selected>Choose the subject</option>
                                             <option value="Math">Math</option>
                                             <option value="Science">Science</option>
@@ -142,6 +142,7 @@
         methods: {
             changeSubject(){
                 this.courses = this.allCourse.filter(e => e.subject == this.entry.subject);
+                console.log(this.lessons);
                 this.listLesson = [];
                 this.list = [];
             },
@@ -153,6 +154,7 @@
             async getLessons() {
                 const res = await $get("/xadmin/lessons/getLessons");
                 this.lessons=res;
+                this.lessons=this.lessons.filter(item => item.subject == this.entry.subject)
             },
             removeLesson(index)
             {
