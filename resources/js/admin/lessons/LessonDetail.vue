@@ -193,7 +193,6 @@ export default {
             })
         }
 
-
         return {
             lessonUnit: '',
             units: [],
@@ -275,7 +274,7 @@ export default {
             this.isLoading = true;
             const res = await $post('/xadmin/lessons/save', {
                 entry: this.entry,
-                inventory: this.list,
+                inventory: this.listResource,
                 lessonUnit: this.lessonUnit
             }, false);
             this.isLoading = false;

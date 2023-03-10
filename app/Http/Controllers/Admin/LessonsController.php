@@ -158,6 +158,7 @@ class LessonsController extends AdminBaseController
          * @var  Lesson $entry
          */
         $message = 'Đã thêm';
+
         if (isset($data['id'])) {
             $entry = Lesson::find($data['id']);
             if (!$entry) {
@@ -170,13 +171,19 @@ class LessonsController extends AdminBaseController
             $unit = Unit::query()->where('id', $data['unit_id'])->first();
             $data['unit_name'] = $unit['unit_name'];
             $entry->fill($data);
+            $entry->save();
 
-            if ($req->inventory) {
-                LessonInventory::where('lesson_id', $entry->id)->delete();
+            LessonInventory::where('lesson_id', $entry->id)->delete();
+
+            if($req->inventory){
+                foreach ($req->inventory as $inven) {
+                    LessonInventory::create([
+                        'lesson_id' => $entry->id,
+                        'inventory_id' => $inven,
+                    ]);
+                }
             }
-            foreach ($req->inventory as $inven) {
-                LessonInventory::create(['lesson_id' => $entry->id, 'inventory_id' => $inven['id']]);
-            }
+
 
             $message = 'Đã cập nhật';
 
@@ -188,9 +195,12 @@ class LessonsController extends AdminBaseController
             $unit = Unit::query()->where('id', $data['unit_id'])->first();
             $data['unit_name'] = $unit['unit_name'];
             $entry->fill($data);
+            $entry->save();
 
-            foreach ($req->inventory as $inven) {
-                LessonInventory::create(['lesson_id' => $entry->id, 'inventory_id' => $inven['id']]);
+            if($req->inventory){
+                foreach ($req->inventory as $inven) {
+                    LessonInventory::create(['lesson_id' => $entry->id, 'inventory_id' => $inven]);
+                }
             }
 
         }
