@@ -62,6 +62,7 @@ class LessonController extends Controller
         }
 
         $query = Lesson::query()->with(['user_units'])
+            ->orderBy('position', 'ASC')
             ->orderBy('id', 'ASC');
 
         if($isSuperAdmin == 0){
