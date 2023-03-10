@@ -159,6 +159,7 @@ class InventoriesController extends AdminBaseController
 
         $data = $req->get('entry');
 
+
         $rules = [
             //'file_image_new' => 'required',
             'name' => ['required','max:100','regex:/^[\p{L}\s\/0-9.,?\(\)_:-]+$/u'],
@@ -212,7 +213,7 @@ class InventoriesController extends AdminBaseController
             {
                 LessonInventory::query()->where('inventory_id',$data['id'])->delete();
                 LessonInventory::query()->create([
-                    'lesson_id'=>$req->lessonId,
+                    'lesson_id'=>$data['lessonId'],
                     'inventory_id'=>$data['id']
                 ]);
             }
