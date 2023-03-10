@@ -147,24 +147,26 @@ export default {
         }
     },
     mounted() {
-        this.getCourses();
-        this.getLessons();
+
+        this.getAllData();
     },
     methods: {
+        async getAllData() {
+            this.$loading(true);
+            const courses = await $get("/xadmin/courses/getCourses");
+            this.allCourse=courses;
+
+            const lessons = await $get("/xadmin/lessons/getLessons");
+            this.allLesson=lessons;
+            this.$loading(false);
+        },
+
         changeSubject() {
             this.courses = this.allCourse.filter(e => e.subject == this.entry.subject);
             this.listLesson = [];
             this.lessons = this.allLesson.filter(e => e.subject == this.entry.subject);
         },
-        async getCourses() {
-            const res = await $get("/xadmin/courses/getCourses");
-            this.allCourse = res;
-            this.courses = this.allCourse.filter(e => e.subject == this.entry.subject);
-        },
-        async getLessons() {
-            const res = await $get("/xadmin/lessons/getLessons");
-            this.allLesson = res;
-        },
+
         removeLesson(index) {
             this.listLesson = this.listLesson.filter((item, key) => key !== index);
 

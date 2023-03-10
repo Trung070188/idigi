@@ -221,6 +221,7 @@ export default {
         }
     },
     mounted() {
+
         this.getUnits();
     },
     methods: {
@@ -256,9 +257,11 @@ export default {
             this.listResource = [];
         },
         async getUnits() {
+            this.$loading(true);
             const res = await $get("/xadmin/units/getUnits");
             this.allUnit=res;
             this.units = this.allUnit.filter(e=> e.subject == this.entry.subject);
+            this.$loading(false);
 
         },
 

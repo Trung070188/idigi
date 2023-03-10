@@ -183,9 +183,11 @@
                 this.listResource = [];
             },
             async getUnits() {
+                this.$loading(true);
                 const res = await $get("/xadmin/units/getUnits");
-                this.units=res;
                 this.allUnit=res;
+                this.units = this.allUnit.filter(e=> e.subject == this.entry.subject);
+                this.$loading(false);
 
             },
             backIndex(){

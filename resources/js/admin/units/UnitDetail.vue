@@ -176,8 +176,8 @@
             }
         },
         mounted() {
-            this.getCourses();
-            this.getLessons();
+            this.getAllData();
+
         },
         methods: {
             deleteUnit(entry)
@@ -190,18 +190,19 @@
                 this.listLesson = [];
                 this.lessons = this.allLesson.filter(e =>e.subject == this.entry.subject);
             },
-            async getCourses() {
-                const res = await $get("/xadmin/courses/getCourses");
-                this.allCourse=res;
+            async getAllData() {
+                this.$loading(true);
+                const courses = await $get("/xadmin/courses/getCourses");
+                this.allCourse=courses;
                 this.courses = this.allCourse.filter(e => e.subject == this.entry.subject);
-            },
 
-            async getLessons() {
-                const res = await $get("/xadmin/lessons/getLessons");
-                this.allLesson=res;
+                const lessons = await $get("/xadmin/lessons/getLessons");
+                this.allLesson=lessons;
                 this.lessons = this.allLesson.filter(e =>e.subject == this.entry.subject);
-
+                this.$loading(false);
             },
+
+
             removeLesson(index)
             {
                 this.listLesson=this.listLesson.filter((item,key)=>key!==index);
