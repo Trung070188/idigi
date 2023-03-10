@@ -1114,7 +1114,7 @@ class UsersController extends AdminBaseController
                 $realPassword = $data['password'];
 //                $data['password'] = Hash::make($data['password']);
             }
-            if ($data['email']) {
+            if (@$data['email']) {
                 $content = [
                     'full_name' =>$data['full_name'],
                     'password' => $realPassword,
