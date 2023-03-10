@@ -27,4 +27,8 @@ class Unit extends BaseModel
         return $this->hasMany(Lesson::class, 'unit_id');
     }
 
+    public function course(){
+        return $this->belongsTo(Course::class, 'course_id');
+    }
+
 }

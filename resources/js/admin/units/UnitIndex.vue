@@ -241,7 +241,7 @@
                                 <td >{{((index+1)+(from+1))-2}}</td>
                                 <td v-text="entry.unit_name" @click="edit(entry.id)"></td>
                                 <td v-text="entry.id" @click="edit(entry.id)"></td>
-                                <td class="" v-text="entry.course_id" @click="edit(entry.id)"></td>
+                                <td class="" v-text="entry.course ? entry.course.course_name : ''" @click="edit(entry.id)"></td>
                                 <td class="" v-text="entry.subject" @click="edit(entry.id)"></td>
                                 <td class="" v-text=" d(entry.created_at)" @click="edit(entry.id)"></td>
                                 <td>
