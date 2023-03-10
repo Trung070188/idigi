@@ -236,7 +236,7 @@ class InventoriesController extends AdminBaseController
             {
                 LessonInventory::query()->create([
                     'inventory_id'=>$entry->id,
-                    'lesson_id'=>$req->lessonId,
+                    'lesson_id'=>$data['lessonId'],
                 ]);
             }
             return [
