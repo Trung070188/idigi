@@ -186,7 +186,7 @@ class UnitsController extends AdminBaseController
                     "time" => "",
                     "type" => $inventory->type,
                     "link" => $pathArr[count($pathArr) - 1],
-                    "full_link" => asset($inventory->virtual_path)
+                    "full_link" => url('/api/download/inventory/' . $inventory->id)
                 ];
             }
             $structure = [
