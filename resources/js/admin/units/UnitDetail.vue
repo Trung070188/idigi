@@ -62,7 +62,7 @@
                                         <textarea class="form-control"  placeholder="Your text here..." rows="5" v-model="entry.description"></textarea>
                                         <error-label for="f_category_id" :errors="errors.description"></error-label>
                                     </div>
-                                    <div class="form-group col-sm-3">
+                                    <div class="form-group col-sm-3" v-if="entry.subject">
                                         <label>Course</label>
                                         <select class="form-select form-control" required v-model="entry.course_id">
                                             <option value="" disabled selected>Choose the course</option>
@@ -71,9 +71,9 @@
                                     </div>
                                     <div class="form-group col-sm-12"  style="border: 1px solid #b5b5c3;border-radius: 25px" v-if="entry.subject">
                                         <label style="margin:15px 0px 10px ">List of lesson</label>
-                                        <treeselect :options="lessons" :multiple="true" v-model="listLesson" @input="lesson()" />
+                                        <treeselect :options="lessons" :valueFormat="'object'" :multiple="true" v-model="listLesson"  />
                                         <draggable
-                                            :list="list"
+                                            :list="listLesson"
                                             :animation="200"
                                             ghost-class="moving-card"
                                             group="users"
@@ -81,7 +81,7 @@
                                             class="form-group col-sm-12"
                                             tag="ul"
                                         >
-                                            <div style="width: 100%;cursor: pointer" v-for="(res,index) in list" :key="index">
+                                            <div style="width: 100%;cursor: pointer" v-for="(res,index) in listLesson" :key="index">
                                                 <i class="bi bi-text-center" style="width: 10%; display: inline-block"></i>
                                                 <div style="width: 50%;display: inline-block;margin-left: -75px">
                                                     <span>Lesson name:</span>
@@ -144,12 +144,16 @@
 
             if(entry.lessons){
                 entry.lessons.forEach(function (e){
-                    listLesson.push(e.id)
+                    listLesson.push({
+                        id:e.id,
+                        label:e.name,
+                    })
                 })
             }
             return {
                 deleteUni:'',
                 allCourse:[],
+                allLesson:[],
                 courses:[],
                 listLesson,
                 lessons:[],
@@ -184,53 +188,32 @@
             changeSubject(){
                 this.courses = this.allCourse.filter(e => e.subject == this.entry.subject);
                 this.listLesson = [];
-                this.list = [];
+                this.lessons = this.allLesson.filter(e =>e.subject == this.entry.subject);
             },
             async getCourses() {
                 const res = await $get("/xadmin/courses/getCourses");
                 this.allCourse=res;
                 this.courses = this.allCourse.filter(e => e.subject == this.entry.subject);
             },
+
             async getLessons() {
-                let self = this;
                 const res = await $get("/xadmin/lessons/getLessons");
-                this.lessons=res;
-
-                    self.listLesson.forEach(function (e){
-                        self.lessons.forEach(function (e1){
-                            if(e1.id == e){
-                                self.list.push(e1);
-                            }
-                        });
-
-
-                })
+                this.allLesson=res;
+                this.lessons = this.allLesson.filter(e =>e.subject == this.entry.subject);
 
             },
             removeLesson(index)
             {
-                this.list=this.list.filter((item,key)=>key!==index);
+                this.listLesson=this.listLesson.filter((item,key)=>key!==index);
 
-                let list=this.list.map(res=>{
-                    return {
-                        'id':res.id
-                    }
-                });
-                this.listLesson = list.reduce((acc, curr) => acc.concat(Object.values(curr)), []);
             },
-            lesson()
-            {
-                this.list = this.listLesson.map(id => {
-                    const item = this.lessons.find(i => i.id === id);
-                    return {id, label: item.label};
-                });
-            },
+
             backIndex(){
                 window.location.href = '/xadmin/units/index';
             },
             async save() {
                 this.isLoading = true;
-                const res = await $post('/xadmin/units/save', {entry: this.entry,list:this.list}, false);
+                const res = await $post('/xadmin/units/save', {entry: this.entry,list:this.listLesson}, false);
                 this.isLoading = false;
                 if (res.errors) {
                     this.errors = res.errors;
