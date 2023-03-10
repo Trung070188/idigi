@@ -407,15 +407,17 @@
                 window.location.href = '/xadmin/users/index';
             },
             async remove_device(deviceTeacher) {
-
+                this.$loading(true);
                 const res = await $post('/xadmin/users/removeDevice', {id: deviceTeacher.id});
-
+                this.$loading(false);
                 if (res.code) {
                     toastr.error(res.message);
                 } else {
                     toastr.success(res.message);
+                    $('#deviceConfirm').modal('hide');
+                    location.replace('/xadmin/users/teacherDetails?id=' + this.entry.id);
+
                 }
-                location.replace('/xadmin/users/editTeacher?id=' + res.id);
             },
             async activeAllocation()
             {
@@ -430,15 +432,18 @@
             },
             async refuse(deviceTeacher)
             {
+                this.$loading(true)
                 const res=await $post('/xadmin/users/refuseDevice',{id:deviceTeacher.id});
+                this.$loading(false);
                 if(res.code)
                 {
                     toastr.error(res.message);
                 }
                 else {
                     toastr.success(res.message);
+                    location.replace('/xadmin/users/teacherDetails?id=' + this.entry.id);
+
                 }
-                location.replace('/xadmin/users/editTeacher?id=' + res.id);
 
             },
 
