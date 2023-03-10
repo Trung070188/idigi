@@ -55,7 +55,7 @@
                                     </div>
                                     <div class="form-group col-sm-3">
                                         <label>Subject<span class="text-danger">*</span></label>
-                                        <select class="form-control form-select" v-model="entry.subject" @change="load">
+                                        <select class="form-control form-select" v-model="entry.subject" @change="changeSubject">
                                                 <option value="Math">Math</option>
                                                 <option value="Science">Science </option>
                                         </select>
@@ -83,9 +83,9 @@
                                     </div>
                                     <div class="form-group col-sm-12"  style="border: 1px solid #b5b5c3;border-radius: 25px" v-if="entry.subject">
                                         <label style="margin:15px 0px 10px ">List of unit</label>
-                                        <Treeselect :options="units" :multiple="true" v-model="listUnit" @input="unit()"  placeholder="Search unit"/>
+                                        <Treeselect :options="units" :multiple="true" :valueFormat="'object'" v-model="listUnit"   placeholder="Search unit"/>
                                         <draggable
-                                            :list="list"
+                                            :list="listUnit"
                                             :animation="200"
                                             ghost-class="moving-card"
                                             group="users"
@@ -93,7 +93,7 @@
                                             class="form-group col-sm-12"
                                             tag="ul"
                                         >
-                                            <div style="width: 100%;cursor: pointer" v-for="(res,index) in list" :key="index">
+                                            <div style="width: 100%;cursor: pointer" v-for="(res,index) in listUnit" :key="index">
                                                 <i class="bi bi-text-center" style="width: 5%; display: inline-block"></i>
                                                 <div style="width: 5%;display: inline-block;position: relative;left: -17px;font-size: 20px">{{index+1}}</div>
                                                 <div style="width: 50%;display: inline-block;margin-left: -50px">
@@ -150,11 +150,24 @@
         name: "CourseDetail.vue",
         components: {ActionBar,draggable,Treeselect},
         data() {
+            let listUnit = [];
+            let entry =  $json.entry;
+
+            if(entry.unit){
+                entry.unit.forEach(function (e){
+                    listUnit.push({
+                        id:e.id,
+                        label:e.unit_name
+                    })
+                })
+            }
+
             return {
                 deleteUnit:[],
                 list:[],
-                listUnit:[],
-                units:[],
+                listUnit,
+                units:listUnit,
+                allUnits:[],
                 breadcrumbs: [
                     {
                         title: 'Resource management',
@@ -173,9 +186,13 @@
             }
         },
         mounted() {
-            $router.on("/", this.load).init();
+            this.load();
         },
         methods: {
+            changeSubject(){
+                this.units = this.allUnits.filter(e => e.subject ==  this.entry.subject);
+                this.listUnit = [];
+            },
             deleteCourse:function(entry='')
             {
                 $('#delete').modal('show');
@@ -183,40 +200,30 @@
             },
             removeUnit(index,id)
             {
-                console.log(id);
-                this.list=this.list.filter((item,key)=>key!==index);
-                this.listUnit=this.list.map(rec => rec.id);
-               this.deleteUnit=this.deleteUnit.concat(id);
+                this.listUnit=this.listUnit.filter((item,key)=>key!==index);
+            },
 
-            },
-            unit()
-            {
-                this.list = this.listUnit.map(id => {
-                    const item = this.units.find(i => i.id === id);
-                    return {id, label: item.label};
-                });
-                console.log(this.list);
-            },
             async load() {
-                let query = $router.getQuery();
                 this.$loading(true);
-                const res = await $get("/xadmin/courses/dataEditCourse?id="+this.entry.id+'&subject='+this.entry.subject, query);
-                this.$loading(false);
-                this.listUnit = [];
-                this.units = res.units.map(rec => {
+                const res = await $get("/xadmin/units/getUnits");
+                this.allUnits = res.map(function(e){
                     return {
-                        'id':rec.id,
-                        'label':rec.unit_name,
+                        id:e.id,
+                        label:e.unit_name,
+                        subject:e.subject,
                     }
                 });
-                this.listUnit=res.listUnit.map(rec => rec.id);
+                this.units = this.allUnits.filter(e => e.subject ==  this.entry.subject);
+
+                this.$loading(false);
+
             },
             backIndex(){
                 window.location.href = '/xadmin/courses/index';
             },
             async save() {
                 this.isLoading = true;
-                const res = await $post('/xadmin/courses/save', {entry: this.entry,units:this.list,deleteUnit:this.deleteUnit}, false);
+                const res = await $post('/xadmin/courses/save', {entry: this.entry,units:this.listUnit}, false);
                 this.isLoading = false;
                 if (res.errors) {
                     this.errors = res.errors;

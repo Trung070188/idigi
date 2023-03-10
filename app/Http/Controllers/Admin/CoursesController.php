@@ -26,45 +26,48 @@ class CoursesController extends AdminBaseController
     ];
 
     /**
-    * Index page
-    * @uri  /xadmin/courses/index
-    * @throw  NotFoundHttpException
-    * @return  View
-    */
-    public function index() {
+     * Index page
+     * @uri  /xadmin/courses/index
+     * @throw  NotFoundHttpException
+     * @return  View
+     */
+    public function index()
+    {
         $title = 'Course';
         $component = 'CourseIndex';
         return component($component, compact('title'));
     }
 
     /**
-    * Create new entry
-    * @uri  /xadmin/courses/create
-    * @throw  NotFoundHttpException
-    * @return  View
-    */
-    public function create (Request $req) {
+     * Create new entry
+     * @uri  /xadmin/courses/create
+     * @throw  NotFoundHttpException
+     * @return  View
+     */
+    public function create(Request $req)
+    {
         $component = 'CourseForm';
         $title = 'Create courses';
         return component($component, compact('title'));
     }
 
     /**
-    * @uri  /xadmin/courses/edit?id=$id
-    * @throw  NotFoundHttpException
-    * @return  View
-    */
-    public function edit (Request $req) {
+     * @uri  /xadmin/courses/edit?id=$id
+     * @throw  NotFoundHttpException
+     * @return  View
+     */
+    public function edit(Request $req)
+    {
         $id = $req->id;
-        $entry = Course::find($id);
+        $entry = Course::with(['unit'])->where('id', $id)->first();
 
         if (!$entry) {
             throw new NotFoundHttpException();
         }
 
         /**
-        * @var  Course $entry
-        */
+         * @var  Course $entry
+         */
 
         $title = 'Edit';
         $component = 'CourseDetail';
@@ -74,10 +77,11 @@ class CoursesController extends AdminBaseController
     }
 
     /**
-    * @uri  /xadmin/courses/remove
-    * @return  array
-    */
-    public function remove(Request $req) {
+     * @uri  /xadmin/courses/remove
+     * @return  array
+     */
+    public function remove(Request $req)
+    {
         $id = $req->id;
         $entry = Course::find($id);
 
@@ -92,19 +96,22 @@ class CoursesController extends AdminBaseController
             'message' => 'Đã xóa'
         ];
     }
+
     public function removeCourse(Request $req)
     {
-        Course::query()->whereIn('id',$req->courseIds)->update(['deleted_at'=>Carbon::now()]);
+        Course::query()->whereIn('id', $req->courseIds)->update(['deleted_at' => Carbon::now()]);
         return [
-          'code'=>0,
-          'message'=>'Đã xóa'
+            'code' => 0,
+            'message' => 'Đã xóa'
         ];
     }
+
     /**
-    * @uri  /xadmin/courses/save
-    * @return  array
-    */
-    public function save(Request $req) {
+     * @uri  /xadmin/courses/save
+     * @return  array
+     */
+    public function save(Request $req)
+    {
         if (!$req->isMethod('POST')) {
             return ['code' => 405, 'message' => 'Method not allow'];
         }
@@ -112,12 +119,12 @@ class CoursesController extends AdminBaseController
         $data = $req->get('entry');
 
         $rules = [
-            'course_name' => ['required','max:100','regex:/^[\p{L}\s\/0-9.,?\(\)_:-]+$/u'],
+            'course_name' => ['required', 'max:100', 'regex:/^[\p{L}\s\/0-9.,?\(\)_:-]+$/u'],
             'subject' => 'required',
-            'grade'=>'required',
-            'description'=>'max:200'
+            'grade' => 'required',
+            'description' => 'max:200'
 
-];
+        ];
 
         $v = Validator::make($data, $rules);
 
@@ -129,8 +136,8 @@ class CoursesController extends AdminBaseController
         }
 
         /**
-        * @var  Course $entry
-        */
+         * @var  Course $entry
+         */
         if (isset($data['id'])) {
             $entry = Course::find($data['id']);
             if (!$entry) {
@@ -141,15 +148,11 @@ class CoursesController extends AdminBaseController
             }
 
             $entry->fill($data);
-            if($req->deleteUnit)
-            {
-                Unit::query()->whereIn('id',$req->deleteUnit)->update(['course_id'=>NULL]);
-            }
-            if($req->units)
-            {
-                foreach ($req->units as $key=>$unit)
-                {
-                    Unit::query()->where('id',$unit['id'])->update(['course_id'=>$entry->id,'position'=>$key+1]);
+            Unit::query()->whereIn('id', $req->deleteUnit)->update(['course_id' => NULL]);
+
+            if ($req->units) {
+                foreach ($req->units as $key => $unit) {
+                    Unit::query()->where('id', $unit['id'])->update(['course_id' => $entry->id, 'position' => $key + 1]);
                 }
 
             }
@@ -164,11 +167,10 @@ class CoursesController extends AdminBaseController
             $entry = new Course();
             $entry->fill($data);
             $entry->save();
-            if($req->units)
-            {
-                foreach ($req->units as $key => $unit)
-                {
-                    Unit::query()->where('id',$unit['id'])->update(['course_id'=>$entry->id,'position'=>$key+1]);
+
+            if ($req->units) {
+                foreach ($req->units as $key => $unit) {
+                    Unit::query()->where('id', $unit['id'])->update(['course_id' => $entry->id, 'position' => $key + 1]);
                 }
             }
 
@@ -181,8 +183,8 @@ class CoursesController extends AdminBaseController
     }
 
     /**
-    * @param  Request $req
-    */
+     * @param Request $req
+     */
     public function toggleStatus(Request $req)
     {
         $id = $req->get('id');
@@ -205,29 +207,27 @@ class CoursesController extends AdminBaseController
     }
 
     /**
-    * Ajax data for index page
-    * @uri  /xadmin/courses/data
-    * @return  array
-    */
-    public function data(Request $req) {
+     * Ajax data for index page
+     * @uri  /xadmin/courses/data
+     * @return  array
+     */
+    public function data(Request $req)
+    {
         $query = Course::query()->orderBy('id', 'desc');
 
         if ($req->keyword) {
-            $query->where('course_name', 'LIKE', '%' . $req->keyword. '%')
-            ->orWhere('subject','LIKE','%' .$req->keyword . '%')
-            ->orWhere('grade','LIKE','%' .$req->keyword . '%');
+            $query->where('course_name', 'LIKE', '%' . $req->keyword . '%')
+                ->orWhere('subject', 'LIKE', '%' . $req->keyword . '%')
+                ->orWhere('grade', 'LIKE', '%' . $req->keyword . '%');
         }
-        if($req->course_name)
-        {
-            $query->where('course_name','LIKE','%' .$req->course_name .'%');
+        if ($req->course_name) {
+            $query->where('course_name', 'LIKE', '%' . $req->course_name . '%');
         }
-        if($req->subject)
-        {
-            $query->where('subject','LIKE','%' .$req->subject. '%');
+        if ($req->subject) {
+            $query->where('subject', 'LIKE', '%' . $req->subject . '%');
         }
-        if($req->grade)
-        {
-            $query->where('grade','LIKE','%'.$req->grade. '%');
+        if ($req->grade) {
+            $query->where('grade', 'LIKE', '%' . $req->grade . '%');
         }
         if ($req->active != '') {
             $query->where('active', $req->active);
@@ -242,7 +242,7 @@ class CoursesController extends AdminBaseController
         $entries = $query->paginate($limit);
 
         return [
-            'count'=>$query->count(),
+            'count' => $query->count(),
             'code' => 0,
             'data' => $entries->items(),
             'paginate' => [
@@ -251,53 +251,53 @@ class CoursesController extends AdminBaseController
             ]
         ];
     }
+
     public function dataCreateCourse(Request $req)
     {
-        if($req->subject)
-        {
-            $units=Unit::query()->where('subject',$req->subject)->orderBy('id','desc');
+        if ($req->subject) {
+            $units = Unit::query()->where('subject', $req->subject)->orderBy('id', 'desc');
 
-        }
-        else{
-            $units=Unit::query()->orderBy('id','desc');
+        } else {
+            $units = Unit::query()->orderBy('id', 'desc');
 
         }
         return [
-          'units'=>$units->get(),
+            'units' => $units->get(),
         ];
     }
 
-    public function getCourses(){
+    public function getCourses()
+    {
         $courses = Course::orderBy('course_name', 'ASC')->get();
 
         return $courses;
     }
+
     public function dataEditCourse(Request $req)
     {
-        if($req->subject)
-        {
-            $units=Unit::query()->where('subject',$req->subject)->orderBy('id','desc');
+        if ($req->subject) {
+            $units = Unit::query()->where('subject', $req->subject)->orderBy('id', 'desc');
+
+        } else {
+            $units = Unit::query()->orderBy('id', 'desc');
 
         }
-        else{
-            $units=Unit::query()->orderBy('id','desc');
-
-        }
-        $listUnit=Unit::query()->where('course_id',$req->id)->orderBy('position','ASC')->get();
+        $listUnit = Unit::query()->where('course_id', $req->id)->orderBy('position', 'ASC')->get();
 
         return [
-            'units'=>$units->get(),
-            'listUnit'=>$listUnit
+            'units' => $units->get(),
+            'listUnit' => $listUnit
         ];
     }
 
-    public function export() {
-                $keys = [
-                            'name' => ['A', 'name'],
-                            'public_from' => ['B', 'public_from'],
-                            'public_to' => ['C', 'public_to'],
-                            'status' => ['D', 'status'],
-                            ];
+    public function export()
+    {
+        $keys = [
+            'name' => ['A', 'name'],
+            'public_from' => ['B', 'public_from'],
+            'public_to' => ['C', 'public_to'],
+            'status' => ['D', 'status'],
+        ];
 
         $query = Course::query()->orderBy('id', 'desc');
 
@@ -310,7 +310,7 @@ class CoursesController extends AdminBaseController
                 $sheet->setCellValue($v . "1", $key);
             } elseif (is_array($v)) {
                 list($c, $n) = $v;
-                 $sheet->setCellValue($c . "1", $n);
+                $sheet->setCellValue($c . "1", $n);
             }
         }
 
