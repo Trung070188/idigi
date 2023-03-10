@@ -180,6 +180,7 @@ export default {
         let filter = {
             type: $q.type || "",
         };
+        let listResource = [];
         let entry = $json.entry;
         let modules = [];
         if(entry.inventories){
@@ -188,6 +189,7 @@ export default {
                     id: e.id,
                     label: e.name,
                 })
+                listResource.push(e.id);
             })
         }
 
@@ -195,7 +197,7 @@ export default {
         return {
             lessonUnit: '',
             units: [],
-            listResource: [],
+            listResource,
             filter: filter,
             module_type: '',
             modules,
@@ -219,7 +221,7 @@ export default {
         }
     },
     mounted() {
-        $router.on("/", this.load).init();
+        this.getUnits();
     },
     methods: {
         deleteLesson: function (entry = '') {
@@ -243,12 +245,13 @@ export default {
                 return {id, label: item.label, type: item.type};
             });
         },
-        doFilter() {
-            $router.setQuery(this.filter);
-        },
+
         changeSubject(){
             this.modules = [];
             this.listResource = [];
+            this.entry.unit_id = null;
+            this.units = this.allUnit.filter(e=> e.subject == this.entry.subject);
+
         },
         changeUnit(){
             this.modules = [];
@@ -258,26 +261,13 @@ export default {
             this.modules = [];
             this.listResource = [];
         },
-        async load() {
-            let query = $router.getQuery();
-            this.$loading(true);
-            const res = await $get("/xadmin/lessons/dataEditLesson?id=" + this.entry.id, query);
-            this.$loading(false);
-            let inventory = [];
-            res.lessons.forEach(function (e) {
-                res.module.forEach(function (e1) {
-                    if (e1.id == e.inventory_id) {
-                        inventory.push(e1);
-                    }
-                })
-            })
-            this.modules = inventory;
-            this.listResource = res.lessons.map(rec => rec.inventory_id);
-            // this.modules = res.module;
-            this.units = res.units;
-            console.log(this.modules);
-            console.log(this.listResource);
+        async getUnits() {
+            const res = await $get("/xadmin/units/getUnits");
+            this.allUnit=res;
+            this.units = this.allUnit.filter(e=> e.subject == this.entry.subject);
+
         },
+
         backIndex() {
             window.location.href = '/xadmin/lessons/index';
         },

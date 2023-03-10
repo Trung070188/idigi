@@ -31,7 +31,7 @@
                                         <textarea class="form-control"  placeholder="Your text here..." rows="5" v-model="entry.description"></textarea>
                                         <error-label for="f_category_id" :errors="errors.description"></error-label>
                                     </div>
-                                    <div class="form-group col-sm-3">
+                                    <div class="form-group col-sm-3" v-if="entry.subject">
                                         <label>Unit </label>
                                         <select class="form-select form-control" required v-model="entry.unit_id" @change="changeUnit">
                                             <option value="" disabled selected>Choose the unit</option>
@@ -125,6 +125,7 @@
             };
             return {
                 units:[],
+                allUnit:[],
                 checkResource:[],
                 listResource:[],
                 filter:filter,
@@ -153,7 +154,7 @@
             }
         },
         mounted() {
-            $router.on("/", this.load).init();
+            this.getUnits();
         },
         methods: {
             async handleSearchChange({action, searchQuery, callback}) {
@@ -166,7 +167,7 @@
             {
               this.list=this.list.filter((item,key)=>key!==index);
               this.listResource=this.list.map(rec => rec.id);
-              console.log(this.list);
+
             },
             resource()
             {
@@ -177,12 +178,12 @@
                     return {id, label: item.label,type:item.type};
                 });
             },
-            doFilter() {
-                $router.setQuery(this.filter);
-            },
             changeSubject(){
                 this.modules = [];
                 this.listResource = [];
+                this.entry.unit_id = null;
+                this.units = this.allUnit.filter(e=> e.subject == this.entry.subject);
+
             },
             changeUnit(){
                 this.modules = [];
@@ -192,14 +193,10 @@
                 this.modules = [];
                 this.listResource = [];
             },
-            async load() {
-                let query = $router.getQuery();
-                this.$loading(true);
-                const res = await $get("/xadmin/lessons/dataCreateLesson", query);
-                this.$loading(false);
-                this.modules = res.module;
-                //this.modules=this.modules.concat(this.list);
-                this.units=res.units;
+            async getUnits() {
+                const res = await $get("/xadmin/units/getUnits");
+                this.units=res;
+                this.allUnit=res;
 
             },
             backIndex(){
