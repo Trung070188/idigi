@@ -281,34 +281,67 @@ class AllocationContentsController extends AdminBaseController
                         ]
                     );
                 }
-
-
-                SchoolCourseUnit::whereIn('school_id', $req->school)->delete();
+                // code cập nhật bảng school_course_unit
+                SchoolCourseUnit::query()->where('allocation_content_id', $data['id'])->delete();
                 foreach ($req->total_course as $course) {
-                    foreach ($req->unit as $unit) {
-                        if ($unit['total_unit'] !== []) {
-                            foreach ($unit['total_unit'] as $un) {
-                                foreach ($req->school as $school) {
-                                    SchoolCourseUnit::create(['school_id' => $school, 'course_id' => $course, 'unit_id' => $un, 'allocation_content_id' => $data['id']]);
-
+                    foreach ($req->school as $school) {
+                        foreach ($req->unit as $unit) {
+                            if (!empty($unit['total_unit']) && $unit['id'] == $course) {
+                                foreach ($unit['total_unit'] as $un) {
+                                    SchoolCourseUnit::create([
+                                        'school_id' => $school,
+                                        'course_id' => $course,
+                                        'unit_id' => $un,
+                                        'allocation_content_id' => $data['id']
+                                    ]);
                                 }
-
                             }
                         }
                     }
                 }
-                $userUnits = UserUnit::query()->whereIn('school_id', $req->school)->get();
-                foreach ($userUnits as $userUnit) {
-                    if ($userUnit->allocation_content_id != $data['id']) {
-                        UserUnit::whereIn('school_id', $req->school)->delete();
-                        UserCourseUnit::whereIn('school_id', $req->school)->delete();
+
+
+                //xoa data user_unit
+                $userUnits = UserUnit::query()
+                    ->whereIn('school_id', $req->school)
+                    ->where('allocation_content_id', $data['id'])
+                    ->pluck('school_id');
+                UserUnit::query()->whereNotIn('school_id', $userUnits)
+                    ->where('allocation_content_id', $data['id'])->delete();
+
+                // xoa data user_course
+
+                $userCourse = UserCourseUnit::query()->whereIn('school_id', $req->school)
+                    ->where('allocation_content_id', $data['id'])->pluck('school_id');
+                UserCourseUnit::query()->whereNotIn('school_id', $userCourse)
+                    ->where('allocation_content_id', $data['id'])->delete();
+
+
+                if (@$req->unit) {
+                    // kiem tra neu course bi xoa khoi content thi xoa course khoi user do
+
+                    UserUnit::query()->where('allocation_content_id', $data['id'])
+                        ->whereNotIn('course_id', $req->total_course)
+                        ->delete();
+
+                    // xoa data user_unit khi thay doi unit cua allocation
+
+
+                    foreach ($req->total_course as $course) {
+                        foreach ($req->unit as $unit) {
+                            if ($unit['id'] == $course) {
+                                UserUnit::query()->where('allocation_content_id', $data['id'])
+                                    ->where('course_id', $course)
+                                    ->whereNotIn('unit_id', $unit['total_unit'])->delete();
+                            }
+                        }
                     }
                 }
 
-
-                SchoolCourse::whereIn('school_id', $req->school)->delete();
-                foreach ($req->total_course as $course) {
-                    foreach ($req->school as $school) {
+                // xoa du lieu bang school_course
+                SchoolCourse::query()->where('allocation_content_id', $data['id'])->delete();
+                foreach ($req->school as $school) {
+                    foreach ($req->total_course as $course) {
                         SchoolCourse::create(['school_id' => $school, 'course_id' => $course, 'allocation_content_id' => $data['id']]);
                     }
                 }
@@ -328,35 +361,35 @@ class AllocationContentsController extends AdminBaseController
                     $allocationContentCourse[] = (['course_id' => $courseId, 'allocation_content_id' => $entry->id]);
                 }
                 AllocationContentCourse::insert($allocationContentCourse);
-                $contentCourses = AllocationContentCourse::where('allocation_content_id', $entry->id)->get();
-                $deleteCourses = [];
-                foreach ($contentCourses as $contentCourse) {
-
-                    {
-                        $deleteCourses[] = $contentCourse->course_id;
-                    }
-
-                }
+//                $contentCourses = AllocationContentCourse::where('allocation_content_id', $entry->id)->get();
+//                $deleteCourses = [];
+//                foreach ($contentCourses as $contentCourse) {
+//
+//                    {
+//                        $deleteCourses[] = $contentCourse->course_id;
+//                    }
+//
+//                }
 
                 // code cập nhật bảng school_course khi thay đổi content ở bảng allocation_content_course
-                $contentUpdates = SchoolCourse::query()->where('allocation_content_id', $entry->id)->get();
-                foreach ($contentUpdates as $contentUpdate) {
-                    SchoolCourse::where('allocation_content_id', $entry->id)->delete();
+//                $contentUpdates = SchoolCourse::query()->where('allocation_content_id', $entry->id)->get();
+//                foreach ($contentUpdates as $contentUpdate) {
+//                    SchoolCourse::where('allocation_content_id', $entry->id)->delete();
+//
+//                    $schoolCourse = [];
+//                    foreach ($deleteCourses as $deleteCourse) {
+//                        $schoolCourse[] = (['allocation_content_id' => $entry->id, 'school_id' => $contentUpdate->school_id, 'course_id' => $deleteCourse]);
+//
+//                    }
+//                    SchoolCourse::insert($schoolCourse);
+//
+//                }
 
-                    $schoolCourse = [];
-                    foreach ($deleteCourses as $deleteCourse) {
-                        $schoolCourse[] = (['allocation_content_id' => $entry->id, 'school_id' => $contentUpdate->school_id, 'course_id' => $deleteCourse]);
-
-                    }
-                    SchoolCourse::insert($schoolCourse);
-
-                }
-
-                $deleteCourseUsers = [];
-                foreach ($contentUpdates as $contentUpdate) {
-                    $deleteCourseUsers[] = $contentUpdate->course_id;
-                }
-                UserCourseUnit::where('allocation_content_id', $entry->id)->whereNotIn('course_id', $deleteCourseUsers)->delete();
+//                $deleteCourseUsers = [];
+//                foreach ($contentUpdates as $contentUpdate) {
+//                    $deleteCourseUsers[] = $contentUpdate->course_id;
+//                }
+//                UserCourseUnit::where('allocation_content_id', $entry->id)->whereNotIn('course_id', $deleteCourseUsers)->delete();
 
                 if (@$dataContent['unit']) {
 
@@ -375,23 +408,23 @@ class AllocationContentsController extends AdminBaseController
 
                     }
                     // code cập nhật bảng school_course_unit khi thay đổi content ở bảng allocation_content_course
-                    $contentCourseUnits = AllocationContentUnit::where('allocation_content_id', $entry->id)->get();
-                    $contentUnitUpdates = SchoolCourseUnit::query()->where('allocation_content_id', $entry->id)->get();
-                    foreach ($contentUnitUpdates as $contentUnitUpdate) {
-                        SchoolCourseUnit::where('allocation_content_id', $entry->id)->delete();
-                        $schoolCourseUnit = [];
-                        foreach ($contentCourseUnits as $contentCourseUnit) {
-                            $schoolCourseUnit[] = (['allocation_content_id' => $entry->id, 'school_id' => $contentUnitUpdate->school_id, 'course_id' => $contentCourseUnit->course_id, 'unit_id' => $contentCourseUnit->unit_id]);
-
-                        }
-                        SchoolCourseUnit::insert($schoolCourseUnit);
-
-                    }
-                    $deleteUnitUsers = [];
-                    foreach ($contentCourseUnits as $contentCourseUnit) {
-                        $deleteUnitUsers[] = $contentCourseUnit->unit_id;
-                    }
-                    UserUnit::where('allocation_content_id', $entry->id)->whereNotIn('unit_id', $deleteUnitUsers)->delete();
+//                    $contentCourseUnits = AllocationContentUnit::where('allocation_content_id', $entry->id)->get();
+//                    $contentUnitUpdates = SchoolCourseUnit::query()->where('allocation_content_id', $entry->id)->get();
+//                    foreach ($contentUnitUpdates as $contentUnitUpdate) {
+//                        SchoolCourseUnit::where('allocation_content_id', $entry->id)->delete();
+//                        $schoolCourseUnit = [];
+//                        foreach ($contentCourseUnits as $contentCourseUnit) {
+//                            $schoolCourseUnit[] = (['allocation_content_id' => $entry->id, 'school_id' => $contentUnitUpdate->school_id, 'course_id' => $contentCourseUnit->course_id, 'unit_id' => $contentCourseUnit->unit_id]);
+//
+//                        }
+//                        SchoolCourseUnit::insert($schoolCourseUnit);
+//
+//                    }
+//                    $deleteUnitUsers = [];
+//                    foreach ($contentCourseUnits as $contentCourseUnit) {
+//                        $deleteUnitUsers[] = $contentCourseUnit->unit_id;
+//                    }
+//                    UserUnit::where('allocation_content_id', $entry->id)->whereNotIn('unit_id', $deleteUnitUsers)->delete();
                 }
 
             }
