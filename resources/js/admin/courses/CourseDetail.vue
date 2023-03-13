@@ -233,8 +233,6 @@
                     toastr.error(res.message);
                 } else {
                     this.errors = {};
-                    toastr.success(res.message);
-
                     if (!this.entry.id) {
                         location.replace('/xadmin/courses/edit?id=' + res.id);
                     }

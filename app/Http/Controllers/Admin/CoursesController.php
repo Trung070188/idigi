@@ -178,10 +178,12 @@ class CoursesController extends AdminBaseController
         }
 
         $lessons = Lesson::whereIn('unit_id', $unitIds)->get();
+
         foreach ($lessons as $key => $lesson) {
 
             $structure = json_decode($lesson->structure, true);
             $structure['grade'] = $entry->grade;
+            $lesson->structure = json_encode($structure);
 
             $lesson->save();
         }
