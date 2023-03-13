@@ -410,15 +410,19 @@ class UsersController extends AdminBaseController
         $id = $req->id;
         $entry = User::query()->with('schools', 'user_devices', 'user_cousers', 'user_units', 'units', 'cousers')
             ->where('id', $id)->first();
-        $active_allocation=$entry->active_allocation;
-        $userCousers = (@$entry->user_cousers);
+        if(@$entry->active_allocation)
+        {
+            $active_allocation=$entry->active_allocation;
+
+        }
+        $userCousers = @$entry->user_cousers;
         $schools = @$entry->schools;
-        $allocationContentId=@$schools->allocation_school->allocation_content_id;
-        $schoolId=@$entry->schools->id;
-        $schoolCousers = ($schools->school_courses);
-        $schoolUnits = $schools->school_course_units;
-        $course_unit = $schools->units;
-        $userUnits = $entry->user_units;
+        $allocationContentId = @$schools->allocation_school->allocation_content_id;
+        $schoolId = @$entry->schools->id;
+        $schoolCousers = @$schools->school_courses;
+        $schoolUnits = @$schools->school_course_units;
+        $course_unit = @$schools->units;
+        $userUnits = @$entry->user_units;
 
         if (@$schoolCousers) {
             $courseTeachers = [];
@@ -487,17 +491,17 @@ class UsersController extends AdminBaseController
 
         ];
         $jsonData = [
-            'roleName'=>$roleName,
+            'roleName'=>@$roleName,
             'active_allocation'=>$active_allocation,
             'permissionFields'=>$permissionFields,
             'allocationContentId'=>$allocationContentId,
             'entry' => $entry,
-            @'schools' => @$schools,
-            @'courseTeachers' => @$courseTeachers,
-            @'schoolCousers' => @$schoolCousers,
+            'schools' => @$schools,
+            'courseTeachers' => @$courseTeachers,
+            'schoolCousers' => @$schoolCousers,
             //           @'course_unit' => @$course_unit,
-            @'userCouser' => @$userCouser,
-            @'userUnits' => @$userUnits,
+            'userCouser' => @$userCouser,
+            'userUnits' => @$userUnits,
             'schoolId'=>@$schoolId
         ];
         return view('admin.layouts.vue', compact('title', 'component', 'jsonData'));
