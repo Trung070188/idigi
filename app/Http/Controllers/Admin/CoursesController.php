@@ -177,7 +177,6 @@ class CoursesController extends AdminBaseController
             }
         }
 
-
         $lessons = Lesson::whereIn('unit_id', $unitIds)->get();
         foreach ($lessons as $key => $lesson) {
 
@@ -186,7 +185,6 @@ class CoursesController extends AdminBaseController
 
             $lesson->save();
         }
-
 
         return [
             'code' => 0,
