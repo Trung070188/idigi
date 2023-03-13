@@ -139,6 +139,7 @@ class CoursesController extends AdminBaseController
         /**
          * @var  Course $entry
          */
+        $unitIds = [];
         $message = 'Đã thêm';
         if (isset($data['id'])) {
             $entry = Course::find($data['id']);
@@ -154,6 +155,7 @@ class CoursesController extends AdminBaseController
 
             if ($req->units) {
                 foreach ($req->units as $key => $unit) {
+                    $unitIds[] = $unit['id'] ;
                     Unit::query()->where('id', $unit['id'])->update(['course_id' => $entry->id, 'position' => $key + 1]);
                 }
 
@@ -168,12 +170,15 @@ class CoursesController extends AdminBaseController
 
             if ($req->units) {
                 foreach ($req->units as $key => $unit) {
+                    $unitIds[] = $unit['id'] ;
                     Unit::query()->where('id', $unit['id'])->update(['course_id' => $entry->id, 'position' => $key + 1]);
 
                 }
             }
         }
-        $lessons = Lesson::whereIn('unit_id', $req->units)->get();
+
+
+        $lessons = Lesson::whereIn('unit_id', $unitIds)->get();
         foreach ($lessons as $key => $lesson) {
 
             $structure = json_decode($lesson->structure, true);
