@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 
+use App\Models\Lesson;
 use App\Models\Unit;
 use Carbon\Carbon;
 use Illuminate\Contracts\View\View;
@@ -138,6 +139,7 @@ class CoursesController extends AdminBaseController
         /**
          * @var  Course $entry
          */
+        $message = 'Đã thêm';
         if (isset($data['id'])) {
             $entry = Course::find($data['id']);
             if (!$entry) {
@@ -157,12 +159,8 @@ class CoursesController extends AdminBaseController
 
             }
             $entry->save();
+            $message = 'Đã cập nhật';
 
-            return [
-                'code' => 0,
-                'message' => 'Đã cập nhật',
-                'id' => $entry->id
-            ];
         } else {
             $entry = new Course();
             $entry->fill($data);
@@ -171,15 +169,25 @@ class CoursesController extends AdminBaseController
             if ($req->units) {
                 foreach ($req->units as $key => $unit) {
                     Unit::query()->where('id', $unit['id'])->update(['course_id' => $entry->id, 'position' => $key + 1]);
+
                 }
             }
-
-            return [
-                'code' => 0,
-                'message' => 'Đã thêm',
-                'id' => $entry->id
-            ];
         }
+        $lessons = Lesson::whereIn('unit_id', $req->units)->get();
+        foreach ($lessons as $key => $lesson) {
+
+            $structure = json_decode($lesson->structure, true);
+            $structure['grade'] = $entry->grade;
+
+            $lesson->save();
+        }
+
+
+        return [
+            'code' => 0,
+            'message' => $message,
+            'id' => $entry->id
+        ];
     }
 
     /**
