@@ -117,7 +117,7 @@
                                                    style="width: 10%; display: inline-block"></i>
                                                 <div style="width: 50%;display: inline-block;margin-left: -75px">
                                                     <span>Resource name:</span>
-                                                    <input class="form-control" v-model="res.label" disabled>
+                                                    <a :href="'/xadmin/inventories/edit?id=' + res.id" target="_blank" style="cursor: pointer;"><input class="form-control" v-model="res.label" disabled></a>
                                                 </div>
                                                 <div style="width: 30%;display: inline-block;margin-left: 20px">
                                                     <span>Type:</span>
