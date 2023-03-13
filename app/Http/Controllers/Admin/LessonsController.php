@@ -176,10 +176,11 @@ class LessonsController extends AdminBaseController
             LessonInventory::where('lesson_id', $entry->id)->delete();
 
             if($req->inventory){
-                foreach ($req->inventory as $inven) {
+                foreach ($req->inventory as $key => $inven) {
                     LessonInventory::create([
                         'lesson_id' => $entry->id,
                         'inventory_id' => $inven['id'],
+                        'order' => $key + 1,
                     ]);
                 }
             }
@@ -198,8 +199,12 @@ class LessonsController extends AdminBaseController
             $entry->save();
 
             if($req->inventory){
-                foreach ($req->inventory as $inven) {
-                    LessonInventory::create(['lesson_id' => $entry->id, 'inventory_id' => $inven['id']]);
+                foreach ($req->inventory as $key => $inven) {
+                    LessonInventory::create([
+                        'lesson_id' => $entry->id,
+                        'inventory_id' => $inven['id'],
+                        'order' => $key + 1,
+                    ]);
                 }
             }
 
