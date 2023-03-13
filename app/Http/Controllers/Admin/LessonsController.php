@@ -210,7 +210,7 @@ class LessonsController extends AdminBaseController
 
         }
 
-        $lesson = Lesson::query()->with(['inventories', 'unit', 'unit.course'])->where('id', $entry->id)->first();
+        $lesson = Lesson::query()->with(['inventories', 'unit1', 'unit1.course'])->where('id', $entry->id)->first();
 
         $inventoryData = [];
 
@@ -232,7 +232,7 @@ class LessonsController extends AdminBaseController
                 "idSubject" => $entry->subject == 'Science' ? 1 : 0,
                 "codeSubject" => $entry->subject,
                 "nameSubject" => 'iSMART ' . $entry->subject,
-                "grade" => @$lesson->unit->course->grade,
+                "grade" => @$lesson->unit1->course->grade,
                 "idUnit" => $entry->position,
                 "titleUnit" => $entry->unit_name,
                 "nameUnit" => $entry->unit_name,

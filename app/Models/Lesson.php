@@ -66,4 +66,8 @@ class Lesson extends BaseModel
     public function unit(){
         return $this->belongsTo(Unit::class, 'unit_id');
     }
+
+    public function unit1(){
+        return $this->belongsTo(Unit::class, 'unit_id');
+    }
 }
