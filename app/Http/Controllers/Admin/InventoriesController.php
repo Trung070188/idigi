@@ -188,11 +188,11 @@ class InventoriesController extends AdminBaseController
         $data['file_image_id'] = @$data['file_image_new']['id'];
         $data['file_asset_id'] = @$data['file_asset_new']['id'];
 
-        $data['virtual_path'] = str_replace('APP_URL', '',  $data['file_asset_new']['uri']);
+        $data['virtual_path'] = str_replace(env('APP_URL'), '',  $data['file_asset_new']['uri']);
         $data['physical_path'] = public_path($data['virtual_path']);
 
         if($data['file_image_id']){
-            $data['image'] = str_replace('APP_URL', '',  $data['file_image_new']['uri']);
+            $data['image'] = str_replace(env('APP_URL'), '',  $data['file_image_new']['uri']);
         }
 
 
