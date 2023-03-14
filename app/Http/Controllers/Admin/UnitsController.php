@@ -176,8 +176,15 @@ class UnitsController extends AdminBaseController
             'unit_id' => NULL,
             'course_id' => NULL,
         ]);
+
         $lessons = Lesson::whereIn('id', $lessonIds)->with(['inventories'])->get();
         foreach ($lessons as $key => $lesson) {
+            $position = 0;
+            foreach ($lessonIds as $key1 => $lessonId){
+                if($lesson->id == $lessonId){
+                    $position = $key1 +1;
+                }
+            }
 
             $lessonNameArr = explode(':', $lesson->name);
             $inventories = $lesson->inventories;
@@ -207,11 +214,11 @@ class UnitsController extends AdminBaseController
                 "titleLesson" => $lesson->name,
                 "nameLesson" => $lesson->name,
                 "subLessons" => $inventoryData,
-                "position" => $key + 1,
+                "position" => $position,
             ];
             $lesson->unit_name = $entry->unit_name;
             $lesson->course_id = $entry->course_id;
-            $lesson->position = $key + 1;
+            $lesson->position = $position;
             $lesson->unit_id = $entry->id;
             $lesson->structure = json_encode($structure);
             $lesson->save();

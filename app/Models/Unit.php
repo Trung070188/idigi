@@ -24,7 +24,7 @@ class Unit extends BaseModel
     ];
 
     public function lessons(){
-        return $this->hasMany(Lesson::class, 'unit_id');
+        return $this->hasMany(Lesson::class, 'unit_id')->orderBy('lessons.position', 'ASC')->orderBy('lessons.id', 'ASC');
     }
 
     public function course(){
