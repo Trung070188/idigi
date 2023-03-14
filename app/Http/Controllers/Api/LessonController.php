@@ -61,7 +61,7 @@ class LessonController extends Controller
             }
         }
 
-        $query = Lesson::query()->with(['user_units', 'invetories', 'unit1', 'unit1.course'])
+        $query = Lesson::query()->with(['user_units', 'inventories', 'unit1', 'unit1.course'])
             ->orderBy('position', 'ASC')
             ->orderBy('id', 'ASC');
 
