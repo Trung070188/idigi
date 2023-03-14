@@ -223,6 +223,7 @@
                                 <th class="">Unit</th>
                                 <th class="">Subject</th>
                                 <th class="">Active</th>
+                                <th class="">Downloaded</th>
                                 <th class="">Creation Date</th>
                                 <th class="">Action</th>
                             </tr>
@@ -250,6 +251,7 @@
                                 <td class="" v-text="entry.unit ? entry.unit.unit_name : ''" @click="edit(entry.id)"></td>
                                 <td class="" v-text="entry.subject" @click="edit(entry.id)"></td>
                                 <td class="" v-text="entry.enabled == 0 ? 'No' : 'Yes'" @click="edit(entry.id)"></td>
+                                <td class="" v-text="entry.total_download" @click="edit(entry.id)"></td>
                                 <td class="" v-text=" d(entry.created_at)" @click="edit(entry.id)"></td>
                                 <td class="">
                                     <a href="list.html#" class="btn btn-light btn-active-light-primary btn-sm" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">Actions

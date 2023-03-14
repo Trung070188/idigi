@@ -390,11 +390,28 @@ class LessonsController extends AdminBaseController
 
 
         $entries = $query->paginate($limit);
+        $items = $entries->items();
+        $downloadLessons = DownloadLessonLog::where('lesson_ids', '<>', NULL)->get();
+
+        foreach ($downloadLessons as $downloadLesson){
+            $lessonIds = explode(',', $downloadLesson->lesson_ids);
+            foreach ($lessonIds as $lessonId){
+                foreach ($items as $item){
+                    if($item->id == $lessonId){
+                        if(isset($item->total_download)){
+                            $item->total_download ++;
+                        }else{
+                            $item->total_download = 0;
+                        }
+                    }
+                }
+            }
+        }
 
         return [
             'code' => 0,
             'user' => $user,
-            'data' => $entries->items(),
+            'data' => $items,
             'schools' => $schools,
             'roleName' => $roleName,
             'countLesson' => $countLesson,
