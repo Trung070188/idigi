@@ -101,7 +101,7 @@ class LessonController extends Controller
                     "codeLesson" => $lessonNameArr[0],
                     "titleLesson" => $lesson->name,
                     "nameLesson" => $lesson->name,
-                    "position" => $lesson->position,
+                    "position" => $lesson->position ? $lesson->position : 0,
                     "subLessons" => $inventoryData,
 
                 ];
