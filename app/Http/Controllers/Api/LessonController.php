@@ -101,17 +101,13 @@ class LessonController extends Controller
                     "codeLesson" => $lessonNameArr[0],
                     "titleLesson" => $lesson->name,
                     "nameLesson" => $lesson->name,
+                    "position" => $lesson->position,
                     "subLessons" => $inventoryData,
 
                 ];
-
-                $lesson->structure = json_encode($structure);
-                $lesson->save();
+                $data[] = $structure;
             }
 
-            if($lesson->structure){
-                $data[] = json_decode($lesson->structure, true);
-            }
         }
 
         return [
