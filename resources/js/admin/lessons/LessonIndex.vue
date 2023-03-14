@@ -60,7 +60,7 @@
                                                 </svg>
                                             </span>
                                             <!--end::Svg Icon-->
-                                            <input type="text" data-kt-filemanager-table-filter = "search" class="form-control form-control-solid w-250px ps-15" @keydown.enter="doFilter($event)" v-model="filter.keyword" placeholder="Search..." value="" />
+                                            <input type="text" data-kt-filemanager-table-filter = "search" class="form-control form-control-solid w-250px ps-15"  v-model="filter.keyword" placeholder="Search..." value="" />
                                               <span v-if="filter.keyword!==''" class="svg-icon svg-icon-2 svg-icon-lg-1 me-0" @click="filterClear">
                                             <svg type="button" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" style="margin: 3px -25px 0px;">
                                             <rect opacity="0.5" x="6" y="17.3137" width="16" height="2" rx="1" transform="rotate(-45 6 17.3137)" fill="black" style="fill:red" />
@@ -110,34 +110,27 @@
                                     <div class="row">
                                         <div class="form-group col-lg-3">
                                             <label>Name </label>
-                                            <input  @keydown.enter="doFilter('name', filter.name, $event)"
+                                            <input
                                                 class="form-control" placeholder="Enter the lesson name"
                                                    v-model="filter.name"/>
                                         </div>
                                         <div class="form-group col-lg-2">
                                             <label>Subject </label>
-                                            <select required class="form-control form-select" v-model="filter.subject" @keydown.enter="doFilter('subject', filter.subject, $event)">
+                                            <select required class="form-control form-select" v-model="filter.subject" @change="changeSubject">
                                                 <option value="" disabled selected>Choose Subject</option>
                                                 <option value="0">All</option>
                                                 <option value="Math">Math</option>
-                                                <option value="Science ">Science</option>
+                                                <option value="Science">Science</option>
                                             </select>
 
                                         </div>
-                                        <div class="form-group col-lg-2">
-                                            <label>Grade </label>
-                                            <select required class="form-control form-select" v-model="filter.grade" @keydown.enter="doFilter('grade', filter.grade, $event)">
-                                                <option value="" disabled selected>Choose Grade</option>
-                                                <option value="0">All</option>
-                                                <option value="1">1</option>
-                                                <option value="2">2</option>
-                                                <option value="3">3</option>
-                                                <option value="4">4</option>
-                                                <option value="5">5</option>
-                                                <option value="6">6</option>
-                                                <option value="7">7</option>
-                                                <option value="8">8</option>
-                                                <option value="9">9</option>
+                                        <div class="form-group col-lg-2" >
+                                            <label>Unit </label>
+                                            <select required class="form-control form-select" v-model="filter.unit" >
+                                                <option value="" disabled selected>Choose unit</option>
+                                                <option value="">All</option>
+                                                <option :value="unit.id" v-for="unit in units" v-text="unit.unit_name"></option>
+
                                             </select>
                                         </div>
                                         <div class="form-group col-lg-3">
@@ -330,7 +323,7 @@
                 created: $q.created || '',
                 name:$q.name||'',
                 subject: $q.subject || '',
-                grade: $q.grade || '',
+                unit: $q.unit || '',
                 enabled: $q.enabled || '',
             };
             for (var key in filter) {
@@ -350,6 +343,8 @@
                 devices: [],
                 lessonIds: [],
                 lessons: [],
+                allUnit:[],
+                units:[],
                 allSelected: false,
                 breadcrumbs: [
                     {
@@ -379,8 +374,27 @@
             $.get('/xadmin/user_devices/getDeviceByUser', function (res) {
                 self.devices = res;
             });
+            $.get('/xadmin/units/getUnits', function (res) {
+                self.allUnit = res;
+                if(self.filter.subject && self.filter.subject != 0){
+                    self.units = self.allUnit.filter(e => e.subject == self.filter.subject);
+                }else{
+                    self.units = self.allUnit;
+                }
+            });
+
         },
         methods: {
+            changeSubject(){
+                if(this.filter.subject && this.filter.subject != 0){
+                    this.units = this.allUnit.filter(e => e.subject == this.filter.subject);
+                    this.filter.unit = '';
+                }else{
+                    this.units = this.allUnit;
+                    console.log(this.filter.unit)
+                }
+
+            },
             edit: function (id){
                 window.location.href='/xadmin/lessons/edit?id='+ id;
             },

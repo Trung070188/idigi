@@ -372,8 +372,8 @@ class LessonsController extends AdminBaseController
 
         }
 
-        if ($req->grade) {
-            $query->where('grade', $req->grade);
+        if ($req->unit) {
+            $query->where('unit_id', $req->unit);
         }
 
         if ($req->enabled != '') {
