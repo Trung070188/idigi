@@ -92,7 +92,7 @@ class ParseData extends Command
                         'grade' => $lesson->grade,
                         'subject' => $lesson->subject,
                     ];
-                    $course = Course::updateOrCreate($courseData, $courseData);
+                    $course = Course::updateOrCreate(['course_name' => $lesson->subject.'_'.$lesson->grade], $courseData);
 
                     $unitData = [
                         'course_id' => $course->id,
