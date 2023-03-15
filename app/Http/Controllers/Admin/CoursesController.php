@@ -3,8 +3,12 @@
 namespace App\Http\Controllers\Admin;
 
 
+use App\Models\AllocationContent;
+use App\Models\AllocationContentUnit;
 use App\Models\Lesson;
+use App\Models\SchoolCourseUnit;
 use App\Models\Unit;
+use App\Models\UserUnit;
 use Carbon\Carbon;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
@@ -100,6 +104,10 @@ class CoursesController extends AdminBaseController
 
     public function removeCourse(Request $req)
     {
+
+        foreach ($req->courseIds as $id) {
+            $this->deleteAllocationByCourse($id);
+        }
         Course::query()->whereIn('id', $req->courseIds)->update(['deleted_at' => Carbon::now()]);
         return [
             'code' => 0,
@@ -111,6 +119,20 @@ class CoursesController extends AdminBaseController
      * @uri  /xadmin/courses/save
      * @return  array
      */
+    private function deleteAllocationByUnit($unitId, $courseId)
+    {
+        AllocationContentUnit::where('unit_id', $unitId)->where('course_id', $courseId)->delete();
+        UserUnit::where('unit_id', $unitId)->where('course_id', $courseId)->delete();
+        SchoolCourseUnit::where('unit_id', $unitId)->where('course_id', $courseId)->delete();
+    }
+
+    private function deleteAllocationByCourse($courseId)
+    {
+        AllocationContentUnit::where('course_id', $courseId)->delete();
+        UserUnit::where('course_id', $courseId)->delete();
+        SchoolCourseUnit::where('course_id', $courseId)->delete();
+    }
+
     public function save(Request $req)
     {
         if (!$req->isMethod('POST')) {
@@ -142,7 +164,7 @@ class CoursesController extends AdminBaseController
         $unitIds = [];
         $message = 'Đã thêm';
         if (isset($data['id'])) {
-            $entry = Course::find($data['id']);
+            $entry = Course::where('id', $data['id'])->with(['unit1'])->first();
             if (!$entry) {
                 return [
                     'code' => 3,
@@ -151,11 +173,34 @@ class CoursesController extends AdminBaseController
             }
 
             $entry->fill($data);
-            Unit::query()->where('course_id', $entry->id)->update(['course_id' => NULL]);
+            if ($entry->unit1) {
+                foreach ($entry->unit1 as $unit) {
+                    $check = 0;
+                    if ($req->units) {
+                        foreach ($req->units as $key => $_unit) {
+                            if($_unit['id'] == $unit->id){
+                                $check = 1;
+                            }
+                        }
+                    }
+                    if($check == 0){
+                        $this->deleteAllocationByUnit($unit->id, $unit->course_id);
+                    }
+                }
+            }
 
+            Unit::query()->where('course_id', $entry->id)->update(['course_id' => NULL]);
             if ($req->units) {
                 foreach ($req->units as $key => $unit) {
-                    $unitIds[] = $unit['id'] ;
+                    $oldUnit = Unit::find($unit['id']);
+
+                    if ($oldUnit->course_id != $entry->id) {
+                        $this->deleteAllocationByUnit($oldUnit->id, $oldUnit->course_id);
+                        $oldUnit->course_id = NULL;
+                        $oldUnit->save();
+                    }
+
+                    $unitIds[] = $unit['id'];
                     Unit::query()->where('id', $unit['id'])->update(['course_id' => $entry->id, 'position' => $key + 1]);
                 }
 
@@ -170,7 +215,8 @@ class CoursesController extends AdminBaseController
 
             if ($req->units) {
                 foreach ($req->units as $key => $unit) {
-                    $unitIds[] = $unit['id'] ;
+                    $unitIds[] = $unit['id'];
+
                     Unit::query()->where('id', $unit['id'])->update(['course_id' => $entry->id, 'position' => $key + 1]);
 
                 }

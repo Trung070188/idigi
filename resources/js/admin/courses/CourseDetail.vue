@@ -222,9 +222,9 @@
                 window.location.href = '/xadmin/courses/index';
             },
             async save() {
-                this.isLoading = true;
+                this.$loading(true);
                 const res = await $post('/xadmin/courses/save', {entry: this.entry,units:this.listUnit}, false);
-                this.isLoading = false;
+                this.$loading(false);
                 if (res.errors) {
                     this.errors = res.errors;
                     return;

@@ -3,9 +3,14 @@
 namespace App\Http\Controllers\Admin;
 
 
+use App\Models\AllocationContent;
+use App\Models\AllocationContentUnit;
 use App\Models\Course;
 use App\Models\Lesson;
 use App\Models\LessonInventory;
+use App\Models\School;
+use App\Models\SchoolCourseUnit;
+use App\Models\UserUnit;
 use Carbon\Carbon;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
@@ -86,6 +91,8 @@ class UnitsController extends AdminBaseController
     public function remove(Request $req)
     {
         $id = $req->id;
+        $unit = Unit::find($id);
+        $this->deleteAllocation($unit->id, $unit->course_id);
         $entry = Unit::query()->where('id', $id)->update(['deleted_at' => Carbon::now()]);
         if (!$entry) {
             throw new NotFoundHttpException();
@@ -95,10 +102,24 @@ class UnitsController extends AdminBaseController
             'message' => 'Đã xóa'
         ];
     }
+    private function deleteAllocation($unitId, $courseId){
+        AllocationContentUnit::where('unit_id', $unitId)->where('course_id',$courseId)->delete();
+        UserUnit::where('unit_id', $unitId)->where('course_id', $courseId)->delete();
+        SchoolCourseUnit::where('unit_id', $unitId)->where('course_id', $courseId)->delete();
+    }
 
     function removeUnit(Request $req)
     {
+        $units = Unit::whereIn('id', $req->unitIds)->get();
+
+        //Xoá các bảng liên quan
+        foreach ($units as $unit){
+            $this->deleteAllocation($unit->id, $unit->course_id);
+        }
         Unit::query()->whereIn('id', $req->unitIds)->update(['deleted_at' => Carbon::now()]);
+
+
+
         return [
             'code' => 0,
             'message' => 'Đã xóa'
@@ -149,6 +170,9 @@ class UnitsController extends AdminBaseController
             }
             if ($entry->course_id != $data['course_id']) {
                 $dsUnit = Unit::query()->where('course_id', $data['course_id'])->count();
+
+                //Xoá các bảng liên quan
+                $this->deleteAllocation($entry->id, $entry->course_id);
                 $entry->fill($data);
                 $entry->position = ($dsUnit + 1);
             } else {
@@ -299,6 +323,7 @@ class UnitsController extends AdminBaseController
             ]
         ];
     }
+
 
     public function dataCreateUnit(Request $req)
     {

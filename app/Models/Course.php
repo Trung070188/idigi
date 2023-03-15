@@ -38,4 +38,8 @@ class Course extends BaseModel
     {
         return $this->hasMany(Unit::class,'course_id')->orderBy('units.position', 'ASC');
     }
+    public function unit1()
+    {
+        return $this->hasMany(Unit::class,'course_id')->orderBy('units.position', 'ASC');
+    }
 }
