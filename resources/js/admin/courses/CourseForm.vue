@@ -165,7 +165,7 @@
                         subject:e.subject,
                     }
                 });
-                this.units = this.allUnits.filter(e => e.subject ==  this.entry.subject);
+                this.units = this.allUnits.filter(e => e.subject ==  this.entry.subject && !e.course_id);
 
                 this.$loading(false);
 
