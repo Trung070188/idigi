@@ -21,7 +21,7 @@
                                         <select class="form-control form-select" v-model="entry.subject" required @change="changeSubject">
                                             <option value="" disabled selected>Choose the subject</option>
                                             <option value="Math">Math</option>
-                                            <option value="Science ">Science </option>
+                                            <option value="Science">Science </option>
                                         </select>
                                         <error-label  for="f_category_id" :errors="errors.subject"></error-label>
 
@@ -163,6 +163,7 @@
                         id:e.id,
                         label:e.unit_name,
                         subject:e.subject,
+                        course_id:e.course_id,
                     }
                 });
                 this.units = this.allUnits.filter(e => e.subject ==  this.entry.subject && !e.course_id);

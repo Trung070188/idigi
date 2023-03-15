@@ -211,6 +211,7 @@
                         id:e.id,
                         label:e.unit_name,
                         subject:e.subject,
+                        course_id:e.course_id,
                     }
                 });
                 this.units = this.allUnits.filter(e => e.subject ==  this.entry.subject && !e.course_id);
