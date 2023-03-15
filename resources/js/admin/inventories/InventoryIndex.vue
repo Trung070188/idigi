@@ -651,9 +651,11 @@
                     this.entries.length;
             },
             async remove() {
+                $('#delete').modal('hide');
                 const res = await $post("/xadmin/inventories/remove", {
                     id: this.entry
                 });
+
 
                 if (res.code) {
                     toastr.error(res.message);
