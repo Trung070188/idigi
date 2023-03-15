@@ -158,7 +158,9 @@
             async load() {
                 this.$loading(true);
                 const res = await $get("/xadmin/units/getUnits");
-                this.allUnits = res.map(function(e){
+                let units = res.filter(e =>!e.course_id);
+                this.allUnits = units.map(function(e){
+
                     return {
                         id:e.id,
                         label:e.unit_name,
