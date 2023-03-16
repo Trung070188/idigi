@@ -235,110 +235,56 @@
                         </div>
 
                         <table class="table table-row-bordered align-middle gy-4 gs-9">
-                            <thead class="
-                      border-bottom border-gray-200
-                      fs-6
-                      text-gray-600
-                      fw-bolder
-                      bg-light bg-opacity-75
-                    ">
+                            <thead class=" border-bottom border-gray-200 fs-6 text-gray-600 fw-bolder bg-light bg-opacity-75 ">
                                 <tr>
-                                    <td width="25">
-                                        <div class="
-                            form-check
-                            form-check-sm
-                            form-check-custom
-                            form-check-solid
-                          ">
+                                    <td width="25" class="text-center">
+                                        <div class=" form-check form-check-sm form-check-custom form-check-solid ">
                                             <input class="form-check-input" type="checkbox" v-model="allSelected"
                                                 @change="selectAll()" />
                                         </div>
                                     </td>
-                                    <th class="">No.</th>
-                                    <th>
-                                        Name
+                                    <th class="text-center">No.</th>
+                                    <th>Name
                                         <button class="btn-sort" @click="onSort('name')">
                                             <i class="fa fa-sort"></i>
                                         </button>
                                     </th>
-                                    <th class="">Grade</th>
                                     <th class="">Type</th>
-                                    <th class="">Active</th>
-                                    <th class="">Creation Date</th>
-                                    <!--                                <th class="">Downloaded</th>-->
-                                    <th class="">Action</th>
+                                    <th class="text-center">Grade</th>
+                                    <th class="text-center">Creation Date</th>
+                                    <th class="text-center" v-if="permissions['010']">Delete</th>
+                                    <th class="text-center" v-if="permissions['008']">Active</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr v-for="(entry, index) in entries">
-                                    <td class="">
-                                        <div class="
-                            form-check
-                            form-check-sm
-                            form-check-custom
-                            form-check-solid
-                          ">
+                                    <td class="text-center">
+                                        <div class="form-check form-check-sm form-check-custom form-check-solid">
                                             <input class="form-check-input" type="checkbox" v-model="inventoryIds"
                                                 :value="entry.id" @change="updateCheckAll" />
                                         </div>
                                     </td>
-                                    <td>{{ index + from }}</td>
-                                    <td v-text="entry.name"></td>
-                                    <td class="" v-text="entry.grade"></td>
-                                    <td class="" v-text="entry.type"></td>
-                                    <td class="" v-text="entry.enabled == 0 ? 'No' : 'Yes'"></td>
-                                    <td class="" v-text="d(entry.created_at)"></td>
-                                    <!--                                <td class="" v-text="entry.download_inventory_logs_count"></td>-->
-                                    <td class="">
-                                        <a href="list.html#" class="btn btn-light btn-active-light-primary btn-sm"
-                                            data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">Actions
-                                            <!--begin::Svg Icon | path: icons/duotune/arrows/arr072.svg-->
-                                            <span class="svg-icon svg-icon-5 m-0">
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                                    viewBox="0 0 24 24" fill="none">
-                                                    <path
-                                                        d="M11.4343 12.7344L7.25 8.55005C6.83579 8.13583 6.16421 8.13584 5.75 8.55005C5.33579 8.96426 5.33579 9.63583 5.75 10.05L11.2929 15.5929C11.6834 15.9835 12.3166 15.9835 12.7071 15.5929L18.25 10.05C18.6642 9.63584 18.6642 8.96426 18.25 8.55005C17.8358 8.13584 17.1642 8.13584 16.75 8.55005L12.5657 12.7344C12.2533 13.0468 11.7467 13.0468 11.4343 12.7344Z"
-                                                        fill="black" />
-                                                </svg>
-                                            </span>
-                                        </a>
-
-                                        <div class="
-                            menu
-                            menu-sub
-                            menu-sub-dropdown
-                            menu-column
-                            menu-rounded
-                            menu-gray-600
-                            menu-state-bg-light-primary
-                            fw-bold
-                            fs-7
-                            w-auto
-                            py-4
-                          " data-kt-menu="true">
-                                            <div class="menu-item px-3">
-                                                <a :href="
-                                                    '/xadmin/inventories/edit?id=' +
-                                                    entry.id
-                                                " v-if="permissions['008']" class="menu-link px-3">Edit</a>
-                                            </div>
-                                            <div class="menu-item px-3">
-                                                <a class="menu-link text-danger px-3" @click="removeResource(entry.id)"
-                                                    href="javascript:;" v-if="permissions['010']"
-                                                    data-kt-subscriptions-table-filter="delete_row">Delete</a>
-                                            </div>
-                                        </div>
+                                    <td class="cursor-pointer text-center" @click="edit(entry.id, permissions['008'])" v-text="index + from"></td>
+                                    <td class="cursor-pointer" @click="edit(entry.id, permissions['008'])" v-text="entry.name"></td>
+                                    <td class="cursor-pointer" @click="edit(entry.id, permissions['008'])" v-text="entry.type"></td>
+                                    <td class="cursor-pointer text-center" @click="edit(entry.id, permissions['008'])" v-text="entry.grade"></td>
+                                    <td class="cursor-pointer text-center" @click="edit(entry.id, permissions['008'])" v-text="d(entry.created_at)"></td>
+                                    <td class="text-center" v-if="permissions['010']">
+                                        <i class="bi bi-trash" style="font-size: 20px" @click="removeResource(entry.id)"></i>
+                                    </td>
+                                    <td class="text-center" v-if="permissions['008']">
+                                        <switch-button v-model="entry.enabled" @change="toggleEnable(entry)"></switch-button>
                                     </td>
                                 </tr>
                             </tbody>
                         </table>
                         <div class="d-flex pl-9 pr-9 mb-8">
                             <div class="
-                      col-sm-12 col-md-5
-                      d-flex
-                      align-items-center
-                      justify-content-center justify-content-md-start
-                    ">
+                              col-sm-12 col-md-5
+                              d-flex
+                              align-items-center
+                              justify-content-center justify-content-md-start
+                            ">
                                 <!--<div class="mr-2">
                                     <label>Records per page:</label>
                                 </div>-->
@@ -353,11 +299,11 @@
                             </div>
                             <!--<div style="float: right; margin: 10px">-->
                             <div class="
-                      col-sm-12 col-md-7
-                      d-flex
-                      align-items-center
-                      justify-content-center justify-content-md-end
-                    ">
+                              col-sm-12 col-md-7
+                              d-flex
+                              align-items-center
+                              justify-content-center justify-content-md-end
+                            ">
                                 <div class="dataTables_paginate paging_simple_numbers" id="kt_customers_table_paginate">
                                     <Paginate :value="paginate" :pagechange="onPageChange"></Paginate>
                                 </div>
@@ -436,8 +382,8 @@ export default {
             this.entry = deleteResource;
 
         },
-        edit: function (id, event) {
-            if (!$(event.target).hasClass("deleted")) {
+        edit: function (id, permission) {
+            if (permission) {
                 window.location.href = "/xadmin/inventories/edit?id=" + id;
             }
         },
@@ -567,12 +513,29 @@ export default {
         },
         deleteMultipleConfirm() {
             $('#deleteMutiple').modal('show');
-        }
+        },
+        async toggleEnable(entry) {
+                const res = await $post('/xadmin/inventories/toggleStatus', {
+                    id: entry.id,
+                    active: entry.active
+                });
+
+                if (res.code === 200) {
+                    toastr.success(res.message);
+                } else {
+                    toastr.error(res.message);
+                }
+
+            },
     }
 };
 </script>
 
 <style scoped>
+.cursor-pointer{
+    cursor: pointer;
+}
+
 .btn-sort {
     border: none;
 }
@@ -587,5 +550,4 @@ option[value=""][disabled] {
 
 option {
     color: black;
-}
-</style>
+}</style>
