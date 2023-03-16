@@ -270,10 +270,12 @@
                                     <td class="cursor-pointer text-center" @click="edit(entry.id, permissions['008'])" v-text="entry.grade"></td>
                                     <td class="cursor-pointer text-center" @click="edit(entry.id, permissions['008'])" v-text="d(entry.created_at)"></td>
                                     <td class="text-center" v-if="permissions['010']">
-                                        <i class="bi bi-trash" style="font-size: 20px" @click="removeResource(entry.id)"></i>
+                                        <i class="bi bi-trash cursor-pointer text-danger font-size-h1" @click="removeResource(entry.id)"></i>
                                     </td>
                                     <td class="text-center" v-if="permissions['008']">
-                                        <switch-button v-model="entry.enabled" @change="toggleEnable(entry)"></switch-button>
+                                        <div class="form-check form-switch form-check-custom form-check-primary justify-content-center">
+                                            <input v-model="entry.enabled" @change="toggleEnable(entry)" class="form-check-input" type="checkbox" value="" id="flexSwitchDefault">
+                                        </div>
                                     </td>
                                 </tr>
                             </tbody>
@@ -532,8 +534,9 @@ export default {
 </script>
 
 <style scoped>
-.cursor-pointer{
-    cursor: pointer;
+.form-check.form-check-primary .form-check-input:checked{
+    background-color: #2196f3 !important;
+    border-color: #2196f3!important;
 }
 
 .btn-sort {

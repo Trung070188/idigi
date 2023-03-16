@@ -312,7 +312,7 @@
                                     <td class="cursor-pointer text-center" @click="edit(entry.id)"
                                         v-text="d(entry.created_at)"></td>
                                     <td class="text-center" v-if="permissions['012']">
-                                        <i class="bi bi-trash text-danger cursor-pointer" :title="'Delete ' + entry.name"
+                                        <i class="bi bi-trash text-danger cursor-pointer font-size-h1" :title="'Delete ' + entry.name"
                                             @click="deleteLession(entry)"></i>
                                     </td>
                                     <td class="text-center" v-if="permissions['043']">
@@ -321,7 +321,7 @@
                                         </div>
                                     </td>
                                     <td class="text-center">
-                                        <i class="bi bi-download text-success cursor-pointer"
+                                        <i class="bi bi-download text-success cursor-pointer font-size-h1"
                                             :title="'Download ' + entry.name" @click="openModalEntry(entry)"></i>
                                     </td>
 
