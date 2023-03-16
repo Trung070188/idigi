@@ -5,8 +5,10 @@ namespace App\Exports;
 
 use Illuminate\Contracts\View\View;
 use Maatwebsite\Excel\Concerns\FromView;
+use Maatwebsite\Excel\Concerns\WithColumnWidths;
 
-class SchoolErrorExport implements FromView
+
+class SchoolErrorExport implements FromView, WithColumnWidths
 {
     protected $data;
 
@@ -22,16 +24,18 @@ class SchoolErrorExport implements FromView
         return view('exports.school_error', compact('data'));
     }
 
-//    public function columnWidths(): array
-//    {
-//        return [
-//            'A'=>20,
-//            'B'=>25,
-//            'C'=>25,
-//            'D'=>11,
-//            'E'=>30,
-//            'F'=>6,
-//            'G'=>40
-//        ];
-//    }
+    public function columnWidths(): array
+    {
+        return [
+            'A' => 25,
+            'B' => 20,
+            'C' => 30,
+            'D' => 11,
+            'E' => 11,
+            'F' => 6,
+            'G' => 6,
+            'H' => 20,
+            'I' => 40
+        ];
+    }
 }

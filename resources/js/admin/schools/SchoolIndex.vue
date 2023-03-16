@@ -107,10 +107,14 @@
                                                                             <div class="dropzone-filename text-dark"
                                                                                  title="some_image_file_name.jpg">
                                                                                 <span
-                                                                                    data-dz-name="">{{ fileUpLoad }}</span>
+                                                                                    data-dz-name="">{{
+                                                                                        fileUpLoad
+                                                                                    }}</span>
                                                                                 <strong>(
                                                                                     <span
-                                                                                        data-dz-size="">{{ sizeFile }}</span>)</strong>
+                                                                                        data-dz-size="">{{
+                                                                                            sizeFile
+                                                                                        }}</span>)</strong>
                                                                             </div>
                                                                             <div class="dropzone-error mt-0"
                                                                                  data-dz-errormessage=""></div>
@@ -128,11 +132,15 @@
                                                                 </div>
                                                                 <div v-if="valueValidateImportSchool==0"
                                                                      class="dropzone-panel mb-4  ">
-                                                                    <a class="btn btn-light btn-active-light-primary btn-sm"
-                                                                       data-kt-menu-trigger="click"
-                                                                       @click="downloadTemplate()"><i
-                                                                        class="bi bi-download mr-2"></i>Download
-                                                                        template here</a>
+                                                                    <a @click="downloadTemplate()" style="color: #696CFF;cursor:pointer">
+                                                                        <i class="bi bi-download mr-2"></i>
+                                                                        Download template import school here
+                                                                    </a>
+                                                                    <br>
+                                                                    <a @click="downloadTemplateDistrict()" style="color: #696CFF;cursor:pointer;margin-top:10px;display:flex">
+                                                                        <i class="bi bi-download mr-2"></i>
+                                                                        Download template City/District here
+                                                                    </a>
 
                                                                 </div>
                                                             </div>
@@ -704,8 +712,8 @@ export default {
 
         return {
             errors: {},
-            disableContinue:false,
-            doNotImport:0,
+            disableContinue: false,
+            doNotImport: 0,
             fileError: [],
             fileImport: [],
             valueValidateImportSchool: 0,
@@ -757,9 +765,9 @@ export default {
                 this.fileUpLoad = '';
                 this.$refs.uploader.value = null;
                 this.valueValidateImportTeacher = 0;
-                this.fileImport.length=0;
-                this.fileError.length=0;
-                this.disableContinue=false;
+                this.fileImport.length = 0;
+                this.fileError.length = 0;
+                this.disableContinue = false;
 
             }
         },
@@ -769,14 +777,13 @@ export default {
         async validateImportSchool() {
             console.log(1);
             this.errors = {};
-            this.valueValidateImportSchool=1;
+            this.valueValidateImportSchool = 1;
             const files = this.$refs.uploader.files;
             const formData = new FormData();
             formData.append('_token', window.$csrf);
             console.log(files);
-            files.forEach(function(e,index)
-            {
-                formData.append(index,e);
+            files.forEach(function (e, index) {
+                formData.append(index, e);
             })
             // forEach(files, (v, k) => {
             //     formData.append(k, v);
@@ -799,21 +806,20 @@ export default {
             if (res.code == 2) {
                 this.code = res.code;
                 this.fileError = res.fileError;
-                this.fileImport=res.fileImport;
-                this.errorName=res.errorFileName;
+                this.fileImport = res.fileImport;
+                this.errorName = res.errorFileName;
             }
             if (res.code == 0) {
                 this.fileImport = res.fileImport;
             }
         },
-        async saveImport()
-        {
-            if (this.doNotImport ==0) {
+        async saveImport() {
+            if (this.doNotImport == 0) {
                 {
                     this.$loading(true);
                     const res = await $post('/xadmin/schools/import', {
                         fileImport: this.fileImport,
-                        school_id:this.entry.id,
+                        school_id: this.entry.id,
                     }, false);
                     this.$loading(false);
                     if (res.code) {
@@ -821,68 +827,66 @@ export default {
                     } else {
                         this.errors = {};
                         toastr.success(res.message);
-                        let self=this;
+                        let self = this;
                         $('#kt_modal_create_app').modal('hide');
                         self.$refs.uploader.value = null;
-                        self.fileUpLoad='';
-                        self.valueValidateImportSchool=0;
-                        self.fileImport.length=0;
-                        self.fileError.length=0;
+                        self.fileUpLoad = '';
+                        self.valueValidateImportSchool = 0;
+                        self.fileImport.length = 0;
+                        self.fileError.length = 0;
                         location.reload();
                     }
                 }
             }
-            if (this.doNotImport ==1) {
+            if (this.doNotImport == 1) {
                 $('#kt_modal_create_app').modal('hide');
                 this.$refs.uploader.value = null;
-                this.fileUpLoad='';
-                this.valueValidateImportSchool=0;
-                this.fileImport.length=0;
-                this.fileError.length=0;
+                this.fileUpLoad = '';
+                this.valueValidateImportSchool = 0;
+                this.fileImport.length = 0;
+                this.fileError.length = 0;
                 location.reload();
             }
 
         },
-        exportErrorImportSchool()
-        {
-            window.location.href='/xadmin/schools/exportErrorSchool?fileError='+ this.errorName;
+        exportErrorImportSchool() {
+            window.location.href = '/xadmin/schools/exportErrorSchool?fileError=' + this.errorName;
         },
-        downloadTemplate()
+        downloadTemplate() {
+            window.location.href = '/xadmin/schools/downloadTemplate';
+        },
+        downloadTemplateDistrict()
         {
-            window.location.href= '/xadmin/schools/downloadTemplate';
+            window.location.href = '/xadmin/schools/downloadTemplateDistrict';
+
         },
         async importFileSchool() {
-            const fileExtension =this.$refs.uploader.files[0].name.split('.').pop();
-            if(fileExtension!=='xlsx')
-            {
-                return  this.errors={
-                    'sizeFile':['The file is not in the correct format']
+            const fileExtension = this.$refs.uploader.files[0].name.split('.').pop();
+            if (fileExtension !== 'xlsx') {
+                return this.errors = {
+                    'sizeFile': ['The file is not in the correct format']
                 };
-            }
-            else {
-                this.errors={};
-                let fileSize=(this.$refs.uploader.files[0].size.toString());
-                if(fileSize.length < 7)
-                {
-                    let size= `${Math.round(+fileSize/1024).toFixed(2)}kb`
-                    this.sizeFile=size;
+            } else {
+                this.errors = {};
+                let fileSize = (this.$refs.uploader.files[0].size.toString());
+                if (fileSize.length < 7) {
+                    let size = `${Math.round(+fileSize / 1024).toFixed(2)}kb`
+                    this.sizeFile = size;
 
-                }
-                else {
-                    let size= `${(Math.round(+fileSize/1024)/1000).toFixed(2)}MB`;
-                    let numberSize=(Math.round(+fileSize/1024)/1000).toFixed(2)
-                    this.sizeFile=size;
-                    if(numberSize>5)
-                    {
-                        return  this.errors={
-                            'sizeFile':['Max file size is 5Mb']
+                } else {
+                    let size = `${(Math.round(+fileSize / 1024) / 1000).toFixed(2)}MB`;
+                    let numberSize = (Math.round(+fileSize / 1024) / 1000).toFixed(2)
+                    this.sizeFile = size;
+                    if (numberSize > 5) {
+                        return this.errors = {
+                            'sizeFile': ['Max file size is 5Mb']
                         };
 
                     }
 
                 }
                 this.fileUpLoad = this.$refs.uploader.files[0].name;
-                this.disableContinue=true;
+                this.disableContinue = true;
                 this.validateImportSchool();
             }
         },
@@ -1053,6 +1057,7 @@ export default {
 input[type="file"] {
     display: none;
 }
+
 td {
     cursor: pointer;
 }
