@@ -1158,6 +1158,10 @@ class SchoolsController extends AdminBaseController
     {
         return response()->download(public_path('sample/Import_School_Template_a.xlsx'));
     }
+    public function downloadTemplateDistrict(): BinaryFileResponse
+    {
+        return response()->download(public_path('sample/District - Province.xlsx'));
+    }
 
     public function validateImportSchool(Request $req)
     {
