@@ -263,21 +263,22 @@
                             <thead
                                 class="border-bottom border-gray-200 fs-6 text-gray-600 fw-bolder bg-light bg-opacity-75">
                                 <tr>
-                                    <td width="25">
+                                    <td width="25" class="text-center">
                                         <div class="form-check form-check-sm form-check-custom form-check-solid">
                                             <input class="form-check-input" type="checkbox" v-model="allSelected"
                                                 @change="selectAll()">
                                         </div>
                                     </td>
-                                    <th class="">No.</th>
-                                    <th>Lesson</th>
-                                    <th>Lesson ID</th>
+                                    <th class="text-center">No.</th>
+                                    <th class="">Lesson name</th>
+                                    <th class="text-center">Lesson ID</th>
                                     <th class="">Unit</th>
                                     <th class="">Subject</th>
-                                    <th class="">Active</th>
-                                    <th class="">Downloaded</th>
-                                    <th class="">Creation Date</th>
-                                    <th class="">Action</th>
+                                    <th class="text-center">Downloaded</th>
+                                    <th class="text-center">Creation Date</th>
+                                    <th class="text-center" v-if="permissions['012']">Delete</th>
+                                    <th class="text-center" v-if="permissions['043']">Active</th>
+                                    <th class="text-center">Download</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -285,60 +286,45 @@
                                     <td valign="top" colspan="10" class="text-center"
                                         style="font-size: 15px;font-weight: bold">Resource allocation has been deactivated
                                         by {{ user.full_name_active_content }}.</td>
-
                                 </tr>
-
                                 <tr v-if="user.active_allocation == 1 && entries.length == 0">
                                     <td valign="top" colspan="10" class="text-center">No results found. Try different
                                         keywords or remove search filters.</td>
-
                                 </tr>
 
                                 <tr v-for="(entry, index) in entries"
-                                    v-if="user.active_allocation == 1 && entries.length > 0" style="cursor: pointer">
-                                    <td class="">
+                                    v-if="user.active_allocation == 1 && entries.length > 0">
+                                    <td class="text-center">
                                         <div class="form-check form-check-sm form-check-custom form-check-solid">
                                             <input class="form-check-input" type="checkbox" v-model="lessonIds"
                                                 :value="entry.id" @change="updateCheckAll">
                                         </div>
                                     </td>
-                                    <td @click="edit(entry.id)">{{ ((index + 1) + (from + 1)) - 2 }}</td>
-                                    <td v-text="entry.name" @click="edit(entry.id)"></td>
-                                    <td v-text="entry.id" @click="edit(entry.id)"></td>
-                                    <td class="" v-text="entry.unit ? entry.unit.unit_name : ''" @click="edit(entry.id)">
+                                    <td class="cursor-pointer text-center" @click="edit(entry.id)">{{ ((index + 1) + (from +
+                                        1)) - 2 }}</td>
+                                    <td class="cursor-pointer " @click="edit(entry.id)" v-text="entry.name"></td>
+                                    <td class="cursor-pointer text-center" @click="edit(entry.id)" v-text="entry.id"></td>
+                                    <td class="cursor-pointer " @click="edit(entry.id)"
+                                        v-text="entry.unit ? entry.unit.unit_name : ''"></td>
+                                    <td class="cursor-pointer " @click="edit(entry.id)" v-text="entry.subject"></td>
+                                    <td class="cursor-pointer text-center" @click="edit(entry.id)"
+                                        v-text="entry.total_download"></td>
+                                    <td class="cursor-pointer text-center" @click="edit(entry.id)"
+                                        v-text="d(entry.created_at)"></td>
+                                    <td class="text-center" v-if="permissions['012']">
+                                        <i class="bi bi-trash text-danger cursor-pointer" :title="'Delete ' + entry.name"
+                                            @click="deleteLession(entry)"></i>
                                     </td>
-                                    <td class="" v-text="entry.subject" @click="edit(entry.id)"></td>
-                                    <td class="" v-text="entry.enabled == 0 ? 'No' : 'Yes'" @click="edit(entry.id)"></td>
-                                    <td class="" v-text="entry.total_download" @click="edit(entry.id)"></td>
-                                    <td class="" v-text="d(entry.created_at)" @click="edit(entry.id)"></td>
-                                    <td class="">
-                                        <a href="list.html#" class="btn btn-light btn-active-light-primary btn-sm"
-                                            data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">Actions
-                                            <!--begin::Svg Icon | path: icons/duotune/arrows/arr072.svg-->
-                                            <span class="svg-icon svg-icon-5 m-0">
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                                    viewBox="0 0 24 24" fill="none">
-                                                    <path
-                                                        d="M11.4343 12.7344L7.25 8.55005C6.83579 8.13583 6.16421 8.13584 5.75 8.55005C5.33579 8.96426 5.33579 9.63583 5.75 10.05L11.2929 15.5929C11.6834 15.9835 12.3166 15.9835 12.7071 15.5929L18.25 10.05C18.6642 9.63584 18.6642 8.96426 18.25 8.55005C17.8358 8.13584 17.1642 8.13584 16.75 8.55005L12.5657 12.7344C12.2533 13.0468 11.7467 13.0468 11.4343 12.7344Z"
-                                                        fill="black" />
-                                                </svg>
-                                            </span>
-                                        </a>
-
-                                        <div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-bold fs-7 w-auto py-4"
-                                            data-kt-menu="true">
-
-                                            <div class="menu-item px-3">
-                                                <a @click="openModalEntry(entry)" class="menu-link px-3">Download</a>
-                                            </div>
-                                            <div class="menu-item px-3">
-                                                <a class="menu-link text-danger px-3" v-if="permissions['012']"
-                                                    @click="deleteLession(entry)"
-                                                    data-kt-subscriptions-table-filter="delete_row">Remove</a>
-
-                                            </div>
+                                    <td class="text-center" v-if="permissions['043']">
+                                        <div class="form-check form-switch form-check-custom form-check-primary justify-content-center">
+                                            <input v-model="entry.enabled" @change="toggleStatus(entry)" class="form-check-input" type="checkbox" value="" id="flexSwitchDefault">
                                         </div>
                                     </td>
+                                    <td class="text-center">
+                                        <i class="bi bi-download text-success cursor-pointer"
+                                            :title="'Download ' + entry.name" @click="openModalEntry(entry)"></i>
+                                    </td>
+
                                 </tr>
                             </tbody>
                         </table>
@@ -615,6 +601,11 @@ export default {
 </script>
 
 <style scoped>
+.form-check.form-check-primary .form-check-input:checked{
+    background-color: #2196f3 !important;
+    border-color: #2196f3!important;
+}
+
 ul.device {
     list-style-type: none;
 }
@@ -629,5 +620,4 @@ option[value=""][disabled] {
 
 option {
     color: black;
-}
-</style>
+}</style>

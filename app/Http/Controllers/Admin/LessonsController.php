@@ -273,7 +273,7 @@ class LessonsController extends AdminBaseController
             ];
         }
 
-        $entry->status = $req->status ? 1 : 0;
+        $entry->enabled = $req->status ? 1 : 0;
         $entry->save();
 
         return [
