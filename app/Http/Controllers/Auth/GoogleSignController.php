@@ -22,30 +22,27 @@ class GoogleSignController
             $userInfo = curl_get_json('https://www.googleapis.com/oauth2/v3/tokeninfo?id_token='.$token);
 
             if (isset($userInfo['email']) && $userInfo['aud'] === $aud) {
+
                 /**
                  * @var User $user
                  */
                 $user = User::where('email', $userInfo['email'])->first();
 
                 if (!$user) {
-                    return [
-                        'code' => 2,
-                        'message' => 'Login fail',
+                    $data = [
+                        'email' => @$userInfo['email'],
+                        'username' => @$userInfo['email'],
+                        'full_name' => @$userInfo['name'],
+                        'created_at' => date('Y-m-d H:i:s'),
                     ];
+                    $user = User::create($data);
                 }
 
-                $user->last_login = date('Y-m-d H:i:s');
-
-                if (!empty($userInfo['picture']) && $userInfo['picture'] != $user->avatar) {
-                    $user->image = $userInfo['picture'];
-                }
-
-                $user->save();
                 Auth::login($user);
 
                 return [
                     'code' => 200,
-                    'redirect' => '/xadmin/lessons/index',
+                    'redirect' => '/xadmin',
                 ];
             }
         } catch (\Exception $e) {
