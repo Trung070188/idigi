@@ -499,7 +499,7 @@ class SchoolsController extends AdminBaseController
 
         $rules = [
             'label' => ['required', 'regex:/^[\p{L}\s\/0-9.,_-]+$/u'],
-            'school_address' => [ 'max:255', 'regex:/^[\p{L}\s\/0-9.,_-]+$/u'],
+            'school_address' => [ 'max:255'],
             'province_id' => ['required'],
             'district_id' => ['required'],
             'number_of_users' => 'required|min:1|integer',
@@ -523,12 +523,12 @@ class SchoolsController extends AdminBaseController
         ];
 
         $v = Validator::make($data, $rules, $message, $dataContent);
-        $v->after(function ($validate) use ($dataContent) {
+       /* $v->after(function ($validate) use ($dataContent) {
             if (!isset($data['id']) && $dataContent['allocationContentSchool'] == "") {
                 $validate->errors()->add('allocationContentSchool', 'Resource allocation field is required ');
 
             }
-        });
+        });*/
 
         if ($v->fails()) {
             return [
