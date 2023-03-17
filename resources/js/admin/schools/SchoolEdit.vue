@@ -186,17 +186,17 @@
 
                                         <select class="form-control form-select " required v-model="allocationContentSchool" :disabled="permissionFields['school_content']==false"
                                                 @change="changeAllocationContent() ">
-
+                                            <option value="">---</option>
                                             <option v-for="allocationContent in allocationContents"
                                                     :value="allocationContent.id">{{allocationContent.title}}
                                             </option>
                                         </select>
 
                                     </div>
-                                    <div class="col-lg-4" v-if="permissionFields['school_content']==false && ['036']">
+                                    <div class="col-lg-4" v-if="permissionFields['school_content']==false && ['036'] && allocationContentSchool">
                                             <button style="margin: 20px 0px 0px" class="btn btn-primary" disabled><i class="bi bi-pencil-square mr-1"></i>Edit</button>
                                     </div>
-                                    <div class="col-lg-4" v-if="permissionFields['school_content']==true && permissions['036']">
+                                    <div class="col-lg-4" v-if="permissionFields['school_content']==true && permissions['036'] && allocationContentSchool">
                                         <a :href="'/xadmin/allocation_contents/edit?id='+allocationContentSchool" >
                                             <button style="margin: 20px 0px 0px" class="btn btn-primary" ><i class="bi bi-pencil-square mr-1"></i>Edit</button>
                                         </a>
