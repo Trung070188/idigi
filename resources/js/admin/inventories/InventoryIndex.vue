@@ -234,8 +234,9 @@
                             </div>
                         </div>
 
-                        <table class="table table-row-bordered align-middle gy-4 gs-9">
-                            <thead class=" border-bottom border-gray-200 fs-6 text-gray-600 fw-bolder bg-light bg-opacity-75 ">
+                        <table class="table table-hover table-row-bordered align-middle gy-4 gs-9">
+                            <thead
+                                class=" border-bottom border-gray-200 fs-6 text-gray-600 fw-bolder bg-light bg-opacity-75 ">
                                 <tr>
                                     <td width="25" class="text-center">
                                         <div class=" form-check form-check-sm form-check-custom form-check-solid ">
@@ -252,29 +253,40 @@
                                     <th class="">Type</th>
                                     <th class="text-center">Grade</th>
                                     <th class="text-center">Creation Date</th>
-                                    <th class="text-center" v-if="permissions['010']">Delete</th>
                                     <th class="text-center" v-if="permissions['008']">Active</th>
+                                    <th class="text-center" v-if="permissions['010']">Action</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr v-for="(entry, index) in entries">
+                                <tr class="cursor-pointer" v-for="(entry, index) in entries"
+                                    v-on:mouseover="mouseover(entry.id)" v-on:mouseleave="mouseleave()">
                                     <td class="text-center">
                                         <div class="form-check form-check-sm form-check-custom form-check-solid">
                                             <input class="form-check-input" type="checkbox" v-model="inventoryIds"
                                                 :value="entry.id" @change="updateCheckAll" />
                                         </div>
                                     </td>
-                                    <td class="cursor-pointer text-center" @click="edit(entry.id, permissions['008'])" v-text="index + from"></td>
-                                    <td class="cursor-pointer" @click="edit(entry.id, permissions['008'])" v-text="entry.name"></td>
-                                    <td class="cursor-pointer" @click="edit(entry.id, permissions['008'])" v-text="entry.type"></td>
-                                    <td class="cursor-pointer text-center" @click="edit(entry.id, permissions['008'])" v-text="entry.grade"></td>
-                                    <td class="cursor-pointer text-center" @click="edit(entry.id, permissions['008'])" v-text="d(entry.created_at)"></td>
-                                    <td class="text-center" v-if="permissions['010']">
-                                        <i class="bi bi-trash cursor-pointer text-danger font-size-h1" @click="removeResource(entry.id)"></i>
-                                    </td>
+                                    <td class="text-center" @click="edit(entry.id, permissions['008'])"
+                                        v-text="index + from"></td>
+                                    <td class="" @click="edit(entry.id, permissions['008'])"
+                                        v-text="entry.name"></td>
+                                    <td class="" @click="edit(entry.id, permissions['008'])"
+                                        v-text="entry.type"></td>
+                                    <td class=" text-center" @click="edit(entry.id, permissions['008'])"
+                                        v-text="entry.grade"></td>
+                                    <td class=" text-center" @click="edit(entry.id, permissions['008'])"
+                                        v-text="d(entry.created_at)"></td>
                                     <td class="text-center" v-if="permissions['008']">
-                                        <div class="form-check form-switch form-check-custom form-check-primary justify-content-center">
-                                            <input v-model="entry.enabled" @change="toggleEnable(entry)" class="form-check-input" type="checkbox" value="" id="flexSwitchDefault">
+                                        <div
+                                            class="form-check form-switch form-check-custom form-check-primary justify-content-center">
+                                            <input v-model="entry.enabled" @change="toggleEnable(entry)"
+                                                class="form-check-input" type="checkbox" value="" id="flexSwitchDefault">
+                                        </div>
+                                    </td>
+                                    <td class="text-center" v-if="permissions['010']">
+                                        <div class="d-flex justify-content-around">
+                                            <i :class="'bi bi-trash text-danger cursor-pointer action-btn action-btn-' + entry.id"
+                                                :title="'Delete ' + entry.name" @click="removeResource(entry.id)"></i>
                                         </div>
                                     </td>
                                 </tr>
@@ -282,11 +294,11 @@
                         </table>
                         <div class="d-flex pl-9 pr-9 mb-8">
                             <div class="
-                              col-sm-12 col-md-5
-                              d-flex
-                              align-items-center
-                              justify-content-center justify-content-md-start
-                            ">
+                                      col-sm-12 col-md-5
+                                      d-flex
+                                      align-items-center
+                                      justify-content-center justify-content-md-start
+                                    ">
                                 <!--<div class="mr-2">
                                     <label>Records per page:</label>
                                 </div>-->
@@ -301,11 +313,11 @@
                             </div>
                             <!--<div style="float: right; margin: 10px">-->
                             <div class="
-                              col-sm-12 col-md-7
-                              d-flex
-                              align-items-center
-                              justify-content-center justify-content-md-end
-                            ">
+                                      col-sm-12 col-md-7
+                                      d-flex
+                                      align-items-center
+                                      justify-content-center justify-content-md-end
+                                    ">
                                 <div class="dataTables_paginate paging_simple_numbers" id="kt_customers_table_paginate">
                                     <Paginate :value="paginate" :pagechange="onPageChange"></Paginate>
                                 </div>
@@ -517,26 +529,33 @@ export default {
             $('#deleteMutiple').modal('show');
         },
         async toggleEnable(entry) {
-                const res = await $post('/xadmin/inventories/toggleStatus', {
-                    id: entry.id,
-                    active: entry.active
-                });
+            const res = await $post('/xadmin/inventories/toggleStatus', {
+                id: entry.id,
+                active: entry.active
+            });
 
-                if (res.code === 200) {
-                    toastr.success(res.message);
-                } else {
-                    toastr.error(res.message);
-                }
+            if (res.code === 200) {
+                toastr.success(res.message);
+            } else {
+                toastr.error(res.message);
+            }
 
-            },
+        },
+        mouseover(id) {
+
+            $('.action-btn-' + id).show();
+        },
+        mouseleave() {
+            $('.action-btn').hide();
+        }
     }
 };
 </script>
 
 <style scoped>
-.form-check.form-check-primary .form-check-input:checked{
+.form-check.form-check-primary .form-check-input:checked {
     background-color: #2196f3 !important;
-    border-color: #2196f3!important;
+    border-color: #2196f3 !important;
 }
 
 .btn-sort {
@@ -553,4 +572,5 @@ option[value=""][disabled] {
 
 option {
     color: black;
-}</style>
+}
+</style>

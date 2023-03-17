@@ -259,7 +259,7 @@
                         </div>
 
                         <!--<table class=" table  table-head-custom table-head-bg table-vertical-center">-->
-                        <table class="table table-row-bordered align-middle gy-4 gs-9">
+                        <table class="table table-hover table-row-bordered align-middle gy-4 gs-9">
                             <thead
                                 class="border-bottom border-gray-200 fs-6 text-gray-600 fw-bolder bg-light bg-opacity-75">
                                 <tr>
@@ -276,9 +276,8 @@
                                     <th class="">Subject</th>
                                     <th class="text-center">Downloaded</th>
                                     <th class="text-center">Creation Date</th>
-                                    <th class="text-center" v-if="permissions['012']">Delete</th>
                                     <th class="text-center" v-if="permissions['043']">Active</th>
-                                    <th class="text-center">Download</th>
+                                    <th class="text-center">Action</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -292,39 +291,42 @@
                                         keywords or remove search filters.</td>
                                 </tr>
 
-                                <tr v-for="(entry, index) in entries"
-                                    v-if="user.active_allocation == 1 && entries.length > 0">
+                                <tr class="cursor-pointer" v-for="(entry, index) in entries"
+                                    v-if="user.active_allocation == 1 && entries.length > 0"
+                                    v-on:mouseover="mouseover(entry.id)"
+                                    v-on:mouseleave="mouseleave()">
                                     <td class="text-center">
                                         <div class="form-check form-check-sm form-check-custom form-check-solid">
                                             <input class="form-check-input" type="checkbox" v-model="lessonIds"
                                                 :value="entry.id" @change="updateCheckAll">
                                         </div>
                                     </td>
-                                    <td class="cursor-pointer text-center" @click="edit(entry.id)">{{ ((index + 1) + (from +
+                                    <td class="text-center" @click="edit(entry.id)">{{ ((index + 1) + (from +
                                         1)) - 2 }}</td>
-                                    <td class="cursor-pointer " @click="edit(entry.id)" v-text="entry.name"></td>
-                                    <td class="cursor-pointer text-center" @click="edit(entry.id)" v-text="entry.id"></td>
-                                    <td class="cursor-pointer " @click="edit(entry.id)"
+                                    <td class="" @click="edit(entry.id)" v-text="entry.name"></td>
+                                    <td class="text-center" @click="edit(entry.id)" v-text="entry.id"></td>
+                                    <td class="" @click="edit(entry.id)"
                                         v-text="entry.unit ? entry.unit.unit_name : ''"></td>
-                                    <td class="cursor-pointer " @click="edit(entry.id)" v-text="entry.subject"></td>
-                                    <td class="cursor-pointer text-center" @click="edit(entry.id)"
+                                    <td class="" @click="edit(entry.id)" v-text="entry.subject"></td>
+                                    <td class="text-center" @click="edit(entry.id)"
                                         v-text="entry.total_download"></td>
-                                    <td class="cursor-pointer text-center" @click="edit(entry.id)"
+                                    <td class="text-center" @click="edit(entry.id)"
                                         v-text="d(entry.created_at)"></td>
-                                    <td class="text-center" v-if="permissions['012']">
-                                        <i class="bi bi-trash text-danger cursor-pointer font-size-h1" :title="'Delete ' + entry.name"
-                                            @click="deleteLession(entry)"></i>
-                                    </td>
                                     <td class="text-center" v-if="permissions['043']">
-                                        <div class="form-check form-switch form-check-custom form-check-primary justify-content-center">
-                                            <input v-model="entry.enabled" @change="toggleStatus(entry)" class="form-check-input" type="checkbox" value="" id="flexSwitchDefault">
+                                        <div
+                                            class="form-check form-switch form-check-custom form-check-primary justify-content-center">
+                                            <input v-model="entry.enabled" @change="toggleStatus(entry)"
+                                                class="form-check-input" type="checkbox" value="" id="flexSwitchDefault">
                                         </div>
                                     </td>
-                                    <td class="text-center">
-                                        <i class="bi bi-download text-success cursor-pointer font-size-h1"
-                                            :title="'Download ' + entry.name" @click="openModalEntry(entry)"></i>
+                                    <td class="text-center ">
+                                        <div class="d-flex justify-content-around">
+                                            <i :class="'bi bi-download text-success cursor-pointer action-btn action-btn-' + entry.id" :title="'Download ' + entry.name"
+                                                @click="openModalEntry(entry)"></i>
+                                            <i :class="'bi bi-trash text-danger cursor-pointer action-btn action-btn-' + entry.id" v-if="permissions['012']"
+                                                :title="'Delete ' + entry.name" @click="deleteLession(entry)"></i>
+                                        </div>
                                     </td>
-
                                 </tr>
                             </tbody>
                         </table>
@@ -595,17 +597,19 @@ export default {
         deleteLession(entry) {
             $('#delete').modal('show');
             this.lessonToDelete = entry;
+        },
+        mouseover(id) {
+
+            $('.action-btn-' + id).show();
+        },
+        mouseleave() {
+            $('.action-btn').hide();
         }
     }
 }
 </script>
 
 <style scoped>
-.form-check.form-check-primary .form-check-input:checked{
-    background-color: #2196f3 !important;
-    border-color: #2196f3!important;
-}
-
 ul.device {
     list-style-type: none;
 }

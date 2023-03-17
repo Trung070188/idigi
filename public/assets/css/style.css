@@ -237,3 +237,11 @@ body {
         padding: 30px 0;
     }
 }
+.action-btn {
+    display: none;
+}
+
+.form-check.form-check-primary .form-check-input:checked {
+    background-color: #2196f3 !important;
+    border-color: #2196f3 !important;
+}
