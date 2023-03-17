@@ -1053,6 +1053,12 @@ export default {
 }
 </script>
 
+<style>
+.loading-screen{
+    z-index: 9999 !important;
+}
+</style>
+
 <style scoped>
 input[type="file"] {
     display: none;
