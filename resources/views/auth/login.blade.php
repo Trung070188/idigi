@@ -158,6 +158,7 @@ License: For each use you must have a valid license purchased only from above li
 								</button>
 								<!--end::Submit button-->
                                 <div id="g_id_onload"
+
                                      data-client_id="{{env('GOOGLE_CLIENT_ID')}}"
                                      data-context="signin"
                                      data-ux_mode="popup"
@@ -165,6 +166,7 @@ License: For each use you must have a valid license purchased only from above li
                                      data-itp_support="true">
                                 </div>
                                 <div class="g_id_signin"
+                                     data-width="500"
                                      data-type="standard"
                                      data-shape="rectangular"
                                      data-theme="outline"
