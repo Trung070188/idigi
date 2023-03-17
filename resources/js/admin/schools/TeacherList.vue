@@ -928,8 +928,21 @@
         }
     }
 </script>
-
+<style>
+.loading-screen{
+    z-index: 9999 !important;
+}
+</style>
 <style scoped>
+
+/*
+.modal {
+    z-index: 299 !important;
+}
+.modal-backdrop {
+    z-index: 298 !important;
+} */
+
  input[type="file"] {
         display: none;
     }
