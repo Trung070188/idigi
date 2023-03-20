@@ -268,17 +268,18 @@
                                     <th class="">Device Name</th>
                                     <th class="text-center">Creation Date</th>
                                     <th class="text-center">Status</th>
+                                    <th class="text-center">Delete</th>
                                     <th class="text-center">Action</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr class="cursor-pointer" v-for="entry in entries" v-on:mouseover="mouseover(entry.id)"
+                                <tr v-for="entry in entries" v-on:mouseover="mouseover(entry.id)"
                                     v-on:mouseleave="mouseleave()">
-                                    <td @click="saveEditName(entry, permissionFields['device_rename'])" class="">{{
+                                    <td class="">{{
                                         entry.device_name }}</td>
-                                    <td @click="saveEditName(entry, permissionFields['device_rename'])" class="text-center">
+                                    <td class="text-center">
                                         {{ d(entry.created_at) }}</td>
-                                    <td @click="saveEditName(entry, permissionFields['device_rename'])" class="text-center">
+                                    <td class="text-center">
                                         <span class="status-request"
                                             v-if="entry.status == 2 && entry.delete_request == 'Deleting request'">Delete
                                             request sent</span>
@@ -286,16 +287,29 @@
                                     </td>
                                     <td class="text-center">
                                         <div class="d-flex justify-content-around">
-                                            <i v-if="permissionFields['device_confirmation_code']"
-                                                :class="'bi bi-upc text-dark cursor-pointer action-btn action-btn-' + entry.id"
-                                                title="Get confirmation code"
-                                                @click="editModalDevice(entry.id, entry.device_name, entry.secret_key)"></i>
                                             <i v-if="checkDeleteDeviceRequest == 0 && permissionFields['device_delete'] == true"
                                                 :class="'bi bi-trash text-danger cursor-pointer action-btn action-btn-' + entry.id"
                                                 :title="'Delete ' + entry.device_name" @click="removeDevice(entry.id)"></i>
                                             <i v-if="checkDeleteDeviceRequest == 1 && entry.status == 2 && permissionFields['device_delete'] == true"
                                                 :class="'bi bi-trash text-danger cursor-pointer action-btn action-btn-' + entry.id"
                                                 :title="'Delete ' + entry.device_name" @click="Sent(entry)"></i>
+                                        </div>
+                                    </td>
+                                    <td class="text-center">
+                                        <button :class="'btn btn-icon btn-active-light-dark text-dark btn-xs action-btn action-btn-' + entry.id"
+                                            data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end" style="display: none;">
+                                            <i class="bi bi-three-dots"></i>
+                                        </button>
+                                        <div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-bold fs-7 w-125px py-4"
+                                            data-kt-menu="true">
+                                            <div class="menu-item px-3">
+                                                <a @click="saveEditName(entry, permissionFields['device_rename'])"
+                                                    class="menu-link px-3">Rename</a>
+                                            </div>
+                                            <div class="menu-item px-3" v-if="permissionFields['device_confirmation_code']">
+                                                <a class="menu-link px-3" @click="editModalDevice(entry.id, entry.device_name, entry.secret_key)"
+                                                    data-kt-subscriptions-table-filter="delete_row">Get confirmation code</a>
+                                            </div>
                                         </div>
                                     </td>
                                 </tr>
@@ -523,7 +537,6 @@ export default {
             $router.updateQuery({ page: page })
         },
         mouseover(id) {
-
             $('.action-btn-' + id).show();
         },
         mouseleave() {
@@ -607,5 +620,4 @@ export default {
     opacity: 0.5;
     text-decoration: none;
     pointer-events: none
-}
-</style>
+}</style>
