@@ -198,7 +198,7 @@
                                                                         <div class="fs-7 text-muted">
                                                                             <a @click="exportErrorImportSchool"
                                                                                 type="button"
-                                                                                class="btn btn-primary">Export</a>
+                                                                                class="btn btn-primary" id="exportError">Export</a>
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -805,6 +805,7 @@ export default {
         },
         exportErrorImportSchool() {
             window.location.href = '/xadmin/schools/exportErrorSchool?fileError=' + this.errorName;
+            $('#exportError').addClass('disabled');
         },
         downloadTemplate() {
             window.location.href = '/xadmin/schools/downloadTemplate';
