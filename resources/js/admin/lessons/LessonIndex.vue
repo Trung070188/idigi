@@ -114,7 +114,7 @@
                                     </svg>
                                 </span>
                                 <input type="text" data-kt-filemanager-table-filter="search"
-                                    class="form-control form-control-solid w-250px ps-15" v-model="filter.keyword"
+                                    class="form-control form-control-solid w-250px ps-15" @keydown.enter="doFilter($event)" v-model="filter.keyword"
                                     placeholder="Search..." value="" />
                                 <span v-if="filter.keyword !== ''" class="svg-icon svg-icon-2 svg-icon-lg-1 me-0"
                                     @click="filterClear">
@@ -164,7 +164,7 @@
                             <div class="row">
                                 <div class="form-group col-lg-3">
                                     <label>Name </label>
-                                    <input class="form-control" placeholder="Enter the lesson name" v-model="filter.name" />
+                                    <input @keydown.enter="doFilter('name', filter.name, $event)" class="form-control" placeholder="Enter the lesson name" v-model="filter.name" />
                                 </div>
                                 <div class="form-group col-lg-2">
                                     <label>Subject </label>
