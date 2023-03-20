@@ -30,10 +30,7 @@
                     </div>
                 </div>
                 <div class="card card-custom card-stretch gutter-b">
-
                     <div class="card-header border-0 pt-6">
-
-
                         <div class="card-title">
                             <div class="d-flex align-items-center position-relative my-1">
                                 <div class="d-flex align-items-center position-relative my-1">
@@ -67,6 +64,7 @@
                             </div>
 
                         </div>
+
                         <div class="card-toolbar">
                             <div class="d-flex justify-content-end" data-kt-customer-table-toolbar="base"
                                 v-if="notificationIds == ''">
@@ -94,6 +92,14 @@
                                 Delete Selected
                             </button>
                         </div>
+                        <form class="col-lg-12" v-if="!isShowFilter">
+                            <div class="row">
+                                <div style="margin:7px 3px 0px">
+                                    <button type="button" class="btn btn-primary"
+                                        @click="doFilter()">Search</button>
+                                </div>
+                            </div>
+                        </form>
                         <form class="col-lg-12" v-if="isShowFilter">
                             <div class="row">
                                 <div class="form-group col-lg-4">
@@ -310,8 +316,8 @@ export default {
             $router.updateQuery({ page: this.paginate.currentPage, _: Date.now() });
         },
         filterClear() {
-            for (var key in app.filter) {
-                app.filter[key] = '';
+            for (var key in this.filter) {
+                this.filter[key] = '';
             }
 
             $router.setQuery({});
