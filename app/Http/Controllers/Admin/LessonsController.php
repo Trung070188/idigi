@@ -651,7 +651,7 @@ class LessonsController extends AdminBaseController
 
     public function getLessons(Request $req)
     {
-        $lessons = Lesson::query()->select(['id', 'name as label', 'subject'])->orderBy('name', 'ASC')->get();
+        $lessons = Lesson::query()->select(['id', 'name as label', 'subject', 'unit_id'])->orderBy('name', 'ASC')->get();
         return $lessons;
     }
 

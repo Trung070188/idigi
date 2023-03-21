@@ -157,7 +157,7 @@ export default {
             this.allCourse=courses;
 
             const lessons = await $get("/xadmin/lessons/getLessons");
-            this.allLesson=lessons;
+            this.allLesson = lessons.filter(e => !e.unit_id);
             this.$loading(false);
         },
 
