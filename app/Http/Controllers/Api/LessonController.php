@@ -78,10 +78,11 @@ class LessonController extends Controller
             if($lesson->inventories){
                 foreach ($lesson->inventories as $inventory) {
                     $pathArr = explode('/', $inventory->virtual_path);
+                    $inventoryName =  explode('_', $inventory->name);
                     $inventoryData[] = [
                         "idSublesson" => $inventory->id,
                         "pathIcon" => "",
-                        "name" => $inventory->name,
+                        "name" => count($inventoryName) >  1 ? $inventoryName[1] :$inventoryName[0],
                         "time" => "",
                         "type" => $inventory->type,
                         "link" => $pathArr[count($pathArr) - 1],
