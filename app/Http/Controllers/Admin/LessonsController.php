@@ -119,12 +119,18 @@ class LessonsController extends AdminBaseController
      */
     public function removeAll(Request $req)
     {
-        $ids = $req->ids;
-        Lesson::whereIn('id', $ids)->delete();
-        return [
-            'code' => 0,
-            'message' => 'Đã xóa'
-        ];
+        $lesson = Lesson::whereIn('id', $req->lessonIds)->delete();
+        if ($lesson){
+            return [
+                'code' => 0,
+                'message' => 'Đã xóa'
+            ];
+        }else{
+            return [
+                'code' => 500,
+                'message' => 'Lỗi'
+            ];
+        }
     }
 
     /**

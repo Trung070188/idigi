@@ -172,8 +172,6 @@ class SchoolsController extends AdminBaseController
             'schoolName' => $schoolName,
             'roleName' => $roleName
         ];
-
-
     }
 
     public function dataTeacher(Request $req)
@@ -193,7 +191,6 @@ class SchoolsController extends AdminBaseController
         }
         $query->whereHas('roles', function ($q) use ($req) {
             $q->where('role_name', 'Teacher');
-
         });
         if ($req->full_name) {
             $query->where('full_name', 'LIKE', '%' . $req->full_name . '%');
@@ -232,7 +229,7 @@ class SchoolsController extends AdminBaseController
         $id = $req->id;
         $entry = School::find($id);
         $userTotal = User::where('school_id', $id)
-            ->whereHas('roles', function ($q){
+            ->whereHas('roles', function ($q) {
                 $q->where('role_name', 'Teacher');
             })
             ->count();
@@ -275,7 +272,6 @@ class SchoolsController extends AdminBaseController
                     foreach ($user->roles as $role) {
                         if ($role->role_name == 'Teacher') {
                             $teacher[] = $user;
-
                         }
                     }
                 }
@@ -333,7 +329,6 @@ class SchoolsController extends AdminBaseController
                             }
                         }
                         @$course['total_unit'] = $total_unit;
-
                     }
                 }
 
@@ -361,10 +356,7 @@ class SchoolsController extends AdminBaseController
                     }
                 }
                 @$course2['total_unit'] = $total_unit2;
-
             }
-
-
         }
 
 
@@ -408,7 +400,7 @@ class SchoolsController extends AdminBaseController
             'teacher' => $lengthTeacher,
             'entry' => $entry,
             @'allocationContents' => @$newAllocationContents,
-            @'allocationContentSchoolName' => @ $allocationContentSchoolName,
+            @'allocationContentSchoolName' => @$allocationContentSchoolName,
             'allocationContentId' => $allocationContentId,
             'courses' => $courses,
             @'units' => @$units,
@@ -499,7 +491,7 @@ class SchoolsController extends AdminBaseController
 
         $rules = [
             'label' => ['required', 'regex:/^[\p{L}\s\/0-9.,_-]+$/u'],
-            'school_address' => [ 'max:255'],
+            'school_address' => ['max:255'],
             'province_id' => ['required'],
             'district_id' => ['required'],
             'number_of_users' => 'required|min:1|integer',
@@ -523,7 +515,7 @@ class SchoolsController extends AdminBaseController
         ];
 
         $v = Validator::make($data, $rules, $message, $dataContent);
-       /* $v->after(function ($validate) use ($dataContent) {
+        /* $v->after(function ($validate) use ($dataContent) {
             if (!isset($data['id']) && $dataContent['allocationContentSchool'] == "") {
                 $validate->errors()->add('allocationContentSchool', 'Resource allocation field is required ');
 
@@ -569,7 +561,7 @@ class SchoolsController extends AdminBaseController
                         'allocation_content_id' => $dataContent['allocationContentSchool']
                     ]
                 );
-//                AllocationContentSchool::create(['allocation_content_id' => $dataContent['allocationContentSchool'], 'school_id' => $entry->id]);
+                //                AllocationContentSchool::create(['allocation_content_id' => $dataContent['allocationContentSchool'], 'school_id' => $entry->id]);
 
             }
             SchoolCourseUnit::where('school_id', $entry->id)->delete();
@@ -635,11 +627,9 @@ class SchoolsController extends AdminBaseController
         if ($data['active_allocation'] == true) {
             School::where('id', $id)->update(['active_allocation' => 1, 'full_name_active_content' => $auth->full_name]);
             User::query()->WhereIn('id', $userSchool)->update(['active_allocation' => 1, 'full_name_active_content' => $auth->full_name]);
-
         } else {
             School::where('id', $id)->update(['active_allocation' => 0, 'full_name_active_content' => $auth->full_name]);
             User::query()->WhereIn('id', $userSchool)->update(['active_allocation' => 0, 'full_name_active_content' => $auth->full_name]);
-
         }
         return [
             'code' => 0,
@@ -657,7 +647,7 @@ class SchoolsController extends AdminBaseController
         $data = $req->get('entry');
 
         $rules = [
-//            'label' => 'required|max:45',
+            //            'label' => 'required|max:45',
             'license_to' => 'required',
         ];
 
@@ -705,12 +695,12 @@ class SchoolsController extends AdminBaseController
         $data = $req->get('entry');
 
         $rules = [
-//            'label' => 'required|max:45',
-//            'school_address' => 'required|max:255',
-//            'school_email' => 'required|max:45|email',
-//            'school_phone' => 'required|max:45',
-//            'number_of_users' => 'required|integer|min:1',
-//            'devices_per_user' => 'required|integer|min:1',
+            //            'label' => 'required|max:45',
+            //            'school_address' => 'required|max:255',
+            //            'school_email' => 'required|max:45|email',
+            //            'school_phone' => 'required|max:45',
+            //            'number_of_users' => 'required|integer|min:1',
+            //            'devices_per_user' => 'required|integer|min:1',
             'license_to' => 'required'
         ];
 
@@ -783,13 +773,13 @@ class SchoolsController extends AdminBaseController
 
             ];
         }
-//        $entry->license_state = $req->license_state ? 1 : 0;
-//        $entry->save();
+        //        $entry->license_state = $req->license_state ? 1 : 0;
+        //        $entry->save();
 
-//        return [
-//            'code' => 200,
-//            'message' => 'Đã lưu'
-//        ];
+        //        return [
+        //            'code' => 200,
+        //            'message' => 'Đã lưu'
+        //        ];
     }
 
     /**
@@ -815,8 +805,6 @@ class SchoolsController extends AdminBaseController
         }
         if ($check == 0) {
             $query = School::query()->whereIn('id', $schoolIdArrs)->with(['users', 'province', 'district']);
-
-
         } else {
             $query = School::query()->with(['users', 'province', 'district']);
             if ($req->role_name) {
@@ -836,7 +824,6 @@ class SchoolsController extends AdminBaseController
 
                 foreach ($explodeIds as $explodeId) {
                     $query = School::query()->with(['users'])->whereIn('id', $explodeId)->orderBy('id', 'ASC');
-
                 }
             }
         }
@@ -856,7 +843,7 @@ class SchoolsController extends AdminBaseController
         if ($req->district_id && $req->district_id != 'undefined' && $req->district_id != 'null') {
             $query->where('district_id', $req->district_id);
         }
-//Sắp xếp
+        //Sắp xếp
         if ($req->sortBy) {
             if ($req->sortBy == 'school_address' || $req->sortBy == 'license_to' || $req->sortBy == 'label' || $req->sortBy = 'devices_per_user') {
                 if ($req->sortDirection == 1) {
@@ -866,7 +853,6 @@ class SchoolsController extends AdminBaseController
                 if ($req->sortDirection == -1) {
                     $query->orderBy($req->sortBy, 'DESC');
                 }
-
             }
             if ($req->sortBy == 'province') {
                 $query->join('provinces', 'provinces.id', '=', 'school.province_id');
@@ -918,8 +904,6 @@ class SchoolsController extends AdminBaseController
                             $nameSchoolAdmin[] = $user->full_name;
                         }
                     }
-
-
                 }
             }
             $teacher = [];
@@ -930,9 +914,7 @@ class SchoolsController extends AdminBaseController
                     if ($role->role_name == 'Teacher') {
                         $teacher[] = $user;
                     }
-
                 }
-
             }
             $data[] = [
                 'id' => $entry->id,
@@ -945,14 +927,12 @@ class SchoolsController extends AdminBaseController
                 'number_of_users' => $entry->number_of_users,
                 'devices_per_user' => $entry->devices_per_user,
                 'nameSchoolAdmin' => implode(' , ', $nameSchoolAdmin),
-//                'license_info'=>$entry->license_info,
+                //                'license_info'=>$entry->license_info,
                 'license_to' => $entry->license_to,
                 'license_state' => $entry->license_state,
                 'teacher' => $teacher,
 
             ];
-
-
         }
         return [
             'code' => 0,
@@ -997,7 +977,6 @@ class SchoolsController extends AdminBaseController
                         $teacher[] = $user;
                     }
                 }
-
             }
             $data[] = [
                 'id' => $entry->id,
@@ -1007,13 +986,12 @@ class SchoolsController extends AdminBaseController
                 'school_phone' => $entry->school_phone,
                 'number_of_users' => $entry->number_of_users,
                 'devices_per_user' => $entry->devices_per_user,
-//                'license_info'=>$entry->license_info,
+                //                'license_info'=>$entry->license_info,
                 'license_to' => $entry->license_to,
                 'license_state' => $entry->license_state,
                 'teacher' => $teacher,
 
             ];
-
         }
         return [
             'code' => 0,
@@ -1112,8 +1090,6 @@ class SchoolsController extends AdminBaseController
                 'check' => $check,
             ];
         }
-
-
     }
 
     public function licenseExpired()
@@ -1121,9 +1097,7 @@ class SchoolsController extends AdminBaseController
         $component = 'LicenseExpired';
         $title = 'License Expired';
 
-        $jsonData = [
-
-        ];
+        $jsonData = [];
         return view('admin.layouts.vue', compact('title', 'component', 'jsonData'));
     }
 
@@ -1169,8 +1143,7 @@ class SchoolsController extends AdminBaseController
         if (!$req->isMethod('POST')) {
             return ['code' => 405, 'message' => 'Method not allow'];
         }
-        $rules = [
-        ];
+        $rules = [];
         $v = Validator::make($req->all(), $rules);
 
         if ($v->fails()) {
@@ -1232,38 +1205,40 @@ class SchoolsController extends AdminBaseController
                         $item['number_of_users'] = $school[4];
                         $item['province'] = $school[5];
                         $item['district'] = $school[6];
-                        $item['license_to'] = $school[7];
-                        $validator = Validator::make($item, [
-                            'label' => ['required','regex:/^[\p{L}\s\/0-9.,_-]+$/u'],
-                            'devices_per_user' => ['required', 'numeric', 'gt:0'],
-                            'number_of_users' => ['required', 'numeric', 'gt:0'],
-                            'license_to' => ['required','date_format:d/m/Y']
-                        ]);
+                        $item['license_to'] = date('d/m/Y',strtotime($school[7]));
+                        $validator = Validator::make(
+                            $item,
+                            [
+                                'label' => ['required', 'regex:/^[\p{L}\s\/0-9.,_-]+$/u'],
+                                'devices_per_user' => ['required', 'numeric', 'gt:0'],
+                                'number_of_users' => ['required', 'numeric', 'gt:0'],
+                                'license_to' => ['required', 'date_format:d/m/Y']
+                            ],
+                            [
+                                'license_to.date_format' => 'The license to does not match the format dd/mm/YYYY'
+                            ]
+                        );
                         $province = Province::query()->where('name', 'LIKE', '%' . $item['province'] . '%')->get();
-                        if ($province->count()!==0) {
-                            $item['province']=$province[0]->id;
+                        if ($province->count() !== 0) {
+                            $item['province'] = $province[0]->id;
                             $district = District::query()->where('province_id', $province[0]->id)->where('name', 'LIKE', '%' . $item['district'] . '%')->get();
-                            $item['district']=$district[0]->id;
+                            $item['district'] = $district[0]->id;
                         }
                         $validator->after(function ($validate) use ($province) {
                             if ($province->count() == 0) {
                                 $validate->errors()->add('province', 'City is not found');
                             }
-
                         });
-                        if($province->count()!==0)
-                        {
-                            $validator->after(function ($validate) use ($district)
-                            {
+                        if ($province->count() !== 0) {
+                            $validator->after(function ($validate) use ($district) {
                                 if ($district->count() == 0) {
                                     $validate->errors()->add('district', 'District is not found');
-
                                 }
                             });
                         }
                         if ($validator->fails()) {
                             $item['error'] = $validator->errors()->messages();
-                            $code = 2;//Có lỗi
+                            $code = 2; //Có lỗi
                         }
                         $validations[] = $item;
                     }
@@ -1275,8 +1250,7 @@ class SchoolsController extends AdminBaseController
             if ($code == 2) {
                 //export
                 foreach ($validations as $key => $validation) {
-                    if (@$validation['error']) {
-                        {
+                    if (@$validation['error']) { {
                             $fileError[] = $validation;
                         }
                     } else {
@@ -1308,9 +1282,7 @@ class SchoolsController extends AdminBaseController
                     'fileImport' => $validations
                 ];
             }
-
         }
-
     }
 
     public function exportErrorSchool(Request $req)
@@ -1349,9 +1321,6 @@ class SchoolsController extends AdminBaseController
             return [
                 'message' => 'Không có teacher nào được thêm'
             ];
-
         }
     }
-
-
 }

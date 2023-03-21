@@ -250,8 +250,8 @@
                                             <i class="fa fa-sort"></i>
                                         </button>
                                     </th>
-                                    <th class="">Type</th>
-                                    <th class="text-center">Grade</th>
+                                    <th >Type</th>
+                                    <th >Subject</th>
                                     <th class="text-center">Creation Date</th>
                                     <th class="text-center" v-if="permissions['008']">Active</th>
                                     <th class="text-center" v-if="permissions['010']">Action</th>
@@ -266,21 +266,16 @@
                                                 :value="entry.id" @change="updateCheckAll" />
                                         </div>
                                     </td>
-                                    <td class="text-center" @click="edit(entry.id, permissions['008'])"
-                                        v-text="index + from"></td>
-                                    <td class="" @click="edit(entry.id, permissions['008'])"
-                                        v-text="entry.name"></td>
-                                    <td class="" @click="edit(entry.id, permissions['008'])"
-                                        v-text="entry.type"></td>
-                                    <td class=" text-center" @click="edit(entry.id, permissions['008'])"
-                                        v-text="entry.grade"></td>
-                                    <td class=" text-center" @click="edit(entry.id, permissions['008'])"
-                                        v-text="d(entry.created_at)"></td>
+                                    <td class="text-center" @click="edit(entry.id, permissions['008'])">{{ index + from }}</td>
+                                    <td  @click="edit(entry.id, permissions['008'])" :title="entry.name">{{ entry.name }}</td>
+                                    <td  @click="edit(entry.id, permissions['008'])" :title="entry.type">{{ entry.type }}</td>
+                                    <td  @click="edit(entry.id, permissions['008'])" :title="entry.subject">{{ entry.subject }}</td>
+                                    <td class=" text-center" @click="edit(entry.id, permissions['008'])" :title="d(entry.created_at)">{{ d(entry.created_at) }}</td>
                                     <td class="text-center" v-if="permissions['008']">
                                         <div
                                             class="form-check form-switch form-check-custom form-check-primary justify-content-center">
                                             <input v-model="entry.enabled" @change="toggleEnable(entry)"
-                                                class="form-check-input" type="checkbox" value="" id="flexSwitchDefault">
+                                                class="form-check-input" type="checkbox" value="" id="flexSwitchDefault" :title="(entry.enabled)?'Deactive this module':'Active this module'">
                                         </div>
                                     </td>
                                     <td class="text-center" v-if="permissions['010']">

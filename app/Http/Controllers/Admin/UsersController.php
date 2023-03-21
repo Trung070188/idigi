@@ -1187,7 +1187,7 @@ class UsersController extends AdminBaseController
                 'message' => 'Not Found'
             ];
         }
-        $entry->state = $req->state ? 0 : 1;
+        $entry->state = $req->state ? 1 : 0;
         $entry->save();
 
         return [

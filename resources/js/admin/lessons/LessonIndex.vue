@@ -44,44 +44,65 @@
             </div>
         </div>
 
+        <div class="modal fade" style="margin-right:50px;border:2px solid #333333  " id="delete" tabindex="-1" role="dialog"
+            aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered popup-main-1" role="document" style="max-width: 450px;">
+                <div class="modal-content box-shadow-main paymment-status"
+                    style="left:120px;text-align: center; padding: 20px 0px 55px;">
+                    <div class="close-popup" data-dismiss="modal"></div>
+                    <div class="swal2-icon swal2-warning swal2-icon-show">
+                        <div class="swal2-icon-content" style="margin: 0px 24.5px 0px ">!</div>
+                    </div>
+                    <div class="swal2-html-container">
+                        <p>Are you sure to delete this lesson?</p>
+                    </div>
+                    <div class="swal2-actions">
+                        <button type="submit" id="kt_modal_new_target_submit" class="swal2-confirm btn fw-bold btn-danger"
+                            @click="remove(lessonToDelete)">
+                            <span class="indicator-label">Yes, delete!</span>
+                        </button>
+                        <button type="reset" id="kt_modal_new_target_cancel"
+                            class="swal2-cancel btn fw-bold btn-active-light-primary" data-bs-dismiss="modal"
+                            style="margin: 0px 8px 0px">No, cancel</button>
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" style="margin-right:50px;border:2px solid #333333  " id="deleteAll" tabindex="-1"
+            role="dialog" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered popup-main-1" role="document" style="max-width: 450px;">
+                <div class="modal-content box-shadow-main paymment-status"
+                    style="left:120px;text-align: center; padding: 20px 0px 55px;">
+                    <div class="close-popup" data-dismiss="modal"></div>
+                    <div class="swal2-icon swal2-warning swal2-icon-show">
+                        <div class="swal2-icon-content" style="margin: 0px 24.5px 0px ">!</div>
+                    </div>
+                    <div class="swal2-html-container">
+                        <p>Are you sure to delete this lessons?</p>
+                    </div>
+                    <div class="swal2-actions">
+                        <button type="submit" id="kt_modal_new_target_submit1" class="swal2-confirm btn fw-bold btn-danger"
+                            @click="deleteMultiple()">
+                            <span class="indicator-label">Yes, delete!</span>
+                        </button>
+                        <button type="reset" id="kt_modal_new_target_cancel1"
+                            class="swal2-cancel btn fw-bold btn-active-light-primary" data-bs-dismiss="modal"
+                            style="margin: 0px 8px 0px">No, cancel</button>
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
         <div class="row">
             <div class="col-lg-12">
-
-                <div class="modal fade" style="margin-right:50px;border:2px solid #333333  " id="delete" tabindex="-1"
-                    role="dialog" aria-hidden="true">
-                    <div class="modal-dialog modal-dialog-centered popup-main-1" role="document" style="max-width: 450px;">
-                        <div class="modal-content box-shadow-main paymment-status"
-                            style="left:120px;text-align: center; padding: 20px 0px 55px;">
-                            <div class="close-popup" data-dismiss="modal"></div>
-                            <div class="swal2-icon swal2-warning swal2-icon-show">
-                                <div class="swal2-icon-content" style="margin: 0px 24.5px 0px ">!</div>
-                            </div>
-                            <div class="swal2-html-container">
-                                <p>Are you sure to delete this lesson?</p>
-                            </div>
-                            <div class="swal2-actions">
-                                <button type="submit" id="kt_modal_new_target_submit"
-                                    class="swal2-confirm btn fw-bold btn-danger" @click="remove(lessonToDelete)">
-                                    <span class="indicator-label">Yes, delete!</span>
-                                </button>
-                                <button type="reset" id="kt_modal_new_target_cancel"
-                                    class="swal2-cancel btn fw-bold btn-active-light-primary" data-bs-dismiss="modal"
-                                    style="margin: 0px 8px 0px">No, cancel</button>
-
-                            </div>
-
-                        </div>
-                    </div>
-                </div>
-
                 <div class="card card-custom card-stretch gutter-b">
-
                     <div class="card-header border-0 pt-6">
-
-
                         <div class="card-title">
                             <div class="d-flex align-items-center position-relative my-1">
-                                <!--begin::Svg Icon | path: icons/duotune/general/gen021.svg-->
                                 <span class="svg-icon svg-icon-1 position-absolute ms-6">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
                                         fill="none">
@@ -92,9 +113,8 @@
                                             fill="black"></path>
                                     </svg>
                                 </span>
-                                <!--end::Svg Icon-->
                                 <input type="text" data-kt-filemanager-table-filter="search"
-                                    class="form-control form-control-solid w-250px ps-15" v-model="filter.keyword"
+                                    class="form-control form-control-solid w-250px ps-15" @keydown.enter="doFilter($event)" v-model="filter.keyword"
                                     placeholder="Search..." value="" />
                                 <span v-if="filter.keyword !== ''" class="svg-icon svg-icon-2 svg-icon-lg-1 me-0"
                                     @click="filterClear">
@@ -113,42 +133,24 @@
                                     <option v-for="school in schools" :value="school.id">{{ school.label }}</option>
                                 </select>
                             </div>
-
                         </div>
                         <div class="card-toolbar">
-                            <div class="d-flex justify-content-end" data-kt-customer-table-toolbar="base"
-                                v-if="lessonIds == ''">
-
-                                <button type="button" style="margin-left: 10px" @click="isShowFilter = !isShowFilter"
-                                    class="btn btn-light" v-if="isShowFilter">
-                                    <i style="margin-left: 5px" class="fas fa-times"></i>
-                                    Close Advanced Search
-                                </button>
-                                <button type="button" style="margin-left: 10px" @click="isShowFilter = !isShowFilter"
-                                    class="btn btn-light" v-if="!isShowFilter">
-                                    <i class="bi bi-funnel"></i>
-                                    Advanced Search
-                                </button>
+                            <div class="d-flex justify-content-end" data-kt-customer-table-toolbar="base" v-if="lessonIds == ''">
+                                <button type="button" style="margin-left: 10px" @click="isShowFilter = !isShowFilter" class="btn btn-light" v-if="isShowFilter"> <i class="fas fa-times"></i> Close Advanced Search </button>
+                                <button type="button" style="margin-left: 10px" @click="isShowFilter = !isShowFilter" class="btn btn-light" v-if="!isShowFilter"><i class="bi bi-funnel"></i> Advanced Search</button>
+                                <a :href="'/xadmin/lessons/create'">
+                                    <button class="btn btn-primary button-create" style="margin:0 0 0 15px"><i class="bi bi-plus-lg"></i>Create new lesson</button>
+                                </a>
                             </div>
-                            <div class="d-flex justify-content-end align-items-center d-none"
-                                data-kt-customer-table-toolbar="selected" v-if="permissions['011'] && lessonIds != ''">
-                                <span v-if="lessons.length > 3" style="color:#f1416c;margin: 0px 10px 0px ">Chỉ được chọn
-                                    tối
-                                    đa 3 lesson để tải xuống</span>
+
+                            <div class="d-flex justify-content-end align-items-center d-none" data-kt-customer-table-toolbar="selected" v-if="permissions['011'] && lessonIds != ''">
+                                <span v-if="lessons.length > 3" style="color:#f1416c;margin: 0px 10px 0px ">Chỉ được chọn tối đa 3 lesson để tải xuống</span>
                                 <div class="fw-bolder me-5" v-if="lessons.length <= 3">
-                                    <span class="me-2" data-kt-customer-table-select="selected_count"></span>{{
-                                        lessonIds.length }} lesson
+                                    <span class="me-2" data-kt-customer-table-select="selected_count"></span>Selected {{ lessonIds.length }} {{ lessonIds.length <= 1 ? ' lesson' : ' lessons' }}
                                 </div>
-
-                                <button @click="openModal()" :disabled="lessons.length > 3" type="button"
-                                    class="btn btn-danger" data-kt-customer-table-select="delete_selected">Download
-                                    lesson</button>
-
+                                <button class="btn btn-danger mx-2" @click="confirmDeleteMultiple()" type="button" data-kt-customer-table-select="delete_selected"><i class="bi bi-trash"></i> Delete {{ lessonIds.length }} {{ lessonIds.length <= 1 ? ' lesson' : ' lessons' }} </button>
+                                <button class="btn btn-success mx-2" @click="openModal()" :disabled="lessons.length > 3" type="button" data-kt-customer-table-select="delete_selected"><i class="bi bi-download"></i> Download lesson</button>
                             </div>
-                            <a :href="'/xadmin/lessons/create'">
-                                <button class="btn btn-primary button-create" style="margin:0 0 0 15px"><i
-                                        class="bi bi-plus-lg"></i>Create new lesson</button>
-                            </a>
                         </div>
                         <form class="col-lg-12" v-if="!isShowFilter">
                             <div class="row">
@@ -162,7 +164,7 @@
                             <div class="row">
                                 <div class="form-group col-lg-3">
                                     <label>Name </label>
-                                    <input class="form-control" placeholder="Enter the lesson name" v-model="filter.name" />
+                                    <input @keydown.enter="doFilter('name', filter.name, $event)" class="form-control" placeholder="Enter the lesson name" v-model="filter.name" />
                                 </div>
                                 <div class="form-group col-lg-2">
                                     <label>Subject </label>
@@ -186,10 +188,8 @@
                                 </div>
                                 <div class="form-group col-lg-3">
                                     <label>Creation date </label>
-                                    <Daterangepicker v-model="filter.created" class="active" placeholder="Creation date"
-                                        readonly></Daterangepicker>
-                                    <span v-if="filter.created !== ''" class="svg-icon svg-icon-2 svg-icon-lg-1 me-0"
-                                        @click="filterClear">
+                                    <Daterangepicker v-model="filter.created" class="active" placeholder="Creation date" readonly></Daterangepicker>
+                                    <span v-if="filter.created !== ''" class="svg-icon svg-icon-2 svg-icon-lg-1 me-0" @click="filterClear">
                                         <svg type="button" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                                             viewBox="0 0 24 24" fill="none" style="float: right;margin: -32px 3px 0px;">
                                             <rect opacity="0.5" x="6" y="17.3137" width="16" height="2" rx="1"
@@ -204,7 +204,6 @@
                                     <div>
                                         <switch-button v-model="filter.enabled"></switch-button>
                                     </div>
-
                                 </div>
                                 <div style="margin: auto 0">
                                     <button type="button" class="btn btn-primary" @click="doFilter()">Search</button>
@@ -213,20 +212,8 @@
                         </form>
 
                     </div>
-                    <!--                    <div class="row">-->
-                    <!--                        <div class="d-flex align-items-center position-absolute my-1 col-lg-12 ml-10">-->
-                    <!--                            <select class="form-control col-lg-2"><option>1</option></select>-->
-                    <!--                        </div>-->
-
-                    <!--                    </div>-->
-
-
-
-                    <!--<div class="card-body d-flex flex-column">-->
                     <div class="tab-content">
                         <div class="d-flex flex-stack pt-4 pl-9 pr-9">
-                            <!--<div class="d-flex flex-stack">-->
-
                             <div class="badge badge-lg badge-light-dark mb-15">
                                 <div class="d-flex align-items-center flex-wrap">
                                     <span class="svg-icon svg-icon-dark mx-1">
@@ -241,14 +228,7 @@
                                     <div v-text="from + '-' + to + ' of ' + countLesson" v-if="entries.length > 0"></div>
 
                                     <template v-if="lessonIds.length > 0">
-                                        <!-- <span class="svg-icon svg-icon-2x svg-icon-primary mx-1">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-                                                <path d="M12.6343 12.5657L8.45001 16.75C8.0358 17.1642 8.0358 17.8358 8.45001 18.25C8.86423 18.6642 9.5358 18.6642 9.95001 18.25L15.4929 12.7071C15.8834 12.3166 15.8834 11.6834 15.4929 11.2929L9.95001 5.75C9.5358 5.33579 8.86423 5.33579 8.45001 5.75C8.0358 6.16421 8.0358 6.83579 8.45001 7.25L12.6343 11.4343C12.9467 11.7467 12.9467 12.2533 12.6343 12.5657Z" fill="black"></path>
-                                            </svg>
-                                        </span> -->
-
                                         <div>
-                                            <!-- {{ lessonIds.length }} lesson selected -->
                                             <a href="javascript:;" @click="removeAll"
                                                 style="color: red; margin-left: 10px">clear all</a>
                                         </div>
@@ -293,8 +273,7 @@
 
                                 <tr class="cursor-pointer" v-for="(entry, index) in entries"
                                     v-if="user.active_allocation == 1 && entries.length > 0"
-                                    v-on:mouseover="mouseover(entry.id)"
-                                    v-on:mouseleave="mouseleave()">
+                                    v-on:mouseover="mouseover(entry.id)" v-on:mouseleave="mouseleave()">
                                     <td class="text-center">
                                         <div class="form-check form-check-sm form-check-custom form-check-solid">
                                             <input class="form-check-input" type="checkbox" v-model="lessonIds"
@@ -305,13 +284,11 @@
                                         1)) - 2 }}</td>
                                     <td class="" @click="edit(entry.id)" v-text="entry.name"></td>
                                     <td class="text-center" @click="edit(entry.id)" v-text="entry.id"></td>
-                                    <td class="" @click="edit(entry.id)"
-                                        v-text="entry.unit ? entry.unit.unit_name : ''"></td>
+                                    <td class="" @click="edit(entry.id)" v-text="entry.unit ? entry.unit.unit_name : ''">
+                                    </td>
                                     <td class="" @click="edit(entry.id)" v-text="entry.subject"></td>
-                                    <td class="text-center" @click="edit(entry.id)"
-                                        v-text="entry.total_download"></td>
-                                    <td class="text-center" @click="edit(entry.id)"
-                                        v-text="d(entry.created_at)"></td>
+                                    <td class="text-center" @click="edit(entry.id)" v-text="entry.total_download"></td>
+                                    <td class="text-center" @click="edit(entry.id)" v-text="d(entry.created_at)"></td>
                                     <td class="text-center" v-if="permissions['043']">
                                         <div
                                             class="form-check form-switch form-check-custom form-check-primary justify-content-center">
@@ -321,10 +298,11 @@
                                     </td>
                                     <td class="text-center ">
                                         <div class="d-flex justify-content-around">
-                                            <i :class="'bi bi-download text-success cursor-pointer action-btn action-btn-' + entry.id" :title="'Download ' + entry.name"
-                                                @click="openModalEntry(entry)"></i>
-                                            <i :class="'bi bi-trash text-danger cursor-pointer action-btn action-btn-' + entry.id" v-if="permissions['012']"
-                                                :title="'Delete ' + entry.name" @click="deleteLession(entry)"></i>
+                                            <i :class="'bi bi-download text-success cursor-pointer action-btn action-btn-' + entry.id"
+                                                :title="'Download ' + entry.name" @click="openModalEntry(entry)"></i>
+                                            <i :class="'bi bi-trash text-danger cursor-pointer action-btn action-btn-' + entry.id"
+                                                v-if="permissions['012']" :title="'Delete ' + entry.name"
+                                                @click="deleteLession(entry)"></i>
                                         </div>
                                     </td>
                                 </tr>
@@ -496,6 +474,10 @@ export default {
             }
             $('#download-lesson').modal('show');
         },
+
+        confirmDeleteMultiple() {
+            $('#deleteAll').modal('show');
+        },
         selectAll() {
             if (this.allSelected) {
                 const selected = this.entries.map((u) => u.id);
@@ -554,12 +536,23 @@ export default {
 
             $router.updateQuery({ page: this.paginate.currentPage, _: Date.now() });
         },
+        async deleteMultiple() {
+            const res = $post('/xadmin/lessons/removeAll', { lessonIds: this.lessonIds })
+            if (res.code) {
+                toastr.error(res.message);
+            } else {
+                toastr.success(res.message);
+                $('#deleteAll').modal('hide');
+                this.lessonIds = [];
+                this.lessons = [];
+            }
+            $router.updateQuery({ page: this.paginate.currentPage, _: Date.now() });
+        },
 
         async removeAll() {
             this.lessonIds = [];
             $('input:checkbox').each(function () { this.checked = false; });
         },
-
         filterClear() {
             for (var key in this.filter) {
                 this.filter[key] = '';
@@ -577,7 +570,6 @@ export default {
             params['limit'] = this.limit;
             $router.setQuery(params)
         },
-
         async toggleStatus(entry) {
             const res = await $post('/xadmin/lessons/toggleStatus', {
                 id: entry.id,
@@ -624,4 +616,5 @@ option[value=""][disabled] {
 
 option {
     color: black;
-}</style>
+}
+</style>
