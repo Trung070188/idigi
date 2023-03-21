@@ -22,4 +22,13 @@ class Unit extends BaseModel
         'active',
         'position'
     ];
+
+    public function lessons(){
+        return $this->hasMany(Lesson::class, 'unit_id')->orderBy('lessons.position', 'ASC')->orderBy('lessons.id', 'ASC');
+    }
+
+    public function course(){
+        return $this->belongsTo(Course::class, 'course_id');
+    }
+
 }
