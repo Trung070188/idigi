@@ -176,7 +176,7 @@ class InventoriesController extends AdminBaseController
         }
 
 
-        $v = Validator::make($data, $rules, ['lessonId.required' => 'The lesson field is required.']);
+        $v = Validator::make($data, $rules, ['lessonId.required' => 'The lesson field is required.', 'file_asset_new.required' => 'The file asset bundle is required.']);
 
         if ($v->fails()) {
             return [
