@@ -558,7 +558,7 @@ class LessonsController extends AdminBaseController
         }
 
         $lessons = Lesson::whereIn('id', $request->lessonIds)
-            ->with(['inventories'])->get();
+            ->with(['inventories', 'unit1', 'unit1.course'])->get();
 
 
         $filenameAll = uniqid(time() . rand(10, 100));
@@ -582,8 +582,6 @@ class LessonsController extends AdminBaseController
             $zip_file = public_path($dir . '/' . $name[0] . '.zip');
             $zip = new \ZipArchive();
             $zip->open($zip_file, \ZipArchive::CREATE | \ZipArchive::OVERWRITE);
-            $structure = json_decode($lesson->structure, true);
-
 
             if ($lesson->inventories) {
                 foreach ($lesson->inventories as $inventory) {
@@ -612,6 +610,44 @@ class LessonsController extends AdminBaseController
                     $this->dispatch(new UpdateDownloadInventory($dataDownloadInventory));
 
                 }
+            }
+            $inventoryData = [];
+            $lessonNameArr = explode(':', $lesson->name);
+            $structure = [
+                "idSubject" => @$lesson->unit1->course->subject == 'Science' ? 1 : 0,
+                "codeSubject" => @$lesson->unit1->course->subject,
+                "nameSubject" => 'iSMART ' .@$lesson->unit1->course->subject,
+                "grade" => @$lesson->unit1->course->grade,
+                "idUnit" => @$lesson->unit1->position,
+                "titleUnit" => @$lesson->unit1->unit_name,
+                "nameUnit" => @$lesson->unit1->unit_name,
+                "idLesson" => $lesson->id,
+                "codeLesson" => $lessonNameArr[0],
+                "titleLesson" => count($lessonNameArr) > 1 ? trim($lessonNameArr[1]) :$lessonNameArr[0],
+                "nameLesson" => $lesson->name,
+                "position" => $lesson->position ? $lesson->position : 0,
+                "subLessons" => [],
+
+
+            ];
+
+            if($lesson->inventories){
+                foreach ($lesson->inventories as $inventory) {
+                    $pathArr = explode('/', $inventory->virtual_path);
+                    $inventoryName =  explode('_', $inventory->name);
+                    $inventoryData[] = [
+                        "idSublesson" => $inventory->id,
+                        "pathIcon" => "",
+                        "name" => count($inventoryName) >  1 ? $inventoryName[1] :$inventoryName[0],
+                        "time" => "",
+                        "type" => $inventory->type,
+                        "link" => $pathArr[count($pathArr) - 1],
+                        "full_link" => url('/api/download/inventory/' . $inventory->id)
+                    ];
+                }
+
+                $structure["subLessons"] = $inventoryData;
+
             }
 
             Storage::put($dir . '/lesson_detail' . $filename . '.txt', json_encode($structure));
