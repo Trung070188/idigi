@@ -467,7 +467,7 @@
                                 <div class="form-group col-lg-3">
                                     <label>Street/ Ward </label>
                                     <input v-model="filter.school_address" class="form-control" type="text"
-                                        placeholder="Enter the region/city">
+                                        placeholder="Enter the Street/ Ward ">
 
                                 </div>
 
@@ -514,7 +514,7 @@
                                         </div>
                                     </td>
                                     <th v-for="(header, index) in tableHeaders" :key="index" @click="sortTable(index)"
-                                        :class="header.class + header.icon ? 'sort_color' : ''">
+                                        :class="header.icon ? header.class+' sort_color'  : header.class ">
                                         {{ header.text }}<i v-html="header.icon"></i>
                                     </th>
                                     <th class="text-center">Action</th>
@@ -653,6 +653,7 @@ export default {
             { text: 'Devices per user', icon: '', name: 'devices_per_user', class: 'text-center' },
             { text: 'License', icon: '', name: 'license_to', class: 'text-center' },
         ];
+        console.log(tableHeaders);
 
 
         tableHeaders.forEach(function (e) {
