@@ -124,13 +124,13 @@ class AllocationContentsController extends AdminBaseController
                 $totalCourseArray[] = $total_course->id;
             }
         }
-        $total_unit = [];
+
         if ($total_courses) {
 
             foreach ($courses as $course) {
 
                 $course['total_unit'] = [];
-
+                $total_unit = [];
                 foreach ($course_unit as $un) {
                     if ($un->course_id == $course->id) {
                         $total_unit[] = $un->unit_id;
@@ -168,7 +168,7 @@ class AllocationContentsController extends AdminBaseController
             'school' => $school ?? [],
             'courses' => $courses,
             'units' => $units,
-            'total_unit' => $total_unit,
+            'total_unit' => [],
         ];
         $title = 'Edit';
         $component = 'Allocation_contentEdit';
