@@ -62,4 +62,14 @@ class Lesson extends BaseModel
         return $this->hasMany(PlanLesson::class,'lesson_id');
 
     }
+
+    public function unit(){
+        return $this->belongsTo(Unit::class, 'unit_id');
+    }
+
+    public function unit1(){
+        return $this->belongsTo(Unit::class, 'unit_id');
+    }
+
+
 }

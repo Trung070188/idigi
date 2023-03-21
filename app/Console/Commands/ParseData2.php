@@ -16,14 +16,14 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
-class ParseData extends Command
+class ParseData2 extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'parse-from-old-data';
+    protected $signature = 'parse-from-old-data-2';
 
     /**
      * The console command description.
@@ -52,7 +52,7 @@ class ParseData extends Command
 
 
         //Đồng bộ lesson
-        \DB::connection('mysql2')->table('lessons')
+        \DB::connection('mysql3')->table('lessons')
             ->chunkById(100, function ($lessons) {
                 foreach ($lessons as $lesson) {
                     $userCreate = User::where('username', $lesson->created_by)->first();
@@ -117,7 +117,7 @@ class ParseData extends Command
                         'number' => $lesson->number,
                         'customized' => $lesson->customized,
                         'old_id' => $lesson->id,
-                        'level' => 'pri',
+                        'level' => 'sec',
                         'created_at' => $lesson->created_date,
                         'updated_at' => $lesson->last_modified_date,
                         'created_by' => @$userCreate->id,
@@ -127,7 +127,7 @@ class ParseData extends Command
 
                     Lesson::updateOrCreate([
                         'old_id' => $lesson->id,
-                        'level' => 'pri',
+                        'level' => 'sec',
                     ], $newLesson);
 
                     echo 'Sync lesson: ' . $lesson->id . PHP_EOL;
