@@ -197,8 +197,6 @@ class LessonsController extends AdminBaseController
 
         } else {
             $entry = new Lesson();
-
-            Lesson::query()->where('unit_id', $data['unit_id'])->update(['unit_id' => NULL, 'unit_name' => NUll]);
             $unit = Unit::query()->where('id', $data['unit_id'])->first();
             $data['unit_name'] = $unit['unit_name'];
             $entry->fill($data);
