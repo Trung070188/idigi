@@ -100,7 +100,7 @@ class LessonController extends Controller
                     "nameUnit" => @$lesson->unit1->unit_name,
                     "idLesson" => $lesson->id,
                     "codeLesson" => $lessonNameArr[0],
-                    "titleLesson" => $lesson->name,
+                    "titleLesson" => count($lessonNameArr) > 1 ? trim($lessonNameArr[1]) :$lessonNameArr[0],
                     "nameLesson" => $lesson->name,
                     "position" => $lesson->position ? $lesson->position : 0,
                     "subLessons" => $inventoryData,
