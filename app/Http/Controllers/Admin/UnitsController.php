@@ -292,8 +292,7 @@ class UnitsController extends AdminBaseController
         $courses = Course::query()->orderBy('id', 'desc')->get();
 
         if ($req->keyword) {
-            $query->where('unit_name', 'LIKE', '%' . $req->keyword . '%')
-                ->orWhere('subject', 'LIKE', '%' . $req->subject . '%');
+            $query->where('unit_name', 'LIKE', '%' . $req->keyword . '%');
         }
         if ($req->course_name) {
             $query->where('unit_name', 'LIKE', '%' . $req->course_name . '%');
