@@ -1187,7 +1187,7 @@ class UsersController extends AdminBaseController
                 'message' => 'Not Found'
             ];
         }
-        $entry->state = $req->state ? 0 : 1;
+        $entry->state = $req->state ? 1 : 0;
         $entry->save();
 
         return [
@@ -1720,11 +1720,13 @@ class UsersController extends AdminBaseController
             $roleName=$role->role_name;
         }
         $id=$req->id;
-      $device=  UserDevice::where('id',$id)->update(['delete_request'=>Null]);
+         UserDevice::where('id', $id)->update(['delete_request' => NULL]);
+        $device=UserDevice::where('id',$id)->pluck('device_name');
+
         return [
             'code'=>0,
             'message'=>'Đã cập nhật',
-            'object'=>$device['device_name'],
+            'object'=>$device,
             'status'=>'Refuse remove device',
             'role'=>$roleName
         ];

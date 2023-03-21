@@ -3,9 +3,14 @@
 namespace App\Http\Controllers\Admin;
 
 
+use App\Models\AllocationContent;
+use App\Models\AllocationContentUnit;
 use App\Models\Course;
 use App\Models\Lesson;
 use App\Models\LessonInventory;
+use App\Models\School;
+use App\Models\SchoolCourseUnit;
+use App\Models\UserUnit;
 use Carbon\Carbon;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
@@ -61,7 +66,8 @@ class UnitsController extends AdminBaseController
     public function edit(Request $req)
     {
         $id = $req->id;
-        $entry = Unit::find($id);
+        $entry = Unit::where('id',$id)->with(['lessons'])->first();
+
 
         if (!$entry) {
             throw new NotFoundHttpException();
@@ -85,6 +91,8 @@ class UnitsController extends AdminBaseController
     public function remove(Request $req)
     {
         $id = $req->id;
+        $unit = Unit::find($id);
+        $this->deleteAllocation($unit->id, $unit->course_id);
         $entry = Unit::query()->where('id', $id)->update(['deleted_at' => Carbon::now()]);
         if (!$entry) {
             throw new NotFoundHttpException();
@@ -94,10 +102,24 @@ class UnitsController extends AdminBaseController
             'message' => 'Đã xóa'
         ];
     }
+    private function deleteAllocation($unitId, $courseId){
+        AllocationContentUnit::where('unit_id', $unitId)->where('course_id',$courseId)->delete();
+        UserUnit::where('unit_id', $unitId)->where('course_id', $courseId)->delete();
+        SchoolCourseUnit::where('unit_id', $unitId)->where('course_id', $courseId)->delete();
+    }
 
     function removeUnit(Request $req)
     {
+        $units = Unit::whereIn('id', $req->unitIds)->get();
+
+        //Xoá các bảng liên quan
+        foreach ($units as $unit){
+            $this->deleteAllocation($unit->id, $unit->course_id);
+        }
         Unit::query()->whereIn('id', $req->unitIds)->update(['deleted_at' => Carbon::now()]);
+
+
+
         return [
             'code' => 0,
             'message' => 'Đã xóa'
@@ -148,6 +170,9 @@ class UnitsController extends AdminBaseController
             }
             if ($entry->course_id != $data['course_id']) {
                 $dsUnit = Unit::query()->where('course_id', $data['course_id'])->count();
+
+                //Xoá các bảng liên quan
+                $this->deleteAllocation($entry->id, $entry->course_id);
                 $entry->fill($data);
                 $entry->position = ($dsUnit + 1);
             } else {
@@ -171,8 +196,20 @@ class UnitsController extends AdminBaseController
             $lessonIds[] = $_lesson['id'];
         }
         $course = Course::where('id', $entry->course_id)->first();
+
+        Lesson::where('unit_id', $entry->id)->update([
+            'unit_id' => NULL,
+            'course_id' => NULL,
+        ]);
+
         $lessons = Lesson::whereIn('id', $lessonIds)->with(['inventories'])->get();
-        foreach ($lessons as $lesson) {
+        foreach ($lessons as $key => $lesson) {
+            $position = 0;
+            foreach ($lessonIds as $key1 => $lessonId){
+                if($lesson->id == $lessonId){
+                    $position = $key1 +1;
+                }
+            }
 
             $lessonNameArr = explode(':', $lesson->name);
             $inventories = $lesson->inventories;
@@ -186,14 +223,14 @@ class UnitsController extends AdminBaseController
                     "time" => "",
                     "type" => $inventory->type,
                     "link" => $pathArr[count($pathArr) - 1],
-                    "full_link" => asset($inventory->virtual_path)
+                    "full_link" => url('/api/download/inventory/' . $inventory->id)
                 ];
             }
             $structure = [
                 "idSubject" => $entry->subject == 'Science' ? 1 : 0,
                 "codeSubject" => $entry->subject,
                 "nameSubject" => 'iSMART ' . $entry->subject,
-                "grade" => $course->grade,
+                "grade" => @$course->grade,
                 "idUnit" => $entry->position,
                 "titleUnit" => $entry->unit_name,
                 "nameUnit" => $entry->unit_name,
@@ -202,9 +239,11 @@ class UnitsController extends AdminBaseController
                 "titleLesson" => $lesson->name,
                 "nameLesson" => $lesson->name,
                 "subLessons" => $inventoryData,
+                "position" => $position,
             ];
             $lesson->unit_name = $entry->unit_name;
             $lesson->course_id = $entry->course_id;
+            $lesson->position = $position;
             $lesson->unit_id = $entry->id;
             $lesson->structure = json_encode($structure);
             $lesson->save();
@@ -250,18 +289,17 @@ class UnitsController extends AdminBaseController
      */
     public function data(Request $req)
     {
-        $query = Unit::query()->orderBy('id', 'desc');
+        $query = Unit::query()->with(['course'])->orderBy('id', 'desc');
         $courses = Course::query()->orderBy('id', 'desc')->get();
 
         if ($req->keyword) {
-            $query->where('unit_name', 'LIKE', '%' . $req->keyword . '%')
-                ->orWhere('subject', 'LIKE', '%' . $req->subject . '%');
+            $query->where('unit_name', 'LIKE', '%' . $req->keyword . '%');
         }
         if ($req->course_name) {
             $query->where('unit_name', 'LIKE', '%' . $req->course_name . '%');
         }
         if ($req->subject) {
-            $query->where('subject', 'LIKE', '%' . $req->subject . '%');
+            $query->where('subject',  $req->subject);
         }
         if ($req->course_id) {
             $query->where('course_id', 'LIKE', '%' . $req->course_id . '%');
@@ -285,6 +323,7 @@ class UnitsController extends AdminBaseController
             ]
         ];
     }
+
 
     public function dataCreateUnit(Request $req)
     {
@@ -370,5 +409,11 @@ class UnitsController extends AdminBaseController
         // Write file to the browser
         $writer->save('php://output');
         die;
+    }
+
+    public function getUnits(){
+        $units = Unit::orderBy('unit_name', 'ASC')->where('subject', '<>', NULL)->get();
+
+        return $units;
     }
 }

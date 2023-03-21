@@ -76,53 +76,38 @@
                             <div class="col-lg-12">
                                 <input v-model="entry.id" type="hidden" name="id" value="">
                                 <div class="row">
-                                    <div class="form-group col-lg-4">
+                                    <div class="form-group col-lg-3">
                                         <label>School name <span class="text-danger">*</span></label>
                                         <input v-model="entry.label" class="form-control" :disabled="permissionFields['school_name']==false"
                                                placeholder="Enter the school name">
                                         <error-label for="f_school_name" :errors="errors.label"></error-label>
 
                                     </div>
-
-<!--                                    <div class="form-group col-lg-4">
-                                        <label>School address <span class="text-danger">*</span></label>
-                                        <input v-model="entry.school_address" :disabled="permissionFields['school_address']==false" class="form-control"
-                                               placeholder="Enter the school address">
-                                        <error-label :errors="errors.school_address"></error-label>
-
-                                    </div>-->
-                                    <div class="form-group col-lg-4">
-                                        <label>School email</label>
-                                        <input v-model="entry.school_email" :disabled="permissionFields['school_email']==false" class="form-control"
-                                               placeholder="Enter the email prefix">
-                                        <error-label :errors="errors.school_email"></error-label>
-
-                                    </div>
-
-                                </div>
-                                <div class="row">
-                                    <div class="form-group col-lg-4">
-                                        <label>Province <span class="text-danger">*</span></label>
+                                    <div class="form-group col-lg-3">
+                                        <label>City/ Province <span class="text-danger">*</span></label>
                                         <treeselect :options="provinces" v-model="entry.province_id"
                                                     @input="selectProvince" :disabled="permissionFields['school_province']==false"/>
                                         <error-label for="f_school_name" :errors="errors.province_id"></error-label>
 
                                     </div>
-                                    <div class="form-group col-lg-4" v-if="entry.province_id">
-                                        <label>District <span class="text-danger">*</span></label>
+                                    <div class="form-group col-lg-3" v-if="entry.province_id">
+                                        <label>District/ Town <span class="text-danger">*</span></label>
                                         <treeselect :options="districts" v-model="entry.district_id" :disabled="permissionFields['school_district']==false"/>
                                         <error-label for="f_school_name" :errors="errors.district_id"></error-label>
 
                                     </div>
 
-                                    <div class="form-group col-lg-4">
-                                        <label>School address <span class="text-danger">*</span></label>
+                                    <div class="form-group col-lg-3">
+                                        <label>Street/ Ward </label>
                                         <input v-model="entry.school_address" class="form-control" :disabled="permissionFields['school_address']==false"
                                                placeholder="Enter the school address">
                                         <error-label :errors="errors.school_address"></error-label>
 
                                     </div>
+
+
                                 </div>
+
                                 <div class="row">
                                     <div class="form-group col-lg-4">
                                         <label>Phone number </label>
@@ -165,17 +150,27 @@
                                 </div>
                             </div>-->
                                 <div class="row">
+                                    <div class="form-group col-lg-4">
+                                        <label>School email</label>
+                                        <input v-model="entry.school_email" :disabled="permissionFields['school_email']==false" class="form-control"
+                                               placeholder="Enter the email prefix">
+                                        <error-label :errors="errors.school_email"></error-label>
+
+                                    </div>
+
+                                    <div class="form-group col-lg-4">
+                                        <label>Expired date/License <span class="text-danger">*</span></label>
+                                        <datepicker  v-model="entry.license_to" rows="5" class="form-control" :disabled="permissionFields['school_expire_date']==false" readonly></datepicker>
+                                        <error-label for="f_grade" :errors="errors.license_to"></error-label>
+                                    </div>
+                                </div>
+                                <div class="row">
                                     <div class="form-group col-lg-8">
                                         <label>School description</label>
                                         <textarea v-model="entry.school_description" :disabled="permissionFields['school_description']==false" rows="5" class="form-control"
                                                   placeholder="Your text here..."></textarea>
                                         <error-label for="f_grade" :errors="errors.school_description"></error-label>
 
-                                    </div>
-                                    <div class="form-group col-lg-4">
-                                        <label>Expired date/License <span class="text-danger">*</span></label>
-                                        <datepicker  v-model="entry.license_to" rows="5" class="form-control" :disabled="permissionFields['school_expire_date']==false" readonly></datepicker>
-                                        <error-label for="f_grade" :errors="errors.license_to"></error-label>
                                     </div>
                                 </div>
                                 <div class="form-check form-check-custom form-check-solid pb-5 ">
@@ -191,17 +186,17 @@
 
                                         <select class="form-control form-select " required v-model="allocationContentSchool" :disabled="permissionFields['school_content']==false"
                                                 @change="changeAllocationContent() ">
-
+                                            <option value="">---</option>
                                             <option v-for="allocationContent in allocationContents"
                                                     :value="allocationContent.id">{{allocationContent.title}}
                                             </option>
                                         </select>
 
                                     </div>
-                                    <div class="col-lg-4" v-if="permissionFields['school_content']==false && ['036']">
+                                    <div class="col-lg-4" v-if="permissionFields['school_content']==false && ['036'] && allocationContentSchool">
                                             <button style="margin: 20px 0px 0px" class="btn btn-primary" disabled><i class="bi bi-pencil-square mr-1"></i>Edit</button>
                                     </div>
-                                    <div class="col-lg-4" v-if="permissionFields['school_content']==true && permissions['036']">
+                                    <div class="col-lg-4" v-if="permissionFields['school_content']==true && permissions['036'] && allocationContentSchool">
                                         <a :href="'/xadmin/allocation_contents/edit?id='+allocationContentSchool" >
                                             <button style="margin: 20px 0px 0px" class="btn btn-primary" ><i class="bi bi-pencil-square mr-1"></i>Edit</button>
                                         </a>

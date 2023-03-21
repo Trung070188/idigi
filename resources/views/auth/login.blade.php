@@ -157,16 +157,23 @@ License: For each use you must have a valid license purchased only from above li
 									<span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
 								</button>
 								<!--end::Submit button-->
-								<!--begin::Separator-->
-<!--								<div class="text-center text-muted text-uppercase fw-bolder mb-5">or</div>
-								&lt;!&ndash;end::Separator&ndash;&gt;
-								&lt;!&ndash;begin::Google link&ndash;&gt;
-								<div id="gSignInWrapper">
-                                    <button id="customBtn" type="button" class="btn btn-flex flex-center btn-light btn-lg w-100 mb-5">
-                                        <img alt="Logo" src="/themes/admin/assets/media/svg/brand-logos/google-icon.svg" class="h-20px me-3" />Continue with Google
-                                    </button>
-                                </div>-->
-								<!--end::Google link-->
+                                <div id="g_id_onload"
+
+                                     data-client_id="{{env('GOOGLE_CLIENT_ID')}}"
+                                     data-context="signin"
+                                     data-ux_mode="popup"
+                                     data-callback="callbackSignIn"
+                                     data-itp_support="true">
+                                </div>
+                                <div class="g_id_signin"
+                                     data-width="500"
+                                     data-type="standard"
+                                     data-shape="rectangular"
+                                     data-theme="outline"
+                                     data-text="signin_with"
+                                     data-size="large"
+                                     data-logo_alignment="left">
+                                </div>
 							</div>
 							<!--end::Actions-->
 						</form>
@@ -187,62 +194,34 @@ License: For each use you must have a valid license purchased only from above li
             </div>
         </div>
 
-        <script src="https://apis.google.com/js/api:client.js"></script>
+        <script src="https://accounts.google.com/gsi/client" async defer></script>
         <script>
-            var csrfToken = '{{csrf_token()}}';
-            var googleUser = {};
-            var startApp = function () {
-                gapi.load('auth2', function () {
-                    // Retrieve the singleton for the GoogleAuth library and set up the client.
-                    auth2 = gapi.auth2.init({
-                        client_id: '{{googleClientId()}}',
-                        cookiepolicy: 'single_host_origin',
-                        // Request scopes in addition to 'profile' and 'email'
-                        //scope: 'additional_scope'
-                    });
-                    attachSignin(document.getElementById('customBtn'));
-                });
-            };
+            function callbackSignIn(e){
+                $('#overlay').show();
+                var params = {
+                    token: e.credential
+                };
+                fetch('/auth/google-sign', {
+                    method: 'POST', // or 'PUT'
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': '{{csrf_token()}}',
+                    },
+                    body: JSON.stringify(params),
+                }).then((response) => response.json())
+                    .then((data) => {
 
-            function attachSignin(element) {
+                        if (data.code === 200 || data.code === 0) {
+                            location.replace(data.redirect);
+                        } else {
+                            $('#overlay').hide();
+                            alert(data.message);
+                        }
+                    })
 
-                auth2.attachClickHandler(element, {},
-                    function (googleUser) {
-                        $('#overlay').show();
-                        var profile = googleUser.getBasicProfile();
-
-                        var params = {
-                            email: profile.getEmail(),
-                            id: profile.getId(),
-                            imageUrl: profile.getImageUrl(),
-                            token: gapi.auth2.getAuthInstance().currentUser.get().getAuthResponse().id_token
-                        };
-
-                        fetch('/auth/google-sign', {
-                            method: 'POST', // or 'PUT'
-                            headers: {
-                                'Content-Type': 'application/json',
-                                'X-CSRF-TOKEN': csrfToken,
-                            },
-                            body: JSON.stringify(params),
-                        }).then((response) => response.json())
-                            .then((data) => {
-
-                                if (data.code === 200 || data.code === 0) {
-                                    location.replace(data.redirect);
-                                } else {
-                                    $('#overlay').hide();
-                                    alert(data.message);
-                                }
-                            })
-
-                    }, function (error) {
-                        console.log(error)
-                        $('#overlay').hide();
-                    });
             }
+
         </script>
-        <script>startApp();</script>
 
 	</body>
 	<!--end::Body-->

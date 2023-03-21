@@ -216,6 +216,7 @@ class PlansController extends AdminBaseController
         $units = Unit::query()->select([
             'units.id as id',
             'units.unit_name as label',
+            'units.course_id as course_id',
         ])->get();
         $courses = Course::query()->select([
             'courses.id as id',

@@ -58,20 +58,17 @@
                                     <input v-model="filter.keyword" @keydown.enter="doFilter($event)" class="form-control" placeholder="Enter the lesson name"/>
                                 </div>
                                 <div class="h-15px me-3" style="width: 218px">
-                                    <label>Unit </label>
-<!--                                    <select required class="form-control form-select" v-model="filter.subject"-->
-<!--                                            @keydown.enter="doFilter('subject', filter.subject, $event)">-->
-<!--                                        <option value="" disabled selected>Choose Subject</option>-->
-<!--                                        <option value="0">All</option>-->
-<!--                                        <option value="Math">Math</option>-->
-<!--                                        <option value="Science ">Science</option>-->
-<!--                                    </select>-->
-                                    <treeselect :options="units" v-model="filter.units" placeholder="Choose unit"/>
+
+                                        <label>Course </label>
+                                        <treeselect :options="courses" v-model="filter.courses" placeholder="Choose course" @input="changeCourse"/>
+
+
                                 </div>
                                 <div class="h-15px me-3" style="width: 218px">
-                                    <label>Course </label>
-                                    <treeselect :options="courses" v-model="filter.courses" placeholder="Choose course"/>
+                                    <label>Unit </label>
+                                    <treeselect :options="units" v-model="filter.units" placeholder="Choose unit"/>
                                 </div>
+
                             </div>
                             <div class="d-flex mt-20">
                                 <div class="btn btn-primary" @click="doFilter">Search</div>
@@ -960,6 +957,7 @@
             };
 
             return {
+                allUnits:$json.units || [],
                 courses:$json.courses || [],
                 units:$json.units || [],
                 dataDeviceEdit:[],
@@ -1044,9 +1042,17 @@
         },
 
         mounted() {
-            $router.on('/', this.load).init();
+           // $router.on('/', this.load).init();
         },
         methods: {
+            changeCourse(){
+                this.filter.units = null;
+              if(this.filter.courses){
+                  this.units = this.allUnits.filter(e=>e.course_id == this.filter.courses);
+              }else{
+                  this.units = this.allUnits;
+              }
+            },
             selectProvince() {
                 this.filter.district_id = null;
                 this.districts = [];
@@ -1824,13 +1830,13 @@
 
                     },1000);
 
-                       setTimeout(function () {
+                       /*setTimeout(function () {
                            for (var key in self.filter) {
                                self.filter[key] = '';
                            }
                            $router.setQuery({});
 
-                       },0)
+                       },0)*/
                        this.load();
 
 
@@ -1862,13 +1868,14 @@
             // },
             doFilter() {
 
-                $router.setQuery(this.filter)
+                this.load();
+                //$router.setQuery(this.filter)
             },
 
             // data all lesson
 
             async load() {
-                let query = $router.getQuery();
+                let query = this.filter;
                 this.$loading(true);
                 setTimeout(function (){
                     KTMenu.createInstances();

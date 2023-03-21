@@ -51,7 +51,7 @@ class Lesson extends BaseModel
     ];
 
     public function inventories(){
-        return $this->belongsToMany(Inventory::class, 'lesson_inventory');
+        return $this->belongsToMany(Inventory::class, 'lesson_inventory')->orderBy("lesson_inventory.order", "ASC");
     }
     public function user_units()
     {

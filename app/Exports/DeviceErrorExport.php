@@ -7,7 +7,7 @@ use Illuminate\Contracts\View\View;
 use Maatwebsite\Excel\Concerns\FromView;
 use Maatwebsite\Excel\Concerns\WithColumnWidths;
 
-class DeviceErrorExport implements FromView,WithColumnWidths
+class DeviceErrorExport implements FromView, WithColumnWidths
 {
     protected $data;
 
@@ -28,8 +28,8 @@ class DeviceErrorExport implements FromView,WithColumnWidths
         return [
             'A' => 40,
             'B' => 15,
-            'C'=>20,
-            'D'=>40,
+            'C' => 20,
+            'D' => 40,
 
         ];
     }

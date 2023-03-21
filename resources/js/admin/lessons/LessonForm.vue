@@ -18,7 +18,7 @@
                                     </div>
                                     <div class="form-group col-sm-3">
                                         <label>Subject<span class="text-danger">*</span></label>
-                                        <select class="form-control form-select" v-model="entry.subject" required >
+                                        <select class="form-control form-select" v-model="entry.subject" required @change="changeSubject">
                                             <option value="" disabled selected>Choose the subject</option>
                                             <option value="Math">Math</option>
                                             <option value="Science">Science</option>
@@ -31,9 +31,9 @@
                                         <textarea class="form-control"  placeholder="Your text here..." rows="5" v-model="entry.description"></textarea>
                                         <error-label for="f_category_id" :errors="errors.description"></error-label>
                                     </div>
-                                    <div class="form-group col-sm-3">
+                                    <div class="form-group col-sm-3" v-if="entry.subject">
                                         <label>Unit </label>
-                                        <select class="form-select form-control" required v-model="entry.unit_id">
+                                        <select class="form-select form-control" required v-model="entry.unit_id" @change="changeUnit">
                                             <option value="" disabled selected>Choose the unit</option>
                                             <option v-for="unit in units" :value="unit.id">{{unit.unit_name}}</option>
                                         </select>
@@ -41,7 +41,7 @@
                                     <div class="form-group col-sm-12"  style="border: 1px solid #b5b5c3;border-radius: 25px" v-if="entry.subject">
                                         <label style="margin:15px 0px 10px ">List of modules</label>
                                         <div style="margin-top: 10px;float: right;display: inline-block;margin-right: -13px" class="form-group col-lg-3">
-                                            <select class="form-control form-select" required v-model="filter.type" @change="doFilter()">
+                                            <select class="form-control form-select" required v-model="filter.type" @change="changeType">
                                                 <option value="" disabled selected>Choose the type</option>
                                                 <option value="Vocabulary">Vocabulary</option>
                                                 <option value="Lecture">Lecture</option>
@@ -49,9 +49,9 @@
                                                 <option value="Summary">Summary</option>
                                             </select>
                                         </div>
-                                        <Treeselect :options="modules"  placeholder="Search module" :multiple="true" v-model="listResource" @input="resource()" @search-change="handleSearchChange"/>
+                                        <Treeselect :options="modules" :async="true"  placeholder="Search module" :multiple="true" v-model="listResource"  :valueFormat="'object'":cacheOptions="false" :load-options="handleSearchChange"/>
                                         <draggable
-                                            :list="list"
+                                            :list="listResource"
                                             :animation="200"
                                             ghost-class="moving-card"
                                             group="users"
@@ -59,7 +59,7 @@
                                             class="form-group col-sm-12"
                                             tag="ul"
                                         >
-                                            <div style="width: 100%;cursor: pointer" v-for="(res,index) in list" :key="index">
+                                            <div style="width: 100%;cursor: pointer" v-for="(res,index) in listResource" :key="index">
                                                 <i class="bi bi-text-center" style="width: 10%; display: inline-block"></i>
                                                 <div style="width: 50%;display: inline-block;margin-left: -75px">
                                                     <span>Resource name:</span>
@@ -125,6 +125,7 @@
             };
             return {
                 units:[],
+                allUnit:[],
                 checkResource:[],
                 listResource:[],
                 filter:filter,
@@ -153,44 +154,40 @@
             }
         },
         mounted() {
-            $router.on("/", this.load).init();
+            this.getUnits();
         },
         methods: {
-          async handleSearchChange(value) {
-                if (value) {
-                    let query = $router.getQuery();
-                    const res = await $get("/xadmin/lessons/dataCreateLesson?subject="+this.entry.subject,query);
-                    this.modules=res.module;
-                    const filteredOptions = this.modules.filter(option => option.label.includes(value)).slice(0,this.searchLimit);
-                    this.modules = filteredOptions
-                }
-        },
-            removeResource(index)
-            {
-              this.list=this.list.filter((item,key)=>key!==index);
-              this.listResource=this.list.map(rec => rec.id);
-              console.log(this.list);
+            async handleSearchChange({action, searchQuery, callback}) {
+
+                const res = await $get("/xadmin/lessons/getModules", {subject: this.entry.subject, type: this.filter.type, keyword: searchQuery});
+                callback(null, res)
+
             },
-            resource()
-            {
-                // this.list = this.list.concat(this.listResource);
-                // this.listResource=[];
-                this.list = this.listResource.map(id => {
-                    const item = this.modules.find(i => i.id === id);
-                    return {id, label: item.label,type:item.type};
-                });
+            removeResource(index) {
+                this.listResource=this.listResource.filter((item,key)=>key!==index);
             },
-            doFilter() {
-                $router.setQuery(this.filter);
+
+            changeSubject(){
+                this.modules = [];
+                this.listResource = [];
+                this.entry.unit_id = null;
+                this.units = this.allUnit.filter(e=> e.subject == this.entry.subject);
+
             },
-            async load() {
-                let query = $router.getQuery();
+            changeUnit(){
+                this.modules = [];
+                this.listResource = [];
+            },
+            changeType(){
+                this.modules = [];
+                this.listResource = [];
+            },
+            async getUnits() {
                 this.$loading(true);
-                const res = await $get("/xadmin/lessons/dataCreateLesson", query);
+                const res = await $get("/xadmin/units/getUnits");
+                this.allUnit=res;
+                this.units = this.allUnit.filter(e=> e.subject == this.entry.subject);
                 this.$loading(false);
-                this.modules = res.module;
-                //this.modules=this.modules.concat(this.list);
-                this.units=res.units;
 
             },
             backIndex(){
@@ -198,7 +195,7 @@
             },
             async save() {
                 this.isLoading = true;
-                const res = await $post('/xadmin/lessons/save', {entry: this.entry,inventory:this.list}, false);
+                const res = await $post('/xadmin/lessons/save', {entry: this.entry,inventory:this.listResource}, false);
                 this.isLoading = false;
                 if (res.errors) {
                     this.errors = res.errors;

@@ -26,13 +26,13 @@ class TeacherErrorExport implements FromView,WithColumnWidths
     public function columnWidths(): array
     {
         return [
-            'A'=>20,
-            'B'=>25,
-            'C'=>25,
-            'D'=>11,
-            'E'=>30,
-            'F'=>6,
-            'G'=>40
+            'A' => 20,
+            'B' => 25,
+            'C' => 25,
+            'D' => 11,
+            'E' => 30,
+            'F' => 6,
+            'G' => 40
         ];
     }
 }

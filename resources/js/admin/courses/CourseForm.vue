@@ -18,10 +18,10 @@
                                     </div>
                                     <div class="form-group col-sm-3">
                                         <label>Subject<span class="text-danger">*</span></label>
-                                        <select class="form-control form-select" v-model="entry.subject" required @change="load">
+                                        <select class="form-control form-select" v-model="entry.subject" required @change="changeSubject">
                                             <option value="" disabled selected>Choose the subject</option>
                                             <option value="Math">Math</option>
-                                            <option value="Science ">Science </option>
+                                            <option value="Science">Science </option>
                                         </select>
                                         <error-label  for="f_category_id" :errors="errors.subject"></error-label>
 
@@ -50,9 +50,9 @@
                                     </div>
                                     <div class="form-group col-sm-12"  style="border: 1px solid #b5b5c3;border-radius: 25px" v-if="entry.subject">
                                         <label style="margin:15px 0px 10px ">List of unit</label>
-                                        <Treeselect :options="units" :multiple="true" v-model="listUnit" @input="unit()" placeholder="Search unit"/>
+                                        <Treeselect :options="units" :multiple="true" :valueFormat="'object'" v-model="listUnit"  placeholder="Search unit"/>
                                         <draggable
-                                            :list="list"
+                                            :list="listUnit"
                                             :animation="200"
                                             ghost-class="moving-card"
                                             group="users"
@@ -60,7 +60,7 @@
                                             class="form-group col-sm-12"
                                             tag="ul"
                                         >
-                                            <div style="width: 100%;cursor: pointer" v-for="(res,index) in list" :key="index">
+                                            <div style="width: 100%;cursor: pointer" v-for="(res,index) in listUnit" :key="index">
                                                 <i class="bi bi-text-center" style="width: 5%; display: inline-block"></i>
                                                 <div style="width: 5%;display: inline-block;position: relative;left: -17px;font-size: 20px">{{index+1}}</div>
                                                 <div style="width: 50%;display: inline-block;margin-left: -50px">
@@ -84,7 +84,7 @@
                                     </div>
                                 </div>
                                 <div class="form-check form-check-custom form-check-solid pb-5">
-                                    <input id="state" type="checkbox" v-model="entry.active" class="form-check-input h-20px w-20px" checked>
+                                    <input id="state" type="checkbox" v-model="entry.active" class="form-check-input h-20px w-20px" >
                                     <label for="state" class="form-check-label fw-bold">Active</label>
                                     <error-label for="f_grade" :errors="errors.active"></error-label>
                                 </div>
@@ -120,6 +120,7 @@
             return {
                 list:[],
                 listUnit:[],
+                allUnits:[],
                 units:[],
                 breadcrumbs: [
                     {
@@ -147,34 +148,37 @@
         methods: {
             removeUnit(index)
             {
-                this.list=this.list.filter((item,key)=>key!==index);
-                this.listUnit=this.list.map(rec => rec.id);
+                this.listUnit=this.listUnit.filter((item,key)=>key!==index);
             },
-            unit()
-            {
-                this.list = this.listUnit.map(id => {
-                    const item = this.units.find(i => i.id === id);
-                    return {index:item.index,id, label: item.label};
-                });
+            changeSubject(){
+                this.units = this.allUnits.filter(e => e.subject ==  this.entry.subject);
+                this.listUnit = [];
             },
+
             async load() {
-                let query = $router.getQuery();
                 this.$loading(true);
-                const res = await $get("/xadmin/courses/dataCreateCourse?subject="+this.entry.subject, query);
-                this.$loading(false);
-                this.units = res.units.map(rec => {
+                const res = await $get("/xadmin/units/getUnits");
+                let units = res.filter(e =>!e.course_id);
+                this.allUnits = units.map(function(e){
+
                     return {
-                        'id':rec.id,
-                        'label':rec.unit_name,
+                        id:e.id,
+                        label:e.unit_name,
+                        subject:e.subject,
+                        course_id:e.course_id,
                     }
                 });
+                this.units = this.allUnits.filter(e => e.subject ==  this.entry.subject && !e.course_id);
+
+                this.$loading(false);
+
             },
             backIndex(){
                 window.location.href = '/xadmin/courses/index';
             },
             async save() {
                 this.$loading(true);
-                const res = await $post('/xadmin/courses/save', {entry: this.entry,units:this.list}, false);
+                const res = await $post('/xadmin/courses/save', {entry: this.entry,units:this.listUnit}, false);
                 this.$loading(false);
                 if (res.errors) {
                     this.errors = res.errors;

@@ -53,31 +53,6 @@
                                 </div>
                                 <div class="row">
 
-<!--                                    <div class="form-group col-lg-4">-->
-<!--                                        <label>Subject <span class="text-danger">*</span></label>-->
-<!--                                        <select class="form-control" v-model="entry.subject" :disabled="permissionFields['resource_subject']==false">-->
-
-<!--                                            <option value="math">Math</option>-->
-<!--                                            <option value="science ">Science </option>-->
-<!--                                        </select>-->
-<!--                                        <error-label for="f_category_id" :errors="errors.subject"></error-label>-->
-<!--                                    </div>-->
-<!--                                    <div class="form-group col-lg-4">-->
-<!--                                        <label>Grade <span class="text-danger">*</span></label>-->
-<!--                                        <select class="form-control" v-model="entry.grade" :disabled="permissionFields['resource_grade']==false">-->
-
-<!--                                            <option value="1">1</option>-->
-<!--                                            <option value="2">2</option>-->
-<!--                                            <option value="3">3</option>-->
-<!--                                            <option value="4">4</option>-->
-<!--                                            <option value="5">5</option>-->
-<!--                                            <option value="6">6</option>-->
-<!--                                            <option value="7">7</option>-->
-<!--                                            <option value="8">8</option>-->
-<!--                                            <option value="9">9</option>-->
-<!--                                        </select>-->
-<!--                                        <error-label for="f_category_id" :errors="errors.grade"></error-label>-->
-<!--                                    </div>-->
                                 </div>
                                 <div class="form-group">
                                     <label>Description</label>
@@ -95,7 +70,7 @@
                                                                           align-items: center" v-if="entry.location==1">
                                      <div class="col-lg-4" style="margin-bottom: 20px;top:10px">
                                          <label>Subject</label>
-                                         <select class="form-control form-select "  required v-model="subject" @change="data()">
+                                         <select class="form-control form-select "  required v-model="entry.subject" @change="changeSubject()">
                                              <option value="" selected disabled>Choose subject</option>
                                              <option value="Math">Math</option>
                                              <option value="Science">Science</option>
@@ -103,9 +78,9 @@
                                      </div>
                                      <div class="col-lg-4" style="margin-left: 20px">
                                          <label>Lesson<span class="text-danger">*</span></label>
-                                         <select class="form-control form-select"  v-model="lessonId" @change="filterSubject(lessonId)" required>
+                                         <select class="form-control form-select"  v-model="entry.lessonId"  required>
                                              <option value="" selected disabled>Choose lesson</option>
-                                             <option v-for="lesson in lessons" :value="lesson.id">{{lesson.name}}</option>
+                                             <option v-for="lesson in lessons" :value="lesson.id">{{lesson.label}}</option>
                                          </select>
                                          <error-label for="f_grade" :errors="errors.lessonId" ></error-label>
                                      </div>
@@ -138,7 +113,7 @@
                                     <select class="form-control form-select" v-model="entry.type" :disabled="permissionFields['resource_type']==false" required>
                                         <option value="" selected disabled>Choose type</option>
                                         <option value="Vocabulary">Vocabulary</option>
-                                        <option value="Summary">Lecture</option>
+                                        <option value="Lecture">Lecture</option>
                                         <option value="Practice">Practice</option>
                                         <option value="Summary">Summary</option>
                                     </select>
@@ -218,6 +193,7 @@ import $router from "../../lib/SimpleRouter";
                 lessonId:'',
                 subject:'',
                 lessons:[],
+                allLesson:[],
                 permissionFields:$json.permissionFields || [],
                 isLoading: false,
                 errors: {},
@@ -260,42 +236,45 @@ import $router from "../../lib/SimpleRouter";
                 }
 
             },
+            changeSubject(){
+
+                this.entry.lessonId = null;
+                this.lessons = this.allLesson.filter(e => e.subject == this.entry.subject);
+            },
             async data()
             {
                 this.check=0;
                 this.$loading(true);
-                if(this.entry.id)
-                {
-                    const res=await $get('/xadmin/inventories/dataForm?id='+this.entry.id+'&subject='+this.subject);
-                    this.lessons=res.lessons;
-                    if(res.lesson.length>0)
-                    {
-                        this.lessonId=res.lesson[0].id;
-                        this.subject=res.lesson[0].subject
-                    }
+                const res = await $get('/xadmin/lessons/getLessons');
+                this.allLesson = res;
+                console.log(this.entry.subject)
 
+                if(this.entry.subject){
+                    this.lessons = this.allLesson.filter(e => e.subject == this.entry.subject);
+                }else{
+                    this.lessons = this.allLesson;
                 }
-                else {
-                    const res=await $get('/xadmin/inventories/dataForm?subject='+this.subject+'&lessonId='+this.lessonId);
-                    this.lessons=res.lessons;
 
-                }
                 this.$loading(false);
+
             },
             location()
             {
-                console.log(this.entry.location);
                 this.entry.location=1;
             },
             backIndex(){
                 window.location.href = '/xadmin/inventories/index';
             },
             async save() {
+                if (this.entry.id) {
+                    this.$loading(true);
+                }
 
-               // this.$loading(true);
                 const res = await $post('/xadmin/inventories/save', {entry: this.entry,lessonId: this.lessonId,subject:this.subject}, false);
 
-               // this.$loading(false);
+                if (this.entry.id) {
+                    this.$loading(false);
+                }
                 if (res.errors) {
                     this.errors = res.errors;
                     return;

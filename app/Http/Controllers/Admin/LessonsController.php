@@ -75,7 +75,7 @@ class LessonsController extends AdminBaseController
     public function edit(Request $req)
     {
         $id = $req->id;
-        $entry = Lesson::find($id);
+        $entry = Lesson::with(['inventories'])->where('id', $id)->first();
 
         if (!$entry) {
             throw new NotFoundHttpException();
@@ -119,12 +119,18 @@ class LessonsController extends AdminBaseController
      */
     public function removeAll(Request $req)
     {
-        $ids = $req->ids;
-        Lesson::whereIn('id', $ids)->delete();
-        return [
-            'code' => 0,
-            'message' => 'Đã xóa'
-        ];
+        $lesson = Lesson::whereIn('id', $req->lessonIds)->delete();
+        if ($lesson){
+            return [
+                'code' => 0,
+                'message' => 'Đã xóa'
+            ];
+        }else{
+            return [
+                'code' => 500,
+                'message' => 'Lỗi'
+            ];
+        }
     }
 
     /**
@@ -140,9 +146,9 @@ class LessonsController extends AdminBaseController
         $data = $req->get('entry');
 
         $rules = [
-            'name' => ['required','max:100','regex:/^[\p{L}\s\/0-9.,?\(\)_:-]+$/u'],
+            'name' => ['required', 'max:100', 'regex:/^[\p{L}\s\/0-9.,?\(\)_:-]+$/u'],
             'subject' => 'required|max:200',
-            'description'=>'max:200'
+            'description' => 'max:200'
         ];
 
         $v = Validator::make($data, $rules);
@@ -157,6 +163,8 @@ class LessonsController extends AdminBaseController
         /**
          * @var  Lesson $entry
          */
+        $message = 'Đã thêm';
+
         if (isset($data['id'])) {
             $entry = Lesson::find($data['id']);
             if (!$entry) {
@@ -165,45 +173,93 @@ class LessonsController extends AdminBaseController
                     'message' => 'Không tìm thấy',
                 ];
             }
-            if($entry->unit_id)
-            {
-                Lesson::query()->where('unit_id',$data['unit_id'])->update(['unit_id'=>NULL,'unit_name'=>NUll]);
-            }
-            $unit=Unit::query()->where('id',$data['unit_id'])->first();
+
+            $unit = Unit::query()->where('id', $data['unit_id'])->first();
+            $data['unit_name'] = $unit['unit_name'];
             $entry->fill($data);
-            $entry->unit_name=$unit['unit_name'];
-            if($req->inventory)
-            {
-                LessonInventory::where('lesson_id',$entry->id)->delete();
-            }
-            foreach ($req->inventory as $inven)
-            {
-                 LessonInventory::create(['lesson_id'=>$entry->id,'inventory_id'=>$inven['id']]);
-            }
             $entry->save();
 
-            return [
-                'code' => 0,
-                'message' => 'Đã cập nhật',
-                'id' => $entry->id
-            ];
+            LessonInventory::where('lesson_id', $entry->id)->delete();
+
+            if($req->inventory){
+                foreach ($req->inventory as $key => $inven) {
+                    LessonInventory::create([
+                        'lesson_id' => $entry->id,
+                        'inventory_id' => $inven['id'],
+                        'order' => $key + 1,
+                    ]);
+                }
+            }
+
+
+            $message = 'Đã cập nhật';
+
+
         } else {
             $entry = new Lesson();
+            $unit = Unit::query()->where('id', $data['unit_id'])->first();
+            $data['unit_name'] = $unit['unit_name'];
             $entry->fill($data);
-            Lesson::query()->where('unit_id',$data['unit_id'])->update(['unit_id'=>NULL,'unit_name'=>NUll]);
-            $unit=Unit::query()->where('id',$data['unit_id'])->first();
-            $entry->unit_name=@$unit['unit_name'];
             $entry->save();
-            foreach ($req->inventory as $inven)
-            {
-                LessonInventory::create(['lesson_id'=>$entry->id,'inventory_id'=>$inven['id']]);
+
+            if($req->inventory){
+                foreach ($req->inventory as $key => $inven) {
+                    LessonInventory::create([
+                        'lesson_id' => $entry->id,
+                        'inventory_id' => $inven['id'],
+                        'order' => $key + 1,
+                    ]);
+                }
             }
-            return [
-                'code' => 0,
-                'message' => 'Đã thêm',
-                'id' => $entry->id
-            ];
+
         }
+
+        $lesson = Lesson::query()->with(['inventories', 'unit1', 'unit1.course'])->where('id', $entry->id)->first();
+
+        $inventoryData = [];
+
+        if($lesson->inventories){
+            foreach ($lesson->inventories as $inventory) {
+                $pathArr = explode('/', $inventory->virtual_path);
+                $inventoryData[] = [
+                    "idSublesson" => $inventory->id,
+                    "pathIcon" => "",
+                    "name" => $inventory->name,
+                    "time" => "",
+                    "type" => $inventory->type,
+                    "link" => $pathArr[count($pathArr) - 1],
+                    "full_link" => url('/api/download/inventory/' . $inventory->id)
+                ];
+            }
+            $lessonNameArr = explode(':', $lesson->name);
+            $structure = [
+                "idSubject" => $entry->subject == 'Science' ? 1 : 0,
+                "codeSubject" => $entry->subject,
+                "nameSubject" => 'iSMART ' . $entry->subject,
+                "grade" => @$lesson->unit1->course->grade,
+                "idUnit" => $entry->position,
+                "titleUnit" => $entry->unit_name,
+                "nameUnit" => $entry->unit_name,
+                "idLesson" => $lesson->id,
+                "codeLesson" => $lessonNameArr[0],
+                "titleLesson" => $lesson->name,
+                "nameLesson" => $lesson->name,
+                "subLessons" => $inventoryData,
+
+            ];
+
+            $lesson->structure = json_encode($structure);
+            $lesson->save();
+        }
+
+        return [
+            'code' => 0,
+            'message' => $message,
+            'id' => $entry->id
+        ];
+
+
+
     }
 
     /**
@@ -221,7 +277,7 @@ class LessonsController extends AdminBaseController
             ];
         }
 
-        $entry->status = $req->status ? 1 : 0;
+        $entry->enabled = $req->status ? 1 : 0;
         $entry->save();
 
         return [
@@ -237,7 +293,7 @@ class LessonsController extends AdminBaseController
      */
     public function data(Request $req)
     {
-        $countLesson=Lesson::query()->orderBy('id','desc')->count();
+        $countLesson = Lesson::query()->orderBy('id', 'desc')->count();
         $user = Auth::user();
 
         $schoolIds = explode(',', $user->school_id);
@@ -251,41 +307,22 @@ class LessonsController extends AdminBaseController
         $isSuperAdmin = 0;
         $roleName = "";
 
-            foreach ($user->roles as $role) {
-                $roleName=$role->role_name;
-                if ($role->role_name == 'Teacher') {
-                    if($user->active_allocation==1)
-                    {
-                        if ($user->user_units) {
-                            foreach ($user->user_units as $unit) {
-                                $unitIds[] = $unit->unit_id;
-                            }
+        foreach ($user->roles as $role) {
+            $roleName = $role->role_name;
+            if ($role->role_name == 'Teacher') {
+                if ($user->active_allocation == 1) {
+                    if ($user->user_units) {
+                        foreach ($user->user_units as $unit) {
+                            $unitIds[] = $unit->unit_id;
                         }
                     }
                 }
-                if($req->schoolLesson!=='null')
-                {
-                    if ($role->role_name == 'School Admin') {
-                        $school=School::where('id',$req->schoolLesson)->first();
-                        if($school->active_allocation==1)
-                        {
-                            $contents = AllocationContentSchool::where('school_id', $req->schoolLesson)
-                                ->with(['allocation_content', 'allocation_content.units'])
-                                ->get();
-                            foreach ($contents as $content) {
-                                if (@$content->allocation_content->units) {
-                                    foreach ($content->allocation_content->units as $unit) {
-                                        $unitIds[] = $unit->id;
-                                    }
-
-                                }
-                            }
-                        }
-                    }
-                }
-                else{
-                    if ($role->role_name == 'School Admin') {
-                        $contents = AllocationContentSchool::WhereIn('school_id',$schoolIdArr)
+            }
+            if ($req->schoolLesson !== 'null') {
+                if ($role->role_name == 'School Admin') {
+                    $school = School::where('id', $req->schoolLesson)->first();
+                    if ($school->active_allocation == 1) {
+                        $contents = AllocationContentSchool::where('school_id', $req->schoolLesson)
                             ->with(['allocation_content', 'allocation_content.units'])
                             ->get();
                         foreach ($contents as $content) {
@@ -298,17 +335,32 @@ class LessonsController extends AdminBaseController
                         }
                     }
                 }
+            } else {
+                if ($role->role_name == 'School Admin') {
+                    $contents = AllocationContentSchool::WhereIn('school_id', $schoolIdArr)
+                        ->with(['allocation_content', 'allocation_content.units'])
+                        ->get();
+                    foreach ($contents as $content) {
+                        if (@$content->allocation_content->units) {
+                            foreach ($content->allocation_content->units as $unit) {
+                                $unitIds[] = $unit->id;
+                            }
 
-                if ($role->role_name != 'Teacher' && $role->role_name != 'School Admin') {
-                    $isSuperAdmin = 1;
+                        }
+                    }
                 }
-
             }
 
-        $query = Lesson::query()->with(['user_units'])
+            if ($role->role_name != 'Teacher' && $role->role_name != 'School Admin') {
+                $isSuperAdmin = 1;
+            }
+
+        }
+
+        $query = Lesson::query()->with(['user_units', 'unit'])
             ->orderBy('id', 'ASC');
 
-        if($isSuperAdmin == 0){
+        if ($isSuperAdmin == 0) {
             $query = $query->whereIn('unit_id', $unitIds);
         }
 
@@ -324,8 +376,8 @@ class LessonsController extends AdminBaseController
 
         }
 
-        if ($req->grade) {
-            $query->where('grade', $req->grade);
+        if ($req->unit) {
+            $query->where('unit_id', $req->unit);
         }
 
         if ($req->enabled != '') {
@@ -342,14 +394,31 @@ class LessonsController extends AdminBaseController
 
 
         $entries = $query->paginate($limit);
+        $items = $entries->items();
+        $downloadLessons = DownloadLessonLog::where('lesson_ids', '<>', NULL)->get();
+
+        foreach ($downloadLessons as $downloadLesson){
+            $lessonIds = explode(',', $downloadLesson->lesson_ids);
+            foreach ($lessonIds as $lessonId){
+                foreach ($items as $item){
+                    if($item->id == $lessonId){
+                        if(isset($item->total_download)){
+                            $item->total_download ++;
+                        }else{
+                            $item->total_download = 0;
+                        }
+                    }
+                }
+            }
+        }
 
         return [
             'code' => 0,
-            'user'=>$user,
-            'data' => $entries->items(),
-            'schools'=>$schools,
-            'roleName'=>$roleName,
-            'countLesson'=>$countLesson,
+            'user' => $user,
+            'data' => $items,
+            'schools' => $schools,
+            'roleName' => $roleName,
+            'countLesson' => $countLesson,
             'paginate' => [
                 'currentPage' => $entries->currentPage(),
                 'lastPage' => $entries->lastPage(),
@@ -357,95 +426,113 @@ class LessonsController extends AdminBaseController
             ]
         ];
     }
+
     public function dataCreateLesson(Request $req)
     {
 
-        if($req->subject)
-        {
-            $modules=Inventory::query()->select([
+        if ($req->subject) {
+            $modules = Inventory::query()->select([
                 'inventories.id as id',
                 'inventories.name as label',
                 'inventories.type as type',
                 'inventories.subject as subject'
-            ])->where('subject',$req->subject)->orderBy('id','desc');
-            $units=Unit::query()->where('subject',$req->subject)->orderBy('id','desc')->get();
-        }
-        else{
-            $modules=Inventory::query()->select([
+            ])->where('subject', $req->subject)->limit(100)->orderBy('id', 'desc');
+            $units = Unit::query()->where('subject', $req->subject)->orderBy('id', 'desc')->get();
+        } else {
+            $modules = Inventory::query()->select([
                 'inventories.id as id',
                 'inventories.name as label',
                 'inventories.type as type',
                 'inventories.subject as subject'
-            ])->orderBy('id','desc');
-            $units=Unit::query()->orderBy('id','desc')->get();
+            ])->limit(100)->orderBy('id', 'desc');
+            $units = Unit::query()->orderBy('id', 'desc')->get();
 
         }
-        if($req->type)
-        {
-            $modules->where('type',$req->type)->select([
+        if ($req->type) {
+            $modules->where('type', $req->type)->select([
                 'inventories.id as id',
                 'inventories.name as label',
                 'inventories.type as type'
-            ])->orderBy('id','desc');
+            ])->limit(100)->orderBy('id', 'desc');
         }
         return [
-            'units'=>$units,
-            'module'=>$modules->get(),
+            'units' => $units,
+            'module' => $modules->get(),
         ];
     }
+
+    public function getModules(Request $req)
+    {
+        $modules = Inventory::query()->select([
+            'inventories.id as id',
+            'inventories.name as label',
+            'inventories.type as type',
+            'inventories.subject as subject'
+        ])->limit(100)->orderBy('id', 'desc');
+
+        if ($req->subject) {
+            $modules = $modules->where(function($q) use ($req){
+                    $q->where('subject', $req->subject);
+                    $q->orWhere('subject', NULL);
+                });
+        }
+        if ($req->type) {
+            $modules = $modules->where('type', $req->type);
+        }
+        if ($req->keyword) {
+            $modules = $modules->where('name', 'LIKE', '%' . $req->keyword . '%');
+        }
+
+        return $modules->get();
+    }
+
     public function dataEditLesson(Request $req)
     {
-        $lessons=DB::table('lessons')->leftJoin('lesson_inventory',function ($join)
-        {
-           $join->on('lessons.id','=','lesson_inventory.lesson_id');
-        })->leftJoin('inventories',function ($join)
-        {
-            $join->on('inventories.id','=','lesson_inventory.inventory_id');
-        })->where('lessons.id',$req->id);
-      $lessons= $lessons->select([
+        $lessons = DB::table('lessons')->leftJoin('lesson_inventory', function ($join) {
+            $join->on('lessons.id', '=', 'lesson_inventory.lesson_id');
+        })->leftJoin('inventories', function ($join) {
+            $join->on('inventories.id', '=', 'lesson_inventory.inventory_id');
+        })->where('lessons.id', $req->id);
+        $lessons = $lessons->select([
             'lessons.id as lesson_id',
             'inventories.id as inventory_id',
             'inventories.name as label',
             'inventories.type as type'
-       ])->get();
-      if($req->subject)
-      {
-          $units=Unit::query()->where('subject',$req->subject)->orderBy('id','desc')->get();
+        ])->get();
+        if ($req->subject) {
+            $units = Unit::query()->where('subject', $req->subject)->orderBy('id', 'desc')->get();
 
-          $modules=Inventory::query()->select([
-              'inventories.id as id',
-              'inventories.name as label',
-              'inventories.type as type'
-          ])->where('subject',$req->subject)->orderBy('id','desc');
-      }
-      else{
-          $units=Unit::query()->orderBy('id','desc')->get();
-          $modules=Inventory::query()->select([
-              'inventories.id as id',
-              'inventories.name as label',
-              'inventories.type as type'
-          ])->orderBy('id','desc');
-
-      }
-
-        $module=[];
-        foreach ($lessons as $lesson)
-        {
-            $module[]=$lesson->inventory_id;
-        }
-
-        if($req->type)
-        {
-            $modules->where('type',$req->type)->orWhereIn('id',$module)->select([
+            $modules = Inventory::query()->select([
                 'inventories.id as id',
                 'inventories.name as label',
                 'inventories.type as type'
-            ])->orderBy('id','desc');
+            ])->where('subject', $req->subject)->orderBy('id', 'desc');
+        } else {
+            $units = Unit::query()->orderBy('id', 'desc')->get();
+            $modules = Inventory::query()->select([
+                'inventories.id as id',
+                'inventories.name as label',
+                'inventories.type as type'
+            ])->orderBy('id', 'desc');
+
+        }
+
+        $module = [];
+        foreach ($lessons as $lesson) {
+            $module[] = $lesson->inventory_id;
+        }
+
+        if ($req->type) {
+            $modules->where('type', $req->type)->orWhereIn('id', $module)->select([
+                'inventories.id as id',
+                'inventories.name as label',
+                'inventories.type as type'
+            ])->orderBy('id', 'desc');
         }
         return [
-            'units'=>$units,
-            'lessons'=>$lessons,
-            'module'=>$modules->get(),
+            'units' => $units,
+            'lessons' => $lessons,
+            'module' => $modules->get(),
         ];
     }
 
@@ -512,11 +599,11 @@ class LessonsController extends AdminBaseController
                         $zip->setEncryptionName($link, \ZipArchive::EM_AES_256, $password);
                     }
 
-                   $dataDownloadInventory =  [
+                    $dataDownloadInventory = [
                         'user_id' => $user->id,
                         'ip_address' => $request->getClientIp(),
                         'user_agent' => $request->userAgent(),
-                        'device_uid' =>  @$userDevice->device_uid,
+                        'device_uid' => @$userDevice->device_uid,
                         'lesson_id' => $lesson->id,
                         'download_at' => Carbon::now(),
                         'type' => 'cms',
@@ -534,7 +621,7 @@ class LessonsController extends AdminBaseController
             $zip->close();
 
             $dataLessonFile = [
-            'download_lesson_log_id' => $lessonLog->id,
+                'download_lesson_log_id' => $lessonLog->id,
                 'path' => $zip_file,
                 'is_main' => 0,
                 'is_deleted_file' => 0,
@@ -549,7 +636,7 @@ class LessonsController extends AdminBaseController
 
         $zipAll->close();
 
-        $dataLessonFile =[
+        $dataLessonFile = [
             'download_lesson_log_id' => $lessonLog->id,
             'path' => $zipFileAll,
             'is_main' => 1,
@@ -563,6 +650,12 @@ class LessonsController extends AdminBaseController
             'url' => url($pathZipAll)
         ];
 
+    }
+
+    public function getLessons(Request $req)
+    {
+        $lessons = Lesson::query()->select(['id', 'name as label', 'subject', 'unit_id'])->orderBy('name', 'ASC')->get();
+        return $lessons;
     }
 
 }
