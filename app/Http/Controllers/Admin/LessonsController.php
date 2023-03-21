@@ -463,7 +463,7 @@ class LessonsController extends AdminBaseController
 
     public function getModules(Request $req)
     {
-        $modules = $modules = Inventory::query()->select([
+        $modules = Inventory::query()->select([
             'inventories.id as id',
             'inventories.name as label',
             'inventories.type as type',
@@ -471,7 +471,10 @@ class LessonsController extends AdminBaseController
         ])->limit(100)->orderBy('id', 'desc');
 
         if ($req->subject) {
-            $modules = $modules->where('subject', $req->subject);
+            $modules = $modules->where(function($q) use ($req){
+                    $q->where('subject', $req->subject);
+                    $q->orWhere('subject', NULL);
+                });
         }
         if ($req->type) {
             $modules = $modules->where('type', $req->type);
