@@ -250,8 +250,9 @@
                                             <i class="fa fa-sort"></i>
                                         </button>
                                     </th>
-                                    <th >Type</th>
-                                    <th >Subject</th>
+                                    <th>Type</th>
+                                    <th>Subject</th>
+                                    <th>Lesson</th>
                                     <th class="text-center">Creation Date</th>
                                     <th class="text-center" v-if="permissions['008']">Active</th>
                                     <th class="text-center" v-if="permissions['010']">Action</th>
@@ -266,16 +267,23 @@
                                                 :value="entry.id" @change="updateCheckAll" />
                                         </div>
                                     </td>
-                                    <td class="text-center" @click="edit(entry.id, permissions['008'])">{{ index + from }}</td>
-                                    <td  @click="edit(entry.id, permissions['008'])" :title="entry.name">{{ entry.name }}</td>
-                                    <td  @click="edit(entry.id, permissions['008'])" :title="entry.type">{{ entry.type }}</td>
-                                    <td  @click="edit(entry.id, permissions['008'])" :title="entry.subject">{{ entry.subject }}</td>
-                                    <td class=" text-center" @click="edit(entry.id, permissions['008'])" :title="d(entry.created_at)">{{ d(entry.created_at) }}</td>
+                                    <td class="text-center" @click="edit(entry.id, permissions['008'])">{{ index + from }}
+                                    </td>
+                                    <td @click="edit(entry.id, permissions['008'])" :title="entry.name">{{ entry.name }}
+                                    </td>
+                                    <td @click="edit(entry.id, permissions['008'])" :title="entry.type">{{ entry.type }}
+                                    </td>
+                                    <td @click="edit(entry.id, permissions['008'])" :title="entry.subject">{{ entry.subject
+                                    }}</td>
+                                    <td @click="edit(entry.id, permissions['008'])" :title="entry.lessons">{{ entry.lessons }}</td>
+                                    <td class=" text-center" @click="edit(entry.id, permissions['008'])"
+                                        :title="d(entry.created_at)">{{ d(entry.created_at) }}</td>
                                     <td class="text-center" v-if="permissions['008']">
                                         <div
                                             class="form-check form-switch form-check-custom form-check-primary justify-content-center">
                                             <input v-model="entry.enabled" @change="toggleEnable(entry)"
-                                                class="form-check-input" type="checkbox" value="" id="flexSwitchDefault" :title="(entry.enabled)?'Deactive this module':'Active this module'">
+                                                class="form-check-input" type="checkbox" value="" id="flexSwitchDefault"
+                                                :title="(entry.enabled) ? 'Deactive this module' : 'Active this module'">
                                         </div>
                                     </td>
                                     <td class="text-center" v-if="permissions['010']">
@@ -289,11 +297,11 @@
                         </table>
                         <div class="d-flex pl-9 pr-9 mb-8">
                             <div class="
-                                      col-sm-12 col-md-5
-                                      d-flex
-                                      align-items-center
-                                      justify-content-center justify-content-md-start
-                                    ">
+                                              col-sm-12 col-md-5
+                                              d-flex
+                                              align-items-center
+                                              justify-content-center justify-content-md-start
+                                            ">
                                 <!--<div class="mr-2">
                                     <label>Records per page:</label>
                                 </div>-->
@@ -308,11 +316,11 @@
                             </div>
                             <!--<div style="float: right; margin: 10px">-->
                             <div class="
-                                      col-sm-12 col-md-7
-                                      d-flex
-                                      align-items-center
-                                      justify-content-center justify-content-md-end
-                                    ">
+                                              col-sm-12 col-md-7
+                                              d-flex
+                                              align-items-center
+                                              justify-content-center justify-content-md-end
+                                            ">
                                 <div class="dataTables_paginate paging_simple_numbers" id="kt_customers_table_paginate">
                                     <Paginate :value="paginate" :pagechange="onPageChange"></Paginate>
                                 </div>

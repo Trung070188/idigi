@@ -69,31 +69,31 @@ class InventoriesController extends AdminBaseController
         if (!$entry) {
             throw new NotFoundHttpException();
         }
-        if(@$entry->fileImage){
-            $entry->file_image_new= [
+        if (@$entry->fileImage) {
+            $entry->file_image_new = [
                 'id' => @$entry->fileImage->id,
                 'uri' => @$entry->fileImage->url,
                 'is_image' => 1,
             ];
-        }else{
+        } else {
             $entry->file_image_new = NULL;
         }
 
         $entry->lessonId = NULL;
-        if($entry->lessons){
-            foreach ($entry->lessons as $lesson){
+        if ($entry->lessons) {
+            foreach ($entry->lessons as $lesson) {
                 $entry->lessonId = $lesson->id;
             }
         }
-        if(@$entry->fileAsset){
-            $entry->file_asset_new =[
+        if (@$entry->fileAsset) {
+            $entry->file_asset_new = [
                 'id' => @$entry->fileAsset->id,
                 'uri' => @$entry->fileAsset->url,
                 'extension' => @$entry->fileAsset->extension,
                 'name' => @$entry->fileAsset->name,
                 'is_image' => 0,
             ];
-        }else{
+        } else {
             $entry->file_asset_new = NULL;
         }
 
@@ -104,26 +104,25 @@ class InventoriesController extends AdminBaseController
         $permissionDetail = new PermissionField();
         $permissions = $permissionDetail->permission($user);
         $permissionFields = [
-            'resource_name' => $permissionDetail->havePermission('resource_name',$permissions,$user),
-            'resource_type'=>$permissionDetail->havePermission('resource_type',$permissions,$user),
-            'resource_subject'=>$permissionDetail->havePermission('resource_subject',$permissions,$user),
-            'resource_grade'=>$permissionDetail->havePermission('resource_grade',$permissions,$user),
-            'resource_picture'=>$permissionDetail->havePermission('resource_picture',$permissions,$user),
-            'resource_file_asset_bundle'=>$permissionDetail->havePermission('resource_file_asset_bundle',$permissions,$user),
-            'resource_description'=>$permissionDetail->havePermission('resource_description',$permissions,$user),
-            'resource_tags'=>$permissionDetail->havePermission('resource_tags',$permissions,$user),
-            'resource_active'=>$permissionDetail->havePermission('resource_active',$permissions,$user)
+            'resource_name' => $permissionDetail->havePermission('resource_name', $permissions, $user),
+            'resource_type' => $permissionDetail->havePermission('resource_type', $permissions, $user),
+            'resource_subject' => $permissionDetail->havePermission('resource_subject', $permissions, $user),
+            'resource_grade' => $permissionDetail->havePermission('resource_grade', $permissions, $user),
+            'resource_picture' => $permissionDetail->havePermission('resource_picture', $permissions, $user),
+            'resource_file_asset_bundle' => $permissionDetail->havePermission('resource_file_asset_bundle', $permissions, $user),
+            'resource_description' => $permissionDetail->havePermission('resource_description', $permissions, $user),
+            'resource_tags' => $permissionDetail->havePermission('resource_tags', $permissions, $user),
+            'resource_active' => $permissionDetail->havePermission('resource_active', $permissions, $user)
 
         ];
 
         $title = 'Edit';
         $component = 'InventoryForm';
         $jsonData = [
-            'permissionFields'=>$permissionFields,
+            'permissionFields' => $permissionFields,
             'entry' => $entry,
         ];
         return view('admin.layouts.vue', compact('title', 'component', 'jsonData'));
-
     }
 
     /**
@@ -162,21 +161,20 @@ class InventoriesController extends AdminBaseController
 
         $rules = [
             //'file_image_new' => 'required',
-            'name' => ['required','max:100','regex:/^[\p{L}\s\/0-9.,?\(\)_:-]+$/u'],
+            'name' => ['required', 'max:100', 'regex:/^[\p{L}\s\/0-9.,?\(\)_:-]+$/u'],
             'file_asset_new' => 'required',
-//            'subject' => 'max:255|required',
+            //            'subject' => 'max:255|required',
             'type' => 'max:255|required',
-//            'grade' => 'max:255|required',
+            //            'grade' => 'max:255|required',
             'link_webview' => 'max:255',
             'tags' => 'max:1000',
         ];
-        if($data['location']==1)
-        {
-            $rules['lessonId']=['required'];
+        if ($data['location'] == 1) {
+            $rules['lessonId'] = ['required'];
         }
 
 
-        $v = Validator::make($data, $rules, ['lessonId.required' => 'The lesson field is required.', 'file_asset_new.required' => 'The file asset bundle is required.']);
+        $v = Validator::make($data, $rules, ['lessonId.required' => 'The lesson field is required.']);
 
         if ($v->fails()) {
             return [
@@ -191,7 +189,7 @@ class InventoriesController extends AdminBaseController
         $data['virtual_path'] = str_replace(env('APP_URL'), '',  $data['file_asset_new']['uri']);
         $data['physical_path'] = public_path($data['virtual_path']);
 
-        if($data['file_image_id']){
+        if ($data['file_image_id']) {
             $data['image'] = str_replace(env('APP_URL'), '',  $data['file_image_new']['uri']);
         }
 
@@ -209,16 +207,14 @@ class InventoriesController extends AdminBaseController
             }
 
             $entry->fill($data);
-            if($data['location']==1)
-            {
-                LessonInventory::query()->where('inventory_id',$data['id'])->delete();
+            if ($data['location'] == 1) {
+                LessonInventory::query()->where('inventory_id', $data['id'])->delete();
                 LessonInventory::query()->create([
-                    'lesson_id'=>$data['lessonId'],
-                    'inventory_id'=>$data['id']
+                    'lesson_id' => $data['lessonId'],
+                    'inventory_id' => $data['id']
                 ]);
-            }
-            else{
-                LessonInventory::query()->where('inventory_id',$data['id'])->delete();
+            } else {
+                LessonInventory::query()->where('inventory_id', $data['id'])->delete();
             }
 
 
@@ -232,11 +228,10 @@ class InventoriesController extends AdminBaseController
             $entry = new Inventory();
             $entry->fill($data);
             $entry->save();
-            if($entry->location==1)
-            {
+            if ($entry->location == 1) {
                 LessonInventory::query()->create([
-                    'inventory_id'=>$entry->id,
-                    'lesson_id'=>$data['lessonId'],
+                    'inventory_id' => $entry->id,
+                    'lesson_id' => $data['lessonId'],
                 ]);
             }
             return [
@@ -278,7 +273,7 @@ class InventoriesController extends AdminBaseController
      */
     public function data(Request $req)
     {
-        $countInventory=Inventory::query()->orderBy('id','desc')->count();
+        $countInventory = Inventory::query()->orderBy('id', 'desc')->count();
         $query = Inventory::query()->withCount(['download_inventory_logs']);
         if ($req->order && $req->sortBy) {
             $query = $query->orderBy($req->order, $req->sortBy);
@@ -288,11 +283,10 @@ class InventoriesController extends AdminBaseController
 
 
         if ($req->keyword) {
-            $query->where('name', 'LIKE', '%' . $req->keyword. '%');
+            $query->where('name', 'LIKE', '%' . $req->keyword . '%');
         }
         if ($req->subject) {
             $query->where('subject',  $req->subject);
-
         }
         if ($req->type) {
             $query->where('type',  $req->type);
@@ -301,24 +295,36 @@ class InventoriesController extends AdminBaseController
             $query->where('grade',  $req->grade);
         }
 
-        if ($req->enabled!='') {
+        if ($req->enabled != '') {
             $query->where('enabled',  $req->enabled);
         }
 
 
         $query->createdIn($req->created);
-        $limit =25;
+        $limit = 25;
 
         if ($req->limit) {
             $limit = $req->limit;
         }
+
         $entries = $query->paginate($limit);
+        $items = $entries->items();
+        foreach ($items as $item) {
+            $lesson_name = [];
+            $lessons = Lesson::query()->whereHas('inventories', function ($q) use ($item) {
+                $q->where('inventory_id', '=', $item->id);
+            })->get();
+            foreach ($lessons as $lesson) {
+                $lesson_name[] = $lesson->name;
+            }
+            $item->lessons = implode(', ',$lesson_name);
+        }
 
 
         return [
-            'countInventory'=>$countInventory,
+            'countInventory' => $countInventory,
             'code' => 0,
-            'data' => $entries->items(),
+            'data' => $items,
             'paginate' => [
                 'currentPage' => $entries->currentPage(),
                 'lastPage' => $entries->lastPage(),
@@ -328,21 +334,18 @@ class InventoriesController extends AdminBaseController
     }
     public function dataForm(Request $req)
     {
-        $lessons=Lesson::query()->orderBy('name','ASC');
-        if($req->subject)
-        {
-            $lessons->where('subject',$req->subject);
+        $lessons = Lesson::query()->orderBy('name', 'ASC');
+        if ($req->subject) {
+            $lessons->where('subject', $req->subject);
         }
-        if($req->id)
-        {
-            $lesson=Lesson::query()->whereHas('inventories',function ($q) use ($req)
-            {
-               $q->where('inventory_id','=',$req->id);
+        if ($req->id) {
+            $lesson = Lesson::query()->whereHas('inventories', function ($q) use ($req) {
+                $q->where('inventory_id', '=', $req->id);
             })->get();
         }
         return [
-          'lessons'=>$lessons->get(),
-          'lesson'=>@$lesson
+            'lessons' => $lessons->get(),
+            'lesson' => @$lesson
 
         ];
     }
@@ -417,5 +420,4 @@ class InventoriesController extends AdminBaseController
             'message' => 'Đã xóa'
         ];
     }
-
 }
