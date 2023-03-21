@@ -282,7 +282,7 @@ class CoursesController extends AdminBaseController
             $query->where('course_name', 'LIKE', '%' . $req->course_name . '%');
         }
         if ($req->subject) {
-            $query->where('subject', 'LIKE', '%' . $req->subject . '%');
+            $query->where('subject',  $req->subject);
         }
         if ($req->grade) {
             $query->where('grade', 'LIKE', '%' . $req->grade . '%');

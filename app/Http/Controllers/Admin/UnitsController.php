@@ -298,7 +298,7 @@ class UnitsController extends AdminBaseController
             $query->where('unit_name', 'LIKE', '%' . $req->course_name . '%');
         }
         if ($req->subject) {
-            $query->where('subject', 'LIKE', '%' . $req->subject . '%');
+            $query->where('subject',  $req->subject);
         }
         if ($req->course_id) {
             $query->where('course_id', 'LIKE', '%' . $req->course_id . '%');
