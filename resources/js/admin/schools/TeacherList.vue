@@ -590,23 +590,23 @@
                                         keywords or remove search filters.</td>
                                 </tr>
                                 <tr v-if="entries !== 0" v-for="(entry, index) in entries"
-                                    v-on:mouseover="mouseover(entry.id)" v-on:mouseleave="mouseleave()" :class="permissions[14]?'cursor-pointer':''">
+                                    v-on:mouseover="mouseover(entry.id)" v-on:mouseleave="mouseleave()" :class="permissions['014']?'cursor-pointer':''">
                                     <td class="">
                                         <div class="form-check form-check-sm form-check-custom form-check-solid">
                                             <input class="form-check-input" type="checkbox" v-model="teacherIds"
                                                 :value="entry.id" @change="updateCheckAll" />
                                         </div>
                                     </td>
-                                    <td @click="edit(entry.id, permissions[14])" class="text-center">{{ index + from }}</td>
-                                    <td @click="edit(entry.id, permissions[14])" class="" v-text="entry.username"></td>
-                                    <td @click="edit(entry.id, permissions[14])" class="" v-text="entry.full_name"></td>
-                                    <td @click="edit(entry.id, permissions[14])" class="" v-text="entry.email"
+                                    <td @click="edit(entry.id, permissions['014'])" class="text-center">{{ index + from }}</td>
+                                    <td @click="edit(entry.id, permissions['014'])" class="" v-text="entry.username"></td>
+                                    <td @click="edit(entry.id, permissions['014'])" class="" v-text="entry.full_name"></td>
+                                    <td @click="edit(entry.id, permissions['014'])" class="" v-text="entry.email"
                                         data-bs-toggle="tooltip" :title="entry.email"></td>
-                                    <td @click="edit(entry.id, permissions[14])" v-text="entry.class"></td>
-                                    <td @click="edit(entry.id, permissions[14])" v-text="entry.phone"></td>
-                                    <td @click="edit(entry.id, permissions[14])" class="text-center">{{
+                                    <td @click="edit(entry.id, permissions['014'])" v-text="entry.class"></td>
+                                    <td @click="edit(entry.id, permissions['014'])" v-text="entry.phone"></td>
+                                    <td @click="edit(entry.id, permissions['014'])" class="text-center">{{
                                         entry.user_devices.length }} / {{ lengthDeviceTeacher }}</td>
-                                    <td @click="edit(entry.id, permissions[14])" class="text-center"
+                                    <td @click="edit(entry.id, permissions['014'])" class="text-center"
                                         v-text="d(entry.created_at)"></td>
                                     <td class="text-center">
                                         <div
