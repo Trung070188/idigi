@@ -196,6 +196,7 @@ class UnitsController extends AdminBaseController
             $lessonIds[] = $_lesson['id'];
         }
         $course = Course::where('id', $entry->course_id)->first();
+
         Lesson::where('unit_id', $entry->id)->update([
             'unit_id' => NULL,
             'course_id' => NULL,
@@ -229,7 +230,7 @@ class UnitsController extends AdminBaseController
                 "idSubject" => $entry->subject == 'Science' ? 1 : 0,
                 "codeSubject" => $entry->subject,
                 "nameSubject" => 'iSMART ' . $entry->subject,
-                "grade" => $course->grade,
+                "grade" => @$course->grade,
                 "idUnit" => $entry->position,
                 "titleUnit" => $entry->unit_name,
                 "nameUnit" => $entry->unit_name,
