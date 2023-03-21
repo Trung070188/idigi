@@ -1209,10 +1209,11 @@ class SchoolsController extends AdminBaseController
                         $validator = Validator::make(
                             $item,
                             [
-                                'label' => ['required', 'regex:/^[\p{L}\s\/0-9.,_-]+$/u'],
+                                'label' => ['required', 'min:6', 'regex:/^[\p{L}\s\/0-9.,_-]+$/u'],
                                 'devices_per_user' => ['required', 'numeric', 'gt:0'],
                                 'number_of_users' => ['required', 'numeric', 'gt:0'],
-                                'license_to' => ['required', 'date_format:d/m/Y']
+                                'license_to' => ['required', 'date_format:d/m/Y'],
+                                'school_phone' => ['numeric', 'size:10']
                             ],
                             [
                                 'license_to.date_format' => 'The license to does not match the format dd/mm/YYYY'
