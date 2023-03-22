@@ -472,7 +472,8 @@ class LessonsController extends AdminBaseController
             'inventories.name as label',
             'inventories.type as type',
             'inventories.subject as subject'
-        ])->limit(100)->orderBy('id', 'desc');
+        ])->whereDoesntHave('lessons')
+            ->limit(100)->orderBy('id', 'desc');
 
         if ($req->subject) {
             $modules = $modules->where(function($q) use ($req){
