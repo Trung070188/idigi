@@ -254,7 +254,7 @@
                                     <th>Subject</th>
                                     <th>Lesson</th>
                                     <th class="text-center">Creation Date</th>
-                                    <th class="text-center" v-if="permissions['008']">Active</th>
+                                    <th class="text-center" v-if="permissions['061']">Active</th>
                                     <th class="text-center" v-if="permissions['010']">Action</th>
                                 </tr>
                             </thead>
@@ -278,7 +278,7 @@
                                     <td @click="edit(entry.id, permissions['008'])" :title="entry.lessons">{{ entry.lessons }}</td>
                                     <td class=" text-center" @click="edit(entry.id, permissions['008'])"
                                         :title="d(entry.created_at)">{{ d(entry.created_at) }}</td>
-                                    <td class="text-center" v-if="permissions['008']">
+                                    <td class="text-center" v-if="permissions['061']">
                                         <div
                                             class="form-check form-switch form-check-custom form-check-primary justify-content-center">
                                             <input v-model="entry.enabled" @change="toggleEnable(entry)"

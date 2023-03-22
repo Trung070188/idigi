@@ -29,8 +29,8 @@
                                 <th scope="row" v-for="role in roles" style="border-left:1px solid #ddd;border-bottom: none;border-right: none;border-top: none;padding: 5px 0px 0px" >
                                     <span></span>
                                     <div class="form-check form-check-custom form-check-solid justify-content-center" v-for="permissionDetail in role.permission" v-if="permissionDetail.permission==permission.id" style="border-bottom:1px dotted #ddd">
-                                        <input disabled @change="changePermissionDetail(role.id,permissionDetail.id,permissionDetail.value)"  class="form-check-input h-20px w-20px"  type="checkbox"  v-model="permissionDetail.value" v-if="permissionDetail.is_admin=='Yes'" style="background-color:#ebedf3;border-color:#ebedf3" >
-                                        <input  @change="changePermissionDetail(role.id,permissionDetail.id,permissionDetail.value)"  class="form-check-input h-20px w-20px"  type="checkbox"  v-model="permissionDetail.value" v-else style="border-color:#ddd">
+
+                                        <input :disabled="userPermissions['063']!= 1"  @change="changePermissionDetail(role.id,permissionDetail.id,permissionDetail.value)"  class="form-check-input h-20px w-20px"  type="checkbox"  v-model="permissionDetail.value" style="border-color:#ddd">
                                         <br>
                                     </div>
                                 </th>
@@ -49,7 +49,7 @@
 </template>
 
 <script>
-    import {$get, $post, getTimeRangeAll} from "../../utils";
+import {$get, $post, clone, getTimeRangeAll} from "../../utils";
     import $router from '../../lib/SimpleRouter';
     import ActionBar from "../includes/ActionBar";
 
@@ -60,7 +60,9 @@
         name: "Permission_detailsIndex.vue",
         components: {ActionBar},
         data() {
+            const userPermissions = clone(window.$permissions);
             return {
+                userPermissions,
                 activeColor:'',
                 permissions:[],
                 roles:[],

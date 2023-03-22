@@ -241,8 +241,8 @@
                                     <th class="text-center">Grade</th>
                                     <th class="">Subject</th>
                                     <th class="text-center">Creation Date</th>
-                                    <th class="text-center">Active</th>
-                                    <th class="text-center">Action</th>
+                                    <th class="text-center" v-if="permissions['062']">Active</th>
+                                    <th class="text-center" >Action</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -261,7 +261,7 @@
                                     <td class="text-center" v-text="entry.grade" @click="edit(entry.id)"></td>
                                     <td class="" v-text="entry.subject" @click="edit(entry.id)"></td>
                                     <td class="text-center" v-text="d(entry.created_at)" @click="edit(entry.id)"></td>
-                                    <td class="text-center" v-if="permissions['043']">
+                                    <td class="text-center" v-if="permissions['062']">
                                         <div
                                             class="form-check form-switch form-check-custom form-check-primary justify-content-center">
                                             <input v-model="entry.active" @change="toggleStatus(entry)"

@@ -256,7 +256,7 @@
                                     <th class="">Subject</th>
                                     <th class="text-center">Downloaded</th>
                                     <th class="text-center">Creation Date</th>
-                                    <th class="text-center" v-if="permissions['043']">Active</th>
+                                    <th class="text-center" v-if="permissions['060']">Active</th>
                                     <th class="text-center">Action</th>
                                 </tr>
                             </thead>
@@ -289,7 +289,7 @@
                                     <td class="" @click="edit(entry.id)" v-text="entry.subject"></td>
                                     <td class="text-center" @click="edit(entry.id)" v-text="entry.total_download"></td>
                                     <td class="text-center" @click="edit(entry.id)" v-text="d(entry.created_at)"></td>
-                                    <td class="text-center" v-if="permissions['043']">
+                                    <td class="text-center" v-if="permissions['060']">
                                         <div
                                             class="form-check form-switch form-check-custom form-check-primary justify-content-center">
                                             <input v-model="entry.enabled" @change="toggleStatus(entry)"
