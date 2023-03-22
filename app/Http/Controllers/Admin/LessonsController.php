@@ -146,12 +146,16 @@ class LessonsController extends AdminBaseController
         $data = $req->get('entry');
 
         $rules = [
-            'name' => ['required', 'max:100', 'regex:/^[\p{L}\s\/0-9.,?\(\)_:-]+$/u'],
+            'name' => ['required', 'max:100', "regex:/^[\p{L}\s\/0-9.,'?\(\)_:-]+$/u"],
             'subject' => 'required|max:200',
             'description' => 'max:200'
         ];
 
-        $v = Validator::make($data, $rules);
+        $messages = [
+            'name.regex'  => 'The :attribute field contains invalid characters, letters, numbers, space and _ - : , . ( ) ? \' are allowed.',
+        ];
+
+        $v = Validator::make($data, $rules, $messages);
 
         if ($v->fails()) {
             return [
