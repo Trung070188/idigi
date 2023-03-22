@@ -16,8 +16,6 @@
                                <div class="d-flex align-items-center flex-wrap" v-if="roleName=='School Admin'">
                                   <div v-text="'School: '+ entry.label " ></div>
 
-
-
                                </div>
                            </div>
 <!--                                    -->
@@ -133,7 +131,7 @@
                             <div class="separator my-2"></div>
                             <!--end::Menu separator-->
                             <!--begin::Menu item-->
-                            <div class="menu-item px-5">
+                            <div class="menu-item px-5" v-if="permissions['064']">
                                 <a :href="'/xadmin/users/profile?id='+auth.id" class="menu-link px-5">My Profile</a>
                             </div>
 
@@ -181,6 +179,7 @@
         data() {
             const menus = clone(window.$sideBarMenus);
             const pathname = location.pathname.split('?')[0];
+            const permissions = clone(window.$permissions);
 
             menus.forEach(menu => {
                 menu.showSubMenu = false;
@@ -207,6 +206,7 @@
             });
 
             return {
+                permissions,
                 entry:$json.entry || {},
                 pathname:pathname,
                 menus,

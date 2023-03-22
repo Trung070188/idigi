@@ -42,7 +42,7 @@
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-dismiss="modal" @click="CloseModal()">Close</button>
-                            <button type="button" class="btn btn-primary" @click="updatePassword()">Save changes</button>
+                            <button type="button" class="btn btn-primary" @click="updatePassword()" >Save changes</button>
                         </div>
                     </div>
                 </div>
@@ -175,87 +175,14 @@
                         </div>
 
                         <div class="card-footer d-flex justify-content-end py-6 px-9">
-                            <button type="button" class="btn btn-primary" @click="save_profile()" :disabled="!changed">Save Changes</button>
+                            <button type="button" class="btn btn-primary" @click="save_profile()" :disabled="!changed" v-if="permissions['065']">Save Changes</button>
                         </div>
 
                     </form>
                 </div>
             </div>
 
-            <!--<div class="row">
-                <div class="col-lg-12">
-                <div class="card card-custom card-stretch gutter-b">
-                    <div class="card-header border-0 pt-5">
-                        <div class="title">
-                            <label>User profile</label>
-                        </div>
 
-                    </div>
-                    <hr>
-                    <div class="card-header border-0 pt-5">
-
-                        <div class="row width-full">
-                            <div class="col-lg-12">
-
-                    <div class="tab-content profile-page">
-                        <div class="tab-pane profile active" id="profile-tab">
-                            <div class="row">
-                                <div class="col-md-3">
-                                    <div class="user-info-left" >
-                                        <div  class="contact">
-
-                                            <upload-image v-model="entry.file_image_new"  :hide-preview="true"></upload-image>
-
-                                        </div>
-                                        <div class="contact" style="margin-top: 20px">
-                                            <a href="#" class="btn-block" @click="modalDevice()">Change password</a>
-                                            <a href="/xadmin/logout" class=" btn-block"> Log out</a>
-
-                                        </div>
-
-                                    </div>
-                                </div>
-                                <div class="col-md-9">
-                                    <div class="user-info-right">
-                                        <div class="basic-info">
-                                            <p class="data-row col-sm-6 " >
-                                                <label >Fullname </label>
-                                                <input  class="form-control" placeholder="Enter the full name" v-model="entry.full_name"  />
-                                                <error-label for="f_category_id"
-                                                             :errors="errors.full_name"></error-label>
-                                            </p>
-                                            <p class="data-row col-sm-6 " >
-                                                <label >Email </label>
-                                                <input  class="form-control" placeholder="Enter the full name" v-model="entry.email"  />
-                                                <error-label for="f_category_id"
-                                                             :errors="errors.email"></error-label>
-                                            </p>
-                                            <p class="data-row col-sm-6 " >
-                                                <label >Username </label>
-                                                <input  class="form-control" disabled v-model="entry.username"  />
-                                                <error-label for="f_category_id"
-                                                             :errors="errors.username"></error-label>
-                                            </p>
-                                            <div  class="data-row col-sm-6 " >
-                                                <label   >Role </label>
-                                                <input  class="form-control" disabled  v-model="role" />
-                                          </div>
-                                            <div class="data-row col-sm-6 " >
-                                                <button type="reset" @click="save_profile()" :disabled="!changed" class="btn btn-primary mr-2" style="margin:14px 0px 0px">Save</button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                </div>
-            </div>-->
 
         </div>
 
@@ -263,7 +190,7 @@
 
 </template>
 <script>
-    import {$get, $post, $upload} from "../../utils";
+import {$get, $post, $upload, clone} from "../../utils";
     import FileManagerInput from "../../components/FileManagerInput";
     import ActionBar from "../includes/ActionBar";
     import UploadImage from "../../components/UploadImage";
@@ -273,7 +200,9 @@
         components: { ActionBar,UploadImage},
 
         data() {
+            const permissions = clone(window.$permissions);
             return {
+                permissions,
                 changed: false,
                 isSaved:true,
                 notYetClicked: true,
