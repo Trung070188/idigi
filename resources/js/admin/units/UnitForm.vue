@@ -15,7 +15,7 @@
                                         <label>Unit name <span class="text-danger">*</span></label>
                                         <input class="form-control nospace" placeholder="Enter the unit name"
                                                v-model="entry.unit_name">
-                                        <error-label for="f_category_id" :errors="errors.label"></error-label>
+                                        <error-label for="f_category_id" :errors="errors.unit_name"></error-label>
                                     </div>
                                     <div class="form-group col-sm-3">
                                         <label>Subject<span class="text-danger">*</span></label>
