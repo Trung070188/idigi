@@ -1042,7 +1042,7 @@
         },
 
         mounted() {
-           // $router.on('/', this.load).init();
+            $router.on('/', this.load).init();
         },
         methods: {
             changeCourse(){
