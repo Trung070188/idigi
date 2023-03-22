@@ -79,9 +79,16 @@ class LessonController extends Controller
                 foreach ($lesson->inventories as $inventory) {
                     $pathArr = explode('/', $inventory->virtual_path);
                     $inventoryName =  explode('_', $inventory->name);
+
+                    $pathIcon = "Icons\\".$inventory->type.@$lesson->unit1->course->subject.".png";
+
+                    if($inventory->type == 'Game'){
+                        $pathIcon = "Icons\\".$inventory->type.@$lesson->unit1->course->subject."1.png";
+                    }
+
                     $inventoryData[] = [
                         "idSublesson" => $inventory->id,
-                        "pathIcon" => "Icons/".$inventory->type.@$lesson->unit1->course->subject.".png",
+                        "pathIcon" => $pathIcon,
                         "name" => count($inventoryName) >  1 ? $inventoryName[1] :$inventoryName[0],
                         "time" => "",
                         "type" => $inventory->type,
