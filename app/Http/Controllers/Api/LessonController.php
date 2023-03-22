@@ -81,7 +81,7 @@ class LessonController extends Controller
                     $inventoryName =  explode('_', $inventory->name);
                     $inventoryData[] = [
                         "idSublesson" => $inventory->id,
-                        "pathIcon" => "",
+                        "pathIcon" => "Icons/".$inventory->type.@$lesson->unit1->course->subject.".png",
                         "name" => count($inventoryName) >  1 ? $inventoryName[1] :$inventoryName[0],
                         "time" => "",
                         "type" => $inventory->type,
