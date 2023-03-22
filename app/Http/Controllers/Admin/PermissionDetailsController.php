@@ -26,35 +26,38 @@ class PermissionDetailsController extends AdminBaseController
     ];
 
     /**
-    * Index page
-    * @uri  /xadmin/permission_details/index
-    * @throw  NotFoundHttpException
-    * @return  View
-    */
-    public function index() {
+     * Index page
+     * @uri  /xadmin/permission_details/index
+     * @throw  NotFoundHttpException
+     * @return  View
+     */
+    public function index()
+    {
         $title = 'PermissionDetail';
         $component = 'PermissionDetailIndex';
         return component($component, compact('title'));
     }
 
     /**
-    * Create new entry
-    * @uri  /xadmin/permission_details/create
-    * @throw  NotFoundHttpException
-    * @return  View
-    */
-    public function create (Request $req) {
+     * Create new entry
+     * @uri  /xadmin/permission_details/create
+     * @throw  NotFoundHttpException
+     * @return  View
+     */
+    public function create(Request $req)
+    {
         $component = 'Permission_detailForm';
         $title = 'Create permission_details';
         return component($component, compact('title'));
     }
 
     /**
-    * @uri  /xadmin/permission_details/edit?id=$id
-    * @throw  NotFoundHttpException
-    * @return  View
-    */
-    public function edit (Request $req) {
+     * @uri  /xadmin/permission_details/edit?id=$id
+     * @throw  NotFoundHttpException
+     * @return  View
+     */
+    public function edit(Request $req)
+    {
         $id = $req->id;
         $entry = PermissionDetail::find($id);
 
@@ -63,8 +66,8 @@ class PermissionDetailsController extends AdminBaseController
         }
 
         /**
-        * @var  PermissionDetail $entry
-        */
+         * @var  PermissionDetail $entry
+         */
 
         $title = 'Edit';
         $component = 'Permission_detailForm';
@@ -74,10 +77,11 @@ class PermissionDetailsController extends AdminBaseController
     }
 
     /**
-    * @uri  /xadmin/permission_details/remove
-    * @return  array
-    */
-    public function remove(Request $req) {
+     * @uri  /xadmin/permission_details/remove
+     * @return  array
+     */
+    public function remove(Request $req)
+    {
         $id = $req->id;
         $entry = PermissionDetail::find($id);
 
@@ -94,10 +98,11 @@ class PermissionDetailsController extends AdminBaseController
     }
 
     /**
-    * @uri  /xadmin/permission_details/save
-    * @return  array
-    */
-    public function save(Request $req) {
+     * @uri  /xadmin/permission_details/save
+     * @return  array
+     */
+    public function save(Request $req)
+    {
         if (!$req->isMethod('POST')) {
             return ['code' => 405, 'message' => 'Method not allow'];
         }
@@ -105,12 +110,12 @@ class PermissionDetailsController extends AdminBaseController
         $data = $req->get('entry');
 
         $rules = [
-    'display_name' => 'max:191',
-    'name' => 'max:191',
-    'code' => 'max:191',
-    'permision_id' => 'numeric',
-    'order' => 'numeric',
-];
+            'display_name' => 'max:191',
+            'name' => 'max:191',
+            'code' => 'max:191',
+            'permision_id' => 'numeric',
+            'order' => 'numeric',
+        ];
 
         $v = Validator::make($data, $rules);
 
@@ -122,8 +127,8 @@ class PermissionDetailsController extends AdminBaseController
         }
 
         /**
-        * @var  PermissionDetail $entry
-        */
+         * @var  PermissionDetail $entry
+         */
         if (isset($data['id'])) {
             $entry = PermissionDetail::find($data['id']);
             if (!$entry) {
@@ -155,8 +160,8 @@ class PermissionDetailsController extends AdminBaseController
     }
 
     /**
-    * @param  Request $req
-    */
+     * @param Request $req
+     */
     public function toggleStatus(Request $req)
     {
         $id = $req->get('id');
@@ -179,80 +184,76 @@ class PermissionDetailsController extends AdminBaseController
     }
 
     /**
-    * Ajax data for index page
-    * @uri  /xadmin/permission_details/data
-    * @return  array
-    */
-    public function data(Request $req) {
+     * Ajax data for index page
+     * @uri  /xadmin/permission_details/data
+     * @return  array
+     */
+    public function data(Request $req)
+    {
 
         $roles = Role::query()
-        ->with(['permissionDetails'])
-        ->where('role_name', '<>','Super Administrator')
-        ->orderBy('order', 'ASC')->get();
-        $permissions=Permission::with(['permissionDetails'])->whereNotNull('display_permission_detail')->orderBy('order_permission','ASC')->get();
-       $data=[];
-       foreach($roles as $role)
-       {
-           $rolePermissionsDetail=[];
-           foreach ($permissions as $permission)
-           {
-              foreach ($permission->permissionDetails as $permissionDetail)
-              {
-                  $item =[
-                      'id'=>$permissionDetail->id,
-                      'permission'=>$permission->id,
-                      'value'=>0,
-                      'is_admin'=>$permissionDetail->is_admin
-                  ];
-                  foreach ($role->permissionDetails as $_permissionDetail)
-                  {
-                      if($_permissionDetail->id==$permissionDetail->id)
-                      {
-                          $item['value']=1;
-                      }
-                  }
-                  $rolePermissionsDetail[]= $item;
-              }
+            ->with(['permissionDetails'])
+            ->where('role_name', '<>', 'Super Administrator')
+            ->orderBy('order', 'ASC')->get();
+        $permissions = Permission::with(['permissionDetails'])->whereNotNull('display_permission_detail')->orderBy('order_permission', 'ASC')->get();
+        $data = [];
+        foreach ($roles as $role) {
+            $rolePermissionsDetail = [];
+            foreach ($permissions as $permission) {
+                foreach ($permission->permissionDetails as $permissionDetail) {
+                    $item = [
+                        'id' => $permissionDetail->id,
+                        'permission' => $permission->id,
+                        'value' => 0,
+                        'is_admin' => $permissionDetail->is_admin
+                    ];
+                    foreach ($role->permissionDetails as $_permissionDetail) {
+                        if ($_permissionDetail->id == $permissionDetail->id) {
+                            $item['value'] = 1;
+                        }
+                    }
+                    $rolePermissionsDetail[] = $item;
+                }
 
 
-           }
-           $data[]=[
+            }
+            $data[] = [
                 'role_name' => $role->role_name,
                 'id' => $role->id,
                 'role_description' => $role->role_description,
                 'allow_deleted' => $role->allow_deleted,
-                'permission'=>$rolePermissionsDetail,
-           ];
-       }
+                'permission' => $rolePermissionsDetail,
+            ];
+        }
+
         return [
-           'code'=> 0,
-           'data'=>[
-               'roles'=>$data,
-               'permissions'=>$permissions,
-           ]
+            'code' => 0,
+            'data' => [
+                'roles' => $data,
+                'permissions' => $permissions,
+            ]
 
 
         ];
     }
+
     public function changeDetailPermission(Request $req)
     {
         $roleId = $req->role_id;
         $permissionId = $req->permission_detail_id;
         $check = $req->check;
-       if($check==false)
-       {
-           RoleHasPermissonDetail::where('role_id',$roleId)->where('permission_detail_id',$permissionId)->delete();
-       }
-       else{
-           RoleHasPermissonDetail::updateOrCreate([
-               'role_id' => $roleId,
-               'permission_detail_id' => $permissionId
-           ],
-               ['role_id' => $roleId,
-                   'permission_detail_id' => $permissionId
+        if ($check == false) {
+            RoleHasPermissonDetail::where('role_id', $roleId)->where('permission_detail_id', $permissionId)->delete();
+        } else {
+            RoleHasPermissonDetail::updateOrCreate([
+                'role_id' => $roleId,
+                'permission_detail_id' => $permissionId
+            ],
+                ['role_id' => $roleId,
+                    'permission_detail_id' => $permissionId
 
-               ]);
-       }
+                ]);
+        }
 
         return [
             'code' => 0,
@@ -260,14 +261,15 @@ class PermissionDetailsController extends AdminBaseController
         ];
     }
 
-    public function export() {
-                $keys = [
-                            'display_name' => ['A', 'display_name'],
-                            'name' => ['B', 'name'],
-                            'code' => ['C', 'code'],
-                            'permision_id' => ['D', 'permision_id'],
-                            'order' => ['E', 'order'],
-                            ];
+    public function export()
+    {
+        $keys = [
+            'display_name' => ['A', 'display_name'],
+            'name' => ['B', 'name'],
+            'code' => ['C', 'code'],
+            'permision_id' => ['D', 'permision_id'],
+            'order' => ['E', 'order'],
+        ];
 
         $query = PermissionDetail::query()->orderBy('id', 'desc');
 
@@ -280,7 +282,7 @@ class PermissionDetailsController extends AdminBaseController
                 $sheet->setCellValue($v . "1", $key);
             } elseif (is_array($v)) {
                 list($c, $n) = $v;
-                 $sheet->setCellValue($c . "1", $n);
+                $sheet->setCellValue($c . "1", $n);
             }
         }
 
