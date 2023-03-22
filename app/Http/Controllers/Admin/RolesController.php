@@ -241,7 +241,9 @@ class RolesController extends AdminBaseController
             ->with(['permissions'])
             ->where('role_name', '<>','Super Administrator')
             ->orderBy('id', 'ASC')->get();
-        $groupPermissions = GroupPermission::with(['permissions'])
+        $groupPermissions = GroupPermission::with(['permissions', function($q) {
+            $q->orderBy('order', 'ASC');
+        }])
             ->whereDoesntHave('childs')
             ->orderBy('order', 'ASC')
             ->where('show_role', 1)
