@@ -152,7 +152,7 @@ class LessonsController extends AdminBaseController
         ];
 
         $messages = [
-            'name.regex'  => 'The :attribute field contains invalid characters, letters, numbers, space and _ - : , . ( ) ? \' are allowed.',
+            'name.regex'  => 'The :attribute field contains invalid characters. Letters, numbers, space and _ - : , . ( ) ? \' are allowed.',
         ];
 
         $v = Validator::make($data, $rules, $messages);
