@@ -99,7 +99,7 @@
                                                 <i class="bi bi-text-center" style="width: 5%; display: inline-block"></i>
                                                 <div style="width: 5%;display: inline-block;position: relative;left: -17px;font-size: 20px">{{index+1}}</div>
 
-                                                <div style="width: 50%;display: inline-block;margin-left: -75px">
+                                                <div style="width: 50%;display: inline-block;margin-left: -50px">
                                                     <span>Lesson name:</span>
                                                     <input class="form-control" v-model="res.label" disabled>
                                                 </div>
