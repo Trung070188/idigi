@@ -83,6 +83,7 @@
                                                     <input class="form-check-input" type="checkbox" v-model="package.allLessonSelected" @change="selectLessonAll()">
                                                 </div>
                                             </td>
+                                            <th class="">Order</th>
                                             <th class="">Name of lesson</th>
                                             <th class="">Grade</th>
                                             <th class="">Subject</th>
@@ -97,6 +98,7 @@
                                                     <input class="form-check-input" type="checkbox" v-model="lessonPackagePlan.lessonIds" :value="lesson.id"  @change="updateLessonAll()">
                                                 </div>
                                             </td>
+                                            <td class="" v-text="lesson.position"></td>
                                             <td class="" v-text="lesson.name"></td>
                                             <td class="" v-text="lesson.grade"></td>
                                             <td class="" v-text="lesson.subject"></td>
@@ -1049,6 +1051,20 @@
                 this.filter.units = null;
               if(this.filter.courses){
                   this.units = this.allUnits.filter(e=>e.course_id == this.filter.courses);
+                  this.units.sort((a,b) => (a.position > b.position) ? 1 : ((b.position > a.position) ? -1 : 0));
+                  this.units = this.units.map(function (e){
+                      let label = e.label;
+
+                      if(e.position != null){
+                          label = e.position+'. '+e.label;
+                      }
+                      return {
+                          id: e.id,
+                         label:label,
+                          position:e.position,
+                      }
+                  });
+
               }else{
                   this.units = this.allUnits;
               }

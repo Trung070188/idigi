@@ -215,9 +215,10 @@ class PlansController extends AdminBaseController
         $permissions = $permissionDetail->permission($user);
         $units = Unit::query()->select([
             'units.id as id',
+            'units.position as position',
             'units.unit_name as label',
             'units.course_id as course_id',
-        ])->get();
+        ])->orderBy('unit_name', 'ASC')->get();
         $courses = Course::query()->select([
             'courses.id as id',
             'courses.course_name as label',
