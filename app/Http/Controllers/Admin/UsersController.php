@@ -1595,7 +1595,9 @@ class UsersController extends AdminBaseController
                     'password' => $import['password'],
                     'username' => $import['username']
                 ];
-                dispatch(new SendMailPassword($import['email'], 'New account information', $content));
+                if ($import['email']) {
+                    dispatch(new SendMailPassword($import['email'], 'New account information', $content));
+                }
             }
             return [
                 'code' => 0,
