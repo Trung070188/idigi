@@ -1046,7 +1046,6 @@ class PlansController extends AdminBaseController
      */
     public function data(Request $req)
     {
-        $countPlan = Plan::query()->orderBy('id', 'desc')->count();
         $user = Auth::user();
         foreach ($user->roles as $role) {
             $roleName = $role->role_name;
@@ -1080,7 +1079,9 @@ class PlansController extends AdminBaseController
             $query->where('due_at', 'LIKE', '%' . $req->due_at . '%');
         }
         $query->createdIn($req->created);
+        $countPlan = $query->count();
         $limit = 25;
+
         if ($req->limit) {
             $limit = $req->limit;
         }

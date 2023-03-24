@@ -297,7 +297,7 @@ class LessonsController extends AdminBaseController
      */
     public function data(Request $req)
     {
-        $countLesson = Lesson::query()->orderBy('id', 'desc')->count();
+
         $user = Auth::user();
 
         $schoolIds = explode(',', $user->school_id);
@@ -387,9 +387,8 @@ class LessonsController extends AdminBaseController
         if ($req->enabled != '') {
             $query->where('enabled', $req->enabled);
         }
-
         $query->createdIn($req->created);
-
+        $countLesson = $query->count();
         $limit = 25;
 
         if ($req->limit) {

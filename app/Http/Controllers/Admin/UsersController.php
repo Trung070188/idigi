@@ -1191,9 +1191,7 @@ class UsersController extends AdminBaseController
      */
     public function data(Request $req)
     {
-        $userCount = User::orderBy('id', 'desc')->whereHas('roles', function ($q) {
-            $q->where('role_name', '<>', 'Super Administrator');
-        })->count();
+
         $query = User::query()
             ->with(['roles', 'fileImage'])->whereHas('roles', function ($q) {
                 $q->where('role_name', '<>', 'Super Administrator');
@@ -1233,6 +1231,7 @@ class UsersController extends AdminBaseController
             $query->where('state', $req->state);
         }
         $query->createdIn($req->created);
+        $userCount = $query->count();
         $limit = 25;
         if ($req->limit) {
             $limit = $req->limit;

@@ -883,6 +883,7 @@ class SchoolsController extends AdminBaseController
             $limit = $req->limit;
         }
         $data = [];
+        $count = $query->count();
         $entries = $query->paginate($limit);
         $users = User::query()->with(['roles'])->whereNotNull('school_id')->orderBy('id', 'ASC')->get();
 
@@ -940,7 +941,7 @@ class SchoolsController extends AdminBaseController
             'paginate' => [
                 'currentPage' => $entries->currentPage(),
                 'lastPage' => $entries->lastPage(),
-                'totalRecord' => $query->count()
+                'totalRecord' => $count
             ]
         ];
     }

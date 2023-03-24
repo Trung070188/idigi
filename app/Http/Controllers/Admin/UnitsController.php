@@ -310,12 +310,14 @@ class UnitsController extends AdminBaseController
         if ($req->limit) {
             $limit = $req->limit;
         }
+        $count = $query->count();
         $entries = $query->paginate($limit);
+
 
         return [
             'code' => 0,
             'courses' => $courses,
-            'count' => $query->count(),
+            'count' => $count,
             'data' => $entries->items(),
             'paginate' => [
                 'currentPage' => $entries->currentPage(),

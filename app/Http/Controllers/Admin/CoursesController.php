@@ -292,6 +292,7 @@ class CoursesController extends AdminBaseController
         }
 
         $query->createdIn($req->created);
+        $count = $query->count();
 
         $limit = 25;
         if ($req->limit) {
@@ -300,7 +301,7 @@ class CoursesController extends AdminBaseController
         $entries = $query->paginate($limit);
 
         return [
-            'count' => $query->count(),
+            'count' => $count,
             'code' => 0,
             'data' => $entries->items(),
             'paginate' => [

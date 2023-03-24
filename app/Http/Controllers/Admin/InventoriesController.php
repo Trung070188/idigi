@@ -299,8 +299,8 @@ class InventoriesController extends AdminBaseController
             $query->where('enabled',  $req->enabled);
         }
 
-
         $query->createdIn($req->created);
+        $count = $query->count();
         $limit = 25;
 
         if ($req->limit) {
@@ -328,7 +328,7 @@ class InventoriesController extends AdminBaseController
             'paginate' => [
                 'currentPage' => $entries->currentPage(),
                 'lastPage' => $entries->lastPage(),
-                'totalRecord' => $query->count(),
+                'totalRecord' => $count,
             ]
         ];
     }
