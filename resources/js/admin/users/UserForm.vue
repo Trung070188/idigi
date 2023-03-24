@@ -181,10 +181,12 @@
 
         methods: {
             inputPasswordConfirm(){
-                if(this.password != this.password_confirmation){
+
+                if(this.entry.password != this.password_confirmation){
                     this.errors.password_confirmation = ["You must enter the same password twice in order to confirm it."];
                 }else{
                     this.errors.password_confirmation = [];
+
                 }
             },
             disableSave(entry)
