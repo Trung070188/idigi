@@ -577,7 +577,8 @@ class UsersController extends AdminBaseController
                     'code' => 3,
                     'message' => 'Không tìm thấy',
                 ];
-            } {
+            }
+            {
                 $data['password'] = Hash::make($data['password']);
             }
             $entry->fill($data);
@@ -1439,7 +1440,7 @@ class UsersController extends AdminBaseController
                         $item['class'] = $tea[5];
                         if ($item['email'] == null) {
                             $validator = Validator::make($item, [
-                                'username' => ['required', 'min:6', Rule::unique('users', 'username')],
+                                'username' => ['required', 'min:6', 'regex:/^[a-zA-Z0-9_.]+$/', Rule::unique('users', 'username')],
                                 'full_name' => [
                                     'required',
                                     function ($attribute, $value, $fail) {
@@ -1513,7 +1514,8 @@ class UsersController extends AdminBaseController
                         ];
                         $validation['error'] = array_merge($validateTemp, $validation['error']);
                     }
-                    if (@$validation['error'] || $error != [] && $error == [$validation['username']]) { {
+                    if (@$validation['error'] || $error != [] && $error == [$validation['username']]) {
+                        {
                             if ($error != [] && $error == [$validation['username']]) {
                                 $validation['error'] = [
                                     'username' => [
