@@ -723,7 +723,7 @@ class UsersController extends AdminBaseController
         $v = Validator::make($data, $rules, $customMessages, $data_role);
         $v->after(function ($validate) use ($data_role, $data) {
             if (isset($data['id']) && $data_role['password'] != $data_role['password_confirmation']) {
-                $validate->errors()->add('password_confirmation', 'The password and confirmation password do not match.');
+                $validate->errors()->add('password_confirmation', 'You must enter the same password twice in order to confirm it.');
             }
             if ($data_role['name_role'] == 2 && isset($data['id']) && $data_role['userSchool'] == []) {
                 $validate->errors()->add('userSchool', 'The school field is required.');
