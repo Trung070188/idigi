@@ -133,8 +133,8 @@
                                     <div class="form-group col-sm-4">
                                         <label>School <span class="text-danger">*</span></label>
                                         <select required  class="form-control form-select"  v-model="entry.school_id" >
-                                            <option value="" disabled selected>Choose role</option>
-                                            <option v-for="school in schools" :value="school.id">{{school.label}}</option>
+                                            <option value="" disabled selected>Choose school</option>
+                                            <option v-for="school in schoolTeacher" :disabled="school.isDisabled" :class="school.isDisabled ? 'disableOption' : ''" :value="school.id">{{school.label}}</option>
                                         </select>
                                         <error-label for="f_grade" :errors="errors.school_id"></error-label>
                                     </div>
@@ -209,6 +209,7 @@
         components: {ActionBar, SwitchButton,Treeselect},
         data() {
             const permissions = clone(window.$permissions)
+            console.log($json.schoolTeacher)
 
             return {
                 userSchool:$json.userSchool || [],
@@ -237,6 +238,7 @@
                     || {
                     },
                 schools:$json.schools||[],
+                schoolTeacher:$json.schoolTeacher||[],
                 school:$json.school||[],
                 roles: $json.roles || [],
                 role: $json.role || [],
@@ -347,6 +349,9 @@
 </script>
 
 <style scoped>
+    .disableOption{
+        background-color:#cccccc
+    }
     .fa-eye {
         position: absolute;
         top: 40%;

@@ -95,11 +95,35 @@ class UsersController extends AdminBaseController
     {
         $component = 'UserForm';
         $title = 'Create users';
-        $schools = School::query()->orderBy('id')->get();
+
+        $schools = School::query()->orderBy('label', 'ASC')
+            ->withCount(['users' => function($q){
+                $q->whereHas('roles', function ($q1){
+                    $q1->where('role_name', 'Teacher');
+                });
+            }])
+            ->get();
+
+        $schoolTeacher = [];
+
+        foreach($schools as $_school){
+            $isDisabled = false;
+
+            if($_school->users_count >= $_school->number_of_users){
+                $isDisabled = true;
+            }
+            $schoolTeacher[] = [
+                'id' => $_school->id,
+                'label' => $_school->label,
+                'isDisabled' => $isDisabled,
+            ];
+        }
+
         $roles = Role::query()->orderBy('order', 'ASC')->where('role_name', '<>', 'Super Administrator')->get();
         $jsonData = [
             'roles' => $roles,
             'schools' => $schools,
+            'schoolTeacher' => $schoolTeacher,
         ];
         return view('admin.layouts.vue', compact('title', 'component', 'jsonData'));
     }
@@ -242,8 +266,31 @@ class UsersController extends AdminBaseController
                 $name_role = $role->id;
             }
         }
-        @$school = $entry->schools->label;
-        $schools = School::query()->orderBy('label', 'ASC')->get();
+        @$school = @$entry->schools->label;
+        $schools = School::query()->orderBy('label', 'ASC')
+            ->withCount(['users' => function($q){
+                $q->whereHas('roles', function ($q1){
+                    $q1->where('role_name', 'Teacher');
+                });
+            }])
+            ->get();
+
+        $schoolTeacher = [];
+
+        foreach($schools as $_school){
+            $isDisabled = false;
+
+            if($_school->id != @$entry->school_id && $_school->users_count >= $_school->number_of_users){
+                $isDisabled = true;
+            }
+            $schoolTeacher[] = [
+                'id' => $_school->id,
+                'label' => $_school->label,
+                'isDisabled' => $isDisabled,
+            ];
+        }
+
+
         $title = 'Edit';
         $component = 'UserEdit';
         $user = Auth::user();
@@ -275,6 +322,7 @@ class UsersController extends AdminBaseController
             'userSchool' => @$userSchool,
             'permissionFields' => $permissionFields,
             'schools' => $schools,
+            'schoolTeacher' => $schoolTeacher,
             @'school' => $school,
             'entry' => $entry,
             'roles' => $roles,
