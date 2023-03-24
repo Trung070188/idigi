@@ -94,7 +94,7 @@
 
                                     <div  class="form-group  col-sm-4">
                                         <label>Confirm your password <span class="text-danger">*</span></label>
-                                        <input class="form-control" :type="showConfirm ? 'text' : 'password'"
+                                        <input class="form-control" :type="showConfirm ? 'text' : 'password'" @input="inputPasswordConfirm"
                                                v-model="password_confirmation"  placeholder="Re-enter to confirm the password">
                                         <error-label for="f_category_id"
                                                      :errors="errors.password_confirmation"></error-label>
@@ -259,6 +259,13 @@
         },
 
         methods: {
+            inputPasswordConfirm(){
+                if(this.password != this.password_confirmation){
+                    this.errors.password_confirmation = ["You must enter the same password twice in order to confirm it."];
+                }else{
+                    this.errors.password_confirmation = [];
+                }
+            },
             async load() {
 
                 let query = $router.getQuery();

@@ -717,7 +717,7 @@ class UsersController extends AdminBaseController
         //        }
         $customMessages = [
             //            'userSchool.required' => 'The school field is required.',
-            'name_role.required' => 'The role field is required.'
+            'name_role.required' => 'The role field is required.',
         ];
         $v = Validator::make($data, $rules, $customMessages, $data_role);
         $v->after(function ($validate) use ($data_role, $data) {
@@ -731,7 +731,7 @@ class UsersController extends AdminBaseController
                 $validate->errors()->add('userSchool', 'The school field is required.');
             }
             if (!isset($data['id']) && $data['password'] != $data_role['password_confirmation'] && $data_role['auto_gen'] == false) {
-                $validate->errors()->add('password_confirmation', 'The password and confirmation password do not match.');
+                $validate->errors()->add('password_confirmation', 'You must enter the same password twice in order to confirm it.');
             }
         });
 
@@ -972,7 +972,7 @@ class UsersController extends AdminBaseController
 
         $v->after(function ($validate) use ($data_role, $data) {
             if (isset($data['id']) && $data_role['password'] != $data_role['password_confirmation']) {
-                $validate->errors()->add('password_confirmation', 'The password and confirmation password do not match.');
+                $validate->errors()->add('password_confirmation', 'You must enter the same password twice in order to confirm it.');
             }
         });
 

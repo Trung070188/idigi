@@ -44,9 +44,9 @@
 
                                     <div v-if="entry.id==null" class="form-group col-sm-4 mb-3">
                                         <label>Confirm password <span class="text-danger">*</span></label>
-                                        <input v-if="auto_gen==true" disabled class="form-control" :type="showConfirm ? 'text' : 'password'"  placeholder="Re-enter to confirm the password"
+                                        <input v-if="auto_gen==true" disabled class="form-control" :type="showConfirm ? 'text' : 'password'"  placeholder="Re-enter to confirm the password" @input="inputPasswordConfirm"
                                                v-model="password_confirmation">
-                                        <input v-if="auto_gen==false"  class="form-control" :type="showConfirm ? 'text' : 'password'"  placeholder="Re-enter to confirm the password"
+                                        <input v-if="auto_gen==false"  class="form-control" :type="showConfirm ? 'text' : 'password'"  placeholder="Re-enter to confirm the password" @input="inputPasswordConfirm"
                                                v-model="password_confirmation">
 <!--                                        <i @click="showConfirm = !showConfirm" class="fa fa-eye"></i>-->
                                         <error-label for="f_category_id" :errors="errors.password_confirmation"></error-label>
@@ -180,6 +180,13 @@
         },
 
         methods: {
+            inputPasswordConfirm(){
+                if(this.password != this.password_confirmation){
+                    this.errors.password_confirmation = ["You must enter the same password twice in order to confirm it."];
+                }else{
+                    this.errors.password_confirmation = [];
+                }
+            },
             disableSave(entry)
             {
                if(entry.username.length>0 || entry.full_name.length>0 || entry.email.length>0 || entry.description.length>0 || entry.password.length>0)

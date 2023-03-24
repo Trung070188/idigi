@@ -55,9 +55,9 @@
 
                                     <div v-if="entry.id==null" class="form-group  col-sm-4">
                                         <label>Confirm your password <span class="text-danger">*</span></label>
-                                        <input v-if="auto_gen==true" disabled class="form-control" :type="showConfirm ? 'text' : 'password'"
+                                        <input v-if="auto_gen==true" disabled class="form-control" :type="showConfirm ? 'text' : 'password'" @input="inputPasswordConfirm"
                                             placeholder="Re-enter to confirm the password"   v-model="entry.password_confirmation">
-                                        <input v-if="auto_gen==false"  class="form-control" :type="showConfirm ? 'text' : 'password'"
+                                        <input v-if="auto_gen==false"  class="form-control" :type="showConfirm ? 'text' : 'password'" @input="inputPasswordConfirm"
                                              placeholder="Re-enter to confirm the password"  v-model="entry.password_confirmation">
                                         <!-- <i @click="showConfirm = !showConfirm" class="fa fa-eye"></i> -->
                                         <error-label for="f_category_id" :errors="errors.password_confirmation"></error-label>
@@ -190,6 +190,13 @@
 
         },
         methods: {
+            inputPasswordConfirm(){
+                if(this.password != this.password_confirmation){
+                    this.errors.password_confirmation = ["You must enter the same password twice in order to confirm it."];
+                }else{
+                    this.errors.password_confirmation = [];
+                }
+            },
             async load() {
                 let query = $router.getQuery();
                 const res  = await $get('/xadmin/users/dataContentCreateTeacher?id='+this.school.id, query);
