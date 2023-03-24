@@ -94,15 +94,9 @@
                                 </div>
                                 <div class="row" v-if="name_role==5">
                                     <div class="form-group col-sm-4">
-                                        <select required class="form-control form-select" v-model="entry.school_id"
-                                                @input="disableSave(entry)">
-                                            <option value="" disabled selected>Choose school</option>
-                                            <option v-for="school in schoolTeacher" :disabled="school.isDisabled"
-                                                    :class="school.isDisabled ? 'disableOption' : ''"
-                                                    :value="school.id">{{ school.label }}
-                                            </option>
-                                        </select>
-                                        <error-label for="f_grade" :errors="errors.userSchool"></error-label>
+                                        <Treeselect :options="schoolTeacher"  v-model="entry.school_id"
+                                                    placeholder="Choose school"/>
+                                        <error-label for="f_grade" :errors="errors.school_id"></error-label>
 
                                     </div>
                                 </div>
@@ -186,7 +180,7 @@ export default {
                 'password': '',
                 'description': '',
                 'state': true,
-                'school_id': ''
+                'school_id': null
 
             },
             roles: $json.roles || [],
@@ -261,10 +255,6 @@ export default {
 </script>
 
 <style scoped>
-.disableOption {
-    background-color: #cccccc
-}
-
 .fa-eye {
     position: absolute;
     top: 50%;

@@ -35,6 +35,10 @@ $title = isset($title) ? $title : '';
     <link rel="stylesheet" href="/assets/css/jquery-ui.css">
     <link rel="stylesheet" href="/assets/css/style.css?v=1">
     <style>
+        .vue-treeselect__option--disabled .vue-treeselect__label-container{
+            background-color: #cccccc !important;
+            background: #cccccc !important;
+        }
         .btn-trash i{
             font-size: 1.3rem;
         }
