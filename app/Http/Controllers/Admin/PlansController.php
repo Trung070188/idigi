@@ -1151,9 +1151,14 @@ class PlansController extends AdminBaseController
         Cache::add($exportDeviceName, json_encode($devices));
         $dataAddLessonPlan = [];
         if ($req->packageLessonId) {
+            $packageLessons = PackageLesson::where('plan_id', $req->idPlan)->whereNotNull('lesson_ids')->pluck('lesson_ids')->toArray();
+            $output = array_map(function ($str) {
+                return array_map('intval', explode(',', trim($str, '"')));
+            }, $packageLessons);
+            $packageLessons = array_reduce($output, 'array_merge', []);
             $packageLesson = PackageLesson::where('id', $req->packageLessonId)->first();
             $lesson_ids = explode(',', $packageLesson->lesson_ids);
-            $lessons = Lesson::query()->whereNotIn('id', $lesson_ids);
+            $lessons = Lesson::query()->whereNotIn('id', $packageLessons);
             $dataAddLessonPlan = Lesson::query()->whereIn('id', $lesson_ids)->get();
 
         } else {
