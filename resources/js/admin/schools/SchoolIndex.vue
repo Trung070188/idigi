@@ -730,7 +730,6 @@ export default {
             $('#kt_modal_create_app').modal('show');
         },
         async validateImportSchool() {
-            console.log(1);
             this.errors = {};
             this.valueValidateImportSchool = 1;
             const files = this.$refs.uploader.files;
@@ -740,10 +739,6 @@ export default {
             files.forEach(function (e, index) {
                 formData.append(index, e);
             })
-            // forEach(files, (v, k) => {
-            //     formData.append(k, v);
-            // });
-
             for (let i = 0; i < files.length; i++) {
                 formData.append('file_' + i, files[i]);
                 formData.append('school_id', this.entry.id);
