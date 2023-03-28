@@ -60,14 +60,10 @@
 
                                     <div v-if="entry.id == null" class="form-group  col-sm-4">
                                         <label>Confirm your password <span class="text-danger">*</span></label>
-                                        <input v-if="auto_gen == true" disabled class="form-control"
-                                            :type="showConfirm ? 'text' : 'password'"
-                                            placeholder="Re-enter to confirm the password"
-                                            v-model="entry.password_confirmation">
-                                        <input v-if="auto_gen == false" class="form-control"
-                                            :type="showConfirm ? 'text' : 'password'"
-                                            placeholder="Re-enter to confirm the password"
-                                            v-model="entry.password_confirmation">
+                                        <input v-if="auto_gen==true" disabled class="form-control" :type="showConfirm ? 'text' : 'password'" @input="inputPasswordConfirm"
+                                            placeholder="Re-enter to confirm the password"   v-model="entry.password_confirmation">
+                                        <input v-if="auto_gen==false"  class="form-control" :type="showConfirm ? 'text' : 'password'" @input="inputPasswordConfirm"
+                                             placeholder="Re-enter to confirm the password"  v-model="entry.password_confirmation">
                                         <!-- <i @click="showConfirm = !showConfirm" class="fa fa-eye"></i> -->
                                         <error-label for="f_category_id"
                                             :errors="errors.password_confirmation"></error-label>
@@ -206,52 +202,52 @@ export default {
             }
         })
 
-    },
-    methods: {
-        async load() {
-            let query = $router.getQuery();
-            const res = await $get('/xadmin/users/dataContentCreateTeacher?id=' + this.school.id, query);
-            this.courses = res.course.map(res => {
-                return {
-                    'label': res.course_name,
-                    'id': res.id,
-                    'units': res.units.map(rec => {
-                        return {
-                            'id': rec.id,
-                            'label': 'Unit' + ' ' + rec.position + ' : ' + rec.unit_name
-                        }
-                    })
-                };
-            })
-            this.courses = [
-                {
-                    'id': 'all',
-                    'label': 'all course',
-                    'children': this.courses
-                }
-            ]
-            let units = this.courses[0].children.map(rec => {
-                return {
-                    'id': rec.id,
-                    'label': rec.label,
-                    'teacher_unit': [],
-                    'teacher_unit_tmp': [],
-                    'unit': [
-                        {
-                            'id': 'all',
-                            'label': 'all units',
-                            'children': rec.units
-                        }
-                    ]
-                }
-            })
-            this.courses = [
-                {
-                    'id': 'all',
-                    'label': 'all course',
-                    'children': units
-                }
-            ]
+        },
+        methods: {
+            async load() {
+                let query = $router.getQuery();
+                const res  = await $get('/xadmin/users/dataContentCreateTeacher?id='+this.school.id, query);
+                this.courses=res.course.map(res =>{
+                    return {
+                      'label':res.course_name,
+                        'id':res.id,
+                        'units':res.units.map(rec =>{
+                            return {
+                                'id':rec.id,
+                                'label': 'Unit' + ' ' + rec.position +' : '+rec.unit_name
+                            }
+                        })
+                    };
+                })
+              this.courses=[
+                  {
+                      'id':'all',
+                      'label':'all course',
+                      'children':this.courses
+                  }
+              ]
+                let units=this.courses[0].children.map( rec => {
+                    return {
+                        'id':rec.id,
+                        'label':rec.label,
+                        'teacher_unit':[],
+                        'teacher_unit_tmp':[],
+                        'unit':[
+                            {
+                                'id':'all',
+                                'label':'all units',
+                                'children':rec.units
+                            }
+                        ]
+                    }
+                })
+                this.courses=[
+                    {
+                        'id':'all',
+                        'label':'all course',
+                        'children':units
+                    }
+                ]
 
 
             this.allocationContent = res.allocationContent;

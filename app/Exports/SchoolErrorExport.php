@@ -32,8 +32,8 @@ class SchoolErrorExport implements FromView, WithColumnWidths
             'C' => 30,
             'D' => 11,
             'E' => 11,
-            'F' => 6,
-            'G' => 6,
+            'F' => 15,
+            'G' => 15,
             'H' => 20,
             'I' => 40
         ];

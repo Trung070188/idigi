@@ -215,9 +215,10 @@ class PlansController extends AdminBaseController
         $permissions = $permissionDetail->permission($user);
         $units = Unit::query()->select([
             'units.id as id',
+            'units.position as position',
             'units.unit_name as label',
             'units.course_id as course_id',
-        ])->get();
+        ])->orderBy('unit_name', 'ASC')->get();
         $courses = Course::query()->select([
             'courses.id as id',
             'courses.course_name as label',
@@ -1027,7 +1028,6 @@ class PlansController extends AdminBaseController
      */
     public function data(Request $req)
     {
-        $countPlan = Plan::query()->orderBy('id', 'desc')->count();
         $user = Auth::user();
         foreach ($user->roles as $role) {
             $roleName = $role->role_name;
@@ -1059,7 +1059,9 @@ class PlansController extends AdminBaseController
             $query->where('due_at', 'LIKE', '%' . $req->due_at . '%');
         }
         $query->createdIn($req->created);
+        $countPlan = $query->count();
         $limit = 25;
+
         if ($req->limit) {
             $limit = $req->limit;
         }
@@ -1128,9 +1130,14 @@ class PlansController extends AdminBaseController
         Cache::add($exportDeviceName, json_encode($devices));
         $dataAddLessonPlan = [];
         if ($req->packageLessonId) {
+            $packageLessons = PackageLesson::where('plan_id', $req->idPlan)->whereNotNull('lesson_ids')->pluck('lesson_ids')->toArray();
+            $output = array_map(function ($str) {
+                return array_map('intval', explode(',', trim($str, '"')));
+            }, $packageLessons);
+            $packageLessons = array_reduce($output, 'array_merge', []);
             $packageLesson = PackageLesson::where('id', $req->packageLessonId)->first();
             $lesson_ids = explode(',', $packageLesson->lesson_ids);
-            $lessons = Lesson::query()->whereNotIn('id', $lesson_ids);
+            $lessons = Lesson::query()->whereNotIn('id', $packageLessons);
             $dataAddLessonPlan = Lesson::query()->whereIn('id', $lesson_ids)->get();
         } else {
             $lessons = Lesson::query()->orderBy('name', 'ASC');

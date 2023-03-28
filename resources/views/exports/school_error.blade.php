@@ -24,8 +24,8 @@
             <td style="border: 1px solid black">{{$item['school_email']}}</td>
             <td style="border: 1px solid black">{{$item['devices_per_user']}}</td>
             <td style="border: 1px solid black">{{$item['number_of_users']}}</td>
-            <td style="border: 1px solid black"></td>
-            <td style="border: 1px solid black"></td>
+            <td style="border: 1px solid black">{{$item['province']}}</td>
+            <td style="border: 1px solid black">{{$item['district']}}</td>
             <td style="border: 1px solid black">{{$item['license_to']}}</td>
             <td style="border: 1px solid black">@if(@$item['error'])
                     @foreach($item['error'] as $er)

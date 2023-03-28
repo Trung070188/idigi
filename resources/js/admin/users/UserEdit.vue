@@ -116,7 +116,7 @@
                                 <div class="row" v-if="name_role==5">
                                     <div class="form-group col-sm-4">
                                         <label>School <span class="text-danger">*</span></label>
-                                        <select required  class="form-control form-select"  v-model="entry.school_id" :disabled="!permissionFields['user_role']">
+                                        <select required  class="form-control form-select"  v-model="entry.school_id" >
                                             <option value="" disabled selected>Choose role</option>
                                             <option v-for="school in schools" :value="school.id">{{school.label}}</option>
                                         </select>
@@ -193,6 +193,7 @@
         components: {ActionBar, SwitchButton,Treeselect},
         data() {
             const permissions = clone(window.$permissions)
+            console.log($json.schoolTeacher)
 
             return {
                 userSchool:$json.userSchool || [],
@@ -221,6 +222,7 @@
                     || {
                     },
                 schools:$json.schools||[],
+                schoolTeacher:$json.schoolTeacher||[],
                 school:$json.school||[],
                 roles: $json.roles || [],
                 role: $json.role || [],
@@ -243,6 +245,13 @@
         },
 
         methods: {
+            inputPasswordConfirm(){
+                if(this.password != this.password_confirmation){
+                    this.errors.password_confirmation = ["You must enter the same password twice in order to confirm it."];
+                }else{
+                    this.errors.password_confirmation = [];
+                }
+            },
             async load() {
 
                 let query = $router.getQuery();
@@ -324,6 +333,9 @@
 </script>
 
 <style scoped>
+    .disableOption{
+        background-color:#cccccc
+    }
     .fa-eye {
         position: absolute;
         top: 40%;

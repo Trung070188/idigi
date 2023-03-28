@@ -100,11 +100,35 @@ class UsersController extends AdminBaseController
     {
         $component = 'UserForm';
         $title = 'Create users';
-        $schools = School::query()->orderBy('id')->get();
+
+        $schools = School::query()->orderBy('label', 'ASC')
+            ->withCount(['users' => function($q){
+                $q->whereHas('roles', function ($q1){
+                    $q1->where('role_name', 'Teacher');
+                });
+            }])
+            ->get();
+
+        $schoolTeacher = [];
+
+        foreach($schools as $_school){
+            $isDisabled = false;
+
+            if($_school->users_count >= $_school->number_of_users){
+                $isDisabled = true;
+            }
+            $schoolTeacher[] = [
+                'id' => $_school->id,
+                'label' => $_school->label,
+                'isDisabled' => $isDisabled,
+            ];
+        }
+
         $roles = Role::query()->orderBy('order', 'ASC')->where('role_name', '<>', 'Super Administrator')->get();
         $jsonData = [
             'roles' => $roles,
             'schools' => $schools,
+            'schoolTeacher' => $schoolTeacher,
         ];
         return view('admin.layouts.vue', compact('title', 'component', 'jsonData'));
     }
@@ -247,8 +271,31 @@ class UsersController extends AdminBaseController
                 $name_role = $role->id;
             }
         }
-        @$school = $entry->schools->label;
-        $schools = School::query()->orderBy('label', 'ASC')->get();
+        @$school = @$entry->schools->label;
+        $schools = School::query()->orderBy('label', 'ASC')
+            ->withCount(['users' => function($q){
+                $q->whereHas('roles', function ($q1){
+                    $q1->where('role_name', 'Teacher');
+                });
+            }])
+            ->get();
+
+        $schoolTeacher = [];
+
+        foreach($schools as $_school){
+            $isDisabled = false;
+
+            if($_school->id != @$entry->school_id && $_school->users_count >= $_school->number_of_users){
+                $isDisabled = true;
+            }
+            $schoolTeacher[] = [
+                'id' => $_school->id,
+                'label' => $_school->label,
+                'isDisabled' => $isDisabled,
+            ];
+        }
+
+
         $title = 'Edit';
         $component = 'UserEdit';
         $user = Auth::user();
@@ -284,6 +331,7 @@ class UsersController extends AdminBaseController
             'userSchool' => @$userSchool,
             'permissionFields' => $permissionFields,
             'schools' => $schools,
+            'schoolTeacher' => $schoolTeacher,
             @'school' => $school,
             'entry' => $entry,
             'roles' => $roles,
@@ -590,7 +638,8 @@ class UsersController extends AdminBaseController
                     'code' => 3,
                     'message' => 'Không tìm thấy',
                 ];
-            } {
+            }
+            {
                 $data['password'] = Hash::make($data['password']);
             }
             $entry->fill($data);
@@ -730,12 +779,12 @@ class UsersController extends AdminBaseController
         //        }
         $customMessages = [
             //            'userSchool.required' => 'The school field is required.',
-            'name_role.required' => 'The role field is required.'
+            'name_role.required' => 'The role field is required.',
         ];
         $v = Validator::make($data, $rules, $customMessages, $data_role);
         $v->after(function ($validate) use ($data_role, $data) {
             if (isset($data['id']) && $data_role['password'] != $data_role['password_confirmation']) {
-                $validate->errors()->add('password_confirmation', 'The password and confirmation password do not match.');
+                $validate->errors()->add('password_confirmation', 'You must enter the same password twice in order to confirm it.');
             }
             if ($data_role['name_role'] == 2 && isset($data['id']) && $data_role['userSchool'] == []) {
                 $validate->errors()->add('userSchool', 'The school field is required.');
@@ -744,7 +793,7 @@ class UsersController extends AdminBaseController
                 $validate->errors()->add('userSchool', 'The school field is required.');
             }
             if (!isset($data['id']) && $data['password'] != $data_role['password_confirmation'] && $data_role['auto_gen'] == false) {
-                $validate->errors()->add('password_confirmation', 'The password and confirmation password do not match.');
+                $validate->errors()->add('password_confirmation', 'You must enter the same password twice in order to confirm it.');
             }
         });
 
@@ -986,7 +1035,7 @@ class UsersController extends AdminBaseController
 
         $v->after(function ($validate) use ($data_role, $data) {
             if (isset($data['id']) && $data_role['password'] != $data_role['password_confirmation']) {
-                $validate->errors()->add('password_confirmation', 'The password and confirmation password do not match.');
+                $validate->errors()->add('password_confirmation', 'You must enter the same password twice in order to confirm it.');
             }
         });
 
@@ -1155,9 +1204,7 @@ class UsersController extends AdminBaseController
      */
     public function data(Request $req)
     {
-        $userCount = User::orderBy('id', 'desc')->whereHas('roles', function ($q) {
-            $q->where('role_name', '<>', 'Super Administrator');
-        })->count();
+
         $query = User::query()
             ->with(['roles', 'fileImage'])->whereHas('roles', function ($q) {
                 $q->where('role_name', '<>', 'Super Administrator');
@@ -1197,6 +1244,7 @@ class UsersController extends AdminBaseController
             $query->where('state', $req->state);
         }
         $query->createdIn($req->created);
+        $userCount = $query->count();
         $limit = 25;
         if ($req->limit) {
             $limit = $req->limit;
@@ -1451,7 +1499,7 @@ class UsersController extends AdminBaseController
                         $item['class'] = $tea[5];
                         if ($item['email'] == null) {
                             $validator = Validator::make($item, [
-                                'username' => ['required', 'min:6', Rule::unique('users', 'username')],
+                                'username' => ['required', 'min:6', 'regex:/^[a-zA-Z0-9_.]+$/', Rule::unique('users', 'username')],
                                 'full_name' => [
                                     'required',
                                     function ($attribute, $value, $fail) {
@@ -1525,7 +1573,8 @@ class UsersController extends AdminBaseController
                         ];
                         $validation['error'] = array_merge($validateTemp, $validation['error']);
                     }
-                    if (@$validation['error'] || $error != [] && $error == [$validation['username']]) { {
+                    if (@$validation['error'] || $error != [] && $error == [$validation['username']]) {
+                        {
                             if ($error != [] && $error == [$validation['username']]) {
                                 $validation['error'] = [
                                     'username' => [

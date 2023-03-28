@@ -228,7 +228,7 @@
                                         '-' +
                                         to +
                                         ' of ' +
-                                        countInventory
+                                        paginate.totalRecord
                                     " v-if="entries.length > 0"></div>
                                 </div>
                             </div>

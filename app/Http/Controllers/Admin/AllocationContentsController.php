@@ -514,7 +514,6 @@ class AllocationContentsController extends AdminBaseController
      */
     public function data(Request $req)
     {
-        $countContent = AllocationContent::query()->orderBy('id', 'desc')->count();
         $query = AllocationContent::query()->with(['courses', 'units', 'schools'])->orderBy('id', 'desc');
 
         if ($req->keyword) {
@@ -522,6 +521,7 @@ class AllocationContentsController extends AdminBaseController
         }
 
         $query->createdIn($req->created);
+        $countContent = $query->count();
 
         $limit = 25;
         if ($req->limit) {

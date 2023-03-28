@@ -59,11 +59,9 @@
                                         >
                                             <div style="width: 100%;cursor: pointer" v-for="(res,index) in listLesson"
                                                  :key="index">
-                                                <div style="width: 10%; display: inline-block">
-                                                    <i class="bi bi-text-center"></i>
-                                                    <span style="font-weight:bold; margin-left: 10px" >{{index+1}}</span>
-                                                </div>
-                                                <div style="width: 50%;display: inline-block;margin-left: -75px">
+                                                <i class="bi bi-text-center" style="width: 5%; display: inline-block"></i>
+                                                <div style="width: 5%;display: inline-block;position: relative;left: -17px;font-size: 20px">{{index+1}}</div>
+                                                <div style="width: 50%;display: inline-block;margin-left: -50px">
                                                     <span>Lesson name:</span>
                                                     <input class="form-control" v-model="res.label" disabled>
                                                 </div>

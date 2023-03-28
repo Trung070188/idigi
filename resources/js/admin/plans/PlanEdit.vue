@@ -80,6 +80,7 @@
                             <div class="d-flex mb-1 mt-5">
                                 <div class="mh-300px scroll-y me-n7 pe-7" style="width: 703px">
                                     <table class="table table-row-bordered align-middle gy-4 gs-9">
+<<<<<<< HEAD
                                         <thead
                                             class="border-bottom border-gray-200 fs-6 text-gray-600 fw-bolder bg-light bg-opacity-75">
                                             <tr>
@@ -112,6 +113,35 @@
                                                 <td class="" v-text="lesson.grade"></td>
                                                 <td class="" v-text="lesson.subject"></td>
                                             </tr>
+=======
+                                        <thead class="border-bottom border-gray-200 fs-6 text-gray-600 fw-bolder bg-light bg-opacity-75">
+                                        <tr>
+                                            <td width="25">
+                                                <div class="form-check form-check-sm form-check-custom form-check-solid">
+                                                    <input class="form-check-input" type="checkbox" v-model="package.allLessonSelected" @change="selectLessonAll()">
+                                                </div>
+                                            </td>
+                                            <th class="">Order</th>
+                                            <th class="">Name of lesson</th>
+                                            <th class="">Grade</th>
+                                            <th class="">Subject</th>
+                                            <th></th>
+                                        </tr>
+                                        </thead>
+
+                                        <tbody  v-for="lessonPackagePlan in lessonPackagePlans" v-if="lessonPackagePlan.package_id==package.package">
+                                        <tr v-for="lesson in entries" >
+                                            <td class="">
+                                                <div class="form-check form-check-sm form-check-custom form-check-solid">
+                                                    <input class="form-check-input" type="checkbox" v-model="lessonPackagePlan.lessonIds" :value="lesson.id"  @change="updateLessonAll()">
+                                                </div>
+                                            </td>
+                                            <td class="" v-text="lesson.position"></td>
+                                            <td class="" v-text="lesson.name"></td>
+                                            <td class="" v-text="lesson.grade"></td>
+                                            <td class="" v-text="lesson.subject"></td>
+                                        </tr>
+>>>>>>> a4384592e0102aa2712064b040f8809d32d047fc
                                         </tbody>
                                     </table>
                                 </div>
@@ -1366,6 +1396,188 @@ export default {
         },
         continueImportDevice() {
         },
+<<<<<<< HEAD
+=======
+        methods: {
+            changeCourse(){
+                this.filter.units = null;
+              if(this.filter.courses){
+                  this.units = this.allUnits.filter(e=>e.course_id == this.filter.courses);
+                  this.units.sort((a,b) => (a.position > b.position) ? 1 : ((b.position > a.position) ? -1 : 0));
+                  this.units = this.units.map(function (e){
+                      let label = e.label;
+
+                      if(e.position != null){
+                          label = e.position+'. '+e.label;
+                      }
+                      return {
+                          id: e.id,
+                         label:label,
+                          position:e.position,
+                      }
+                  });
+
+              }else{
+                  this.units = this.allUnits;
+              }
+            },
+            selectProvince() {
+                this.filter.district_id = null;
+                this.districts = [];
+                if (this.filter.province_id) {
+                    this.districts = this.provinces.filter(e => e.id == this.filter.province_id)[0]['districts'];
+                }
+
+            },
+            cancelModalLesson()
+            {
+                $('#kt_modal_invite').modal('hide');
+
+                $('#cancelModal').modal('show');
+            },
+            cancelModalYes()
+            {
+                $('#kt_modal_invite').modal('hide');
+                $('#cancelModal').modal('hide');
+            },
+            cancelModalNo()
+            {
+                $('#cancelModal').modal('hide');
+                $('#kt_modal_invite').modal('show');
+            },
+            modalConfirmationCode:function(device=[])
+            {
+                $('#editdeviceConfirm').modal('show');
+                this.deviceGetCode=device;
+
+            },
+            deviceExpireDateClear()
+            {
+                this.deviceExpireDate='';
+            },
+            EditDeviceExpireDateClear(dataDeviceEdit)
+            {
+                dataDeviceEdit.expire_date='';
+            },
+            expireDateClear()
+            {
+                this.entry.expire_date='';
+            },
+            dueAtClear()
+            {
+                this.entry.due_at='';
+            },
+            deletePackageLessonModal:function(deletePackage='')
+            {
+              $('#delete').modal('show');
+              this.deletePack=deletePackage;
+            },
+            addPackageLessonModal:function(addPackage='')
+            {
+                $('#addNamePackageLesson').modal('show');
+                this.packageLessonName='';
+                this.tabLessonContent='';
+            },
+            modalEditDevice:function(device={})
+            {
+                $('#deviceConfirm1').modal('show');
+                this.dataDeviceEdit=device;
+                const originalDate = device.expire_date;
+                console.log(originalDate);
+                const [day, month, year] = originalDate.split("/");
+                const newDate = `${year}-${month.padStart(2, "0")}-${day.padStart(2, "0")}`;
+              return   this.dataDeviceEdit = {
+                   'name' : device.device_name,
+                    'id' :device.id,
+                    'uid':device.device_uid,
+                    'os':device.type,
+                    'expired':newDate
+                }
+
+
+
+            },
+            renameLessonPackage:function(rename='')
+            {
+                $('#addNamePackageLesson').modal('show');
+                let self=this;
+                let pack= self.lessonPackagePlans.filter(item =>item.package_id==rename);
+                self.packageLessonName=pack[0].name;
+            },
+            deleteLessonModal:function(deleteIdLesson='')
+            {
+                $('#deleteLesson').modal('show');
+                this.deleteLessons=deleteIdLesson;
+            },
+            removeDeviceModal:function(deleteIdDevice='')
+            {
+                $('#deleteDevice').modal('show');
+                this.deleteDevice=deleteIdDevice;
+
+            },
+            tabPackageLesson: function (tabPackage = '') {
+                $('#kt_billing_year').show();
+                this.tabLessonContent = tabPackage;
+                this.load();
+                let self = this;
+                self.checkZipPackage=[];
+                let dataPackage=self.lessonPackagePlans.filter(item =>item.package_id==tabPackage);
+               self.checkZipPackage.push(dataPackage[0]);
+
+               // code select lesson
+                this.allViewLessonSelected={
+                    'allViewLessonSelected':false,
+                    'tabPackage':tabPackage
+                }
+
+               setTimeout(function(){
+                   $.get('/xadmin/plans/dataPackage',function(res)
+                   {
+                    self.dataTableLesson=res.data.filter(item => item.id==tabPackage);
+                       let viewLesson=[];
+                       let checkRemoveLesson=0;
+                       self.dataTableLesson=self.dataTableLesson.map(abc => {
+
+                       return {
+                           'id':abc.id,
+                           'name':abc.name,
+                           'plan_id':abc.plan_id,
+                           'lesson_ids':abc.lesson_ids,
+                           'viewLesson':viewLesson,
+                           'checkRemoveLesson':checkRemoveLesson,
+                       }
+                    })
+                       self.dataTableLesson= self.dataTableLesson[0];
+                   })
+               },0)
+               setTimeout(function () {
+                    $.get('/xadmin/plans/dataZipLessonPlan',function (res) {
+                        let array=res.data.filter(item => item.plan_id==self.entry.id);
+                      let arrZipPlan= array.filter(item =>item.package_id==tabPackage);
+                        self.dataZipLesson=arrZipPlan[0];
+                    })
+
+                },0)
+            },
+            importDevice(){
+                $('#kt_modal_create_app').modal('show');
+            },
+            addDevice: function (addDevice = '') {
+                $('#deviceConfirm').modal('show');
+            },
+            addLessonPackage: function (tabLessonContent = '') {
+                $('#kt_modal_invite').modal('show');
+                this.package=
+                    {
+                        allLessonSelected:false,
+                        package:tabLessonContent
+                    };
+
+            },
+            continueImportDevice()
+            {
+            },
+>>>>>>> a4384592e0102aa2712064b040f8809d32d047fc
         // xoa lesson theo từng id
         async deleteLesson(deleteLessons) {
             let self = this;

@@ -887,6 +887,7 @@ class SchoolsController extends AdminBaseController
             $limit = $req->limit;
         }
         $data = [];
+        $count = $query->count();
         $entries = $query->paginate($limit);
         $users = User::query()->with(['roles'])->whereNotNull('school_id')->orderBy('id', 'ASC')->get();
 
@@ -944,7 +945,7 @@ class SchoolsController extends AdminBaseController
             'paginate' => [
                 'currentPage' => $entries->currentPage(),
                 'lastPage' => $entries->lastPage(),
-                'totalRecord' => $query->count()
+                'totalRecord' => $count
             ]
         ];
     }
@@ -1136,6 +1137,7 @@ class SchoolsController extends AdminBaseController
     {
         return response()->download(public_path('sample/Import_School_Template.xlsx'));
     }
+
     public function downloadTemplateDistrict(): BinaryFileResponse
     {
         return response()->download(public_path('sample/District - Province.xlsx'));
@@ -1209,7 +1211,7 @@ class SchoolsController extends AdminBaseController
                         $item['number_of_users'] = $school[4];
                         $item['province'] = $school[5];
                         $item['district'] = $school[6];
-                        $item['license_to'] = date('d/m/Y',strtotime($school[7]));
+                        $item['license_to'] = $school[7];
                         $validator = Validator::make(
                             $item,
                             [
@@ -1217,7 +1219,7 @@ class SchoolsController extends AdminBaseController
                                 'devices_per_user' => ['required', 'numeric', 'gt:0'],
                                 'number_of_users' => ['required', 'numeric', 'gt:0'],
                                 'license_to' => ['required', 'date_format:d/m/Y'],
-                                'school_phone' => ['numeric', 'size:10']
+                                'school_phone' => ['nullable', 'numeric', 'size:10']
                             ],
                             [
                                 'license_to.date_format' => 'The license to does not match the format dd/mm/YYYY'
@@ -1225,9 +1227,12 @@ class SchoolsController extends AdminBaseController
                         );
                         $province = Province::query()->where('name', 'LIKE', '%' . $item['province'] . '%')->get();
                         if ($province->count() !== 0) {
-                            $item['province'] = $province[0]->id;
+                            $item['province_id'] = $province[0]->id;
                             $district = District::query()->where('province_id', $province[0]->id)->where('name', 'LIKE', '%' . $item['district'] . '%')->get();
-                            $item['district'] = $district[0]->id;
+                            if ($district->count() !== 0) {
+                                $item['district_id'] = $district[0]->id;
+
+                            }
                         }
                         $validator->after(function ($validate) use ($province) {
                             if ($province->count() == 0) {
@@ -1255,7 +1260,8 @@ class SchoolsController extends AdminBaseController
             if ($code == 2) {
                 //export
                 foreach ($validations as $key => $validation) {
-                    if (@$validation['error']) { {
+                    if (@$validation['error']) {
+                        {
                             $fileError[] = $validation;
                         }
                     } else {
@@ -1313,8 +1319,8 @@ class SchoolsController extends AdminBaseController
                 $school->school_email = $import['school_email'];
                 $school->devices_per_user = $import['devices_per_user'];
                 $school->number_of_users = ($import['number_of_users']);
-                $school->province_id = $import['province'];
-                $school->district_id = $import['district'];
+                $school->province_id = $import['province_id'];
+                $school->district_id = $import['district_id'];
                 $school->license_to = date('Y-m-d H:i:s', strtotime($import['license_to']));
                 $school->save();
             }

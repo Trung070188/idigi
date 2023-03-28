@@ -374,58 +374,72 @@ export default {
     mounted() {
         $router.on('/', this.load).init();
 
-        $('.noString').keypress(function (e) {
-            if (e.keyCode < 48 || e.keyCode > 57) {
-                e.preventDefault();
-            }
-        })
-    },
-    methods: {
-        async load() {
-            let query = $router.getQuery();
-            this.$loading(true);
-            const res = await $get('/xadmin/users/deviceTeacher?id=' + this.entry.id, query);
-            this.$loading(false);
-            setTimeout(function () {
-                KTMenu.createInstances();
-            }, 0)
-            this.userDevices = res.data;
-            this.school = res.school
-            this.deviceLog = res.deviceLog
-        },
-        selectTotalUnit(course) {
-            let self = this;
-            self.courses.forEach(function (e) {
-                if (e.id == course.id) {
-                    if (e.total_unit.length > 0 && e.courseTeaTmp[0] == 'all') {
-                        e.courseTea = e.total_unit[0].children.map(rec => {
-                            return rec.id;
-                        })
-                    } else {
-                        e.courseTea = e.courseTeaTmp;
-                    }
+            $('.noString').keypress(function (e) {
+                if (e.keyCode < 48 || e.keyCode > 57) {
+                    e.preventDefault();
                 }
             })
         },
-        selectTotalCourse() {
-            if (this.courseTeachersTmp.length > 0 && this.courseTeachersTmp[0] == 'all') {
-                this.courseTeachers = this.courses.map(res => {
-                    return res.id;
-                })
-            } else {
-                this.courseTeachers = this.courseTeachersTmp;
-            }
-        },
-        removeTeacher: function () {
-            $('#delete').modal('show');
-        },
-        deleteCourse: function (node, instanceId) {
-            node.courseTea = [];
-        },
-        modalDevice: function (device = []) {
-            $('#deviceConfirm').modal('show');
-            this.deviceTeacher = device;
-        },
+        methods: {
+            inputPasswordConfirm(){
+                if(this.password != this.password_confirmation){
+                    this.errors.password_confirmation = ["You must enter the same password twice in order to confirm it."];
+                }else{
+                    this.errors.password_confirmation = [];
+                }
+            },
+            async load() {
+                let query = $router.getQuery();
+                this.$loading(true);
+                const res  = await $get('/xadmin/users/deviceTeacher?id='+this.entry.id, query);
+                this.$loading(false);
+                setTimeout(function (){
+                    KTMenu.createInstances();
+                }, 0)
+                this.userDevices = res.data;
+                this.school=res.school
+                this.deviceLog=res.deviceLog
+            },
+           selectTotalUnit(course)
+            {
+              let self=this;
+              self.courses.forEach(function (e)
+              {
+                  if(e.id==course.id)
+                  {
+                      if(e.total_unit.length>0 && e.courseTeaTmp[0]=='all')
+                      {
+                          e.courseTea=e.total_unit[0].children.map(rec => {
+                              return rec.id;
+                          })
+                      }else {
+                          e.courseTea = e.courseTeaTmp;
+                      }
+                  }
+              })
+            },
+             selectTotalCourse()
+            {
+               if(this.courseTeachersTmp.length > 0 && this.courseTeachersTmp[0]=='all')
+               {
+                   this.courseTeachers=this.courses.map(res=>{
+                       return res.id;
+                   })
+               }else{
+                   this.courseTeachers = this.courseTeachersTmp;
+               }
+            },
+            removeTeacher:function()
+            {
+                $('#delete').modal('show');
+            },
+            deleteCourse: function (node, instanceId) {
+                node.courseTea = [];
+            },
+           modalDevice:function(device=[]) {
+                $('#deviceConfirm').modal('show');
+                this.deviceTeacher=device;
+            },
 
 
         backIndex() {
