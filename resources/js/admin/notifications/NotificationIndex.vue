@@ -16,16 +16,13 @@
                                 <p>Are you sure to delete this notification?</p>
                             </div>
                             <div class="swal2-actions">
-                                <button type="submit" id="kt_modal_new_target_submit"
-                                    class="swal2-confirm btn fw-bold btn-danger" @click="remove(entry)">
+                                <button type="button" id="kt_modal_new_target_submit" class="swal2-confirm btn fw-bold btn-danger" @click="remove(entry)" :disabled="!permissions['025']">
                                     <span class="indicator-label">Yes, delete!</span>
                                 </button>
                                 <button type="reset" id="kt_modal_new_target_cancel"
                                     class="swal2-cancel btn fw-bold btn-active-light-primary" data-bs-dismiss="modal"
                                     style="margin: 0px 8px 0px">No, cancel</button>
-
                             </div>
-
                         </div>
                     </div>
                 </div>
@@ -34,7 +31,6 @@
                         <div class="card-title">
                             <div class="d-flex align-items-center position-relative my-1">
                                 <div class="d-flex align-items-center position-relative my-1">
-                                    <!--begin::Svg Icon | path: icons/duotune/general/gen021.svg-->
                                     <span class="svg-icon svg-icon-1 position-absolute ms-6">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
                                             fill="none">
@@ -45,7 +41,6 @@
                                                 fill="black"></path>
                                         </svg>
                                     </span>
-                                    <!--end::Svg Icon-->
                                     <input type="text" data-kt-filemanager-table-filter="search"
                                         class="form-control form-control-solid w-250px ps-15"
                                         @keydown.enter="doFilter($event)" v-model="filter.keyword" placeholder="Search..."
@@ -62,7 +57,6 @@
                                     </span>
                                 </div>
                             </div>
-
                         </div>
 
                         <div class="card-toolbar">
@@ -81,6 +75,7 @@
                             </div>
 
                         </div>
+
                         <div class="d-flex justify-content-end align-items-center d-none"
                             data-kt-customer-table-toolbar="selected" v-if="notificationIds != ''">
                             <div class="fw-bolder me-5">
@@ -92,14 +87,15 @@
                                 Delete Selected
                             </button>
                         </div>
+
                         <form class="col-lg-12" v-if="!isShowFilter">
                             <div class="row">
                                 <div style="margin:7px 3px 0px">
-                                    <button type="button" class="btn btn-primary"
-                                        @click="doFilter()">Search</button>
+                                    <button type="button" class="btn btn-primary" @click="doFilter()">Search</button>
                                 </div>
                             </div>
                         </form>
+
                         <form class="col-lg-12" v-if="isShowFilter">
                             <div class="row">
                                 <div class="form-group col-lg-4">
@@ -119,6 +115,7 @@
                                 </button>
                             </div>
                         </form>
+
                     </div>
                     <div class="tab-content">
                         <div class="d-flex flex-stack pt-4 pl-9 pr-9">
@@ -132,16 +129,7 @@
                                                 fill="black"></path>
                                         </svg>
                                     </span>
-
-                                    <div v-text="
-
-                                        from +
-                                        '-' +
-                                        to +
-                                        ' of ' +
-                                        paginate.totalRecord
-
-                                    " v-if="entries.length > 0"></div>
+                                    <div v-text="from + '-' + to + ' of ' + paginate.totalRecord" v-if="entries.length > 0"></div>
                                 </div>
                             </div>
                         </div>
@@ -160,12 +148,12 @@
                                     <th class="">Account</th>
                                     <th class="">Role</th>
                                     <th class="">Content</th>
-                                    <th class="text-center" v-if="permissions['025']">Action</th>
+                                    <th class="text-center" v-if="permissions['025'] && permissionFields['notification_delete']">Action</th>
 
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr :class="permissions['025'] ? 'cursor-pointer' : ''" v-for="entry in entries"
+                                <tr :class="permissions['025'] && permissionFields['notification_view_detail'] ? 'cursor-pointer' : ''" v-for="entry in entries"
                                     v-on:mouseover="mouseover(entry.id)" v-on:mouseleave="mouseleave()">
                                     <td class="text-center">
                                         <div class="form-check form-check-sm form-check-custom form-check-solid">
@@ -173,12 +161,12 @@
                                                 :value="entry.id" @change="updateCheckAll" />
                                         </div>
                                     </td>
-                                    <td @click="detail(entry.url, permissions['025'])" class="text-center">{{
+                                    <td @click="detail(entry.url, permissions['025'] && permissionFields['notification_view_detail'])" class="text-center">{{
                                         d(entry.created_at) }}</td>
-                                    <td @click="detail(entry.url, permissions['025'])" class="">{{ entry.username }}</td>
-                                    <td @click="detail(entry.url, permissions['025'])" class="">{{ entry.role }}</td>
-                                    <td @click="detail(entry.url, permissions['025'])" class="">{{ entry.title }}</td>
-                                    <td class="text-center" v-if="permissions['025']">
+                                    <td @click="detail(entry.url, permissions['025'] && permissionFields['notification_view_detail'])" class="">{{ entry.username }}</td>
+                                    <td @click="detail(entry.url, permissions['025'] && permissionFields['notification_view_detail'])" class="">{{ entry.role }}</td>
+                                    <td @click="detail(entry.url, permissions['025'] && permissionFields['notification_view_detail'])" class="">{{ entry.title }}</td>
+                                    <td class="text-center" v-if="permissions['025'] && permissionFields['notification_delete']">
                                         <div class="d-flex justify-content-around">
                                             <i :class="'bi bi-trash text-danger cursor-pointer action-btn action-btn-' + entry.id"
                                                 :title="'Delete ' + entry.id" @click="removeNotification(entry.id)"></i>
@@ -189,11 +177,7 @@
                             </tbody>
                         </table>
                         <div class="d-flex pl-9 pr-9 mb-8">
-                            <div
-                                class="col-sm-12 col-md-5 d-flex align-items-center justify-content-center justify-content-md-start">
-                                <!--<div class="mr-2">
-                                    <label>Records per page:</label>
-                                </div>-->
+                            <div class="col-sm-12 col-md-5 d-flex align-items-center justify-content-center justify-content-md-start">
                                 <div>
                                     <select class="form-select form-select-sm form-select-solid" v-model="limit"
                                         @change="changeLimit">
@@ -203,9 +187,7 @@
                                     </select>
                                 </div>
                             </div>
-                            <!--<div style="float: right; margin: 10px">-->
-                            <div
-                                class="col-sm-12 col-md-7 d-flex align-items-center justify-content-center justify-content-md-end">
+                            <div class="col-sm-12 col-md-7 d-flex align-items-center justify-content-center justify-content-md-end">
                                 <div class="dataTables_paginate paging_simple_numbers" id="kt_customers_table_paginate">
                                     <Paginate :value="paginate" :pagechange="onPageChange"></Paginate>
                                 </div>
@@ -231,6 +213,7 @@ export default {
     components: { ActionBar },
     data() {
         const permissions = clone(window.$permissions)
+        let permissionFields = $json.permissionFields
         let isShowFilter = false;
         let filter = {
             keyword: $q.keyword || '',
@@ -245,6 +228,7 @@ export default {
         return {
             entry: '',
             notificationIds: [],
+            permissionFields: permissionFields || [],
             notification: [],
             allSelected: false,
             permissions,

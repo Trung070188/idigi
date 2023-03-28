@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 
 use App\Console\Commands\DownloadLesson;
+use App\Helpers\PermissionField;
 use App\Jobs\UpdateDownloadInventory;
 use App\Jobs\UpdateDownloadLessonFile;
 use App\Models\AllocationContent;
@@ -88,8 +89,30 @@ class LessonsController extends AdminBaseController
         $title = 'Edit';
         $component = 'LessonDetail';
 
+        $user = Auth::user();
+        $permissionDetail = new PermissionField();
+        $permissions = $permissionDetail->permission($user);
+        $permissionFields = [];
+        $permissionList = [
+            'lesson_name',
+            'lesson_subject',
+            'lesson_unit',
+            'lesson_description',
+            'lesson_modules_list',
+            'lesson_active',
+            'lesson_delete'
+        ];
+        foreach ($permissionList as $permission) {
+            $haspermission = $permissionDetail->havePermission($permission, $permissions, $user);
+            $permissionFields[(string)$permission] = (bool)$haspermission;
+        }
+        $jsonData = [
+            'entry'=>$entry,
+            'permissionFields'=>$permissionFields
+        ];
 
-        return component($component, compact('title', 'entry'));
+
+        return component($component, compact('title', 'jsonData'));
     }
 
     /**

@@ -34,24 +34,27 @@ class AppVersionsController extends AdminBaseController
     {
         $title = 'AppVersion';
         $component = 'App_versionIndex';
-        $user=Auth::user();
-        if(@$user->roles)
-        {
-            foreach($user->roles as $role)
-            {
-                $roleName=$role->role_name;
+        $user = Auth::user();
+        if (@$user->roles) {
+            foreach ($user->roles as $role) {
+                $roleName = $role->role_name;
             }
         }
         $permissionDetail = new PermissionField();
         $permissions = $permissionDetail->permission($user);
-        $permissionFields = [
-            'app_download' => $permissionDetail->havePermission('app_download',$permissions ,$user),
-            'app_delete'=>$permissionDetail->havePermission('app_delete',$permissions ,$user),
-            'app_create_new'=>$permissionDetail->havePermission('app_create_new',$permissions ,$user),
+        $permissionFields = [];
+        $permissionList = [
+            'app_download',
+            'app_delete',
+            'app_create_new',
         ];
-        $jsonData=[
-            'permissionFields'=>$permissionFields,
-            'roleName'=>$roleName,
+        foreach ($permissionList as $permission) {
+            $haspermission = $permissionDetail->havePermission($permission, $permissions, $user);
+            $permissionFields[(string)$permission] = (bool)$haspermission;
+        }
+        $jsonData = [
+            'permissionFields' => $permissionFields,
+            'roleName' => $roleName,
         ];
         return view('admin.layouts.vue', compact('title', 'component', 'jsonData'));
     }
@@ -127,16 +130,16 @@ class AppVersionsController extends AdminBaseController
 
 
         $rules = [
-           'version' => 'required',
+            'version' => 'required',
             'type' => 'required',
             'file_0' => 'required',
-//            'release_date' => 'required',
+            //            'release_date' => 'required',
         ];
-        $message=[
-            'file_0.required'=>'The installation file is required.'
+        $message = [
+            'file_0.required' => 'The installation file is required.'
         ];
 
-        $v = Validator::make($req->all(), $rules,$message);
+        $v = Validator::make($req->all(), $rules, $message);
 
         if ($v->fails()) {
             return [
@@ -147,57 +150,53 @@ class AppVersionsController extends AdminBaseController
 
         //Upload File
         $file0 = $_FILES['file_0'];
-        @$file1=$_FILES['file1_0'];
+        @$file1 = $_FILES['file1_0'];
 
 
         $fileExe = $this->uploadFile($file0);
-        if($fileExe['code']==3)
-        {
+        if ($fileExe['code'] == 3) {
             return [
-                'message'=>'The installation file is not in the correct format'
+                'message' => 'The installation file is not in the correct format'
             ];
         }
 
-        if($file1!=null)
-        {
+        if ($file1 != null) {
 
             $fileUpdate = $this->uploadFile($file1);
-            if($fileUpdate['code']==3)
-            {
+            if ($fileUpdate['code'] == 3) {
                 return [
-                    'message'=>'The update OTA file is not the correct format'
+                    'message' => 'The update OTA file is not the correct format'
                 ];
             }
         }
 
         $data = [
-            'is_default'=>$req->is_default,
-//            'name' =>$req->name,
-            'path' =>$fileExe['path'],
-            'path_updated'=>@$fileUpdate['path'],
+            'is_default' => $req->is_default,
+            //            'name' =>$req->name,
+            'path' => $fileExe['path'],
+            'path_updated' => @$fileUpdate['path'],
             'url' => $fileExe['url'],
-            'url_updated'=>@$fileUpdate['url'],
+            'url_updated' => @$fileUpdate['url'],
             'type' => $req->type,
-//            'release_date' => $req->release_date,
-            'version'=>$req->version,
-            'release_note'=>$req->release_note,
+            //            'release_date' => $req->release_date,
+            'version' => $req->version,
+            'release_note' => $req->release_note,
         ];
         $entry = new AppVersion();
         $entry->fill($data);
-       if($entry->is_default=='false')
-       {
-           $entry->is_default=0;
-           $entry->save();
+        if ($entry->is_default == 'false') {
+            $entry->is_default = 0;
+            $entry->save();
 
-        return [
-            'code' => 0,
-            'message' => 'Đã thêm',
-            'id' => $entry->id
-        ];
-       }
-    AppVersion::where('is_default','=',1)->where('type',$entry->type)->update(['is_default' => 0]);
-    $entry->is_default=1;
-    $entry->save();
+            return [
+                'code' => 0,
+                'message' => 'Đã thêm',
+                'id' => $entry->id
+            ];
+        }
+        AppVersion::where('is_default', '=', 1)->where('type', $entry->type)->update(['is_default' => 0]);
+        $entry->is_default = 1;
+        $entry->save();
         return [
             'code' => 0,
             'message' => 'Đã thêm',
@@ -205,12 +204,13 @@ class AppVersionsController extends AdminBaseController
         ];
     }
 
-    protected function uploadFile($file){
+    protected function uploadFile($file)
+    {
         $y = date('Y');
         $m = date('m');
 
         $allowed = [
-            'exe','rar','zip'
+            'exe', 'rar', 'zip'
         ];
 
 
@@ -229,13 +229,13 @@ class AppVersionsController extends AdminBaseController
         }
 
         $hash = sha1(uniqid());
-        $newFilePath = $dir.'/'.$hash.'.'.$extension;
+        $newFilePath = $dir . '/' . $hash . '.' . $extension;
 
         move_uploaded_file($file['tmp_name'], $newFilePath);
         $newUrl = url("/files/app_version/{$y}/{$m}/{$hash}.{$extension}");
 
         return [
-            'code'=>1,
+            'code' => 1,
             'url' => $newUrl,
             'path' => $newFilePath
         ];
@@ -278,16 +278,16 @@ class AppVersionsController extends AdminBaseController
         }
         $query->createdIn($req->created);
         $entries = $query->paginate(100);
-        $appVersionsWindow=null;
-        $appVersionsOs=null;
+        $appVersionsWindow = null;
+        $appVersionsOs = null;
 
-        $appVersionsWindow=AppVersion::where('is_default',1)->where('type','Window')->first();
-        $appVersionsOs=AppVersion::where('is_default',1)->where('type','Mac')->first();
+        $appVersionsWindow = AppVersion::where('is_default', 1)->where('type', 'Window')->first();
+        $appVersionsOs = AppVersion::where('is_default', 1)->where('type', 'Mac')->first();
         return [
             'code' => 0,
             'data' => $entries->items(),
-            'appVersionsWindow'=>$appVersionsWindow,
-            'appVersionsOs'=>$appVersionsOs,
+            'appVersionsWindow' => $appVersionsWindow,
+            'appVersionsOs' => $appVersionsOs,
             'paginate' => [
                 'currentPage' => $entries->currentPage(),
                 'lastPage' => $entries->lastPage(),
@@ -296,35 +296,36 @@ class AppVersionsController extends AdminBaseController
     }
     public function downloadApp(Request $req, $id)
     {
-        $appVersion=AppVersion::where('id','=',$id)->first();
-        $appId=$appVersion->id;
-        $user=Auth::user();
-//        foreach ($user->user_devices as $device)
-//        {
-//            $device_uid=$device->device_uid;
-//        }
+        $appVersion = AppVersion::where('id', '=', $id)->first();
+        $appId = $appVersion->id;
+        $user = Auth::user();
+        //        foreach ($user->user_devices as $device)
+        //        {
+        //            $device_uid=$device->device_uid;
+        //        }
 
-        $downloadAppLog=new DownloadAppLog();
-        $downloadAppLog->user_id=$user->id;
-        $downloadAppLog->user_agent=$req->userAgent();
-        $downloadAppLog->ip_address=$req->getClientIp();
-        $downloadAppLog->app_id=$appId;
-//        $downloadAppLog->device_uid=$device_uid;
-        $downloadAppLog->download_at=Carbon::now();
+        $downloadAppLog = new DownloadAppLog();
+        $downloadAppLog->user_id = $user->id;
+        $downloadAppLog->user_agent = $req->userAgent();
+        $downloadAppLog->ip_address = $req->getClientIp();
+        $downloadAppLog->app_id = $appId;
+        //        $downloadAppLog->device_uid=$device_uid;
+        $downloadAppLog->download_at = Carbon::now();
         $downloadAppLog->save();
 
 
         return redirect($appVersion->url);
-        }
+    }
 
-    public function setDefaultVersion(Request  $req){
+    public function setDefaultVersion(Request  $req)
+    {
         if (!$req->isMethod('POST')) {
             return ['code' => 405, 'message' => 'Method not allow'];
         }
 
         $entry = AppVersion::find($req->id);
 
-        if($req->is_default == 1){
+        if ($req->is_default == 1) {
             AppVersion::where('is_default', 1)
                 ->where('type', $entry->type)
                 ->update(['is_default' => 0]);
@@ -345,7 +346,4 @@ class AppVersionsController extends AdminBaseController
             'id' => $entry->id
         ];
     }
-
-
-
 }

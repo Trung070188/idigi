@@ -57,11 +57,17 @@ class UserDevicesController extends AdminBaseController
         $user = Auth::user();
         $permissionDetail = new PermissionField();
         $permissions = $permissionDetail->permission($user);
-        $permissionFields= [
-            'device_rename' => $permissionDetail->havePermission('device_rename',$permissions,$user),
-            'device_confirmation_code'=>$permissionDetail->havePermission('device_confirmation_code',$permissions,$user),
-            'device_delete'=>$permissionDetail->havePermission('device_delete',$permissions,$user),
+        $permissionFields = [];
+        $permissionList = [
+            'device_rename',
+            'device_confirmation_code',
+            'device_delete',
         ];
+        foreach ($permissionList as $permission) {
+            $haspermission = $permissionDetail->havePermission($permission, $permissions, $user);
+            $permissionFields[(string)$permission] = (bool)$haspermission;
+        }
+
         $jsonData = [
             'checkDeleteDeviceRequest'=>@$checkDeleteDeviceRequest,
             'permissionFields'=>$permissionFields,

@@ -5,18 +5,14 @@
          <div class="row">
             <div class="col-lg-12">
                 <div class="card card-custom card-stretch gutter-b">
-<!--                    <div class="d-flex justify-content-end" style="margin-right: 28px;margin-top: 20px">-->
-<!--                        <button class="btn btn-primary button-create mb-3" ><i class="bi bi-plus-lg"></i>Add feature</button>-->
-<!--                    </div>-->
-                    <!--<hr>-->
                     <div class="card-header border-0 pt-2">
                         <table class="table bg-white table-bordered">
                             <tbody>
                             <tr >
                                 <th></th>
                                 <th v-for="role in roles">
-                                    <div class="text-center" style="cursor: pointer">
-                                        <span class="badge badge-warning fs-6 fw-bold"  >{{role.role_name}}</span>
+                                    <div class="text-center">
+                                        <span class="badge badge-warning fs-6 fw-bold" >{{role.role_name}}</span>
                                     </div>
                                 </th>
                             </tr>
@@ -29,7 +25,6 @@
                                 <th scope="row" v-for="role in roles" style="border-left:1px solid #ddd;border-bottom: none;border-right: none;border-top: none;padding: 5px 0px 0px" >
                                     <span></span>
                                     <div class="form-check form-check-custom form-check-solid justify-content-center" v-for="permissionDetail in role.permission" v-if="permissionDetail.permission==permission.id" style="border-bottom:1px dotted #ddd">
-
                                         <input :disabled="userPermissions['063']!= 1"  @change="changePermissionDetail(role.id,permissionDetail.id,permissionDetail.value)"  class="form-check-input h-20px w-20px"  type="checkbox"  v-model="permissionDetail.value" style="border-color:#ddd">
                                         <br>
                                     </div>
@@ -37,15 +32,10 @@
                             </tr>
                         </table>
                     </div>
-
-
-
                 </div>
             </div>
         </div>
-
     </div>
-
 </template>
 
 <script>

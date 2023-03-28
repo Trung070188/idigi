@@ -22,13 +22,13 @@ use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
 class RolesController extends AdminBaseController
 {
-//    public static $menus = [
-//        [
-//            'name' => 'Role',
-//            'icon' => 'fa fa-shopping-cart',
-//            'url' => '/xadmin/roles/index',
-//        ]
-//    ];
+    //    public static $menus = [
+    //        [
+    //            'name' => 'Role',
+    //            'icon' => 'fa fa-shopping-cart',
+    //            'url' => '/xadmin/roles/index',
+    //        ]
+    //    ];
 
     /**
      * Index page
@@ -44,16 +44,20 @@ class RolesController extends AdminBaseController
         $user = Auth::user();
         $permissionDetail = new PermissionField();
         $permission = $permissionDetail->permission($user);
-        $permissionFields = [
-            'role_add_new' => $permissionDetail->havePermission('role_add_new',$permission,$user),
-            'role_name'=>$permissionDetail->havePermission('role_name',$permission,$user),
-            'role_description'=>$permissionDetail->havePermission('role_description',$permission,$user),
-            'role_set'=>$permissionDetail->havePermission('role_set',$permission,$user),
+        $permissionFields = [];
+        $permissionList = [
+            'role_add_new',
+            'role_name',
+            'role_description',
+            'role_set',
         ];
+        foreach ($permissionList as $permission) {
+            $haspermission = $permissionDetail->havePermission($permission, $permissions, $user);
+            $permissionFields[(string)$permission] = (bool)$haspermission;
+        }
         $jsonData = [
-            'permissionFields'=>$permissionFields,
+            'permissionFields' => $permissionFields,
             'permissions' => $permissions,
-//            'entry' => $entry,
         ];
 
         return view('admin.layouts.vue', compact('title', 'component', 'jsonData'));
@@ -116,9 +120,9 @@ class RolesController extends AdminBaseController
         return [
             'code' => 0,
             'message' => 'Đã xóa',
-            'object'=>$entry->role_name,
-            'status'=>'deleted role',
-            'role'=>$this->roleName()
+            'object' => $entry->role_name,
+            'status' => 'deleted role',
+            'role' => $this->roleName()
         ];
     }
 
@@ -128,10 +132,9 @@ class RolesController extends AdminBaseController
      */
     public function roleName()
     {
-        $auth=Auth::user();
-        foreach ($auth->roles as $role)
-        {
-            $roleName=$role->role_name;
+        $auth = Auth::user();
+        foreach ($auth->roles as $role) {
+            $roleName = $role->role_name;
         }
         return $roleName;
     }
@@ -144,17 +147,14 @@ class RolesController extends AdminBaseController
         $data = $req->get('entry');
 
         $rules = [
-             'role_name' => 'unique:roles,role_name',
-//    'role_description' => 'max:255',
+            'role_name' => 'unique:roles,role_name',
+            //    'role_description' => 'max:255',
         ];
         if (isset($data['id'])) {
             $role = Role::find($data['id']);
-            if($data['role_name'])
-            {
-                $rules['role_name'] = [ Rule::unique('roles')->ignore($role->id),];
-
+            if ($data['role_name']) {
+                $rules['role_name'] = [Rule::unique('roles')->ignore($role->id),];
             }
-
         }
 
         $v = Validator::make($data, $rules);
@@ -186,9 +186,9 @@ class RolesController extends AdminBaseController
                 'code' => 0,
                 'message' => 'Đã cập nhật',
                 'id' => $entry->id,
-                'status'=>'Update role',
-                'object'=>$entry->role_name,
-                'role'=>$this->roleName(),
+                'status' => 'Update role',
+                'object' => $entry->role_name,
+                'role' => $this->roleName(),
             ];
         } else {
             $entry = new Role();
@@ -199,9 +199,9 @@ class RolesController extends AdminBaseController
                 'code' => 0,
                 'message' => 'Đã thêm',
                 'id' => $entry->id,
-                'status'=>'created new role',
-                'object'=>$entry->role_name,
-                'role'=>$this->roleName(),
+                'status' => 'created new role',
+                'object' => $entry->role_name,
+                'role' => $this->roleName(),
             ];
         }
     }
@@ -239,9 +239,9 @@ class RolesController extends AdminBaseController
     {
         $roles = Role::query()
             ->with(['permissions'])
-            ->where('role_name', '<>','Super Administrator')
+            ->where('role_name', '<>', 'Super Administrator')
             ->orderBy('id', 'ASC')->get();
-        $groupPermissions = GroupPermission::with(['permissions' => function($q) {
+        $groupPermissions = GroupPermission::with(['permissions' => function ($q) {
             $q->orderBy('order', 'ASC');
         }])
             ->whereDoesntHave('childs')
@@ -278,7 +278,6 @@ class RolesController extends AdminBaseController
                 'permissions' => $rolePermissions
 
             ];
-
         }
 
 
@@ -302,7 +301,7 @@ class RolesController extends AdminBaseController
         $permission = Permission::where('id', $permissionId)->first();
         $groupPermission = GroupPermission::where('id', $permission->group_permission_id)->with(['parent'])->first();
         $childCount = Permission::where('group_permission_id', $permission->group_permission_id)
-            ->whereHas('roles', function ($q) use ($roleId){
+            ->whereHas('roles', function ($q) use ($roleId) {
                 $q->where('id', $roleId);
             })
             ->where('id', '<>', $permissionId)->count();
@@ -313,13 +312,13 @@ class RolesController extends AdminBaseController
                 ->where('permission_id', $permissionId)
                 ->delete();
 
-            if($groupPermission && $childCount == 0){//Xóa role ở group
+            if ($groupPermission && $childCount == 0) { //Xóa role ở group
 
                 $permissionRole = $groupPermission->role_id;
                 $newRole = [];
                 $roles = explode(';', $permissionRole);
-                foreach ($roles as $role){
-                    if($role != $roleId){
+                foreach ($roles as $role) {
+                    if ($role != $roleId) {
                         $newRole[] = $role;
                     }
                 }
@@ -327,23 +326,23 @@ class RolesController extends AdminBaseController
                 $groupPermission->save();
 
 
-                if($groupPermission->parent_id){//Xóa role ở parent_group
+                if ($groupPermission->parent_id) { //Xóa role ở parent_group
                     $parentPermission = GroupPermission::where('id', $groupPermission->parent_id)->first();
                     $childIds = GroupPermission::where('parent_id', $groupPermission->parent_id)
-                        ->where('id','<>', $groupPermission->id)
+                        ->where('id', '<>', $groupPermission->id)
                         ->pluck('id')->toArray();
 
-                    $childCount = Permission::whereHas('roles', function ($q) use ($roleId){
-                            $q->where('id', $roleId);
-                        })
+                    $childCount = Permission::whereHas('roles', function ($q) use ($roleId) {
+                        $q->where('id', $roleId);
+                    })
                         ->whereIn('group_permission_id', $childIds)->count();
 
-                    if($childCount == 0){
+                    if ($childCount == 0) {
                         $permissionRole = $parentPermission->role_id;
                         $newRole = [];
                         $roles = explode(';', $permissionRole);
-                        foreach ($roles as $role){
-                            if($role != $roleId){
+                        foreach ($roles as $role) {
+                            if ($role != $roleId) {
                                 $newRole[] = $role;
                             }
                         }
@@ -351,34 +350,34 @@ class RolesController extends AdminBaseController
                         $parentPermission->save();
                     }
                 }
-
             }
-
         } else {
-            RoleHasPermission::updateOrCreate([
-                'role_id' => $roleId,
-                'permission_id' => $permissionId
-            ],
-                ['role_id' => $roleId,
-                'permission_id' => $permissionId
-                ]);
+            RoleHasPermission::updateOrCreate(
+                [
+                    'role_id' => $roleId,
+                    'permission_id' => $permissionId
+                ],
+                [
+                    'role_id' => $roleId,
+                    'permission_id' => $permissionId
+                ]
+            );
 
-            if($groupPermission){
+            if ($groupPermission) {
                 $roles = explode(';', $groupPermission->role_id);
-                if(!in_array($roleId, $roles)){
+                if (!in_array($roleId, $roles)) {
                     $roles[] = $roleId;
                     $groupPermission->role_id = implode(';', $roles);
                     $groupPermission->save();
 
-                    if($groupPermission->parent_id){
+                    if ($groupPermission->parent_id) {
                         $parentPermission = GroupPermission::where('id', $groupPermission->parent_id)->first();
                         $roles = explode(';', $parentPermission->role_id);
-                        if(!in_array($roleId, $roles)){
+                        if (!in_array($roleId, $roles)) {
                             $roles[] = $roleId;
                             $parentPermission->role_id = implode(';', $roles);
                             $parentPermission->save();
                         }
-
                     }
                 }
             }

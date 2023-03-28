@@ -374,22 +374,26 @@ class SchoolsController extends AdminBaseController
         }
         $permissionDetail = new PermissionField();
         $permissions = $permissionDetail->permission($user);
-        $permissionFields = [
-            'school_name' => $permissionDetail->havePermission('school_name', $permissions, $user),
-            'school_address' => $permissionDetail->havePermission('school_address', $permissions, $user),
-            'school_province' => $permissionDetail->havePermission('school_province', $permissions, $user),
-            'school_district' => $permissionDetail->havePermission('school_district', $permissions, $user),
-            'school_email' => $permissionDetail->havePermission('school_email', $permissions, $user),
-            'school_phone_number' => $permissionDetail->havePermission('school_phone_number', $permissions, $user),
-            'school_device' => $permissionDetail->havePermission('school_device', $permissions, $user),
-            'school_user' => $permissionDetail->havePermission('school_user', $permissions, $user),
-            'school_expire_date' => $permissionDetail->havePermission('school_expire_date', $permissions, $user),
-            'school_description' => $permissionDetail->havePermission('school_description', $permissions, $user),
-            'school_content' => $permissionDetail->havePermission('school_content', $permissions, $user),
-            'school_delete' => $permissionDetail->havePermission('school_delete', $permissions, $user),
-            'school_teacher_list' => $permissionDetail->havePermission('school_teacher_list', $permissions, $user),
-
+        $permissionFields = [];
+        $permissionList = [
+            'school_delete',
+            'school_teacher_list',
+            'school_name',
+            'school_address',
+            'school_email',
+            'school_phone_number',
+            'school_device',
+            'school_user',
+            'school_expire_date',
+            'school_description',
+            'school_content',
+            'school_active',
+            'school_content',
         ];
+        foreach ($permissionList as $permission) {
+            $haspermission = $permissionDetail->havePermission($permission, $permissions, $user);
+            $permissionFields[(string)$permission] = (bool)$haspermission;
+        }
         $title = 'Edit';
         $component = 'SchoolEdit';
         $entry->allocationContentId = $allocationContentId;

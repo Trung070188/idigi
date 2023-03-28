@@ -73,10 +73,15 @@ class UsersController extends AdminBaseController
         $user = Auth::user();
         $permissionDetail = new PermissionField();
         $permissions = $permissionDetail->permission($user);
-        $permissionFields = [
-            'teacher_management_import' => $permissionDetail->havePermission('teacher_management_import', $permissions, $user),
-            'teacher_management_create_new' => $permissionDetail->havePermission('teacher_management_create_new', $permissions, $user),
+        $permissionFields = [];
+        $permissionList = [
+            'teacher_management_import',
+            'teacher_management_create_new',
         ];
+        foreach ($permissionList as $permission) {
+            $haspermission = $permissionDetail->havePermission($permission, $permissions, $user);
+            $permissionFields[(string)$permission] = (bool)$haspermission;
+        }
 
         $jsonData = [
             'permissionFields' => $permissionFields,
@@ -249,18 +254,22 @@ class UsersController extends AdminBaseController
         $user = Auth::user();
         $permissionDetail = new PermissionField();
         $permissions = $permissionDetail->permission($user);
-        $permissionFields = [
-            'user_username' => $permissionDetail->havePermission('user_username', $permissions, $user),
-            'user_full_name' => $permissionDetail->havePermission('user_full_name', $permissions, $user),
-            'user_email' => $permissionDetail->havePermission('user_email', $permissions, $user),
-            'user_description' => $permissionDetail->havePermission('user_description', $permissions, $user),
-            'user_active' => $permissionDetail->havePermission('user_active', $permissions, $user),
-            'user_role' => $permissionDetail->havePermission('user_role', $permissions, $user),
-            'user_remove' => $permissionDetail->havePermission('user_remove', $permissions, $user),
-            'user_password' => $permissionDetail->havePermission('user_password', $permissions, $user),
-            'user_delete_device' => $permissionDetail->havePermission('user_delete_device', $permissions, $user)
-
+        $permissionFields = [];
+        $permissionList = [
+            'user_username',
+            'user_full_name',
+            'user_email',
+            'user_role',
+            'user_description',
+            'user_active',
+            'user_remove',
+            'user_password',
+            'user_delete_device',
         ];
+        foreach ($permissionList as $permission) {
+            $haspermission = $permissionDetail->havePermission($permission, $permissions, $user);
+            $permissionFields[(string)$permission] = (bool)$haspermission;
+        }
         if ($entry->school_id) {
             $userSchoolArr = explode(',', $entry->school_id);
         }
@@ -460,23 +469,27 @@ class UsersController extends AdminBaseController
         }
         $permissionDetail = new PermissionField();
         $permissions = $permissionDetail->permission($user);
-        $permissionFields = [
-            'teacher_username' => $permissionDetail->havePermission('teacher_username', $permissions, $user),
-            'teacher_email' => $permissionDetail->havePermission('teacher_email', $permissions, $user),
-            'teacher_phone' => $permissionDetail->havePermission('teacher_phone', $permissions, $user),
-            'teacher_class' => $permissionDetail->havePermission('teacher_class', $permissions, $user),
-            'teacher_school' => $permissionDetail->havePermission('teacher_school', $permissions, $user),
-            'teacher_description' => $permissionDetail->havePermission('teacher_description', $permissions, $user),
-            'teacher_import' => $permissionDetail->havePermission('teacher_import', $permissions, $user),
-            'delete_device' => $permissionDetail->havePermission('delete_device', $permissions, $user),
-            'active_teacher' => $permissionDetail->havePermission('active_teacher', $permissions, $user),
-            'teacher_full_name' => $permissionDetail->havePermission('teacher_full_name', $permissions, $user),
-            'active_allocation' => $permissionDetail->havePermission('active_allocation', $permissions, $user),
-            'resource_allocation' => $permissionDetail->havePermission('resource_allocation', $permissions, $user),
-            'password' => $permissionDetail->havePermission('password', $permissions, $user),
-            'teacher_delete' => $permissionDetail->havePermission('teacher_delete', $permissions, $user),
-
+        $permissionFields = [];
+        $permissionList = [
+            'teacher_username',
+            'teacher_email',
+            'teacher_phone',
+            'teacher_class',
+            'active_teacher',
+            'teacher_delete',
+            'resource_allocation',
+            'teacher_school',
+            'teacher_description',
+            'teacher_import',
+            'delete_device',
+            'teacher_full_name',
+            'active_allocation',
+            'password',
         ];
+        foreach ($permissionList as $permission) {
+            $haspermission = $permissionDetail->havePermission($permission, $permissions, $user);
+            $permissionFields[(string)$permission] = (bool)$haspermission;
+        }
         $jsonData = [
             'roleName' => @$roleName,
             'active_allocation' => $active_allocation,
@@ -866,6 +879,7 @@ class UsersController extends AdminBaseController
         if (!$req->isMethod('POST')) {
             return ['code' => 405, 'message' => 'Method not allow'];
         }
+
         $rules = [
             'full_name' => [
                 'required', function ($attribute, $value, $fail) {
@@ -1101,7 +1115,6 @@ class UsersController extends AdminBaseController
         }
     }
 
-
     /**
      * @param Request $req
      */
@@ -1284,7 +1297,6 @@ class UsersController extends AdminBaseController
             ]
         ];
     }
-
 
     public function export()
     {

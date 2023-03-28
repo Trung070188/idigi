@@ -309,7 +309,7 @@
                                 <div class="d-flex justify-content-end" data-kt-filemanager-table-toolbar="base">
 
 
-                                    <button :disabled="permissionFields['teacher_management_import']==false" type="button" class="btn btn-primary mr-2" @click="importTeacher">
+                                    <button :disabled="!permissionFields['teacher_management_import']" type="button" class="btn btn-primary mr-2" @click="importTeacher">
                                         <span class="svg-icon svg-icon-2">
 													<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
 														<path opacity="0.3" d="M10 4H21C21.6 4 22 4.4 22 5V7H10V4Z" fill="black" />

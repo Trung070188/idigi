@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
-
+use App\Helpers\PermissionField;
 use App\Models\AllocationContent;
 use App\Models\AllocationContentUnit;
 use App\Models\Course;
@@ -17,6 +17,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use App\Models\Unit;
+use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
@@ -80,8 +81,30 @@ class UnitsController extends AdminBaseController
         $title = 'Edit';
         $component = 'UnitDetail';
 
+        $user = Auth::user();
+        $permissionDetail = new PermissionField();
+        $permissions = $permissionDetail->permission($user);
+        $permissionFields = [];
+        $permissionList = [
+            'unit_name',
+            'unit_subject',
+            'unit_course',
+            'unit_description',
+            'unit_lessons_list',
+            'unit_active',
+            'unit_delete'
+        ];
+        foreach ($permissionList as $permission) {
+            $haspermission = $permissionDetail->havePermission($permission, $permissions, $user);
+            $permissionFields[(string)$permission] = (bool)$haspermission;
+        }
+        $jsonData = [
+            'entry'=>$entry,
+            'permissionFields'=>$permissionFields
+        ];
 
-        return component($component, compact('title', 'entry'));
+
+        return component($component, compact('title', 'jsonData'));
     }
 
     /**
@@ -144,7 +167,7 @@ class UnitsController extends AdminBaseController
             'description' => 'max:200'
         ];
         $message = [
-            'unit_name.required' => 'The unit name field is required'
+            'unit_name.required' => 'The unit name field is required.'
         ];
 
         $v = Validator::make($data, $rules, $message);

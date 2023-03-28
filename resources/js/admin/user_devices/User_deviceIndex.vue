@@ -1,7 +1,7 @@
 <template>
     <div class="container-fluid">
         <ActionBar type="index" :breadcrumbs="breadcrumbs" title="My devices" />
-
+        <!-- send request delete device -->
         <div class="modal fade" style="margin-right:50px " id="sentConfirm" tabindex="-1" role="dialog"
             aria-labelledby="sentConfirm" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered popup-main-1" role="document" style="max-width: 500px;">
@@ -24,6 +24,7 @@
             </div>
         </div>
 
+        <!-- modal delete -->
         <div class="modal fade" style="margin-right:50px;border:2px solid #333333  " id="delete" tabindex="-1" role="dialog"
             aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered popup-main-1" role="document" style="max-width: 450px;">
@@ -38,19 +39,18 @@
                     </div>
                     <div class="swal2-actions">
                         <button type="submit" id="kt_modal_new_target_submit" class="swal2-confirm btn fw-bold btn-danger"
-                            @click="remove(idDevice)">
+                            @click="remove(idDevice)" :disabled="!permissionFields['device_delete']">
                             <span class="indicator-label">Yes, delete!</span>
                         </button>
                         <button type="reset" id="kt_modal_new_target_cancel"
                             class="swal2-cancel btn fw-bold btn-active-light-primary" data-bs-dismiss="modal"
                             style="margin: 0px 8px 0px">No, cancel</button>
-
                     </div>
-
                 </div>
             </div>
         </div>
 
+        <!-- modal add new device  -->
         <div class="modal fade" style="margin-right:50px " id="deviceConfirm" tabindex="-1" role="dialog"
             aria-labelledby="deviceConfirm" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered popup-main-1" role="document" style="max-width: 500px;">
@@ -109,6 +109,7 @@
             </div>
         </div>
 
+        <!-- modal edit davice name  -->
         <div class="modal fade" id="editDeviceName" tabindex="-1" role="dialog" aria-labelledby="editDeviceName"
             aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered popup-main-1" role="document">
@@ -118,21 +119,19 @@
                     <div class="content">
                         <label>Device Name<span class="text-danger">*</span></label>
                         <input type="text" class="form-control " placeholder="Device name" aria-label=""
-                            style="margin-bottom: 10px" aria-describedby="basic-addon1" v-model="Edit_name.device_name">
+                            style="margin-bottom: 10px" aria-describedby="basic-addon1" v-model="Edit_name.device_name"
+                            :disabled="!permissionFields['device_rename']">
                         <error-label for="f_category_id" :errors="errors.device_name"></error-label>
                         <div style="text-align:center">
-                            <button class="btn btn-primary" @click="save_name">Save</button>
+                            <button class="btn btn-primary" @click="save_name"
+                                :disabled="!permissionFields['device_rename']">Save</button>
                         </div>
-
-
-
                     </div>
-
-
                 </div>
             </div>
         </div>
 
+        <!-- modal get confimation code  -->
         <div class="modal fade" id="editdeviceConfirm" tabindex="-1" role="dialog" aria-labelledby="editdeviceConfirm"
             aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered popup-main-1" role="document">
@@ -145,22 +144,21 @@
                             style="margin-bottom: 10px" aria-describedby="basic-addon1" v-model="editDevice" disabled>
                         <error-label for="f_category_id" :errors="errors.device_name"></error-label>
                         <div>
-                            <button type="button" class="btn btn-primary" v-on:click="genToken"> Generate Key</button>
+                            <button type="button" class="btn btn-primary" v-on:click="genToken"
+                                :disabled="!permissionFields['device_confirmation_code']"> Generate Key</button>
                         </div>
                         <div style="text-align:right"><button type="button" v-if="token" class="btn btn-primary"
                                 v-on:click="copyTextToken" title="Copy Token" style="padding: 5px 20px;margin:0px 7px 10px">
                                 Copy</button></div>
-
                         <div v-if="token"
                             style="font-size: 14px; word-wrap: break-word;white-space: pre-wrap;word-break: normal;background-color: #f7f7f9;">
                             {{ token }}</div>
                     </div>
-
-
                 </div>
             </div>
         </div>
 
+        <!-- modal limit of devices number -->
         <div class="modal fade" style="margin-right:50px;border:2px solid #333333  " id="deviceConfirmLimit" tabindex="-1"
             role="dialog" aria-labelledby="deviceConfirmLimit" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered popup-main-1" role="document" style="max-width: 500px;">
@@ -176,59 +174,13 @@
             </div>
         </div>
 
+        <!-- main content  -->
         <div class="row">
             <div class="col-lg-12">
                 <div class="card card-custom card-stretch gutter-b">
-
                     <div class="card-header border-0 pt-6">
                         <div class="card-title">
-                            <!--                            <div class="d-flex align-items-center position-relative my-1">-->
-                            <!--                              <span-->
-                            <!--                                    class="svg-icon svg-icon-1 position-absolute ms-6"-->
-                            <!--                                >-->
-                            <!--                                    <svg-->
-                            <!--                                        xmlns="http://www.w3.org/2000/svg"-->
-                            <!--                                        width="24"-->
-                            <!--                                        height="24"-->
-                            <!--                                        viewBox="0 0 24 24"-->
-                            <!--                                        fill="none"-->
-                            <!--                                    >-->
-                            <!--                                        <rect-->
-                            <!--                                            opacity="0.5"-->
-                            <!--                                            x="17.0365"-->
-                            <!--                                            y="15.1223"-->
-                            <!--                                            width="8.15546"-->
-                            <!--                                            height="2"-->
-                            <!--                                            rx="1"-->
-                            <!--                                            transform="rotate(45 17.0365 15.1223)"-->
-                            <!--                                            fill="black"-->
-                            <!--                                        ></rect>-->
-                            <!--                                        <path-->
-                            <!--                                            d="M11 19C6.55556 19 3 15.4444 3 11C3 6.55556 6.55556 3 11 3C15.4444 3 19 6.55556 19 11C19 15.4444 15.4444 19 11 19ZM11 5C7.53333 5 5 7.53333 5 11C5 14.4667 7.53333 17 11 17C14.4667 17 17 14.4667 17 11C17 7.53333 14.4667 5 11 5Z"-->
-                            <!--                                            fill="black"-->
-                            <!--                                        ></path>-->
-                            <!--                                    </svg>-->
-                            <!--                                </span>-->
-                            <!--                                  <input-->
-                            <!--                                    type="text"-->
-                            <!--                                    data-kt-filemanager-table-filter="search"-->
-                            <!--                                    class="form-control form-control-solid w-250px ps-15"-->
-
-
-                            <!--                                    placeholder="Search..."-->
-                            <!--                                    value=""-->
-                            <!--                                />-->
-                            <!--                                <span-->
-
-                            <!--                                    class="svg-icon svg-icon-2 svg-icon-lg-1 me-0"-->
-
-                            <!--                                >-->
-                            <!--                                </span>-->
-
-
-                            <!--                            </div>-->
                         </div>
-
                         <div class="card-toolbar">
                             <div class="d-flex justify-content-end" data-kt-customer-table-toolbar="base">
                                 <button
@@ -244,10 +196,7 @@
                                 <button v-if="roleName != 'School Admin' && roleName != 'Teacher'" type="button"
                                     class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#kt_modal_add_customer"
                                     @click="modalDevice()"><i class="bi bi-plus-lg"></i>New Device</button>
-
-
                             </div>
-
                         </div>
                     </div>
                     <div class="tab-content">
@@ -260,7 +209,6 @@
                                 </div>
                             </div>
                         </div>
-
                         <table class="table table-hover table-row-bordered align-middle gy-4 gs-9">
                             <thead
                                 class="border-bottom border-gray-200 fs-6 text-gray-600 fw-bolder bg-light bg-opacity-75">
@@ -287,17 +235,21 @@
                                     </td>
                                     <td class="text-center">
                                         <div class="d-flex justify-content-around">
-                                            <i v-if="checkDeleteDeviceRequest == 0 && permissionFields['device_delete'] == true"
+
+                                            <i v-if="checkDeleteDeviceRequest == 0 && permissionFields['device_delete']"
                                                 :class="'bi bi-trash text-danger cursor-pointer action-btn action-btn-' + entry.id"
                                                 :title="'Delete ' + entry.device_name" @click="removeDevice(entry.id)"></i>
-                                            <i v-if="checkDeleteDeviceRequest == 1 && entry.status == 2 && permissionFields['device_delete'] == true"
+
+                                            <i v-if="checkDeleteDeviceRequest == 1 && entry.status == 2 && permissionFields['device_delete']"
                                                 :class="'bi bi-trash text-danger cursor-pointer action-btn action-btn-' + entry.id"
                                                 :title="'Delete ' + entry.device_name" @click="Sent(entry)"></i>
                                         </div>
                                     </td>
                                     <td class="text-center">
-                                        <button :class="'btn btn-icon btn-active-light-dark text-dark btn-xs action-btn action-btn-' + entry.id"
-                                            data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end" style="display: none;">
+                                        <button
+                                            :class="'btn btn-icon btn-active-light-dark text-dark btn-xs action-btn action-btn-' + entry.id"
+                                            data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end"
+                                            style="display: none;">
                                             <i class="bi bi-three-dots"></i>
                                         </button>
                                         <div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-bold fs-7 w-125px py-4"
@@ -307,8 +259,10 @@
                                                     class="menu-link px-3">Rename</a>
                                             </div>
                                             <div class="menu-item px-3" v-if="permissionFields['device_confirmation_code']">
-                                                <a class="menu-link px-3" @click="editModalDevice(entry.id, entry.device_name, entry.secret_key)"
-                                                    data-kt-subscriptions-table-filter="delete_row">Get confirmation code</a>
+                                                <a class="menu-link px-3"
+                                                    @click="editModalDevice(entry.id, entry.device_name, entry.secret_key)"
+                                                    data-kt-subscriptions-table-filter="delete_row">Get confirmation
+                                                    code</a>
                                             </div>
                                         </div>
                                     </td>

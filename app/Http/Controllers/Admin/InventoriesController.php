@@ -103,18 +103,23 @@ class InventoriesController extends AdminBaseController
         $user = Auth::user();
         $permissionDetail = new PermissionField();
         $permissions = $permissionDetail->permission($user);
-        $permissionFields = [
-            'resource_name' => $permissionDetail->havePermission('resource_name', $permissions, $user),
-            'resource_type' => $permissionDetail->havePermission('resource_type', $permissions, $user),
-            'resource_subject' => $permissionDetail->havePermission('resource_subject', $permissions, $user),
-            'resource_grade' => $permissionDetail->havePermission('resource_grade', $permissions, $user),
-            'resource_picture' => $permissionDetail->havePermission('resource_picture', $permissions, $user),
-            'resource_file_asset_bundle' => $permissionDetail->havePermission('resource_file_asset_bundle', $permissions, $user),
-            'resource_description' => $permissionDetail->havePermission('resource_description', $permissions, $user),
-            'resource_tags' => $permissionDetail->havePermission('resource_tags', $permissions, $user),
-            'resource_active' => $permissionDetail->havePermission('resource_active', $permissions, $user)
-
+        $permissionFields = [];
+        $permissionList = [
+            'module_name',
+            'module_type',
+            'module_file_asset_bundle',
+            'module_description',
+            'module_location',
+            'module_subject',
+            'module_lesson',
+            'module_active',
+            'module_delete',
         ];
+
+        foreach ($permissionList as $permission) {
+            $haspermission = $permissionDetail->havePermission($permission, $permissions, $user);
+            $permissionFields[(string)$permission] = (bool)$haspermission;
+        }
 
         $title = 'Edit';
         $component = 'InventoryForm';

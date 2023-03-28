@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
-
+use App\Helpers\PermissionField;
 use App\Models\Plan;
 use App\Models\User;
 use App\Models\UserDevice;
@@ -42,7 +42,22 @@ class NotificationsController extends AdminBaseController
 //        }
         $title = 'Notification';
         $component = 'NotificationIndex';
-        return component($component, compact('title'));
+
+        $user = Auth::user();
+        $permissionDetail = new PermissionField();
+        $permissions = $permissionDetail->permission($user);
+        $permissionFields = [];
+        $permissionList = [
+            'notification_view_detail',
+            'notification_delete'
+        ];
+        foreach ($permissionList as $permission) {
+            $haspermission = $permissionDetail->havePermission($permission, $permissions, $user);
+            $permissionFields[(string)$permission] = (bool)$haspermission;
+        }
+
+
+        return component($component, compact('title', 'permissionFields'));
     }
 
     /**

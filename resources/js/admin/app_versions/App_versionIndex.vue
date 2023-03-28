@@ -46,12 +46,10 @@
 
                 <div class="card-toolbar">
                     <div class="d-flex justify-content-end" data-kt-customer-table-toolbar="base">
-                        <a>
-                            <button class="btn btn-primary button-create" style="margin:0 0 0 15px"
-                                @click="showModalUpload()" v-if="appIds == '' && windowIds == '' && permissions['022']">
-                                <i class="bi bi-upload mr-1"></i>New Application
-                            </button>
-                        </a>
+                        <button class="btn btn-primary button-create" style="margin:0 0 0 15px" @click="showModalUpload()"
+                            v-if="appIds == '' && windowIds == '' && permissions['022'] && permissionFields['app_create_new']">
+                            <i class="bi bi-upload mr-1"></i>New Application
+                        </button>
                     </div>
                 </div>
             </div>
@@ -93,11 +91,12 @@
                                                     d="M7.009 12.139a7.632 7.632 0 0 1-1.804-1.352A7.568 7.568 0 0 1 3.794 8.86c-1.102.992-1.965 5.054-1.839 5.18.125.126 3.936-.896 5.054-1.902Z" />
                                             </svg>
                                         </i>
-                                        <a v-if="permissions['023']" :href="'/xadmin/app_versions/downloadApp/' + entry.id">
+                                        <a v-if="permissions['023'] && permissionFields['app_download']" :href="'/xadmin/app_versions/downloadApp/' + entry.id">
                                             <i :class="'bi bi-download text-success cursor-pointer action-btn action-btn-' + entry.id"
                                                 :title="'Download version ' + entry.version"></i>
                                         </a>
-                                        <i v-if="permissions['024']" :class="'bi bi-trash text-danger cursor-pointer action-btn action-btn-' + entry.id"
+                                        <i v-if="permissions['024'] && permissionFields['app_delete']"
+                                            :class="'bi bi-trash text-danger cursor-pointer action-btn action-btn-' + entry.id"
                                             :title="'Delete version ' + entry.version" @click="removeApp(entry.id)">
                                         </i>
                                     </div>
@@ -117,7 +116,6 @@
                                 <th class="">Release notes</th>
                                 <th class="text-center">Status</th>
                                 <th class="text-center">Actions</th>
-
                             </tr>
                         </thead>
                         <tbody>
@@ -145,11 +143,12 @@
                                                     d="M7.009 12.139a7.632 7.632 0 0 1-1.804-1.352A7.568 7.568 0 0 1 3.794 8.86c-1.102.992-1.965 5.054-1.839 5.18.125.126 3.936-.896 5.054-1.902Z" />
                                             </svg>
                                         </i>
-                                        <a v-if="permissions['023']" :href="entry.url">
+                                        <a v-if="permissions['023'] && permissionFields['app_download']" :href="entry.url">
                                             <i :class="'bi bi-download text-success cursor-pointer action-btn action-btn-' + entry.id"
                                                 :title="'Download version ' + entry.version"></i>
                                         </a>
-                                        <i v-if="permissions['024']" :class="'bi bi-trash text-danger cursor-pointer action-btn action-btn-' + entry.id"
+                                        <i v-if="permissions['024'] && permissionFields['app_delete']"
+                                            :class="'bi bi-trash text-danger cursor-pointer action-btn action-btn-' + entry.id"
                                             :title="'Delete version ' + entry.version" @click="removeApp(entry.id)">
                                         </i>
                                     </div>
@@ -158,16 +157,9 @@
                             </tr>
                         </tbody>
                     </table>
-
                 </div>
-
-
                 <div class="d-flex pl-9 pr-9 mb-8">
-                    <div
-                        class="col-sm-12 col-md-5 d-flex align-items-center justify-content-center justify-content-md-start">
-                        <!--<div class="mr-2">
-                            <label>Records per page:</label>
-                        </div>-->
+                    <div class="col-sm-12 col-md-5 d-flex align-items-center justify-content-center justify-content-md-start">
                         <div>
                             <select class="form-select form-select-sm form-select-solid">
                                 <option value="25">25</option>
@@ -177,25 +169,19 @@
                             </select>
                         </div>
                     </div>
-                    <!--<div style="float: right; margin: 10px">-->
                     <div class="col-sm-12 col-md-7 d-flex align-items-center justify-content-center justify-content-md-end">
                         <div class="dataTables_paginate paging_simple_numbers" id="kt_customers_table_paginate">
                         </div>
                     </div>
                 </div>
-
             </div>
             <div class="modal" id="uploadApp" tabindex="-1">
                 <div class="modal-dialog modal-dialog-centered popup-main-1">
                     <div class="modal-content">
                         <div class="modal-header">
                             <h3 class="modal-title fw-bolder text-center w-100">Create new application</h3>
-                            <!--<button type="button" class="close" data-bs-dismiss="modal">
-                                &times;
-                            </button>-->
                         </div>
                         <div class="modal-body px-10">
-
                             <div id="overlay">
                                 <div class="la-3x text">
                                     <i class="la la-spinner la-spin"></i>
@@ -213,12 +199,6 @@
                                     <input type="file" ref="uploader1" class="form-control-file" accept=".zip,.rar,.7zip">
                                     <error-label :errors="errors.file_1"></error-label>
                                 </div>
-                                <!--                                <div class="form-group">-->
-                                <!--                                    <label>Name <span class="required"></span></label>-->
-                                <!--                                    <input type="text" v-model="model.name" class="form-control">-->
-                                <!--                                    <error-label :errors="errors.name"></error-label>-->
-                                <!--                                </div>-->
-
                                 <div class="form-group">
                                     <label>Operating System <span class="required"></span></label>
                                     <select v-model="model.type" class="form-control">
@@ -233,12 +213,6 @@
                                     <input type="text" class="form-control" v-model="model.version">
                                     <error-label :errors="errors.version"></error-label>
                                 </div>
-                                <!--                                <div class="form-group">-->
-                                <!--                                    <label>Release date <span class="required"></span></label>-->
-                                <!--                                    <Datepicker v-model="model.release_date"/>-->
-                                <!--                                    <error-label for="f_title" :errors="errors.release_date"></error-label>-->
-
-                                <!--                                </div>-->
                                 <div class="form-group">
                                     <label>Release Note </label>
                                     <textarea type="text" class="form-control" v-model="model.release_note" />
@@ -251,7 +225,6 @@
                                     <error-label for="f_grade" :errors="errors.is_default"></error-label>
                                 </div>
                             </form>
-
                         </div>
                         <div class="modal-footer" style="justify-content: center">
                             <button type="button" class="btn btn-primary mr-2" @click="save"><i

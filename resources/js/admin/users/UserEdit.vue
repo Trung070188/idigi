@@ -18,7 +18,7 @@
                                 <p >Are you sure to delete this device?</p>
                             </div>
                             <div class="swal2-actions">
-                                <button type="submit" id="kt_modal_new_target_submit1" class="swal2-confirm btn fw-bold btn-danger" @click="deleteDevice(deleteUserDevice)">
+                                <button type="submit" id="kt_modal_new_target_submit1" class="swal2-confirm btn fw-bold btn-danger" @click="deleteDevice(deleteUserDevice)" :disabled="!permissionFields['user_delete_device']">
                                     <span class="indicator-label">Yes, delete!</span>
                                 </button>
                                 <button type="reset" id="kt_modal_new_target_cancel1" class="swal2-cancel btn fw-bold btn-active-light-primary" data-bs-dismiss="modal" style="margin: 0px 8px 0px">No, cancel</button>
@@ -29,7 +29,6 @@
                     </div>
                 </div>
                 <!-- end modal xoa device -->
-
                 <div class="modal fade" style="margin-right:50px;border:2px solid #333333  " id="delete" tabindex="-1" role="dialog"
                      aria-hidden="true">
                     <div class="modal-dialog modal-dialog-centered popup-main-1" role="document"
@@ -43,13 +42,11 @@
                                 <p >Are you sure to delete this user?</p>
                             </div>
                             <div class="swal2-actions">
-                                <button type="submit" id="kt_modal_new_target_submit" class="swal2-confirm btn fw-bold btn-danger" @click="remove(entry)">
+                                <button type="submit" id="kt_modal_new_target_submit" class="swal2-confirm btn fw-bold btn-danger" @click="remove(entry)" :disabled="!permissionFields['user_remove']">
                                     <span class="indicator-label">Yes, delete!</span>
                                 </button>
                                 <button type="reset" id="kt_modal_new_target_cancel" class="swal2-cancel btn fw-bold btn-active-light-primary" data-bs-dismiss="modal" style="margin: 0px 8px 0px">No, cancel</button>
-
                             </div>
-
                         </div>
                     </div>
                 </div>
@@ -62,7 +59,6 @@
                             </button>
                         </div>
                     </div>
-                    <!-- <div class="card-body d-flex flex-column"> -->
                     <div class="card-body d-flex flex-column mt-4">
                         <div class="row">
                             <div class=" col-sm-12">
@@ -70,32 +66,30 @@
                                 <div class="row">
                                     <div class="form-group col-sm-4">
                                         <label>Username <span class="text-danger">*</span></label>
-                                        <input class="form-control  nospace" :disabled="permissionFields['user_username']==false" placeholder="Enter the username" v-model="entry.username" disabled>
-
+                                        <input class="form-control  nospace" :disabled="true" placeholder="Enter the username" v-model="entry.username">
                                         <error-label for="f_category_id" :errors="errors.username" ></error-label>
                                     </div>
                                     <div class="form-group col-sm-4">
                                         <label>Full name <span class="text-danger">*</span></label>
                                         <input class="form-control" placeholder="Enter the full name" :disabled="permissionFields['user_full_name']==false" v-model="entry.full_name">
-
                                         <error-label for="f_category_id" :errors="errors.full_name"></error-label>
                                     </div>
                                     <div class="form-group  col-sm-4">
                                         <label>Email</label>
-                                        <input class="form-control" placeholder="Enter the email address" :disabled="permissionFields['user_email']==false" v-model="entry.email">
+                                        <input class="form-control" placeholder="Enter the email address" :disabled="true" v-model="entry.email">
                                         <error-label for="f_category_id" :errors="errors.email"></error-label>
                                     </div>
                                     <div  class="form-group  col-sm-4">
                                         <label>Password <span class="text-danger">*</span></label>
                                         <input :type="showPass ? 'text' : 'password'" class="form-control"
-                                               ref="password" v-model="password" placeholder="Enter the password">
+                                               ref="password" v-model="password" placeholder="Enter the password" :disabled="!permissionFields['user_password']">
                                         <error-label for="f_category_id" :errors="errors.password"></error-label>
                                     </div>
 
                                     <div  class="form-group  col-sm-4">
                                         <label>Confirm your password <span class="text-danger">*</span></label>
                                         <input class="form-control" :type="showConfirm ? 'text' : 'password'"
-                                               v-model="password_confirmation"  placeholder="Re-enter to confirm the password">
+                                               v-model="password_confirmation"  placeholder="Re-enter to confirm the password" :disabled="!permissionFields['user_password']">
                                         <error-label for="f_category_id"
                                                      :errors="errors.password_confirmation"></error-label>
                                     </div>
@@ -105,34 +99,24 @@
                                         <label>Role <span class="text-danger">*</span></label>
                                         <div class="d-flex align-items-center justify-content-start mt-2">
                                             <div class="form-check form-check-custom form-check-solid mr-10" v-for="role in roles">
-                                                <input :disabled="permissionFields['user_role']==false"  class="form-check-input mr-2" type="radio" :id="role.id" v-model="name_role" :value="role.id">
-                                                <span :for="role.id">{{role.role_name}}</span>
+                                                <input :disabled="!permissionFields['user_role']"  class="form-check-input mr-2" type="radio" :id="role.id" v-model="name_role" :value="role.id">
+                                                <label :for="role.id">{{role.role_name}}</label>
                                             </div>
                                             <error-label for="f_grade" :errors="errors.name_role"></error-label>
                                         </div>
                                     </div>
-                                    <!-- <div class=" form-group col-lg-3 ">
-                                        <label >Password</label>
-                                        <div class="d-flex align-items-center justify-content-start mt-2" >
-                                            <input :disabled="permissionFields['user_password']==false" class="form-control " type="password" placeholder="Enter the password" v-model="password" >
-                                            <error-label></error-label>
-                                        </div>
-                                    </div> -->
                                 </div>
                                 <div class="row" v-if="name_role==2">
                                     <div class="form-group col-sm-4 mb-7">
                                         <label>School <span class="text-danger">*</span></label>
-                                        <!--                                        <select  class="form-control form-select" v-model="entry.school_id" required>-->
-                                        <!--                                            <option v-for="school in schools" :value="school.id" >{{school.label}}</option>-->
-                                        <!--                                        </select>-->
-                                        <Treeselect :options="schools" :multiple="true" v-model="userSchool" placeholder="Choose school"/>
+                                        <Treeselect :options="schools" :multiple="true" v-model="userSchool" placeholder="Choose school"  :disabled="!permissionFields['user_role']"/>
                                     <error-label for="f_grade" :errors="errors.userSchool"></error-label>
                                     </div>
                                 </div>
                                 <div class="row" v-if="name_role==5">
                                     <div class="form-group col-sm-4">
                                         <label>School <span class="text-danger">*</span></label>
-                                        <select required  class="form-control form-select"  v-model="entry.school_id" >
+                                        <select required  class="form-control form-select"  v-model="entry.school_id" :disabled="!permissionFields['user_role']">
                                             <option value="" disabled selected>Choose role</option>
                                             <option v-for="school in schools" :value="school.id">{{school.label}}</option>
                                         </select>
@@ -142,7 +126,7 @@
                                 <div class="row">
                                     <div class="form-group col-sm-12 mb-3">
                                         <label>User description</label>
-                                        <textarea v-model="entry.description" rows="5" class="form-control" :disabled="permissionFields['user_description']==false"
+                                        <textarea v-model="entry.description" rows="5" class="form-control" :disabled="!permissionFields['user_description']"
                                                   placeholder="Type the description here (200 characters)"></textarea>
                                         <error-label for="f_grade" :errors="errors.description"></error-label>
 
@@ -154,7 +138,7 @@
                                     <error-label for="f_grade" :errors="errors.state"></error-label>
                                 </div>
                                 <div class="mt-2 mb-4">
-                                    <button type="reset" @click="save()" class="btn btn-primary mr-3" style="padding: 8.375px 13.75px"><i class="bi bi-save2 mr-1"></i>Save</button>
+                                    <button type="reset" @click="save()" class="btn btn-primary mr-3" style="padding: 8.375px 13.75px" :disabled="!permissions['002']"><i class="bi bi-save2 mr-1"></i>Save</button>
                                     <button type="reset" @click="backIndex()" class="btn btn-light" style="padding: 8.375px 13.75px">Cancel</button>
                                 </div>
                             </div>
@@ -178,7 +162,7 @@
                                 <td>{{d(device.created_at)}}</td>
                                 <td v-if="device.delete_request!=null" class="status-request" v-text="device.delete_request"></td>
                                 <td v-else ></td>
-                                <td v-if="permissionFields['user_delete_device']==true"><i class="bi bi-trash "  style="cursor: pointer" @click="deleteDeviceModal(device)"></i></td>
+                                <td v-if="permissionFields['user_delete_device']"><i class="bi bi-trash text-danger"  style="cursor: pointer" @click="deleteDeviceModal(device)"></i></td>
                                 <td v-else></td>
                             </tr>
                             </tbody>
