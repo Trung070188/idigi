@@ -30,6 +30,14 @@ class Course extends BaseModel
     {
         return $this->belongsToMany(Unit::class,'allocation_content_units');
     }
+    public function user_courses()
+    {
+        return $this->hasMany(UserCourseUnit::class,'course_id');
+    }
+    public function school_courses()
+    {
+        return $this->hasMany(SchoolCourse::class,'course_id');
+    }
     public function unitSchool()
     {
         return $this->hasMany(SchoolCourseUnit::class,'course_id');

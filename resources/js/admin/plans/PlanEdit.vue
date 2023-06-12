@@ -237,10 +237,10 @@
                                     <div id="kt_billing_months" class="card-body p-0 tab-pane fade show active"
                                         role="tabpanel" aria-labelledby="kt_billing_months">
                                         <div class="d-flex justify-content-end mb-4">
-                                            <a  class="btn btn-danger btn-sm mr-3"
-                                                @click="removeDeviceAll" data-kt-menu-trigger="click"
-                                                data-kt-menu-placement="bottom-end">Remove device</a>
-                                            <a href="list.html#" class="btn btn-light btn-active-light-primary btn-sm"
+<!--                                            <a  class="btn btn-danger btn-sm mr-3"-->
+<!--                                                @click="removeDeviceAll"-->
+<!--                                                data-kt-menu-placement="bottom-end">Remove device</a>-->
+                                            <a class="btn btn-light btn-active-light-primary btn-sm"
                                                 data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">Actions
                                                 <span class="svg-icon svg-icon-5 m-0">
                                                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
@@ -354,12 +354,10 @@
                                         aria-labelledby="kt_billing_year">
                                         <div class="d-flex justify-content-end mb-4">
                                             <a v-if="dataTableLesson.checkRemoveLesson == 1 && dataZipLesson.status == 'waitting' && permissionFields['plan_remove_lesson'] == true"
-                                                class="btn btn-danger btn-sm mr-3" @click="deleteAllLesson">Remove
-                                                lesson</a>
+                                                class="btn btn-danger btn-sm mr-3" @click="deleteAllLesson">Remove lesson</a>
                                             <a v-if="dataTableLesson.checkRemoveLesson == 1 && dataZipLesson.status == 'waitting' && permissionFields['plan_remove_lesson'] == false"
                                                 class="btn btn-danger btn-sm mr-3 isDisabled"
-                                                @click="deleteAllLesson">Remove
-                                                lesson</a>
+                                                @click="deleteAllLesson">Remove lesson</a>
                                             <a v-if="dataZipLesson.status == 'running' || dataZipLesson.status == 'inprogress'"
                                                 class="mt-2 mr-5" style="color: rgb(230 180 0)"> Lesson list is
                                                 packaging...</a>

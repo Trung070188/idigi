@@ -157,12 +157,6 @@
                                     </select>
 
                                 </div>
-                                <!--                                <div class="form-group col-lg-3">-->
-                                <!--                                    <label>Unit ID </label>-->
-                                <!--                                    <select required class="form-control form-select" v-model="filter.grade" @keydown.enter="doFilter('id', filter.grade, $event)"  >-->
-                                <!--                                        <option value="" disabled selected>Choose unit ID</option>-->
-                                <!--                                    </select>-->
-                                <!--                                </div>-->
                                 <div class="form-group col-lg-3">
                                     <label>Course</label>
                                     <select class="form-control form-select" v-model="filter.course_id"
@@ -201,14 +195,6 @@
                         </form>
 
                     </div>
-                    <!--                    <div class="row">-->
-                    <!--                        <div class="d-flex align-items-center position-absolute my-1 col-lg-12 ml-10">-->
-                    <!--                            <select class="form-control col-lg-2"><option>1</option></select>-->
-                    <!--                        </div>-->
-
-                    <!--                    </div>-->
-
-
 
                     <!--<div class="card-body d-flex flex-column">-->
                     <div class="tab-content">
@@ -239,7 +225,7 @@
                                     <td width="25">
                                         <div class="form-check form-check-sm form-check-custom form-check-solid">
                                             <input class="form-check-input" type="checkbox" v-model="allSelected"
-                                                @change="selectAll()">
+                                                @change="selectAll()" v-if="permissions['058']">
                                         </div>
                                     </td>
                                     <th class="text-center">No.</th>
@@ -258,7 +244,7 @@
                                     <td class="text-center">
                                         <div class="form-check form-check-sm form-check-custom form-check-solid">
                                             <input class="form-check-input" type="checkbox" v-model="unitIds"
-                                                :value="entry.id" @change="updateCheckAll" />
+                                                :value="entry.id" @change="updateCheckAll" v-if="permissions['058']" />
                                         </div>
                                     </td>
                                     <td class="text-center">{{ ((index + 1) + (from + 1)) - 2 }}</td>
@@ -278,7 +264,7 @@
                                     <td class="text-center">
                                         <div class="d-flex justify-content-around">
                                             <i :class="'bi bi-trash text-danger cursor-pointer action-btn action-btn-' + entry.id"
-                                                :title="'Delete ' + entry.name" @click="deleteUnit(entry)"></i>
+                                                :title="'Delete ' + entry.name" @click="deleteUnit(entry)" v-if="permissions['058']"></i>
                                         </div>
                                     </td>
                                 </tr>

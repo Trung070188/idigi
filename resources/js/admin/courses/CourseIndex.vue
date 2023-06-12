@@ -232,7 +232,7 @@
                                     <td class="text-center" width="25">
                                         <div class="form-check form-check-sm form-check-custom form-check-solid">
                                             <input class="form-check-input" type="checkbox" v-model="allSelected"
-                                                @change="selectAll()">
+                                                @change="selectAll()" v-if="permissions['012']">
                                         </div>
                                     </td>
                                     <th class="text-center">No.</th>
@@ -251,7 +251,7 @@
                                     <td class="text-center">
                                         <div class="form-check form-check-sm form-check-custom form-check-solid">
                                             <input class="form-check-input" type="checkbox" v-model="courseIds"
-                                                :value="entry.id" @change="updateCheckAll" />
+                                                :value="entry.id" @change="updateCheckAll" v-if="permissions['012']" />
                                         </div>
                                     </td>
                                     <td class="text-center" @click="edit(entry.id)">{{ ((index + 1) + (from + 1)) - 2 }}

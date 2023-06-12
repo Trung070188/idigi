@@ -295,7 +295,26 @@ class CoursesController extends AdminBaseController
      */
     public function data(Request $req)
     {
+        $user = auth_user();
+        $schoolId = explode(',', $user['school_id']);
+        $roleName = $user->roles[0]['role_name'];
+
         $query = Course::query()->orderBy('id', 'desc');
+        if($roleName == 'Teacher')
+        {
+            $query->whereHas('user_courses', function ($q) use ($user)
+            {
+                $q->where('user_id', $user['id']);
+            });
+        }
+
+        if($roleName == 'School Admin')
+        {
+            $query->whereHas('school_courses', function ($q) use ($schoolId)
+            {
+                $q->where('school_id', (int)$schoolId[0]);
+            });
+        }
 
         if ($req->keyword) {
             $query->where('course_name', 'LIKE', '%' . $req->keyword . '%');

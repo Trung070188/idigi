@@ -138,7 +138,7 @@
                             <div class="d-flex justify-content-end" data-kt-customer-table-toolbar="base" v-if="lessonIds == ''">
                                 <button type="button" style="margin-left: 10px" @click="isShowFilter = !isShowFilter" class="btn btn-light" v-if="isShowFilter"> <i class="fas fa-times"></i> Close Advanced Search </button>
                                 <button type="button" style="margin-left: 10px" @click="isShowFilter = !isShowFilter" class="btn btn-light" v-if="!isShowFilter"><i class="bi bi-funnel"></i> Advanced Search</button>
-                                <a :href="'/xadmin/lessons/create'">
+                                <a :href="'/xadmin/lessons/create'" v-if="permissions['066']">
                                     <button class="btn btn-primary button-create" style="margin:0 0 0 15px"><i class="bi bi-plus-lg"></i>Create new lesson</button>
                                 </a>
                             </div>
@@ -148,7 +148,7 @@
                                 <div class="fw-bolder me-5" v-if="lessons.length <= 3">
                                     <span class="me-2" data-kt-customer-table-select="selected_count"></span>Selected {{ lessonIds.length }} {{ lessonIds.length <= 1 ? ' lesson' : ' lessons' }}
                                 </div>
-                                <button class="btn btn-danger mx-2" @click="confirmDeleteMultiple()" type="button" data-kt-customer-table-select="delete_selected"><i class="bi bi-trash"></i> Delete {{ lessonIds.length }} {{ lessonIds.length <= 1 ? ' lesson' : ' lessons' }} </button>
+                                <button v-if="permissions['012']" class="btn btn-danger mx-2" @click="confirmDeleteMultiple()" type="button" data-kt-customer-table-select="delete_selected"><i class="bi bi-trash"></i> Delete {{ lessonIds.length }} {{ lessonIds.length <= 1 ? ' lesson' : ' lessons' }} </button>
                                 <button class="btn btn-success mx-2" @click="openModal()" :disabled="lessons.length > 3" type="button" data-kt-customer-table-select="delete_selected"><i class="bi bi-download"></i> Download lesson</button>
                             </div>
                         </div>

@@ -176,7 +176,7 @@
                             <div class="form-check form-check-custom form-check-solid pb-5"
                                 v-if="roleName == 'Super Administrator'">
                                 <input id="state1" type="checkbox" class="form-check-input h-20px w-20px"
-                                    v-model="entry.active_allocation" checked :disabled="!permissionFields['school_active_allocation']">
+                                    v-model="entry.active_allocation" checked :disabled="!permissionFields['school_content']">
                                 <label for="state1" class="form-check-label fw-bold">Active allocation</label>
                                 <error-label for="f_grade"></error-label>
                             </div>

@@ -76,7 +76,7 @@
                                     </div>
                                     <div class="form-group  col-sm-4">
                                         <label>Email</label>
-                                        <input class="form-control" placeholder="Enter the email address" :disabled="true" v-model="entry.email">
+                                        <input class="form-control" placeholder="Enter the email address" v-model="entry.email">
                                         <error-label for="f_category_id" :errors="errors.email"></error-label>
                                     </div>
                                     <div  class="form-group  col-sm-4">

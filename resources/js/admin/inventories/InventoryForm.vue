@@ -45,13 +45,13 @@
                             <div class="form-group col-lg-9 col-sm-12">
                                 <label>Module name <span class="text-danger">*</span></label>
                                 <input v-model="entry.name" class="form-control"
-                                    :disabled="!permissionFields['module_name']" placeholder="Enter the module name">
+                                    placeholder="Enter the module name">
                                 <error-label for="f_grade" :errors="errors.name"></error-label>
                             </div>
                             <div class="form-group col-lg-3 col-sm-12">
                                 <label>Type <span class="text-danger">*</span></label>
                                 <select class="form-control form-select" v-model="entry.type"
-                                    :disabled="!permissionFields['module_type']" required>
+                                    required>
                                     <option value="" selected disabled>Choose type</option>
                                     <option value="Vocabulary">Vocabulary</option>
                                     <option value="Lecture">Lecture</option>
@@ -65,11 +65,10 @@
                             <div class="form-group col-lg-9 col-sm-12">
                                 <label>Description</label>
                                 <textarea v-model="entry.description" rows="5" class="form-control"
-                                    :disabled="!permissionFields['module_description']"
                                     placeholder="Your text here..."></textarea>
                                 <error-label for="f_grade" :errors="errors.description"></error-label>
                             </div>
-                            <div class="form-group col-lg-3 col-sm-12" v-if="permissionFields['module_file_asset_bundle']">
+                            <div class="form-group col-lg-3 col-sm-12">
                                 <label>File asset bundle<span class="text-danger">*</span></label>
                                 <file-manager-input v-model="entry.file_asset_new"></file-manager-input>
                                 <error-label for="f_title" :errors="errors.file_asset_new"></error-label>
@@ -77,14 +76,14 @@
                         </div>
                         <div class="form-group">
                             <button class="btn btn-primary" @click="location"
-                                :disabled="!permissionFields['module_location']">Location</button>
+                                >Location</button>
                         </div>
                         <div class="form-group col-lg-9 col-sm-12 border rounded-3 p-5" v-if="entry.location == 1">
                             <div class="form-row justify-content-center">
                                 <div class="form-group col-md-5">
                                     <label>Subject</label>
                                     <select class="form-control form-select " required v-model="entry.subject"
-                                        @change="changeSubject()" :disabled="!permissionFields['module_subject']">
+                                        @change="changeSubject()" >
                                         <option value="" selected disabled>Choose subject</option>
                                         <option value="Math">Math</option>
                                         <option value="Science">Science</option>
@@ -92,7 +91,7 @@
                                 </div>
                                 <div class="form-group col-md-6">
                                     <label>Lesson<span class="text-danger">*</span></label>
-                                    <select class="form-control form-select" v-model="entry.lessonId" required :disabled="!permissionFields['module_lesson']">
+                                    <select class="form-control form-select" v-model="entry.lessonId" required>
                                         <option value="" selected disabled>Choose lesson</option>
                                         <option v-for="lesson in lessons" :value="lesson.id">{{ lesson.label }}</option>
                                     </select>
@@ -100,21 +99,21 @@
                                 </div>
                                 <div class="form-group col-md-auto d-flex align-items-center justify-content-start">
                                     <i class="fa fa-times fa-2x mt-6 cursor-pointer" @click="removeLesson"
-                                        title="Remove" v-if="permissionFields['module_location']"></i>
+                                        title="Remove" ></i>
                                 </div>
                             </div>
                         </div>
                         <div class="form-group">
                             <div class="form-check form-check-custom form-check-solid me-10 pb-5 mt-2">
                                 <input id="enabled" type="checkbox" class="form-check-input h-20px w-20px"
-                                    v-model="entry.enabled" :disabled="!permissionFields['module_active']">
+                                    v-model="entry.enabled" >
                                 <label for="enabled" class="form-check-label fw-bold">Active</label>
                                 <error-label for="f_grade" :errors="errors.enabled"></error-label>
                             </div>
                         </div>
                     </div>
                     <div class="card-footer">
-                        <button type="reset" @click="save()" class="btn btn-primary mr-2" :disabled="!permissions['008']">
+                        <button type="reset" @click="save()" class="btn btn-primary mr-2">
                             <i class="bi bi-save2 mr-1"></i>Save</button>
                         <button type="reset" @click="backIndex()" class="btn btn-light">Cancel</button>
                     </div>

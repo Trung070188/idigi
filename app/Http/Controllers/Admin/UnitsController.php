@@ -312,9 +312,27 @@ class UnitsController extends AdminBaseController
      */
     public function data(Request $req)
     {
+        $user = auth_user();
+        $schoolId = explode(',', $user['school_id']);
+        $roleName = $user->roles[0]['role_name'];
+
         $query = Unit::query()->with(['course'])->orderBy('id', 'desc');
         $courses = Course::query()->orderBy('id', 'desc')->get();
 
+        if($roleName == 'Teacher')
+        {
+            $query->whereHas('user_units', function ($q) use ($user)
+            {
+               $q->where('user_id', $user['id']);
+            });
+        }
+        if($roleName == 'School Admin')
+        {
+            $query->whereHas('school_units', function ($q) use ($schoolId)
+            {
+               $q->where('school_id', (int)$schoolId[0]);
+            });
+        }
         if ($req->keyword) {
             $query->where('unit_name', 'LIKE', '%' . $req->keyword . '%');
         }

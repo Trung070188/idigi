@@ -53,7 +53,31 @@ class InventoriesController extends AdminBaseController
     {
         $component = 'InventoryForm';
         $title = 'Create inventories';
-        return component($component, compact('title'));
+        $permissionList = [
+            'module_name',
+            'module_type',
+            'module_file_asset_bundle',
+            'module_description',
+            'module_location',
+            'module_subject',
+            'module_lesson',
+            'module_active',
+            'module_delete',
+        ];
+
+        $user = Auth::user();
+        $permissionDetail = new PermissionField();
+        $permissions = $permissionDetail->permission($user);
+        $permissionFields = [];
+        foreach ($permissionList as $permission) {
+            $haspermission = $permissionDetail->havePermission($permission, $permissions, $user);
+            $permissionFields[(string)$permission] = (bool)$haspermission;
+        }
+        $jsonData = [
+            'permissionFields' => $permissionFields,
+        ];
+
+        return component($component, compact('title','component','jsonData'));
     }
 
     /**
